@@ -1,4 +1,4 @@
-package seng302.group5.sample;
+package seng302.group5.model;
 
 import java.util.Calendar;
 
@@ -22,10 +22,7 @@ abstract public class Actor {
     this.name = name;
   }
 
-  public String getName(){
+  public String getName() {
     return name;
   }
-
-
-
 }

@@ -1,4 +1,4 @@
-package seng302.group5.sample;
+package seng302.group5;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -6,12 +6,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * Main class to run the application
+ */
 public class Main extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    Parent root = FXMLLoader.load(getClass().getResource("/Testing.fxml"));
-    primaryStage.setTitle("Hello World");
+    Parent root = FXMLLoader.load(getClass().getResource("/Main.fxml"));
+    primaryStage.setTitle("Scrumfinity");
     primaryStage.setScene(new Scene(root, 300, 275));
     primaryStage.show();
   }
