@@ -80,7 +80,7 @@ public class Main extends Application {
       controller.setMainApp(this);
       MBC = controller;
 
-      rootLayout.setTop(menuBar);
+     rootLayout.setTop(menuBar);
     } catch (IOException e) {
       e.printStackTrace();
     }
