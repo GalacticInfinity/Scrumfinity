@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="279.0" prefWidth="434.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="279.0" prefWidth="434.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.ProjectDialogController">
    <children>
       <HBox alignment="BOTTOM_LEFT" prefHeight="35.0" prefWidth="434.0" spacing="10.0">
          <children>
@@ -16,7 +16,7 @@
                   <Font size="15.0" />
                </font>
             </Label>
-            <TextField alignment="TOP_LEFT" />
+            <TextField fx:id="shortName" alignment="TOP_LEFT" />
          </children>
       </HBox>
       <HBox alignment="CENTER_LEFT" prefHeight="38.0" prefWidth="369.0" spacing="10.0">
@@ -26,7 +26,7 @@
                   <Font size="15.0" />
                </font>
             </Label>
-            <TextField alignment="TOP_LEFT" />
+            <TextField  fx:id="projectName" alignment="TOP_LEFT" />
          </children>
       </HBox>
       <HBox prefHeight="157.0" prefWidth="434.0" spacing="10.0">
@@ -36,13 +36,13 @@
                   <Font size="15.0" />
                </font>
             </Label>
-            <TextArea prefHeight="229.0" prefWidth="310.0" />
+            <TextArea  fx:id="projectDescription" prefHeight="229.0" prefWidth="310.0" />
          </children>
       </HBox>
       <HBox alignment="BOTTOM_RIGHT" prefHeight="39.0" prefWidth="434.0" spacing="10.0">
          <children>
-            <Button mnemonicParsing="false" text="Create" />
-            <Button mnemonicParsing="false" text="Cancel" />
+            <Button  fx:id="btnCreateProject" mnemonicParsing="false" onAction="#btnCreateProjectClick" text="Create" />
+            <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#btnCancelClick" text="Cancel" />
          </children>
          <opaqueInsets>
             <Insets />

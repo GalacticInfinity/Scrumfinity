@@ -1,21 +1,21 @@
 package seng302.group5;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng302.group5.controller.ListMainPaneController;
 import seng302.group5.controller.MenuBarController;
+import seng302.group5.controller.ProjectDialogController;
 import seng302.group5.model.Project;
 
 /**
@@ -48,6 +48,7 @@ public class Main extends Application {
     showMenuBar();
     showListMainPane();
   }
+
 
   /**
    * Initializes the root layout.
@@ -106,7 +107,26 @@ public class Main extends Application {
   }
 
   public void showProjectDialogCreation() {
-    projects.add(new Project("1", "2", "3"));
+    try {
+      FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(Main.class.getResource("/ProjectDialog.fxml"));
+      VBox projectDialogLayout = (VBox) loader.load();
+
+      ProjectDialogController controller = loader.getController();
+      controller.setMainApp(this);
+
+      Scene projectDialogScene = new Scene(projectDialogLayout);
+      Stage projectDialogStage = new Stage();
+      controller.setStage(projectDialogStage);
+
+      projectDialogStage.initModality(Modality.APPLICATION_MODAL);
+      projectDialogStage.initOwner(primaryStage);
+      projectDialogStage.setScene(projectDialogScene);
+      projectDialogStage.show();
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   public ObservableList<Project> getTestGroup() {
@@ -127,6 +147,10 @@ public class Main extends Application {
 
   public ObservableList<Project> getProjects() {
     return projects;
+  }
+
+  public void addProject(String shortName, String projectName, String projectDescription) {
+    projects.add(new Project(shortName, projectName, projectDescription));
   }
 
   public static void main(String[] args) {
