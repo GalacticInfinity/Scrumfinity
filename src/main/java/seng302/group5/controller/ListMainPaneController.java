@@ -57,7 +57,7 @@ public class ListMainPaneController {
   public void showHideList() {
     if(!isListHidden){
       // This part will need extending
-      listView.setItems(mainApp.getTestGroup());
+      listView.setItems(mainApp.getProjects());
       isListHidden = true;
     } else {
       ObservableList<Project> clear = FXCollections.observableArrayList();

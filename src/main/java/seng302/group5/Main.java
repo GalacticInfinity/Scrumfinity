@@ -37,7 +37,7 @@ public class Main extends Application {
   private ListMainPaneController LMPC;
   private MenuBarController MBC;
 
-  private List<Project> projects = new ArrayList<Project>();
+  private ObservableList<Project> projects = FXCollections.observableArrayList();
 
   @Override
   public void start(Stage primaryStage) {
@@ -86,11 +86,6 @@ public class Main extends Application {
     }
   }
 
-  public Project showDialogCreation() {
-    // Placeholder
-    return new Project("1", "2", "3");
-  }
-
   /**
    * Shows the ListMainPane
    */
@@ -110,6 +105,10 @@ public class Main extends Application {
     }
   }
 
+  public void showProjectDialogCreation() {
+    projects.add(new Project("1", "2", "3"));
+  }
+
   public ObservableList<Project> getTestGroup() {
     return  testGroup;
   }
@@ -126,7 +125,7 @@ public class Main extends Application {
     return MBC;
   }
 
-  public List<Project> getProjects() {
+  public ObservableList<Project> getProjects() {
     return projects;
   }
 
