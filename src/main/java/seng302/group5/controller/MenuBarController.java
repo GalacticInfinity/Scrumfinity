@@ -28,9 +28,7 @@ public class MenuBarController {
 
   @FXML
   protected void createProject(ActionEvent event) {
-    //Open project Dialog
-    //Project project = ;
-    List<Project> projectList = mainApp.getProjects();
+    mainApp.showProjectDialogCreation();
   }
 
   /**

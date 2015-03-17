@@ -1,7 +1,5 @@
 package seng302.group5.model;
 
-import java.util.GregorianCalendar;
-
 /**
  * Created by @author Alex Woo
  */
