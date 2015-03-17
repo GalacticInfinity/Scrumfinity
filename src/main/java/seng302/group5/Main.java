@@ -1,22 +1,22 @@
 package seng302.group5;
 
 import java.io.IOException;
-import java.util.GregorianCalendar;
+import java.util.ArrayList;
+import java.util.List;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import seng302.group5.controller.ListMainPaneController;
 import seng302.group5.controller.MenuBarController;
-import seng302.group5.model.Actor;
+import seng302.group5.model.Project;
 
 /**
  * Main class to run the application
@@ -26,16 +26,18 @@ public class Main extends Application {
   private Stage primaryStage;
   private BorderPane rootLayout;
   // Quick test list
-  private ObservableList<Actor> testGroup = FXCollections.observableArrayList(
-      new Actor("bill", "likes potatoes", new GregorianCalendar(1994,5,7)),
-      new Actor("bob", "likes potatoes n stuff", new GregorianCalendar(1994,5,7)),
-      new Actor("Left Shark", "random text", new GregorianCalendar(1994,5,7)),
-      new Actor("bobbeh", "specific text", new GregorianCalendar(1994,5,7)),
-      new Actor("shellington", "lorem ipsum", new GregorianCalendar(1994,5,7)),
-      new Actor("aquadude", "cant think of else", new GregorianCalendar(1994,5,7))
+  private ObservableList<Project> testGroup = FXCollections.observableArrayList(
+      new Project("bill", "Billo bob baggins", "Only 6 years young"),
+      new Project("bob", "likes potatoes n stuff", "test1"),
+      new Project("Left Shark", "random text", "test2"),
+      new Project("bobbeh", "specific text", "test3"),
+      new Project("shellington", "lorem ipsum", "Meow"),
+      new Project("aquadude", "cant think of else", "Finalo")
   );
   private ListMainPaneController LMPC;
   private MenuBarController MBC;
+
+  private List<Project> projects = new ArrayList<Project>();
 
   @Override
   public void start(Stage primaryStage) {
@@ -84,6 +86,11 @@ public class Main extends Application {
     }
   }
 
+  public Project showDialogCreation() {
+    // Placeholder
+    return new Project("1", "2", "3");
+  }
+
   /**
    * Shows the ListMainPane
    */
@@ -103,7 +110,7 @@ public class Main extends Application {
     }
   }
 
-  public ObservableList<Actor> getTestGroup() {
+  public ObservableList<Project> getTestGroup() {
     return  testGroup;
   }
 
@@ -117,6 +124,10 @@ public class Main extends Application {
 
   public MenuBarController getMBC() {
     return MBC;
+  }
+
+  public List<Project> getProjects() {
+    return projects;
   }
 
   public static void main(String[] args) {

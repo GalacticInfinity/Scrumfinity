@@ -1,11 +1,14 @@
 package seng302.group5.controller;
 
+import java.util.List;
+
 import java.io.File;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import seng302.group5.Main;
+import seng302.group5.model.Project;
 
 /**
  * Created by Michael on 3/15/2015.
@@ -27,6 +30,13 @@ public class MenuBarController {
   @FXML
   protected void showHideList(ActionEvent event) {
     mainApp.getLMPC().showHideList();
+  }
+
+  @FXML
+  protected void createProject(ActionEvent event) {
+    //Open project Dialog
+    //Project project = ;
+    List<Project> projectList = mainApp.getProjects();
   }
 
   /**

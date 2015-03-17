@@ -8,11 +8,11 @@
       <Menu mnemonicParsing="false" text="File">
          <items>
             <MenuItem mnemonicParsing="false" text="New" />
-            <MenuItem mnemonicParsing="false" onAction="#btnClickOpen" text="Open…" />
+            <MenuItem mnemonicParsing="false" text="Open…" />
             <Menu mnemonicParsing="false" text="Open Recent" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" text="Close" />
-            <MenuItem mnemonicParsing="false" onAction="#btnClickSave" text="Save" />
+            <MenuItem mnemonicParsing="false" text="Save" />
             <MenuItem mnemonicParsing="false" text="Save As…" />
             <MenuItem mnemonicParsing="false" text="Revert" />
             <SeparatorMenuItem mnemonicParsing="false" />
