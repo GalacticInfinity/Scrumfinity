@@ -4,12 +4,11 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import seng302.group5.Main;
-import seng302.group5.model.Actor;
+import seng302.group5.model.Project;
 
 /**
  * Created by Michael on 3/15/2015.
@@ -38,14 +37,14 @@ public class ListMainPaneController {
    */
   private void iniActorList() {
     listView.getSelectionModel().selectedItemProperty().addListener(
-        new ChangeListener<Actor>() {
+        new ChangeListener<Project>() {
           @Override
-          public void changed(ObservableValue<? extends Actor> observableValue,
-                              Actor previous, Actor next) {
+          public void changed(ObservableValue<? extends Project> observableValue,
+                              Project previous, Project next) {
             if (next != null) {
               // Will place checks to update main pane here based on item type selected
               sampleTextArea.clear();
-              sampleTextArea.appendText(next.getActorDescription());
+              sampleTextArea.appendText(next.getDescription());
             }
           }
         }
@@ -61,7 +60,7 @@ public class ListMainPaneController {
       listView.setItems(mainApp.getTestGroup());
       isListHidden = true;
     } else {
-      ObservableList<Actor> clear = FXCollections.observableArrayList();
+      ObservableList<Project> clear = FXCollections.observableArrayList();
       listView.setItems(clear);
       isListHidden = false;
     }
