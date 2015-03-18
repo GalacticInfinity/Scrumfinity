@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -16,6 +17,7 @@ import javafx.stage.Stage;
 import seng302.group5.controller.ListMainPaneController;
 import seng302.group5.controller.MenuBarController;
 import seng302.group5.controller.ProjectDialogController;
+import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Project;
 
 /**
@@ -106,18 +108,27 @@ public class Main extends Application {
     }
   }
 
-  public void showProjectDialogCreation() {
+  public void showProjectDialog(CreateOrEdit createOrEdit) {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/ProjectDialog.fxml"));
       VBox projectDialogLayout = (VBox) loader.load();
 
       ProjectDialogController controller = loader.getController();
-      controller.setMainApp(this);
-
       Scene projectDialogScene = new Scene(projectDialogLayout);
       Stage projectDialogStage = new Stage();
+
+      controller.setMainApp(this);
       controller.setStage(projectDialogStage);
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        Project project = (Project) LMPC.getSelectedProject();
+        if (project == null) {
+          System.err.println("No project selected");
+          return;
+        }
+        controller.setProject(project);
+      }
+      controller.setCreateOrEdit(createOrEdit);
 
       projectDialogStage.initModality(Modality.APPLICATION_MODAL);
       projectDialogStage.initOwner(primaryStage);
@@ -149,8 +160,12 @@ public class Main extends Application {
     return projects;
   }
 
-  public void addProject(String shortName, String projectName, String projectDescription) {
-    projects.add(new Project(shortName, projectName, projectDescription));
+  public void addProject(Project project) {
+    projects.add(project);
+  }
+
+  public void updateProjectList(){
+    LMPC.refreshList();
   }
 
   public static void main(String[] args) {

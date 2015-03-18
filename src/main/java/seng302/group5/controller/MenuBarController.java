@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import seng302.group5.Main;
+import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Project;
 
 /**
@@ -34,7 +35,12 @@ public class MenuBarController {
 
   @FXML
   protected void createProject(ActionEvent event) {
-    mainApp.showProjectDialogCreation();
+    mainApp.showProjectDialog(CreateOrEdit.CREATE);
+  }
+
+  @FXML
+  protected void editProject(ActionEvent event) {
+    mainApp.showProjectDialog(CreateOrEdit.EDIT);
   }
 
   /**

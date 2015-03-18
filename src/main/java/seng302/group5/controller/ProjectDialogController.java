@@ -2,10 +2,13 @@ package seng302.group5.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import seng302.group5.Main;
+import seng302.group5.controller.enums.CreateOrEdit;
+import seng302.group5.model.Project;
 
 /**
  * Created by @author Alex Woo
@@ -15,9 +18,12 @@ public class ProjectDialogController {
   @FXML private TextField projectIDField;
   @FXML private TextField projectNameField;
   @FXML private TextArea projectDescriptionField;
+  @FXML private Button btnConfirm;
 
   private Main mainApp;
   private Stage thisStage;
+  private CreateOrEdit createOrEdit;
+  private Project project;
 
   /**
    * Parse a string containing a project ID. Throws exceptions if input is not valid.
@@ -59,7 +65,7 @@ public class ProjectDialogController {
    * Handles when the create button is pushed
    */
   @FXML
-  protected void btnCreateProjectClick(ActionEvent event) {
+  protected void btnConfirmClick(ActionEvent event) {
     StringBuilder errors = new StringBuilder();
     errors.append("Invalid Fields:");
     int noErrors = 0;
@@ -93,7 +99,17 @@ public class ProjectDialogController {
       // TODO: Dialogs for errors
       System.out.println(String.format("%s\n%s", title, errors.toString()));
     } else {
-      mainApp.addProject(projectID, projectName, projectDescription);
+
+      if (createOrEdit == CreateOrEdit.CREATE) {
+        project = new Project(projectID, projectName, projectDescription);
+        mainApp.addProject(project);
+      } else if (createOrEdit == CreateOrEdit.EDIT) {
+        project.setUniqueShortName(projectID);
+        project.setLongName(projectName);
+        project.setDescription(projectDescription);
+        mainApp.updateProjectList();
+      }
+
       thisStage.close();
     }
   }
@@ -110,4 +126,24 @@ public class ProjectDialogController {
   public void setStage(Stage stage) {
     this.thisStage = stage;
   }
+
+  public void setCreateOrEdit(CreateOrEdit createOrEdit) {
+    if (createOrEdit == CreateOrEdit.CREATE) {
+      thisStage.setTitle("Create New Project");
+      btnConfirm.setText("Create");
+    } else if (createOrEdit == CreateOrEdit.EDIT) {
+      thisStage.setTitle("Edit Project");
+      btnConfirm.setText("Save");
+
+      projectIDField.setText(project.getUniqueShortName());
+      projectNameField.setText(project.getLongName());
+      projectDescriptionField.setText(project.getDescription());
+    }
+    this.createOrEdit = createOrEdit;
+  }
+
+  public void setProject(Project project) {
+    this.project = project;
+  }
+
 }

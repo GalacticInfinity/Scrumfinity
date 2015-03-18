@@ -23,6 +23,7 @@ public class ListMainPaneController {
   private boolean isListHidden = false;
 
   public ListMainPaneController() {};
+  private Project selectedItem; // TODO: interface for other list object types
 
   /**
    * Initialise the fxml, basic setup functions called.
@@ -45,6 +46,7 @@ public class ListMainPaneController {
               // Will place checks to update main pane here based on item type selected
               sampleTextArea.clear();
               sampleTextArea.appendText(next.getDescription());
+              selectedItem = next;
             }
           }
         }
@@ -64,6 +66,17 @@ public class ListMainPaneController {
       listView.setItems(clear);
       isListHidden = false;
     }
+  }
+
+  public void refreshList() {
+    listView.setItems(null);
+    listView.setItems(mainApp.getProjects());
+    sampleTextArea.clear();
+    sampleTextArea.appendText(selectedItem.getDescription());
+  }
+
+  public Object getSelectedProject() {
+    return selectedItem;
   }
 
   public void setMainApp(Main mainApp) {
