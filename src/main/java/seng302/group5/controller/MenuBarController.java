@@ -22,6 +22,7 @@ public class MenuBarController {
   @FXML private MenuItem showListMenuItem;
 
   private Main mainApp;
+  public File defaultPath;
 
   /**
    * Tells ListMainPaneController to hide/show the item list based on current state
@@ -50,8 +51,27 @@ public class MenuBarController {
     System.exit(0);
   }
 
+  private File getDefaultPath() {
+    return defaultPath;
+  }
+
+  private void setDefaultPath(File path) {
+    defaultPath = path;
+  }
+
   @FXML
-  protected void btnClickSave(ActionEvent event)
+  protected void btnClickSave(ActionEvent event) {
+    File fileSave = getDefaultPath();
+    if (fileSave == null) {
+      FileChooser fileChooser = new FileChooser();
+      fileChooser.setTitle("Save Project");
+      fileSave = fileChooser.showSaveDialog(mainApp.getPrimaryStage());
+    }
+
+  }
+
+  @FXML
+  protected void btnClickSaveAs(ActionEvent event)
   {
 
     /**
@@ -62,6 +82,7 @@ public class MenuBarController {
     // Has no actual save functionality yet.
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Save Project");
+    fileChooser.setInitialDirectory(getDefaultPath());
     File file = fileChooser.showSaveDialog(mainApp.getPrimaryStage());
 
   }
@@ -77,7 +98,8 @@ public class MenuBarController {
     //No open functionality at the moment.
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Open Project");
-    File file = fileChooser.showOpenDialog(mainApp.getPrimaryStage());
+    File fileOpen = fileChooser.showOpenDialog(mainApp.getPrimaryStage());
+    if (fileOpen != null) { setDefaultPath(fileOpen);}
 
   }
 
