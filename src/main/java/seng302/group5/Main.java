@@ -1,6 +1,7 @@
 package seng302.group5;
 
 import java.io.IOException;
+import java.util.List;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -15,8 +16,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng302.group5.controller.ListMainPaneController;
 import seng302.group5.controller.MenuBarController;
+import seng302.group5.controller.PersonDialogController;
 import seng302.group5.controller.ProjectDialogController;
 import seng302.group5.model.Project;
+import seng302.group5.model.Person;
 
 /**
  * Main class to run the application
@@ -25,19 +28,12 @@ public class Main extends Application {
 
   private Stage primaryStage;
   private BorderPane rootLayout;
-  // Quick test list
-  private ObservableList<Project> testGroup = FXCollections.observableArrayList(
-      new Project("bill", "Billo bob baggins", "Only 6 years young"),
-      new Project("bob", "likes potatoes n stuff", "test1"),
-      new Project("Left Shark", "random text", "test2"),
-      new Project("bobbeh", "specific text", "test3"),
-      new Project("shellington", "lorem ipsum", "Meow"),
-      new Project("aquadude", "cant think of else", "Finalo")
-  );
+
   private ListMainPaneController LMPC;
   private MenuBarController MBC;
 
   private ObservableList<Project> projects = FXCollections.observableArrayList();
+  private ObservableList<Person> people = FXCollections.observableArrayList();
 
   @Override
   public void start(Stage primaryStage) {
@@ -129,8 +125,27 @@ public class Main extends Application {
     }
   }
 
-  public ObservableList<Project> getTestGroup() {
-    return  testGroup;
+  public void showPersonDialogCreation() {
+    try {
+      FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(Main.class.getResource("/PersonDialog.fxml"));
+      VBox personDialogLayout = (VBox) loader.load();
+
+      PersonDialogController controller = loader.getController();
+      controller.setMainApp(this);
+
+      Scene personDialogScene = new Scene(personDialogLayout);
+      Stage personDialogStage = new Stage();
+      controller.setStage(personDialogStage);
+
+      personDialogStage.initModality(Modality.APPLICATION_MODAL);
+      personDialogStage.initOwner(primaryStage);
+      personDialogStage.setScene(personDialogScene);
+      personDialogStage.show();
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   public Stage getPrimaryStage(){
@@ -149,8 +164,16 @@ public class Main extends Application {
     return projects;
   }
 
+  public ObservableList<Person> getPeople() {
+    return people;
+  }
+
   public void addProject(String shortName, String projectName, String projectDescription) {
     projects.add(new Project(shortName, projectName, projectDescription));
+  }
+
+  public void addPerson(String shortName, String firstName, String lastName) {
+    people.add(new Person(shortName, firstName, lastName));
   }
 
   public static void main(String[] args) {
