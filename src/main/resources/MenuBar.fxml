@@ -5,27 +5,6 @@
 
 <MenuBar xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.MenuBarController">
    <menus>
-      <Menu mnemonicParsing="false" text="File">
-         <items>
-            <Menu mnemonicParsing="false" text="New...">
-              <items>
-                  <MenuItem mnemonicParsing="false" onAction="#createProject" text="Project" />
-                  <MenuItem mnemonicParsing="false" onAction="#createPerson" text="Person" />
-              </items>
-            </Menu>
-            <MenuItem mnemonicParsing="false" text="Open…" />
-            <Menu mnemonicParsing="false" text="Open Recent" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Close" />
-            <MenuItem mnemonicParsing="false" text="Save" />
-            <MenuItem mnemonicParsing="false" text="Save As…" />
-            <MenuItem mnemonicParsing="false" text="Revert" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Preferences…" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" onAction="#btnQuitClick" text="Quit" />
-         </items>
-      </Menu>
        <Menu mnemonicParsing="false" text="File">
            <items>
                <Menu mnemonicParsing="false" text="New...">

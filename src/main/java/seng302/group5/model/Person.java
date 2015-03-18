@@ -34,9 +34,9 @@ public class Person {
   }
 
   /**
-   * Returns the first name of person.
+   * returns the first name of person.
    *
-   * @return First name of person.
+   * @return first name of person.
    */
   public String getFirstName() {
     return firstName;

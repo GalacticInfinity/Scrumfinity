@@ -3,7 +3,7 @@ package seng302.group5.model;
 /**
  * Created by @author Alex Woo
  */
-public class Project {
+public class Project implements AgileItem {
 
   private String uniqueShortName;
   private String longName;
@@ -34,8 +34,7 @@ public class Project {
   }
 
   /**
-   *Project
-   *
+   * Project
    * @param uniqueShortName Name of Person
    * @param longName Description of person
    * @param description Date of birth of person?
@@ -46,6 +45,11 @@ public class Project {
     this.description = description;
   }
 
+  public void delete(){
+  }
+
+  public void create(){
+  }
   // New toString method, for list
   @Override
   public String toString() {

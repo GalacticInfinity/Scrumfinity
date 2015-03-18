@@ -8,7 +8,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import seng302.group5.Main;
+import seng302.group5.model.Person;
 import seng302.group5.model.Project;
+import seng302.group5.model.Saving;
 
 /**
  * Created by Michael on 3/15/2015.
@@ -51,18 +53,20 @@ public class MenuBarController {
   }
 
   @FXML
-  protected void btnClickSave(ActionEvent event)
-  {
-
+  protected void btnClickSave(ActionEvent event) {
     /**
      * Save file button in File menu, opens up the file chooser to select where you would
      * like to save.
      */
-
     // Has no actual save functionality yet.
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Save Project");
     File file = fileChooser.showSaveDialog(mainApp.getPrimaryStage());
+
+    mainApp.getPeople().add(new Person("msr51", "Mike", "Roman"));
+    mainApp.getProjects().add(new Project("xyz01", "supah proj", "This is the best thing ever"));
+    Saving.saveDataToFile(file, mainApp);
+
 
   }
 
