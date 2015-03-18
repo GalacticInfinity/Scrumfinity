@@ -33,6 +33,10 @@ public class Person {
     return uniqueShortName;
   }
 
+  public void setUniqueShortName(String uniqueShortName) {
+    this.uniqueShortName = uniqueShortName;
+  }
+
   /**
    * returns the first name of person.
    *
@@ -40,6 +44,10 @@ public class Person {
    */
   public String getFirstName() {
     return firstName;
+  }
+
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
   }
 
   /**
@@ -50,6 +58,14 @@ public class Person {
   public String getLastName() {
     return lastName;
   }
+
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
+
+  public void delete(){}
+
+  public void create(){}
 
   /**
    * Overrides to toString method with the
