@@ -37,6 +37,11 @@ public class MenuBarController {
     mainApp.showProjectDialogCreation();
   }
 
+  @FXML
+  protected void createSkill(ActionEvent event) {
+    mainApp.showSkillCreationDialog();
+  }
+
   /**
    * Fxml import for quit button, closes application on click
    */

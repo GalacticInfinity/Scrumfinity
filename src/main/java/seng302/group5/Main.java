@@ -16,10 +16,13 @@ import javafx.stage.Stage;
 import seng302.group5.controller.ListMainPaneController;
 import seng302.group5.controller.MenuBarController;
 import seng302.group5.controller.ProjectDialogController;
+import seng302.group5.controller.SkillsDialogController;
 import seng302.group5.model.Project;
+import seng302.group5.model.Skills;
 
 /**
  * Main class to run the application
+ * @author Team 5
  */
 public class Main extends Application {
 
@@ -38,6 +41,7 @@ public class Main extends Application {
   private MenuBarController MBC;
 
   private ObservableList<Project> projects = FXCollections.observableArrayList();
+  private ObservableList<Skills> skills = FXCollections.observableArrayList();
 
   @Override
   public void start(Stage primaryStage) {
@@ -129,6 +133,28 @@ public class Main extends Application {
     }
   }
 
+  public void showSkillCreationDialog() {
+    try {
+      FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(Main.class.getResource("/SkillsDialog.fxml"));
+      VBox SkillsDialogLayout = (VBox) loader.load();
+
+      SkillsDialogController controller = loader.getController();
+      controller.setMainApp(this);
+
+      Scene skillDialogScene = new Scene(SkillsDialogLayout);
+      Stage skillDialogStage = new Stage();
+      controller.setStage(skillDialogStage);
+
+      skillDialogStage.initModality(Modality.APPLICATION_MODAL);
+      skillDialogStage.initOwner(primaryStage);
+      skillDialogStage.setScene(skillDialogScene);
+      skillDialogStage.show();
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
   public ObservableList<Project> getTestGroup() {
     return  testGroup;
   }
@@ -153,6 +179,9 @@ public class Main extends Application {
     projects.add(new Project(shortName, projectName, projectDescription));
   }
 
+  public void addSkill(String skillName, String skillDescription) {
+    skills.add(new Skills(skillName, skillDescription));
+  }
   public static void main(String[] args) {
     launch(args);
   }

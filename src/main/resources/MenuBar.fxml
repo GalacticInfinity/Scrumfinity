@@ -10,6 +10,7 @@
                <Menu mnemonicParsing="false" text="New...">
                    <items>
                        <MenuItem mnemonicParsing="false" onAction="#createProject" text="Project" />
+                       <MenuItem mnemonicParsing="false" onAction="#createSkill" text="Skill" />
                    </items>
                </Menu>
                <MenuItem mnemonicParsing="false" onAction="#btnClickOpen" text="Open…" />
