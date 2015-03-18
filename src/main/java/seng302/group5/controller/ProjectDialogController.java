@@ -28,7 +28,6 @@ public class ProjectDialogController {
    */
   @FXML
   protected void btnCreateProjectClick(ActionEvent event) {
-
     mainApp.addProject(shortName.getText(), projectName.getText(), projectDescription.getText());
     thisStage.close();
   }
