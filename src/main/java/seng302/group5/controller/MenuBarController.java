@@ -43,6 +43,11 @@ public class MenuBarController {
     mainApp.showProjectDialog(CreateOrEdit.EDIT);
   }
 
+  @FXML
+  protected void createPerson(ActionEvent event) {
+    mainApp.showPersonDialogCreation();
+  }
+
   /**
    * Fxml import for quit button, closes application on click
    */
