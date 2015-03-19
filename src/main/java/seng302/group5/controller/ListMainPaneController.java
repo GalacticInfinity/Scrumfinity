@@ -13,7 +13,7 @@ import seng302.group5.model.Project;
 /**
  * Created by Michael on 3/15/2015.
  * ListManePane fxml contains styling for both List and MainPane, still
- * requires asthetic tweaks, doesn't scale properly
+ * requires asthetic tweaks, doesn't scale properly.
  */
 public class ListMainPaneController {
 
