@@ -5,6 +5,8 @@ import java.util.Deque;
 
 /**
  * Created by Michael on 3/17/2015.
+ *
+ * Work in progess, may scrap alltogether
  */
 public class UndoRedo {
 

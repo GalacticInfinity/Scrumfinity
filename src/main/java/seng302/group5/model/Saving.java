@@ -68,6 +68,11 @@ public class Saving {
     }
   }
 
+  /**
+   * Loads data from specified csv and saves into main.
+   * @param file Filepath for csv
+   * @param main Main class to store data in
+   */
   public static void loadDataFromFile(File file, Main main) {
     try {
       JAXBContext context = JAXBContext
