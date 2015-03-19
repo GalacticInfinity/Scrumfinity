@@ -36,8 +36,8 @@ public class ProjectDialogController {
 
     if (inputProjectID.isEmpty()) {
       throw new Exception("Project ID is empty");
-    } else if (inputProjectID.length() > 10) {
-      throw new Exception("Project ID is more than 10 characters long");
+    } else if (inputProjectID.length() > 8) {
+      throw new Exception("Project ID is more than 8 characters long");
     } else {
       return inputProjectID;
     }
@@ -104,9 +104,9 @@ public class ProjectDialogController {
         project = new Project(projectID, projectName, projectDescription);
         mainApp.addProject(project);
       } else if (createOrEdit == CreateOrEdit.EDIT) {
-        project.setUniqueShortName(projectID);
-        project.setLongName(projectName);
-        project.setDescription(projectDescription);
+        project.setProjectID(projectID);
+        project.setProjectName(projectName);
+        project.setProjectDescription(projectDescription);
         mainApp.updateProjectList();
       }
 
@@ -135,9 +135,9 @@ public class ProjectDialogController {
       thisStage.setTitle("Edit Project");
       btnConfirm.setText("Save");
 
-      projectIDField.setText(project.getUniqueShortName());
-      projectNameField.setText(project.getLongName());
-      projectDescriptionField.setText(project.getDescription());
+      projectIDField.setText(project.getProjectID());
+      projectNameField.setText(project.getProjectName());
+      projectDescriptionField.setText(project.getProjectDescription());
     }
     this.createOrEdit = createOrEdit;
   }

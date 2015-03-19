@@ -7,19 +7,19 @@ package seng302.group5.model;
  */
 public class Person {
 
-  private String uniqueShortName;
+  private String personID;
   private String firstName;
   private String lastName;
 
   /**
    * Person constructor
    *
-   * @param uniqueShortName Unique, non-null person ID
+   * @param personID Unique, non-null person ID
    * @param firstName First name of person
    * @param lastName Last name of person
    */
-  public Person(String uniqueShortName, String firstName, String lastName) {
-    this.uniqueShortName = uniqueShortName;
+  public Person(String personID, String firstName, String lastName) {
+    this.personID = personID;
     this.firstName = firstName;
     this.lastName = lastName;
   }
@@ -29,8 +29,8 @@ public class Person {
    *
    * @return Unique short name of person.
    */
-  public String getUniqueShortName() {
-    return uniqueShortName;
+  public String getPersonID() {
+    return personID;
   }
 
   /**
@@ -59,6 +59,6 @@ public class Person {
    */
   @Override
   public String toString() {
-    return uniqueShortName;
+    return personID;
   }
 }

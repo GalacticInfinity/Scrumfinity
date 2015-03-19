@@ -45,7 +45,7 @@ public class ListMainPaneController {
             if (next != null) {
               // Will place checks to update main pane here based on item type selected
               sampleTextArea.clear();
-              sampleTextArea.appendText(next.getDescription());
+              sampleTextArea.appendText(next.getProjectDescription());
               selectedItem = next;
             }
           }
@@ -72,7 +72,7 @@ public class ListMainPaneController {
     listView.setItems(null);
     listView.setItems(mainApp.getProjects());
     sampleTextArea.clear();
-    sampleTextArea.appendText(selectedItem.getDescription());
+    sampleTextArea.appendText(selectedItem.getProjectDescription());
   }
 
   public Object getSelectedProject() {
