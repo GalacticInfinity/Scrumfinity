@@ -44,6 +44,11 @@ public class MenuBarController {
   }
 
   @FXML
+  protected void createSkill(ActionEvent event) {
+    mainApp.showSkillCreationDialog();
+  }
+
+  @FXML
   protected void createPerson(ActionEvent event) {
     mainApp.showPersonDialogCreation();
   }

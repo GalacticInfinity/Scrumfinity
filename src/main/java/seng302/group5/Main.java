@@ -20,7 +20,9 @@ import seng302.group5.controller.MenuBarController;
 import seng302.group5.controller.PersonDialogController;
 import seng302.group5.controller.ProjectDialogController;
 import seng302.group5.controller.enums.CreateOrEdit;
+import seng302.group5.controller.SkillsDialogController;
 import seng302.group5.model.Project;
+import seng302.group5.model.Skills;
 import seng302.group5.model.Person;
 
 /**
@@ -35,6 +37,7 @@ public class Main extends Application {
   private MenuBarController MBC;
 
   private ObservableList<Project> projects = FXCollections.observableArrayList();
+  private ObservableList<Skills> skills = FXCollections.observableArrayList();
   private ObservableList<Person> people = FXCollections.observableArrayList();
 
   @Override
@@ -79,7 +82,7 @@ public class Main extends Application {
       controller.setMainApp(this);
       MBC = controller;
 
-      rootLayout.setTop(menuBar);
+     rootLayout.setTop(menuBar);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -159,6 +162,29 @@ public class Main extends Application {
     }
   }
 
+  public void showSkillCreationDialog() {
+    try {
+      FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(Main.class.getResource("/SkillsDialog.fxml"));
+      VBox SkillsDialogLayout = (VBox) loader.load();
+
+      SkillsDialogController controller = loader.getController();
+      controller.setMainApp(this);
+
+      Scene skillDialogScene = new Scene(SkillsDialogLayout);
+      Stage skillDialogStage = new Stage();
+      controller.setStage(skillDialogStage);
+
+      skillDialogStage.initModality(Modality.APPLICATION_MODAL);
+      skillDialogStage.initOwner(primaryStage);
+      skillDialogStage.setScene(skillDialogScene);
+      skillDialogStage.show();
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
   public Stage getPrimaryStage(){
     return primaryStage;
   }
@@ -191,6 +217,9 @@ public class Main extends Application {
     LMPC.refreshList();
   }
 
+  public void addSkill(String skillName, String skillDescription) {
+    skills.add(new Skills(skillName, skillDescription));
+  }
   public static void main(String[] args) {
     launch(args);
   }
