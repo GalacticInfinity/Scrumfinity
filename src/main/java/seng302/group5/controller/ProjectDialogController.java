@@ -39,6 +39,11 @@ public class ProjectDialogController {
     } else if (inputProjectID.length() > 8) {
       throw new Exception("Project ID is more than 8 characters long");
     } else {
+      for (Project project : mainApp.getProjects()) {
+        if (project.getProjectID().equals(inputProjectID)) {
+          throw new Exception("Project ID is not unique.");
+        }
+      }
       return inputProjectID;
     }
   }
