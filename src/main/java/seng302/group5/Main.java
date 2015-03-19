@@ -5,6 +5,7 @@ import java.util.List;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -18,7 +19,10 @@ import seng302.group5.controller.ListMainPaneController;
 import seng302.group5.controller.MenuBarController;
 import seng302.group5.controller.PersonDialogController;
 import seng302.group5.controller.ProjectDialogController;
+import seng302.group5.controller.enums.CreateOrEdit;
+import seng302.group5.controller.SkillsDialogController;
 import seng302.group5.model.Project;
+import seng302.group5.model.Skills;
 import seng302.group5.model.Person;
 
 /**
@@ -33,6 +37,7 @@ public class Main extends Application {
   private MenuBarController MBC;
 
   private ObservableList<Project> projects = FXCollections.observableArrayList();
+  private ObservableList<Skills> skills = FXCollections.observableArrayList();
   private ObservableList<Person> people = FXCollections.observableArrayList();
 
   @Override
@@ -77,7 +82,7 @@ public class Main extends Application {
       controller.setMainApp(this);
       MBC = controller;
 
-      rootLayout.setTop(menuBar);
+     rootLayout.setTop(menuBar);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -102,18 +107,27 @@ public class Main extends Application {
     }
   }
 
-  public void showProjectDialogCreation() {
+  public void showProjectDialog(CreateOrEdit createOrEdit) {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/ProjectDialog.fxml"));
       VBox projectDialogLayout = (VBox) loader.load();
 
       ProjectDialogController controller = loader.getController();
-      controller.setMainApp(this);
-
       Scene projectDialogScene = new Scene(projectDialogLayout);
       Stage projectDialogStage = new Stage();
+
+      controller.setMainApp(this);
       controller.setStage(projectDialogStage);
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        Project project = (Project) LMPC.getSelectedProject();
+        if (project == null) {
+          System.err.println("No project selected");
+          return;
+        }
+        controller.setProject(project);
+      }
+      controller.setCreateOrEdit(createOrEdit);
 
       projectDialogStage.initModality(Modality.APPLICATION_MODAL);
       projectDialogStage.initOwner(primaryStage);
@@ -148,6 +162,29 @@ public class Main extends Application {
     }
   }
 
+  public void showSkillCreationDialog() {
+    try {
+      FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(Main.class.getResource("/SkillsDialog.fxml"));
+      VBox SkillsDialogLayout = (VBox) loader.load();
+
+      SkillsDialogController controller = loader.getController();
+      controller.setMainApp(this);
+
+      Scene skillDialogScene = new Scene(SkillsDialogLayout);
+      Stage skillDialogStage = new Stage();
+      controller.setStage(skillDialogStage);
+
+      skillDialogStage.initModality(Modality.APPLICATION_MODAL);
+      skillDialogStage.initOwner(primaryStage);
+      skillDialogStage.setScene(skillDialogScene);
+      skillDialogStage.show();
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
   public Stage getPrimaryStage(){
     return primaryStage;
   }
@@ -168,14 +205,21 @@ public class Main extends Application {
     return people;
   }
 
-  public void addProject(String shortName, String projectName, String projectDescription) {
-    projects.add(new Project(shortName, projectName, projectDescription));
+  public void addProject(Project project) {
+    projects.add(project);
   }
 
   public void addPerson(String shortName, String firstName, String lastName) {
     people.add(new Person(shortName, firstName, lastName));
   }
 
+  public void updateProjectList(){
+    LMPC.refreshList();
+  }
+
+  public void addSkill(String skillName, String skillDescription) {
+    skills.add(new Skills(skillName, skillDescription));
+  }
   public static void main(String[] args) {
     launch(args);
   }

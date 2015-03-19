@@ -70,7 +70,7 @@ public class PersonDialogController {
   private boolean checkShortNameValidity(String name) {
     if (name.length() < 8 && name.length() > 0) {
       for (Person person : mainApp.getPeople()) {
-        if (person.getUniqueShortName().equals(name)) {
+        if (person.getPersonID().equals(name)) {
           System.out.println("Person ID is not unique.");
           return false;
         }

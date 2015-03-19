@@ -9,6 +9,7 @@ import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import seng302.group5.Main;
 import seng302.group5.model.Person;
+import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Project;
 import seng302.group5.model.Saving;
 
@@ -36,7 +37,17 @@ public class MenuBarController {
 
   @FXML
   protected void createProject(ActionEvent event) {
-    mainApp.showProjectDialogCreation();
+    mainApp.showProjectDialog(CreateOrEdit.CREATE);
+  }
+
+  @FXML
+  protected void editProject(ActionEvent event) {
+    mainApp.showProjectDialog(CreateOrEdit.EDIT);
+  }
+
+  @FXML
+  protected void createSkill(ActionEvent event) {
+    mainApp.showSkillCreationDialog();
   }
 
   @FXML
@@ -62,9 +73,7 @@ public class MenuBarController {
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Save Project");
     File file = fileChooser.showSaveDialog(mainApp.getPrimaryStage());
-
-    mainApp.getPeople().add(new Person("msr51", "Mike", "Roman"));
-    mainApp.getProjects().add(new Project("xyz01", "supah proj", "This is the best thing ever"));
+    
     Saving.saveDataToFile(file, mainApp);
 
 

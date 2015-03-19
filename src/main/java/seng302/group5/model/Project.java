@@ -5,44 +5,45 @@ package seng302.group5.model;
  */
 public class Project implements AgileItem {
 
-  private String uniqueShortName;
-  private String longName;
-  private String description;
-
-  public void setUniqueShortName(String name) {
-    this.uniqueShortName = name;
-  }
-
-  public String getUniqueShortName() {
-    return uniqueShortName;
-  }
-
-  public void setLongName(String longName) {
-    this.longName = longName;
-  }
-
-  public String getLongName() {
-    return this.longName;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  public String getDescription() {
-    return description;
-  }
+  private String projectID;
+  private String projectName;
+  private String projectDescription;
 
   /**
-   * Project
-   * @param uniqueShortName Name of Person
-   * @param longName Description of person
-   * @param description Date of birth of person?
+   * Project constructor given ID, name, and projectDescription.
+   *
+   * @param projectID Name of Person
+   * @param projectName        Description of person
+   * @param projectDescription     Date of birth of person?
    */
-  public Project(String uniqueShortName, String longName, String description) {
-    this.uniqueShortName = uniqueShortName;
-    this.longName = longName;
-    this.description = description;
+  public Project(String projectID, String projectName, String projectDescription) {
+    this.projectID = projectID;
+    this.projectName = projectName;
+    this.projectDescription = projectDescription;
+  }
+
+  public String getProjectID() {
+    return projectID;
+  }
+
+  public void setProjectID(String name) {
+    this.projectID = name;
+  }
+
+  public String getProjectName() {
+    return this.projectName;
+  }
+
+  public void setProjectName(String projectName) {
+    this.projectName = projectName;
+  }
+
+  public String getProjectDescription() {
+    return projectDescription;
+  }
+
+  public void setProjectDescription(String projectDescription) {
+    this.projectDescription = projectDescription;
   }
 
   public void delete(){
@@ -53,7 +54,7 @@ public class Project implements AgileItem {
   // New toString method, for list
   @Override
   public String toString() {
-    return this.uniqueShortName;
-  };
+    return this.projectID;
+  }
 
 }
