@@ -12,6 +12,15 @@ public class Person {
   private String lastName;
 
   /**
+   * Default constructor
+   */
+  public Person() {
+    personID = "";
+    firstName = "";
+    lastName = "";
+  }
+
+  /**
    * Person constructor
    *
    * @param personID Unique, non-null person ID
@@ -33,8 +42,8 @@ public class Person {
     return personID;
   }
 
-  public void setUniqueShortName(String uniqueShortName) {
-    this.uniqueShortName = uniqueShortName;
+  public void setPersonID(String personID) {
+    this.personID = personID;
   }
 
   /**

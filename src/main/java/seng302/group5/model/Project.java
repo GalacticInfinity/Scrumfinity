@@ -10,11 +10,19 @@ public class Project implements AgileItem {
   private String projectDescription;
 
   /**
-   * Project constructor given ID, name, and projectDescription.
-   *
+   * Default constructor
+   */
+  public Project() {
+    projectID = "";
+    projectName = "";
+    projectDescription = "";
+  }
+  
+  /**
+   * Project
    * @param projectID Name of Person
-   * @param projectName        Description of person
-   * @param projectDescription     Date of birth of person?
+   * @param projectName Description of person
+   * @param projectDescription Date of birth of person?
    */
   public Project(String projectID, String projectName, String projectDescription) {
     this.projectID = projectID;

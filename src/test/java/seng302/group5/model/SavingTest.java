@@ -1,5 +1,8 @@
 package seng302.group5.model;
 
+import static org.junit.Assert.*;
+
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -12,12 +15,37 @@ import seng302.group5.Main;
  */
 public class SavingTest {
 
-  @Test
-  public void testSaving(){
-    Main main = new Main();
+  public Main main;
+  public File filez;
+  public File newFile = new File(System.getProperty("user.home".concat("//Documents")), "Test1.xml");
+
+  @Before
+  public void setUp(){
+    main = new Main();
     main.getPeople().add(new Person("msr51", "Mike", "Roman"));
-    main.getProjects().add(new Project("xyz01", "supah proj", "This is the best thing ever"));
-    File newFile = new File(System.getProperty("user.home"), "Test1.csv");
+    main.getProjects().addAll(
+        new Project("xyz01", "supah proj", "This is the best thing ever"),
+        new Project("xyz01", "supah proj", "This is the best thing ever"),
+        new Project("xyz01", "supah proj", "This is the best thing ever"));
+  }
+
+  @Test
+  public void testSavingCreate(){
     Saving.saveDataToFile(newFile, main);
+    assertTrue(newFile.exists());
+  }
+
+  @Test
+  public void testLoadingContents(){
+    Main orig = main;
+    main.getProjects().clear();
+    main.getPeople().clear();
+    Saving.loadDataFromFile(newFile, main);
+    for (Person i: main.getPeople()) {
+      assertTrue(orig.getPeople().contains(i));
+    }
+    for (Project i: main.getProjects()) {
+      assertTrue(orig.getProjects().contains(i));
+    }
   }
 }

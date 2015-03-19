@@ -12,6 +12,7 @@ import seng302.group5.model.Person;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Project;
 import seng302.group5.model.Saving;
+import seng302.group5.model.util.Settings;
 
 /**
  * Created by Michael on 3/15/2015.
@@ -81,16 +82,18 @@ public class MenuBarController {
 
   @FXML
   protected void btnClickOpen(ActionEvent event) {
-
     /**
      * Open file button in File menu, opens up the file chooser to select which file you
      * wish to open.
      */
-
     //No open functionality at the moment.
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Open Project");
+    if (Settings.defaultFilepath != null) {
+      fileChooser.setInitialDirectory(Settings.defaultFilepath);
+    }
     File file = fileChooser.showOpenDialog(mainApp.getPrimaryStage());
+    Saving.loadDataFromFile(file, mainApp);
 
   }
 
