@@ -1,73 +1,71 @@
 package seng302.group5.model;
 
-import java.util.ArrayList;
-
 /**
  * @author Liang Ma
  */
 public class Skills {
 
-  private String name;
-  private String description;
+  private String skillName;
+  private String skillDescription;
 
   /**
-   * Skill constructor with skill name only.
+   * Skill constructor with skill skillName only.
    *
-   * @param name short name of a skill
+   * @param skillName short skillName of a skill
    */
-  public Skills(String name) {
-    this.name = name;
+  public Skills(String skillName) {
+    this.skillName = skillName;
   }
 
   /**
-   * Skill constructor with both skill name and skill description.
+   * Skill constructor with both skill skillName and skill skillDescription.
    *
-   * @param name short name of a skill
-   * @param description Description of the skill
+   * @param skillName short skillName of a skill
+   * @param skillDescription Description of the skill
    */
-  public Skills(String name, String description) {
-    this.name = name;
-    this.description = description;
+  public Skills(String skillName, String skillDescription) {
+    this.skillName = skillName;
+    this.skillDescription = skillDescription;
   }
 
   /**
-   * Set name for a skill.
-   * @param name name of the skill
+   * Set skillName for a skill.
+   * @param skillName skillName of the skill
    */
-  public void setName(String name) {
-    this.name = name;
+  public void setSkillName(String skillName) {
+    this.skillName = skillName;
   }
 
   /**
-   * Get name of a skill.
-   * @return name of the skill
+   * Get skillName of a skill.
+   * @return skillName of the skill
    */
-  public String getName() {
-    return name;
+  public String getSkillName() {
+    return skillName;
   }
 
   /**
-   * Set the description of a skill.
-   * @param description description of the skill
+   * Set the skillDescription of a skill.
+   * @param skillDescription skillDescription of the skill
    */
-  public void setDescription(String description) {
-    this.description = description;
+  public void setSkillDescription(String skillDescription) {
+    this.skillDescription = skillDescription;
   }
 
   /**
-   * Get the description of the skill.
-   * @return description of the skill
+   * Get the skillDescription of the skill.
+   * @return skillDescription of the skill
    */
-  public String getDescription() {
-    return this.description;
+  public String getSkillDescription() {
+    return this.skillDescription;
   }
 
   /**
-   *
+   * Return a formatted string of the skill.
    * @return
    */
   @Override
   public String toString() {
-    return this.getName() + ": " + this.getDescription() + ".";
+    return this.getSkillName() + ": " + this.getSkillDescription() + ".";
   }
 }

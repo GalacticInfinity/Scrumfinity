@@ -148,6 +148,8 @@ public class Main extends Application {
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
   public void showSkillCreationDialog() {
     try {
       FXMLLoader loader = new FXMLLoader();
@@ -169,9 +171,6 @@ public class Main extends Application {
     } catch (IOException e) {
       e.printStackTrace();
     }
-  }
-  public ObservableList<Project> getTestGroup() {
-    return  testGroup;
   }
 
   public Stage getPrimaryStage(){
