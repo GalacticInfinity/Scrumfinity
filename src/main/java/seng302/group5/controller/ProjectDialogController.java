@@ -2,6 +2,7 @@ package seng302.group5.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -72,7 +73,6 @@ public class ProjectDialogController {
   @FXML
   protected void btnConfirmClick(ActionEvent event) {
     StringBuilder errors = new StringBuilder();
-    errors.append("Invalid Fields:");
     int noErrors = 0;
 
     String projectID = "";
@@ -83,26 +83,27 @@ public class ProjectDialogController {
       projectID = parseProjectID(projectIDField.getText());
     } catch (Exception e) {
       noErrors++;
-      errors.append(String.format("\n\t%s", e.getMessage()));
+      errors.append(String.format("%s\n", e.getMessage()));
     }
 
     try {
       projectName = parseProjectName(projectNameField.getText());
     } catch (Exception e) {
       noErrors++;
-      errors.append(String.format("\n\t%s", e.getMessage()));
+      errors.append(String.format("%s\n", e.getMessage()));
     }
 
     // Display all errors if they exist
     if (noErrors > 0) {
-      String title;
-      if (noErrors == 1) {
-        title = String.format("%d Invalid Field", noErrors);
-      } else {
-        title = String.format("%d Invalid Fields", noErrors);
+      String header = String.format("%d Invalid Field", noErrors);
+      if (noErrors > 1) {
+        header += "s";  // plural
       }
-      // TODO: Dialogs for errors
-      System.out.println(String.format("%s\n%s", title, errors.toString()));
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Invalid Input");
+      alert.setHeaderText(header);
+      alert.setContentText(errors.toString());
+      alert.showAndWait();
     } else {
 
       if (createOrEdit == CreateOrEdit.CREATE) {
