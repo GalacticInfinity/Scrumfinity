@@ -71,6 +71,7 @@ public class ListMainPaneController {
   public void refreshList() {
     listView.setItems(null);
     listView.setItems(mainApp.getProjects());
+    listView.setItems(mainApp.getSkills());
     sampleTextArea.clear();
     sampleTextArea.appendText(selectedItem.getProjectDescription());
   }

@@ -162,7 +162,7 @@ public class Main extends Application {
     }
   }
 
-  public void showSkillCreationDialog() {
+  public void showSkillCreationDialog(CreateOrEdit createOrEdit) {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/SkillsDialog.fxml"));
@@ -175,6 +175,15 @@ public class Main extends Application {
       Stage skillDialogStage = new Stage();
       controller.setStage(skillDialogStage);
 
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        Skills skill = (Skills) LMPC.getSelectedProject();
+        if (skill == null) {
+          System.err.println("No project selected");
+          return;
+        }
+        controller.setSkill(skill);
+      }
+      controller.setCreateOrEdit(createOrEdit);
       skillDialogStage.initModality(Modality.APPLICATION_MODAL);
       skillDialogStage.initOwner(primaryStage);
       skillDialogStage.setScene(skillDialogScene);
@@ -205,6 +214,8 @@ public class Main extends Application {
     return people;
   }
 
+  public ObservableList<Skills> getSkills() { return skills;}
+
   public void addProject(Project project) {
     projects.add(project);
   }
@@ -217,9 +228,12 @@ public class Main extends Application {
     LMPC.refreshList();
   }
 
-  public void addSkill(String skillName, String skillDescription) {
-    skills.add(new Skills(skillName, skillDescription));
+  public void addSkill(Skills skill) {
+    skills.add(skill);
   }
+
+  public void updateSkillList() {LMPC.refreshList();}
+
   public static void main(String[] args) {
     launch(args);
   }
