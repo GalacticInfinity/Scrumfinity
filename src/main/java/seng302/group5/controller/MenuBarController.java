@@ -8,9 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import seng302.group5.Main;
-import seng302.group5.model.Person;
 import seng302.group5.controller.enums.CreateOrEdit;
-import seng302.group5.model.Project;
 import seng302.group5.model.Saving;
 import seng302.group5.model.util.Settings;
 
@@ -24,6 +22,8 @@ import seng302.group5.model.util.Settings;
 public class MenuBarController {
 
   @FXML private MenuItem showListMenuItem;
+  @FXML private MenuItem showProjectsMenuItem;
+  @FXML private MenuItem showPeopleMenuItem;
 
   private Main mainApp;
 
@@ -94,8 +94,22 @@ public class MenuBarController {
     }
     File file = fileChooser.showOpenDialog(mainApp.getPrimaryStage());
     Saving.loadDataFromFile(file, mainApp);
-
+    mainApp.getLMPC().refreshList();
   }
+
+
+  @FXML
+  protected void btnShowProjects() {
+    Settings.currentListType = "Project";
+    mainApp.getLMPC().refreshList();
+  }
+
+  @FXML
+  protected void btnShowPeople() {
+    Settings.currentListType = "People";
+    mainApp.getLMPC().refreshList();
+  }
+
 
 
   public void setMainApp(Main mainApp){

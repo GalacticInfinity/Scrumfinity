@@ -5,7 +5,7 @@ package seng302.group5.model;
  *
  * Created by Zander on 17/03/2015.
  */
-public class Person {
+public class Person implements AgileItem{
 
   private String personID;
   private String firstName;

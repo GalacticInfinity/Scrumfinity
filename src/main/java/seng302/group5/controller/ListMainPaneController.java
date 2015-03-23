@@ -8,7 +8,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import seng302.group5.Main;
-import seng302.group5.model.Project;
+import seng302.group5.model.AgileItem;
+import seng302.group5.model.util.Settings;
 
 /**
  * Created by Michael on 3/15/2015.
@@ -20,32 +21,34 @@ public class ListMainPaneController {
   @FXML private ListView listView;
   @FXML private TextArea sampleTextArea;
   private Main mainApp;
-  private boolean isListHidden = false;
+  private boolean isListHidden = true;
 
   public ListMainPaneController() {};
-  private Project selectedItem; // TODO: interface for other list object types
+  private AgileItem selectedItem;
 
   /**
    * Initialise the fxml, basic setup functions called.
    */
   @FXML
   private void initialize() {
+    Settings.currentListType = "Project";
     iniActorList();
+    showHideList();
   }
 
   /**
-   * Sets listeners to whatever is in the list. TODO create item interface
+   * Sets listeners to whatever is in the list.
    */
   private void iniActorList() {
     listView.getSelectionModel().selectedItemProperty().addListener(
-        new ChangeListener<Project>() {
+        new ChangeListener<AgileItem>() {
           @Override
-          public void changed(ObservableValue<? extends Project> observableValue,
-                              Project previous, Project next) {
+          public void changed(ObservableValue<? extends AgileItem> observableValue,
+                              AgileItem previous, AgileItem next) {
             if (next != null) {
               // Will place checks to update main pane here based on item type selected
               sampleTextArea.clear();
-              sampleTextArea.appendText(next.getProjectDescription());
+              sampleTextArea.appendText(next.toString());
               selectedItem = next;
             }
           }
@@ -54,25 +57,47 @@ public class ListMainPaneController {
   }
 
   /**
-   * Shows/Hides items in list. TODO check what type list is currently showing
+   * Shows/Hides items in list.
    */
   public void showHideList() {
     if(!isListHidden){
-      // This part will need extending
-      listView.setItems(mainApp.getProjects());
+      checkListType();
       isListHidden = true;
     } else {
-      ObservableList<Project> clear = FXCollections.observableArrayList();
+      ObservableList<AgileItem> clear = FXCollections.observableArrayList();
       listView.setItems(clear);
       isListHidden = false;
     }
   }
 
+
+  /**
+   * Refreshes listView and text area text for when edits occur.
+   * TODO Testing
+   */
   public void refreshList() {
     listView.setItems(null);
-    listView.setItems(mainApp.getProjects());
-    sampleTextArea.clear();
-    sampleTextArea.appendText(selectedItem.getProjectDescription());
+    checkListType();
+    listView.getSelectionModel().clearSelection();
+    if (selectedItem != null) {
+      sampleTextArea.appendText(selectedItem.toString());
+    }
+  }
+
+  /**
+   * Checks list type currently set as viewed list by user.
+   * TODO testing
+   */
+  public void checkListType(){
+    String listType = Settings.currentListType;
+    switch (listType) {
+      case "Project":
+        listView.setItems(mainApp.getProjects());
+        break;
+      case "People":
+        listView.setItems(mainApp.getPeople());
+        break;
+    }
   }
 
   public Object getSelectedProject() {

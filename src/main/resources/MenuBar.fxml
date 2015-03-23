@@ -46,7 +46,10 @@
       <Menu mnemonicParsing="false" text="Display">
          <items>
             <MenuItem fx:id="showListMenuItem" mnemonicParsing="false" onAction="#showHideList" text="Show List" />
-            <MenuItem mnemonicParsing="false" text="Action 1" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <CheckMenuItem mnemonicParsing="false" text="Unspecified Action" />
+            <MenuItem fx:id="showProjectsMenuItem" mnemonicParsing="false" onAction="#btnShowProjects" text="Show Projects" />
+            <MenuItem fx:id="showPeopleMenuItem" mnemonicParsing="false" onAction="#btnShowPeople" text="Show People" />
          </items>
       </Menu>
       <Menu mnemonicParsing="false" text="Help">

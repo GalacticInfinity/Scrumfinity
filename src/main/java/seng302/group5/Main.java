@@ -205,6 +205,10 @@ public class Main extends Application {
     return people;
   }
 
+  public ObservableList<Skills> getSkills() {
+    return skills;
+  }
+
   public void addProject(Project project) {
     projects.add(project);
   }
