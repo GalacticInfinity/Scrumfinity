@@ -26,5 +26,8 @@
         <module name="galactic_infinity" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="galactic_infinity" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
