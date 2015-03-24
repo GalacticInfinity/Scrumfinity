@@ -15,9 +15,9 @@ public class PersonDialogController {
   private Main mainApp;
   private Stage thisStage;
 
-  @FXML private TextField uniqueShortName;
-  @FXML private TextField firstName;
-  @FXML private TextField lastName;
+  @FXML private TextField personIDField;
+  @FXML private TextField personFirstNameField;
+  @FXML private TextField personLastNameField;
 
   /**
    * Sets the current instance of Main as mainApp.
@@ -39,10 +39,37 @@ public class PersonDialogController {
    */
   @FXML
   protected void btnCreatePersonClick(ActionEvent event) {
-    String shortName = uniqueShortName.getText();
+    StringBuilder errors = new StringBuilder();
+    errors.append("Invalid Fields:");
+    int noErrors = 0;
 
-    if (checkShortNameValidity(shortName) == true) {
-      mainApp.addPerson(shortName, firstName.getText(), lastName.getText());
+    String personID = "";
+    String personFirstName = personFirstNameField.getText().trim();
+    String personLastName = personLastNameField.getText().trim();
+
+    try {
+      personID = parsePersonID(personIDField.getText());
+    }
+    catch (Exception e) {
+      noErrors++;
+      errors.append(String.format("\n\t%s", e.getMessage()));
+    }
+
+    // Display all errors if they exist
+    if (noErrors > 0) {
+      String title;
+      if (noErrors == 1) {
+        title = String.format("%d Invalid Field", noErrors);
+      }
+      else {
+        title = String.format("%d Invalid Fields", noErrors);
+      }
+      // TODO: Dialogs for errors
+      System.out.println(String.format("%s\n%s", title, errors.toString()));
+    }
+    else {
+      Person person = new Person(personID, personFirstName, personLastName);
+      mainApp.addPerson(person);
       thisStage.close();
     }
   }
@@ -59,27 +86,29 @@ public class PersonDialogController {
   }
 
   /**
-   * Checks whether the a uniqueShortName is valid.
-   * It is not-null.
-   * It is less than 8 characters in length.
-   * It is unique.
+   * Checks that the Person ID entry box contains
+   * valid input.
    *
-   * @param name uniqueShortName to be verified.
-   * @return True: name is valid. False: name is not valid.
+   * @param inputPersonID Person ID from entry field.
+   * @return Person ID if ID is valid.
+   * @throws Exception Any invalid input.
    */
-  private boolean checkShortNameValidity(String name) {
-    if (name.length() < 8 && name.length() > 0) {
-      for (Person person : mainApp.getPeople()) {
-        if (person.getPersonID().equals(name)) {
-          System.out.println("Person ID is not unique.");
-          return false;
-        }
-      }
-      return true;
+  private String parsePersonID(String inputPersonID) throws Exception {
+    inputPersonID = inputPersonID.trim();
+
+    if (inputPersonID.isEmpty()) {
+      throw new Exception("Person ID is empty.");
+    }
+    else if (inputPersonID.length() > 8) {
+      throw new Exception("Person ID is more than 8 characters long");
     }
     else {
-      System.out.println("Person ID is blank or too long.");
-      return false;
+      for (Person person : mainApp.getPeople()) {
+        if (person.getPersonID().equals(inputPersonID)) {
+          throw new Exception("Person ID is not unique.");
+        }
+      }
+      return inputPersonID;
     }
   }
 }
