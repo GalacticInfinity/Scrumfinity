@@ -8,6 +8,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
@@ -121,7 +122,11 @@ public class Main extends Application {
       if (createOrEdit == CreateOrEdit.EDIT) {
         Project project = (Project) LMPC.getSelectedProject();
         if (project == null) {
-          System.err.println("No project selected");
+          Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setTitle("Error");
+          alert.setHeaderText(null);
+          alert.setContentText("No project selected");
+          alert.showAndWait();
           return;
         }
         controller.setProject(project);
