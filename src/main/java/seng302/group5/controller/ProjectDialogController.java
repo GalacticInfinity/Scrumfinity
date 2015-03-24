@@ -95,13 +95,13 @@ public class ProjectDialogController {
 
     // Display all errors if they exist
     if (noErrors > 0) {
-      String header = String.format("%d Invalid Field", noErrors);
+      String title = String.format("%d Invalid Field", noErrors);
       if (noErrors > 1) {
-        header += "s";  // plural
+        title += "s";  // plural
       }
       Alert alert = new Alert(Alert.AlertType.ERROR);
-      alert.setTitle("Invalid Input");
-      alert.setHeaderText(header);
+      alert.setTitle(title);
+      alert.setHeaderText(null);
       alert.setContentText(errors.toString());
       alert.showAndWait();
     } else {
