@@ -48,7 +48,12 @@ public class MenuBarController {
 
   @FXML
   protected void createSkill(ActionEvent event) {
-    mainApp.showSkillCreationDialog();
+    mainApp.showSkillCreationDialog(CreateOrEdit.CREATE);
+  }
+
+  @FXML
+  protected void editSkill(ActionEvent event) {
+    mainApp.showSkillCreationDialog(CreateOrEdit.EDIT);
   }
 
   @FXML

@@ -53,16 +53,16 @@ public class Skills {
   }
 
   /**
-   * Get the skillDescription of the skill.
-   * @return skillDescription of the skill
+   * Get the description of the skill.
+   * @return description of the skill
    */
   public String getSkillDescription() {
     return this.skillDescription;
   }
 
   /**
-   * Return a formatted string of the skill.
-   * @return
+   * Return a formatted skill name along with its description.
+   * @return skill name and description
    */
   @Override
   public String toString() {
