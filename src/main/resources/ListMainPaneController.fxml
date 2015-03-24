@@ -6,16 +6,16 @@
 
 <SplitPane dividerPositions="0.29797979797979796" prefHeight="371.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.ListMainPaneController">
    <items>
-      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" maxWidth="200.0" >
          <children>
-            <ListView fx:id="listView" layoutX="-7.0" maxWidth="200.0" prefHeight="371.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <ListView fx:id="listView" layoutX="-7.0" maxWidth="200.0" prefHeight="371.0" prefWidth="200.0" />
             <ScrollBar layoutX="178.0" layoutY="-1.0" orientation="VERTICAL" prefHeight="369.0" prefWidth="17.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             <ScrollBar layoutY="355.0" prefHeight="17.0" prefWidth="186.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
          </children>
       </AnchorPane>
       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
          <children>
-            <TextArea fx:id="sampleTextArea" prefHeight="371.0" prefWidth="444.0" promptText="text display area" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <TextArea fx:id="sampleTextArea" prefHeight="371.0" prefWidth="444.0" promptText="text display area" />
             <ScrollBar layoutX="430.0" layoutY="-7.0" orientation="VERTICAL" prefHeight="371.0" prefWidth="17.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             <ScrollBar layoutX="-3.0" layoutY="356.0" prefHeight="17.0" prefWidth="450.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
          </children>
