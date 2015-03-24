@@ -8,7 +8,7 @@
    <items>
       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" maxWidth="200.0" SplitPane.resizableWithParent="false" >
          <children>
-            <ListView fx:id="listView" layoutX="-7.0" maxWidth="200.0" prefHeight="371.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+            <ListView fx:id="listView" layoutX="-7.0" maxWidth="200.0" prefHeight="371.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" />
             <ScrollBar layoutX="178.0" layoutY="-1.0" orientation="VERTICAL" prefHeight="369.0" prefWidth="17.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             <ScrollBar layoutY="355.0" prefHeight="17.0" prefWidth="186.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
          </children>
