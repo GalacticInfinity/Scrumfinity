@@ -20,6 +20,7 @@ import seng302.group5.controller.PersonDialogController;
 import seng302.group5.controller.ProjectDialogController;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.controller.SkillsDialogController;
+import seng302.group5.model.AgileItem;
 import seng302.group5.model.Project;
 import seng302.group5.model.Skill;
 import seng302.group5.model.Person;
@@ -235,6 +236,15 @@ public class Main extends Application {
 
   public void addSkill(Skill skill) {
     skills.add(skill);
+  }
+
+  public void deletePerson(AgileItem inputPerson){
+    for(Person person : people) {
+      if(person == inputPerson){
+        people.remove(person);
+        break;
+      }
+    }
   }
 
   public static void main(String[] args) {
