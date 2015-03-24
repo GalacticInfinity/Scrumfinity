@@ -117,10 +117,9 @@ public class Main extends Application {
       Scene projectDialogScene = new Scene(projectDialogLayout);
       Stage projectDialogStage = new Stage();
 
-      controller.setMainApp(this);
-      controller.setStage(projectDialogStage);
+      Project project = null;
       if (createOrEdit == CreateOrEdit.EDIT) {
-        Project project = (Project) LMPC.getSelectedProject();
+        project = (Project) LMPC.getSelectedProject();
         if (project == null) {
           Alert alert = new Alert(Alert.AlertType.ERROR);
           alert.setTitle("Error");
@@ -129,9 +128,9 @@ public class Main extends Application {
           alert.showAndWait();
           return;
         }
-        controller.setProject(project);
       }
-      controller.setCreateOrEdit(createOrEdit);
+
+      controller.setupController(this, projectDialogStage, createOrEdit, project);
 
       projectDialogStage.initModality(Modality.APPLICATION_MODAL);
       projectDialogStage.initOwner(primaryStage);
@@ -173,21 +172,23 @@ public class Main extends Application {
       VBox SkillsDialogLayout = (VBox) loader.load();
 
       SkillsDialogController controller = loader.getController();
-      controller.setMainApp(this);
-
       Scene skillDialogScene = new Scene(SkillsDialogLayout);
       Stage skillDialogStage = new Stage();
-      controller.setStage(skillDialogStage);
 
+      Skill skill = null;
       if (createOrEdit == CreateOrEdit.EDIT) {
-        Skill skill = (Skill) LMPC.getSelectedProject();
+        skill = (Skill) LMPC.getSelectedProject();
         if (skill == null) {
-          System.err.println("No project selected");
+          Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setTitle("Error");
+          alert.setHeaderText(null);
+          alert.setContentText("No skill selected");
+          alert.showAndWait();
           return;
         }
-        controller.setSkill(skill);
       }
-      controller.setCreateOrEdit(createOrEdit);
+      controller.setupController(this, skillDialogStage, createOrEdit, skill);
+
       skillDialogStage.initModality(Modality.APPLICATION_MODAL);
       skillDialogStage.initOwner(primaryStage);
       skillDialogStage.setScene(skillDialogScene);

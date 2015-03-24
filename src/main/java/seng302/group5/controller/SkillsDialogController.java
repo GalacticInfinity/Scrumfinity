@@ -23,6 +23,45 @@ public class SkillsDialogController {
   private Stage thisStage;
   private Skill skill;
   private CreateOrEdit createOrEdit;
+  private String lastSkillName;
+
+  /**
+   * Setup the skill dialog controller
+   *
+   * @param mainApp - The main application object
+   * @param thisStage - The stage of the dialog
+   * @param createOrEdit - If dialog is for creating or editing a skill
+   * @param skill - The skill object if editing, null otherwise
+   */
+  public void setupController(Main mainApp,
+                              Stage thisStage,
+                              CreateOrEdit createOrEdit,
+                              Skill skill) {
+    this.mainApp = mainApp;
+    this.thisStage = thisStage;
+
+    if (createOrEdit == CreateOrEdit.CREATE) {
+      thisStage.setTitle("Create New Skill");
+      skillCreation.setText("Create");
+    } else if (createOrEdit == CreateOrEdit.EDIT) {
+      thisStage.setTitle("Edit Skill");
+      skillCreation.setText("Save");
+
+      skillName.setText(skill.getSkillName());
+      skillDescription.setText(skill.getSkillDescription());
+    }
+    this.createOrEdit = createOrEdit;
+
+    if (skill != null) {
+      this.skill = skill;
+      this.lastSkillName = skill.getSkillName();
+    } else {
+      this.skill = null;
+      this.lastSkillName = "";
+    }
+
+    skillCreation.setDefaultButton(true);
+  }
 
   /**
    * Parse a string containing a skill name. Throws exceptions if input is not valid.
@@ -37,12 +76,13 @@ public class SkillsDialogController {
       throw new Exception("Skill Name is more than 32 characters long");
     } else {
       for (Skill aSkill : mainApp.getSkills()) {
-        if (aSkill.getSkillName().equals(inputSkillName)) {
+        String aSkillName = aSkill.getSkillName();
+        if (aSkillName.equals(inputSkillName) && !aSkillName.equals(lastSkillName)) {
           throw new Exception("Skill name is not unique.");
         }
       }
-      return inputSkillName;
     }
+    return inputSkillName;
   }
 
   /**
@@ -73,29 +113,5 @@ public class SkillsDialogController {
     thisStage.close();
   }
 
-  public void setCreateOrEdit(CreateOrEdit createOrEdit) {
-    this.createOrEdit = createOrEdit;
-    if (createOrEdit == CreateOrEdit.CREATE) {
-      thisStage.setTitle("Create New Skill");
-      skillCreation.setText("Create");
-    } else if (createOrEdit == CreateOrEdit.EDIT) {
-      thisStage.setTitle("Edit Skill");
-      skillCreation.setText("Save");
-
-      skillName.setText(skill.getSkillName());
-      skillDescription.setText(skill.getSkillDescription());
-    }
-  }
-  public void setMainApp(Main mainApp){
-    this.mainApp = mainApp;
-  }
-
-  public void setStage(Stage stage) {
-    this.thisStage = stage;
-  }
-
-  public void setSkill(Skill skill) {
-    this.skill = skill;
-  }
 }
 

@@ -25,6 +25,46 @@ public class ProjectDialogController {
   private Stage thisStage;
   private CreateOrEdit createOrEdit;
   private Project project;
+  private String lastProjectID;
+
+  /**
+   * Setup the project dialog controller
+   *
+   * @param mainApp - The main application object
+   * @param thisStage - The stage of the dialog
+   * @param createOrEdit - If dialog is for creating or editing a project
+   * @param project - The project object if editing, null otherwise
+   */
+  public void setupController(Main mainApp,
+                              Stage thisStage,
+                              CreateOrEdit createOrEdit,
+                              Project project) {
+    this.mainApp = mainApp;
+    this.thisStage = thisStage;
+
+    if (createOrEdit == CreateOrEdit.CREATE) {
+      thisStage.setTitle("Create New Project");
+      btnConfirm.setText("Create");
+    } else if (createOrEdit == CreateOrEdit.EDIT) {
+      thisStage.setTitle("Edit Project");
+      btnConfirm.setText("Save");
+
+      projectIDField.setText(project.getProjectID());
+      projectNameField.setText(project.getProjectName());
+      projectDescriptionField.setText(project.getProjectDescription());
+    }
+    this.createOrEdit = createOrEdit;
+
+    if (project != null) {
+      this.project = project;
+      this.lastProjectID = project.getProjectID();
+    } else {
+      this.project = null;
+      this.lastProjectID = "";
+    }
+
+    btnConfirm.setDefaultButton(true);
+  }
 
   /**
    * Parse a string containing a project ID. Throws exceptions if input is not valid.
@@ -39,9 +79,10 @@ public class ProjectDialogController {
       throw new Exception("Project ID is empty");
     } else if (inputProjectID.length() > 8) {
       throw new Exception("Project ID is more than 8 characters long");
-    } else if (createOrEdit == CreateOrEdit.CREATE) {
+    } else {
       for (Project project : mainApp.getProjects()) {
-        if (project.getProjectID().equals(inputProjectID)) {
+        String projectID = project.getProjectID();
+        if (projectID.equals(inputProjectID) && !projectID.equals(lastProjectID)) {
           throw new Exception("Project ID is not unique.");
         }
       }
@@ -120,36 +161,12 @@ public class ProjectDialogController {
     }
   }
 
+  /**
+   * Close the dialog
+   */
   @FXML
   protected void btnCancelClick(ActionEvent event) {
     thisStage.close();
-  }
-
-  public void setMainApp(Main mainApp) {
-    this.mainApp = mainApp;
-  }
-
-  public void setStage(Stage stage) {
-    this.thisStage = stage;
-  }
-
-  public void setCreateOrEdit(CreateOrEdit createOrEdit) {
-    if (createOrEdit == CreateOrEdit.CREATE) {
-      thisStage.setTitle("Create New Project");
-      btnConfirm.setText("Create");
-    } else if (createOrEdit == CreateOrEdit.EDIT) {
-      thisStage.setTitle("Edit Project");
-      btnConfirm.setText("Save");
-
-      projectIDField.setText(project.getProjectID());
-      projectNameField.setText(project.getProjectName());
-      projectDescriptionField.setText(project.getProjectDescription());
-    }
-    this.createOrEdit = createOrEdit;
-  }
-
-  public void setProject(Project project) {
-    this.project = project;
   }
 
 }
