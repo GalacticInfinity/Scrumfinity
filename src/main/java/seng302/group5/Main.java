@@ -116,10 +116,9 @@ public class Main extends Application {
       Scene projectDialogScene = new Scene(projectDialogLayout);
       Stage projectDialogStage = new Stage();
 
-      controller.setMainApp(this);
-      controller.setStage(projectDialogStage);
+      Project project = null;
       if (createOrEdit == CreateOrEdit.EDIT) {
-        Project project = (Project) LMPC.getSelectedProject();
+        project = (Project) LMPC.getSelectedProject();
         if (project == null) {
           Alert alert = new Alert(Alert.AlertType.ERROR);
           alert.setTitle("Error");
@@ -128,9 +127,9 @@ public class Main extends Application {
           alert.showAndWait();
           return;
         }
-        controller.setProject(project);
       }
-      controller.setCreateOrEdit(createOrEdit);
+
+      controller.setupController(this, projectDialogStage, createOrEdit, project);
 
       projectDialogStage.initModality(Modality.APPLICATION_MODAL);
       projectDialogStage.initOwner(primaryStage);
