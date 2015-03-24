@@ -121,6 +121,15 @@ public class MenuBarController {
     mainApp.getLMPC().refreshList();
   }
 
+  @FXML
+  protected void btnUndoClick() {
+    mainApp.undo();
+  }
+
+  @FXML
+  protected void btnRedoClick() {
+    mainApp.redo();
+  }
 
   public void setMainApp(Main mainApp){
     this.mainApp = mainApp;

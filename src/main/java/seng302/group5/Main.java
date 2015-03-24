@@ -23,6 +23,8 @@ import seng302.group5.controller.SkillsDialogController;
 import seng302.group5.model.Project;
 import seng302.group5.model.Skill;
 import seng302.group5.model.Person;
+import seng302.group5.model.undoredo.UndoRedoHandler;
+import seng302.group5.model.undoredo.UndoRedoObject;
 
 /**
  * Main class to run the application
@@ -39,6 +41,8 @@ public class Main extends Application {
   private ObservableList<Skill> skills = FXCollections.observableArrayList();
   private ObservableList<Person> people = FXCollections.observableArrayList();
 
+  private UndoRedoHandler undoRedoHandler;
+
   @Override
   public void start(Stage primaryStage) {
     this.primaryStage = primaryStage;
@@ -47,6 +51,9 @@ public class Main extends Application {
     initRootLayout();
     showMenuBar();
     showListMainPane();
+
+    // Initialise the undo/redo handler
+    undoRedoHandler = new UndoRedoHandler();
   }
 
 
@@ -207,6 +214,26 @@ public class Main extends Application {
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  public void undo() {
+    try {
+      undoRedoHandler.undo();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void redo() {
+    try {
+      undoRedoHandler.redo();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void newAction(UndoRedoObject undoRedoObject) {
+    undoRedoHandler.newAction(undoRedoObject);
   }
 
   public Stage getPrimaryStage(){
