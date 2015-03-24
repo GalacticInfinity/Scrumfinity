@@ -2,7 +2,6 @@ package seng302.group5;
 
 import java.io.IOException;
 import java.util.List;
-
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -213,11 +212,11 @@ public class Main extends Application {
     projects.add(project);
   }
 
-  public void addPerson(String shortName, String firstName, String lastName) {
-    people.add(new Person(shortName, firstName, lastName));
+  public void addPerson(Person person) {
+    people.add(person);
   }
 
-  public void updateProjectList(){
+  public void updateProjectList() {
     LMPC.refreshList();
   }
 
