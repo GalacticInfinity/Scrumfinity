@@ -58,7 +58,7 @@ public class MenuBarController {
 
   @FXML
   protected void createPerson(ActionEvent event) {
-    mainApp.showPersonDialogCreation();
+    mainApp.showPersonDialog(CreateOrEdit.CREATE);
   }
 
   /**
@@ -79,7 +79,7 @@ public class MenuBarController {
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Save Project");
     File file = fileChooser.showSaveDialog(mainApp.getPrimaryStage());
-    
+
     Saving.saveDataToFile(file, mainApp);
 
 

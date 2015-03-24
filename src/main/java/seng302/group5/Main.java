@@ -141,18 +141,29 @@ public class Main extends Application {
     }
   }
 
-  public void showPersonDialogCreation() {
+  public void showPersonDialog(CreateOrEdit createOrEdit) {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/PersonDialog.fxml"));
       VBox personDialogLayout = (VBox) loader.load();
 
       PersonDialogController controller = loader.getController();
-      controller.setMainApp(this);
-
       Scene personDialogScene = new Scene(personDialogLayout);
       Stage personDialogStage = new Stage();
-      controller.setStage(personDialogStage);
+
+      Person person = null;
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        person = (Person) LMPC.getSelectedProject();    // TODO: Fix
+        if (person == null) {
+          Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setTitle("Error");
+          alert.setHeaderText(null);
+          alert.setContentText("No person selected");
+          alert.showAndWait();
+          return;
+        }
+      }
+      controller.setupController(this, personDialogStage, createOrEdit, person);
 
       personDialogStage.initModality(Modality.APPLICATION_MODAL);
       personDialogStage.initOwner(primaryStage);
@@ -176,7 +187,7 @@ public class Main extends Application {
 
       Skill skill = null;
       if (createOrEdit == CreateOrEdit.EDIT) {
-        skill = (Skill) LMPC.getSelectedProject();
+        skill = (Skill) LMPC.getSelectedProject();    // TODO: Fix
         if (skill == null) {
           Alert alert = new Alert(Alert.AlertType.ERROR);
           alert.setTitle("Error");
