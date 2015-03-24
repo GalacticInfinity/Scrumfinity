@@ -54,6 +54,7 @@ public class Main extends Application {
 
     // Initialise the undo/redo handler
     undoRedoHandler = new UndoRedoHandler();
+    undoRedoHandler.setMainApp(this);
   }
 
 
