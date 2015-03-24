@@ -62,13 +62,10 @@ public class ListMainPaneController {
   public void showHideList() {
     if(!isListShown){
       checkListType();
-      isListShown = true;
-      System.out.println("not hidden");
     } else {
       ObservableList<AgileItem> clear = FXCollections.observableArrayList();
       listView.setItems(clear);
       isListShown = false;
-      System.out.println("hidden");
     }
   }
 
@@ -94,12 +91,15 @@ public class ListMainPaneController {
     String listType = Settings.currentListType;
     switch (listType) {
       case "Project":
+        isListShown = true;
         listView.setItems(mainApp.getProjects());
         break;
       case "People":
+        isListShown = true;
         listView.setItems(mainApp.getPeople());
         break;
       case "Skills":
+        isListShown = true;
         listView.setItems(mainApp.getSkills());
         break;
     }
@@ -107,6 +107,13 @@ public class ListMainPaneController {
 
   public Object getSelectedProject() {
     if(isListShown == false || Settings.currentListType != "Project"){
+      return null;
+    }
+    return selectedItem;
+  }
+
+  public Object getSelectedPerson() {
+    if(isListShown == false || Settings.currentListType != "People"){
       return null;
     }
     return selectedItem;
