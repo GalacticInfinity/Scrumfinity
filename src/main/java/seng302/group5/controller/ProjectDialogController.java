@@ -27,6 +27,14 @@ public class ProjectDialogController {
   private Project project;
   private String lastProjectID;
 
+  /**
+   * Setup the project dialog controller
+   *
+   * @param mainApp - The main application object
+   * @param thisStage - The stage of the dialog
+   * @param createOrEdit - If dialog is for creating or editing a project
+   * @param project - The project object if editing, null otherwise
+   */
   public void setupController(Main mainApp,
                               Stage thisStage,
                               CreateOrEdit createOrEdit,
@@ -54,6 +62,8 @@ public class ProjectDialogController {
       this.project = null;
       this.lastProjectID = "";
     }
+
+    btnConfirm.setDefaultButton(true);
   }
 
   /**
@@ -151,6 +161,9 @@ public class ProjectDialogController {
     }
   }
 
+  /**
+   * Close the dialog
+   */
   @FXML
   protected void btnCancelClick(ActionEvent event) {
     thisStage.close();
