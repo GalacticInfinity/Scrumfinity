@@ -2,9 +2,11 @@ package seng302.group5.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import seng302.group5.Main;
+import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Person;
 
 /**
@@ -12,23 +14,54 @@ import seng302.group5.model.Person;
  */
 public class PersonDialogController {
 
-  private Main mainApp;
-  private Stage thisStage;
-
   @FXML private TextField personIDField;
   @FXML private TextField personFirstNameField;
   @FXML private TextField personLastNameField;
+  @FXML private Button btnCreatePerson;
+
+  private Main mainApp;
+  private Stage thisStage;
+  private CreateOrEdit createOrEdit;
+  private Person person;
+  private String lastPersonID;
 
   /**
-   * Sets the current instance of Main as mainApp.
-   * @param mainApp Current instance of Main.
+   * Setup the person dialog controller
+   *
+   * @param mainApp - The main application object
+   * @param thisStage - The stage of the dialog
+   * @param createOrEdit - If dialog is for creating or editing a person
+   * @param person - The person object if editing, null otherwise
    */
-  public void setMainApp(Main mainApp){
+  public void setupController(Main mainApp,
+                              Stage thisStage,
+                              CreateOrEdit createOrEdit,
+                              Person person) {
     this.mainApp = mainApp;
-  }
+    this.thisStage = thisStage;
 
-  public void setStage(Stage stage) {
-    this.thisStage = stage;
+    if (createOrEdit == CreateOrEdit.CREATE) {
+      thisStage.setTitle("Create New Project");
+      btnCreatePerson.setText("Create");
+    } else if (createOrEdit == CreateOrEdit.EDIT) {
+      thisStage.setTitle("Edit Project");
+      btnCreatePerson.setText("Save");
+
+      personIDField.setText(person.getPersonID());
+      personFirstNameField.setText(person.getFirstName());
+      personLastNameField.setText(person.getLastName());
+    }
+    this.createOrEdit = createOrEdit;
+
+    if (person != null) {
+      this.person = person;
+      this.lastPersonID = person.getPersonID();
+    } else {
+      this.person = null;
+      this.lastPersonID = "";
+    }
+
+    btnCreatePerson.setDefaultButton(true);
   }
 
   /**

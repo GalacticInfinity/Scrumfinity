@@ -59,7 +59,7 @@ public class MenuBarController {
 
   @FXML
   protected void createPerson(ActionEvent event) {
-    mainApp.showPersonDialogCreation();
+    mainApp.showPersonDialog(CreateOrEdit.CREATE);
   }
 
   /**
@@ -128,6 +128,15 @@ public class MenuBarController {
     mainApp.refreshList();
   }
 
+  @FXML
+  protected void btnUndoClick() {
+    mainApp.undo();
+  }
+
+  @FXML
+  protected void btnRedoClick() {
+    mainApp.redo();
+  }
 
   public void setMainApp(Main mainApp){
     this.mainApp = mainApp;

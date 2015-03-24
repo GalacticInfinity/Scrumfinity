@@ -24,6 +24,8 @@ import seng302.group5.model.AgileItem;
 import seng302.group5.model.Project;
 import seng302.group5.model.Skill;
 import seng302.group5.model.Person;
+import seng302.group5.model.undoredo.UndoRedoHandler;
+import seng302.group5.model.undoredo.UndoRedoObject;
 
 /**
  * Main class to run the application
@@ -40,6 +42,8 @@ public class Main extends Application {
   private ObservableList<Skill> skills = FXCollections.observableArrayList();
   private ObservableList<Person> people = FXCollections.observableArrayList();
 
+  private UndoRedoHandler undoRedoHandler;
+
   @Override
   public void start(Stage primaryStage) {
     this.primaryStage = primaryStage;
@@ -48,6 +52,10 @@ public class Main extends Application {
     initRootLayout();
     showMenuBar();
     showListMainPane();
+
+    // Initialise the undo/redo handler
+    undoRedoHandler = new UndoRedoHandler();
+    undoRedoHandler.setMainApp(this);
   }
 
 
@@ -142,18 +150,29 @@ public class Main extends Application {
     }
   }
 
-  public void showPersonDialogCreation() {
+  public void showPersonDialog(CreateOrEdit createOrEdit) {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/PersonDialog.fxml"));
       VBox personDialogLayout = (VBox) loader.load();
 
       PersonDialogController controller = loader.getController();
-      controller.setMainApp(this);
-
       Scene personDialogScene = new Scene(personDialogLayout);
       Stage personDialogStage = new Stage();
-      controller.setStage(personDialogStage);
+
+      Person person = null;
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        person = (Person) LMPC.getSelectedProject();    // TODO: Fix
+        if (person == null) {
+          Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setTitle("Error");
+          alert.setHeaderText(null);
+          alert.setContentText("No person selected");
+          alert.showAndWait();
+          return;
+        }
+      }
+      controller.setupController(this, personDialogStage, createOrEdit, person);
 
       personDialogStage.initModality(Modality.APPLICATION_MODAL);
       personDialogStage.initOwner(primaryStage);
@@ -177,7 +196,7 @@ public class Main extends Application {
 
       Skill skill = null;
       if (createOrEdit == CreateOrEdit.EDIT) {
-        skill = (Skill) LMPC.getSelectedProject();
+        skill = (Skill) LMPC.getSelectedProject();    // TODO: Fix
         if (skill == null) {
           Alert alert = new Alert(Alert.AlertType.ERROR);
           alert.setTitle("Error");
@@ -197,6 +216,26 @@ public class Main extends Application {
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  public void undo() {
+    try {
+      undoRedoHandler.undo();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void redo() {
+    try {
+      undoRedoHandler.redo();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void newAction(UndoRedoObject undoRedoObject) {
+    undoRedoHandler.newAction(undoRedoObject);
   }
 
   public Stage getPrimaryStage(){

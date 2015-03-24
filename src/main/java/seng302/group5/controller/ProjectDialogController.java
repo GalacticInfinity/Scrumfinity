@@ -10,6 +10,8 @@ import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Project;
+import seng302.group5.model.undoredo.Action;
+import seng302.group5.model.undoredo.UndoRedoObject;
 
 /**
  * Created by @author Alex Woo
@@ -26,6 +28,8 @@ public class ProjectDialogController {
   private CreateOrEdit createOrEdit;
   private Project project;
   private String lastProjectID;
+  private String lastProjectName;
+  private String lastProjectDescription;
 
   /**
    * Setup the project dialog controller
@@ -58,9 +62,13 @@ public class ProjectDialogController {
     if (project != null) {
       this.project = project;
       this.lastProjectID = project.getProjectID();
+      this.lastProjectName = project.getProjectName();
+      this.lastProjectDescription = project.getProjectDescription();
     } else {
       this.project = null;
       this.lastProjectID = "";
+      this.lastProjectName = "";
+      this.lastProjectDescription = "";
     }
 
     btnConfirm.setDefaultButton(true);
@@ -106,6 +114,25 @@ public class ProjectDialogController {
     } else {
       return inputProjectName;
     }
+  }
+
+  private UndoRedoObject generateUndoRedoObject() {
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+
+    if (createOrEdit == CreateOrEdit.CREATE) {
+      undoRedoObject.setAction(Action.PROJECT_CREATE);
+    } else {
+      undoRedoObject.setAction(Action.PROJECT_EDIT);
+      undoRedoObject.addDatum(lastProjectID);
+      undoRedoObject.addDatum(lastProjectName);
+      undoRedoObject.addDatum(lastProjectDescription);
+    }
+
+    undoRedoObject.addDatum(project.getProjectID());
+    undoRedoObject.addDatum(project.getProjectName());
+    undoRedoObject.addDatum(project.getProjectDescription());
+
+    return undoRedoObject;
   }
 
   /**
@@ -156,6 +183,9 @@ public class ProjectDialogController {
         project.setProjectDescription(projectDescription);
         mainApp.refreshList();
       }
+
+      UndoRedoObject undoRedoObject = generateUndoRedoObject();
+      mainApp.newAction(undoRedoObject);
 
       thisStage.close();
     }
