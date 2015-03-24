@@ -113,7 +113,7 @@ public class ProjectDialogController {
         project.setProjectID(projectID);
         project.setProjectName(projectName);
         project.setProjectDescription(projectDescription);
-        mainApp.updateProjectList();
+        mainApp.refreshList();
       }
 
       thisStage.close();

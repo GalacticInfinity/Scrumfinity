@@ -225,7 +225,7 @@ public class Main extends Application {
     people.add(person);
   }
 
-  public void updateProjectList() {
+  public void refreshList() {
     LMPC.refreshList();
   }
 

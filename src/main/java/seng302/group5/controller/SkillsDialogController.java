@@ -62,7 +62,7 @@ public class SkillsDialogController {
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       skill.setSkillName(nameOfSkill);
       skill.setSkillDescription(skillDescription.getText());
-      mainApp.updateSkillList();
+      mainApp.refreshList();
     }
 
     thisStage.close();
