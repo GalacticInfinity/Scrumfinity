@@ -1,10 +1,9 @@
 package seng302.group5;
 
 import java.io.IOException;
-import java.util.List;
+
 import javafx.application.Application;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -22,7 +21,7 @@ import seng302.group5.controller.ProjectDialogController;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.controller.SkillsDialogController;
 import seng302.group5.model.Project;
-import seng302.group5.model.Skills;
+import seng302.group5.model.Skill;
 import seng302.group5.model.Person;
 
 /**
@@ -37,7 +36,7 @@ public class Main extends Application {
   private MenuBarController MBC;
 
   private ObservableList<Project> projects = FXCollections.observableArrayList();
-  private ObservableList<Skills> skills = FXCollections.observableArrayList();
+  private ObservableList<Skill> skills = FXCollections.observableArrayList();
   private ObservableList<Person> people = FXCollections.observableArrayList();
 
   @Override
@@ -180,7 +179,7 @@ public class Main extends Application {
       controller.setStage(skillDialogStage);
 
       if (createOrEdit == CreateOrEdit.EDIT) {
-        Skills skill = (Skills) LMPC.getSelectedProject();
+        Skill skill = (Skill) LMPC.getSelectedProject();
         if (skill == null) {
           System.err.println("No project selected");
           return;
@@ -218,7 +217,7 @@ public class Main extends Application {
     return people;
   }
 
-  public ObservableList<Skills> getSkills() {
+  public ObservableList<Skill> getSkills() {
     return skills;
   }
 
@@ -234,7 +233,7 @@ public class Main extends Application {
     LMPC.refreshList();
   }
 
-  public void addSkill(Skills skill) {
+  public void addSkill(Skill skill) {
     skills.add(skill);
   }
 

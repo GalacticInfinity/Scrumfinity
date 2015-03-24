@@ -8,7 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
-import seng302.group5.model.Skills;
+import seng302.group5.model.Skill;
 
 /**
  * @author liang Ma
@@ -21,7 +21,7 @@ public class SkillsDialogController {
 
   private Main mainApp;
   private Stage thisStage;
-  private Skills skill;
+  private Skill skill;
   private CreateOrEdit createOrEdit;
 
   /**
@@ -36,7 +36,7 @@ public class SkillsDialogController {
     } else if (inputSkillName.length() > 32) {
       throw new Exception("Skill Name is more than 32 characters long");
     } else {
-      for (Skills aSkill : mainApp.getSkills()) {
+      for (Skill aSkill : mainApp.getSkills()) {
         if (aSkill.getSkillName().equals(inputSkillName)) {
           throw new Exception("Skill name is not unique.");
         }
@@ -57,7 +57,7 @@ public class SkillsDialogController {
       //e1.printStackTrace();
     }
     if (createOrEdit == CreateOrEdit.CREATE) {
-      skill = new Skills(nameOfSkill, skillDescription.getText());
+      skill = new Skill(nameOfSkill, skillDescription.getText());
       mainApp.addSkill(skill);
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       skill.setSkillName(nameOfSkill);
@@ -94,7 +94,7 @@ public class SkillsDialogController {
     this.thisStage = stage;
   }
 
-  public void setSkill(Skills skill) {
+  public void setSkill(Skill skill) {
     this.skill = skill;
   }
 }
