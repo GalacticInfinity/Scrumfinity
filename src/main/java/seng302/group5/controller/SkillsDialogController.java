@@ -54,7 +54,7 @@ public class SkillsDialogController {
     try {
       nameOfSkill = parseSkillName(skillName.getText());
     } catch (Exception e1) {
-      e1.printStackTrace();
+      //e1.printStackTrace();
     }
     if (createOrEdit == CreateOrEdit.CREATE) {
       skill = new Skills(nameOfSkill, skillDescription.getText());

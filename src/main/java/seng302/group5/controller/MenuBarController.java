@@ -115,6 +115,11 @@ public class MenuBarController {
     mainApp.getLMPC().refreshList();
   }
 
+  @FXML
+  protected void btnShowSkills() {
+    Settings.currentListType = "Skills";
+    mainApp.getLMPC().refreshList();
+  }
 
 
   public void setMainApp(Main mainApp){

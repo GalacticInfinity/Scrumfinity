@@ -97,6 +97,9 @@ public class ListMainPaneController {
       case "People":
         listView.setItems(mainApp.getPeople());
         break;
+      case "Skills":
+        listView.setItems(mainApp.getSkills());
+        break;
     }
   }
 

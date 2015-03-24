@@ -3,7 +3,7 @@ package seng302.group5.model;
 /**
  * @author Liang Ma
  */
-public class Skills {
+public class Skills implements AgileItem{
 
   private String skillName;
   private String skillDescription;
@@ -60,12 +60,22 @@ public class Skills {
     return this.skillDescription;
   }
 
+  @Override
+  public void create() {
+
+  }
+
+  @Override
+  public void delete() {
+
+  }
+
   /**
    * Return a formatted skill name along with its description.
    * @return skill name and description
    */
   @Override
   public String toString() {
-    return this.getSkillName() + ": " + this.getSkillDescription() + ".";
+    return this.getSkillName();
   }
 }

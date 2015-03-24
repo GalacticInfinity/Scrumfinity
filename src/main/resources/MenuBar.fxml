@@ -50,6 +50,7 @@
             <CheckMenuItem mnemonicParsing="false" text="Unspecified Action" />
             <MenuItem fx:id="showProjectsMenuItem" mnemonicParsing="false" onAction="#btnShowProjects" text="Show Projects" />
             <MenuItem fx:id="showPeopleMenuItem" mnemonicParsing="false" onAction="#btnShowPeople" text="Show People" />
+            <MenuItem fx:id="showSkillsMenuItem" mnemonicParsing="false" onAction="#btnShowSkills" text="Show Skills" />
          </items>
       </Menu>
       <Menu mnemonicParsing="false" text="Help">
