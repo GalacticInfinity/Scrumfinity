@@ -40,7 +40,7 @@
             <MenuItem mnemonicParsing="false" text="Select All" />
             <MenuItem mnemonicParsing="false" text="Unselect All" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" onAction="#editProject" text="Edit..." />
+            <MenuItem mnemonicParsing="false" onAction="#editItem" text="Edit Item" />
          </items>
       </Menu>
       <Menu mnemonicParsing="false" text="Display">

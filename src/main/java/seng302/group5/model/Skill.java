@@ -3,7 +3,7 @@ package seng302.group5.model;
 /**
  * @author Liang Ma
  */
-public class Skills implements AgileItem{
+public class Skill implements AgileItem{
 
   private String skillName;
   private String skillDescription;
@@ -13,7 +13,7 @@ public class Skills implements AgileItem{
    *
    * @param skillName short skillName of a skill
    */
-  public Skills(String skillName) {
+  public Skill(String skillName) {
     this.skillName = skillName;
   }
 
@@ -23,7 +23,7 @@ public class Skills implements AgileItem{
    * @param skillName short skillName of a skill
    * @param skillDescription Description of the skill
    */
-  public Skills(String skillName, String skillDescription) {
+  public Skill(String skillName, String skillDescription) {
     this.skillName = skillName;
     this.skillDescription = skillDescription;
   }

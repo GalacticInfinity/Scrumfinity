@@ -2,13 +2,14 @@ package seng302.group5.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
-import seng302.group5.model.Skills;
+import seng302.group5.model.Skill;
 
 /**
  * @author liang Ma
@@ -21,8 +22,47 @@ public class SkillsDialogController {
 
   private Main mainApp;
   private Stage thisStage;
-  private Skills skill;
+  private Skill skill;
   private CreateOrEdit createOrEdit;
+  private String lastSkillName;
+
+  /**
+   * Setup the skill dialog controller
+   *
+   * @param mainApp - The main application object
+   * @param thisStage - The stage of the dialog
+   * @param createOrEdit - If dialog is for creating or editing a skill
+   * @param skill - The skill object if editing, null otherwise
+   */
+  public void setupController(Main mainApp,
+                              Stage thisStage,
+                              CreateOrEdit createOrEdit,
+                              Skill skill) {
+    this.mainApp = mainApp;
+    this.thisStage = thisStage;
+
+    if (createOrEdit == CreateOrEdit.CREATE) {
+      thisStage.setTitle("Create New Skill");
+      skillCreation.setText("Create");
+    } else if (createOrEdit == CreateOrEdit.EDIT) {
+      thisStage.setTitle("Edit Skill");
+      skillCreation.setText("Save");
+
+      skillName.setText(skill.getSkillName());
+      skillDescription.setText(skill.getSkillDescription());
+    }
+    this.createOrEdit = createOrEdit;
+
+    if (skill != null) {
+      this.skill = skill;
+      this.lastSkillName = skill.getSkillName();
+    } else {
+      this.skill = null;
+      this.lastSkillName = "";
+    }
+
+    skillCreation.setDefaultButton(true);
+  }
 
   /**
    * Parse a string containing a skill name. Throws exceptions if input is not valid.
@@ -36,13 +76,14 @@ public class SkillsDialogController {
     } else if (inputSkillName.length() > 32) {
       throw new Exception("Skill Name is more than 32 characters long");
     } else {
-      for (Skills aSkill : mainApp.getSkills()) {
-        if (aSkill.getSkillName().equals(inputSkillName)) {
+      for (Skill aSkill : mainApp.getSkills()) {
+        String aSkillName = aSkill.getSkillName();
+        if (aSkillName.equals(inputSkillName) && !aSkillName.equals(lastSkillName)) {
           throw new Exception("Skill name is not unique.");
         }
       }
-      return inputSkillName;
     }
+    return inputSkillName;
   }
 
   /**
@@ -57,7 +98,7 @@ public class SkillsDialogController {
       //e1.printStackTrace();
     }
     if (createOrEdit == CreateOrEdit.CREATE) {
-      skill = new Skills(nameOfSkill, skillDescription.getText());
+      skill = new Skill(nameOfSkill, skillDescription.getText());
       mainApp.addSkill(skill);
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       skill.setSkillName(nameOfSkill);
@@ -94,8 +135,26 @@ public class SkillsDialogController {
     this.thisStage = stage;
   }
 
-  public void setSkill(Skills skill) {
+  public void setSkill(Skill skill) {
     this.skill = skill;
+  }
+
+  public String checkName(String name) {
+    String error = null;
+    String nameOfSkill = null;
+    try {
+      nameOfSkill = parseSkillName(name);
+    } catch (Exception e1) {
+      error = e1.getMessage();
+    }
+    if (error != null) {
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Input Error");
+      alert.setHeaderText(null);
+      alert.setContentText(error.toString());
+      alert.showAndWait();
+    }
+    return nameOfSkill;
   }
 }
 

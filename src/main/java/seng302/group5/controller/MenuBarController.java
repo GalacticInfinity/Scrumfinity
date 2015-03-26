@@ -42,18 +42,24 @@ public class MenuBarController {
   }
 
   @FXML
-  protected void editProject(ActionEvent event) {
-    mainApp.showProjectDialog(CreateOrEdit.EDIT);
+  protected void editItem(ActionEvent event) {
+    String listType = Settings.currentListType;
+    switch (listType) {
+      case "Project":
+        mainApp.showProjectDialog(CreateOrEdit.EDIT);
+        break;
+      case "People":
+        //mainApp.showPersonDialog(CreateOrEdit.EDIT);
+        break;
+      case "Skills":
+        mainApp.showSkillCreationDialog(CreateOrEdit.EDIT);
+        break;
+    }
   }
 
   @FXML
   protected void createSkill(ActionEvent event) {
     mainApp.showSkillCreationDialog(CreateOrEdit.CREATE);
-  }
-
-  @FXML
-  protected void editSkill(ActionEvent event) {
-    mainApp.showSkillCreationDialog(CreateOrEdit.EDIT);
   }
 
   @FXML
