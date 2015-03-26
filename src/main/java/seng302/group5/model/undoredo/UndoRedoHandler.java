@@ -12,20 +12,23 @@ import seng302.group5.model.Project;
  * Work in progess, may scrap alltogether
  */
 public class UndoRedoHandler {
-  private enum UndoOrRedo { UNDO, REDO }
+
+  /**
+   * Local enum for denoting whether the action is an undo or a redo
+   */
+  private enum UndoOrRedo {
+    UNDO, REDO
+  }
 
   private Main mainApp;
 
-  Stack<UndoRedoObject> undoStack = new Stack<>();
-  Stack<UndoRedoObject> redoStack = new Stack<>();
+  private Stack<UndoRedoObject> undoStack;
+  private Stack<UndoRedoObject> redoStack;
 
-  /**
-   * Set the main application object the handler will communicate with
-   *
-   * @param mainApp The main app
-   */
-  public void setMainApp(Main mainApp) {
+  public UndoRedoHandler(Main mainApp) {
     this.mainApp = mainApp;
+    undoStack = new Stack<>();
+    redoStack = new Stack<>();
   }
 
   /**
@@ -126,17 +129,21 @@ public class UndoRedoHandler {
   private void handleProjectEdit(UndoRedoObject undoRedoObject,
                                  UndoOrRedo undoOrRedo) throws Exception {
 
+    // Get the data and ensure it has all 3 fields for the projects both before and after
     ArrayList<String> data = undoRedoObject.getData();
-
     if (data.size() < 6) {
       throw new Exception("Can't undo/redo project edit - Less than 6 variables");
     }
+
+    // Get the project ID which is currently in the list
     String currentProjectID;
     if (undoOrRedo == UndoOrRedo.UNDO) {
       currentProjectID = data.get(3);
     } else {
       currentProjectID = data.get(0);
     }
+
+    // Find the project in the list and ensure it exists
     Project projectToEdit = null;
     for (Project project : mainApp.getProjects()) {
       if (project.getProjectID().equals(currentProjectID)) {
@@ -148,6 +155,7 @@ public class UndoRedoHandler {
       throw new Exception("Can't undo/redo project edit - Can't find the edited project");
     }
 
+    // Set the target ID, name, and description.
     String newProjectID;
     String newProjectName;
     String newProjectDescription;
@@ -161,6 +169,7 @@ public class UndoRedoHandler {
       newProjectDescription = data.get(5);
     }
 
+    // Make the changes and refresh the list
     projectToEdit.setProjectID(newProjectID);
     projectToEdit.setProjectName(newProjectName);
     projectToEdit.setProjectDescription(newProjectDescription);

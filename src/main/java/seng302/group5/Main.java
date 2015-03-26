@@ -54,8 +54,7 @@ public class Main extends Application {
     showListMainPane();
 
     // Initialise the undo/redo handler
-    undoRedoHandler = new UndoRedoHandler();
-    undoRedoHandler.setMainApp(this);
+    undoRedoHandler = new UndoRedoHandler(this);
   }
 
 
