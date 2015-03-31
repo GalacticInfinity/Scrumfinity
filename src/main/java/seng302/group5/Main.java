@@ -18,12 +18,14 @@ import seng302.group5.controller.ListMainPaneController;
 import seng302.group5.controller.MenuBarController;
 import seng302.group5.controller.PersonDialogController;
 import seng302.group5.controller.ProjectDialogController;
+import seng302.group5.controller.TeamDialogController;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.controller.SkillsDialogController;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Project;
 import seng302.group5.model.Skill;
 import seng302.group5.model.Person;
+import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.UndoRedoHandler;
 import seng302.group5.model.undoredo.UndoRedoObject;
 
@@ -39,6 +41,7 @@ public class Main extends Application {
   private MenuBarController MBC;
 
   private ObservableList<Project> projects = FXCollections.observableArrayList();
+  private ObservableList<Team> teams = FXCollections.observableArrayList();
   private ObservableList<Skill> skills = FXCollections.observableArrayList();
   private ObservableList<Person> people = FXCollections.observableArrayList();
 
@@ -149,6 +152,42 @@ public class Main extends Application {
     }
   }
 
+  public void showTeamDialog(CreateOrEdit createOrEdit) {
+    try {
+      FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(Main.class.getResource("/TeamDialog.fxml"));
+      VBox teamDialogLayout = (VBox) loader.load();
+
+      TeamDialogController controller = loader.getController();
+
+      Scene teamDialogScene = new Scene(teamDialogLayout);
+      Stage teamDialogStage = new Stage();
+
+      Team team = null;
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        team = (Team) LMPC.getSelectedTeam();
+        if (team == null) {
+          Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setTitle("Error");
+          alert.setHeaderText(null);
+          alert.setContentText("No team selected");
+          alert.showAndWait();
+          return;
+        }
+      }
+
+      controller.setupController(this, teamDialogStage, createOrEdit, team);
+
+      teamDialogStage.initModality(Modality.APPLICATION_MODAL);
+      teamDialogStage.initOwner(primaryStage);
+      teamDialogStage.setScene(teamDialogScene);
+      teamDialogStage.show();
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
   public void showPersonDialog(CreateOrEdit createOrEdit) {
     try {
       FXMLLoader loader = new FXMLLoader();
@@ -253,6 +292,10 @@ public class Main extends Application {
     return projects;
   }
 
+  public ObservableList<Team> getTeams() {
+    return teams;
+  }
+
   public ObservableList<Person> getPeople() {
     return people;
   }
@@ -267,6 +310,10 @@ public class Main extends Application {
 
   public void addPerson(Person person) {
     people.add(person);
+  }
+
+  public void addTeam(Team team) {
+    teams.add(team);
   }
 
   public void refreshList() {
