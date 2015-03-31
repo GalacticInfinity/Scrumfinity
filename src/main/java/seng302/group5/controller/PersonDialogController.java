@@ -41,7 +41,7 @@ public class PersonDialogController {
     this.thisStage = thisStage;
 
     if (createOrEdit == CreateOrEdit.CREATE) {
-      thisStage.setTitle("Create New Project");
+      thisStage.setTitle("Create New Person");
       btnCreatePerson.setText("Create");
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       thisStage.setTitle("Edit Project");
