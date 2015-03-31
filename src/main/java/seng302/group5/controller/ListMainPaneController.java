@@ -78,8 +78,7 @@ public class ListMainPaneController {
                     sampleTextArea.appendText(project.getProjectDescription());
                   }
                 }
-              }
-                else if (Settings.currentListType == "Skills") {
+              } else if (Settings.currentListType == "Skills") {
                 sampleTextArea.clear();
                 sampleTextArea.appendText("Skills information \nSkill Name: ");
                 for (Skill skill : mainApp.getSkills()) {
@@ -89,8 +88,7 @@ public class ListMainPaneController {
                     sampleTextArea.appendText(skill.getSkillDescription());
                   }
                 }
-              }
-                else if (Settings.currentListType == "Team") {
+              } else if (Settings.currentListType == "Team") {
                 sampleTextArea.clear();
                 sampleTextArea.appendText("Team information \nTeam ID: ");
                 for (Team team : mainApp.getTeams()) {
@@ -107,9 +105,8 @@ public class ListMainPaneController {
                     }
                   }
                 }
-
-                  selectedItem = next;
               }
+              selectedItem = next;
             }
           }
         }
