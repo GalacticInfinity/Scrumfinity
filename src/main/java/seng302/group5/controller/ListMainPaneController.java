@@ -35,6 +35,7 @@ public class ListMainPaneController {
   @FXML
   private void initialize() {
     Settings.currentListType = "Project";
+    Settings.setSysDefault();
     iniActorList();
     showHideList();
   }
