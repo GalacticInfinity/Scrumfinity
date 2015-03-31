@@ -12,6 +12,8 @@ import seng302.group5.model.AgileItem;
 import seng302.group5.model.util.Settings;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
+import seng302.group5.model.Team;
+import seng302.group5.model.Skill;
 
 
 /**
@@ -54,27 +56,57 @@ public class ListMainPaneController {
                 sampleTextArea.clear();
                 sampleTextArea.appendText("Person information \nPerson ID: ");
                 for (Person person : mainApp.getPeople()) {
-                  if (person.getPersonID().toString().equals(next.toString())){
-                    sampleTextArea.appendText(person.getPersonID().toString());
+                  if (person.getPersonID().equals(next.toString())){
+                    sampleTextArea.appendText(person.getPersonID());
                     sampleTextArea.appendText("\nFirst Name: ");
                     sampleTextArea.appendText(person.getFirstName());
                     sampleTextArea.appendText("\nLast Name: ");
-                    sampleTextArea.appendText(person.getLastName().toString());
+                    sampleTextArea.appendText(person.getLastName());
                     sampleTextArea.appendText("\nSkills: ");
                   }
                 }
-              } else if (Settings.currentListType == "Project"){
-                  sampleTextArea.clear();
-                  sampleTextArea.appendText("Project information \nProject ID: ");
-                  for (Project project : mainApp.getProjects()) {
-                    if (project.getProjectID().toString().equals(next.toString())) {
-                      sampleTextArea.appendText(project.getProjectID());
-                      sampleTextArea.appendText("\nProject Name: ");
-                      sampleTextArea.appendText(project.getProjectName());
-                      sampleTextArea.appendText("\nProject Description: \n");
-                      sampleTextArea.appendText(project.getProjectDescription());
+              } else if (Settings.currentListType == "Project") {
+                sampleTextArea.clear();
+                sampleTextArea.appendText("Project information \nProject ID: ");
+                for (Project project : mainApp.getProjects()) {
+                  if (project.getProjectID().equals(next.toString())) {
+                    sampleTextArea.appendText(project.getProjectID());
+                    sampleTextArea.appendText("\nProject Name: ");
+                    sampleTextArea.appendText(project.getProjectName());
+                    sampleTextArea.appendText("\nProject Description: \n");
+                    sampleTextArea.appendText(project.getProjectDescription());
+                  }
+                }
+              }
+                else if (Settings.currentListType == "Skills") {
+                sampleTextArea.clear();
+                sampleTextArea.appendText("Skills information \nSkill Name: ");
+                for (Skill skill : mainApp.getSkills()) {
+                  if (skill.getSkillName().equals(next.toString())) {
+                    sampleTextArea.appendText(skill.getSkillName().toString());
+                    sampleTextArea.appendText("\nSkill Description: ");
+                    sampleTextArea.appendText(skill.getSkillDescription());
+                  }
+                }
+              }
+                else if (Settings.currentListType == "Team") {
+                sampleTextArea.clear();
+                sampleTextArea.appendText("Team information \nTeam ID: ");
+                for (Team team : mainApp.getTeams()) {
+                  if (team.getTeamID().equals(next.toString())) {
+                    sampleTextArea.appendText(team.getTeamID());
+                    sampleTextArea.appendText("\nTeam Description: ");
+                    sampleTextArea.appendText(team.getTeamDescription());
+                    sampleTextArea.appendText("\nTeam members: \n");
+                    for (Person member : team.getTeamMembers()) {
+                      sampleTextArea.appendText(member.getFirstName());
+                      sampleTextArea.appendText(" - ");
+                      sampleTextArea.appendText(member.getPersonID());
+                      sampleTextArea.appendText("\n");
                     }
                   }
+                }
+
                   selectedItem = next;
               }
             }
