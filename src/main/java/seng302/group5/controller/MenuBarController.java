@@ -91,15 +91,18 @@ public class MenuBarController {
      * Save file button in File menu, opens up the file chooser to select where you would
      * like to save.
      */
-    // Has no actual save functionality yet.
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Save Project");
-    File file = fileChooser.showSaveDialog(mainApp.getPrimaryStage());
-
-    Saving.saveDataToFile(file, mainApp);
-
-
+    if (Settings.defaultFilepath != null) {
+      fileChooser.setInitialDirectory(Settings.defaultFilepath);
+    }
+    try {
+      File file = fileChooser.showSaveDialog(mainApp.getPrimaryStage());
+      Saving.saveDataToFile(file, mainApp);
+    } catch (Exception e) {
+      System.out.println("No filename specified");
   }
+}
 
   @FXML
   protected void btnClickOpen(ActionEvent event) {
@@ -110,12 +113,18 @@ public class MenuBarController {
     //No open functionality at the moment.
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Open Project");
+    FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("CSV files (*.xml)", "*.xml");
+    fileChooser.getExtensionFilters().add(filter);
     if (Settings.defaultFilepath != null) {
       fileChooser.setInitialDirectory(Settings.defaultFilepath);
     }
-    File file = fileChooser.showOpenDialog(mainApp.getPrimaryStage());
-    Saving.loadDataFromFile(file, mainApp);
-    mainApp.getLMPC().refreshList();
+    try {
+      File file = fileChooser.showOpenDialog(mainApp.getPrimaryStage());
+      Saving.loadDataFromFile(file, mainApp);
+      mainApp.getLMPC().refreshList();
+    } catch (Exception e) {
+      System.out.println("No file selected");
+    }
   }
 
 

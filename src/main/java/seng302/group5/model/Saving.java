@@ -52,7 +52,8 @@ public class Saving {
 
   /**
    * Saves all data currently stored in Main in CSV format to specified file.
-   * Overwrites any file chosen without checks currently
+   * Overwrites any file chosen without checks currently.
+   * Makes sure file ends with .csv.
    * @param file Directory + filename
    * @param main Main class containing data
    */
@@ -69,23 +70,38 @@ public class Saving {
       wrapper.setProjects(main.getProjects());
       wrapper.setSkills(main.getSkills());
 
+      // Checks if file ends with .xml, appends if does not.
+      String filename = file.toString();
+      if (!filename.endsWith(".xml")) {
+        filename = filename + ".xml";
+        System.out.println(filename);
+        file = new File(filename);
+      }
+
       // Marshalling and saving XML to the file.
       m.marshal(wrapper, file);
 
-      // Save the file path to the registry, not doing yet
       Settings.defaultFilepath = file.getParentFile();
     } catch (Exception e) { // catches ANY exception
+      System.out.println("Could not save file properly");
       e.printStackTrace();
     }
   }
 
   /**
    * Loads data from specified csv and saves into main.
+   * Must be in .xml or will thorw error.
    * @param file Filepath for csv
    * @param main Main class to store data in
    */
   public static void loadDataFromFile(File file, Main main) {
     try {
+      // Checks if file ends with .csv, throws error if doesn't.
+      String filename = file.toString();
+      if (!filename.endsWith(".xml")) {
+        throw new Exception("Wrong form, cannot load non .xml");
+      }
+
       JAXBContext context = JAXBContext
           .newInstance(Saving.class);
       Unmarshaller um = context.createUnmarshaller();
@@ -101,7 +117,8 @@ public class Saving {
 
       // Save the file path to Settings class
       Settings.defaultFilepath = file.getParentFile();
-    } catch (Exception e) { // catches ANY exception
+    } catch (Exception e) {
+      System.out.println("Could not load file properly");
       e.printStackTrace();
     }
   }
