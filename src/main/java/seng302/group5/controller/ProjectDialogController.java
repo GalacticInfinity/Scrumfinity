@@ -27,9 +27,7 @@ public class ProjectDialogController {
   private Stage thisStage;
   private CreateOrEdit createOrEdit;
   private Project project;
-  private String lastProjectID;
-  private String lastProjectName;
-  private String lastProjectDescription;
+  private Project lastProject;
 
   /**
    * Setup the project dialog controller
@@ -61,14 +59,14 @@ public class ProjectDialogController {
 
     if (project != null) {
       this.project = project;
-      this.lastProjectID = project.getProjectID();
-      this.lastProjectName = project.getProjectName();
-      this.lastProjectDescription = project.getProjectDescription();
+      // Make a copy for the undo stack
+      String lastProjectID = project.getProjectID();
+      String lastProjectName = project.getProjectName();
+      String lastProjectDescription = project.getProjectDescription();
+      this.lastProject = new Project(lastProjectID, lastProjectName, lastProjectDescription);
     } else {
       this.project = null;
-      this.lastProjectID = "";
-      this.lastProjectName = "";
-      this.lastProjectDescription = "";
+      this.lastProject = null;
     }
 
     btnConfirm.setDefaultButton(true);
@@ -88,6 +86,12 @@ public class ProjectDialogController {
     } else if (inputProjectID.length() > 8) {
       throw new Exception("Project ID is more than 8 characters long");
     } else {
+      String lastProjectID;
+      if (lastProject == null) {
+        lastProjectID = "";
+      } else {
+        lastProjectID = lastProject.getProjectID();
+      }
       for (Project project : mainApp.getProjects()) {
         String projectID = project.getProjectID();
         if (projectID.equals(inputProjectID) && !projectID.equals(lastProjectID)) {
@@ -123,14 +127,14 @@ public class ProjectDialogController {
       undoRedoObject.setAction(Action.PROJECT_CREATE);
     } else {
       undoRedoObject.setAction(Action.PROJECT_EDIT);
-      undoRedoObject.addDatum(lastProjectID);
-      undoRedoObject.addDatum(lastProjectName);
-      undoRedoObject.addDatum(lastProjectDescription);
+      undoRedoObject.addDatum(lastProject);
     }
 
-    undoRedoObject.addDatum(project.getProjectID());
-    undoRedoObject.addDatum(project.getProjectName());
-    undoRedoObject.addDatum(project.getProjectDescription());
+    // Store a copy of project to edit in stack to avoid reference problems
+    Project projectToStore = new Project(project.getProjectID(),
+                                         project.getProjectName(),
+                                         project.getProjectDescription());
+    undoRedoObject.addDatum(projectToStore);
 
     return undoRedoObject;
   }
@@ -197,6 +201,33 @@ public class ProjectDialogController {
   @FXML
   protected void btnCancelClick(ActionEvent event) {
     thisStage.close();
+  }
+
+  public void setMainApp(Main mainApp) {
+    this.mainApp = mainApp;
+  }
+
+  public void setStage(Stage stage) {
+    this.thisStage = stage;
+  }
+
+  public void setCreateOrEdit(CreateOrEdit createOrEdit) {
+    if (createOrEdit == CreateOrEdit.CREATE) {
+      thisStage.setTitle("Create New Project");
+      btnConfirm.setText("Create");
+    } else if (createOrEdit == CreateOrEdit.EDIT) {
+      thisStage.setTitle("Edit Project");
+      btnConfirm.setText("Save");
+
+      projectIDField.setText(project.getProjectID());
+      projectNameField.setText(project.getProjectName());
+      projectDescriptionField.setText(project.getProjectDescription());
+    }
+    this.createOrEdit = createOrEdit;
+  }
+
+  public void setProject(Project project) {
+    this.project = project;
   }
 
 }
