@@ -129,7 +129,7 @@ public class Main extends Application {
 
       Project project = null;
       if (createOrEdit == CreateOrEdit.EDIT) {
-        project = (Project) LMPC.getSelectedProject();
+        project = (Project) LMPC.getSelected();
         if (project == null) {
           Alert alert = new Alert(Alert.AlertType.ERROR);
           alert.setTitle("Error");
@@ -165,7 +165,7 @@ public class Main extends Application {
 
       Team team = null;
       if (createOrEdit == CreateOrEdit.EDIT) {
-        team = (Team) LMPC.getSelectedTeam();
+        team = (Team) LMPC.getSelected();
         if (team == null) {
           Alert alert = new Alert(Alert.AlertType.ERROR);
           alert.setTitle("Error");
@@ -200,7 +200,7 @@ public class Main extends Application {
 
       Person person = null;
       if (createOrEdit == CreateOrEdit.EDIT) {
-        person = (Person) LMPC.getSelectedProject();    // TODO: Fix
+        person = (Person) LMPC.getSelected();    // TODO: Fix
         if (person == null) {
           Alert alert = new Alert(Alert.AlertType.ERROR);
           alert.setTitle("Error");
@@ -234,7 +234,7 @@ public class Main extends Application {
 
       Skill skill = null;
       if (createOrEdit == CreateOrEdit.EDIT) {
-        skill = (Skill) LMPC.getSelectedSkill();    // TODO: Fix
+        skill = (Skill) LMPC.getSelected();    // TODO: Fix
         if (skill == null){
           Alert alert = new Alert(Alert.AlertType.ERROR);
           alert.setTitle("Error");

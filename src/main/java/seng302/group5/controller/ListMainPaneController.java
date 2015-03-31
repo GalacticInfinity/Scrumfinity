@@ -134,33 +134,62 @@ public class ListMainPaneController {
     }
   }
 
-  public Object getSelectedProject() {
-    if(isListShown == false || Settings.currentListType != "Project"){
+  public AgileItem getSelected(){
+    String listType = Settings.currentListType;
+    switch (listType) {
+      case "Project":
+        if(isListShown == false || Settings.currentListType != "Project"){
+          return null;
+        }
+        return selectedItem;
+      case "People":
+        if(isListShown == false || Settings.currentListType != "People"){
+          return null;
+        }
+        return selectedItem;
+      case "Skills":
+        if(isListShown == false || Settings.currentListType != "Skills"){
+          return null;
+        }
+        return selectedItem;
+      case "Team":
+        if(isListShown == false || Settings.currentListType != "Team") {
       return null;
     }
     return selectedItem;
+    }
+    return null;
   }
 
-  public Object getSelectedPerson() {
-    if(isListShown == false || Settings.currentListType != "People"){
-      return null;
-    }
-    return selectedItem;
-  }
+//
+//  public Object getSelectedProject() {
+//    if(isListShown == false || Settings.currentListType != "Project"){
+//      return null;
+//    }
+//    return selectedItem;
+//  }
 
-  public Object getSelectedTeam() {
-    if(isListShown == false || Settings.currentListType != "Team") {
-      return null;
-    }
-    return selectedItem;
-  }
+//  public Object getSelectedPerson() {
+//    if(isListShown == false || Settings.currentListType != "People"){
+//      return null;
+//    }
+//    return selectedItem;
+//  }
 
-  public Object getSelectedSkill() {
-    if(isListShown == false || Settings.currentListType != "Skills"){
-      return null;
-    }
-    return selectedItem;
-  }
+//  public Object getSelectedTeam() {
+//    if(isListShown == false || Settings.currentListType != "Team") {
+//      return null;
+//    }
+//    return selectedItem;
+//  }
+//
+//  public Object getSelectedSkill() {
+//    if(isListShown == false || Settings.currentListType != "Skills"){
+//      return null;
+//    }
+//    return selectedItem;
+//  }
+
   public void setMainApp(Main mainApp) {
     this.mainApp = mainApp;
   }
