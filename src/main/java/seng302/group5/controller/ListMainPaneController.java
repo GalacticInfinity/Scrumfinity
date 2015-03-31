@@ -10,6 +10,9 @@ import javafx.scene.control.TextArea;
 import seng302.group5.Main;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.util.Settings;
+import seng302.group5.model.Person;
+import seng302.group5.model.Project;
+
 
 /**
  * Created by Michael on 3/15/2015.
@@ -47,9 +50,33 @@ public class ListMainPaneController {
                               AgileItem previous, AgileItem next) {
             if (next != null) {
               // Will place checks to update main pane here based on item type selected
-              sampleTextArea.clear();
-              sampleTextArea.appendText(next.toString());
-              selectedItem = next;
+              if (Settings.currentListType == "People") {
+                sampleTextArea.clear();
+                sampleTextArea.appendText("Person information \nPerson ID: ");
+                for (Person person : mainApp.getPeople()) {
+                  if (person.getPersonID().toString().equals(next.toString())){
+                    sampleTextArea.appendText(person.getPersonID().toString());
+                    sampleTextArea.appendText("\nFirst Name: ");
+                    sampleTextArea.appendText(person.getFirstName());
+                    sampleTextArea.appendText("\nLast Name: ");
+                    sampleTextArea.appendText(person.getLastName().toString());
+                    sampleTextArea.appendText("\nSkills: ");
+                  }
+                }
+              } else if (Settings.currentListType == "Project"){
+                  sampleTextArea.clear();
+                  sampleTextArea.appendText("Project information \nProject ID: ");
+                  for (Project project : mainApp.getProjects()) {
+                    if (project.getProjectID().toString().equals(next.toString())) {
+                      sampleTextArea.appendText(project.getProjectID());
+                      sampleTextArea.appendText("\nProject Name: ");
+                      sampleTextArea.appendText(project.getProjectName());
+                      sampleTextArea.appendText("\nProject Description: \n");
+                      sampleTextArea.appendText(project.getProjectDescription());
+                    }
+                  }
+                  selectedItem = next;
+              }
             }
           }
         }
@@ -78,9 +105,7 @@ public class ListMainPaneController {
     listView.setItems(null);
     checkListType();
     listView.getSelectionModel().clearSelection();
-    if (selectedItem != null) {
-      sampleTextArea.appendText(selectedItem.toString());
-    }
+    sampleTextArea.clear();
   }
 
   /**
