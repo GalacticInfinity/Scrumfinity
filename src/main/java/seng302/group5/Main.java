@@ -195,8 +195,8 @@ public class Main extends Application {
 
       Skill skill = null;
       if (createOrEdit == CreateOrEdit.EDIT) {
-        skill = (Skill) LMPC.getSelectedProject();    // TODO: Fix
-        if (skill == null) {
+        skill = (Skill) LMPC.getSelectedSkill();    // TODO: Fix
+        if (skill == null){
           Alert alert = new Alert(Alert.AlertType.ERROR);
           alert.setTitle("Error");
           alert.setHeaderText(null);

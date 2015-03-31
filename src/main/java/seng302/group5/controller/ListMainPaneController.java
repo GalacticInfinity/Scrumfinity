@@ -119,6 +119,12 @@ public class ListMainPaneController {
     return selectedItem;
   }
 
+  public Object getSelectedSkill() {
+    if(isListShown == false || Settings.currentListType != "Skills"){
+      return null;
+    }
+    return selectedItem;
+  }
   public void setMainApp(Main mainApp) {
     this.mainApp = mainApp;
   }
