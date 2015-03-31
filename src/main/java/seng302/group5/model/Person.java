@@ -5,14 +5,17 @@ package seng302.group5.model;
  *
  * Created by Zander on 17/03/2015.
  */
-public class Person implements AgileItem{
+public class Person implements AgileItem {
 
   private String personID;
   private String firstName;
   private String lastName;
 
+  private Boolean assignedToTeam = false;
+  private Team team = null;
+
   /**
-   * Default constructor
+   * Default constructor.
    */
   public Person() {
     personID = "";
@@ -21,11 +24,11 @@ public class Person implements AgileItem{
   }
 
   /**
-   * Person constructor
+   * Person constructor.
    *
-   * @param personID Unique, non-null person ID
-   * @param firstName First name of person
-   * @param lastName Last name of person
+   * @param personID Unique, non-null person ID.
+   * @param firstName First name of person.
+   * @param lastName Last name of person.
    */
   public Person(String personID, String firstName, String lastName) {
     this.personID = personID;
@@ -33,11 +36,6 @@ public class Person implements AgileItem{
     this.lastName = lastName;
   }
 
-  /**
-   * Returns the unique short name of person.
-   *
-   * @return Unique short name of person.
-   */
   public String getPersonID() {
     return personID;
   }
@@ -46,11 +44,6 @@ public class Person implements AgileItem{
     this.personID = personID;
   }
 
-  /**
-   * returns the first name of person.
-   *
-   * @return first name of person.
-   */
   public String getFirstName() {
     return firstName;
   }
@@ -59,17 +52,37 @@ public class Person implements AgileItem{
     this.firstName = firstName;
   }
 
-  /**
-   * Returns the last name of person.
-   *
-   * @return Last name of person.
-   */
   public String getLastName() {
     return lastName;
   }
 
   public void setLastName(String lastName) {
     this.lastName = lastName;
+  }
+
+  /**
+   * Assigns this person to a team.
+   * @param team Team object that person is assigned to.
+   */
+  public void assignToTeam(Team team) {
+    this.assignedToTeam = true;
+    this.team = team;
+  }
+
+  /**
+   * Removes this person from a team.
+   */
+  public void removeFromTeam() {
+    this.assignedToTeam = false;
+    this.team = null;
+  }
+
+  /**
+   * Checks if person is in a team.
+   * @return True, if person is in team. False, if not.
+   */
+  public Boolean isInTeam() {
+    return assignedToTeam;
   }
 
   public void delete(){}

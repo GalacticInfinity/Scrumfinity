@@ -1,7 +1,5 @@
 package seng302.group5.controller;
 
-import java.util.List;
-
 import java.io.File;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,6 +23,7 @@ public class MenuBarController {
   @FXML private MenuItem showListMenuItem;
   @FXML private MenuItem showProjectsMenuItem;
   @FXML private MenuItem showPeopleMenuItem;
+  @FXML private MenuItem showTeamsMenuItem;
 
   private Main mainApp;
 
@@ -43,8 +42,19 @@ public class MenuBarController {
   }
 
   @FXML
-  protected void editProject(ActionEvent event) {
-    mainApp.showProjectDialog(CreateOrEdit.EDIT);
+  protected void editItem(ActionEvent event) {
+    String listType = Settings.currentListType;
+    switch (listType) {
+      case "Project":
+        mainApp.showProjectDialog(CreateOrEdit.EDIT);
+        break;
+      case "People":
+        //mainApp.showPersonDialog(CreateOrEdit.EDIT);
+        break;
+      case "Skills":
+        mainApp.showSkillCreationDialog(CreateOrEdit.EDIT);
+        break;
+    }
   }
 
   @FXML
@@ -53,13 +63,18 @@ public class MenuBarController {
   }
 
   @FXML
-  protected void editSkill(ActionEvent event) {
-    mainApp.showSkillCreationDialog(CreateOrEdit.EDIT);
+  protected void createPerson(ActionEvent event) {
+    mainApp.showPersonDialog(CreateOrEdit.CREATE);
   }
 
   @FXML
-  protected void createPerson(ActionEvent event) {
-    mainApp.showPersonDialog(CreateOrEdit.CREATE);
+  protected void createTeam(ActionEvent event) {
+    mainApp.showTeamDialog(CreateOrEdit.CREATE);
+  }
+
+  @FXML
+  protected void editTeam(ActionEvent event) {
+    mainApp.showTeamDialog(CreateOrEdit.EDIT);
   }
 
   /**
@@ -123,6 +138,12 @@ public class MenuBarController {
   }
 
   @FXML
+  protected void btnShowTeams() {
+    Settings.currentListType = "Team";
+    mainApp.getLMPC().refreshList();
+  }
+
+  @FXML
   protected void btnDelete(){
     mainApp.deletePerson((AgileItem) mainApp.getLMPC().getSelectedPerson());
     mainApp.refreshList();
@@ -141,6 +162,4 @@ public class MenuBarController {
   public void setMainApp(Main mainApp){
     this.mainApp = mainApp;
   }
-
-
 }

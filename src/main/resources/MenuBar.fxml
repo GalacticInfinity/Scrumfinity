@@ -10,6 +10,7 @@
                <Menu mnemonicParsing="false" text="New...">
                    <items>
                        <MenuItem mnemonicParsing="false" onAction="#createProject" text="Project" />
+                  <MenuItem mnemonicParsing="false" onAction="#createTeam" text="Team" />
                        <MenuItem mnemonicParsing="false" onAction="#createPerson" text="Person" />
                        <MenuItem mnemonicParsing="false" onAction="#createSkill" text="Skill" />
                    </items>
@@ -40,7 +41,7 @@
             <MenuItem mnemonicParsing="false" text="Select All" />
             <MenuItem mnemonicParsing="false" text="Unselect All" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" onAction="#editProject" text="Edit..." />
+            <MenuItem mnemonicParsing="false" onAction="#editItem" text="Edit Item" />
          </items>
       </Menu>
       <Menu mnemonicParsing="false" text="Display">
@@ -49,6 +50,7 @@
             <SeparatorMenuItem mnemonicParsing="false" />
             <CheckMenuItem mnemonicParsing="false" text="Unspecified Action" />
             <MenuItem fx:id="showProjectsMenuItem" mnemonicParsing="false" onAction="#btnShowProjects" text="Show Projects" />
+            <MenuItem fx:id="showTeamsMenuItem" mnemonicParsing="false" onAction="#btnShowTeams" text="Show Teams" />
             <MenuItem fx:id="showPeopleMenuItem" mnemonicParsing="false" onAction="#btnShowPeople" text="Show People" />
             <MenuItem fx:id="showSkillsMenuItem" mnemonicParsing="false" onAction="#btnShowSkills" text="Show Skills" />
          </items>
