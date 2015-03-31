@@ -78,9 +78,7 @@ public class ListMainPaneController {
     listView.setItems(null);
     checkListType();
     listView.getSelectionModel().clearSelection();
-    if (selectedItem != null) {
-      sampleTextArea.appendText(selectedItem.toString());
-    }
+    sampleTextArea.clear();
   }
 
   /**
@@ -102,6 +100,10 @@ public class ListMainPaneController {
         isListShown = true;
         listView.setItems(mainApp.getSkills());
         break;
+      case "Team":
+        isListShown = true;
+        listView.setItems(mainApp.getTeams());
+        break;
     }
   }
 
@@ -119,6 +121,19 @@ public class ListMainPaneController {
     return selectedItem;
   }
 
+  public Object getSelectedTeam() {
+    if(isListShown == false || Settings.currentListType != "Team") {
+      return null;
+    }
+    return selectedItem;
+  }
+
+  public Object getSelectedSkill() {
+    if(isListShown == false || Settings.currentListType != "Skills"){
+      return null;
+    }
+    return selectedItem;
+  }
   public void setMainApp(Main mainApp) {
     this.mainApp = mainApp;
   }
