@@ -78,9 +78,7 @@ public class ListMainPaneController {
     listView.setItems(null);
     checkListType();
     listView.getSelectionModel().clearSelection();
-    if (selectedItem != null) {
-      sampleTextArea.appendText(selectedItem.toString());
-    }
+    sampleTextArea.clear();
   }
 
   /**
