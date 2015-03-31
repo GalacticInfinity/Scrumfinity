@@ -98,6 +98,7 @@ public class UndoRedoHandler {
       case PROJECT_CREATE:
         //TODO: delete a project
         System.out.println(String.format("I am %sing a project creation", undoOrRedoStr)) ; // temp
+        handleProjectCreate(undoRedoObject, undoOrRedo);
         break;
 
       case PROJECT_EDIT:
@@ -121,6 +122,48 @@ public class UndoRedoHandler {
   }
 
   /**
+   * Undo or redo a project creation
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handleProjectCreate(UndoRedoObject undoRedoObject,
+                                   UndoOrRedo undoOrRedo) throws Exception {
+
+    // Get the data and ensure it has data for the project
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 1) {
+      throw new Exception("Can't undo/redo project creation - No variables");
+    }
+
+    // Get the project ID which is currently in the list and the project to edit
+    Project project = (Project) data.get(0);
+    String projectID = project.getProjectID();
+
+    // Make the changes and refresh the list
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+      // TODO: delete for undo
+      // Find the project in the list and ensure it exists so it can be deleted
+      Project projectToDelete = null;
+      for (Project projectInList : mainApp.getProjects()) {
+        if (projectInList.getProjectID().equals(projectID)) {
+          projectToDelete = projectInList;
+          break;
+        }
+      }
+      if (projectToDelete == null) {
+        throw new Exception("Can't undo project creation - Can't find the created project");
+      }
+      // TODO: Call deleteItem(projectToDelete);
+    } else {
+      Project projectToAdd = new Project(project);
+      mainApp.addProject(projectToAdd);
+    }
+    mainApp.refreshList();
+  }
+
+  /**
    * Undo or redo a project edit
    *
    * @param undoRedoObject Object containing the action data
@@ -130,7 +173,7 @@ public class UndoRedoHandler {
   private void handleProjectEdit(UndoRedoObject undoRedoObject,
                                  UndoOrRedo undoOrRedo) throws Exception {
 
-    // Get the data and ensure it has all 3 fields for the projects both before and after
+    // Get the data and ensure it has data for the projects both before and after
     ArrayList<AgileItem> data = undoRedoObject.getData();
     if (data.size() < 2) {
       throw new Exception("Can't undo/redo project edit - Less than 2 variables");
@@ -153,9 +196,9 @@ public class UndoRedoHandler {
 
     // Find the project in the list and ensure it exists
     Project projectToEdit = null;
-    for (Project project : mainApp.getProjects()) {
-      if (project.getProjectID().equals(currentProjectID)) {
-        projectToEdit = project;
+    for (Project projectInList : mainApp.getProjects()) {
+      if (projectInList.getProjectID().equals(currentProjectID)) {
+        projectToEdit = projectInList;
         break;
       }
     }

@@ -17,7 +17,7 @@ public class Project implements AgileItem {
     projectName = "";
     projectDescription = "";
   }
-  
+
   /**
    * Project
    * @param projectID Name of Person
@@ -28,6 +28,16 @@ public class Project implements AgileItem {
     this.projectID = projectID;
     this.projectName = projectName;
     this.projectDescription = projectDescription;
+  }
+
+  /**
+   * Constructor to create a clone of an existing project
+   * @param clone Project to clone
+   */
+  public Project(Project clone) {
+    this.projectID = clone.getProjectID();
+    this.projectName = clone.getProjectName();
+    this.projectDescription = clone.getProjectDescription();
   }
 
   public String getProjectID() {

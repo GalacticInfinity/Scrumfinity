@@ -60,10 +60,7 @@ public class ProjectDialogController {
     if (project != null) {
       this.project = project;
       // Make a copy for the undo stack
-      String lastProjectID = project.getProjectID();
-      String lastProjectName = project.getProjectName();
-      String lastProjectDescription = project.getProjectDescription();
-      this.lastProject = new Project(lastProjectID, lastProjectName, lastProjectDescription);
+      this.lastProject = new Project(project);
     } else {
       this.project = null;
       this.lastProject = null;
@@ -120,6 +117,10 @@ public class ProjectDialogController {
     }
   }
 
+  /**
+   * Generate an UndoRedoObject to place in the stack
+   * @return the UndoRedoObject to store
+   */
   private UndoRedoObject generateUndoRedoObject() {
     UndoRedoObject undoRedoObject = new UndoRedoObject();
 
@@ -131,9 +132,7 @@ public class ProjectDialogController {
     }
 
     // Store a copy of project to edit in stack to avoid reference problems
-    Project projectToStore = new Project(project.getProjectID(),
-                                         project.getProjectName(),
-                                         project.getProjectDescription());
+    Project projectToStore = new Project(project);
     undoRedoObject.addDatum(projectToStore);
 
     return undoRedoObject;
@@ -201,33 +200,6 @@ public class ProjectDialogController {
   @FXML
   protected void btnCancelClick(ActionEvent event) {
     thisStage.close();
-  }
-
-  public void setMainApp(Main mainApp) {
-    this.mainApp = mainApp;
-  }
-
-  public void setStage(Stage stage) {
-    this.thisStage = stage;
-  }
-
-  public void setCreateOrEdit(CreateOrEdit createOrEdit) {
-    if (createOrEdit == CreateOrEdit.CREATE) {
-      thisStage.setTitle("Create New Project");
-      btnConfirm.setText("Create");
-    } else if (createOrEdit == CreateOrEdit.EDIT) {
-      thisStage.setTitle("Edit Project");
-      btnConfirm.setText("Save");
-
-      projectIDField.setText(project.getProjectID());
-      projectNameField.setText(project.getProjectName());
-      projectDescriptionField.setText(project.getProjectDescription());
-    }
-    this.createOrEdit = createOrEdit;
-  }
-
-  public void setProject(Project project) {
-    this.project = project;
   }
 
 }
