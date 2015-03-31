@@ -9,6 +9,7 @@ import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
+import seng302.group5.model.AgileItem;
 import seng302.group5.model.Saving;
 import seng302.group5.model.util.Settings;
 
@@ -64,7 +65,7 @@ public class MenuBarController {
 
   @FXML
   protected void createPerson(ActionEvent event) {
-    mainApp.showPersonDialogCreation();
+    mainApp.showPersonDialog(CreateOrEdit.CREATE);
   }
 
   /**
@@ -85,7 +86,7 @@ public class MenuBarController {
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Save Project");
     File file = fileChooser.showSaveDialog(mainApp.getPrimaryStage());
-    
+
     Saving.saveDataToFile(file, mainApp);
 
 
@@ -127,6 +128,21 @@ public class MenuBarController {
     mainApp.getLMPC().refreshList();
   }
 
+  @FXML
+  protected void btnDelete(){
+    mainApp.deletePerson((AgileItem) mainApp.getLMPC().getSelectedPerson());
+    mainApp.refreshList();
+  }
+
+  @FXML
+  protected void btnUndoClick() {
+    mainApp.undo();
+  }
+
+  @FXML
+  protected void btnRedoClick() {
+    mainApp.redo();
+  }
 
   public void setMainApp(Main mainApp){
     this.mainApp = mainApp;

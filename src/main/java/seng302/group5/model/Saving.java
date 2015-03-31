@@ -21,6 +21,7 @@ public class Saving {
 
   private List<Person> persons;
   private List<Project> projects;
+  private List<Skill> skills;
 
   @XmlElement(name = "person")
   public List<Person> getPersons() {
@@ -40,6 +41,15 @@ public class Saving {
     this.projects = projects;
   }
 
+  @XmlElement(name = "skill")
+  public List<Skill> getSkills() {
+    return skills;
+  }
+
+  public void setSkills(List<Skill> skills) {
+    this.skills = skills;
+  }
+
   /**
    * Saves all data currently stored in Main in CSV format to specified file.
    * Overwrites any file chosen without checks currently
@@ -57,6 +67,7 @@ public class Saving {
       Saving wrapper = new Saving();
       wrapper.setPersons(main.getPeople());
       wrapper.setProjects(main.getProjects());
+      wrapper.setSkills(main.getSkills());
 
       // Marshalling and saving XML to the file.
       m.marshal(wrapper, file);
@@ -83,8 +94,10 @@ public class Saving {
       Saving wrapper = (Saving) um.unmarshal(file);
       main.getPeople().clear();
       main.getProjects().clear();
+      main.getSkills().clear();
       main.getPeople().addAll(wrapper.getPersons());
       main.getProjects().addAll(wrapper.getProjects());
+      main.getSkills().addAll(wrapper.getSkills());
 
       // Save the file path to Settings class
       Settings.defaultFilepath = file.getParentFile();

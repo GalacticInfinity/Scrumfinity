@@ -9,6 +9,14 @@ public class Skill implements AgileItem{
   private String skillDescription;
 
   /**
+   * Default constructor for skill
+   */
+  public Skill () {
+    this.skillName = "";
+    this.skillDescription = "";
+  }
+
+  /**
    * Skill constructor with skill skillName only.
    *
    * @param skillName short skillName of a skill
