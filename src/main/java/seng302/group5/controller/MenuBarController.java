@@ -145,7 +145,10 @@ public class MenuBarController {
 
   @FXML
   protected void btnDelete(){
-    mainApp.deletePerson((AgileItem) mainApp.getLMPC().getSelectedPerson());
+    if(mainApp.getLMPC().getSelected() == null){
+      System.out.println("No person selected");
+    }
+    mainApp.deletePerson((AgileItem) mainApp.getLMPC().getSelected());
     mainApp.refreshList();
   }
 

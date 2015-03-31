@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 import seng302.group5.Main;
+import seng302.group5.model.AgileItem;
 import seng302.group5.model.Project;
 
 /**
@@ -130,17 +131,24 @@ public class UndoRedoHandler {
                                  UndoOrRedo undoOrRedo) throws Exception {
 
     // Get the data and ensure it has all 3 fields for the projects both before and after
-    ArrayList<String> data = undoRedoObject.getData();
-    if (data.size() < 6) {
-      throw new Exception("Can't undo/redo project edit - Less than 6 variables");
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 2) {
+      throw new Exception("Can't undo/redo project edit - Less than 2 variables");
     }
 
-    // Get the project ID which is currently in the list
+    // Get the project ID which is currently in the list and the project to edit
+    Project currentProject;
     String currentProjectID;
+    Project newProject;
+
     if (undoOrRedo == UndoOrRedo.UNDO) {
-      currentProjectID = data.get(3);
+      currentProject = (Project) data.get(1);
+      currentProjectID = currentProject.getProjectID();
+      newProject = (Project) data.get(0);
     } else {
-      currentProjectID = data.get(0);
+      currentProject = (Project) data.get(0);
+      currentProjectID = currentProject.getProjectID();
+      newProject = (Project) data.get(1);
     }
 
     // Find the project in the list and ensure it exists
@@ -155,24 +163,10 @@ public class UndoRedoHandler {
       throw new Exception("Can't undo/redo project edit - Can't find the edited project");
     }
 
-    // Set the target ID, name, and description.
-    String newProjectID;
-    String newProjectName;
-    String newProjectDescription;
-    if (undoOrRedo == UndoOrRedo.UNDO) {
-      newProjectID = data.get(0);
-      newProjectName = data.get(1);
-      newProjectDescription = data.get(2);
-    } else {
-      newProjectID = data.get(3);
-      newProjectName = data.get(4);
-      newProjectDescription = data.get(5);
-    }
-
     // Make the changes and refresh the list
-    projectToEdit.setProjectID(newProjectID);
-    projectToEdit.setProjectName(newProjectName);
-    projectToEdit.setProjectDescription(newProjectDescription);
+    projectToEdit.setProjectID(newProject.getProjectID());
+    projectToEdit.setProjectName(newProject.getProjectName());
+    projectToEdit.setProjectDescription(newProject.getProjectDescription());
     mainApp.refreshList();
   }
 

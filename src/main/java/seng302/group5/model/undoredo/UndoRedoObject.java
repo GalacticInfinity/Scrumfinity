@@ -2,13 +2,15 @@ package seng302.group5.model.undoredo;
 
 import java.util.ArrayList;
 
+import seng302.group5.model.AgileItem;
+
 /**
  * @author Su-Shing Chen
  */
 public class UndoRedoObject {
 
   private Action action;
-  private ArrayList<String> data;
+  private ArrayList<AgileItem> data;
 
   public UndoRedoObject() {
     this.action = Action.UNDEFINED;
@@ -23,11 +25,11 @@ public class UndoRedoObject {
     this.action = action;
   }
 
-  public ArrayList<String> getData() {
+  public ArrayList<AgileItem> getData() {
     return data;
   }
 
-  public void addDatum(String datum) {
+  public void addDatum(AgileItem datum) {
     this.data.add(datum);
   }
 }
