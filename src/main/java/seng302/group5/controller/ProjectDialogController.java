@@ -127,20 +127,14 @@ public class ProjectDialogController {
       undoRedoObject.setAction(Action.PROJECT_CREATE);
     } else {
       undoRedoObject.setAction(Action.PROJECT_EDIT);
-//      undoRedoObject.addDatum(lastProjectID);
-//      undoRedoObject.addDatum(lastProjectName);
-//      undoRedoObject.addDatum(lastProjectDescription);
       undoRedoObject.addDatum(lastProject);
     }
 
-//    undoRedoObject.addDatum(project.getProjectID());
-//    undoRedoObject.addDatum(project.getProjectName());
-//    undoRedoObject.addDatum(project.getProjectDescription());
-    undoRedoObject.addDatum(project);
-
-    if (lastProject != null)
-      System.out.println("old " + lastProject.getProjectID());
-    System.out.println("new " + project.getProjectID());
+    // Store a copy of project to edit in stack to avoid reference problems
+    Project projectToStore = new Project(project.getProjectID(),
+                                         project.getProjectName(),
+                                         project.getProjectDescription());
+    undoRedoObject.addDatum(projectToStore);
 
     return undoRedoObject;
   }

@@ -136,10 +136,11 @@ public class UndoRedoHandler {
       throw new Exception("Can't undo/redo project edit - Less than 2 variables");
     }
 
-    // Get the project ID which is currently in the list
+    // Get the project ID which is currently in the list and the project to edit
     Project currentProject;
     String currentProjectID;
     Project newProject;
+
     if (undoOrRedo == UndoOrRedo.UNDO) {
       currentProject = (Project) data.get(1);
       currentProjectID = currentProject.getProjectID();
@@ -161,14 +162,6 @@ public class UndoRedoHandler {
     if (projectToEdit == null) {
       throw new Exception("Can't undo/redo project edit - Can't find the edited project");
     }
-
-    // Set the target ID, name, and description.
-//    if (undoOrRedo == UndoOrRedo.UNDO) {
-//    } else {
-//    }
-
-    System.out.println("old " + currentProject.getProjectID());
-    System.out.println("new " + newProject.getProjectID());
 
     // Make the changes and refresh the list
     projectToEdit.setProjectID(newProject.getProjectID());
