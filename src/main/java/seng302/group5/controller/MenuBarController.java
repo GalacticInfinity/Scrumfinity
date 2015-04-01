@@ -49,7 +49,7 @@ public class MenuBarController {
         mainApp.showProjectDialog(CreateOrEdit.EDIT);
         break;
       case "People":
-        //mainApp.showPersonDialog(CreateOrEdit.EDIT);
+        mainApp.showPersonDialog(CreateOrEdit.EDIT);
         break;
       case "Skills":
         mainApp.showSkillCreationDialog(CreateOrEdit.EDIT);

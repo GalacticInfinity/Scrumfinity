@@ -122,8 +122,16 @@ public class UndoRedoHandler {
         handlePersonCreate(undoRedoObject, undoOrRedo);
         break;
 
+      case PERSON_EDIT:
+        System.out.println(String.format("I am %sing a person edit", undoOrRedoStr)) ; // temp
+        handlePersonEdit(undoRedoObject, undoOrRedo);
+        break;
+
       case UNDEFINED:
         throw new Exception("Unreadable UndoRedoObject");
+
+      default:
+        throw new Exception("Undo/Redo case is not handled");
     }
   }
 
@@ -229,7 +237,7 @@ public class UndoRedoHandler {
   private void handlePersonCreate(UndoRedoObject undoRedoObject,
                                   UndoOrRedo undoOrRedo) throws Exception {
 
-    // Get the data and ensure it has data for the project
+    // Get the data and ensure it has data for the person
     ArrayList<AgileItem> data = undoRedoObject.getData();
     if (data.size() < 1) {
       throw new Exception("Can't undo/redo person creation - No variables");
@@ -242,7 +250,7 @@ public class UndoRedoHandler {
     // Make the changes and refresh the list
     if (undoOrRedo == UndoOrRedo.UNDO) {
       // TODO: delete for undo
-      // Find the project in the list and ensure it exists so it can be deleted
+      // Find the person in the list and ensure it exists so it can be deleted
       Person personToDelete = null;
       for (Person personInList : mainApp.getPeople()) {
         if (personInList.getPersonID().equals(personID)) {
@@ -258,6 +266,56 @@ public class UndoRedoHandler {
       Person personToAdd = new Person(person);
       mainApp.addPerson(personToAdd);
     }
+    mainApp.refreshList();
+  }
+
+  /**
+   * Undo or redo a person edit
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handlePersonEdit(UndoRedoObject undoRedoObject,
+                                UndoOrRedo undoOrRedo) throws Exception {
+
+    // Get the data and ensure it has data for the people both before and after
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 2) {
+      throw new Exception("Can't undo/redo person edit - Less than 2 variables");
+    }
+
+    // Get the person ID which is currently in the list and the person to edit
+    Person currentPerson;
+    String currentPersonID;
+    Person newPerson;
+
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+      currentPerson = (Person) data.get(1);
+      currentPersonID = currentPerson.getPersonID();
+      newPerson = (Person) data.get(0);
+    } else {
+      currentPerson = (Person) data.get(0);
+      currentPersonID = currentPerson.getPersonID();
+      newPerson = (Person) data.get(1);
+    }
+
+    // Find the person in the list and ensure it exists
+    Person personToEdit = null;
+    for (Person personInList : mainApp.getPeople()) {
+      if (personInList.getPersonID().equals(currentPersonID)) {
+        personToEdit = personInList;
+        break;
+      }
+    }
+    if (personToEdit == null) {
+      throw new Exception("Can't undo/redo person edit - Can't find the edited person");
+    }
+
+    // Make the changes and refresh the list
+    personToEdit.setPersonID(newPerson.getPersonID());
+    personToEdit.setFirstName(newPerson.getFirstName());
+    personToEdit.setLastName(newPerson.getLastName());
     mainApp.refreshList();
   }
 

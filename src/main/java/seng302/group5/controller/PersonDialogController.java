@@ -128,7 +128,10 @@ public class PersonDialogController {
         person = new Person(personID, personFirstName, personLastName);
         mainApp.addPerson(person);
       } else if (createOrEdit == CreateOrEdit.EDIT) {
-        // TODO: Editing
+        person.setPersonID(personID);
+        person.setFirstName(personFirstName);
+        person.setLastName(personLastName);
+        mainApp.refreshList();
       }
 
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
