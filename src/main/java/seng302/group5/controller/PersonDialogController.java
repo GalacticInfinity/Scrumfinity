@@ -170,12 +170,19 @@ public class PersonDialogController {
       throw new Exception("Person ID is more than 8 characters long");
     }
     else {
-      for (Person person : mainApp.getPeople()) {
-        if (person.getPersonID().equals(inputPersonID)) {
-          throw new Exception("Person ID is not unique.");
+      String lastPersonID;
+      if (lastPerson == null) {
+        lastPersonID = "";
+      } else {
+        lastPersonID = lastPerson.getPersonID();
+      }
+      for (Person personInList : mainApp.getPeople()) {
+        String personID = personInList.getPersonID();
+        if (personID.equals(inputPersonID) && !personID.equals(lastPersonID)) {
+          throw new Exception("Person ID is not unique");
         }
       }
-      return inputPersonID;
     }
+    return inputPersonID;
   }
 }

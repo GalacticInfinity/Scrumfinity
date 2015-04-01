@@ -100,8 +100,8 @@ public class ProjectDialogController {
       } else {
         lastProjectID = lastProject.getProjectID();
       }
-      for (Project project : mainApp.getProjects()) {
-        String projectID = project.getProjectID();
+      for (Project projectInList : mainApp.getProjects()) {
+        String projectID = projectInList.getProjectID();
         if (projectID.equals(inputProjectID) && !projectID.equals(lastProjectID)) {
           throw new Exception("Project ID is not unique.");
         }
