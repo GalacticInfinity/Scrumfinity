@@ -324,10 +324,40 @@ public class Main extends Application {
     skills.add(skill);
   }
 
-  public void deletePerson(AgileItem inputPerson){
-    for(Person person : people) {
-      if(person == inputPerson){
+  /**
+   * Delete a project from the list of projects
+   * @param inputProject Project to delete - must be same object reference
+   */
+  public void deleteProject(AgileItem inputProject) {
+    for (Project project : projects) {
+      if (project == inputProject) {
+        projects.remove(project);
+        break;
+      }
+    }
+  }
+
+  /**
+   * Delete a person from the list of people
+   * @param inputPerson Person to delete - must be the same object reference
+   */
+  public void deletePerson(AgileItem inputPerson) {
+    for (Person person : people) {
+      if (person == inputPerson) {
         people.remove(person);
+        break;
+      }
+    }
+  }
+
+  /**
+   * Delete a skill from the list of skills
+   * @param inputSkill Skill to delete - must be the same object reference
+   */
+  public void deleteSkill(AgileItem inputSkill) {
+    for (Skill skill : skills) {
+      if (skill == inputSkill) {
+        skills.remove(skill);
         break;
       }
     }

@@ -179,7 +179,7 @@ public class UndoRedoHandler {
       if (projectToDelete == null) {
         throw new Exception("Can't undo project creation - Can't find the created project");
       }
-      // TODO: Call deleteProject(projectToDelete);
+      mainApp.deleteProject(projectToDelete);
     } else {
       Project projectToAdd = new Project(project);
       mainApp.addProject(projectToAdd);
@@ -361,7 +361,7 @@ public class UndoRedoHandler {
       if (skillToDelete == null) {
         throw new Exception("Can't undo skill creation - Can't find the created skill");
       }
-//      TODO: implement mainApp.deleteSkill(skillToDelete);
+      mainApp.deleteSkill(skillToDelete);
     } else {
       Skill skillToAdd = new Skill(skill);
       mainApp.addSkill(skillToAdd);
