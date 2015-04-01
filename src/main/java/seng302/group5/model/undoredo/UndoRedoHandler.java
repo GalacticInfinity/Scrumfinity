@@ -7,6 +7,7 @@ import seng302.group5.Main;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
+import seng302.group5.model.Skill;
 
 /**
  * Created by Michael on 3/17/2015.
@@ -107,15 +108,15 @@ public class UndoRedoHandler {
         handleProjectEdit(undoRedoObject, undoOrRedo);
         break;
 
-      case PROJECT_DELETE:
-        System.out.println(String.format("I am %sing a project deletion", undoOrRedoStr));  // temp
+//      case PROJECT_DELETE:
+//        System.out.println(String.format("I am %sing a project deletion", undoOrRedoStr));  // temp
         // Some possible delete code for future
 //        if (data.size() < 3) {
 //          throw new Exception("Can't recreate project - Less than 3 variables");
 //        }
 //        Project project = new Project(data.get(0), data.get(1), data.get(2));
 //        mainApp.addProject(project);
-        break;
+//        break;
 
       case PERSON_CREATE:
         System.out.println(String.format("I am %sing a person creation", undoOrRedoStr)) ; // temp
@@ -125,6 +126,16 @@ public class UndoRedoHandler {
       case PERSON_EDIT:
         System.out.println(String.format("I am %sing a person edit", undoOrRedoStr)) ; // temp
         handlePersonEdit(undoRedoObject, undoOrRedo);
+        break;
+
+      case SKILL_CREATE:
+        System.out.println(String.format("I am %sing a skill creation", undoOrRedoStr)) ; // temp
+        handleSkillCreate(undoRedoObject, undoOrRedo);
+        break;
+
+      case SKILL_EDIT:
+        System.out.println(String.format("I am %sing a skill edit", undoOrRedoStr)) ; // temp
+        handleSkillEdit(undoRedoObject, undoOrRedo);
         break;
 
       case UNDEFINED:
@@ -157,7 +168,6 @@ public class UndoRedoHandler {
 
     // Make the changes and refresh the list
     if (undoOrRedo == UndoOrRedo.UNDO) {
-      // TODO: delete for undo
       // Find the project in the list and ensure it exists so it can be deleted
       Project projectToDelete = null;
       for (Project projectInList : mainApp.getProjects()) {
@@ -169,7 +179,7 @@ public class UndoRedoHandler {
       if (projectToDelete == null) {
         throw new Exception("Can't undo project creation - Can't find the created project");
       }
-      // TODO: Call deleteItem(projectToDelete);
+      // TODO: Call deleteProject(projectToDelete);
     } else {
       Project projectToAdd = new Project(project);
       mainApp.addProject(projectToAdd);
@@ -249,7 +259,6 @@ public class UndoRedoHandler {
 
     // Make the changes and refresh the list
     if (undoOrRedo == UndoOrRedo.UNDO) {
-      // TODO: delete for undo
       // Find the person in the list and ensure it exists so it can be deleted
       Person personToDelete = null;
       for (Person personInList : mainApp.getPeople()) {
@@ -316,6 +325,96 @@ public class UndoRedoHandler {
     personToEdit.setPersonID(newPerson.getPersonID());
     personToEdit.setFirstName(newPerson.getFirstName());
     personToEdit.setLastName(newPerson.getLastName());
+    mainApp.refreshList();
+  }
+
+  /**
+   * Undo or redo a skill creation
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handleSkillCreate(UndoRedoObject undoRedoObject,
+                                 UndoOrRedo undoOrRedo) throws Exception {
+
+    // Get the data and ensure it has data for the skill
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 1) {
+      throw new Exception("Can't undo/redo skill creation - No variables");
+    }
+
+    // Get the skill name which is currently in the list and the skill to change
+    Skill skill = (Skill) data.get(0);
+    String skillName = skill.getSkillName();
+
+    // Make the changes and refresh the list
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+      // Find the skill in the list and ensure it exists so it can be deleted
+      Skill skillToDelete = null;
+      for (Skill skillInList : mainApp.getSkills()) {
+        if (skillInList.getSkillName().equals(skillName)) {
+          skillToDelete = skillInList;
+          break;
+        }
+      }
+      if (skillToDelete == null) {
+        throw new Exception("Can't undo skill creation - Can't find the created skill");
+      }
+//      TODO: implement mainApp.deleteSkill(skillToDelete);
+    } else {
+      Skill skillToAdd = new Skill(skill);
+      mainApp.addSkill(skillToAdd);
+    }
+    mainApp.refreshList();
+  }
+
+  /**
+   * Undo or redo a skill edit
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handleSkillEdit(UndoRedoObject undoRedoObject,
+                               UndoOrRedo undoOrRedo) throws Exception {
+
+    // Get the data and ensure it has data for the skills both before and after
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 2) {
+      throw new Exception("Can't undo/redo skill edit - Less than 2 variables");
+    }
+
+    // Get the skill name which is currently in the list and the skill to edit
+    Skill currentSkill;
+    String currentSkillName;
+    Skill newSkill;
+
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+      currentSkill = (Skill) data.get(1);
+      currentSkillName = currentSkill.getSkillName();
+      newSkill = (Skill) data.get(0);
+    } else {
+      currentSkill = (Skill) data.get(0);
+      currentSkillName = currentSkill.getSkillName();
+      newSkill = (Skill) data.get(1);
+    }
+
+    // Find the skill in the list and ensure it exists
+    Skill skillToEdit = null;
+    for (Skill skillInList : mainApp.getSkills()) {
+      if (skillInList.getSkillName().equals(currentSkillName)) {
+        skillToEdit = skillInList;
+        break;
+      }
+    }
+    if (skillToEdit == null) {
+      throw new Exception("Can't undo/redo skill edit - Can't find the edited skill");
+    }
+
+    // Make the changes and refresh the list
+    skillToEdit.setSkillName(newSkill.getSkillName());
+    skillToEdit.setSkillDescription(newSkill.getSkillDescription());
     mainApp.refreshList();
   }
 

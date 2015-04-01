@@ -13,6 +13,8 @@ import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Skill;
+import seng302.group5.model.undoredo.Action;
+import seng302.group5.model.undoredo.UndoRedoObject;
 
 /**
  * @author liang Ma
@@ -26,8 +28,8 @@ public class SkillsDialogController {
   private Main mainApp;
   private Stage thisStage;
   private Skill skill;
+  private Skill lastSkill;
   private CreateOrEdit createOrEdit;
-  private String lastSkillName;
 
   /**
    * Setup the skill dialog controller
@@ -58,10 +60,11 @@ public class SkillsDialogController {
 
     if (skill != null) {
       this.skill = skill;
-      this.lastSkillName = skill.getSkillName();
+      // Make a copy for the undo stack
+      this.lastSkill = new Skill(skill);
     } else {
       this.skill = null;
-      this.lastSkillName = "";
+      this.lastSkill = null;
     }
 
     skillDescription.setOnKeyPressed(event -> {
@@ -86,6 +89,12 @@ public class SkillsDialogController {
     } else if (inputSkillName.length() > 32) {
       throw new Exception("Skill Name is more than 32 characters long");
     } else {
+      String lastSkillName;
+      if (lastSkill == null) {
+        lastSkillName = "";
+      } else {
+        lastSkillName = lastSkill.getSkillName();
+      }
       for (Skill aSkill : mainApp.getSkills()) {
         String aSkillName = aSkill.getSkillName();
         if (aSkillName.equals(inputSkillName) && !aSkillName.equals(lastSkillName)) {
@@ -94,6 +103,27 @@ public class SkillsDialogController {
       }
     }
     return inputSkillName;
+  }
+
+  /**
+   * Generate an UndoRedoObject to place in the stack
+   * @return the UndoRedoObject to store
+   */
+  private UndoRedoObject generateUndoRedoObject() {
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+
+    if (createOrEdit == CreateOrEdit.CREATE) {
+      undoRedoObject.setAction(Action.SKILL_CREATE);
+    } else {
+      undoRedoObject.setAction(Action.SKILL_EDIT);
+      undoRedoObject.addDatum(lastSkill);
+    }
+
+    // Store a copy of skill to edit in stack to avoid reference problems
+    Skill skillToStore = new Skill(skill);
+    undoRedoObject.addDatum(skillToStore);
+
+    return undoRedoObject;
   }
 
   /**
@@ -121,6 +151,9 @@ public class SkillsDialogController {
       skill.setSkillDescription(skillDescription.getText());
       mainApp.refreshList();
     }
+
+    UndoRedoObject undoRedoObject = generateUndoRedoObject();
+    mainApp.newAction(undoRedoObject);
 
     thisStage.close();
   }

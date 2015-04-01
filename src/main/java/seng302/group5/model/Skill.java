@@ -37,6 +37,15 @@ public class Skill implements AgileItem{
   }
 
   /**
+   * Constructor to create a clone of an existing skill
+   * @param clone Skill to clone
+   */
+  public Skill(Skill clone) {
+    this.skillName = clone.getSkillName();
+    this.skillDescription = clone.getSkillDescription();
+  }
+
+  /**
    * Set skillName for a skill.
    * @param skillName skillName of the skill
    */
