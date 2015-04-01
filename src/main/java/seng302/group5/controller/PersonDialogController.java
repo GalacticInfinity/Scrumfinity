@@ -8,6 +8,8 @@ import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Person;
+import seng302.group5.model.undoredo.Action;
+import seng302.group5.model.undoredo.UndoRedoObject;
 
 /**
  * Created by Zander on 18/03/2015.
@@ -23,7 +25,7 @@ public class PersonDialogController {
   private Stage thisStage;
   private CreateOrEdit createOrEdit;
   private Person person;
-  private String lastPersonID;
+  private Person lastPerson;
 
   /**
    * Setup the person dialog controller
@@ -55,13 +57,34 @@ public class PersonDialogController {
 
     if (person != null) {
       this.person = person;
-      this.lastPersonID = person.getPersonID();
+      this.lastPerson = new Person(person);
     } else {
       this.person = null;
-      this.lastPersonID = "";
+      this.lastPerson = null;
     }
 
     btnCreatePerson.setDefaultButton(true);
+  }
+
+  /**
+   * Generate an UndoRedoObject to place in the stack
+   * @return the UndoRedoObject to store
+   */
+  private UndoRedoObject generateUndoRedoObject() {
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+
+    if (createOrEdit == CreateOrEdit.CREATE) {
+      undoRedoObject.setAction(Action.PERSON_CREATE);
+    } else {
+      undoRedoObject.setAction(Action.PERSON_EDIT);
+      undoRedoObject.addDatum(lastPerson);
+    }
+
+    // Store a copy of person to edit in stack to avoid reference problems
+    Person personToStore = new Person(person);
+    undoRedoObject.addDatum(personToStore);
+
+    return undoRedoObject;
   }
 
   /**
@@ -101,8 +124,16 @@ public class PersonDialogController {
       System.out.println(String.format("%s\n%s", title, errors.toString()));
     }
     else {
-      Person person = new Person(personID, personFirstName, personLastName);
-      mainApp.addPerson(person);
+      if (createOrEdit == CreateOrEdit.CREATE) {
+        person = new Person(personID, personFirstName, personLastName);
+        mainApp.addPerson(person);
+      } else if (createOrEdit == CreateOrEdit.EDIT) {
+        // TODO: Editing
+      }
+
+      UndoRedoObject undoRedoObject = generateUndoRedoObject();
+      mainApp.newAction(undoRedoObject);
+
       thisStage.close();
     }
   }

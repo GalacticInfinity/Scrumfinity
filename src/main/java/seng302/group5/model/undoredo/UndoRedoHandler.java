@@ -5,6 +5,7 @@ import java.util.Stack;
 
 import seng302.group5.Main;
 import seng302.group5.model.AgileItem;
+import seng302.group5.model.Person;
 import seng302.group5.model.Project;
 
 /**
@@ -116,6 +117,11 @@ public class UndoRedoHandler {
 //        mainApp.addProject(project);
         break;
 
+      case PERSON_CREATE:
+        System.out.println(String.format("I am %sing a person creation", undoOrRedoStr)) ; // temp
+        handlePersonCreate(undoRedoObject, undoOrRedo);
+        break;
+
       case UNDEFINED:
         throw new Exception("Unreadable UndoRedoObject");
     }
@@ -137,7 +143,7 @@ public class UndoRedoHandler {
       throw new Exception("Can't undo/redo project creation - No variables");
     }
 
-    // Get the project ID which is currently in the list and the project to edit
+    // Get the project ID which is currently in the list and the project to change
     Project project = (Project) data.get(0);
     String projectID = project.getProjectID();
 
@@ -210,6 +216,48 @@ public class UndoRedoHandler {
     projectToEdit.setProjectID(newProject.getProjectID());
     projectToEdit.setProjectName(newProject.getProjectName());
     projectToEdit.setProjectDescription(newProject.getProjectDescription());
+    mainApp.refreshList();
+  }
+
+  /**
+   * Undo or redo a person creation
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handlePersonCreate(UndoRedoObject undoRedoObject,
+                                  UndoOrRedo undoOrRedo) throws Exception {
+
+    // Get the data and ensure it has data for the project
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 1) {
+      throw new Exception("Can't undo/redo person creation - No variables");
+    }
+
+    // Get the person ID which is currently in the list and the person to change
+    Person person = (Person) data.get(0);
+    String personID = person.getPersonID();
+
+    // Make the changes and refresh the list
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+      // TODO: delete for undo
+      // Find the project in the list and ensure it exists so it can be deleted
+      Person personToDelete = null;
+      for (Person personInList : mainApp.getPeople()) {
+        if (personInList.getPersonID().equals(personID)) {
+          personToDelete = personInList;
+          break;
+        }
+      }
+      if (personToDelete == null) {
+        throw new Exception("Can't undo person creation - Can't find the created person");
+      }
+      mainApp.deletePerson(personToDelete);
+    } else {
+      Person personToAdd = new Person(person);
+      mainApp.addPerson(personToAdd);
+    }
     mainApp.refreshList();
   }
 

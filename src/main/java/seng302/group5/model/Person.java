@@ -36,6 +36,17 @@ public class Person implements AgileItem {
     this.lastName = lastName;
   }
 
+  /**
+   * Constructor to create a clone of an existing person
+   *
+   * @param clone Person to clone
+   */
+  public Person(Person clone) {
+    this.personID = clone.getPersonID();
+    this.firstName = clone.getFirstName();
+    this.lastName = clone.getLastName();
+  }
+
   public String getPersonID() {
     return personID;
   }
