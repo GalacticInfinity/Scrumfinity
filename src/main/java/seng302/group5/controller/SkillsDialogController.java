@@ -1,11 +1,14 @@
 package seng302.group5.controller;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
@@ -61,6 +64,14 @@ public class SkillsDialogController {
       this.lastSkillName = "";
     }
 
+    skillDescription.setOnKeyPressed(new EventHandler<KeyEvent>() {
+      @Override
+      public void handle(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+          skillCreation.fire();
+        }
+      }
+    });
     skillCreation.setDefaultButton(true);
   }
 
@@ -71,6 +82,8 @@ public class SkillsDialogController {
    * @throws Exception Exception with message explaining why input is invalid.
    */
   private String parseSkillName(String inputSkillName) throws Exception {
+    inputSkillName = inputSkillName.trim();
+
     if (inputSkillName.isEmpty()) {
       throw new Exception("Skill Name is empty");
     } else if (inputSkillName.length() > 32) {
@@ -95,7 +108,13 @@ public class SkillsDialogController {
     try {
       nameOfSkill = parseSkillName(skillName.getText());
     } catch (Exception e1) {
-      //e1.printStackTrace();
+      // Error - Don't create the object
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Invalid Field");
+      alert.setHeaderText(null);
+      alert.setContentText(e1.getMessage());
+      alert.showAndWait();
+      return;
     }
     if (createOrEdit == CreateOrEdit.CREATE) {
       skill = new Skill(nameOfSkill, skillDescription.getText());
