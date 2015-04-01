@@ -64,12 +64,9 @@ public class SkillsDialogController {
       this.lastSkillName = "";
     }
 
-    skillDescription.setOnKeyPressed(new EventHandler<KeyEvent>() {
-      @Override
-      public void handle(KeyEvent event) {
-        if (event.getCode() == KeyCode.ENTER) {
-          skillCreation.fire();
-        }
+    skillDescription.setOnKeyPressed(event -> {
+      if (event.getCode() == KeyCode.ENTER) {
+        skillCreation.fire();
       }
     });
     skillCreation.setDefaultButton(true);

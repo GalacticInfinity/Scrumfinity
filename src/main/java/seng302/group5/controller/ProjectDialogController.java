@@ -69,12 +69,9 @@ public class ProjectDialogController {
       this.lastProject = null;
     }
 
-    projectDescriptionField.setOnKeyPressed(new EventHandler<KeyEvent>() {
-      @Override
-      public void handle(KeyEvent event) {
-        if (event.getCode() == KeyCode.ENTER) {
-          btnConfirm.fire();
-        }
+    projectDescriptionField.setOnKeyPressed(event -> {
+      if (event.getCode() == KeyCode.ENTER) {
+        btnConfirm.fire();
       }
     });
     btnConfirm.setDefaultButton(true);
