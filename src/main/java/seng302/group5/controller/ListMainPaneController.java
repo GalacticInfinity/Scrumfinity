@@ -10,6 +10,11 @@ import javafx.scene.control.TextArea;
 import seng302.group5.Main;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.util.Settings;
+import seng302.group5.model.Person;
+import seng302.group5.model.Project;
+import seng302.group5.model.Team;
+import seng302.group5.model.Skill;
+
 
 /**
  * Created by Michael on 3/15/2015.
@@ -32,6 +37,7 @@ public class ListMainPaneController {
   @FXML
   private void initialize() {
     Settings.currentListType = "Project";
+    Settings.setSysDefault();
     iniActorList();
     showHideList();
   }
@@ -47,8 +53,59 @@ public class ListMainPaneController {
                               AgileItem previous, AgileItem next) {
             if (next != null) {
               // Will place checks to update main pane here based on item type selected
-              sampleTextArea.clear();
-              sampleTextArea.appendText(next.toString());
+              if (Settings.currentListType == "People") {
+                sampleTextArea.clear();
+                sampleTextArea.appendText("Person information \nPerson ID: ");
+                for (Person person : mainApp.getPeople()) {
+                  if (person.getPersonID().equals(next.toString())){
+                    sampleTextArea.appendText(person.getPersonID());
+                    sampleTextArea.appendText("\nFirst Name: ");
+                    sampleTextArea.appendText(person.getFirstName());
+                    sampleTextArea.appendText("\nLast Name: ");
+                    sampleTextArea.appendText(person.getLastName());
+                    sampleTextArea.appendText("\nSkills: ");
+                  }
+                }
+              } else if (Settings.currentListType == "Project") {
+                sampleTextArea.clear();
+                sampleTextArea.appendText("Project information \nProject ID: ");
+                for (Project project : mainApp.getProjects()) {
+                  if (project.getProjectID().equals(next.toString())) {
+                    sampleTextArea.appendText(project.getProjectID());
+                    sampleTextArea.appendText("\nProject Name: ");
+                    sampleTextArea.appendText(project.getProjectName());
+                    sampleTextArea.appendText("\nProject Description: \n");
+                    sampleTextArea.appendText(project.getProjectDescription());
+                  }
+                }
+              } else if (Settings.currentListType == "Skills") {
+                sampleTextArea.clear();
+                sampleTextArea.appendText("Skills information \nSkill Name: ");
+                for (Skill skill : mainApp.getSkills()) {
+                  if (skill.getSkillName().equals(next.toString())) {
+                    sampleTextArea.appendText(skill.getSkillName().toString());
+                    sampleTextArea.appendText("\nSkill Description: ");
+                    sampleTextArea.appendText(skill.getSkillDescription());
+                  }
+                }
+              } else if (Settings.currentListType == "Team") {
+                sampleTextArea.clear();
+                sampleTextArea.appendText("Team information \nTeam ID: ");
+                for (Team team : mainApp.getTeams()) {
+                  if (team.getTeamID().equals(next.toString())) {
+                    sampleTextArea.appendText(team.getTeamID());
+                    sampleTextArea.appendText("\nTeam Description: ");
+                    sampleTextArea.appendText(team.getTeamDescription());
+                    sampleTextArea.appendText("\nTeam members: \n");
+                    for (Person member : team.getTeamMembers()) {
+                      sampleTextArea.appendText(member.getFirstName());
+                      sampleTextArea.appendText(" - ");
+                      sampleTextArea.appendText(member.getPersonID());
+                      sampleTextArea.appendText("\n");
+                    }
+                  }
+                }
+              }
               selectedItem = next;
             }
           }
@@ -107,33 +164,62 @@ public class ListMainPaneController {
     }
   }
 
-  public Object getSelectedProject() {
-    if(isListShown == false || Settings.currentListType != "Project"){
+  public AgileItem getSelected(){
+    String listType = Settings.currentListType;
+    switch (listType) {
+      case "Project":
+        if(isListShown == false || Settings.currentListType != "Project"){
+          return null;
+        }
+        return selectedItem;
+      case "People":
+        if(isListShown == false || Settings.currentListType != "People"){
+          return null;
+        }
+        return selectedItem;
+      case "Skills":
+        if(isListShown == false || Settings.currentListType != "Skills"){
+          return null;
+        }
+        return selectedItem;
+      case "Team":
+        if(isListShown == false || Settings.currentListType != "Team") {
       return null;
     }
     return selectedItem;
+    }
+    return null;
   }
 
-  public Object getSelectedPerson() {
-    if(isListShown == false || Settings.currentListType != "People"){
-      return null;
-    }
-    return selectedItem;
-  }
+//
+//  public Object getSelectedProject() {
+//    if(isListShown == false || Settings.currentListType != "Project"){
+//      return null;
+//    }
+//    return selectedItem;
+//  }
 
-  public Object getSelectedTeam() {
-    if(isListShown == false || Settings.currentListType != "Team") {
-      return null;
-    }
-    return selectedItem;
-  }
+//  public Object getSelectedPerson() {
+//    if(isListShown == false || Settings.currentListType != "People"){
+//      return null;
+//    }
+//    return selectedItem;
+//  }
 
-  public Object getSelectedSkill() {
-    if(isListShown == false || Settings.currentListType != "Skills"){
-      return null;
-    }
-    return selectedItem;
-  }
+//  public Object getSelectedTeam() {
+//    if(isListShown == false || Settings.currentListType != "Team") {
+//      return null;
+//    }
+//    return selectedItem;
+//  }
+//
+//  public Object getSelectedSkill() {
+//    if(isListShown == false || Settings.currentListType != "Skills"){
+//      return null;
+//    }
+//    return selectedItem;
+//  }
+
   public void setMainApp(Main mainApp) {
     this.mainApp = mainApp;
   }
