@@ -4,9 +4,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<SplitPane dividerPositions="0.29797979797979796" prefHeight="371.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.ListMainPaneController">
+<SplitPane fx:id="splitPane" dividerPositions="0.29797979797979796" prefHeight="371.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.ListMainPaneController">
    <items>
-      <AnchorPane maxWidth="200.0" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" SplitPane.resizableWithParent="false">
+      <AnchorPane fx:id="listViewPane" maxWidth="200.0" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" SplitPane.resizableWithParent="false">
          <children>
             <ListView fx:id="listView" layoutX="-7.0" maxWidth="200.0" prefHeight="371.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
             <ScrollBar layoutX="178.0" layoutY="-1.0" orientation="VERTICAL" prefHeight="369.0" prefWidth="17.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />

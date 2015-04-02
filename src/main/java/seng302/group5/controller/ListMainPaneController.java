@@ -6,7 +6,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.AnchorPane;
 import seng302.group5.Main;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.util.Settings;
@@ -25,6 +27,8 @@ public class ListMainPaneController {
 
   @FXML private ListView listView;
   @FXML private TextArea sampleTextArea;
+  @FXML private SplitPane splitPane;
+  @FXML private AnchorPane listViewPane;
   private Main mainApp;
   private boolean isListShown = true;
 
@@ -122,6 +126,8 @@ public class ListMainPaneController {
       ObservableList<AgileItem> clear = FXCollections.observableArrayList();
       listView.setItems(clear);
       isListShown = false;
+      // Hide the pane containing the list
+      splitPane.getItems().remove(listViewPane);
     }
   }
 
@@ -160,6 +166,10 @@ public class ListMainPaneController {
         isListShown = true;
         listView.setItems(mainApp.getTeams());
         break;
+    }
+    // Show the pane containing the list
+    if (splitPane.getItems().size() < 2) {
+      splitPane.getItems().add(0, listViewPane);
     }
   }
 
