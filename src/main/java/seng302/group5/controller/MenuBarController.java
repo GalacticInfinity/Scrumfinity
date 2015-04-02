@@ -100,6 +100,7 @@ public class MenuBarController {
     try {
       File file = fileChooser.showSaveDialog(mainApp.getPrimaryStage());
       Saving.saveDataToFile(file, mainApp);
+      mainApp.setSaved(true);
     } catch (Exception e) {
       System.out.println("No filename specified");
   }

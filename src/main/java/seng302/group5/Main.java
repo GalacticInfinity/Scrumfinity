@@ -48,6 +48,8 @@ public class Main extends Application {
 
   private UndoRedoHandler undoRedoHandler;
 
+  private boolean saved;
+
   @Override
   public void start(Stage primaryStage) {
     this.primaryStage = primaryStage;
@@ -60,8 +62,7 @@ public class Main extends Application {
     // Initialise the undo/redo handler
     undoRedoHandler = new UndoRedoHandler(this);
 
-    //  Load objects into list view
-    LMPC.checkListType();
+    saved = true;
   }
 
 
@@ -113,6 +114,7 @@ public class Main extends Application {
 
       ListMainPaneController controller = loader.getController();
       controller.setMainApp(this);
+      controller.checkListType();   // Load objects into list view
       LMPC = controller;
 
       rootLayout.setCenter(splitPane);
@@ -260,17 +262,25 @@ public class Main extends Application {
     }
   }
 
+  /**
+   * Undo last action
+   */
   public void undo() {
     try {
       undoRedoHandler.undo();
+      setSaved(false);
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
+  /**
+   * Redo last action
+   */
   public void redo() {
     try {
       undoRedoHandler.redo();
+      setSaved(false);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -278,6 +288,21 @@ public class Main extends Application {
 
   public void newAction(UndoRedoObject undoRedoObject) {
     undoRedoHandler.newAction(undoRedoObject);
+    setSaved(false);
+  }
+
+  /**
+   * Set the saved variable and change window title accordingly
+   * @param saved True if saved
+   */
+  public void setSaved(boolean saved) {
+    if (saved) {
+      primaryStage.setTitle("Scrumfinity");
+      this.saved = true;
+    } else {
+      primaryStage.setTitle("Scrumfinity *");
+      this.saved = false;
+    }
   }
 
   public Stage getPrimaryStage(){
