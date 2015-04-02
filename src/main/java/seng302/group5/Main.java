@@ -329,7 +329,7 @@ public class Main extends Application {
    * Delete a project from the list of projects
    * @param inputProject Project to delete - must be same object reference
    */
-  public void deleteProject(AgileItem inputProject) {
+  public void deleteProject(Project inputProject) {
     for (Project project : projects) {
       if (project == inputProject) {
         projects.remove(project);
@@ -342,7 +342,7 @@ public class Main extends Application {
    * Delete a person from the list of people
    * @param inputPerson Person to delete - must be the same object reference
    */
-  public void deletePerson(AgileItem inputPerson) {
+  public void deletePerson(Person inputPerson) {
     for (Person person : people) {
       if (person == inputPerson) {
         people.remove(person);
@@ -355,7 +355,7 @@ public class Main extends Application {
    * Delete a skill from the list of skills
    * @param inputSkill Skill to delete - must be the same object reference
    */
-  public void deleteSkill(AgileItem inputSkill) {
+  public void deleteSkill(Skill inputSkill) {
     for (Skill skill : skills) {
       if (skill == inputSkill) {
         skills.remove(skill);
@@ -364,7 +364,11 @@ public class Main extends Application {
     }
   }
 
-  public void deleteTeam(AgileItem inputTeam) {
+  /**
+   * Delete a team from the list of teams
+   * @param inputTeam Team to delete - must be the same object reference
+   */
+  public void deleteTeam(Team inputTeam) {
     for(Team team : teams) {
       if (team == inputTeam) {
         teams.remove(team);
@@ -373,6 +377,13 @@ public class Main extends Application {
     }
   }
 
+    /**
+   * Generate an UndoRedoObject to place in the stack
+     *
+   * @param action The action to store in the object
+   * @param agileItem The item to store in the object
+   * @return the UndoRedoObject to store
+   */
   private UndoRedoObject generateDelUndoRedoObject(Action action, AgileItem agileItem) {
     UndoRedoObject undoRedoObject = new UndoRedoObject();
 
@@ -401,27 +412,33 @@ public class Main extends Application {
     return undoRedoObject;
   }
 
+  /**
+   * Generic delete function which deletes an item from the appropriate list and then adds
+   * the action to the undo/redo stack
+   *
+   * @param agileItem Item to delete
+   */
   public void delete(AgileItem agileItem) {
     String listType = LMPC.getCurrentListType();
     UndoRedoObject undoRedoObject;
     switch (listType) {
       case "Project":
-        deleteProject(agileItem);
+        deleteProject((Project) agileItem);
         undoRedoObject = generateDelUndoRedoObject(Action.PROJECT_DELETE, agileItem);
         newAction(undoRedoObject);
         break;
       case "People":
-        deletePerson(agileItem);
+        deletePerson((Person) agileItem);
         undoRedoObject = generateDelUndoRedoObject(Action.PERSON_DELETE, agileItem);
         newAction(undoRedoObject);
         break;
       case "Skills":
-        deleteSkill(agileItem);
+        deleteSkill((Skill) agileItem);
         undoRedoObject = generateDelUndoRedoObject(Action.SKILL_DELETE, agileItem);
         newAction(undoRedoObject);
         break;
       case "Team":
-        deleteTeam(agileItem);
+        deleteTeam((Team) agileItem);
         // TODO: undo redo - cascading delete prompt
         break;
       default:
