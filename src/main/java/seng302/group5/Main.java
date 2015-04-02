@@ -59,6 +59,9 @@ public class Main extends Application {
 
     // Initialise the undo/redo handler
     undoRedoHandler = new UndoRedoHandler(this);
+
+    //  Load objects into list view
+    LMPC.checkListType();
   }
 
 

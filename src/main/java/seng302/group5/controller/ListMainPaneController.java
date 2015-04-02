@@ -28,7 +28,7 @@ public class ListMainPaneController {
   private Main mainApp;
   private boolean isListShown = true;
 
-  public ListMainPaneController() {};
+  public ListMainPaneController() {}
   private AgileItem selectedItem;
 
   /**
@@ -39,7 +39,6 @@ public class ListMainPaneController {
     Settings.currentListType = "Project";
     Settings.setSysDefault();
     iniActorList();
-    showHideList();
   }
 
   /**
