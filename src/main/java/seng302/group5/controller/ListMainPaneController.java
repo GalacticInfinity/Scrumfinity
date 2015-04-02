@@ -168,57 +168,34 @@ public class ListMainPaneController {
     String listType = Settings.currentListType;
     switch (listType) {
       case "Project":
-        if(isListShown == false || Settings.currentListType != "Project"){
+        if (isListShown == false || listType != "Project") {
           return null;
         }
         return selectedItem;
       case "People":
-        if(isListShown == false || Settings.currentListType != "People"){
+        if (isListShown == false) {
+          System.out.println("im in here!");
           return null;
         }
         return selectedItem;
       case "Skills":
-        if(isListShown == false || Settings.currentListType != "Skills"){
+        if (isListShown == false || listType != "Skills") {
           return null;
         }
         return selectedItem;
       case "Team":
-        if(isListShown == false || Settings.currentListType != "Team") {
-      return null;
-    }
-    return selectedItem;
+        if (isListShown == false || listType != "Team") {
+          return null;
+        }
+        return selectedItem;
     }
     return null;
   }
 
-//
-//  public Object getSelectedProject() {
-//    if(isListShown == false || Settings.currentListType != "Project"){
-//      return null;
-//    }
-//    return selectedItem;
-//  }
+  public String getCurrentListType() {
+    return Settings.currentListType;
+  }
 
-//  public Object getSelectedPerson() {
-//    if(isListShown == false || Settings.currentListType != "People"){
-//      return null;
-//    }
-//    return selectedItem;
-//  }
-
-//  public Object getSelectedTeam() {
-//    if(isListShown == false || Settings.currentListType != "Team") {
-//      return null;
-//    }
-//    return selectedItem;
-//  }
-//
-//  public Object getSelectedSkill() {
-//    if(isListShown == false || Settings.currentListType != "Skills"){
-//      return null;
-//    }
-//    return selectedItem;
-//  }
 
   public void setMainApp(Main mainApp) {
     this.mainApp = mainApp;

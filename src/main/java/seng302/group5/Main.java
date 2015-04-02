@@ -28,6 +28,7 @@ import seng302.group5.model.Person;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.UndoRedoHandler;
 import seng302.group5.model.undoredo.UndoRedoObject;
+import seng302.group5.model.util.Settings;
 
 /**
  * Main class to run the application
@@ -360,6 +361,37 @@ public class Main extends Application {
         skills.remove(skill);
         break;
       }
+    }
+  }
+
+  public void deleteTeam(AgileItem inputTeam){
+    for(Team team : teams) {
+      if (team == inputTeam) {
+        teams.remove(team);
+        break;
+      }
+    }
+  }
+
+  public void delete(AgileItem agileItem){
+    String listType = LMPC.getCurrentListType();
+    switch (listType) {
+      case "Project":
+        deleteProject(agileItem);
+        // TODO: Undo/red0 stuff
+        break;
+      case "People":
+        deletePerson(agileItem);
+        // TODO: undo redo
+        break;
+      case "Skills":
+        deleteSkill(agileItem);
+        // TODO: SHINGY LOOK!
+        break;
+      case "Team":
+        deleteTeam(agileItem);
+        // TODO: undo redo
+        break;
     }
   }
 
