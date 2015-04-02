@@ -108,15 +108,10 @@ public class UndoRedoHandler {
         handleProjectEdit(undoRedoObject, undoOrRedo);
         break;
 
-//      case PROJECT_DELETE:
-//        System.out.println(String.format("I am %sing a project deletion", undoOrRedoStr));  // temp
-        // Some possible delete code for future
-//        if (data.size() < 3) {
-//          throw new Exception("Can't recreate project - Less than 3 variables");
-//        }
-//        Project project = new Project(data.get(0), data.get(1), data.get(2));
-//        mainApp.addProject(project);
-//        break;
+      case PROJECT_DELETE:
+        System.out.println(String.format("I am %sing a project deletion", undoOrRedoStr));   // temp
+        handleProjectDelete(undoRedoObject, undoOrRedo);
+        break;
 
       case PERSON_CREATE:
         System.out.println(String.format("I am %sing a person creation", undoOrRedoStr)) ; // temp
@@ -141,6 +136,11 @@ public class UndoRedoHandler {
       case SKILL_EDIT:
         System.out.println(String.format("I am %sing a skill edit", undoOrRedoStr)) ; // temp
         handleSkillEdit(undoRedoObject, undoOrRedo);
+        break;
+
+      case SKILL_DELETE:
+        System.out.println(String.format("I am %sing a skill deletion", undoOrRedoStr));   // temp
+        handleSkillDelete(undoRedoObject, undoOrRedo);
         break;
 
       case UNDEFINED:
@@ -239,6 +239,48 @@ public class UndoRedoHandler {
     projectToEdit.setProjectID(newProject.getProjectID());
     projectToEdit.setProjectName(newProject.getProjectName());
     projectToEdit.setProjectDescription(newProject.getProjectDescription());
+    mainApp.refreshList();
+  }
+
+  /**
+   * Undo or redo a project deletion
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handleProjectDelete(UndoRedoObject undoRedoObject,
+                                   UndoOrRedo undoOrRedo) throws Exception {
+
+    // Get the data and ensure it has data for the project
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 1) {
+      throw new Exception("Can't undo/redo project deletion - No variables");
+    }
+
+    // Get the project and ID to undo/redo deletion of
+    Project project = (Project) data.get(0);
+    String projectID = project.getProjectID();
+
+    // Make the changes and refresh the list
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+      // Create the deleted project again
+      Project projectToAdd = new Project(project);
+      mainApp.addProject(projectToAdd);
+    } else {
+      // Find the project in list and ensure it exists so it can be deleted again
+      Project projectToDelete = null;
+      for (Project projectInList : mainApp.getProjects()) {
+        if (projectInList.getProjectID().equals(projectID)) {
+          projectToDelete = projectInList;
+          break;
+        }
+      }
+      if (projectToDelete == null) {
+        throw new Exception("Can't redo project deletion - Can't find the created project");
+      }
+      mainApp.deleteProject(projectToDelete);
+    }
     mainApp.refreshList();
   }
 
@@ -359,7 +401,7 @@ public class UndoRedoHandler {
       Person personToAdd = new Person(person);
       mainApp.addPerson(personToAdd);
     } else {
-      // Find the person and list and ensure it exists so it can be deleted
+      // Find the person in list and ensure it exists so it can be deleted again
       Person personToDelete = null;
       for (Person personInList : mainApp.getPeople()) {
         if (personInList.getPersonID().equals(personID)) {
@@ -462,6 +504,48 @@ public class UndoRedoHandler {
     // Make the changes and refresh the list
     skillToEdit.setSkillName(newSkill.getSkillName());
     skillToEdit.setSkillDescription(newSkill.getSkillDescription());
+    mainApp.refreshList();
+  }
+
+  /**
+   * Undo or redo a skill deletion
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handleSkillDelete(UndoRedoObject undoRedoObject,
+                                 UndoOrRedo undoOrRedo) throws Exception {
+
+    // Get the data and ensure it has data for the skill
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 1) {
+      throw new Exception("Can't undo/redo skill deletion - No variables");
+    }
+
+    // Get the skill and name to undo/redo deletion of
+    Skill skill = (Skill) data.get(0);
+    String skillName = skill.getSkillName();
+
+    // Make the changes and refresh the list
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+      // Create the deleted skill again
+      Skill skillToAdd = new Skill(skill);
+      mainApp.addSkill(skillToAdd);
+    } else {
+      // Find the skill in list and ensure it exists so it can be deleted again
+      Skill skillToDelete = null;
+      for (Skill skillInList : mainApp.getSkills()) {
+        if (skillInList.getSkillName().equals(skillName)) {
+          skillToDelete = skillInList;
+          break;
+        }
+      }
+      if (skillToDelete == null) {
+        throw new Exception("Can't redo skill deletion - Can't find the created skill");
+      }
+      mainApp.deleteSkill(skillToDelete);
+    }
     mainApp.refreshList();
   }
 

@@ -381,12 +381,18 @@ public class Main extends Application {
     // Store a copy of object in stack to avoid reference problems
     AgileItem itemToStore;
     switch (action) {
+      case PROJECT_DELETE:
+        itemToStore = new Project((Project) agileItem);
+        break;
       case PERSON_DELETE:
         itemToStore = new Person((Person) agileItem);
         break;
+      case SKILL_DELETE:
+        itemToStore = new Skill((Skill) agileItem);
+        break;
       default:
         itemToStore = null;
-        System.err.println("Unhandled case");
+        System.err.println("Unhandled case for generating undo/redo delete object");
         break;
     }
 
@@ -397,23 +403,29 @@ public class Main extends Application {
 
   public void delete(AgileItem agileItem) {
     String listType = LMPC.getCurrentListType();
+    UndoRedoObject undoRedoObject;
     switch (listType) {
       case "Project":
         deleteProject(agileItem);
-        // TODO: Undo/red0 stuff
+        undoRedoObject = generateDelUndoRedoObject(Action.PROJECT_DELETE, agileItem);
+        newAction(undoRedoObject);
         break;
       case "People":
         deletePerson(agileItem);
-        UndoRedoObject undoRedoObject = generateDelUndoRedoObject(Action.PERSON_DELETE, agileItem);
+        undoRedoObject = generateDelUndoRedoObject(Action.PERSON_DELETE, agileItem);
         newAction(undoRedoObject);
         break;
       case "Skills":
         deleteSkill(agileItem);
-        // TODO: SHINGY LOOK!
+        undoRedoObject = generateDelUndoRedoObject(Action.SKILL_DELETE, agileItem);
+        newAction(undoRedoObject);
         break;
       case "Team":
         deleteTeam(agileItem);
-        // TODO: undo redo
+        // TODO: undo redo - cascading delete prompt
+        break;
+      default:
+        System.err.println("Unhandled case for deleting agile item");
         break;
     }
   }
