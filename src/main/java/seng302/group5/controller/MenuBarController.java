@@ -161,9 +161,10 @@ public class MenuBarController {
       alert.setHeaderText(null);
       alert.setContentText("Deleting failed - No item selected");
       alert.showAndWait();
+    } else {
+      mainApp.delete(mainApp.getLMPC().getSelected());
+      mainApp.refreshList();
     }
-    mainApp.delete(mainApp.getLMPC().getSelected());
-    mainApp.refreshList();
   }
 
   @FXML

@@ -26,9 +26,9 @@ import seng302.group5.model.Project;
 import seng302.group5.model.Skill;
 import seng302.group5.model.Person;
 import seng302.group5.model.Team;
+import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoHandler;
 import seng302.group5.model.undoredo.UndoRedoObject;
-import seng302.group5.model.util.Settings;
 
 /**
  * Main class to run the application
@@ -364,7 +364,7 @@ public class Main extends Application {
     }
   }
 
-  public void deleteTeam(AgileItem inputTeam){
+  public void deleteTeam(AgileItem inputTeam) {
     for(Team team : teams) {
       if (team == inputTeam) {
         teams.remove(team);
@@ -373,7 +373,29 @@ public class Main extends Application {
     }
   }
 
-  public void delete(AgileItem agileItem){
+  private UndoRedoObject generateDelUndoRedoObject(Action action, AgileItem agileItem) {
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+
+    undoRedoObject.setAction(action);
+
+    // Store a copy of object in stack to avoid reference problems
+    AgileItem itemToStore;
+    switch (action) {
+      case PERSON_DELETE:
+        itemToStore = new Person((Person) agileItem);
+        break;
+      default:
+        itemToStore = null;
+        System.err.println("Unhandled case");
+        break;
+    }
+
+    undoRedoObject.addDatum(itemToStore);
+
+    return undoRedoObject;
+  }
+
+  public void delete(AgileItem agileItem) {
     String listType = LMPC.getCurrentListType();
     switch (listType) {
       case "Project":
@@ -382,7 +404,8 @@ public class Main extends Application {
         break;
       case "People":
         deletePerson(agileItem);
-        // TODO: undo redo
+        UndoRedoObject undoRedoObject = generateDelUndoRedoObject(Action.PERSON_DELETE, agileItem);
+        newAction(undoRedoObject);
         break;
       case "Skills":
         deleteSkill(agileItem);

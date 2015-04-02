@@ -128,6 +128,11 @@ public class UndoRedoHandler {
         handlePersonEdit(undoRedoObject, undoOrRedo);
         break;
 
+      case PERSON_DELETE:
+        System.out.println(String.format("I am %sing a person deletion", undoOrRedoStr)) ; // temp
+        handlePersonDelete(undoRedoObject, undoOrRedo);
+        break;
+
       case SKILL_CREATE:
         System.out.println(String.format("I am %sing a skill creation", undoOrRedoStr)) ; // temp
         handleSkillCreate(undoRedoObject, undoOrRedo);
@@ -325,6 +330,48 @@ public class UndoRedoHandler {
     personToEdit.setPersonID(newPerson.getPersonID());
     personToEdit.setFirstName(newPerson.getFirstName());
     personToEdit.setLastName(newPerson.getLastName());
+    mainApp.refreshList();
+  }
+
+  /**
+   * Undo or redo a person deletion
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handlePersonDelete(UndoRedoObject undoRedoObject,
+                                  UndoOrRedo undoOrRedo) throws Exception {
+
+    // Get the data and ensure it has data for the person
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 1) {
+      throw new Exception("Can't undo/redo person deletion - No variables");
+    }
+
+    // Get the person and ID to undo/redo deletion of
+    Person person = (Person) data.get(0);
+    String personID = person.getPersonID();
+
+    // Make the changes and refresh the list
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+      // Create the deleted person again
+      Person personToAdd = new Person(person);
+      mainApp.addPerson(personToAdd);
+    } else {
+      // Find the person and list and ensure it exists so it can be deleted
+      Person personToDelete = null;
+      for (Person personInList : mainApp.getPeople()) {
+        if (personInList.getPersonID().equals(personID)) {
+          personToDelete = personInList;
+          break;
+        }
+      }
+      if (personToDelete == null) {
+        throw new Exception("Can't redo person deletion - Can't find the created person");
+      }
+      mainApp.deletePerson(personToDelete);
+    }
     mainApp.refreshList();
   }
 
