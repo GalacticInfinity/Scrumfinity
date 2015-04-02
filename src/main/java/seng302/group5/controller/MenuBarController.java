@@ -3,6 +3,7 @@ package seng302.group5.controller;
 import java.io.File;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import seng302.group5.Main;
@@ -154,8 +155,12 @@ public class MenuBarController {
 
   @FXML
   protected void btnDelete(){
-    if(mainApp.getLMPC().getSelected() == null){
-      System.out.println("Nothing selected");
+    if (mainApp.getLMPC().getSelected() == null) {
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Cannot delete");
+      alert.setHeaderText(null);
+      alert.setContentText("Deleting failed - No item selected");
+      alert.showAndWait();
     }
     mainApp.delete(mainApp.getLMPC().getSelected());
     mainApp.refreshList();
