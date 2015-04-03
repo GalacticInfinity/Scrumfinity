@@ -5,6 +5,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
@@ -29,6 +30,7 @@ public class ListMainPaneController {
   @FXML private TextArea sampleTextArea;
   @FXML private SplitPane splitPane;
   @FXML private AnchorPane listViewPane;
+  @FXML private Label listViewLabel;
   private Main mainApp;
   private boolean isListShown = true;
 
@@ -167,7 +169,9 @@ public class ListMainPaneController {
         listView.setItems(mainApp.getTeams());
         break;
     }
-    // Show the pane containing the list
+    // Set the list label
+    listViewLabel.setText(listType);
+    // Show the pane containing the list if not already
     if (splitPane.getItems().size() < 2) {
       splitPane.getItems().add(0, listViewPane);
     }
