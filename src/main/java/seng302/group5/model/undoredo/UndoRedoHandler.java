@@ -118,7 +118,7 @@ public class UndoRedoHandler {
 
     switch(action) {
       case PROJECT_CREATE:
-        System.out.println(String.format("I am %sing a project creation", undoOrRedoStr)) ; // temp
+        System.out.println(String.format("I am %sing a project creation", undoOrRedoStr)); // temp
         handleProjectCreate(undoRedoObject, undoOrRedo);
         break;
 
@@ -133,27 +133,27 @@ public class UndoRedoHandler {
         break;
 
       case PERSON_CREATE:
-        System.out.println(String.format("I am %sing a person creation", undoOrRedoStr)) ; // temp
+        System.out.println(String.format("I am %sing a person creation", undoOrRedoStr)); // temp
         handlePersonCreate(undoRedoObject, undoOrRedo);
         break;
 
       case PERSON_EDIT:
-        System.out.println(String.format("I am %sing a person edit", undoOrRedoStr)) ; // temp
+        System.out.println(String.format("I am %sing a person edit", undoOrRedoStr)); // temp
         handlePersonEdit(undoRedoObject, undoOrRedo);
         break;
 
       case PERSON_DELETE:
-        System.out.println(String.format("I am %sing a person deletion", undoOrRedoStr)) ; // temp
+        System.out.println(String.format("I am %sing a person deletion", undoOrRedoStr)); // temp
         handlePersonDelete(undoRedoObject, undoOrRedo);
         break;
 
       case SKILL_CREATE:
-        System.out.println(String.format("I am %sing a skill creation", undoOrRedoStr)) ; // temp
+        System.out.println(String.format("I am %sing a skill creation", undoOrRedoStr)); // temp
         handleSkillCreate(undoRedoObject, undoOrRedo);
         break;
 
       case SKILL_EDIT:
-        System.out.println(String.format("I am %sing a skill edit", undoOrRedoStr)) ; // temp
+        System.out.println(String.format("I am %sing a skill edit", undoOrRedoStr)); // temp
         handleSkillEdit(undoRedoObject, undoOrRedo);
         break;
 
