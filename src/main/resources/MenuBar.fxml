@@ -15,11 +15,11 @@
                        <MenuItem mnemonicParsing="false" onAction="#createSkill" text="Skill" />
                    </items>
                </Menu>
-               <MenuItem mnemonicParsing="false" onAction="#btnClickOpen" text="Open…" />
+               <MenuItem fx:id="openMenuItem" mnemonicParsing="false" onAction="#btnClickOpen" text="Open…" />
                <Menu mnemonicParsing="false" text="Open Recent" />
                <SeparatorMenuItem mnemonicParsing="false" />
                <MenuItem mnemonicParsing="false" text="Close" />
-               <MenuItem mnemonicParsing="false" onAction="#btnClickSave" text="Save" />
+               <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" onAction="#btnClickSave" text="Save" />
                <MenuItem mnemonicParsing="false" text="Save As…" />
                <MenuItem mnemonicParsing="false" text="Revert" />
                <SeparatorMenuItem mnemonicParsing="false" />
@@ -30,8 +30,8 @@
        </Menu>
       <Menu mnemonicParsing="false" text="Edit">
          <items>
-            <MenuItem mnemonicParsing="false" onAction="#btnUndoClick" text="Undo" />
-            <MenuItem mnemonicParsing="false" onAction="#btnRedoClick" text="Redo" />
+            <MenuItem fx:id="undoMenuItem" mnemonicParsing="false" onAction="#btnUndoClick" text="Undo" />
+            <MenuItem fx:id="redoMenuItem" mnemonicParsing="false" onAction="#btnRedoClick" text="Redo" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" text="Cut" />
             <MenuItem mnemonicParsing="false" text="Copy" />

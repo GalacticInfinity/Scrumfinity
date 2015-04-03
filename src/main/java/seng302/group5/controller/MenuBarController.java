@@ -5,13 +5,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.MenuItem;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.stage.FileChooser;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
-import seng302.group5.model.AgileItem;
 import seng302.group5.model.Saving;
-import seng302.group5.model.undoredo.Action;
-import seng302.group5.model.undoredo.UndoRedoObject;
 import seng302.group5.model.util.Settings;
 
 /**
@@ -23,12 +23,29 @@ import seng302.group5.model.util.Settings;
  */
 public class MenuBarController {
 
+  @FXML private MenuItem openMenuItem;
+  @FXML private MenuItem saveMenuItem;
+  @FXML private MenuItem undoMenuItem;
+  @FXML private MenuItem redoMenuItem;
+
   @FXML private MenuItem showListMenuItem;
   @FXML private MenuItem showProjectsMenuItem;
   @FXML private MenuItem showPeopleMenuItem;
   @FXML private MenuItem showTeamsMenuItem;
 
   private Main mainApp;
+
+  /**
+   * Initialise the fxml, basic setup functions called.
+   */
+  @FXML
+  private void initialize() {
+    // Set up the keyboard shortcuts
+    openMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
+    saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
+    undoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN));
+    redoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN));
+  }
 
   /**
    * Tells ListMainPaneController to hide/show the item list based on current state
