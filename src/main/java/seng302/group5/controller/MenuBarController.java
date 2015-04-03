@@ -10,6 +10,8 @@ import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Saving;
+import seng302.group5.model.undoredo.Action;
+import seng302.group5.model.undoredo.UndoRedoObject;
 import seng302.group5.model.util.Settings;
 
 /**
@@ -100,7 +102,9 @@ public class MenuBarController {
     try {
       File file = fileChooser.showSaveDialog(mainApp.getPrimaryStage());
       Saving.saveDataToFile(file, mainApp);
-      mainApp.setSaved(true);
+
+      // Refresh the last saved action
+      mainApp.refreshLastSaved();
     } catch (Exception e) {
       System.out.println("No filename specified");
   }

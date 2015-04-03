@@ -48,7 +48,7 @@ public class Main extends Application {
 
   private UndoRedoHandler undoRedoHandler;
 
-  private boolean saved;
+  private UndoRedoObject lastSavedObject;
 
   @Override
   public void start(Stage primaryStage) {
@@ -62,7 +62,7 @@ public class Main extends Application {
     // Initialise the undo/redo handler
     undoRedoHandler = new UndoRedoHandler(this);
 
-    saved = true;
+    lastSavedObject = null;
   }
 
 
@@ -268,7 +268,7 @@ public class Main extends Application {
   public void undo() {
     try {
       undoRedoHandler.undo();
-      setSaved(false);
+      checkSaved();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -280,28 +280,41 @@ public class Main extends Application {
   public void redo() {
     try {
       undoRedoHandler.redo();
-      setSaved(false);
+      checkSaved();
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
+  /**
+   * Add a new action to the undo/redo stack
+   * @param undoRedoObject Action to store
+   */
   public void newAction(UndoRedoObject undoRedoObject) {
     undoRedoHandler.newAction(undoRedoObject);
-    setSaved(false);
+    checkSaved();
   }
 
   /**
-   * Set the saved variable and change window title accordingly
-   * @param saved True if saved
+   * Refresh the last saved object to be the newest action on the undo stack
    */
-  public void setSaved(boolean saved) {
-    if (saved) {
+  public void refreshLastSaved() {
+    lastSavedObject = undoRedoHandler.peekUndoStack();
+    checkSaved();
+  }
+
+  /**
+   * Check if the newest action was the saved action and adjust the window title
+   */
+  private void checkSaved() {
+    UndoRedoObject topObject = undoRedoHandler.peekUndoStack();
+    boolean neverSaved = lastSavedObject == null && topObject == null;
+
+    // Adjust the window title
+    if (neverSaved || topObject == lastSavedObject) {
       primaryStage.setTitle("Scrumfinity");
-      this.saved = true;
     } else {
       primaryStage.setTitle("Scrumfinity *");
-      this.saved = false;
     }
   }
 

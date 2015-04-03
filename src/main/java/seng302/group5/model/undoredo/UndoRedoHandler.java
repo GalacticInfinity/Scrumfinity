@@ -28,10 +28,26 @@ public class UndoRedoHandler {
   private Stack<UndoRedoObject> undoStack;
   private Stack<UndoRedoObject> redoStack;
 
+  /**
+   * Constructor. Set the main app to communicate with and initialise stacks
+   * @param mainApp Main app to communicate with
+   */
   public UndoRedoHandler(Main mainApp) {
     this.mainApp = mainApp;
     undoStack = new Stack<>();
     redoStack = new Stack<>();
+  }
+
+  /**
+   * Peek at what is on top of the undo stack
+   * @return The top element of the undo stack, or null if it's empty
+   */
+  public UndoRedoObject peekUndoStack() {
+    if (undoStack.isEmpty()) {
+      return null;
+    } else {
+      return undoStack.peek();
+    }
   }
 
   /**
@@ -54,9 +70,11 @@ public class UndoRedoHandler {
       System.out.println("Nothing to undo");
       return;
     }
+    // Rearrange stacks
     redoStack.push(undoStack.peek());
     UndoRedoObject undoRedoObject = undoStack.pop();
 
+    // Handle the action
     handleUndoRedoObject(undoRedoObject, UndoOrRedo.UNDO);
   }
 
@@ -70,9 +88,11 @@ public class UndoRedoHandler {
       System.out.println("Nothing to redo");
       return;
     }
+    // Rearrange stacks
     undoStack.push(redoStack.peek());
     UndoRedoObject undoRedoObject = redoStack.pop();
 
+    // Handle the action
     handleUndoRedoObject(undoRedoObject, UndoOrRedo.REDO);
   }
 
@@ -98,7 +118,6 @@ public class UndoRedoHandler {
 
     switch(action) {
       case PROJECT_CREATE:
-        //TODO: delete a project
         System.out.println(String.format("I am %sing a project creation", undoOrRedoStr)) ; // temp
         handleProjectCreate(undoRedoObject, undoOrRedo);
         break;
