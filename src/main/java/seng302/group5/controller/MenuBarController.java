@@ -118,10 +118,12 @@ public class MenuBarController {
     }
     try {
       File file = fileChooser.showSaveDialog(mainApp.getPrimaryStage());
-      Saving.saveDataToFile(file, mainApp);
+      if (file != null) {
+        Saving.saveDataToFile(file, mainApp);
 
-      // Refresh the last saved action
-      mainApp.refreshLastSaved();
+        // Refresh the last saved action
+        mainApp.refreshLastSaved();
+      }
     } catch (Exception e) {
       System.out.println("No filename specified");
   }
@@ -143,8 +145,10 @@ public class MenuBarController {
     }
     try {
       File file = fileChooser.showOpenDialog(mainApp.getPrimaryStage());
-      Saving.loadDataFromFile(file, mainApp);
-      mainApp.getLMPC().refreshList();
+      if (file != null) {
+        Saving.loadDataFromFile(file, mainApp);
+        mainApp.getLMPC().refreshList();
+      }
     } catch (Exception e) {
       System.out.println("No file selected");
     }
