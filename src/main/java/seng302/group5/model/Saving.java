@@ -111,9 +111,20 @@ public class Saving {
       main.getPeople().clear();
       main.getProjects().clear();
       main.getSkills().clear();
-      main.getPeople().addAll(wrapper.getPersons());
-      main.getProjects().addAll(wrapper.getProjects());
-      main.getSkills().addAll(wrapper.getSkills());
+
+      List<Person> xmlPersons = wrapper.getPersons();
+      List<Project> xmlProjects = wrapper.getProjects();
+      List<Skill> xmlSkills = wrapper.getSkills();
+
+      if (xmlPersons != null) {
+        main.getPeople().addAll(xmlPersons);
+      }
+      if (xmlProjects != null) {
+        main.getProjects().addAll(xmlProjects);
+      }
+      if (xmlSkills != null) {
+        main.getSkills().addAll(xmlSkills);
+      }
 
       // Save the file path to Settings class
       Settings.defaultFilepath = file.getParentFile();
