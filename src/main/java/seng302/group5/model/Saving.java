@@ -108,9 +108,9 @@ public class Saving {
 
       // Reading XML from the file and unmarshalling.
       Saving wrapper = (Saving) um.unmarshal(file);
-      main.getPeople().clear();
-      main.getProjects().clear();
-      main.getSkills().clear();
+
+      // Reset main to its original state
+      main.resetAll();
 
       List<Person> xmlPersons = wrapper.getPersons();
       List<Project> xmlProjects = wrapper.getProjects();

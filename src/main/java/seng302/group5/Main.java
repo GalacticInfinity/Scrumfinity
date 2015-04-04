@@ -488,6 +488,18 @@ public class Main extends Application {
     }
   }
 
+  /**
+   * Reset main to its original state
+   */
+  public void resetAll() {
+    undoRedoHandler.clearStacks();
+    lastSavedObject = null;
+    projects.clear();
+    teams.clear();
+    people.clear();
+    skills.clear();
+  }
+
   public static void main(String[] args) {
     launch(args);
   }

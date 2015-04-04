@@ -51,6 +51,14 @@ public class UndoRedoHandler {
   }
 
   /**
+   * Clear the undo and redo stacks
+   */
+  public void clearStacks() {
+    undoStack.clear();
+    redoStack.clear();
+  }
+
+  /**
    * Add a new action onto the undo stack
    *
    * @param undoRedoObject The action object
