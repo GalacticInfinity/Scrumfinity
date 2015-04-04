@@ -1,13 +1,18 @@
 package seng302.group5.controller;
 
+import javax.swing.text.html.ListView;
+
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Person;
+import seng302.group5.model.Skill;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoObject;
 
@@ -20,12 +25,15 @@ public class PersonDialogController {
   @FXML private TextField personFirstNameField;
   @FXML private TextField personLastNameField;
   @FXML private Button btnCreatePerson;
+  @FXML private Button btnRemoveSkill;
+  @FXML private ComboBox skillsList;
 
   private Main mainApp;
   private Stage thisStage;
   private CreateOrEdit createOrEdit;
   private Person person;
   private Person lastPerson;
+  private ListView personSkillList;
 
   /**
    * Setup the person dialog controller
@@ -102,6 +110,7 @@ public class PersonDialogController {
     String personID = "";
     String personFirstName = personFirstNameField.getText().trim();
     String personLastName = personLastNameField.getText().trim();
+    ObservableList<Skill> personSkillSet = (ObservableList<Skill>) personSkillList.getAttributes();
 
     try {
       personID = parsePersonID(personIDField.getText());
@@ -125,7 +134,7 @@ public class PersonDialogController {
     }
     else {
       if (createOrEdit == CreateOrEdit.CREATE) {
-        person = new Person(personID, personFirstName, personLastName);
+        person = new Person(personID, personFirstName, personLastName, personSkillSet);
         mainApp.addPerson(person);
       } else if (createOrEdit == CreateOrEdit.EDIT) {
         person.setPersonID(personID);

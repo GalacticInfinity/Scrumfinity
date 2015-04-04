@@ -1,5 +1,8 @@
 package seng302.group5.model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 /**
  * Basic model of a Person.
  *
@@ -13,6 +16,8 @@ public class Person implements AgileItem {
 
   private Boolean assignedToTeam = false;
   private Team team = null;
+
+  private ObservableList<Skill> skillSet = FXCollections.observableArrayList();
 
   /**
    * Default constructor.
@@ -30,10 +35,11 @@ public class Person implements AgileItem {
    * @param firstName First name of person.
    * @param lastName Last name of person.
    */
-  public Person(String personID, String firstName, String lastName) {
+  public Person(String personID, String firstName, String lastName, ObservableList<Skill> skills) {
     this.personID = personID;
     this.firstName = firstName;
     this.lastName = lastName;
+    this.skillSet = skills;
   }
 
   /**
@@ -45,6 +51,7 @@ public class Person implements AgileItem {
     this.personID = clone.getPersonID();
     this.firstName = clone.getFirstName();
     this.lastName = clone.getLastName();
+    this.skillSet = clone.getSkillSet();
   }
 
   public String getPersonID() {
@@ -69,6 +76,12 @@ public class Person implements AgileItem {
 
   public void setLastName(String lastName) {
     this.lastName = lastName;
+  }
+
+  public ObservableList<Skill> getSkillSet() { return skillSet;}
+
+  public void setSkillSet(ObservableList<Skill> skillSet) {
+    this.skillSet = skillSet;
   }
 
   /**
