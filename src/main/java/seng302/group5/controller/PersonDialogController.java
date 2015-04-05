@@ -1,13 +1,13 @@
 package seng302.group5.controller;
 
-import javax.swing.text.html.ListView;
-
+import java.util.stream.Collectors;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
@@ -27,13 +27,14 @@ public class PersonDialogController {
   @FXML private Button btnCreatePerson;
   @FXML private Button btnRemoveSkill;
   @FXML private ComboBox skillsList;
+  @FXML private ListView personSkillList;
 
   private Main mainApp;
   private Stage thisStage;
   private CreateOrEdit createOrEdit;
   private Person person;
   private Person lastPerson;
-  private ListView personSkillList;
+
 
   /**
    * Setup the person dialog controller
@@ -49,9 +50,12 @@ public class PersonDialogController {
                               Person person) {
     this.mainApp = mainApp;
     this.thisStage = thisStage;
-
+    ObservableList<String> listOfSkills = null;
+    listOfSkills.addAll(mainApp.getSkills().stream().map(Skill::getSkillName).collect(Collectors.toList()));
+    System.out.println(listOfSkills);
     if (createOrEdit == CreateOrEdit.CREATE) {
       thisStage.setTitle("Create New Person");
+      skillsList.setItems(listOfSkills);
       btnCreatePerson.setText("Create");
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       thisStage.setTitle("Edit Project");
@@ -60,6 +64,7 @@ public class PersonDialogController {
       personIDField.setText(person.getPersonID());
       personFirstNameField.setText(person.getFirstName());
       personLastNameField.setText(person.getLastName());
+      personSkillList.setItems(person.getSkillSet());
     }
     this.createOrEdit = createOrEdit;
 
@@ -110,7 +115,7 @@ public class PersonDialogController {
     String personID = "";
     String personFirstName = personFirstNameField.getText().trim();
     String personLastName = personLastNameField.getText().trim();
-    ObservableList<Skill> personSkillSet = (ObservableList<Skill>) personSkillList.getAttributes();
+    ObservableList<Skill> personSkillSet = personSkillList.getItems();
 
     try {
       personID = parsePersonID(personIDField.getText());
@@ -140,6 +145,7 @@ public class PersonDialogController {
         person.setPersonID(personID);
         person.setFirstName(personFirstName);
         person.setLastName(personLastName);
+        person.setSkillSet(personSkillSet);
         mainApp.refreshList();
       }
 

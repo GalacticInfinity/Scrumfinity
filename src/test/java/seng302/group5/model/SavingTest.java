@@ -8,6 +8,7 @@ import org.junit.Test;
 import java.io.File;
 import java.util.List;
 
+import javafx.collections.ObservableList;
 import seng302.group5.Main;
 
 /**
@@ -22,7 +23,9 @@ public class SavingTest {
   @Before
   public void setUp(){
     main = new Main();
-    main.getPeople().add(new Person("msr51", "Mike", "Roman"));
+    ObservableList<Skill> skillSet = null;
+    skillSet.add(new Skill("C"));
+    main.getPeople().add(new Person("msr51", "Mike", "Roman", skillSet));
     main.getProjects().addAll(
         new Project("xyz01", "supah proj", "This is the best thing ever"),
         new Project("xyz01", "supah proj", "This is the best thing ever"),
