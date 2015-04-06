@@ -60,7 +60,7 @@ public class PersonDialogController {
       btnCreatePerson.setText("Create");
       initialiseLists(CreateOrEdit.CREATE, person);
     } else if (createOrEdit == CreateOrEdit.EDIT) {
-      thisStage.setTitle("Edit Project");
+      thisStage.setTitle("Edit Person");
       btnCreatePerson.setText("Save");
 
       personIDField.setText(person.getPersonID());
