@@ -1,6 +1,8 @@
 package seng302.group5.controller;
 
 import java.util.stream.Collectors;
+
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,7 +27,6 @@ public class PersonDialogController {
   @FXML private TextField personFirstNameField;
   @FXML private TextField personLastNameField;
   @FXML private Button btnCreatePerson;
-  @FXML private Button btnRemoveSkill;
   @FXML private ComboBox skillsList;
   @FXML private ListView personSkillList;
 
@@ -34,6 +35,9 @@ public class PersonDialogController {
   private CreateOrEdit createOrEdit;
   private Person person;
   private Person lastPerson;
+
+  private ObservableList<Skill> availableSkills = FXCollections.observableArrayList();
+  private ObservableList<Skill> selectedSkills = FXCollections.observableArrayList();
 
 
   /**
@@ -50,14 +54,11 @@ public class PersonDialogController {
                               Person person) {
     this.mainApp = mainApp;
     this.thisStage = thisStage;
-    ObservableList<String> listOfSkills = null;
-    if (listOfSkills != null) {
-      listOfSkills.addAll(mainApp.getSkills().stream().map(Skill::getSkillName).collect(Collectors.toList()));
-    }
+
     if (createOrEdit == CreateOrEdit.CREATE) {
       thisStage.setTitle("Create New Person");
-      skillsList.setItems(listOfSkills);
       btnCreatePerson.setText("Create");
+      initialiseLists(CreateOrEdit.CREATE, person);
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       thisStage.setTitle("Edit Project");
       btnCreatePerson.setText("Save");
@@ -65,7 +66,7 @@ public class PersonDialogController {
       personIDField.setText(person.getPersonID());
       personFirstNameField.setText(person.getFirstName());
       personLastNameField.setText(person.getLastName());
-      personSkillList.setItems(person.getSkillSet());
+      initialiseLists(CreateOrEdit.EDIT, person);
     }
     this.createOrEdit = createOrEdit;
 
@@ -200,5 +201,52 @@ public class PersonDialogController {
       }
     }
     return inputPersonID;
+  }
+
+  /**
+   * Populates a list of available skills for assigning them to people
+   */
+  private void initialiseLists(CreateOrEdit createOrEdit, Person person) {
+    try {
+      availableSkills.addAll(mainApp.getSkills().stream().collect(Collectors.toList()));
+
+      this.skillsList.setVisibleRowCount(5);
+      this.skillsList.setPromptText("Available Skills");
+
+      this.skillsList.setItems(availableSkills);
+      this.personSkillList.setItems(selectedSkills);
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  @FXML
+  protected void btnAddSkillClick(ActionEvent event) {
+    try {
+      Skill selectedSkill = (Skill) skillsList.getSelectionModel().getSelectedItem();
+      if (selectedSkill != null) {
+        this.selectedSkills.add(selectedSkill);
+        this.availableSkills.remove(selectedSkill);
+      }
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  @FXML
+  protected void btnRemoveSkillClick(ActionEvent event) {
+    try {
+      Skill selectedSkill = (Skill) personSkillList.getSelectionModel().getSelectedItem();
+
+      if (selectedSkill != null) {
+        this.availableSkills.add(selectedSkill);
+        this.selectedSkills.remove(selectedSkill);
+      }
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 }

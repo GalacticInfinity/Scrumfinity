@@ -1,5 +1,7 @@
 package seng302.group5.controller;
 
+import java.util.stream.Collectors;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -69,6 +71,13 @@ public class ListMainPaneController {
                     sampleTextArea.appendText("\nLast Name: ");
                     sampleTextArea.appendText(person.getLastName());
                     sampleTextArea.appendText("\nSkills: ");
+                    StringBuilder listOfSkills = new StringBuilder();
+                    for(Skill skill : person.getSkillSet()) {
+                      listOfSkills.append(skill.getSkillName());
+                      listOfSkills.append(", ");
+                    }
+                    sampleTextArea.appendText(listOfSkills.length() > 0 ? listOfSkills.substring(
+                        0, listOfSkills.length() - 2): " ");
                   }
                 }
               } else if (Settings.currentListType == "Project") {
