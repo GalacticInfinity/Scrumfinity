@@ -51,8 +51,9 @@ public class PersonDialogController {
     this.mainApp = mainApp;
     this.thisStage = thisStage;
     ObservableList<String> listOfSkills = null;
-    listOfSkills.addAll(mainApp.getSkills().stream().map(Skill::getSkillName).collect(Collectors.toList()));
-    System.out.println(listOfSkills);
+    if (listOfSkills != null) {
+      listOfSkills.addAll(mainApp.getSkills().stream().map(Skill::getSkillName).collect(Collectors.toList()));
+    }
     if (createOrEdit == CreateOrEdit.CREATE) {
       thisStage.setTitle("Create New Person");
       skillsList.setItems(listOfSkills);
