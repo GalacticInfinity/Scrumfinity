@@ -1,6 +1,7 @@
 package seng302.group5;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -8,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
@@ -466,17 +468,79 @@ public class Main extends Application {
         newAction(undoRedoObject);
         break;
       case "People":
-        deletePerson((Person) agileItem);
+        Person person = (Person) agileItem;
+
+        if (person.isInTeam()) {
+          Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+          alert.setTitle("Person is in team");
+          alert.setHeaderText(null);
+          alert.setContentText("Do you want to delete this person and remove him/her from their team?");
+          //checks response
+          Optional<ButtonType> result = alert.showAndWait();
+          if (result.get() == ButtonType.OK){
+            //if yes then remove
+            person.getTeam().getTeamMembers().remove(person);
+            deletePerson(person);
+          }
+        } else {
+          deletePerson(person);
+        }
         undoRedoObject = generateDelUndoRedoObject(Action.PERSON_DELETE, agileItem);
         newAction(undoRedoObject);
         break;
       case "Skills":
-        deleteSkill((Skill) agileItem);
+        Skill skill = (Skill) agileItem;
+        boolean skillUsed  = false;
+        //iterate through each person
+        for (Person skillPerson : people) {
+          //check if they have the skill
+          if (skillPerson.getSkillSet().contains(skill)) {
+            skillUsed = true;
+            break;//breaks out of check once it finds someone has it
+          }
+        }
+        if (skillUsed) {
+          //if so open a yes/no dialog
+          Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+          alert.setTitle("People have this skill!");
+          alert.setHeaderText(null);
+          alert.setContentText("Do you want to delete this skill and remove it from the people who have it?");
+          //checks response
+          Optional<ButtonType> result = alert.showAndWait();
+          if (result.get() == ButtonType.OK){
+            //if yes then remove skill from all who have it
+            for (Person currentPerson : people) {
+              if (currentPerson.getSkillSet().contains(skill)) {
+                currentPerson.getSkillSet().remove(skill);
+              }
+            }
+            //after all people have this skill removed delete the skill object
+            deleteSkill(skill);
+          }
+        } else {
+          deleteSkill(skill);
+        }
         undoRedoObject = generateDelUndoRedoObject(Action.SKILL_DELETE, agileItem);
         newAction(undoRedoObject);
         break;
       case "Team":
-        deleteTeam((Team) agileItem);
+        Team team = (Team) agileItem;
+        if (team.getTeamMembers().isEmpty()) {
+          deleteTeam(team);
+        } else {
+          Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+          alert.setTitle("Team contains people");
+          alert.setHeaderText(null);
+          alert.setContentText("Do you want to delete team along with the existing people?");
+
+          Optional<ButtonType> result = alert.showAndWait();
+          if (result.get() == ButtonType.OK){
+            for (Person teamPerson : team.getTeamMembers()) {
+              deletePerson(teamPerson);
+            }
+            deleteTeam(team);
+          }
+        }
         // TODO: undo redo - cascading delete prompt
         break;
       default:

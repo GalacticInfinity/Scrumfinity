@@ -23,6 +23,11 @@ public class TeamDialogController {
   private Main mainApp;
   private Stage thisStage;
 
+  private Team team;
+  private Team lastTeam;
+
+  private CreateOrEdit createOrEdit;
+
   private ObservableList<Person> availableMembers = FXCollections.observableArrayList();
   private ObservableList<Person> selectedMembers = FXCollections.observableArrayList();
 
@@ -48,6 +53,15 @@ public class TeamDialogController {
       teamIDField.setText(team.getTeamID());
       initialiseLists(CreateOrEdit.EDIT, team);
       teamDescriptionField.setText(team.getTeamDescription());
+    }
+    this.createOrEdit = createOrEdit;
+
+    if (team != null) {
+      this.team = team;
+      this.lastTeam = new Team(team);
+    } else {
+      this.team = null;
+      this.lastTeam = null;
     }
   }
 
@@ -109,6 +123,7 @@ public class TeamDialogController {
       if (selectedPerson != null) {
         this.availableMembers.add(selectedPerson);
         this.selectedMembers.remove(selectedPerson);
+        selectedPerson.removeFromTeam();
       }
     }
     catch (Exception e) {
@@ -146,11 +161,22 @@ public class TeamDialogController {
       System.out.println(String.format("%s\n%s", title, errors.toString()));
     }
     else {
-      Team team = new Team(teamID, selectedMembers, teamDescription);
-      for (Person person : selectedMembers) {
-        person.assignToTeam(team);
+      if (createOrEdit == CreateOrEdit.CREATE) {
+        Team team = new Team(teamID, selectedMembers, teamDescription);
+        for (Person person : selectedMembers) {
+          person.assignToTeam(team);
+        }
+        mainApp.addTeam(team);
+      } else if (createOrEdit == CreateOrEdit.EDIT) {
+
+        team.setTeamID(teamID);
+        team.setTeamDescription(teamDescription);
+        team.setTeamMembers(selectedMembers);
+        for (Person person : selectedMembers) {
+          person.assignToTeam(team);
+        }
+        mainApp.refreshList();
       }
-      mainApp.addTeam(team);
       thisStage.close();
     }
   }
@@ -177,8 +203,15 @@ public class TeamDialogController {
       throw new Exception("Team ID is more than 8 characters long");
     }
     else {
+      String lastTeamID;
+      if (lastTeam == null) {
+        lastTeamID = "";
+      } else {
+        lastTeamID = lastTeam.getTeamID();
+      }
       for (Team team : mainApp.getTeams()) {
-        if (team.getTeamID().equals(inputTeamID)) {
+        String teamID = team.getTeamID();
+        if (team.getTeamID().equals(inputTeamID) && !teamID.equals(lastTeamID)) {
           throw new Exception("Team ID is not unique.");
         }
       }
