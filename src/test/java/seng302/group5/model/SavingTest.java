@@ -8,6 +8,7 @@ import org.junit.Test;
 import java.io.File;
 import java.util.List;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seng302.group5.Main;
 
@@ -23,13 +24,15 @@ public class SavingTest {
   @Before
   public void setUp(){
     main = new Main();
-    ObservableList<Skill> skillSet = null;
-    skillSet.add(new Skill("C"));
+    ObservableList<Skill> skillSet = FXCollections.observableArrayList();
+    skillSet.add(new Skill("C", "C saving"));
     main.getPeople().add(new Person("msr51", "Mike", "Roman", skillSet));
     main.getProjects().addAll(
         new Project("xyz01", "supah proj", "This is the best thing ever"),
         new Project("xyz01", "supah proj", "This is the best thing ever"),
         new Project("xyz01", "supah proj", "This is the best thing ever"));
+    main.getSkills().add(new Skill("Ballin'", "Straight from Compton"));
+    main.getTeams().add(new Team("Boys2men", main.getPeople(), "Best group of all time"));
   }
 
   @Test
@@ -49,6 +52,12 @@ public class SavingTest {
     }
     for (Project i: main.getProjects()) {
       assertTrue(orig.getProjects().contains(i));
+    }
+    for (Skill i: main.getSkills()) {
+      assertTrue(orig.getSkills().contains(i));
+    }
+    for (Team i: main.getTeams()) {
+      assertTrue(orig.getSkills().contains(i));
     }
   }
 }

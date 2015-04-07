@@ -46,9 +46,9 @@ public class Main extends Application {
   private ObservableList<Skill> skills = FXCollections.observableArrayList();
   private ObservableList<Person> people = FXCollections.observableArrayList();
 
-  private UndoRedoHandler undoRedoHandler;
+  private UndoRedoHandler undoRedoHandler = new UndoRedoHandler(this);
 
-  private UndoRedoObject lastSavedObject;
+  private UndoRedoObject lastSavedObject = null;
 
   @Override
   public void start(Stage primaryStage) {
@@ -58,11 +58,6 @@ public class Main extends Application {
     initRootLayout();
     showMenuBar();
     showListMainPane();
-
-    // Initialise the undo/redo handler
-    undoRedoHandler = new UndoRedoHandler(this);
-
-    lastSavedObject = null;
   }
 
 
