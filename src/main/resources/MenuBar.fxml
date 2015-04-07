@@ -16,14 +16,8 @@
                    </items>
                </Menu>
                <MenuItem fx:id="openMenuItem" mnemonicParsing="false" onAction="#btnClickOpen" text="Open…" />
-               <Menu mnemonicParsing="false" text="Open Recent" />
                <SeparatorMenuItem mnemonicParsing="false" />
-               <MenuItem mnemonicParsing="false" text="Close" />
                <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" onAction="#btnClickSave" text="Save" />
-               <MenuItem mnemonicParsing="false" text="Save As…" />
-               <MenuItem mnemonicParsing="false" text="Revert" />
-               <SeparatorMenuItem mnemonicParsing="false" />
-               <MenuItem mnemonicParsing="false" text="Preferences…" />
                <SeparatorMenuItem mnemonicParsing="false" />
                <MenuItem mnemonicParsing="false" onAction="#btnQuitClick" text="Quit" />
            </items>
@@ -32,27 +26,19 @@
          <items>
             <MenuItem fx:id="undoMenuItem" mnemonicParsing="false" onAction="#btnUndoClick" text="Undo" />
             <MenuItem fx:id="redoMenuItem" mnemonicParsing="false" onAction="#btnRedoClick" text="Redo" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Cut" />
-            <MenuItem mnemonicParsing="false" text="Copy" />
-            <MenuItem mnemonicParsing="false" text="Paste" />
             <MenuItem fx:id="delete" mnemonicParsing="false" onAction="#btnDelete" text="Delete" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Select All" />
-            <MenuItem mnemonicParsing="false" text="Unselect All" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" onAction="#editItem" text="Edit Item" />
          </items>
       </Menu>
       <Menu mnemonicParsing="false" text="Display">
          <items>
-            <MenuItem fx:id="showListMenuItem" mnemonicParsing="false" onAction="#showHideList" text="Show/Hide List" />
+            <CheckMenuItem fx:id="showListMenuItem" mnemonicParsing="false" onAction="#showHideList" text="Show/Hide List" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <CheckMenuItem mnemonicParsing="false" text="Unspecified Action" />
-            <MenuItem fx:id="showProjectsMenuItem" mnemonicParsing="false" onAction="#btnShowProjects" text="Show Projects" />
-            <MenuItem fx:id="showTeamsMenuItem" mnemonicParsing="false" onAction="#btnShowTeams" text="Show Teams" />
-            <MenuItem fx:id="showPeopleMenuItem" mnemonicParsing="false" onAction="#btnShowPeople" text="Show People" />
-            <MenuItem fx:id="showSkillsMenuItem" mnemonicParsing="false" onAction="#btnShowSkills" text="Show Skills" />
+            <CheckMenuItem fx:id="showProjectsMenuItem" mnemonicParsing="false" onAction="#btnShowProjects" text="Show Projects" />
+            <CheckMenuItem fx:id="showTeamsMenuItem" mnemonicParsing="false" onAction="#btnShowTeams" text="Show Teams" />
+            <CheckMenuItem fx:id="showPeopleMenuItem" mnemonicParsing="false" onAction="#btnShowPeople" text="Show People" />
+            <CheckMenuItem fx:id="showSkillsMenuItem" mnemonicParsing="false" onAction="#btnShowSkills" text="Show Skills" />
          </items>
       </Menu>
       <Menu mnemonicParsing="false" text="Help">

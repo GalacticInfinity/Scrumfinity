@@ -7,6 +7,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SplitPane;
@@ -72,13 +73,15 @@ public class ListMainPaneController {
   /**
    * Shows/Hides items in list.
    */
-  public void showHideList() {
+  public void showHideList(CheckMenuItem item) {
     if(!isListShown){
       checkListType();
+      item.setSelected(true);
     } else {
       ObservableList<AgileItem> clear = FXCollections.observableArrayList();
       listView.setItems(clear);
       isListShown = false;
+      item.setSelected(false);
       // Hide the pane containing the list
       splitPane.getItems().remove(listViewPane);
     }

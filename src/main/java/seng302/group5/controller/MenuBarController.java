@@ -1,9 +1,13 @@
 package seng302.group5.controller;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -28,10 +32,11 @@ public class MenuBarController {
   @FXML private MenuItem undoMenuItem;
   @FXML private MenuItem redoMenuItem;
 
-  @FXML private MenuItem showListMenuItem;
-  @FXML private MenuItem showProjectsMenuItem;
-  @FXML private MenuItem showPeopleMenuItem;
-  @FXML private MenuItem showTeamsMenuItem;
+  @FXML private CheckMenuItem showListMenuItem;
+  @FXML private CheckMenuItem showProjectsMenuItem;
+  @FXML private CheckMenuItem showPeopleMenuItem;
+  @FXML private CheckMenuItem showTeamsMenuItem;
+  @FXML private CheckMenuItem showSkillsMenuItem;
 
   private Main mainApp;
 
@@ -45,6 +50,10 @@ public class MenuBarController {
     saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
     undoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN));
     redoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN));
+
+    // Ticks the project menu item
+    showProjectsMenuItem.setSelected(true);
+    showListMenuItem.setSelected(true);
   }
 
   /**
@@ -53,7 +62,7 @@ public class MenuBarController {
    */
   @FXML
   protected void showHideList(ActionEvent event) {
-    mainApp.getLMPC().showHideList();
+    mainApp.getLMPC().showHideList(showListMenuItem);
   }
 
   @FXML
@@ -155,28 +164,59 @@ public class MenuBarController {
   }
 
 
+  /**
+   * Populates left side with projects
+   */
   @FXML
   protected void btnShowProjects() {
     Settings.currentListType = "Project";
+    deselectList();
+    showProjectsMenuItem.setSelected(true);
     mainApp.getLMPC().refreshList();
   }
 
+  /**
+   * Populates left side with people.
+   */
   @FXML
   protected void btnShowPeople() {
     Settings.currentListType = "People";
+    deselectList();
+    showPeopleMenuItem.setSelected(true);
     mainApp.getLMPC().refreshList();
   }
 
+  /**
+   * Populates left side with skills
+   */
   @FXML
   protected void btnShowSkills() {
     Settings.currentListType = "Skills";
+    deselectList();
+    showSkillsMenuItem.setSelected(true);
     mainApp.getLMPC().refreshList();
   }
 
+  /**
+   * Populates left side with teams
+   */
   @FXML
   protected void btnShowTeams() {
     Settings.currentListType = "Team";
+    deselectList();
+    showTeamsMenuItem.setSelected(true);
     mainApp.getLMPC().refreshList();
+  }
+
+  /**
+   * Unchecks all the show list items, faster than going through and checking which is currently
+   * selected using switch.
+   */
+  private void deselectList() {
+    showProjectsMenuItem.setSelected(false);
+    showPeopleMenuItem.setSelected(false);
+    showTeamsMenuItem.setSelected(false);
+    showSkillsMenuItem.setSelected(false);
   }
 
   @FXML
