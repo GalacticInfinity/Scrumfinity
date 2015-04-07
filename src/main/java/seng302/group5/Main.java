@@ -471,7 +471,37 @@ public class Main extends Application {
         newAction(undoRedoObject);
         break;
       case "Skills":
-        deleteSkill((Skill) agileItem);
+        Skill skill = (Skill) agileItem;
+        boolean skillUsed  = false;
+        //iterate through each person
+        for (Person person : people) {
+          //check if they have the skill
+          if (person.getSkillSet().contains(skill)) {
+            skillUsed = true;
+            break;//breaks out of check once it finds someone has it
+          }
+        }
+        if (skillUsed) {
+          //if so open a yes/no dialog
+          Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+          alert.setTitle("People have this skill!");
+          alert.setHeaderText(null);
+          alert.setContentText("Do you want to delete this skill and remove it from the people who have it?");
+          //checks response
+          Optional<ButtonType> result = alert.showAndWait();
+          if (result.get() == ButtonType.OK){
+            //if yes then remove skill from all who have it
+            for (Person currentPerson : people) {
+              if (currentPerson.getSkillSet().contains(skill)) {
+                currentPerson.getSkillSet().remove(skill);
+              }
+            }
+            //after all people have this skill removed delete the skill object
+            deleteSkill(skill);
+          }
+        } else {
+          deleteSkill(skill);
+        }
         undoRedoObject = generateDelUndoRedoObject(Action.SKILL_DELETE, agileItem);
         newAction(undoRedoObject);
         break;
