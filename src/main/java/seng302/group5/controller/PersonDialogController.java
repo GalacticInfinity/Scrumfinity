@@ -66,6 +66,8 @@ public class PersonDialogController {
       personIDField.setText(person.getPersonID());
       personFirstNameField.setText(person.getFirstName());
       personLastNameField.setText(person.getLastName());
+      selectedSkills = person.getSkillSet();
+      personSkillList.setItems(selectedSkills);
       initialiseLists(CreateOrEdit.EDIT, person);
     }
     this.createOrEdit = createOrEdit;
@@ -208,7 +210,13 @@ public class PersonDialogController {
    */
   private void initialiseLists(CreateOrEdit createOrEdit, Person person) {
     try {
-      availableSkills.addAll(mainApp.getSkills().stream().collect(Collectors.toList()));
+
+      // loop for adding the skills that you can assign to someone.
+      for (Skill item : mainApp.getSkills()) {
+        if(!selectedSkills.contains(item)) {
+          availableSkills.add(item);
+        }
+      }
 
       this.skillsList.setVisibleRowCount(5);
       this.skillsList.setPromptText("Available Skills");
