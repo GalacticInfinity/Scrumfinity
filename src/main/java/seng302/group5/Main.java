@@ -23,6 +23,7 @@ import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.controller.SkillsDialogController;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Project;
+import seng302.group5.model.Release;
 import seng302.group5.model.Skill;
 import seng302.group5.model.Person;
 import seng302.group5.model.Team;
@@ -45,6 +46,7 @@ public class Main extends Application {
   private ObservableList<Team> teams = FXCollections.observableArrayList();
   private ObservableList<Skill> skills = FXCollections.observableArrayList();
   private ObservableList<Person> people = FXCollections.observableArrayList();
+  private ObservableList<Release> releases = FXCollections.observableArrayList();
 
   private UndoRedoHandler undoRedoHandler = new UndoRedoHandler(this);
 
