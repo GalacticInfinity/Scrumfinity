@@ -60,66 +60,8 @@ public class ListMainPaneController {
                               AgileItem previous, AgileItem next) {
             if (next != null) {
               // Will place checks to update main pane here based on item type selected
-              if (Settings.currentListType == "People") {
-                sampleTextArea.clear();
-                sampleTextArea.appendText("Person information \nPerson ID: ");
-                for (Person person : mainApp.getPeople()) {
-                  if (person.getPersonID().equals(next.toString())){
-                    sampleTextArea.appendText(person.getPersonID());
-                    sampleTextArea.appendText("\nFirst Name: ");
-                    sampleTextArea.appendText(person.getFirstName());
-                    sampleTextArea.appendText("\nLast Name: ");
-                    sampleTextArea.appendText(person.getLastName());
-                    sampleTextArea.appendText("\nSkills: ");
-                    StringBuilder listOfSkills = new StringBuilder();
-                    for(Skill skill : person.getSkillSet()) {
-                      listOfSkills.append(skill.getSkillName());
-                      listOfSkills.append(", ");
-                    }
-                    sampleTextArea.appendText(listOfSkills.length() > 0 ? listOfSkills.substring(
-                        0, listOfSkills.length() - 2): " ");
-                  }
-                }
-              } else if (Settings.currentListType == "Project") {
-                sampleTextArea.clear();
-                sampleTextArea.appendText("Project information \nProject ID: ");
-                for (Project project : mainApp.getProjects()) {
-                  if (project.getProjectID().equals(next.toString())) {
-                    sampleTextArea.appendText(project.getProjectID());
-                    sampleTextArea.appendText("\nProject Name: ");
-                    sampleTextArea.appendText(project.getProjectName());
-                    sampleTextArea.appendText("\nProject Description: \n");
-                    sampleTextArea.appendText(project.getProjectDescription());
-                  }
-                }
-              } else if (Settings.currentListType == "Skills") {
-                sampleTextArea.clear();
-                sampleTextArea.appendText("Skills information \nSkill Name: ");
-                for (Skill skill : mainApp.getSkills()) {
-                  if (skill.getSkillName().equals(next.toString())) {
-                    sampleTextArea.appendText(skill.getSkillName().toString());
-                    sampleTextArea.appendText("\nSkill Description: ");
-                    sampleTextArea.appendText(skill.getSkillDescription());
-                  }
-                }
-              } else if (Settings.currentListType == "Team") {
-                sampleTextArea.clear();
-                sampleTextArea.appendText("Team information \nTeam ID: ");
-                for (Team team : mainApp.getTeams()) {
-                  if (team.getTeamID().equals(next.toString())) {
-                    sampleTextArea.appendText(team.getTeamID());
-                    sampleTextArea.appendText("\nTeam Description: ");
-                    sampleTextArea.appendText(team.getTeamDescription());
-                    sampleTextArea.appendText("\nTeam members: \n");
-                    for (Person member : team.getTeamMembers()) {
-                      sampleTextArea.appendText(member.getFirstName());
-                      sampleTextArea.appendText(" - ");
-                      sampleTextArea.appendText(member.getPersonID());
-                      sampleTextArea.appendText("\n");
-                    }
-                  }
-                }
-              }
+              displayInfo(next);
+
               selectedItem = next;
             }
           }
@@ -218,6 +160,69 @@ public class ListMainPaneController {
     return Settings.currentListType;
   }
 
+  /**
+   * Takes the current selected item (next) as an AgileItem and then casts it to the correct object
+   * based on what the current selected list is.
+   * @param next
+   */
+  public void displayInfo(AgileItem next) {
+    if (Settings.currentListType == "People") {
+      sampleTextArea.clear();
+      Person person = (Person) next;
+      sampleTextArea.appendText("Person information \nPerson ID: ");
+      sampleTextArea.appendText(person.getPersonID());
+      sampleTextArea.appendText("\nFirst Name: ");
+      sampleTextArea.appendText(person.getFirstName());
+      sampleTextArea.appendText("\nLast Name: ");
+      sampleTextArea.appendText(person.getLastName());
+      sampleTextArea.appendText("\nTeam: ");
+      if (person.isInTeam()) {
+        sampleTextArea.appendText(person.getTeam());
+      }
+      else {sampleTextArea.appendText("Not assigned");}
+      sampleTextArea.appendText("\nSkills: ");
+      StringBuilder listOfSkills = new StringBuilder();
+      for(Skill skill : person.getSkillSet()) {
+        listOfSkills.append(skill.getSkillName());
+        listOfSkills.append(", ");
+      }
+      sampleTextArea.appendText(listOfSkills.length() > 0 ? listOfSkills.substring(
+          0, listOfSkills.length() - 2): " ");
+      }
+    else if (Settings.currentListType == "Project") {
+      sampleTextArea.clear();
+      Project project = (Project) next;
+      sampleTextArea.appendText("Project information \nProject ID: ");
+      sampleTextArea.appendText(project.getProjectID());
+      sampleTextArea.appendText("\nProject Name: ");
+      sampleTextArea.appendText(project.getProjectName());
+      sampleTextArea.appendText("\nProject Description: \n");
+      sampleTextArea.appendText(project.getProjectDescription());
+
+    } else if (Settings.currentListType == "Skills") {
+      sampleTextArea.clear();
+      Skill skill = (Skill) next;
+      sampleTextArea.appendText("Skills information \nSkill Name: ");
+      sampleTextArea.appendText(skill.getSkillName().toString());
+      sampleTextArea.appendText("\nSkill Description: ");
+      sampleTextArea.appendText(skill.getSkillDescription());
+
+    } else if (Settings.currentListType == "Team") {
+      sampleTextArea.clear();
+      Team team = (Team) next; //Casts next as Team object
+      sampleTextArea.appendText("Team information \nTeam ID: ");
+      sampleTextArea.appendText(team.getTeamID());
+      sampleTextArea.appendText("\nTeam Description: ");
+      sampleTextArea.appendText(team.getTeamDescription());
+      sampleTextArea.appendText("\nTeam members: \n");
+      for (Person member : team.getTeamMembers()) {
+        sampleTextArea.appendText(member.getFirstName());
+        sampleTextArea.appendText(" - ");
+        sampleTextArea.appendText(member.getPersonID());
+        sampleTextArea.appendText("\n");
+      }
+    }
+  }
 
   public void setMainApp(Main mainApp) {
     this.mainApp = mainApp;
