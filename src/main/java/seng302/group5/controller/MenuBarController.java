@@ -83,6 +83,9 @@ public class MenuBarController {
       case "Skills":
         mainApp.showSkillCreationDialog(CreateOrEdit.EDIT);
         break;
+      case "Team":
+        mainApp.showTeamDialog(CreateOrEdit.EDIT);
+        break;
     }
   }
 

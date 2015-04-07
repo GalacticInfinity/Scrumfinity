@@ -35,6 +35,17 @@ public class Team implements AgileItem {
     this.teamDescription = teamDescription;
   }
 
+
+  /**
+   * Constructor to create a clone of an existing person
+   *
+   * @param clone Person to clone
+   */
+  public Team(Team clone) {
+    this.teamID = clone.getTeamID();
+    this.teamDescription = clone.getTeamDescription();
+  }
+
   public String getTeamID() {
     return this.teamID;
   }
