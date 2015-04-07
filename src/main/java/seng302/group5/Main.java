@@ -1,6 +1,7 @@
 package seng302.group5;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -8,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
@@ -474,7 +476,23 @@ public class Main extends Application {
         newAction(undoRedoObject);
         break;
       case "Team":
-        deleteTeam((Team) agileItem);
+        Team team = (Team) agileItem;
+        if (team.getTeamMembers().isEmpty()) {
+          deleteTeam(team);
+        } else {
+          Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+          alert.setTitle("Team contains people");
+          alert.setHeaderText(null);
+          alert.setContentText("Do you want to delete team along with the existing people?");
+
+          Optional<ButtonType> result = alert.showAndWait();
+          if (result.get() == ButtonType.OK){
+            for (Person person : team.getTeamMembers()) {
+              deletePerson(person);
+            }
+            deleteTeam(team);
+          }
+        }
         // TODO: undo redo - cascading delete prompt
         break;
       default:
