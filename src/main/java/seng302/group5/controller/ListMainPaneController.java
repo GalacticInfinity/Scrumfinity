@@ -77,11 +77,13 @@ public class ListMainPaneController {
     if(!isListShown){
       checkListType();
       item.setSelected(true);
+      mainApp.getMBC().deselectList(Settings.currentListType);
     } else {
       ObservableList<AgileItem> clear = FXCollections.observableArrayList();
       listView.setItems(clear);
       isListShown = false;
       item.setSelected(false);
+      mainApp.getMBC().deselectList("");
       // Hide the pane containing the list
       splitPane.getItems().remove(listViewPane);
     }

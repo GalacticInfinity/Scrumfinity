@@ -198,6 +198,8 @@ public class MenuBarController {
         Settings.currentFile = file;
         Saving.loadDataFromFile(file, mainApp);
         mainApp.getLMPC().refreshList();
+        showListMenuItem.setSelected(true);
+        deselectList(Settings.currentListType);
       }
     } catch (Exception e) {
       System.out.println("No file selected");
@@ -211,7 +213,7 @@ public class MenuBarController {
   @FXML
   protected void btnShowProjects() {
     Settings.currentListType = "Project";
-    deselectList();
+    deselectList("Project");
     showProjectsMenuItem.setSelected(true);
     mainApp.getLMPC().refreshList();
   }
@@ -222,7 +224,7 @@ public class MenuBarController {
   @FXML
   protected void btnShowPeople() {
     Settings.currentListType = "People";
-    deselectList();
+    deselectList("People");
     showPeopleMenuItem.setSelected(true);
     mainApp.getLMPC().refreshList();
   }
@@ -233,7 +235,7 @@ public class MenuBarController {
   @FXML
   protected void btnShowSkills() {
     Settings.currentListType = "Skills";
-    deselectList();
+    deselectList("Skill");
     showSkillsMenuItem.setSelected(true);
     mainApp.getLMPC().refreshList();
   }
@@ -244,21 +246,37 @@ public class MenuBarController {
   @FXML
   protected void btnShowTeams() {
     Settings.currentListType = "Team";
-    deselectList();
-    showTeamsMenuItem.setSelected(true);
+    deselectList("Team");
     mainApp.getLMPC().refreshList();
   }
 
+
   /**
-   * Unchecks all the show list items, faster than going through and checking which is currently
-   * selected using switch.
+   *
+   * @param selectedList
    */
-  private void deselectList() {
+  protected void deselectList(String selectedList) {
     showProjectsMenuItem.setSelected(false);
     showPeopleMenuItem.setSelected(false);
     showTeamsMenuItem.setSelected(false);
     showSkillsMenuItem.setSelected(false);
-  }
+    if (!(selectedList == "")) {
+      switch (selectedList) {
+        case "Project":
+          showProjectsMenuItem.setSelected(true);
+          break;
+        case "People":
+          showPeopleMenuItem.setSelected(true);
+          break;
+        case "Skill":
+          showSkillsMenuItem.setSelected(true);
+          break;
+        case "Team":
+          showTeamsMenuItem.setSelected(true);
+          break;
+      }
+    }
+    }
 
   @FXML
   protected void btnDelete(){
