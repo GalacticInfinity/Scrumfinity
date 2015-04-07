@@ -117,10 +117,45 @@ public class MenuBarController {
     System.exit(0);
   }
 
+
   @FXML
   protected void btnClickSave(ActionEvent event) {
+    /** Save button that attempts to save in the current open file, if no file is open, it
+     * opens the file chooser dialog to allow the user to select where they wish to save the file.
+     */
+    if (Settings.currentFile != null) {
+      try {
+        Saving.saveDataToFile(Settings.currentFile, mainApp);
+        mainApp.refreshLastSaved();
+      } catch (Exception a) {
+        System.out.println("Current File does not exist");
+      }
+    }
+    else {
+      FileChooser fileChooser = new FileChooser();
+      fileChooser.setTitle("Save Project");
+      if (Settings.defaultFilepath != null) {
+        fileChooser.setInitialDirectory(Settings.defaultFilepath);
+      }
+      try {
+        File file = fileChooser.showSaveDialog(mainApp.getPrimaryStage());
+
+        if (file != null) {
+          Settings.currentFile = file;
+          Saving.saveDataToFile(file, mainApp);
+
+          // Refresh the last saved action
+          mainApp.refreshLastSaved();
+        }
+      } catch (Exception e) {
+        System.out.println("No filename specified");
+      }
+    }
+  }
+  @FXML
+  protected void btnClickSaveAs(ActionEvent event) {
     /**
-     * Save file button in File menu, opens up the file chooser to select where you would
+     * Save as file button in File menu, opens up the file chooser to select where you would
      * like to save.
      */
     FileChooser fileChooser = new FileChooser();
@@ -130,7 +165,9 @@ public class MenuBarController {
     }
     try {
       File file = fileChooser.showSaveDialog(mainApp.getPrimaryStage());
+
       if (file != null) {
+        Settings.currentFile = file;
         Saving.saveDataToFile(file, mainApp);
 
         // Refresh the last saved action
@@ -158,6 +195,7 @@ public class MenuBarController {
     try {
       File file = fileChooser.showOpenDialog(mainApp.getPrimaryStage());
       if (file != null) {
+        Settings.currentFile = file;
         Saving.loadDataFromFile(file, mainApp);
         mainApp.getLMPC().refreshList();
       }
