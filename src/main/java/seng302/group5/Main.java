@@ -317,54 +317,6 @@ public class Main extends Application {
     }
   }
 
-  public Stage getPrimaryStage(){
-    return primaryStage;
-  }
-
-  public ListMainPaneController getLMPC() {
-    return LMPC;
-  }
-
-  public MenuBarController getMBC() {
-    return MBC;
-  }
-
-  public ObservableList<Project> getProjects() {
-    return projects;
-  }
-
-  public ObservableList<Team> getTeams() {
-    return teams;
-  }
-
-  public ObservableList<Person> getPeople() {
-    return people;
-  }
-
-  public ObservableList<Skill> getSkills() {
-    return skills;
-  }
-
-  public void addProject(Project project) {
-    projects.add(project);
-  }
-
-  public void addPerson(Person person) {
-    people.add(person);
-  }
-
-  public void addTeam(Team team) {
-    teams.add(team);
-  }
-
-  public void refreshList() {
-    LMPC.refreshList();
-  }
-
-  public void addSkill(Skill skill) {
-    skills.add(skill);
-  }
-
   /**
    * Delete a project from the list of projects
    * @param inputProject Project to delete - must be same object reference
@@ -531,7 +483,16 @@ public class Main extends Application {
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
           alert.setTitle("Team contains people");
           alert.setHeaderText(null);
-          alert.setContentText("Do you want to delete team along with the existing people?");
+
+          int messageLength = 1;
+          String message = "";
+          message += "Are you sure you want to delete team " + team.getTeamID() + " and people:\n";
+          for (Person teamMemeber: team.getTeamMembers()) {
+            messageLength ++;
+            message += teamMemeber.getFirstName() + " " + teamMemeber.getLastName() + "\n";
+          }
+          alert.getDialogPane().setPrefHeight(60 + 20*messageLength);
+          alert.setContentText(message);
 
           Optional<ButtonType> result = alert.showAndWait();
           if (result.get() == ButtonType.OK){
@@ -541,7 +502,6 @@ public class Main extends Application {
             deleteTeam(team);
           }
         }
-        // TODO: undo redo - cascading delete prompt
         break;
       default:
         System.err.println("Unhandled case for deleting agile item");
@@ -559,6 +519,55 @@ public class Main extends Application {
     teams.clear();
     people.clear();
     skills.clear();
+  }
+
+
+  public Stage getPrimaryStage(){
+    return primaryStage;
+  }
+
+  public ListMainPaneController getLMPC() {
+    return LMPC;
+  }
+
+  public MenuBarController getMBC() {
+    return MBC;
+  }
+
+  public ObservableList<Project> getProjects() {
+    return projects;
+  }
+
+  public ObservableList<Team> getTeams() {
+    return teams;
+  }
+
+  public ObservableList<Person> getPeople() {
+    return people;
+  }
+
+  public ObservableList<Skill> getSkills() {
+    return skills;
+  }
+
+  public void addProject(Project project) {
+    projects.add(project);
+  }
+
+  public void addPerson(Person person) {
+    people.add(person);
+  }
+
+  public void addTeam(Team team) {
+    teams.add(team);
+  }
+
+  public void refreshList() {
+    LMPC.refreshList();
+  }
+
+  public void addSkill(Skill skill) {
+    skills.add(skill);
   }
 
   public static void main(String[] args) {

@@ -26,6 +26,7 @@ public class Person implements AgileItem {
     personID = "";
     firstName = "";
     lastName = "";
+
   }
 
   /**
