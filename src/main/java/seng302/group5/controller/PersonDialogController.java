@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -131,15 +132,15 @@ public class PersonDialogController {
 
     // Display all errors if they exist
     if (noErrors > 0) {
-      String title;
-      if (noErrors == 1) {
-        title = String.format("%d Invalid Field", noErrors);
+      String title = String.format("%d Invalid Field", noErrors);
+      if (noErrors > 1) {
+        title += "s";  // plural
       }
-      else {
-        title = String.format("%d Invalid Fields", noErrors);
-      }
-      // TODO: Dialogs for errors
-      System.out.println(String.format("%s\n%s", title, errors.toString()));
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle(title);
+      alert.setHeaderText(null);
+      alert.setContentText(errors.toString());
+      alert.showAndWait();
     }
     else {
       if (createOrEdit == CreateOrEdit.CREATE) {
