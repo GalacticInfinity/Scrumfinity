@@ -70,9 +70,13 @@ public class Person implements AgileItem {
     this.firstName = firstName;
   }
 
-  public String getTeam() {
-       return team.getTeamID();
-    }
+  public Team getTeam() {
+    return team;
+  }
+
+  public String getTeamID() {
+    return team.getTeamID();
+  }
 
 
   public String getLastName() {
