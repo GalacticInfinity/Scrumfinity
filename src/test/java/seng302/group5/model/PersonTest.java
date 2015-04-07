@@ -3,6 +3,7 @@ package seng302.group5.model;
 import org.junit.Before;
 import org.junit.Test;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import static org.junit.Assert.*;
@@ -15,7 +16,7 @@ public class PersonTest {
   private String personID;
   private String firstName;
   private String lastName;
-  private ObservableList<Skill> skillSet;
+  private ObservableList<Skill> skillSet = FXCollections.observableArrayList();
 
   private Person person;
 
@@ -24,8 +25,8 @@ public class PersonTest {
     personID = "ssc55";
     firstName = "Su-Shing";
     lastName = "Chen";
-    skillSet.add(new Skill("C"));
-    skillSet.add(new Skill("Java"));
+    skillSet.addAll(new Skill("C", "C skill"));
+    skillSet.add(new Skill("Java", "java Skill"));
     person = new Person(personID, firstName, lastName, skillSet);
   }
 
