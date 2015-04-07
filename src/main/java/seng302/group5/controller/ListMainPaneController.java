@@ -1,7 +1,5 @@
 package seng302.group5.controller;
 
-import java.util.stream.Collectors;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -182,7 +180,7 @@ public class ListMainPaneController {
       sampleTextArea.appendText(person.getLastName());
       sampleTextArea.appendText("\nTeam: ");
       if (person.isInTeam()) {
-        sampleTextArea.appendText(person.getTeam());
+        sampleTextArea.appendText(person.getTeamID());
       }
       else {sampleTextArea.appendText("Not assigned");}
       sampleTextArea.appendText("\nSkills: ");

@@ -466,7 +466,23 @@ public class Main extends Application {
         newAction(undoRedoObject);
         break;
       case "People":
-        deletePerson((Person) agileItem);
+        Person person = (Person) agileItem;
+
+        if (person.isInTeam()) {
+          Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+          alert.setTitle("Person is in team");
+          alert.setHeaderText(null);
+          alert.setContentText("Do you want to delete this person and remove him/her from their team?");
+          //checks response
+          Optional<ButtonType> result = alert.showAndWait();
+          if (result.get() == ButtonType.OK){
+            //if yes then remove
+            person.getTeam().getTeamMembers().remove(person);
+            deletePerson(person);
+          }
+        } else {
+          deletePerson(person);
+        }
         undoRedoObject = generateDelUndoRedoObject(Action.PERSON_DELETE, agileItem);
         newAction(undoRedoObject);
         break;
@@ -474,9 +490,9 @@ public class Main extends Application {
         Skill skill = (Skill) agileItem;
         boolean skillUsed  = false;
         //iterate through each person
-        for (Person person : people) {
+        for (Person skillPerson : people) {
           //check if they have the skill
-          if (person.getSkillSet().contains(skill)) {
+          if (skillPerson.getSkillSet().contains(skill)) {
             skillUsed = true;
             break;//breaks out of check once it finds someone has it
           }
@@ -517,8 +533,8 @@ public class Main extends Application {
 
           Optional<ButtonType> result = alert.showAndWait();
           if (result.get() == ButtonType.OK){
-            for (Person person : team.getTeamMembers()) {
-              deletePerson(person);
+            for (Person teamPerson : team.getTeamMembers()) {
+              deletePerson(teamPerson);
             }
             deleteTeam(team);
           }
