@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="431.0" prefWidth="520.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.ReleaseDialogController">
+    <children>
+        <HBox alignment="BOTTOM_LEFT" prefHeight="44.0" prefWidth="515.0" spacing="10.0">
+            <children>
+                <Label prefHeight="25.0" prefWidth="115.0" text="Release ID:">
+                    <font>
+                        <Font size="15.0" />
+                    </font>
+                </Label>
+                <TextField fx:id="releaseIDField" alignment="TOP_LEFT" layoutX="1.0" layoutY="10.0" prefWidth="200.0">
+               <HBox.margin>
+                  <Insets bottom="5.0" />
+               </HBox.margin></TextField>
+            </children>
+        </HBox>
+        <HBox prefHeight="85.0" prefWidth="434.0" spacing="10.0">
+            <children>
+                <Label prefHeight="25.0" prefWidth="115.0" text="Description:">
+                    <font>
+                        <Font size="15.0" />
+                    </font>
+                </Label>
+                <TextArea fx:id="releaseDescriptionField" maxHeight="75.0" prefHeight="90.0" prefWidth="290.0" wrapText="true" />
+            </children>
+        </HBox>
+      <HBox prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <Label prefHeight="28.0" prefWidth="125.0" text="Release Notes:">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <TextArea prefHeight="100.0" prefWidth="289.0" />
+         </children>
+      </HBox>
+        <HBox alignment="CENTER_LEFT" layoutY="1.0" prefHeight="85.0" prefWidth="369.0" spacing="10.0">
+            <children>
+                <Label prefHeight="25.0" prefWidth="115.0" text="Project">
+                    <font>
+                        <Font size="15.0" />
+                    </font>
+                </Label>
+                <ListView fx:id="projectLists" maxHeight="25.0" prefHeight="16.0" prefWidth="200.0" />
+                <Button fx:id="btnRemoveProject" mnemonicParsing="false"  text="Remove" />
+            </children>
+        </HBox>
+        <HBox prefHeight="30.0" prefWidth="200.0">
+            <children>
+                <ComboBox fx:id="projectList" prefHeight="25.0" prefWidth="200.0">
+                    <HBox.margin>
+                        <Insets right="10.0" />
+                    </HBox.margin></ComboBox>
+                <Button fx:id="btnAddProject" mnemonicParsing="false"  text="Add" />
+            </children>
+            <VBox.margin>
+                <Insets left="125.0" />
+            </VBox.margin>
+        </HBox>
+      <HBox prefHeight="50.0" prefWidth="515.0" spacing="10.0">
+         <children>
+            <Label prefHeight="37.0" prefWidth="115.0" text="Release Date:">
+               <font>
+                  <Font size="15.0" />
+               </font>
+               <HBox.margin>
+                  <Insets top="2.0" />
+               </HBox.margin>
+            </Label>
+            <DatePicker fx:id="releaseDateField" prefHeight="40.0" prefWidth="174.0">
+               <HBox.margin>
+                  <Insets top="5.0" />
+               </HBox.margin>
+            </DatePicker>
+         </children>
+      </HBox>
+        <HBox alignment="BOTTOM_RIGHT" prefHeight="24.0" prefWidth="420.0" spacing="10.0">
+            <opaqueInsets>
+                <Insets />
+            </opaqueInsets>
+            <padding>
+                <Insets bottom="5.0" right="5.0" />
+            </padding>
+            <VBox.margin>
+                <Insets right="5.0" />
+            </VBox.margin>
+         <children>
+                <Button fx:id="btnConfirm" mnemonicParsing="false" text="Create" />
+                <Button fx:id="btnCancel" mnemonicParsing="false" text="Cancel" />
+         </children>
+        </HBox>
+    </children>
+    <padding>
+        <Insets left="5.0" />
+    </padding>
+</VBox>
