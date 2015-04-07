@@ -31,6 +31,7 @@ public class MenuBarController {
   @FXML private MenuItem saveMenuItem;
   @FXML private MenuItem undoMenuItem;
   @FXML private MenuItem redoMenuItem;
+  @FXML private MenuItem deleteMenuItem;
 
   @FXML private CheckMenuItem showListMenuItem;
   @FXML private CheckMenuItem showProjectsMenuItem;
@@ -50,6 +51,7 @@ public class MenuBarController {
     saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
     undoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN));
     redoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN));
+    deleteMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DELETE));
 
     // Ticks the project menu item
     showProjectsMenuItem.setSelected(true);
