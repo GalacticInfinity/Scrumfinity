@@ -57,7 +57,7 @@ public class SavingTest {
       assertTrue(orig.getSkills().contains(i));
     }
     for (Team i: main.getTeams()) {
-      assertTrue(orig.getSkills().contains(i));
+      assertTrue(orig.getTeams().contains(i));
     }
   }
 }
