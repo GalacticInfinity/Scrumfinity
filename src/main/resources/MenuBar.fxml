@@ -20,7 +20,7 @@
                <SeparatorMenuItem mnemonicParsing="false" />
                <MenuItem mnemonicParsing="false" text="Close" />
                <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" onAction="#btnClickSave" text="Save" />
-               <MenuItem mnemonicParsing="false" text="Save As…" />
+               <MenuItem mnemonicParsing="false" onAction="#btnClickSaveAs" text="Save As…" />
                <MenuItem mnemonicParsing="false" text="Revert" />
                <SeparatorMenuItem mnemonicParsing="false" />
                <MenuItem mnemonicParsing="false" text="Preferences…" />

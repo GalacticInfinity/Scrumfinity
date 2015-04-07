@@ -8,6 +8,7 @@ import java.io.File;
 public class Settings {
 
   public static File defaultFilepath;
+  public static File currentFile;
   public static String currentListType;
 
   public static void setSysDefault() {
