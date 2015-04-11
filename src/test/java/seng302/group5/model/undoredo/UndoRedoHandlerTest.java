@@ -30,7 +30,13 @@ public class UndoRedoHandlerTest {
   private String newLastName;
 //  private ObservableList<Skill> newSkillSet = FXCollections.observableArrayList(); // use later
 
+  private String skillName;
+  private String skillDescription;
+  private String newSkillName;
+  private String newSkillDescription;
+
   private Person person;
+  private Skill skill;
 
   private UndoRedoHandler undoRedoHandler;
   private Main mainApp;
@@ -87,6 +93,48 @@ public class UndoRedoHandlerTest {
     undoRedoObject.setAction(Action.PERSON_EDIT);
     undoRedoObject.addDatum(lastPerson);
     undoRedoObject.addDatum(newPerson);
+
+    undoRedoHandler.newAction(undoRedoObject);
+  }
+
+  private void newSkill() {
+    skillName = "C#";
+    skillDescription = "Person can program in the C# language";
+    skill = new Skill(skillName, skillDescription);
+
+    mainApp.addSkill(skill);
+
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+    undoRedoObject.setAction(Action.SKILL_CREATE);
+    undoRedoObject.addDatum(new Skill(skill));
+
+    undoRedoHandler.newAction(undoRedoObject);
+  }
+
+  private void deleteNewestSkill() {
+    mainApp.deleteSkill(skill);
+
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+    undoRedoObject.setAction(Action.SKILL_DELETE);
+    undoRedoObject.addDatum(new Skill(skill));
+
+    undoRedoHandler.newAction(undoRedoObject);
+  }
+
+  private void editNewestSkill() {
+    Skill lastSkill = new Skill(skill);
+
+    newSkillName = "Python";
+    newSkillDescription = "Person can program in the Python language";
+    skill.setSkillName(newSkillName);
+    skill.setSkillDescription(newSkillDescription);
+
+    Skill newSkill = new Skill(skill);
+
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+    undoRedoObject.setAction(Action.SKILL_EDIT);
+    undoRedoObject.addDatum(lastSkill);
+    undoRedoObject.addDatum(newSkill);
 
     undoRedoHandler.newAction(undoRedoObject);
   }
@@ -288,5 +336,156 @@ public class UndoRedoHandlerTest {
     assertEquals(redonePerson.getPersonID(), newPersonID);
     assertEquals(redonePerson.getFirstName(), newFirstName);
     assertEquals(redonePerson.getLastName(), newLastName);
+  }
+
+  @Test
+  public void testSkillCreateUndo() throws Exception {
+    assertTrue(mainApp.getSkills().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+
+    newSkill();
+    assertEquals(mainApp.getSkills().size(), 1);
+    assertEquals(undoRedoHandler.getUndoStack().size(), 1);
+
+    undoRedoHandler.undo();
+    assertTrue(mainApp.getSkills().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+  }
+
+  @Test
+  public void testSkillCreateRedo() throws Exception {
+    assertTrue(mainApp.getSkills().isEmpty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    newSkill();
+    assertEquals(mainApp.getSkills().size(), 1);
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    undoRedoHandler.undo();
+    assertTrue(mainApp.getSkills().isEmpty());
+    assertEquals(undoRedoHandler.getRedoStack().size(), 1);
+
+    undoRedoHandler.redo();
+    assertEquals(mainApp.getSkills().size(), 1);
+    assertEquals(undoRedoHandler.getUndoStack().size(), 1);
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+  }
+
+  @Test
+  public void testSkillDeleteUndo() throws Exception {
+    assertTrue(mainApp.getSkills().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+
+    newSkill();
+    assertEquals(mainApp.getSkills().size(), 1);
+    assertEquals(undoRedoHandler.getUndoStack().size(), 1);
+
+    deleteNewestSkill();
+    assertEquals(mainApp.getSkills().size(), 0);
+    assertEquals(undoRedoHandler.getUndoStack().size(), 2);
+
+    undoRedoHandler.undo();
+    assertEquals(mainApp.getSkills().size(), 1);
+    assertEquals(undoRedoHandler.getUndoStack().size(), 1);
+  }
+
+  @Test
+  public void testSkillDeleteRedo() throws Exception {
+    assertTrue(mainApp.getSkills().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    newSkill();
+    assertEquals(mainApp.getSkills().size(), 1);
+    assertEquals(undoRedoHandler.getUndoStack().size(), 1);
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    deleteNewestSkill();
+    assertEquals(mainApp.getSkills().size(), 0);
+    assertEquals(undoRedoHandler.getUndoStack().size(), 2);
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    undoRedoHandler.undo();
+    assertEquals(mainApp.getSkills().size(), 1);
+    assertEquals(undoRedoHandler.getUndoStack().size(), 1);
+    assertEquals(undoRedoHandler.getRedoStack().size(), 1);
+
+    undoRedoHandler.redo();
+    assertEquals(mainApp.getSkills().size(), 0);
+    assertEquals(undoRedoHandler.getUndoStack().size(), 2);
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+  }
+
+  @Test
+  public void testSkillEditUndo() throws Exception {
+    assertTrue(mainApp.getSkills().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+
+    newSkill();
+    assertEquals(mainApp.getSkills().size(), 1);
+    assertEquals(undoRedoHandler.getUndoStack().size(), 1);
+
+    Skill createdSkill = mainApp.getSkills().get(mainApp.getSkills().size() - 1);
+    assertEquals(createdSkill.getSkillName(), skillName);
+    assertEquals(createdSkill.getSkillDescription(), skillDescription);
+
+    editNewestSkill();
+    assertEquals(mainApp.getSkills().size(), 1);
+    assertEquals(undoRedoHandler.getUndoStack().size(), 2);
+
+    Skill editedSkill = mainApp.getSkills().get(mainApp.getSkills().size() - 1);
+    assertEquals(editedSkill.getSkillName(), newSkillName);
+    assertEquals(editedSkill.getSkillDescription(), newSkillDescription);
+
+    undoRedoHandler.undo();
+    assertEquals(mainApp.getSkills().size(), 1);
+    assertEquals(undoRedoHandler.getUndoStack().size(), 1);
+
+    Skill undoneSkill = mainApp.getSkills().get(mainApp.getSkills().size() - 1);
+    assertEquals(undoneSkill.getSkillName(), skillName);
+    assertEquals(undoneSkill.getSkillDescription(), skillDescription);
+  }
+
+  @Test
+  public void testSkillEditRedo() throws Exception {
+    assertTrue(mainApp.getSkills().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    newSkill();
+    assertEquals(mainApp.getSkills().size(), 1);
+    assertEquals(undoRedoHandler.getUndoStack().size(), 1);
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    Skill createdSkill = mainApp.getSkills().get(mainApp.getSkills().size() - 1);
+    assertEquals(createdSkill.getSkillName(), skillName);
+    assertEquals(createdSkill.getSkillDescription(), skillDescription);
+
+    editNewestSkill();
+    assertEquals(mainApp.getSkills().size(), 1);
+    assertEquals(undoRedoHandler.getUndoStack().size(), 2);
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    Skill editedSkill = mainApp.getSkills().get(mainApp.getSkills().size() - 1);
+    assertEquals(editedSkill.getSkillName(), newSkillName);
+    assertEquals(editedSkill.getSkillDescription(), newSkillDescription);
+
+    undoRedoHandler.undo();
+    assertEquals(mainApp.getSkills().size(), 1);
+    assertEquals(undoRedoHandler.getUndoStack().size(), 1);
+    assertEquals(undoRedoHandler.getRedoStack().size(), 1);
+
+    Skill undoneSkill = mainApp.getSkills().get(mainApp.getSkills().size() - 1);
+    assertEquals(undoneSkill.getSkillName(), skillName);
+    assertEquals(undoneSkill.getSkillDescription(), skillDescription);
+
+    undoRedoHandler.redo();
+    assertEquals(mainApp.getSkills().size(), 1);
+    assertEquals(undoRedoHandler.getUndoStack().size(), 2);
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    Skill redoneSkill = mainApp.getSkills().get(mainApp.getSkills().size() - 1);
+    assertEquals(redoneSkill.getSkillName(), newSkillName);
+    assertEquals(redoneSkill.getSkillDescription(), newSkillDescription);
   }
 }
