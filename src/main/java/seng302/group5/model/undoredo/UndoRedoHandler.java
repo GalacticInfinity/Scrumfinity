@@ -3,6 +3,7 @@ package seng302.group5.model.undoredo;
 import java.util.ArrayList;
 import java.util.Stack;
 
+import javafx.collections.FXCollections;
 import seng302.group5.Main;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Person;
@@ -399,6 +400,7 @@ public class UndoRedoHandler {
     personToEdit.setPersonID(newPerson.getPersonID());
     personToEdit.setFirstName(newPerson.getFirstName());
     personToEdit.setLastName(newPerson.getLastName());
+    personToEdit.setSkillSet(FXCollections.observableArrayList(newPerson.getSkillSet()));
     mainApp.refreshList();
   }
 

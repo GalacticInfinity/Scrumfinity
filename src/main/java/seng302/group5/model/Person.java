@@ -52,7 +52,7 @@ public class Person implements AgileItem {
     this.personID = clone.getPersonID();
     this.firstName = clone.getFirstName();
     this.lastName = clone.getLastName();
-    this.skillSet = clone.getSkillSet();
+    this.skillSet = FXCollections.observableArrayList(clone.getSkillSet());
   }
 
   public String getPersonID() {
