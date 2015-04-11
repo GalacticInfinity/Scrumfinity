@@ -576,4 +576,11 @@ public class UndoRedoHandler {
     mainApp.refreshList();
   }
 
+  public Stack<UndoRedoObject> getUndoStack() {
+    return undoStack;
+  }
+
+  public Stack<UndoRedoObject> getRedoStack() {
+    return redoStack;
+  }
 }

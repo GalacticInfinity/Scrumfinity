@@ -21,6 +21,12 @@
             <artifactId>openjfx-dialogs</artifactId>
             <version>1.0.2</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.9.5</version>
+        </dependency>
     </dependencies>
 
     <properties>
