@@ -24,11 +24,11 @@ public class UndoRedoHandlerTest {
   private String personID;
   private String firstName;
   private String lastName;
-  private ObservableList<Skill> skillSet = FXCollections.observableArrayList();
+  private ObservableList<Skill> skillSet;
   private String newPersonID;
   private String newFirstName;
   private String newLastName;
-//  private ObservableList<Skill> newSkillSet = FXCollections.observableArrayList(); // use later
+  private ObservableList<Skill> newSkillSet;
 
   private String skillName;
   private String skillDescription;
@@ -56,6 +56,7 @@ public class UndoRedoHandlerTest {
     personID = "ssc55";
     firstName = "Su-Shing";
     lastName = "Chen";
+    skillSet = FXCollections.observableArrayList();
     person = new Person(personID, firstName, lastName, skillSet);
 
     mainApp.addPerson(person);
@@ -83,9 +84,13 @@ public class UndoRedoHandlerTest {
     newPersonID = "apw76";
     newFirstName = "Alex";
     newLastName = "Woo";
+    newSkillSet = FXCollections.observableArrayList();
+    newSkillSet.add(skill);
+
     person.setPersonID(newPersonID);
     person.setFirstName(newFirstName);
     person.setLastName(newLastName);
+    person.setSkillSet(newSkillSet);
 
     Person newPerson = new Person(person);
 
@@ -263,32 +268,40 @@ public class UndoRedoHandlerTest {
     assertTrue(mainApp.getPeople().isEmpty());
     assertTrue(undoRedoHandler.getUndoStack().empty());
 
+    newSkill();
     newPerson();
     assertEquals(mainApp.getPeople().size(), 1);
-    assertEquals(undoRedoHandler.getUndoStack().size(), 1);
+    assertEquals(mainApp.getSkills().size(), 1);
+    assertEquals(undoRedoHandler.getUndoStack().size(), 2);
 
     Person createdPerson = mainApp.getPeople().get(mainApp.getPeople().size() - 1);
     assertEquals(createdPerson.getPersonID(), personID);
     assertEquals(createdPerson.getFirstName(), firstName);
     assertEquals(createdPerson.getLastName(), lastName);
+    assertTrue(createdPerson.getSkillSet().isEmpty());  // no skills yet
 
     editNewestPerson();
     assertEquals(mainApp.getPeople().size(), 1);
-    assertEquals(undoRedoHandler.getUndoStack().size(), 2);
+    assertEquals(undoRedoHandler.getUndoStack().size(), 3);
 
     Person editedPerson = mainApp.getPeople().get(mainApp.getPeople().size() - 1);
     assertEquals(editedPerson.getPersonID(), newPersonID);
     assertEquals(editedPerson.getFirstName(), newFirstName);
     assertEquals(editedPerson.getLastName(), newLastName);
+    assertEquals(editedPerson.getSkillSet(), newSkillSet);
+    // TODO edit skill while person has the skill
 
     undoRedoHandler.undo();
     assertEquals(mainApp.getPeople().size(), 1);
-    assertEquals(undoRedoHandler.getUndoStack().size(), 1);
+    assertEquals(undoRedoHandler.getUndoStack().size(), 2);
 
     Person undonePerson = mainApp.getPeople().get(mainApp.getPeople().size() - 1);
     assertEquals(undonePerson.getPersonID(), personID);
     assertEquals(undonePerson.getFirstName(), firstName);
     assertEquals(undonePerson.getLastName(), lastName);
+    assertTrue(undonePerson.getSkillSet().isEmpty());  // no skills now
+
+    assertEquals(mainApp.getSkills().size(), 1);
   }
 
   @Test
@@ -306,6 +319,7 @@ public class UndoRedoHandlerTest {
     assertEquals(createdPerson.getPersonID(), personID);
     assertEquals(createdPerson.getFirstName(), firstName);
     assertEquals(createdPerson.getLastName(), lastName);
+    assertTrue(createdPerson.getSkillSet().isEmpty());  // no skills yet
 
     editNewestPerson();
     assertEquals(mainApp.getPeople().size(), 1);
@@ -316,6 +330,7 @@ public class UndoRedoHandlerTest {
     assertEquals(editedPerson.getPersonID(), newPersonID);
     assertEquals(editedPerson.getFirstName(), newFirstName);
     assertEquals(editedPerson.getLastName(), newLastName);
+    assertEquals(editedPerson.getSkillSet(), newSkillSet);
 
     undoRedoHandler.undo();
     assertEquals(mainApp.getPeople().size(), 1);
@@ -326,6 +341,7 @@ public class UndoRedoHandlerTest {
     assertEquals(undonePerson.getPersonID(), personID);
     assertEquals(undonePerson.getFirstName(), firstName);
     assertEquals(undonePerson.getLastName(), lastName);
+    assertTrue(undonePerson.getSkillSet().isEmpty());  // no skills now
 
     undoRedoHandler.redo();
     assertEquals(mainApp.getPeople().size(), 1);
@@ -336,6 +352,7 @@ public class UndoRedoHandlerTest {
     assertEquals(redonePerson.getPersonID(), newPersonID);
     assertEquals(redonePerson.getFirstName(), newFirstName);
     assertEquals(redonePerson.getLastName(), newLastName);
+    assertEquals(redonePerson.getSkillSet(), newSkillSet); // has skills again
   }
 
   @Test
