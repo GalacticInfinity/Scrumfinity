@@ -89,7 +89,7 @@ public class UndoRedoHandlerTest {
 
     newPerson();
     newPerson();
-    assertFalse(undoRedoHandler.getUndoStack().empty());
+    assertEquals(undoRedoHandler.getUndoStack().size(), 2);
     assertTrue(undoRedoHandler.getRedoStack().empty());
 
     // Add a random person to the redo stack
@@ -98,8 +98,9 @@ public class UndoRedoHandlerTest {
     undoRedoObject.setAction(Action.PERSON_CREATE);
     undoRedoObject.addDatum(new Person(tempPerson));
     undoRedoHandler.getRedoStack().add(undoRedoObject);
-    assertFalse(undoRedoHandler.getUndoStack().empty());
-    assertFalse(undoRedoHandler.getRedoStack().empty());
+
+    assertEquals(undoRedoHandler.getUndoStack().size(), 2);
+    assertEquals(undoRedoHandler.getRedoStack().size(), 1);
 
     // Clear stacks
     undoRedoHandler.clearStacks();
@@ -113,8 +114,8 @@ public class UndoRedoHandlerTest {
     assertTrue(undoRedoHandler.getUndoStack().empty());
 
     newPerson();
-    assertFalse(mainApp.getPeople().isEmpty());
-    assertFalse(undoRedoHandler.getUndoStack().empty());
+    assertEquals(mainApp.getPeople().size(), 1);
+    assertEquals(undoRedoHandler.getUndoStack().size(), 1);
 
     undoRedoHandler.undo();
     assertTrue(mainApp.getPeople().isEmpty());
@@ -127,16 +128,16 @@ public class UndoRedoHandlerTest {
     assertTrue(undoRedoHandler.getRedoStack().empty());
 
     newPerson();
-    assertFalse(mainApp.getPeople().isEmpty());
+    assertEquals(mainApp.getPeople().size(), 1);
     assertTrue(undoRedoHandler.getRedoStack().empty());
 
     undoRedoHandler.undo();
     assertTrue(mainApp.getPeople().isEmpty());
-    assertFalse(undoRedoHandler.getRedoStack().empty());
+    assertEquals(undoRedoHandler.getRedoStack().size(), 1);
 
     undoRedoHandler.redo();
-    assertFalse(mainApp.getPeople().isEmpty());
-    assertFalse(undoRedoHandler.getUndoStack().empty());
+    assertEquals(mainApp.getPeople().size(), 1);
+    assertEquals(undoRedoHandler.getUndoStack().size(), 1);
     assertTrue(undoRedoHandler.getRedoStack().empty());
   }
 
