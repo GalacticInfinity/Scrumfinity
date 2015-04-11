@@ -1,5 +1,8 @@
 package seng302.group5.model;
 
+import java.util.Enumeration;
+import java.util.Vector;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -18,6 +21,8 @@ public class Person implements AgileItem {
   private Team team = null;
 
   private ObservableList<Skill> skillSet = FXCollections.observableArrayList();
+
+  private Vector _roles = new Vector();
 
   /**
    * Default constructor.
@@ -53,6 +58,16 @@ public class Person implements AgileItem {
     this.firstName = clone.getFirstName();
     this.lastName = clone.getLastName();
     this.skillSet = clone.getSkillSet();
+  }
+
+  public void addRole(PersonRole value) {
+    if (canAddRole()) {
+      _roles.addElement(value);
+    }
+  }
+
+  private boolean canAddRole() {
+    return _roles.isEmpty();
   }
 
   public String getPersonID() {
