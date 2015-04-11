@@ -102,6 +102,23 @@ public class UndoRedoHandlerTest {
     undoRedoHandler.newAction(undoRedoObject);
   }
 
+  private void newPersonWithSkill() {
+    personID = "ssc55";
+    firstName = "Su-Shing";
+    lastName = "Chen";
+    skillSet = FXCollections.observableArrayList();
+    skillSet.add(skill);
+    person = new Person(personID, firstName, lastName, skillSet);
+
+    mainApp.addPerson(person);
+
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+    undoRedoObject.setAction(Action.PERSON_CREATE);
+    undoRedoObject.addDatum(new Person(person));
+
+    undoRedoHandler.newAction(undoRedoObject);
+  }
+
   private void newSkill() {
     skillName = "C#";
     skillDescription = "Person can program in the C# language";
@@ -289,7 +306,6 @@ public class UndoRedoHandlerTest {
     assertEquals(editedPerson.getFirstName(), newFirstName);
     assertEquals(editedPerson.getLastName(), newLastName);
     assertEquals(editedPerson.getSkillSet(), newSkillSet);
-    // TODO edit skill while person has the skill
 
     undoRedoHandler.undo();
     assertEquals(mainApp.getPeople().size(), 1);
@@ -353,6 +369,91 @@ public class UndoRedoHandlerTest {
     assertEquals(redonePerson.getFirstName(), newFirstName);
     assertEquals(redonePerson.getLastName(), newLastName);
     assertEquals(redonePerson.getSkillSet(), newSkillSet); // has skills again
+  }
+
+  /**
+   * Undo an edit for a skill which a person already has
+   */
+  @Test
+  public void testPersonEditExistingSkillUndo() throws Exception {
+    assertTrue(mainApp.getPeople().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+
+    newSkill();
+    newPersonWithSkill();
+    assertEquals(mainApp.getPeople().size(), 1);
+    assertEquals(mainApp.getSkills().size(), 1);
+    assertEquals(undoRedoHandler.getUndoStack().size(), 2);
+
+    Skill oldSkill = person.getSkillSet().get(0);
+    assertEquals(oldSkill.getSkillName(), skillName);
+    assertEquals(oldSkill.getSkillDescription(), skillDescription);
+
+    editNewestSkill();
+    assertEquals(mainApp.getPeople().size(), 1);
+    assertEquals(mainApp.getSkills().size(), 1);
+    assertEquals(undoRedoHandler.getUndoStack().size(), 3);
+
+    Skill newSkill = person.getSkillSet().get(0);
+    assertEquals(newSkill.getSkillName(), newSkillName);
+    assertEquals(newSkill.getSkillDescription(), newSkillDescription);
+
+    undoRedoHandler.undo();
+    assertEquals(mainApp.getPeople().size(), 1);
+    assertEquals(undoRedoHandler.getUndoStack().size(), 2);
+
+    Skill undoneSkill = person.getSkillSet().get(0);
+    assertEquals(undoneSkill.getSkillName(), skillName);
+    assertEquals(undoneSkill.getSkillDescription(), skillDescription);
+  }
+
+  /**
+   * Redo an edit for a skill which a person already has
+   */
+  @Test
+  public void testPersonEditExistingSkillRedo() throws Exception {
+    assertTrue(mainApp.getPeople().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    newSkill();
+    newPersonWithSkill();
+    assertEquals(mainApp.getPeople().size(), 1);
+    assertEquals(mainApp.getSkills().size(), 1);
+    assertEquals(undoRedoHandler.getUndoStack().size(), 2);
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    Skill oldSkill = person.getSkillSet().get(0);
+    assertEquals(oldSkill.getSkillName(), skillName);
+    assertEquals(oldSkill.getSkillDescription(), skillDescription);
+
+    editNewestSkill();
+    assertEquals(mainApp.getPeople().size(), 1);
+    assertEquals(mainApp.getSkills().size(), 1);
+    assertEquals(undoRedoHandler.getUndoStack().size(), 3);
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    Skill newSkill = person.getSkillSet().get(0);
+    assertEquals(newSkill.getSkillName(), newSkillName);
+    assertEquals(newSkill.getSkillDescription(), newSkillDescription);
+
+    undoRedoHandler.undo();
+    assertEquals(mainApp.getPeople().size(), 1);
+    assertEquals(undoRedoHandler.getUndoStack().size(), 2);
+    assertEquals(undoRedoHandler.getRedoStack().size(), 1);
+
+    Skill undoneSkill = person.getSkillSet().get(0);
+    assertEquals(undoneSkill.getSkillName(), skillName);
+    assertEquals(undoneSkill.getSkillDescription(), skillDescription);
+
+    undoRedoHandler.redo();
+    assertEquals(mainApp.getPeople().size(), 1);
+    assertEquals(undoRedoHandler.getUndoStack().size(), 3);
+    assertEquals(undoRedoHandler.getRedoStack().size(), 0);
+
+    Skill redoneSkill = person.getSkillSet().get(0);
+    assertEquals(redoneSkill.getSkillName(), newSkillName);
+    assertEquals(redoneSkill.getSkillDescription(), newSkillDescription);
   }
 
   @Test
