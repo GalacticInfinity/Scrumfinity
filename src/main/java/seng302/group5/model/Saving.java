@@ -130,15 +130,16 @@ public class Saving {
       List<Team> xmlTeams = wrapper.getTeams();
 
       // TODO comments
-      if (xmlPersons != null) {
-        main.getPeople().addAll(xmlPersons);
-      }
       if (xmlProjects != null) {
         main.getProjects().addAll(xmlProjects);
+      }
+      if (xmlPersons != null) {
+        main.getPeople().addAll(xmlPersons);
       }
       if (xmlSkills != null) {
         main.getSkills().addAll(xmlSkills);
       }
+      syncSkills(main);
       if (xmlTeams != null) {
         main.getTeams().addAll(xmlTeams);
       }
@@ -148,6 +149,27 @@ public class Saving {
     } catch (Exception e) {
       System.out.println("Could not load file properly");
       e.printStackTrace();
+    }
+  }
+
+  /**
+   * Creates proper object reference between people and skills.
+   * @param main Main application
+   */
+  private static void syncSkills(Main main){
+    // For every available person
+    for (Person person : main.getPeople()) {
+      // For every skill in that person
+      for (Skill personSkill : person.getSkillSet()) {
+        // For every skill in main app
+        for (Skill mainSkill : main.getSkills()) {
+          if (mainSkill.getSkillName().equals(personSkill.getSkillName())) {
+            // Remove loaded skill object
+            person.getSkillSet().remove(personSkill);
+            person.getSkillSet().add(mainSkill);
+          }
+        }
+      }
     }
   }
 }
