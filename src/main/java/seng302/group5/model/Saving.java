@@ -1,6 +1,7 @@
 package seng302.group5.model;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -159,16 +160,21 @@ public class Saving {
   private static void syncSkills(Main main){
     // For every available person
     for (Person person : main.getPeople()) {
+      ArrayList<Skill> skillArray = new ArrayList<>();
       // For every skill in that person
       for (Skill personSkill : person.getSkillSet()) {
         // For every skill in main app
         for (Skill mainSkill : main.getSkills()) {
           if (mainSkill.getSkillName().equals(personSkill.getSkillName())) {
             // Remove loaded skill object
-            person.getSkillSet().remove(personSkill);
-            person.getSkillSet().add(mainSkill);
+            skillArray.add(mainSkill);
           }
         }
+      }
+      // To fix Concurrent Modification Exception
+      person.getSkillSet().clear();
+      for (Skill arraySkill : skillArray) {
+        person.getSkillSet().add(arraySkill);
       }
     }
   }
