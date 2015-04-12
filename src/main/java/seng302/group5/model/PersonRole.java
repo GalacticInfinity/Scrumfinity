@@ -10,11 +10,15 @@ package seng302.group5.model;
  */
 public class PersonRole {
 
+  public PersonRole(){}
+
   public boolean hasType(String value) {
     return false;
   }
 
-  public class ProductOwner extends PersonRole {
+  public static class ProductOwner extends PersonRole {
+
+    public ProductOwner() {super();}
 
     public boolean hasType(String value) {
       if (value.equalsIgnoreCase("Product Owner")) {
@@ -25,7 +29,7 @@ public class PersonRole {
     }
   }
 
-  public class ScrumMaster extends PersonRole {
+  public static class ScrumMaster extends PersonRole {
 
     public boolean hasType(String value) {
       if (value.equalsIgnoreCase("ScrumMaster")) {
@@ -36,7 +40,7 @@ public class PersonRole {
     }
   }
 
-  public class DevelopmentTeamMember extends PersonRole {
+  public static class DevelopmentTeamMember extends PersonRole {
 
     public boolean hasType(String value) {
       if (value.equalsIgnoreCase("DevelopmentTeamMember")) {

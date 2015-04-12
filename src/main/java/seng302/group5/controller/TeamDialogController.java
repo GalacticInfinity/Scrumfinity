@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Person;
+import seng302.group5.model.PersonRole;
 import seng302.group5.model.Team;
 
 /**
@@ -30,10 +31,17 @@ public class TeamDialogController {
 
   private ObservableList<Person> availableMembers = FXCollections.observableArrayList();
   private ObservableList<Person> selectedMembers = FXCollections.observableArrayList();
+  ObservableList<String> roles =
+      FXCollections.observableArrayList(
+          "Product Owner",
+          "Scrum Master",
+          "Development Team Member"
+      );
 
   @FXML private TextField teamIDField;
   @FXML private ListView teamMembersList;
   @FXML private ComboBox teamMemberAddCombo;
+  @FXML private ComboBox teamMemberRoleCombo;
   @FXML private TextArea teamDescriptionField;
   @FXML private Button btnConfirm;
 
@@ -91,9 +99,11 @@ public class TeamDialogController {
 
       this.teamMemberAddCombo.setVisibleRowCount(5);
       this.teamMemberAddCombo.setPromptText("Available People");
-
       this.teamMemberAddCombo.setItems(availableMembers);
       this.teamMembersList.setItems(selectedMembers);
+
+      this.teamMemberRoleCombo.setPromptText("Person's Role");
+      this.teamMemberRoleCombo.setItems(roles);
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -104,10 +114,25 @@ public class TeamDialogController {
   protected void btnAddMemberClick(ActionEvent event) {
     try {
       Person selectedPerson = (Person) teamMemberAddCombo.getSelectionModel().getSelectedItem();
+      String selectedRole = (String) teamMemberRoleCombo.getSelectionModel().getSelectedItem();
 
+      PersonRole roleType;
       if (selectedPerson != null) {
+        selectedPerson.addRole(selectedRole);
         this.selectedMembers.add(selectedPerson);
         this.availableMembers.remove(selectedPerson);
+        if (selectedRole == "Product Owner") {
+          PersonRole.ProductOwner productOwner = (PersonRole.ProductOwner) new PersonRole();
+          roleType = productOwner;
+        } else if (selectedRole == "Scrum Master") {
+          PersonRole.ScrumMaster scrumMaster = (PersonRole.ScrumMaster) new PersonRole();
+          roleType = scrumMaster;
+        } else {
+          PersonRole.DevelopmentTeamMember developmentTeamMember
+              = (PersonRole.DevelopmentTeamMember) new PersonRole();
+          roleType = developmentTeamMember;
+        }
+        this.team.addRole(roleType);
       }
     }
     catch (Exception e) {

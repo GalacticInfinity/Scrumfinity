@@ -29,12 +29,25 @@
             <Button fx:id="btnRemoveMember" mnemonicParsing="false" onAction="#btnRemoveMemberClick" text="Remove" />
             </children>
         </HBox>
-      <HBox prefHeight="30.0" prefWidth="200.0">
+      <HBox layoutX="140.0" layoutY="130.0" prefHeight="30.0" prefWidth="200.0">
          <children>
             <ComboBox fx:id="teamMemberAddCombo" prefHeight="25.0" prefWidth="200.0">
                <HBox.margin>
                   <Insets right="10.0" />
-               </HBox.margin></ComboBox>
+               </HBox.margin>
+            </ComboBox>
+         </children>
+         <VBox.margin>
+            <Insets left="125.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox prefHeight="30.0" prefWidth="200.0">
+         <children>
+            <ComboBox fx:id="teamMemberRoleCombo" prefHeight="25.0" prefWidth="200.0">
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
+            </ComboBox>
             <Button fx:id="btnAddMember" mnemonicParsing="false" onAction="#btnAddMemberClick" text="Add" />
          </children>
          <VBox.margin>

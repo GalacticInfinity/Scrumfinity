@@ -60,9 +60,9 @@ public class Person implements AgileItem {
     this.skillSet = clone.getSkillSet();
   }
 
-  public void addRole(PersonRole value) {
+  public void addRole(String role) {
     if (canAddRole()) {
-      _roles.addElement(value);
+      _roles.addElement(role);
     }
   }
 

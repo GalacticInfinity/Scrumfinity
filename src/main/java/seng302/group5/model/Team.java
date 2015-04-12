@@ -1,5 +1,8 @@
 package seng302.group5.model;
 
+import java.util.Enumeration;
+import java.util.Vector;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -13,6 +16,8 @@ public class Team implements AgileItem {
   private String teamDescription;
 
   private ObservableList<Person> teamMembers = FXCollections.observableArrayList();
+
+  private Vector _roles = new Vector();
 
   /**
    * Default constructor.
@@ -73,6 +78,23 @@ public class Team implements AgileItem {
   public void delete(){}
 
   public void create(){}
+
+  public void addRole(PersonRole role) {
+    if (canAddRole(role)) {
+      _roles.addElement(role);
+    }
+  }
+
+  private boolean canAddRole(PersonRole role) {
+    if (role.hasType("JobRole")){
+      Enumeration e = _roles.elements();
+      while (e.hasMoreElements()) {
+        PersonRole each = (PersonRole) e.nextElement();
+        if (each.hasType("JobRole")) return false;
+      }
+    }
+      return true;
+  }
 
   /**
    * Overrides to toString method with the
