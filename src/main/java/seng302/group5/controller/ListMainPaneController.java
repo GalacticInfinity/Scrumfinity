@@ -181,18 +181,27 @@ public class ListMainPaneController {
       sampleTextArea.appendText("\nTeam: ");
       if (person.isInTeam()) {
         sampleTextArea.appendText(person.getTeamID());
+      } else {
+        sampleTextArea.appendText("Not assigned.");
       }
-      else {sampleTextArea.appendText("Not assigned");}
       sampleTextArea.appendText("\nSkills: ");
       StringBuilder listOfSkills = new StringBuilder();
-      for(Skill skill : person.getSkillSet()) {
+      for (Skill skill : person.getSkillSet()) {
         listOfSkills.append(skill.getSkillName());
         listOfSkills.append(", ");
       }
-      sampleTextArea.appendText(listOfSkills.length() > 0 ? listOfSkills.substring(
-          0, listOfSkills.length() - 2): " ");
+      if (listOfSkills.length() == 0) {
+        sampleTextArea.appendText("No known skills. Please add skills to this person.");
+      } else {
+        sampleTextArea.appendText(listOfSkills.substring(0, listOfSkills.length() - 2));
       }
-    else if (Settings.currentListType == "Project") {
+      sampleTextArea.appendText("\nRole: ");
+      if (person.hasRole()) {
+        sampleTextArea.appendText(person.getRoles().toString());
+      } else {
+        sampleTextArea.appendText("Not assigned to a team yet.");
+      }
+    } else if (Settings.currentListType == "Project") {
       sampleTextArea.clear();
       Project project = (Project) next;
       sampleTextArea.appendText("Project information \nProject ID: ");

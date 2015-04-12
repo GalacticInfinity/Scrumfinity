@@ -70,6 +70,14 @@ public class Person implements AgileItem {
     return _roles.isEmpty();
   }
 
+  public boolean hasRole() {
+    return !_roles.isEmpty();
+  }
+
+  public Vector getRoles() {
+    return _roles;
+  }
+
   public String getPersonID() {
     return personID;
   }
