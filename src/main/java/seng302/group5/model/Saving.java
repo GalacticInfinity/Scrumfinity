@@ -141,9 +141,11 @@ public class Saving {
         main.getSkills().addAll(xmlSkills);
       }
       syncSkills(main);
+
       if (xmlTeams != null) {
         main.getTeams().addAll(xmlTeams);
       }
+      syncTeams(main);
 
       // Save the file path to Settings class
       Settings.defaultFilepath = file.getParentFile();
@@ -155,6 +157,7 @@ public class Saving {
 
   /**
    * Creates proper object reference between people and skills.
+   * TODO Create hash map for people, technical debt.
    * @param main Main application
    */
   private static void syncSkills(Main main){
@@ -175,6 +178,32 @@ public class Saving {
       person.getSkillSet().clear();
       for (Skill arraySkill : skillArray) {
         person.getSkillSet().add(arraySkill);
+      }
+    }
+  }
+
+  /**
+   * Creates concurrency between people in main app and people in teams.
+   * @param main Main application
+   */
+  private static void syncTeams(Main main) {
+    // For every available team
+    for (Team team : main.getTeams()) {
+      ArrayList<Person> personArray = new ArrayList<>();
+      // For every person in that team
+      for (Person teamPerson : team.getTeamMembers()) {
+        // For every person that is in Main App
+        for (Person mainPerson : main.getPeople()) {
+          if (teamPerson.getPersonID().equals(mainPerson.getPersonID())) {
+            personArray.add(mainPerson);
+          }
+        }
+      }
+      // To fix Concurrent Modification Exception
+      team.getTeamMembers().clear();
+      for (Person person : personArray) {
+        person.assignToTeam(team);
+        team.getTeamMembers().add(person);
       }
     }
   }
