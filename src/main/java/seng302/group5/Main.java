@@ -1,6 +1,7 @@
 package seng302.group5;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import javafx.application.Application;
@@ -423,10 +424,10 @@ public class Main extends Application {
         break;
       case RELEASE_DELETE:
         itemToStore = new Release((Release) agileItem);
+        break;
       default:
         itemToStore = null;
         System.err.println("Unhandled case for generating undo/redo delete object");
-        break;
     }
 
     undoRedoObject.addDatum(itemToStore);
@@ -472,16 +473,15 @@ public class Main extends Application {
         break;
       case "Skills":
         Skill skill = (Skill) agileItem;
-        boolean skillUsed  = false;
+        ArrayList<Person> skillUsers = new ArrayList<>();
         //iterate through each person
         for (Person skillPerson : people) {
           //check if they have the skill
           if (skillPerson.getSkillSet().contains(skill)) {
-            skillUsed = true;
-            break;//breaks out of check once it finds someone has it
+            skillUsers.add(skillPerson);
           }
         }
-        if (skillUsed) {
+        if (!skillUsers.isEmpty()) {
           //if so open a yes/no dialog
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
           alert.setTitle("People have this skill!");
@@ -544,7 +544,6 @@ public class Main extends Application {
               deletePerson(teamPerson);
             }
             deleteTeam(team);
-            // TODO: cascading delete undo
             undoRedoObject = generateDelUndoRedoObject(Action.TEAM_DELETE, agileItem);
             newAction(undoRedoObject);
           }
@@ -556,7 +555,8 @@ public class Main extends Application {
           System.err.println("Unhandled case for deleting agile item");
         } else {
           deleteRelease(release);
-          // TODO Shingy powers activate
+          undoRedoObject = generateDelUndoRedoObject(Action.PERSON_DELETE, agileItem);
+          newAction(undoRedoObject);
         }
       default:
         System.err.println("Unhandled case for deleting agile item");
@@ -574,6 +574,7 @@ public class Main extends Application {
     teams.clear();
     people.clear();
     skills.clear();
+    releases.clear();
   }
 
 
