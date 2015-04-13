@@ -360,12 +360,7 @@ public class Main extends Application {
    * @param inputProject Project to delete - must be same object reference
    */
   public void deleteProject(Project inputProject) {
-    for (Project project : projects) {
-      if (project == inputProject) {
-        projects.remove(project);
-        break;
-      }
-    }
+    projects.remove(inputProject);
   }
 
   /**
@@ -373,12 +368,7 @@ public class Main extends Application {
    * @param inputPerson Person to delete - must be the same object reference
    */
   public void deletePerson(Person inputPerson) {
-    for (Person person : people) {
-      if (person == inputPerson) {
-        people.remove(person);
-        break;
-      }
-    }
+    people.remove(inputPerson);
   }
 
   /**
@@ -386,12 +376,7 @@ public class Main extends Application {
    * @param inputSkill Skill to delete - must be the same object reference
    */
   public void deleteSkill(Skill inputSkill) {
-    for (Skill skill : skills) {
-      if (skill == inputSkill) {
-        skills.remove(skill);
-        break;
-      }
-    }
+    skills.remove(inputSkill);
   }
 
   /**
@@ -399,12 +384,7 @@ public class Main extends Application {
    * @param inputTeam Team to delete - must be the same object reference
    */
   public void deleteTeam(Team inputTeam) {
-    for(Team team : teams) {
-      if (team == inputTeam) {
-        teams.remove(team);
-        break;
-      }
-    }
+    teams.remove(inputTeam);
   }
 
     /**
