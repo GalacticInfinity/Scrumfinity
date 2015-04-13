@@ -177,6 +177,11 @@ public class UndoRedoHandler {
         handleTeamCreate(undoRedoObject, undoOrRedo);
         break;
 
+      case TEAM_EDIT:
+        System.out.println(String.format("I am %sing a team edit", undoOrRedoStr));   // temp
+        handleTeamEdit(undoRedoObject, undoOrRedo);
+        break;
+
       case TEAM_DELETE:
         System.out.println(String.format("I am %sing a team deletion", undoOrRedoStr));   // temp
         handleTeamDelete(undoRedoObject, undoOrRedo);
@@ -607,14 +612,14 @@ public class UndoRedoHandler {
 
     // Get the team name which is currently in the list and the team to change
     Team team = (Team) data.get(0);
-    String teamName = team.getTeamID();
+    String teamID = team.getTeamID();
 
     // Make the changes and refresh the list
     if (undoOrRedo == UndoOrRedo.UNDO) {
       // Find the team in the list and ensure it exists so it can be deleted
       Team teamToDelete = null;
       for (Team teamInList : mainApp.getTeams()) {
-        if (teamInList.getTeamID().equals(teamName)) {
+        if (teamInList.getTeamID().equals(teamID)) {
           teamToDelete = teamInList;
           break;
         }
@@ -636,7 +641,62 @@ public class UndoRedoHandler {
     mainApp.refreshList();
   }
 
+  /**
+   * Undo or redo a team edit
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handleTeamEdit(UndoRedoObject undoRedoObject,
+                               UndoOrRedo undoOrRedo) throws Exception {
 
+    // Get the data and ensure it has data for the teams both before and after
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 2) {
+      throw new Exception("Can't undo/redo team edit - Less than 2 variables");
+    }
+
+    // Get the team name which is currently in the list and the team to edit
+    Team currentTeam;
+    String currentTeamID;
+    Team newTeam;
+
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+      currentTeam = (Team) data.get(1);
+      currentTeamID = currentTeam.getTeamID();
+      newTeam = (Team) data.get(0);
+    } else {
+      currentTeam = (Team) data.get(0);
+      currentTeamID = currentTeam.getTeamID();
+      newTeam = (Team) data.get(1);
+    }
+
+    // Find the team in the list and ensure it exists
+    Team teamToEdit = null;
+    for (Team teamInList : mainApp.getTeams()) {
+      if (teamInList.getTeamID().equals(currentTeamID)) {
+        teamToEdit = teamInList;
+        break;
+      }
+    }
+    if (teamToEdit == null) {
+      throw new Exception("Can't undo/redo team edit - Can't find the edited team");
+    }
+
+    // Make the changes and refresh the list
+    for (Person oldMember : currentTeam.getTeamMembers()) {
+      oldMember.removeFromTeam();
+    }
+
+    teamToEdit.setTeamID(newTeam.getTeamID());
+    teamToEdit.setTeamDescription(newTeam.getTeamDescription());
+    teamToEdit.setTeamMembers(FXCollections.observableArrayList(newTeam.getTeamMembers()));
+    for (Person newMember : teamToEdit.getTeamMembers()) {
+      newMember.assignToTeam(teamToEdit);
+    }
+    mainApp.refreshList();
+  }
 
 
   /**
