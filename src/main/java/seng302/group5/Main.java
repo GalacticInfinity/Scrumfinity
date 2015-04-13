@@ -196,39 +196,39 @@ public class Main extends Application {
     }
   }
 
-//  public void showReleaseDialog(CreateOrEdit createOrEdit) {
-//    try {
-//      FXMLLoader loader = new FXMLLoader();
-//      loader.setLocation(Main.class.getResource("/ReleaseDialog.fxml"));
-//      VBox releaseDialogLayout = (VBox) loader.load();
-//
-//      ReleaseDialogController controller = loader.getController();
-//      Scene releaseDialogScene = new Scene(releaseDialogLayout);
-//      Stage releaseDialogStage = new Stage();
-//
-//      Release release = null;
-//      if (createOrEdit == CreateOrEdit.EDIT) {
-//        release = (Release) LMPC.getSelected();    // TODO: Fix
-//        if (release == null) {
-//          Alert alert = new Alert(Alert.AlertType.ERROR);
-//          alert.setTitle("Error");
-//          alert.setHeaderText(null);
-//          alert.setContentText("No release selected");
-//          alert.showAndWait();
-//          return;
-//        }
-//      }
-//      controller.setupController(this ,releaseDialogStage, createOrEdit, release);
-//
-//      releaseDialogStage.initModality(Modality.APPLICATION_MODAL);
-//      releaseDialogStage.initOwner(primaryStage);
-//      releaseDialogStage.setScene(releaseDialogScene);
-//      releaseDialogStage.show();
-//
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
-//  }
+ /* public void showReleaseDialog(CreateOrEdit createOrEdit) {
+    try {
+      FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(Main.class.getResource("/ReleaseDialog.fxml"));
+      VBox releaseDialogLayout = (VBox) loader.load();
+
+      ReleaseDialogController controller = loader.getController();
+      Scene releaseDialogScene = new Scene(releaseDialogLayout);
+      Stage releaseDialogStage = new Stage();
+
+      Release release = null;
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        release = (Release) LMPC.getSelected();    // TODO: Fix
+        if (release == null) {
+          Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setTitle("Error");
+          alert.setHeaderText(null);
+          alert.setContentText("No release selected");
+          alert.showAndWait();
+          return;
+        }
+      }
+      controller.setupController(this ,releaseDialogStage, createOrEdit, release);
+
+      releaseDialogStage.initModality(Modality.APPLICATION_MODAL);
+      releaseDialogStage.initOwner(primaryStage);
+      releaseDialogStage.setScene(releaseDialogScene);
+      releaseDialogStage.show();
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }*/
 
 
   public void showPersonDialog(CreateOrEdit createOrEdit) {
@@ -607,8 +607,28 @@ public class Main extends Application {
     return skills;
   }
 
+  public ObservableList<Release> getReleases() {
+    return releases;
+  }
+
   public void addProject(Project project) {
     projects.add(project);
+  }
+
+  public void addPerson(Person person) {
+    people.add(person);
+  }
+
+  public void addTeam(Team team) {
+    teams.add(team);
+  }
+
+  public void addSkill(Skill skill) {
+    skills.add(skill);
+  }
+
+  public void addRelease(Release release) {
+    releases.add(release);
   }
 
   public UndoRedoHandler getUndoRedoHandler() {
@@ -621,26 +641,9 @@ public class Main extends Application {
     this.LMPC = LMPC;
   }
 
-  public void addPerson(Person person) {
-    people.add(person);
-  }
-
-  public void addTeam(Team team) {
-    teams.add(team);
-  }
-
   public void refreshList() {
     LMPC.refreshList();
   }
-
-  public void addSkill(Skill skill) {
-    skills.add(skill);
-  }
-
-  public void addRelease(Release release) {
-    releases.add(release);
-  }
-
 
   public static void main(String[] args) {
     launch(args);

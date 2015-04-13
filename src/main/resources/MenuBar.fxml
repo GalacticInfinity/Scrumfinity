@@ -42,6 +42,7 @@
             <CheckMenuItem fx:id="showTeamsMenuItem" mnemonicParsing="false" onAction="#btnShowTeams" text="Show Teams" />
             <CheckMenuItem fx:id="showPeopleMenuItem" mnemonicParsing="false" onAction="#btnShowPeople" text="Show People" />
             <CheckMenuItem fx:id="showSkillsMenuItem" mnemonicParsing="false" onAction="#btnShowSkills" text="Show Skills" />
+            <CheckMenuItem fx:id="showReleasesMenuItem" mnemonicParsing="false" onAction="#btnShowReleases" text="Show Releases" />
          </items>
       </Menu>
       <Menu mnemonicParsing="false" text="Help">
