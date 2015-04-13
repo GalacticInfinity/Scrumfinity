@@ -14,7 +14,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -392,7 +391,7 @@ public class Main extends Application {
    * @param inputRelease
    */
   public void deleteRelease(Release inputRelease) {
-    teams.remove(inputRelease);
+    releases.remove(inputRelease);
   }
 
     /**
@@ -555,7 +554,7 @@ public class Main extends Application {
           System.err.println("Unhandled case for deleting agile item");
         } else {
           deleteRelease(release);
-          undoRedoObject = generateDelUndoRedoObject(Action.PERSON_DELETE, agileItem);
+          undoRedoObject = generateDelUndoRedoObject(Action.RELEASE_DELETE, agileItem);
           newAction(undoRedoObject);
         }
       default:

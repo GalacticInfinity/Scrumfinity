@@ -189,6 +189,21 @@ public class UndoRedoHandler {
         handleTeamDelete(undoRedoObject, undoOrRedo);
         break;
 
+      case RELEASE_CREATE:
+        System.out.println(String.format("I am %sing a release creation", undoOrRedoStr));   // temp
+        handleReleaseCreate(undoRedoObject, undoOrRedo);
+        break;
+
+      case RELEASE_EDIT:
+        System.out.println(String.format("I am %sing a release edit", undoOrRedoStr));   // temp
+        handleReleaseEdit(undoRedoObject, undoOrRedo);
+        break;
+
+      case RELEASE_DELETE:
+        System.out.println(String.format("I am %sing a release delete", undoOrRedoStr));   // temp
+        handleReleaseDelete(undoRedoObject, undoOrRedo);
+        break;
+
       case UNDEFINED:
         throw new Exception("Unreadable UndoRedoObject");
 
