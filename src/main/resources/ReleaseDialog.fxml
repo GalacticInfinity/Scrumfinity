@@ -28,7 +28,7 @@
                         <Font size="15.0" />
                     </font>
                 </Label>
-                <TextArea fx:id="releaseDescriptionField" maxHeight="75.0" prefHeight="90.0" prefWidth="290.0" wrapText="true" />
+                <TextField fx:id="releaseDescriptionField" maxHeight="75.0" prefHeight="90.0" prefWidth="290.0"  />
             </children>
         </HBox>
       <HBox prefHeight="100.0" prefWidth="200.0">

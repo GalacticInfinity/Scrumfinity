@@ -73,6 +73,11 @@ public class MenuBarController {
   }
 
   @FXML
+  protected void createRelease(ActionEvent event) {
+    mainApp.showReleaseDialog(CreateOrEdit.CREATE);
+  }
+
+  @FXML
   protected void editItem(ActionEvent event) {
     String listType = Settings.currentListType;
     switch (listType) {

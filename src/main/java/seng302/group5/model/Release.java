@@ -1,6 +1,9 @@
 package seng302.group5.model;
 
+import java.time.LocalDate;
 import java.util.Date;
+
+import javafx.collections.ObservableList;
 
 /**
  * Release class that sets the model for a release.
@@ -10,11 +13,11 @@ public class Release {
 
   private String releaseName;
   private String releaseDescription;
-  private Date releaseDate;
+  private LocalDate releaseDate;
   private String releaseNotes;
-  private Project projectRelease = null;
+  private ObservableList<Project> projectRelease = null;
 
-  public void Release() {
+  public Release() {
     releaseName = "";
     releaseDescription = "";
     releaseNotes = "";
@@ -24,12 +27,12 @@ public class Release {
    * Constructor for Release object.
    * @param releaseName
    * @param releaseDescription
-   * @param releaseDate
+   * @param //releaseDate
    * @param releaseNotes
-   * @param projectRelease
+   * @param //projectRelease
    */
-  public void Release(String releaseName, String releaseDescription, Date releaseDate,
-                      String releaseNotes, Project projectRelease) {
+  public Release(String releaseName, String releaseDescription, String releaseNotes,
+                 LocalDate releaseDate, ObservableList<Project> project) {
     this.releaseName = releaseName;
     this.releaseDescription = releaseDescription;
     this.releaseDate = releaseDate;
@@ -41,11 +44,11 @@ public class Release {
 
   public String getReleaseDescription() {return this.releaseDescription;}
 
-  public Date getReleaseDate() {return  this.releaseDate;}
+  public LocalDate getReleaseDate() {return  this.releaseDate;}
 
   public String getReleaseNotes() {return  this.releaseNotes;}
 
-  public Project getProjectRelease() {return  this.projectRelease;}
+  public ObservableList<Project> getProjectRelease() {return  this.projectRelease;}
 
   public void setReleaseName(String releaseName) {this.releaseName = releaseName;}
 
@@ -53,11 +56,11 @@ public class Release {
     this.releaseDescription = releaseDescription;
   }
 
-  public void setReleaseDate(Date releaseDate) {
+  public void setReleaseDate(LocalDate releaseDate) {
     this.releaseDate = releaseDate;
   }
 
-  public void setProjectRelease(Project projectRelease) {
+  public void setProjectRelease(ObservableList<Project> projectRelease) {
     this.projectRelease = projectRelease;
   }
 
@@ -67,4 +70,6 @@ public class Release {
 
   @Override
   public String toString() {return this.releaseName;}
+
 }
+

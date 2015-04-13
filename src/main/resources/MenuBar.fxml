@@ -13,6 +13,7 @@
                   <MenuItem mnemonicParsing="false" onAction="#createTeam" text="Team" />
                        <MenuItem mnemonicParsing="false" onAction="#createPerson" text="Person" />
                        <MenuItem mnemonicParsing="false" onAction="#createSkill" text="Skill" />
+                       <MenuItem mnemonicParsing="false" onAction="#createRelease" text="Release" />
                    </items>
                </Menu>
                <MenuItem fx:id="openMenuItem" mnemonicParsing="false" onAction="#btnClickOpen" text="Open…" />
