@@ -387,6 +387,14 @@ public class Main extends Application {
     teams.remove(inputTeam);
   }
 
+  /**
+   * Delete a release from the list of releases
+   * @param inputRelease
+   */
+  public void deleteRelease(Release inputRelease) {
+    teams.remove(inputRelease);
+  }
+
     /**
    * Generate an UndoRedoObject to place in the stack
      *
@@ -414,10 +422,12 @@ public class Main extends Application {
       case TEAM_DELETE:
         itemToStore = new Team((Team) agileItem);
         break;
+      case RELEASE_DELETE:
+        itemToStore = new Release((Release) agileItem);
+        break;
       default:
         itemToStore = null;
         System.err.println("Unhandled case for generating undo/redo delete object");
-        break;
     }
 
     undoRedoObject.addDatum(itemToStore);
@@ -444,14 +454,10 @@ public class Main extends Application {
         Person person = (Person) agileItem;
 
         if (person.isInTeam()) {
-          String message = String.format(
-              "Do you want to delete '%s' and remove him/her from the team '%s'?",
-              person.getPersonID(),
-              person.getTeamID());
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
           alert.setTitle("Person is in team");
           alert.setHeaderText(null);
-          alert.setContentText(message);
+          alert.setContentText("Do you want to delete this person and remove him/her from their team?");
           //checks response
           Optional<ButtonType> result = alert.showAndWait();
           if (result.get() == ButtonType.OK){
@@ -492,6 +498,7 @@ public class Main extends Application {
           }
           alert.getDialogPane().setPrefHeight(60 + 30 * messageLength);
           alert.setContentText(message);
+          alert.setContentText("Do you want to delete this skill and remove it from the people who have it?");
           //checks response
           Optional<ButtonType> result = alert.showAndWait();
           if (result.get() == ButtonType.OK){
@@ -503,14 +510,12 @@ public class Main extends Application {
             }
             //after all people have this skill removed delete the skill object
             deleteSkill(skill);
-            undoRedoObject = generateDelUndoRedoObject(Action.SKILL_DELETE, agileItem);
-            newAction(undoRedoObject);
           }
         } else {
           deleteSkill(skill);
-          undoRedoObject = generateDelUndoRedoObject(Action.SKILL_DELETE, agileItem);
-          newAction(undoRedoObject);
         }
+        undoRedoObject = generateDelUndoRedoObject(Action.SKILL_DELETE, agileItem);
+        newAction(undoRedoObject);
         break;
       case "Team":
         Team team = (Team) agileItem;
@@ -524,16 +529,13 @@ public class Main extends Application {
           alert.setHeaderText(null);
 
           int messageLength = 1;
-          String message = String.format("Are you sure you want to delete team '%s' and people:\n",
-                                         team.getTeamID());
-          for (Person teamMember: team.getTeamMembers()) {
+          String message = "";
+          message += "Are you sure you want to delete team " + team.getTeamID() + " and people:\n";
+          for (Person teamMemeber: team.getTeamMembers()) {
             messageLength ++;
-            message += String.format("%s - %s %s\n",
-                                     teamMember.getPersonID(),
-                                     teamMember.getFirstName(),
-                                     teamMember.getLastName());
+            message += teamMemeber.getFirstName() + " " + teamMemeber.getLastName() + "\n";
           }
-          alert.getDialogPane().setPrefHeight(60 + 30*messageLength);
+          alert.getDialogPane().setPrefHeight(60 + 20*messageLength);
           alert.setContentText(message);
 
           Optional<ButtonType> result = alert.showAndWait();
@@ -542,12 +544,20 @@ public class Main extends Application {
               deletePerson(teamPerson);
             }
             deleteTeam(team);
-            // TODO: cascading delete undo
             undoRedoObject = generateDelUndoRedoObject(Action.TEAM_DELETE, agileItem);
             newAction(undoRedoObject);
           }
         }
         break;
+      case "Release":
+        Release release = (Release) agileItem;
+        if (release.getProjectRelease() != null) {
+          System.err.println("Unhandled case for deleting agile item");
+        } else {
+          deleteRelease(release);
+          undoRedoObject = generateDelUndoRedoObject(Action.PERSON_DELETE, agileItem);
+          newAction(undoRedoObject);
+        }
       default:
         System.err.println("Unhandled case for deleting agile item");
         break;
@@ -564,6 +574,7 @@ public class Main extends Application {
     teams.clear();
     people.clear();
     skills.clear();
+    releases.clear();
   }
 
 

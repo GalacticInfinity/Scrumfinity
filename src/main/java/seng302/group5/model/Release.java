@@ -32,12 +32,20 @@ public class Release implements AgileItem {
    * @param //projectRelease
    */
   public Release(String releaseName, String releaseDescription, String releaseNotes,
-                 LocalDate releaseDate, ObservableList<Project> project) {
+                 LocalDate releaseDate, Project projectRelease) {
     this.releaseName = releaseName;
     this.releaseDescription = releaseDescription;
     this.releaseDate = releaseDate;
     this.releaseNotes = releaseNotes;
     this.projectRelease = projectRelease;
+  }
+
+  public Release(Release clone) {
+    this.releaseName = clone.getReleaseName();
+    this.releaseDescription = clone.getReleaseDescription();
+    this.releaseDate = clone.getReleaseDate();
+    this.releaseNotes = clone.getReleaseNotes();
+    this.projectRelease = clone.getProjectRelease();
   }
 
   public String getReleaseName() {return this.releaseName;}
