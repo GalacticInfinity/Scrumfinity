@@ -94,6 +94,7 @@ public class ListMainPaneController {
    * TODO Testing
    */
   public void refreshList() {
+    selectedItem = null;
     listView.setItems(null);
     checkListType();
     listView.getSelectionModel().clearSelection();
