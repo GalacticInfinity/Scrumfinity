@@ -59,6 +59,7 @@ public class PersonDialogController {
     if (createOrEdit == CreateOrEdit.CREATE) {
       thisStage.setTitle("Create New Person");
       btnCreatePerson.setText("Create");
+
       initialiseLists(CreateOrEdit.CREATE, person);
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       thisStage.setTitle("Edit Person");

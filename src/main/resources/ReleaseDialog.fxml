@@ -28,7 +28,7 @@
                         <Font size="15.0" />
                     </font>
                 </Label>
-                <TextField fx:id="releaseDescriptionField" maxHeight="75.0" prefHeight="90.0" prefWidth="290.0"  />
+                <TextField fx:id="releaseDescriptionField" maxHeight="75.0" prefHeight="90.0" prefWidth="290.0" />
             </children>
         </HBox>
       <HBox prefHeight="100.0" prefWidth="200.0">
@@ -38,7 +38,7 @@
                   <Font size="15.0" />
                </font>
             </Label>
-            <TextArea prefHeight="100.0" prefWidth="289.0" />
+            <TextField fx:id="releaseNotesField" prefHeight="100.0" prefWidth="289.0" />
          </children>
       </HBox>
         <HBox alignment="CENTER_LEFT" layoutY="1.0" prefHeight="85.0" prefWidth="369.0" spacing="10.0">
@@ -49,7 +49,7 @@
                     </font>
                 </Label>
                 <ListView fx:id="projectLists" maxHeight="25.0" prefHeight="16.0" prefWidth="200.0" />
-                <Button fx:id="btnRemoveProject" mnemonicParsing="false"  text="Remove" />
+                <Button fx:id="btnRemoveProject" mnemonicParsing="false" onAction="#btnRemoveSkill" text="Remove" />
             </children>
         </HBox>
         <HBox prefHeight="30.0" prefWidth="200.0">
@@ -58,7 +58,7 @@
                     <HBox.margin>
                         <Insets right="10.0" />
                     </HBox.margin></ComboBox>
-                <Button fx:id="btnAddProject" mnemonicParsing="false"  text="Add" />
+                <Button fx:id="btnAddProject" mnemonicParsing="false" onAction="#btnAddProject" text="Add" />
             </children>
             <VBox.margin>
                 <Insets left="125.0" />
@@ -92,8 +92,8 @@
                 <Insets right="5.0" />
             </VBox.margin>
          <children>
-                <Button fx:id="btnConfirm" mnemonicParsing="false" text="Create" />
-                <Button fx:id="btnCancel" mnemonicParsing="false" text="Cancel" />
+                <Button fx:id="btnConfirm" mnemonicParsing="false" onAction="#btnCreateRelease" text="Create" />
+                <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#btnCancelClick" text="Cancel" />
          </children>
         </HBox>
     </children>

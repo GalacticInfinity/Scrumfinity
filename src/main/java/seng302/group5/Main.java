@@ -19,7 +19,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng302.group5.controller.ListMainPaneController;
 import seng302.group5.controller.MenuBarController;
-//import seng302.group5.controller.ReleaseDialogController;
+import seng302.group5.controller.ReleaseDialogController;
 import seng302.group5.controller.PersonDialogController;
 import seng302.group5.controller.ProjectDialogController;
 import seng302.group5.controller.TeamDialogController;
@@ -195,7 +195,7 @@ public class Main extends Application {
     }
   }
 
- /* public void showReleaseDialog(CreateOrEdit createOrEdit) {
+  public void showReleaseDialog(CreateOrEdit createOrEdit) {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/ReleaseDialog.fxml"));
@@ -227,7 +227,7 @@ public class Main extends Application {
     } catch (IOException e) {
       e.printStackTrace();
     }
-  }*/
+  }
 
 
   public void showPersonDialog(CreateOrEdit createOrEdit) {
