@@ -172,6 +172,11 @@ public class UndoRedoHandler {
         handleSkillDelete(undoRedoObject, undoOrRedo);
         break;
 
+      case TEAM_CREATE:
+        System.out.println(String.format("I am %sing a team creation", undoOrRedoStr));   // temp
+        handleTeamCreate(undoRedoObject, undoOrRedo);
+        break;
+
       case TEAM_DELETE:
         System.out.println(String.format("I am %sing a team deletion", undoOrRedoStr));   // temp
         handleTeamDelete(undoRedoObject, undoOrRedo);
@@ -585,6 +590,56 @@ public class UndoRedoHandler {
   }
 
   /**
+   * Undo or redo a team creation
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handleTeamCreate(UndoRedoObject undoRedoObject,
+                                 UndoOrRedo undoOrRedo) throws Exception {
+
+    // Get the data and ensure it has data for the team
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 1) {
+      throw new Exception("Can't undo/redo team creation - No variables");
+    }
+
+    // Get the team name which is currently in the list and the team to change
+    Team team = (Team) data.get(0);
+    String teamName = team.getTeamID();
+
+    // Make the changes and refresh the list
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+      // Find the team in the list and ensure it exists so it can be deleted
+      Team teamToDelete = null;
+      for (Team teamInList : mainApp.getTeams()) {
+        if (teamInList.getTeamID().equals(teamName)) {
+          teamToDelete = teamInList;
+          break;
+        }
+      }
+      if (teamToDelete == null) {
+        throw new Exception("Can't undo team creation - Can't find the created team");
+      }
+      for (Person person : teamToDelete.getTeamMembers()) {
+        person.removeFromTeam();
+      }
+      mainApp.deleteTeam(teamToDelete);
+    } else {
+      Team teamToAdd = new Team(team);
+      mainApp.addTeam(teamToAdd);
+      for (Person person : teamToAdd.getTeamMembers()) {
+        person.assignToTeam(teamToAdd);
+      }
+    }
+    mainApp.refreshList();
+  }
+
+
+
+
+  /**
    * Undo or redo a team deletion
    *
    * @param undoRedoObject Object containing the action data
@@ -594,10 +649,10 @@ public class UndoRedoHandler {
   private void handleTeamDelete(UndoRedoObject undoRedoObject,
                                 UndoOrRedo undoOrRedo) throws Exception {
 
-    // Get the data and ensure it has data for the skill
+    // Get the data and ensure it has data for the team
     ArrayList<AgileItem> data = undoRedoObject.getData();
     if (data.size() < 1) {
-      throw new Exception("Can't undo/redo skill deletion - No variables");
+      throw new Exception("Can't undo/redo team deletion - No variables");
     }
 
     // Get the team and id to undo/redo deletion of
@@ -622,7 +677,7 @@ public class UndoRedoHandler {
         }
       }
       if (teamToDelete == null) {
-        throw new Exception("Can't redo team deletion - Can't find the created skill");
+        throw new Exception("Can't redo team deletion - Can't find the created team");
       }
       for (Person teamMember : teamToDelete.getTeamMembers()) {
         mainApp.deletePerson(teamMember);
