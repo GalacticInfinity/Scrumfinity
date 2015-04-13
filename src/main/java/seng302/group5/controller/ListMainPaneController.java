@@ -13,6 +13,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import seng302.group5.Main;
 import seng302.group5.model.AgileItem;
+import seng302.group5.model.Release;
 import seng302.group5.model.util.Settings;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
@@ -122,6 +123,10 @@ public class ListMainPaneController {
         isListShown = true;
         listView.setItems(mainApp.getTeams());
         break;
+      case "Release":
+        isListShown = true;
+        listView.setItems(mainApp.getReleases());
+        break;
     }
     // Set the list label
     listViewLabel.setText(listType);
@@ -141,7 +146,6 @@ public class ListMainPaneController {
         return selectedItem;
       case "People":
         if (isListShown == false) {
-          System.out.println("im in here!");
           return null;
         }
         return selectedItem;
@@ -155,6 +159,11 @@ public class ListMainPaneController {
           return null;
         }
         return selectedItem;
+      case "Release":
+        if (isListShown == false || listType != "Release") {
+          return null;
+        }
+        return  selectedItem;
     }
     return null;
   }
@@ -224,6 +233,19 @@ public class ListMainPaneController {
         sampleTextArea.appendText(member.getPersonID());
         sampleTextArea.appendText("\n");
       }
+    } else if (Settings.currentListType == "Release") {
+      sampleTextArea.clear();
+      Release release = (Release) next;
+      sampleTextArea.appendText("Release information \nRelease Name: ");
+      sampleTextArea.appendText(release.getReleaseName());
+      sampleTextArea.appendText("\nRelease description: ");
+      sampleTextArea.appendText(release.getReleaseDescription());
+      sampleTextArea.appendText("\nRelease Date: ");
+      sampleTextArea.appendText(release.getReleaseDate().toString());
+      sampleTextArea.appendText("\nRelease Notes: ");
+      sampleTextArea.appendText(release.getReleaseNotes());
+      sampleTextArea.appendText("\nProject: ");
+      sampleTextArea.appendText(release.getProjectRelease().toString());
     }
   }
 

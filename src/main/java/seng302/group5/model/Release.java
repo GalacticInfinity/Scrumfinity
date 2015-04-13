@@ -9,13 +9,13 @@ import javafx.collections.ObservableList;
  * Release class that sets the model for a release.
  * Created by Craig Barnard on 07/04/2015
  */
-public class Release {
+public class Release implements AgileItem {
 
   private String releaseName;
   private String releaseDescription;
   private LocalDate releaseDate;
   private String releaseNotes;
-  private ObservableList<Project> projectRelease = null;
+  private Project projectRelease = null;
 
   public Release() {
     releaseName = "";
@@ -48,7 +48,7 @@ public class Release {
 
   public String getReleaseNotes() {return  this.releaseNotes;}
 
-  public ObservableList<Project> getProjectRelease() {return  this.projectRelease;}
+  public Project getProjectRelease() {return  this.projectRelease;}
 
   public void setReleaseName(String releaseName) {this.releaseName = releaseName;}
 
@@ -60,7 +60,7 @@ public class Release {
     this.releaseDate = releaseDate;
   }
 
-  public void setProjectRelease(ObservableList<Project> projectRelease) {
+  public void setProjectRelease(Project projectRelease) {
     this.projectRelease = projectRelease;
   }
 
@@ -68,8 +68,14 @@ public class Release {
     this.releaseNotes = releaseNotes;
   }
 
+  public void create() {
+
+  }
+
+  public void delete() {
+
+  }
+
   @Override
   public String toString() {return this.releaseName;}
-
 }
-

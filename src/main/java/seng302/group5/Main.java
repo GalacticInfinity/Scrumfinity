@@ -19,7 +19,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng302.group5.controller.ListMainPaneController;
 import seng302.group5.controller.MenuBarController;
-import seng302.group5.controller.ReleaseDialogController;
+//import seng302.group5.controller.ReleaseDialogController;
 import seng302.group5.controller.PersonDialogController;
 import seng302.group5.controller.ProjectDialogController;
 import seng302.group5.controller.TeamDialogController;
@@ -195,7 +195,7 @@ public class Main extends Application {
     }
   }
 
-  public void showReleaseDialog(CreateOrEdit createOrEdit) {
+ /* public void showReleaseDialog(CreateOrEdit createOrEdit) {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/ReleaseDialog.fxml"));
@@ -227,7 +227,7 @@ public class Main extends Application {
     } catch (IOException e) {
       e.printStackTrace();
     }
-  }
+  }*/
 
 
   public void showPersonDialog(CreateOrEdit createOrEdit) {
@@ -587,8 +587,28 @@ public class Main extends Application {
     return skills;
   }
 
+  public ObservableList<Release> getReleases() {
+    return releases;
+  }
+
   public void addProject(Project project) {
     projects.add(project);
+  }
+
+  public void addPerson(Person person) {
+    people.add(person);
+  }
+
+  public void addTeam(Team team) {
+    teams.add(team);
+  }
+
+  public void addSkill(Skill skill) {
+    skills.add(skill);
+  }
+
+  public void addRelease(Release release) {
+    releases.add(release);
   }
 
   public UndoRedoHandler getUndoRedoHandler() {
@@ -601,26 +621,9 @@ public class Main extends Application {
     this.LMPC = LMPC;
   }
 
-  public void addPerson(Person person) {
-    people.add(person);
-  }
-
-  public void addTeam(Team team) {
-    teams.add(team);
-  }
-
   public void refreshList() {
     LMPC.refreshList();
   }
-
-  public void addSkill(Skill skill) {
-    skills.add(skill);
-  }
-
-  public void addRelease(Release release) {
-    releases.add(release);
-  }
-
 
   public static void main(String[] args) {
     launch(args);
