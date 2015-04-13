@@ -1,7 +1,6 @@
 package seng302.group5;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Optional;
 
 import javafx.application.Application;
@@ -407,6 +406,19 @@ public class Main extends Application {
     }
   }
 
+  /**
+   * Delete a release from the list of releases
+   * @param inputRelease
+   */
+  public void deleteRelease(Release inputRelease) {
+    for (Release release : releases) {
+      if (release == inputRelease) {
+        releases.remove(release);
+        break;
+      }
+    }
+  }
+
     /**
    * Generate an UndoRedoObject to place in the stack
      *
@@ -461,14 +473,10 @@ public class Main extends Application {
         Person person = (Person) agileItem;
 
         if (person.isInTeam()) {
-          String message = String.format(
-              "Do you want to delete '%s' and remove him/her from the team '%s'?",
-              person.getPersonID(),
-              person.getTeamID());
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
           alert.setTitle("Person is in team");
           alert.setHeaderText(null);
-          alert.setContentText(message);
+          alert.setContentText("Do you want to delete this person and remove him/her from their team?");
           //checks response
           Optional<ButtonType> result = alert.showAndWait();
           if (result.get() == ButtonType.OK){
@@ -484,31 +492,21 @@ public class Main extends Application {
         break;
       case "Skills":
         Skill skill = (Skill) agileItem;
-        ArrayList<Person> skillUsers = new ArrayList<>();
+        boolean skillUsed  = false;
         //iterate through each person
         for (Person skillPerson : people) {
           //check if they have the skill
           if (skillPerson.getSkillSet().contains(skill)) {
-            skillUsers.add(skillPerson);
+            skillUsed = true;
+            break;//breaks out of check once it finds someone has it
           }
         }
-        if (!skillUsers.isEmpty()) {
+        if (skillUsed) {
           //if so open a yes/no dialog
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
           alert.setTitle("People have this skill!");
           alert.setHeaderText(null);
-          int messageLength = 1;
-          String message = String.format("Do you want to delete skill '%s' and remove it from:\n",
-                                         skill.getSkillName());
-          for (Person skillUser: skillUsers) {
-            messageLength ++;
-            message += String.format("%s - %s %s\n",
-                                     skillUser.getPersonID(),
-                                     skillUser.getFirstName(),
-                                     skillUser.getLastName());
-          }
-          alert.getDialogPane().setPrefHeight(60 + 30*messageLength);
-          alert.setContentText(message);
+          alert.setContentText("Do you want to delete this skill and remove it from the people who have it?");
           //checks response
           Optional<ButtonType> result = alert.showAndWait();
           if (result.get() == ButtonType.OK){
@@ -520,14 +518,12 @@ public class Main extends Application {
             }
             //after all people have this skill removed delete the skill object
             deleteSkill(skill);
-            undoRedoObject = generateDelUndoRedoObject(Action.SKILL_DELETE, agileItem);
-            newAction(undoRedoObject);
           }
         } else {
           deleteSkill(skill);
-          undoRedoObject = generateDelUndoRedoObject(Action.SKILL_DELETE, agileItem);
-          newAction(undoRedoObject);
         }
+        undoRedoObject = generateDelUndoRedoObject(Action.SKILL_DELETE, agileItem);
+        newAction(undoRedoObject);
         break;
       case "Team":
         Team team = (Team) agileItem;
@@ -539,16 +535,13 @@ public class Main extends Application {
           alert.setHeaderText(null);
 
           int messageLength = 1;
-          String message = String.format("Are you sure you want to delete team '%s' and people:\n",
-                                         team.getTeamID());
-          for (Person teamMember: team.getTeamMembers()) {
+          String message = "";
+          message += "Are you sure you want to delete team " + team.getTeamID() + " and people:\n";
+          for (Person teamMemeber: team.getTeamMembers()) {
             messageLength ++;
-            message += String.format("%s - %s %s\n",
-                                     teamMember.getPersonID(),
-                                     teamMember.getFirstName(),
-                                     teamMember.getLastName());
+            message += teamMemeber.getFirstName() + " " + teamMemeber.getLastName() + "\n";
           }
-          alert.getDialogPane().setPrefHeight(60 + 30*messageLength);
+          alert.getDialogPane().setPrefHeight(60 + 20*messageLength);
           alert.setContentText(message);
 
           Optional<ButtonType> result = alert.showAndWait();
@@ -560,6 +553,14 @@ public class Main extends Application {
           }
         }
         break;
+      case "Release":
+        Release release = (Release) agileItem;
+        if (release.getProjectRelease() != null) {
+          System.err.println("Unhandled case for deleting agile item");
+        } else {
+          deleteRelease(release);
+          // TODO Shingy powers activate
+        }
       default:
         System.err.println("Unhandled case for deleting agile item");
         break;
