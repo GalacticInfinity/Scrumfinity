@@ -785,7 +785,7 @@ public class UndoRedoHandler {
     String releaseName = release.getReleaseName();
 
     // Make the changes and refresh the list
-    if (undoOrRedo == undoOrRedo.UNDO) {
+    if (undoOrRedo == UndoOrRedo.UNDO) {
       // Find the release in the list and ensure it exists so it can be deleted
       Release releaseToDelete = null;
       for (Release releaseInList : mainApp.getReleases()) {
