@@ -9,6 +9,7 @@ import seng302.group5.model.AgileItem;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
 import seng302.group5.model.Skill;
+import seng302.group5.model.Team;
 
 /**
  * Created by Michael on 3/17/2015.
@@ -169,6 +170,11 @@ public class UndoRedoHandler {
       case SKILL_DELETE:
         System.out.println(String.format("I am %sing a skill deletion", undoOrRedoStr));   // temp
         handleSkillDelete(undoRedoObject, undoOrRedo);
+        break;
+
+      case TEAM_DELETE:
+        System.out.println(String.format("I am %sing a team deletion", undoOrRedoStr));   // temp
+        handleTeamDelete(undoRedoObject, undoOrRedo);
         break;
 
       case UNDEFINED:
@@ -574,6 +580,54 @@ public class UndoRedoHandler {
         throw new Exception("Can't redo skill deletion - Can't find the created skill");
       }
       mainApp.deleteSkill(skillToDelete);
+    }
+    mainApp.refreshList();
+  }
+
+  /**
+   * Undo or redo a team deletion
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handleTeamDelete(UndoRedoObject undoRedoObject,
+                                UndoOrRedo undoOrRedo) throws Exception {
+
+    // Get the data and ensure it has data for the skill
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 1) {
+      throw new Exception("Can't undo/redo skill deletion - No variables");
+    }
+
+    // Get the team and id to undo/redo deletion of
+    Team team = (Team) data.get(0);
+    String teamID = team.getTeamID();
+
+    // Make the changes and refresh the list
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+      // Create the deleted team again
+      Team teamToAdd = new Team(team);
+      for (Person teamMember : teamToAdd.getTeamMembers()) {
+        mainApp.addPerson(teamMember);
+      }
+      mainApp.addTeam(teamToAdd);
+    } else {
+      // Find the team in list and ensure it exists so it can be deleted again
+      Team teamToDelete = null;
+      for (Team teamInList : mainApp.getTeams()) {
+        if (teamInList.getTeamID().equals(teamID)) {
+          teamToDelete = teamInList;
+          break;
+        }
+      }
+      if (teamToDelete == null) {
+        throw new Exception("Can't redo team deletion - Can't find the created skill");
+      }
+      for (Person teamMember : teamToDelete.getTeamMembers()) {
+        mainApp.deletePerson(teamMember);
+      }
+      mainApp.deleteTeam(teamToDelete);
     }
     mainApp.refreshList();
   }

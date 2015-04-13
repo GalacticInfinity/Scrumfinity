@@ -14,5 +14,8 @@ public enum Action {
   SKILL_CREATE,   // Skill creation - 1 AgileItem
   SKILL_EDIT,     // Skill edit - 2 AgileItems
   SKILL_DELETE,   // Skill deletion - 1 AgileItem
+  TEAM_CREATE,   // Team creation - 1 AgileItem
+  TEAM_EDIT,     // Team edit - 2 AgileItems
+  TEAM_DELETE,   // Team deletion - 1 AgileItem
   UNDEFINED       // Undefined action - no AgileItems
 }

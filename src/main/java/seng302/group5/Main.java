@@ -431,6 +431,9 @@ public class Main extends Application {
       case SKILL_DELETE:
         itemToStore = new Skill((Skill) agileItem);
         break;
+      case TEAM_DELETE:
+        itemToStore = new Team((Team) agileItem);
+        break;
       default:
         itemToStore = null;
         System.err.println("Unhandled case for generating undo/redo delete object");
@@ -507,7 +510,7 @@ public class Main extends Application {
                                      skillUser.getFirstName(),
                                      skillUser.getLastName());
           }
-          alert.getDialogPane().setPrefHeight(60 + 30*messageLength);
+          alert.getDialogPane().setPrefHeight(60 + 30 * messageLength);
           alert.setContentText(message);
           //checks response
           Optional<ButtonType> result = alert.showAndWait();
@@ -533,6 +536,8 @@ public class Main extends Application {
         Team team = (Team) agileItem;
         if (team.getTeamMembers().isEmpty()) {
           deleteTeam(team);
+          undoRedoObject = generateDelUndoRedoObject(Action.TEAM_DELETE, agileItem);
+          newAction(undoRedoObject);
         } else {
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
           alert.setTitle("Team contains people");
@@ -557,6 +562,9 @@ public class Main extends Application {
               deletePerson(teamPerson);
             }
             deleteTeam(team);
+            // TODO: cascading delete undo
+            undoRedoObject = generateDelUndoRedoObject(Action.TEAM_DELETE, agileItem);
+            newAction(undoRedoObject);
           }
         }
         break;
