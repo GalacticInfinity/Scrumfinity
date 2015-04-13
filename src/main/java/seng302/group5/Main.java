@@ -591,6 +591,16 @@ public class Main extends Application {
     projects.add(project);
   }
 
+  public UndoRedoHandler getUndoRedoHandler() {
+    // This is for tests
+    return undoRedoHandler;
+  }
+
+  public void setLMPC(ListMainPaneController LMPC) {
+    // This is for tests
+    this.LMPC = LMPC;
+  }
+
   public void addPerson(Person person) {
     people.add(person);
   }
