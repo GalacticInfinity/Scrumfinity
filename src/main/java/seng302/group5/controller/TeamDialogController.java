@@ -14,6 +14,8 @@ import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Person;
 import seng302.group5.model.Team;
+import seng302.group5.model.undoredo.Action;
+import seng302.group5.model.undoredo.UndoRedoObject;
 
 /**
  * Created by Zander on 24/03/2015.
@@ -131,6 +133,27 @@ public class TeamDialogController {
     }
   }
 
+  /**
+   * Generate an UndoRedoObject to place in the stack
+   * @return the UndoRedoObject to store
+   */
+  private UndoRedoObject generateUndoRedoObject() {
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+
+    if (createOrEdit == CreateOrEdit.CREATE) {
+      undoRedoObject.setAction(Action.TEAM_CREATE);
+    } else {
+      undoRedoObject.setAction(Action.TEAM_EDIT);
+      undoRedoObject.addDatum(lastTeam);
+    }
+
+    // Store a copy of skill to edit in stack to avoid reference problems
+    Team teamToStore = new Team(team);
+    undoRedoObject.addDatum(teamToStore);
+
+    return undoRedoObject;
+  }
+
   @FXML
   protected void btnConfirmClick(ActionEvent event) {
     StringBuilder errors = new StringBuilder();
@@ -162,7 +185,7 @@ public class TeamDialogController {
     }
     else {
       if (createOrEdit == CreateOrEdit.CREATE) {
-        Team team = new Team(teamID, selectedMembers, teamDescription);
+        team = new Team(teamID, selectedMembers, teamDescription);
         for (Person person : selectedMembers) {
           person.assignToTeam(team);
         }
@@ -177,6 +200,9 @@ public class TeamDialogController {
         }
         mainApp.refreshList();
       }
+
+      UndoRedoObject undoRedoObject = generateUndoRedoObject();
+      mainApp.newAction(undoRedoObject);
       thisStage.close();
     }
   }

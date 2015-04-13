@@ -359,12 +359,7 @@ public class Main extends Application {
    * @param inputProject Project to delete - must be same object reference
    */
   public void deleteProject(Project inputProject) {
-    for (Project project : projects) {
-      if (project == inputProject) {
-        projects.remove(project);
-        break;
-      }
-    }
+    projects.remove(inputProject);
   }
 
   /**
@@ -372,12 +367,7 @@ public class Main extends Application {
    * @param inputPerson Person to delete - must be the same object reference
    */
   public void deletePerson(Person inputPerson) {
-    for (Person person : people) {
-      if (person == inputPerson) {
-        people.remove(person);
-        break;
-      }
-    }
+    people.remove(inputPerson);
   }
 
   /**
@@ -385,12 +375,7 @@ public class Main extends Application {
    * @param inputSkill Skill to delete - must be the same object reference
    */
   public void deleteSkill(Skill inputSkill) {
-    for (Skill skill : skills) {
-      if (skill == inputSkill) {
-        skills.remove(skill);
-        break;
-      }
-    }
+    skills.remove(inputSkill);
   }
 
   /**
@@ -398,12 +383,7 @@ public class Main extends Application {
    * @param inputTeam Team to delete - must be the same object reference
    */
   public void deleteTeam(Team inputTeam) {
-    for(Team team : teams) {
-      if (team == inputTeam) {
-        teams.remove(team);
-        break;
-      }
-    }
+    teams.remove(inputTeam);
   }
 
   /**
@@ -411,12 +391,7 @@ public class Main extends Application {
    * @param inputRelease
    */
   public void deleteRelease(Release inputRelease) {
-    for (Release release : releases) {
-      if (release == inputRelease) {
-        releases.remove(release);
-        break;
-      }
-    }
+    teams.remove(inputRelease);
   }
 
     /**
@@ -443,6 +418,11 @@ public class Main extends Application {
       case SKILL_DELETE:
         itemToStore = new Skill((Skill) agileItem);
         break;
+      case TEAM_DELETE:
+        itemToStore = new Team((Team) agileItem);
+        break;
+      case RELEASE_DELETE:
+        itemToStore = new Release((Release) agileItem);
       default:
         itemToStore = null;
         System.err.println("Unhandled case for generating undo/redo delete object");
@@ -506,6 +486,18 @@ public class Main extends Application {
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
           alert.setTitle("People have this skill!");
           alert.setHeaderText(null);
+          int messageLength = 1;
+          String message = String.format("Do you want to delete skill '%s' and remove it from:\n",
+                                         skill.getSkillName());
+          for (Person skillUser: skillUsers) {
+            messageLength ++;
+            message += String.format("%s - %s %s\n",
+                                     skillUser.getPersonID(),
+                                     skillUser.getFirstName(),
+                                     skillUser.getLastName());
+          }
+          alert.getDialogPane().setPrefHeight(60 + 30 * messageLength);
+          alert.setContentText(message);
           alert.setContentText("Do you want to delete this skill and remove it from the people who have it?");
           //checks response
           Optional<ButtonType> result = alert.showAndWait();
@@ -529,6 +521,8 @@ public class Main extends Application {
         Team team = (Team) agileItem;
         if (team.getTeamMembers().isEmpty()) {
           deleteTeam(team);
+          undoRedoObject = generateDelUndoRedoObject(Action.TEAM_DELETE, agileItem);
+          newAction(undoRedoObject);
         } else {
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
           alert.setTitle("Team contains people");
@@ -550,6 +544,9 @@ public class Main extends Application {
               deletePerson(teamPerson);
             }
             deleteTeam(team);
+            // TODO: cascading delete undo
+            undoRedoObject = generateDelUndoRedoObject(Action.TEAM_DELETE, agileItem);
+            newAction(undoRedoObject);
           }
         }
         break;

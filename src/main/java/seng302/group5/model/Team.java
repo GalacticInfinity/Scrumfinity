@@ -44,6 +44,7 @@ public class Team implements AgileItem {
   public Team(Team clone) {
     this.teamID = clone.getTeamID();
     this.teamDescription = clone.getTeamDescription();
+    this.teamMembers = FXCollections.observableArrayList(clone.getTeamMembers());
   }
 
   public String getTeamID() {
