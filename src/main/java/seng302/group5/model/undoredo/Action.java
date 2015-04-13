@@ -17,5 +17,8 @@ public enum Action {
   TEAM_CREATE,   // Team creation - 1 AgileItem
   TEAM_EDIT,     // Team edit - 2 AgileItems
   TEAM_DELETE,   // Team deletion - 1 AgileItem
+  RELEASE_CREATE, // Release creation - 1 AgileItem
+  RELEASE_EDIT,   // Release edit - 2 AgileItem
+  RELEASE_DELETE, // Release delete - 1 AgileItem
   UNDEFINED       // Undefined action - no AgileItems
 }
