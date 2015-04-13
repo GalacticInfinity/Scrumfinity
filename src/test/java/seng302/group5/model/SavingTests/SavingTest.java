@@ -46,6 +46,7 @@ public class SavingTest {
 
   @Test
   public void testLoadingContents(){
+    testSavingCreate();
     Main orig = main;
     main.getProjects().clear();
     main.getPeople().clear();

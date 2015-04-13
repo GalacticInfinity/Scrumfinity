@@ -1,9 +1,6 @@
 package seng302.group5.model;
 
 import java.time.LocalDate;
-import java.util.Date;
-
-import javafx.collections.ObservableList;
 
 /**
  * Release class that sets the model for a release.

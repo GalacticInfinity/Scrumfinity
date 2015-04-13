@@ -289,14 +289,17 @@ public class UndoRedoHandlerTest {
   @Test
   public void testPersonCreateRedo() throws Exception {
     assertTrue(mainApp.getPeople().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
     assertTrue(undoRedoHandler.getRedoStack().empty());
 
     newPerson();
     assertEquals(mainApp.getPeople().size(), 1);
+    assertEquals(undoRedoHandler.getUndoStack().size(), 1);
     assertTrue(undoRedoHandler.getRedoStack().empty());
 
     undoRedoHandler.undo();
     assertTrue(mainApp.getPeople().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
     assertEquals(undoRedoHandler.getRedoStack().size(), 1);
 
     undoRedoHandler.redo();
