@@ -143,16 +143,25 @@ public class UndoRedoHandlerTest {
   }
 
   private void deleteNewestSkill() {
+    ArrayList<Person> skillUsers = new ArrayList<>();
     for (Person skillPerson : mainApp.getPeople()) {
+      //check if they have the skill
       if (skillPerson.getSkillSet().contains(skill)) {
-        skillPerson.getSkillSet().remove(skill);
+        skillUsers.add(skillPerson);
       }
+    }
+    for (Person skillUser : skillUsers) {
+      skillUser.getSkillSet().remove(skill);
     }
     mainApp.deleteSkill(skill);
 
     UndoRedoObject undoRedoObject = new UndoRedoObject();
     undoRedoObject.setAction(Action.SKILL_DELETE);
     undoRedoObject.addDatum(new Skill(skill));
+    for (Person skillUser : skillUsers) {
+      // Add data so users can get the skill back after undo
+      undoRedoObject.addDatum(skillUser);
+    }
 
     undoRedoHandler.newAction(undoRedoObject);
   }

@@ -589,11 +589,21 @@ public class UndoRedoHandler {
     Skill skill = (Skill) data.get(0);
     String skillName = skill.getSkillName();
 
+    // Get the skill users
+    ArrayList<Person> skillUsers = new ArrayList<>();
+    for (AgileItem agileItem : data.subList(1, data.size())) {
+      skillUsers.add((Person) agileItem);
+    }
+
     // Make the changes and refresh the list
     if (undoOrRedo == UndoOrRedo.UNDO) {
       // Create the deleted skill again
       Skill skillToAdd = new Skill(skill);
       mainApp.addSkill(skillToAdd);
+      // For each person stored, add the skill to their skill set
+      for (Person skillUser : skillUsers) {
+        skillUser.getSkillSet().add(skill);
+      }
     } else {
       // Find the skill in list and ensure it exists so it can be deleted again
       Skill skillToDelete = null;
@@ -605,6 +615,10 @@ public class UndoRedoHandler {
       }
       if (skillToDelete == null) {
         throw new Exception("Can't redo skill deletion - Can't find the created skill");
+      }
+      // For each person stored, remove the skill to their skill set
+      for (Person skillUser : skillUsers) {
+        skillUser.getSkillSet().remove(skill);
       }
       mainApp.deleteSkill(skillToDelete);
     }
