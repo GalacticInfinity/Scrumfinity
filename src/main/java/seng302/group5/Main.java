@@ -502,10 +502,8 @@ public class Main extends Application {
           Optional<ButtonType> result = alert.showAndWait();
           if (result.get() == ButtonType.OK){
             //if yes then remove skill from all who have it
-            for (Person currentPerson : people) {
-              if (currentPerson.getSkillSet().contains(skill)) {
-                currentPerson.getSkillSet().remove(skill);
-              }
+            for (Person skillUser : skillUsers) {
+              skillUser.getSkillSet().remove(skill);
             }
             //after all people have this skill removed delete the skill object
             deleteSkill(skill);
