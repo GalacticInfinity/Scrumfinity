@@ -54,9 +54,25 @@ public class Person implements AgileItem {
     this.lastName = clone.getLastName();
     this.skillSet = FXCollections.observableArrayList(clone.getSkillSet());
     if (clone.getTeam() != null) {
-      this.team = new Team(clone.getTeam());
+      this.team = new Team(clone.getTeam(), this);
     }
     this.assignedToTeam = clone.isInTeam();
+  }
+
+  /**
+   * Constructor to create a clone of an existing person if the team is known.
+   * This is to avoid stack overflows since the Team and Person clone functions call each other.
+   *
+   * @param clone Person to clone
+   * @param team Team to set
+   */
+  public Person(Person clone, Team team) {
+    this.personID = clone.getPersonID();
+    this.firstName = clone.getFirstName();
+    this.lastName = clone.getLastName();
+    this.skillSet = FXCollections.observableArrayList(clone.getSkillSet());
+    this.team = team;
+    this.assignedToTeam = true;
   }
 
   public String getPersonID() {
