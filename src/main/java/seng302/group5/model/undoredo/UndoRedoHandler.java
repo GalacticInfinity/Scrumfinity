@@ -381,7 +381,16 @@ public class UndoRedoHandler {
       }
       mainApp.deletePerson(personToDelete);
     } else {
+      ArrayList<Skill> skills = new ArrayList<>();
+
+      for (Skill skillInList : mainApp.getSkills()) {
+        if (person.getSkillSet().contains(skillInList)) {
+          // Store the existing skill in a new list to avoid reference problems
+          skills.add(skillInList);
+        }
+      }
       Person personToAdd = new Person(person);
+      personToAdd.setSkillSet(FXCollections.observableArrayList(skills));
       mainApp.addPerson(personToAdd);
     }
     mainApp.refreshList();
