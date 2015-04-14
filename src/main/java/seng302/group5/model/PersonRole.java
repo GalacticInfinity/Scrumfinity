@@ -5,7 +5,7 @@ package seng302.group5.model;
  *
  *To set a person's role we do the following
  * Person person;
- * ProductOwner pOwner = (ProductOwner) person.roleOf("ProductOwner");
+ * ProductOwner pOwner = (ProductOwner) person.roleOf("Product Owner");
  *
  */
 public class PersonRole {
@@ -32,7 +32,7 @@ public class PersonRole {
   public static class ScrumMaster extends PersonRole {
 
     public boolean hasType(String value) {
-      if (value.equalsIgnoreCase("ScrumMaster")) {
+      if (value.equalsIgnoreCase("Scrum Master")) {
         return true;
       } else {
         return super.hasType(value);
@@ -43,7 +43,7 @@ public class PersonRole {
   public static class DevelopmentTeamMember extends PersonRole {
 
     public boolean hasType(String value) {
-      if (value.equalsIgnoreCase("DevelopmentTeamMember")) {
+      if (value.equalsIgnoreCase("Development Team Member")) {
         return true;
       } else {
         return super.hasType(value);

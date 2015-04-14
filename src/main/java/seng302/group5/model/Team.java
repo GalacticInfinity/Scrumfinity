@@ -5,6 +5,7 @@ import java.util.Vector;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 
 /**Basic model of a Team.
  *
@@ -83,14 +84,22 @@ public class Team implements AgileItem {
     if (canAddRole(role)) {
       _roles.addElement(role);
     }
+    else {
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Cannot Add Role");
+      alert.setHeaderText(null);
+      alert.setContentText("There only can be 1 Product Owner and 1 Scrum Master in the team.");
+      alert.showAndWait();
+    }
   }
 
   private boolean canAddRole(PersonRole role) {
-    if (role.hasType("JobRole")){
+    if (role.hasType("ProductOwner") || role.hasType("ScrumMaster") ||
+        role.hasType("DevelopmentTeamMember")) {
       Enumeration e = _roles.elements();
       while (e.hasMoreElements()) {
         PersonRole each = (PersonRole) e.nextElement();
-        if (each.hasType("JobRole")) return false;
+        if (each.hasType("ProductOwner") || each.hasType("ScrumMaster")) return false;
       }
     }
       return true;
