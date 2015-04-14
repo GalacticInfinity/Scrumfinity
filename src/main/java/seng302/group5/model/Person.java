@@ -119,10 +119,6 @@ public class Person implements AgileItem {
     return assignedToTeam;
   }
 
-  public void delete(){}
-
-  public void create(){}
-
   /**
    * Overrides to toString method with the
    * ID of person.

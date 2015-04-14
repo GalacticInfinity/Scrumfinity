@@ -77,16 +77,6 @@ public class Skill implements AgileItem{
     return this.skillDescription;
   }
 
-  @Override
-  public void create() {
-
-  }
-
-  @Override
-  public void delete() {
-
-  }
-
   /**
    * Return a formatted skill name along with its description.
    * @return skill name and description

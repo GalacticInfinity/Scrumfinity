@@ -7,8 +7,17 @@ package seng302.group5.model;
  */
 public interface AgileItem {
 
-  public void create();
-  public void delete();
-  public String toString();
+  /**
+   * What will display in the list.
+   * @return String representation of item.
+   */
+  String toString();
+
+  /**
+   * The function which will be used to compare AgileItems. Assumes IDs are unique and non null.
+   * @param obj Object to compare to.
+   * @return Whether IDs are equal or not.
+   */
+  boolean equals(Object obj);
 
 }

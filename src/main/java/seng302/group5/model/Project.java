@@ -64,15 +64,20 @@ public class Project implements AgileItem {
     this.projectDescription = projectDescription;
   }
 
-  public void delete(){
-  }
-
-  public void create(){
-  }
   // New toString method, for list
   @Override
   public String toString() {
     return this.projectID;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    boolean result = false;
+    if (obj instanceof Project) {
+      Project project = (Project) obj;
+      result = this.projectID.equals(project.getProjectID());
+    }
+    return result;
   }
 
 }
