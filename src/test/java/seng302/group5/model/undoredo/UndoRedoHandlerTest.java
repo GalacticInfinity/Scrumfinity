@@ -1020,4 +1020,55 @@ public class UndoRedoHandlerTest {
     assertTrue(undoRedoHandler.getRedoStack().empty());
   }
 
+  @Test
+  public void testSpecialDeleteSkillRedoDeep() throws Exception {
+    assertTrue(mainApp.getSkills().isEmpty());
+    assertTrue(mainApp.getPeople().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    newSkill();
+    newPerson();
+    editNewestPerson();
+
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(1, mainApp.getSkills().size());
+    assertEquals(1, person.getSkillSet().size());
+    assertEquals(3, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    deleteNewestSkill();
+    assertEquals(1, mainApp.getPeople().size(), 1);
+    assertTrue(mainApp.getSkills().isEmpty());
+    assertTrue(person.getSkillSet().isEmpty());
+    assertEquals(4, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    undoRedoHandler.undo();
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(1, mainApp.getSkills().size());
+    assertEquals(1, person.getSkillSet().size());
+    assertEquals(3, undoRedoHandler.getUndoStack().size());
+    assertEquals(1, undoRedoHandler.getRedoStack().size());
+
+    undoRedoHandler.undo();
+    undoRedoHandler.undo();
+    undoRedoHandler.undo();
+    undoRedoHandler.redo();
+    undoRedoHandler.redo();
+    undoRedoHandler.redo();
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(1, mainApp.getSkills().size());
+    assertEquals(1, person.getSkillSet().size());
+    assertEquals(3, undoRedoHandler.getUndoStack().size());
+    assertEquals(1, undoRedoHandler.getRedoStack().size());
+
+    undoRedoHandler.redo();
+    assertEquals(1, mainApp.getPeople().size(), 1);
+    assertTrue(mainApp.getSkills().isEmpty());
+    assertTrue(person.getSkillSet().isEmpty());
+    assertEquals(4, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+  }
+
 }
