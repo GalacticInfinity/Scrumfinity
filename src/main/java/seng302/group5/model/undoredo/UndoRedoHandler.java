@@ -703,10 +703,16 @@ public class UndoRedoHandler {
       mainApp.deleteTeam(teamToDelete);
     } else {
       Team teamToAdd = new Team(team);
-      mainApp.addTeam(teamToAdd);
-      for (Person person : teamToAdd.getTeamMembers()) {
-        person.assignToTeam(teamToAdd);
+      ArrayList<Person> newMembers = new ArrayList<>();
+      for (Person personInList : mainApp.getPeople()) {
+        if (team.getTeamMembers().contains(personInList)) {
+          // Store the existing person in a new list to avoid reference problems and assign to team
+          newMembers.add(personInList);
+          personInList.assignToTeam(teamToAdd);
+        }
       }
+      teamToAdd.setTeamMembers(FXCollections.observableArrayList(newMembers));
+      mainApp.addTeam(teamToAdd);
     }
     mainApp.refreshList();
   }

@@ -1072,6 +1072,68 @@ public class UndoRedoHandlerTest {
     assertEquals(newLastName, redonePerson.getLastName());
   }
 
+  /**
+   * Redo an edit for a person which is part of a team  but undo back to beginning
+   */
+  @Test
+  public void testTeamEditExistingMemberRedoDeep() throws Exception {
+    Person teamMember;
+
+    assertTrue(mainApp.getTeams().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+
+    newPerson();
+    newTeamWithMember();
+    assertEquals(1, mainApp.getTeams().size());
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(2, undoRedoHandler.getUndoStack().size());
+
+    teamMember = mainApp.getTeams().get(0).getTeamMembers().get(0);
+    assertEquals(personID, teamMember.getPersonID());
+    assertEquals(firstName, teamMember.getFirstName());
+    assertEquals(lastName, teamMember.getLastName());
+
+    editNewestPerson();
+    assertEquals(1, mainApp.getTeams().size());
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(3, undoRedoHandler.getUndoStack().size());
+
+    teamMember = mainApp.getTeams().get(0).getTeamMembers().get(0);
+    assertEquals(newPersonID, teamMember.getPersonID());
+    assertEquals(newFirstName, teamMember.getFirstName());
+    assertEquals(newLastName, teamMember.getLastName());
+
+    undoRedoHandler.undo(); // edit person
+    assertEquals(1, mainApp.getTeams().size());
+    assertEquals(2, undoRedoHandler.getUndoStack().size());
+
+    teamMember = mainApp.getTeams().get(0).getTeamMembers().get(0);
+    assertEquals(personID, teamMember.getPersonID());
+    assertEquals(firstName, teamMember.getFirstName());
+    assertEquals(lastName, teamMember.getLastName());
+
+    undoRedoHandler.undo(); // new team
+    undoRedoHandler.undo(); // new person
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+    undoRedoHandler.redo(); // new person
+    undoRedoHandler.redo(); // new team
+
+    teamMember = mainApp.getTeams().get(0).getTeamMembers().get(0);
+    assertEquals(personID, teamMember.getPersonID());
+    assertEquals(firstName, teamMember.getFirstName());
+    assertEquals(lastName, teamMember.getLastName());
+
+    undoRedoHandler.redo();
+    assertEquals(1, mainApp.getTeams().size());
+    assertEquals(3, undoRedoHandler.getUndoStack().size());
+    assertEquals(0, undoRedoHandler.getRedoStack().size());
+
+    teamMember = mainApp.getTeams().get(0).getTeamMembers().get(0);
+    assertEquals(newPersonID, teamMember.getPersonID());
+    assertEquals(newFirstName, teamMember.getFirstName());
+    assertEquals(newLastName, teamMember.getLastName());
+  }
+
   @Test
   public void testSpecialDeleteSkillUndo() throws Exception {
     assertTrue(mainApp.getSkills().isEmpty());
