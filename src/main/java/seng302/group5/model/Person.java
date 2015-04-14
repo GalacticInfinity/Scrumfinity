@@ -52,7 +52,9 @@ public class Person implements AgileItem {
     this.personID = clone.getPersonID();
     this.firstName = clone.getFirstName();
     this.lastName = clone.getLastName();
-    this.skillSet = FXCollections.observableArrayList(clone.getSkillSet());
+    for (Skill skill : clone.getSkillSet()) {
+      this.skillSet.add(new Skill(skill));
+    }
     if (clone.getTeam() != null) {
       this.team = new Team(clone.getTeam(), this);
     }
@@ -70,7 +72,9 @@ public class Person implements AgileItem {
     this.personID = clone.getPersonID();
     this.firstName = clone.getFirstName();
     this.lastName = clone.getLastName();
-    this.skillSet = FXCollections.observableArrayList(clone.getSkillSet());
+    for (Skill skill : clone.getSkillSet()) {
+      this.skillSet.add(new Skill(skill));
+    }
     this.team = team;
     this.assignedToTeam = true;
   }

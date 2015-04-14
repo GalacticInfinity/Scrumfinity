@@ -431,10 +431,19 @@ public class UndoRedoHandler {
     }
 
     // Make the changes and refresh the list
+    ArrayList<Skill> newSkills = new ArrayList<>();
+
+    for (Skill skillInList : mainApp.getSkills()) {
+      if (newPerson.getSkillSet().contains(skillInList)) {
+        // Store the existing skill in a new list to avoid reference problems
+        newSkills.add(skillInList);
+      }
+    }
+
     personToEdit.setPersonID(newPerson.getPersonID());
     personToEdit.setFirstName(newPerson.getFirstName());
     personToEdit.setLastName(newPerson.getLastName());
-    personToEdit.setSkillSet(FXCollections.observableArrayList(newPerson.getSkillSet()));
+    personToEdit.setSkillSet(FXCollections.observableArrayList(newSkills));
     mainApp.refreshList();
   }
 
