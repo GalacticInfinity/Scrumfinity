@@ -737,16 +737,23 @@ public class UndoRedoHandler {
     }
 
     // Make the changes and refresh the list
-    for (Person oldMember : currentTeam.getTeamMembers()) {
-      oldMember.removeFromTeam();
+    ArrayList<Person> newMembers = new ArrayList<>();
+
+    for (Person personInList : mainApp.getPeople()) {
+      if (newTeam.getTeamMembers().contains(personInList)) {
+        // Store the existing person in a new list to avoid reference problems and assign to team
+        newMembers.add(personInList);
+        personInList.assignToTeam(teamToEdit);
+      } else if (currentTeam.getTeamMembers().contains(personInList)) {
+        // Remove the person from the team
+        personInList.removeFromTeam();
+      }
     }
 
     teamToEdit.setTeamID(newTeam.getTeamID());
     teamToEdit.setTeamDescription(newTeam.getTeamDescription());
-    teamToEdit.setTeamMembers(FXCollections.observableArrayList(newTeam.getTeamMembers()));
-    for (Person newMember : teamToEdit.getTeamMembers()) {
-      newMember.assignToTeam(teamToEdit);
-    }
+    teamToEdit.setTeamMembers(FXCollections.observableArrayList(newMembers));
+
     mainApp.refreshList();
   }
 
