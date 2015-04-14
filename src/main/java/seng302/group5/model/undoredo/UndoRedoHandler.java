@@ -2,6 +2,7 @@ package seng302.group5.model.undoredo;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 import javafx.collections.FXCollections;
@@ -590,9 +591,12 @@ public class UndoRedoHandler {
     String skillName = skill.getSkillName();
 
     // Get the skill users
+    List<AgileItem> savedUsers = data.subList(1, data.size());
     ArrayList<Person> skillUsers = new ArrayList<>();
-    for (AgileItem agileItem : data.subList(1, data.size())) {
-      skillUsers.add((Person) agileItem);
+    for (Person personInList : mainApp.getPeople()) {
+      if (savedUsers.contains(personInList)) {
+        skillUsers.add(personInList);
+      }
     }
 
     // Make the changes and refresh the list

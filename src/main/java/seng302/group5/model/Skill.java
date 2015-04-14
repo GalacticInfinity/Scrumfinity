@@ -95,4 +95,14 @@ public class Skill implements AgileItem{
   public String toString() {
     return this.getSkillName();
   }
+
+  @Override
+  public boolean equals(Object obj) {
+    boolean result = false;
+    if (obj instanceof Skill) {
+      Skill skill = (Skill) obj;
+      result = this.skillName.equals(skill.getSkillName());
+    }
+    return result;
+  }
 }

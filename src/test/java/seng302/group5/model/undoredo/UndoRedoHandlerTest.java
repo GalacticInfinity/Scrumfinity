@@ -160,7 +160,7 @@ public class UndoRedoHandlerTest {
     undoRedoObject.addDatum(new Skill(skill));
     for (Person skillUser : skillUsers) {
       // Add data so users can get the skill back after undo
-      undoRedoObject.addDatum(skillUser);
+      undoRedoObject.addDatum(new Person(skillUser));
     }
 
     undoRedoHandler.newAction(undoRedoObject);
@@ -1033,40 +1033,40 @@ public class UndoRedoHandlerTest {
 
     assertEquals(1, mainApp.getPeople().size());
     assertEquals(1, mainApp.getSkills().size());
-    assertEquals(1, person.getSkillSet().size());
+    assertEquals(1, mainApp.getPeople().get(0).getSkillSet().size());
     assertEquals(3, undoRedoHandler.getUndoStack().size());
     assertTrue(undoRedoHandler.getRedoStack().empty());
 
     deleteNewestSkill();
-    assertEquals(1, mainApp.getPeople().size(), 1);
+    assertEquals(1, mainApp.getPeople().size());
     assertTrue(mainApp.getSkills().isEmpty());
-    assertTrue(person.getSkillSet().isEmpty());
+    assertTrue(mainApp.getPeople().get(0).getSkillSet().isEmpty());
     assertEquals(4, undoRedoHandler.getUndoStack().size());
     assertTrue(undoRedoHandler.getRedoStack().empty());
 
-    undoRedoHandler.undo();
+    undoRedoHandler.undo(); // deleteNewestSkill
     assertEquals(1, mainApp.getPeople().size());
     assertEquals(1, mainApp.getSkills().size());
-    assertEquals(1, person.getSkillSet().size());
+    assertEquals(1, mainApp.getPeople().get(0).getSkillSet().size());
     assertEquals(3, undoRedoHandler.getUndoStack().size());
     assertEquals(1, undoRedoHandler.getRedoStack().size());
 
-    undoRedoHandler.undo();
-    undoRedoHandler.undo();
-    undoRedoHandler.undo();
-    undoRedoHandler.redo();
-    undoRedoHandler.redo();
-    undoRedoHandler.redo();
+    undoRedoHandler.undo(); // edit person
+    undoRedoHandler.undo(); // new person
+    undoRedoHandler.undo(); // new skill
+    undoRedoHandler.redo(); // new skill
+    undoRedoHandler.redo(); // new person
+    undoRedoHandler.redo(); // edit person
     assertEquals(1, mainApp.getPeople().size());
     assertEquals(1, mainApp.getSkills().size());
-    assertEquals(1, person.getSkillSet().size());
+    assertEquals(1, mainApp.getPeople().get(0).getSkillSet().size());
     assertEquals(3, undoRedoHandler.getUndoStack().size());
     assertEquals(1, undoRedoHandler.getRedoStack().size());
 
-    undoRedoHandler.redo();
-    assertEquals(1, mainApp.getPeople().size(), 1);
+    undoRedoHandler.redo(); // deleteNewestSkill
+    assertEquals(1, mainApp.getPeople().size());
     assertTrue(mainApp.getSkills().isEmpty());
-    assertTrue(person.getSkillSet().isEmpty());
+    assertTrue(mainApp.getPeople().get(0).getSkillSet().isEmpty());
     assertEquals(4, undoRedoHandler.getUndoStack().size());
     assertTrue(undoRedoHandler.getRedoStack().empty());
   }

@@ -133,4 +133,14 @@ public class Person implements AgileItem {
   public String toString() {
     return personID;
   }
+
+  @Override
+  public boolean equals(Object obj) {
+    boolean result = false;
+    if (obj instanceof Person) {
+      Person person = (Person) obj;
+      result = this.personID.equals(person.getPersonID());
+    }
+    return result;
+  }
 }
