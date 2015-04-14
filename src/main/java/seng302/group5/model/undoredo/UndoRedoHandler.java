@@ -458,11 +458,25 @@ public class UndoRedoHandler {
     Person person = (Person) data.get(0);
     String personID = person.getPersonID();
 
+    // Get the person's team which is in the list
+    Team team = null;
+    if (person.getTeam() != null) {
+      for (Team teamInList : mainApp.getTeams()) {
+        if (teamInList.equals(person.getTeam())) {
+          team = teamInList;
+          break;
+        }
+      }
+    }
+
     // Make the changes and refresh the list
     if (undoOrRedo == UndoOrRedo.UNDO) {
       // Create the deleted person again
       Person personToAdd = new Person(person);
       mainApp.addPerson(personToAdd);
+      if (team != null) {
+        team.getTeamMembers().add(personToAdd);
+      }
     } else {
       // Find the person in list and ensure it exists so it can be deleted again
       Person personToDelete = null;
@@ -474,6 +488,9 @@ public class UndoRedoHandler {
       }
       if (personToDelete == null) {
         throw new Exception("Can't redo person deletion - Can't find the created person");
+      }
+      if (team != null) {
+        team.getTeamMembers().remove(personToDelete);
       }
       mainApp.deletePerson(personToDelete);
     }

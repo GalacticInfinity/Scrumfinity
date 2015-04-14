@@ -53,6 +53,10 @@ public class Person implements AgileItem {
     this.firstName = clone.getFirstName();
     this.lastName = clone.getLastName();
     this.skillSet = FXCollections.observableArrayList(clone.getSkillSet());
+    if (clone.getTeam() != null) {
+      this.team = new Team(clone.getTeam());
+    }
+    this.assignedToTeam = clone.isInTeam();
   }
 
   public String getPersonID() {
