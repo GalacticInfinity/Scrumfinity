@@ -453,10 +453,14 @@ public class Main extends Application {
         Person person = (Person) agileItem;
 
         if (person.isInTeam()) {
+          String message = String.format(
+              "Do you want to delete '%s' and remove him/her from the team '%s'?",
+              person.getPersonID(),
+              person.getTeamID());
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
           alert.setTitle("Person is in team");
           alert.setHeaderText(null);
-          alert.setContentText("Do you want to delete this person and remove him/her from their team?");
+          alert.setContentText(message);
           //checks response
           Optional<ButtonType> result = alert.showAndWait();
           if (result.get() == ButtonType.OK){
@@ -497,7 +501,6 @@ public class Main extends Application {
           }
           alert.getDialogPane().setPrefHeight(60 + 30 * messageLength);
           alert.setContentText(message);
-          alert.setContentText("Do you want to delete this skill and remove it from the people who have it?");
           //checks response
           Optional<ButtonType> result = alert.showAndWait();
           if (result.get() == ButtonType.OK){
@@ -530,13 +533,16 @@ public class Main extends Application {
           alert.setHeaderText(null);
 
           int messageLength = 1;
-          String message = "";
-          message += "Are you sure you want to delete team " + team.getTeamID() + " and people:\n";
-          for (Person teamMemeber: team.getTeamMembers()) {
+          String message = String.format("Are you sure you want to delete team '%s' and people:\n",
+                                         team.getTeamID());
+          for (Person teamMember: team.getTeamMembers()) {
             messageLength ++;
-            message += teamMemeber.getFirstName() + " " + teamMemeber.getLastName() + "\n";
+            message += String.format("%s - %s %s\n",
+                                     teamMember.getPersonID(),
+                                     teamMember.getFirstName(),
+                                     teamMember.getLastName());
           }
-          alert.getDialogPane().setPrefHeight(60 + 20*messageLength);
+          alert.getDialogPane().setPrefHeight(60 + 30*messageLength);
           alert.setContentText(message);
 
           Optional<ButtonType> result = alert.showAndWait();
