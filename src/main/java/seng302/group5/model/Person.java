@@ -71,7 +71,8 @@ public class Person implements AgileItem {
   }
 
   public boolean hasRole() {
-    return !_roles.isEmpty();
+    return _roles.size() != 0;
+
   }
 
   public Vector getRoles() {

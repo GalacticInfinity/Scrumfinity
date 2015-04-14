@@ -231,6 +231,12 @@ public class ListMainPaneController {
         sampleTextArea.appendText(member.getFirstName());
         sampleTextArea.appendText(" - ");
         sampleTextArea.appendText(member.getPersonID());
+        sampleTextArea.appendText(" Role: ");
+        if (member.hasRole()) {
+          sampleTextArea.appendText(member.getRoles().toString());
+        } else {
+          sampleTextArea.appendText("Not assigned to a role yet.");
+        }
         sampleTextArea.appendText("\n");
       }
     }
