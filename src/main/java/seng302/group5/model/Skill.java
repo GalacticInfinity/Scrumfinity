@@ -78,13 +78,12 @@ public class Skill implements AgileItem{
   }
 
   @Override
-  public void create() {
-
-  }
-
-  @Override
-  public void delete() {
-
+  public void copyValues(AgileItem agileItem) {
+    if (agileItem instanceof Skill) {
+      Skill clone = (Skill) agileItem;
+      this.skillName = clone.getSkillName();
+      this.skillDescription = clone.getSkillDescription();
+    }
   }
 
   /**
@@ -94,5 +93,15 @@ public class Skill implements AgileItem{
   @Override
   public String toString() {
     return this.getSkillName();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    boolean result = false;
+    if (obj instanceof Skill) {
+      Skill skill = (Skill) obj;
+      result = this.skillName.equals(skill.getSkillName());
+    }
+    return result;
   }
 }

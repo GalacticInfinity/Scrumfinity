@@ -1,5 +1,9 @@
 package seng302.group5.model;
 
+import org.mockito.cglib.core.Local;
+
+import java.time.LocalDate;
+
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -15,6 +19,9 @@ public class Team implements AgileItem {
 
   private String teamID;
   private String teamDescription;
+  private LocalDate startDate;
+  private LocalDate endDate;
+  private Project currentProject = null;
 
   private ObservableList<Person> teamMembers = FXCollections.observableArrayList();
 
@@ -50,6 +57,8 @@ public class Team implements AgileItem {
   public Team(Team clone) {
     this.teamID = clone.getTeamID();
     this.teamDescription = clone.getTeamDescription();
+    this.teamMembers.clear();
+    this.teamMembers.addAll(clone.getTeamMembers());
   }
 
   public String getTeamID() {
@@ -76,8 +85,13 @@ public class Team implements AgileItem {
     this.teamMembers = teamMembers;
   }
 
-  public void delete(){}
+  public void setStartDate(LocalDate startDate) {
+    this.startDate = startDate;
+  }
 
+  public void setEndDate(LocalDate endDate) {
+    this.endDate = endDate;
+  }
   public void create(){}
 
   public void addRole(PersonRole role) {
@@ -105,6 +119,33 @@ public class Team implements AgileItem {
       return true;
   }
 
+  public void setCurrentProject(Project project) {
+    this.currentProject = project;
+  }
+
+  public LocalDate getStartDate() {
+    return this.startDate;
+  }
+
+  public LocalDate getEndDate() {
+    return this.endDate;
+  }
+
+  public Project getCurrentProject() {
+    return this.currentProject;
+  }
+
+  @Override
+  public void copyValues(AgileItem agileItem) {
+    if (agileItem instanceof Team) {
+      Team clone = (Team) agileItem;
+      this.teamID = clone.getTeamID();
+      this.teamDescription = clone.getTeamDescription();
+      this.teamMembers.clear();
+      this.teamMembers.addAll(clone.getTeamMembers());
+    }
+  }
+
   /**
    * Overrides to toString method with the
    * ID of team.
@@ -114,5 +155,15 @@ public class Team implements AgileItem {
   @Override
   public String toString() {
     return teamID;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    boolean result = false;
+    if (obj instanceof Team) {
+      Team team = (Team) obj;
+      result = this.teamID.equals(team.getTeamID());
+    }
+    return result;
   }
 }

@@ -1,13 +1,18 @@
 package seng302.group5.model.undoredo;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
+import javafx.collections.FXCollections;
 import seng302.group5.Main;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
+import seng302.group5.model.Release;
 import seng302.group5.model.Skill;
+import seng302.group5.model.Team;
 
 /**
  * Created by Michael on 3/17/2015.
@@ -170,6 +175,36 @@ public class UndoRedoHandler {
         handleSkillDelete(undoRedoObject, undoOrRedo);
         break;
 
+      case TEAM_CREATE:
+        System.out.println(String.format("I am %sing a team creation", undoOrRedoStr));   // temp
+        handleTeamCreate(undoRedoObject, undoOrRedo);
+        break;
+
+      case TEAM_EDIT:
+        System.out.println(String.format("I am %sing a team edit", undoOrRedoStr));   // temp
+        handleTeamEdit(undoRedoObject, undoOrRedo);
+        break;
+
+      case TEAM_DELETE:
+        System.out.println(String.format("I am %sing a team deletion", undoOrRedoStr));   // temp
+        handleTeamDelete(undoRedoObject, undoOrRedo);
+        break;
+
+      case RELEASE_CREATE:
+        System.out.println(String.format("I am %sing a release creation", undoOrRedoStr));   // temp
+        handleReleaseCreate(undoRedoObject, undoOrRedo);
+        break;
+
+      case RELEASE_EDIT:
+        System.out.println(String.format("I am %sing a release edit", undoOrRedoStr));   // temp
+        handleReleaseEdit(undoRedoObject, undoOrRedo);
+        break;
+
+      case RELEASE_DELETE:
+        System.out.println(String.format("I am %sing a release delete", undoOrRedoStr));   // temp
+        handleReleaseDelete(undoRedoObject, undoOrRedo);
+        break;
+
       case UNDEFINED:
         throw new Exception("Unreadable UndoRedoObject");
 
@@ -195,26 +230,15 @@ public class UndoRedoHandler {
     }
 
     // Get the project ID which is currently in the list and the project to change
-    Project project = (Project) data.get(0);
-    String projectID = project.getProjectID();
+    Project projectToChange = (Project) undoRedoObject.getAgileItem();
+    Project projectData = (Project) data.get(0);
 
     // Make the changes and refresh the list
     if (undoOrRedo == UndoOrRedo.UNDO) {
-      // Find the project in the list and ensure it exists so it can be deleted
-      Project projectToDelete = null;
-      for (Project projectInList : mainApp.getProjects()) {
-        if (projectInList.getProjectID().equals(projectID)) {
-          projectToDelete = projectInList;
-          break;
-        }
-      }
-      if (projectToDelete == null) {
-        throw new Exception("Can't undo project creation - Can't find the created project");
-      }
-      mainApp.deleteProject(projectToDelete);
+      mainApp.deleteProject(projectToChange);
     } else {
-      Project projectToAdd = new Project(project);
-      mainApp.addProject(projectToAdd);
+      projectToChange.copyValues(projectData);
+      mainApp.addProject(projectToChange);
     }
     mainApp.refreshList();
   }
@@ -236,36 +260,17 @@ public class UndoRedoHandler {
     }
 
     // Get the project ID which is currently in the list and the project to edit
-    Project currentProject;
-    String currentProjectID;
-    Project newProject;
+    Project projectToChange = (Project) undoRedoObject.getAgileItem();
+    Project projectData;
 
     if (undoOrRedo == UndoOrRedo.UNDO) {
-      currentProject = (Project) data.get(1);
-      currentProjectID = currentProject.getProjectID();
-      newProject = (Project) data.get(0);
+      projectData = (Project) data.get(0);
     } else {
-      currentProject = (Project) data.get(0);
-      currentProjectID = currentProject.getProjectID();
-      newProject = (Project) data.get(1);
-    }
-
-    // Find the project in the list and ensure it exists
-    Project projectToEdit = null;
-    for (Project projectInList : mainApp.getProjects()) {
-      if (projectInList.getProjectID().equals(currentProjectID)) {
-        projectToEdit = projectInList;
-        break;
-      }
-    }
-    if (projectToEdit == null) {
-      throw new Exception("Can't undo/redo project edit - Can't find the edited project");
+      projectData = (Project) data.get(1);
     }
 
     // Make the changes and refresh the list
-    projectToEdit.setProjectID(newProject.getProjectID());
-    projectToEdit.setProjectName(newProject.getProjectName());
-    projectToEdit.setProjectDescription(newProject.getProjectDescription());
+    projectToChange.copyValues(projectData);
     mainApp.refreshList();
   }
 
@@ -286,27 +291,16 @@ public class UndoRedoHandler {
     }
 
     // Get the project and ID to undo/redo deletion of
-    Project project = (Project) data.get(0);
-    String projectID = project.getProjectID();
+    Project projectToChange = (Project) undoRedoObject.getAgileItem();
+    Project projectData = (Project) data.get(0);
 
     // Make the changes and refresh the list
     if (undoOrRedo == UndoOrRedo.UNDO) {
       // Create the deleted project again
-      Project projectToAdd = new Project(project);
-      mainApp.addProject(projectToAdd);
+      projectToChange.copyValues(projectData);
+      mainApp.addProject(projectToChange);
     } else {
-      // Find the project in list and ensure it exists so it can be deleted again
-      Project projectToDelete = null;
-      for (Project projectInList : mainApp.getProjects()) {
-        if (projectInList.getProjectID().equals(projectID)) {
-          projectToDelete = projectInList;
-          break;
-        }
-      }
-      if (projectToDelete == null) {
-        throw new Exception("Can't redo project deletion - Can't find the created project");
-      }
-      mainApp.deleteProject(projectToDelete);
+      mainApp.deleteProject(projectToChange);
     }
     mainApp.refreshList();
   }
@@ -327,27 +321,16 @@ public class UndoRedoHandler {
       throw new Exception("Can't undo/redo person creation - No variables");
     }
 
-    // Get the person ID which is currently in the list and the person to change
-    Person person = (Person) data.get(0);
-    String personID = person.getPersonID();
+    Person personToChange = (Person) undoRedoObject.getAgileItem();
+    Person personData = (Person) data.get(0);
 
     // Make the changes and refresh the list
     if (undoOrRedo == UndoOrRedo.UNDO) {
       // Find the person in the list and ensure it exists so it can be deleted
-      Person personToDelete = null;
-      for (Person personInList : mainApp.getPeople()) {
-        if (personInList.getPersonID().equals(personID)) {
-          personToDelete = personInList;
-          break;
-        }
-      }
-      if (personToDelete == null) {
-        throw new Exception("Can't undo person creation - Can't find the created person");
-      }
-      mainApp.deletePerson(personToDelete);
+      mainApp.deletePerson(personToChange);
     } else {
-      Person personToAdd = new Person(person);
-      mainApp.addPerson(personToAdd);
+      personToChange.copyValues(personData);
+      mainApp.addPerson(personToChange);
     }
     mainApp.refreshList();
   }
@@ -368,37 +351,17 @@ public class UndoRedoHandler {
       throw new Exception("Can't undo/redo person edit - Less than 2 variables");
     }
 
-    // Get the person ID which is currently in the list and the person to edit
-    Person currentPerson;
-    String currentPersonID;
-    Person newPerson;
+    Person personToChange = (Person) undoRedoObject.getAgileItem();
+    Person personData;
 
     if (undoOrRedo == UndoOrRedo.UNDO) {
-      currentPerson = (Person) data.get(1);
-      currentPersonID = currentPerson.getPersonID();
-      newPerson = (Person) data.get(0);
+      personData = (Person) data.get(0);
     } else {
-      currentPerson = (Person) data.get(0);
-      currentPersonID = currentPerson.getPersonID();
-      newPerson = (Person) data.get(1);
-    }
-
-    // Find the person in the list and ensure it exists
-    Person personToEdit = null;
-    for (Person personInList : mainApp.getPeople()) {
-      if (personInList.getPersonID().equals(currentPersonID)) {
-        personToEdit = personInList;
-        break;
-      }
-    }
-    if (personToEdit == null) {
-      throw new Exception("Can't undo/redo person edit - Can't find the edited person");
+      personData = (Person) data.get(1);
     }
 
     // Make the changes and refresh the list
-    personToEdit.setPersonID(newPerson.getPersonID());
-    personToEdit.setFirstName(newPerson.getFirstName());
-    personToEdit.setLastName(newPerson.getLastName());
+    personToChange.copyValues(personData);
     mainApp.refreshList();
   }
 
@@ -418,28 +381,25 @@ public class UndoRedoHandler {
       throw new Exception("Can't undo/redo person deletion - No variables");
     }
 
-    // Get the person and ID to undo/redo deletion of
-    Person person = (Person) data.get(0);
-    String personID = person.getPersonID();
+    Person personToChange = (Person) undoRedoObject.getAgileItem();
+    Person personData = (Person) data.get(0);
+
+    // Get the person's team which is in the list
+    Team team = personToChange.getTeam();
 
     // Make the changes and refresh the list
     if (undoOrRedo == UndoOrRedo.UNDO) {
       // Create the deleted person again
-      Person personToAdd = new Person(person);
-      mainApp.addPerson(personToAdd);
+      personToChange.copyValues(personData);
+      mainApp.addPerson(personToChange);
+      if (team != null) {
+        team.getTeamMembers().add(personToChange);
+      }
     } else {
-      // Find the person in list and ensure it exists so it can be deleted again
-      Person personToDelete = null;
-      for (Person personInList : mainApp.getPeople()) {
-        if (personInList.getPersonID().equals(personID)) {
-          personToDelete = personInList;
-          break;
-        }
+      if (team != null) {
+        team.getTeamMembers().remove(personToChange);
       }
-      if (personToDelete == null) {
-        throw new Exception("Can't redo person deletion - Can't find the created person");
-      }
-      mainApp.deletePerson(personToDelete);
+      mainApp.deletePerson(personToChange);
     }
     mainApp.refreshList();
   }
@@ -460,27 +420,15 @@ public class UndoRedoHandler {
       throw new Exception("Can't undo/redo skill creation - No variables");
     }
 
-    // Get the skill name which is currently in the list and the skill to change
-    Skill skill = (Skill) data.get(0);
-    String skillName = skill.getSkillName();
+    Skill skillToChange = (Skill) undoRedoObject.getAgileItem();
+    Skill skillData = (Skill) data.get(0);
 
     // Make the changes and refresh the list
     if (undoOrRedo == UndoOrRedo.UNDO) {
-      // Find the skill in the list and ensure it exists so it can be deleted
-      Skill skillToDelete = null;
-      for (Skill skillInList : mainApp.getSkills()) {
-        if (skillInList.getSkillName().equals(skillName)) {
-          skillToDelete = skillInList;
-          break;
-        }
-      }
-      if (skillToDelete == null) {
-        throw new Exception("Can't undo skill creation - Can't find the created skill");
-      }
-      mainApp.deleteSkill(skillToDelete);
+      mainApp.deleteSkill(skillToChange);
     } else {
-      Skill skillToAdd = new Skill(skill);
-      mainApp.addSkill(skillToAdd);
+      skillToChange.copyValues(skillData);
+      mainApp.addSkill(skillToChange);
     }
     mainApp.refreshList();
   }
@@ -501,36 +449,16 @@ public class UndoRedoHandler {
       throw new Exception("Can't undo/redo skill edit - Less than 2 variables");
     }
 
-    // Get the skill name which is currently in the list and the skill to edit
-    Skill currentSkill;
-    String currentSkillName;
-    Skill newSkill;
+    Skill skillToChange = (Skill) undoRedoObject.getAgileItem();
+    Skill skillData;
 
     if (undoOrRedo == UndoOrRedo.UNDO) {
-      currentSkill = (Skill) data.get(1);
-      currentSkillName = currentSkill.getSkillName();
-      newSkill = (Skill) data.get(0);
+      skillData = (Skill) data.get(0);
     } else {
-      currentSkill = (Skill) data.get(0);
-      currentSkillName = currentSkill.getSkillName();
-      newSkill = (Skill) data.get(1);
+      skillData = (Skill) data.get(1);
     }
 
-    // Find the skill in the list and ensure it exists
-    Skill skillToEdit = null;
-    for (Skill skillInList : mainApp.getSkills()) {
-      if (skillInList.getSkillName().equals(currentSkillName)) {
-        skillToEdit = skillInList;
-        break;
-      }
-    }
-    if (skillToEdit == null) {
-      throw new Exception("Can't undo/redo skill edit - Can't find the edited skill");
-    }
-
-    // Make the changes and refresh the list
-    skillToEdit.setSkillName(newSkill.getSkillName());
-    skillToEdit.setSkillDescription(newSkill.getSkillDescription());
+    skillToChange.copyValues(skillData);
     mainApp.refreshList();
   }
 
@@ -550,30 +478,288 @@ public class UndoRedoHandler {
       throw new Exception("Can't undo/redo skill deletion - No variables");
     }
 
-    // Get the skill and name to undo/redo deletion of
-    Skill skill = (Skill) data.get(0);
-    String skillName = skill.getSkillName();
+    Skill skillToChange = (Skill) undoRedoObject.getAgileItem();
+    Skill skillData = (Skill) data.get(0);
+
+    // Get the skill users
+    List<AgileItem> skillUsers = data.subList(1, data.size());
 
     // Make the changes and refresh the list
     if (undoOrRedo == UndoOrRedo.UNDO) {
       // Create the deleted skill again
-      Skill skillToAdd = new Skill(skill);
-      mainApp.addSkill(skillToAdd);
+      skillToChange.copyValues(skillData);
+      mainApp.addSkill(skillToChange);
+      // For each person stored, add the skill to their skill set
+      for (AgileItem agileItem : skillUsers) {
+        Person skillUser = (Person) agileItem;
+        skillUser.getSkillSet().add(skillToChange);
+      }
     } else {
-      // Find the skill in list and ensure it exists so it can be deleted again
-      Skill skillToDelete = null;
-      for (Skill skillInList : mainApp.getSkills()) {
-        if (skillInList.getSkillName().equals(skillName)) {
-          skillToDelete = skillInList;
-          break;
-        }
+      // For each person stored, remove the skill to their skill set
+      for (AgileItem agileItem : skillUsers) {
+        Person skillUser = (Person) agileItem;
+        skillUser.getSkillSet().remove(skillToChange);
       }
-      if (skillToDelete == null) {
-        throw new Exception("Can't redo skill deletion - Can't find the created skill");
-      }
-      mainApp.deleteSkill(skillToDelete);
+      mainApp.deleteSkill(skillToChange);
     }
     mainApp.refreshList();
   }
 
+  /**
+   * Undo or redo a team creation
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handleTeamCreate(UndoRedoObject undoRedoObject,
+                                 UndoOrRedo undoOrRedo) throws Exception {
+
+    // Get the data and ensure it has data for the team
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 1) {
+      throw new Exception("Can't undo/redo team creation - No variables");
+    }
+
+    // Get the team name which is currently in the list and the team to change
+    Team teamToChange = (Team) undoRedoObject.getAgileItem();
+    Team teamData = (Team) data.get(0);
+
+    // Make the changes and refresh the list
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+      for (Person person : teamToChange.getTeamMembers()) {
+        person.removeFromTeam();
+      }
+      mainApp.deleteTeam(teamToChange);
+    } else {
+      teamToChange.copyValues(teamData);
+      mainApp.addTeam(teamToChange);
+      for (Person member : teamToChange.getTeamMembers()) {
+        member.assignToTeam(teamToChange);
+      }
+    }
+    mainApp.refreshList();
+  }
+
+  /**
+   * Undo or redo a team edit
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handleTeamEdit(UndoRedoObject undoRedoObject,
+                               UndoOrRedo undoOrRedo) throws Exception {
+
+    // Get the data and ensure it has data for the teams both before and after
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 2) {
+      throw new Exception("Can't undo/redo team edit - Less than 2 variables");
+    }
+
+    // Get the team name which is currently in the list and the team to edit
+    Team teamToChange = (Team) undoRedoObject.getAgileItem();
+    Team teamOldData;
+    Team teamData;
+
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+      teamData = (Team) data.get(0);
+      teamOldData = (Team) data.get(1);
+    } else {
+      teamData = (Team) data.get(1);
+      teamOldData = (Team) data.get(0);
+    }
+
+    // Make the changes and refresh the list
+    for (Person oldMember : teamOldData.getTeamMembers()) {
+      oldMember.removeFromTeam();
+    }
+    for (Person newMember : teamData.getTeamMembers()) {
+      newMember.assignToTeam(teamToChange);
+    }
+    teamToChange.copyValues(teamData);
+
+    mainApp.refreshList();
+  }
+
+
+  /**
+   * Undo or redo a team deletion
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handleTeamDelete(UndoRedoObject undoRedoObject,
+                                UndoOrRedo undoOrRedo) throws Exception {
+
+    // Get the data and ensure it has data for the team
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 1) {
+      throw new Exception("Can't undo/redo team deletion - No variables");
+    }
+
+    // Get the team and id to undo/redo deletion of
+    Team teamToChange = (Team) undoRedoObject.getAgileItem();
+    Team teamData = (Team) data.get(0);
+
+    // Make the changes and refresh the list
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+      // Create the deleted team again
+      teamToChange.copyValues(teamData);
+      for (Person teamMember : teamToChange.getTeamMembers()) {
+        mainApp.addPerson(teamMember);
+      }
+      mainApp.addTeam(teamToChange);
+    } else {
+      for (Person teamMember : teamToChange.getTeamMembers()) {
+        mainApp.deletePerson(teamMember);
+      }
+      mainApp.deleteTeam(teamToChange);
+    }
+    mainApp.refreshList();
+  }
+
+  /**
+   * Undo or redo a skill creation
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handleReleaseCreate(UndoRedoObject undoRedoObject,
+                                 UndoOrRedo undoOrRedo) throws Exception {
+
+    // Get the data and ensure it has data for the skill
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 1) {
+      throw new Exception("Can't undo/redo release creation - No variables");
+    }
+
+    // Get the Release name which is currently in the list and the release to change
+    Release release = (Release) data.get(0);
+    String releaseName = release.getReleaseName();
+
+    // Make the changes and refresh the list
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+      // Find the release in the list and ensure it exists so it can be deleted
+      Release releaseToDelete = null;
+      for (Release releaseInList : mainApp.getReleases()) {
+        if (releaseInList.getReleaseName().equals(releaseName)) {
+          releaseToDelete = releaseInList;
+          break;
+        }
+      }
+      if (releaseToDelete == null) {
+        throw new Exception("Can't undo release creation - Can't find the created release");
+      }
+      mainApp.deleteRelease(releaseToDelete);
+    } else {
+      Release releaseToAdd = new Release(release);
+      mainApp.addRelease(releaseToAdd);
+    }
+    mainApp.refreshList();
+  }
+
+  /**
+   * Undo or redo a release edit
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handleReleaseEdit(UndoRedoObject undoRedoObject,
+                               UndoOrRedo undoOrRedo) throws Exception {
+
+    // Get the data and ensure it has data for the releases both before and after
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 2) {
+      throw new Exception("Can't undo/redo release edit - Less than 2 variables");
+    }
+
+    // Get the release name which is currently in the list and the release to edit
+    Release currentRelease;
+    String currentReleaseName;
+    Release newRelease;
+
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+      currentRelease = (Release) data.get(1);
+      currentReleaseName = currentRelease.getReleaseName();
+      newRelease = (Release) data.get(0);
+    } else {
+      currentRelease = (Release) data.get(0);
+      currentReleaseName = currentRelease.getReleaseName();
+      newRelease = (Release) data.get(1);
+    }
+
+    // Finds the release in the list and ensure it exists
+    Release releaseToEdit = null;
+    for (Release releaseInList : mainApp.getReleases()) {
+      if (releaseInList.getReleaseName().equals(currentReleaseName)) {
+        releaseToEdit = releaseInList;
+        break;
+      }
+    }
+    if (releaseToEdit == null) {
+      throw new Exception("Can't undo/redo release edit - Can't find the edited release");
+    }
+
+    // Make the changes and refresh the list
+    releaseToEdit.setReleaseName(newRelease.getReleaseName());
+    releaseToEdit.setReleaseDescription(newRelease.getReleaseDescription());
+    releaseToEdit.setReleaseDate(newRelease.getReleaseDate());
+    releaseToEdit.setReleaseNotes(newRelease.getReleaseNotes());
+    releaseToEdit.setProjectRelease(newRelease.getProjectRelease());
+    mainApp.refreshList();
+  }
+
+  /**
+   * Undo or redo a release deletion
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handleReleaseDelete(UndoRedoObject undoRedoObject,
+                                 UndoOrRedo undoOrRedo) throws Exception {
+
+    // Get the data and ensure it has data for the skill
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 1) {
+      throw new Exception("Can't undo/redo release deletion - No variables");
+    }
+
+    // Get the skill and name to undo/redo deletion of
+    Release release = (Release) data.get(0);
+    String releaseName = release.getReleaseName();
+
+    // Make the changes and refresh the list
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+      // Create the deleted skill again
+      Release releaseToAdd = new Release(release);
+      mainApp.addRelease(releaseToAdd);
+    } else {
+      // Find the skill in list and ensure it exists so it can be deleted again
+      Release releaseToDelete = null;
+      for (Release releaseInList : mainApp.getReleases()) {
+        if (releaseInList.getReleaseName().equals(releaseName)) {
+          releaseToDelete = releaseInList;
+          break;
+        }
+      }
+      if (releaseToDelete == null) {
+        throw new Exception("Can't redo release deletion - Can't find the created release");
+      }
+      mainApp.deleteRelease(releaseToDelete);
+    }
+    mainApp.refreshList();
+  }
+
+  public Stack<UndoRedoObject> getUndoStack() {
+    return undoStack;
+  }
+
+  public Stack<UndoRedoObject> getRedoStack() {
+    return redoStack;
+  }
 }

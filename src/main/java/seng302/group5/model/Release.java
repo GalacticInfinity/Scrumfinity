@@ -1,20 +1,20 @@
 package seng302.group5.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * Release class that sets the model for a release.
  * Created by Craig Barnard on 07/04/2015
  */
-public class Release {
+public class Release implements AgileItem {
 
   private String releaseName;
   private String releaseDescription;
-  private Date releaseDate;
+  private LocalDate releaseDate;
   private String releaseNotes;
   private Project projectRelease = null;
 
-  public void Release() {
+  public Release() {
     releaseName = "";
     releaseDescription = "";
     releaseNotes = "";
@@ -24,12 +24,12 @@ public class Release {
    * Constructor for Release object.
    * @param releaseName
    * @param releaseDescription
-   * @param releaseDate
+   * @param //releaseDate
    * @param releaseNotes
-   * @param projectRelease
+   * @param //projectRelease
    */
-  public void Release(String releaseName, String releaseDescription, Date releaseDate,
-                      String releaseNotes, Project projectRelease) {
+  public Release(String releaseName, String releaseDescription, String releaseNotes,
+                 LocalDate releaseDate, Project projectRelease) {
     this.releaseName = releaseName;
     this.releaseDescription = releaseDescription;
     this.releaseDate = releaseDate;
@@ -37,11 +37,19 @@ public class Release {
     this.projectRelease = projectRelease;
   }
 
+  public Release(Release clone) {
+    this.releaseName = clone.getReleaseName();
+    this.releaseDescription = clone.getReleaseDescription();
+    this.releaseDate = clone.getReleaseDate();
+    this.releaseNotes = clone.getReleaseNotes();
+    this.projectRelease = clone.getProjectRelease();
+  }
+
   public String getReleaseName() {return this.releaseName;}
 
   public String getReleaseDescription() {return this.releaseDescription;}
 
-  public Date getReleaseDate() {return  this.releaseDate;}
+  public LocalDate getReleaseDate() {return  this.releaseDate;}
 
   public String getReleaseNotes() {return  this.releaseNotes;}
 
@@ -53,7 +61,7 @@ public class Release {
     this.releaseDescription = releaseDescription;
   }
 
-  public void setReleaseDate(Date releaseDate) {
+  public void setReleaseDate(LocalDate releaseDate) {
     this.releaseDate = releaseDate;
   }
 
@@ -66,5 +74,25 @@ public class Release {
   }
 
   @Override
-  public String toString() {return this.releaseName;}
+  public void copyValues(AgileItem agileItem) {
+    if (agileItem instanceof Release) {
+      Release clone = (Release) agileItem;
+      // TODO: do it
+    }
+  }
+
+  @Override
+  public String toString() {
+    return this.releaseName;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    boolean result = false;
+    if (obj instanceof Release) {
+      Release release = (Release) obj;
+      result = this.releaseName.equals(release.getReleaseName());
+    }
+    return result;
+  }
 }

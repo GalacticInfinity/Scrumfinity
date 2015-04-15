@@ -1,6 +1,7 @@
 package seng302.group5;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import javafx.application.Application;
@@ -18,6 +19,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng302.group5.controller.ListMainPaneController;
 import seng302.group5.controller.MenuBarController;
+import seng302.group5.controller.ReleaseDialogController;
 import seng302.group5.controller.PersonDialogController;
 import seng302.group5.controller.ProjectDialogController;
 import seng302.group5.controller.TeamDialogController;
@@ -193,6 +195,41 @@ public class Main extends Application {
     }
   }
 
+  public void showReleaseDialog(CreateOrEdit createOrEdit) {
+    try {
+      FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(Main.class.getResource("/ReleaseDialog.fxml"));
+      VBox releaseDialogLayout = (VBox) loader.load();
+
+      ReleaseDialogController controller = loader.getController();
+      Scene releaseDialogScene = new Scene(releaseDialogLayout);
+      Stage releaseDialogStage = new Stage();
+
+      Release release = null;
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        release = (Release) LMPC.getSelected();    // TODO: Fix
+        if (release == null) {
+          Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setTitle("Error");
+          alert.setHeaderText(null);
+          alert.setContentText("No release selected");
+          alert.showAndWait();
+          return;
+        }
+      }
+      controller.setupController(this ,releaseDialogStage, createOrEdit, release);
+
+      releaseDialogStage.initModality(Modality.APPLICATION_MODAL);
+      releaseDialogStage.initOwner(primaryStage);
+      releaseDialogStage.setScene(releaseDialogScene);
+      releaseDialogStage.show();
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+
   public void showPersonDialog(CreateOrEdit createOrEdit) {
     try {
       FXMLLoader loader = new FXMLLoader();
@@ -322,12 +359,7 @@ public class Main extends Application {
    * @param inputProject Project to delete - must be same object reference
    */
   public void deleteProject(Project inputProject) {
-    for (Project project : projects) {
-      if (project == inputProject) {
-        projects.remove(project);
-        break;
-      }
-    }
+    projects.remove(inputProject);
   }
 
   /**
@@ -335,12 +367,7 @@ public class Main extends Application {
    * @param inputPerson Person to delete - must be the same object reference
    */
   public void deletePerson(Person inputPerson) {
-    for (Person person : people) {
-      if (person == inputPerson) {
-        people.remove(person);
-        break;
-      }
-    }
+    people.remove(inputPerson);
   }
 
   /**
@@ -348,12 +375,7 @@ public class Main extends Application {
    * @param inputSkill Skill to delete - must be the same object reference
    */
   public void deleteSkill(Skill inputSkill) {
-    for (Skill skill : skills) {
-      if (skill == inputSkill) {
-        skills.remove(skill);
-        break;
-      }
-    }
+    skills.remove(inputSkill);
   }
 
   /**
@@ -361,12 +383,15 @@ public class Main extends Application {
    * @param inputTeam Team to delete - must be the same object reference
    */
   public void deleteTeam(Team inputTeam) {
-    for(Team team : teams) {
-      if (team == inputTeam) {
-        teams.remove(team);
-        break;
-      }
-    }
+    teams.remove(inputTeam);
+  }
+
+  /**
+   * Delete a release from the list of releases
+   * @param inputRelease
+   */
+  public void deleteRelease(Release inputRelease) {
+    releases.remove(inputRelease);
   }
 
     /**
@@ -393,13 +418,19 @@ public class Main extends Application {
       case SKILL_DELETE:
         itemToStore = new Skill((Skill) agileItem);
         break;
+      case TEAM_DELETE:
+        itemToStore = new Team((Team) agileItem);
+        break;
+      case RELEASE_DELETE:
+        itemToStore = new Release((Release) agileItem);
+        break;
       default:
         itemToStore = null;
         System.err.println("Unhandled case for generating undo/redo delete object");
-        break;
     }
 
-    undoRedoObject.addDatum(itemToStore);
+    undoRedoObject.setAgileItem(agileItem); // store original
+    undoRedoObject.addDatum(itemToStore);   // store clone
 
     return undoRedoObject;
   }
@@ -423,10 +454,14 @@ public class Main extends Application {
         Person person = (Person) agileItem;
 
         if (person.isInTeam()) {
+          String message = String.format(
+              "Do you want to delete '%s' and remove him/her from the team '%s'?",
+              person.getPersonID(),
+              person.getTeamID());
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
           alert.setTitle("Person is in team");
           alert.setHeaderText(null);
-          alert.setContentText("Do you want to delete this person and remove him/her from their team?");
+          alert.setContentText(message);
           //checks response
           Optional<ButtonType> result = alert.showAndWait();
           if (result.get() == ButtonType.OK){
@@ -442,29 +477,37 @@ public class Main extends Application {
         break;
       case "Skills":
         Skill skill = (Skill) agileItem;
-        boolean skillUsed  = false;
+        ArrayList<Person> skillUsers = new ArrayList<>();
         //iterate through each person
         for (Person skillPerson : people) {
           //check if they have the skill
           if (skillPerson.getSkillSet().contains(skill)) {
-            skillUsed = true;
-            break;//breaks out of check once it finds someone has it
+            skillUsers.add(skillPerson);
           }
         }
-        if (skillUsed) {
+        if (!skillUsers.isEmpty()) {
           //if so open a yes/no dialog
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
           alert.setTitle("People have this skill!");
           alert.setHeaderText(null);
-          alert.setContentText("Do you want to delete this skill and remove it from the people who have it?");
+          int messageLength = 1;
+          String message = String.format("Do you want to delete skill '%s' and remove it from:\n",
+                                         skill.getSkillName());
+          for (Person skillUser: skillUsers) {
+            messageLength ++;
+            message += String.format("%s - %s %s\n",
+                                     skillUser.getPersonID(),
+                                     skillUser.getFirstName(),
+                                     skillUser.getLastName());
+          }
+          alert.getDialogPane().setPrefHeight(60 + 30 * messageLength);
+          alert.setContentText(message);
           //checks response
           Optional<ButtonType> result = alert.showAndWait();
           if (result.get() == ButtonType.OK){
             //if yes then remove skill from all who have it
-            for (Person currentPerson : people) {
-              if (currentPerson.getSkillSet().contains(skill)) {
-                currentPerson.getSkillSet().remove(skill);
-              }
+            for (Person skillUser : skillUsers) {
+              skillUser.getSkillSet().remove(skill);
             }
             //after all people have this skill removed delete the skill object
             deleteSkill(skill);
@@ -473,25 +516,34 @@ public class Main extends Application {
           deleteSkill(skill);
         }
         undoRedoObject = generateDelUndoRedoObject(Action.SKILL_DELETE, agileItem);
+        for (Person skillUser : skillUsers) {
+          // Add data so users can get the skill back after undo
+          undoRedoObject.addDatum(new Person(skillUser));
+        }
         newAction(undoRedoObject);
         break;
       case "Team":
         Team team = (Team) agileItem;
         if (team.getTeamMembers().isEmpty()) {
           deleteTeam(team);
+          undoRedoObject = generateDelUndoRedoObject(Action.TEAM_DELETE, agileItem);
+          newAction(undoRedoObject);
         } else {
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
           alert.setTitle("Team contains people");
           alert.setHeaderText(null);
 
           int messageLength = 1;
-          String message = "";
-          message += "Are you sure you want to delete team " + team.getTeamID() + " and people:\n";
-          for (Person teamMemeber: team.getTeamMembers()) {
+          String message = String.format("Are you sure you want to delete team '%s' and people:\n",
+                                         team.getTeamID());
+          for (Person teamMember: team.getTeamMembers()) {
             messageLength ++;
-            message += teamMemeber.getFirstName() + " " + teamMemeber.getLastName() + "\n";
+            message += String.format("%s - %s %s\n",
+                                     teamMember.getPersonID(),
+                                     teamMember.getFirstName(),
+                                     teamMember.getLastName());
           }
-          alert.getDialogPane().setPrefHeight(60 + 20*messageLength);
+          alert.getDialogPane().setPrefHeight(60 + 30*messageLength);
           alert.setContentText(message);
 
           Optional<ButtonType> result = alert.showAndWait();
@@ -500,9 +552,20 @@ public class Main extends Application {
               deletePerson(teamPerson);
             }
             deleteTeam(team);
+            undoRedoObject = generateDelUndoRedoObject(Action.TEAM_DELETE, agileItem);
+            newAction(undoRedoObject);
           }
         }
         break;
+      case "Release":
+        Release release = (Release) agileItem;
+        if (release.getProjectRelease() != null) {
+          System.err.println("Unhandled case for deleting agile item");
+        } else {
+          deleteRelease(release);
+          undoRedoObject = generateDelUndoRedoObject(Action.RELEASE_DELETE, agileItem);
+          newAction(undoRedoObject);
+        }
       default:
         System.err.println("Unhandled case for deleting agile item");
         break;
@@ -519,6 +582,7 @@ public class Main extends Application {
     teams.clear();
     people.clear();
     skills.clear();
+    releases.clear();
   }
 
 
@@ -550,6 +614,10 @@ public class Main extends Application {
     return skills;
   }
 
+  public ObservableList<Release> getReleases() {
+    return releases;
+  }
+
   public void addProject(Project project) {
     projects.add(project);
   }
@@ -562,12 +630,26 @@ public class Main extends Application {
     teams.add(team);
   }
 
-  public void refreshList() {
-    LMPC.refreshList();
-  }
-
   public void addSkill(Skill skill) {
     skills.add(skill);
+  }
+
+  public void addRelease(Release release) {
+    releases.add(release);
+  }
+
+  public UndoRedoHandler getUndoRedoHandler() {
+    // This is for tests
+    return undoRedoHandler;
+  }
+
+  public void setLMPC(ListMainPaneController LMPC) {
+    // This is for tests
+    this.LMPC = LMPC;
+  }
+
+  public void refreshList() {
+    LMPC.refreshList();
   }
 
   public static void main(String[] args) {

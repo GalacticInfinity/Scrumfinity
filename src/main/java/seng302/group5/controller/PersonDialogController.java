@@ -59,6 +59,7 @@ public class PersonDialogController {
     if (createOrEdit == CreateOrEdit.CREATE) {
       thisStage.setTitle("Create New Person");
       btnCreatePerson.setText("Create");
+
       initialiseLists(CreateOrEdit.CREATE, person);
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       thisStage.setTitle("Edit Person");
@@ -99,6 +100,7 @@ public class PersonDialogController {
     }
 
     // Store a copy of person to edit in stack to avoid reference problems
+    undoRedoObject.setAgileItem(person);
     Person personToStore = new Person(person);
     undoRedoObject.addDatum(personToStore);
 

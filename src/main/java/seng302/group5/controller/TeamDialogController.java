@@ -4,17 +4,21 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Person;
 import seng302.group5.model.PersonRole;
 import seng302.group5.model.Team;
+import seng302.group5.model.undoredo.Action;
+import seng302.group5.model.undoredo.UndoRedoObject;
 
 /**
  * Created by Zander on 24/03/2015.
@@ -61,6 +65,7 @@ public class TeamDialogController {
       teamIDField.setText(team.getTeamID());
       initialiseLists(CreateOrEdit.EDIT, team);
       teamDescriptionField.setText(team.getTeamDescription());
+
     }
     this.createOrEdit = createOrEdit;
 
@@ -71,6 +76,13 @@ public class TeamDialogController {
       this.team = null;
       this.lastTeam = null;
     }
+
+    teamDescriptionField.setOnKeyPressed(event -> {
+      if (event.getCode() == KeyCode.ENTER) {
+        btnConfirm.fire();
+      }
+    });
+    btnConfirm.setDefaultButton(true);
   }
 
   /**
@@ -156,6 +168,28 @@ public class TeamDialogController {
     }
   }
 
+  /**
+   * Generate an UndoRedoObject to place in the stack
+   * @return the UndoRedoObject to store
+   */
+  private UndoRedoObject generateUndoRedoObject() {
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+
+    if (createOrEdit == CreateOrEdit.CREATE) {
+      undoRedoObject.setAction(Action.TEAM_CREATE);
+    } else {
+      undoRedoObject.setAction(Action.TEAM_EDIT);
+      undoRedoObject.addDatum(lastTeam);
+    }
+
+    // Store a copy of skill to edit in stack to avoid reference problems
+    undoRedoObject.setAgileItem(team);
+    Team teamToStore = new Team(team);
+    undoRedoObject.addDatum(teamToStore);
+
+    return undoRedoObject;
+  }
+
   @FXML
   protected void btnConfirmClick(ActionEvent event) {
     StringBuilder errors = new StringBuilder();
@@ -175,19 +209,19 @@ public class TeamDialogController {
 
     // Display all errors if they exist
     if (noErrors > 0) {
-      String title;
-      if (noErrors == 1) {
-        title = String.format("%d Invalid Field", noErrors);
+      String title = String.format("%d Invalid Field", noErrors);
+      if (noErrors > 1) {
+        title += "s";  // plural
       }
-      else {
-        title = String.format("%d Invalid Fields", noErrors);
-      }
-      // TODO: Dialogs for errors
-      System.out.println(String.format("%s\n%s", title, errors.toString()));
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle(title);
+      alert.setHeaderText(null);
+      alert.setContentText(errors.toString());
+      alert.showAndWait();
     }
     else {
       if (createOrEdit == CreateOrEdit.CREATE) {
-        Team team = new Team(teamID, selectedMembers, teamDescription);
+        team = new Team(teamID, selectedMembers, teamDescription);
         for (Person person : selectedMembers) {
           person.assignToTeam(team);
         }
@@ -202,6 +236,9 @@ public class TeamDialogController {
         }
         mainApp.refreshList();
       }
+
+      UndoRedoObject undoRedoObject = generateUndoRedoObject();
+      mainApp.newAction(undoRedoObject);
       thisStage.close();
     }
   }

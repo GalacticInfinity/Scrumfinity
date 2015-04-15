@@ -1,5 +1,10 @@
 package seng302.group5.model;
 
+import java.time.LocalDate;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 /**
  * Created by @author Alex Woo
  */
@@ -8,6 +13,8 @@ public class Project implements AgileItem {
   private String projectID;
   private String projectName;
   private String projectDescription;
+  private ObservableList<Team> allocatedTeams = FXCollections.observableArrayList();
+
 
   /**
    * Default constructor
@@ -60,19 +67,46 @@ public class Project implements AgileItem {
     return projectDescription;
   }
 
+  public void addTeam(Team team) {
+    this.allocatedTeams.add(team);
+  }
+
+  public ObservableList<Team> getTeam() {
+    return this.allocatedTeams;
+  }
+
+  public void removeTeam(Team team) {
+    this.allocatedTeams.remove(team);
+  }
+
   public void setProjectDescription(String projectDescription) {
     this.projectDescription = projectDescription;
   }
 
-  public void delete(){
+  @Override
+  public void copyValues(AgileItem agileItem) {
+    if (agileItem instanceof Project) {
+      Project clone = (Project) agileItem;
+      this.projectID = clone.getProjectID();
+      this.projectName = clone.getProjectName();
+      this.projectDescription = clone.getProjectDescription();
+    }
   }
 
-  public void create(){
-  }
   // New toString method, for list
   @Override
   public String toString() {
     return this.projectID;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    boolean result = false;
+    if (obj instanceof Project) {
+      Project project = (Project) obj;
+      result = this.projectID.equals(project.getProjectID());
+    }
+    return result;
   }
 
 }

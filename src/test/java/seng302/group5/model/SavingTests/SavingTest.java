@@ -1,4 +1,4 @@
-package seng302.group5.model;
+package seng302.group5.model.SavingTests;
 
 import static org.junit.Assert.*;
 
@@ -6,11 +6,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seng302.group5.Main;
+import seng302.group5.model.Person;
+import seng302.group5.model.Project;
+import seng302.group5.model.Saving;
+import seng302.group5.model.Skill;
+import seng302.group5.model.Team;
 
 /**
  * Created by Michael on 3/19/2015.
@@ -18,7 +22,6 @@ import seng302.group5.Main;
 public class SavingTest {
 
   public Main main;
-  public File filez;
   public File newFile = new File(System.getProperty("user.home".concat("//Documents")), "Test1.xml");
 
   @Before
@@ -43,6 +46,7 @@ public class SavingTest {
 
   @Test
   public void testLoadingContents(){
+    testSavingCreate();
     Main orig = main;
     main.getProjects().clear();
     main.getPeople().clear();

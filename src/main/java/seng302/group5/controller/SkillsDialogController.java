@@ -120,6 +120,7 @@ public class SkillsDialogController {
     }
 
     // Store a copy of skill to edit in stack to avoid reference problems
+    undoRedoObject.setAgileItem(skill);
     Skill skillToStore = new Skill(skill);
     undoRedoObject.addDatum(skillToStore);
 

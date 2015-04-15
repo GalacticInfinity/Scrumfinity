@@ -21,11 +21,14 @@ public class TeamTest {
 
   @Before
   public void setUp() throws Exception {
-    // TODO
+    //creating the team to be tested
+    teamID = "TheTeam";
+    teamDescription = "This is the team to end all teams";
+    team = new Team(teamID,teamMembers,teamDescription);  //has no team members
   }
 
   @Test
   public void testToString() throws Exception {
-    // TODO
+    assertEquals(team.toString(), teamID);
   }
 }

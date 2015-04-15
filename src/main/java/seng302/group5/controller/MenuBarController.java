@@ -38,6 +38,7 @@ public class MenuBarController {
   @FXML private CheckMenuItem showPeopleMenuItem;
   @FXML private CheckMenuItem showTeamsMenuItem;
   @FXML private CheckMenuItem showSkillsMenuItem;
+  @FXML private CheckMenuItem showReleasesMenuItem;
 
   private Main mainApp;
 
@@ -73,6 +74,11 @@ public class MenuBarController {
   }
 
   @FXML
+  protected void createRelease(ActionEvent event) {
+    mainApp.showReleaseDialog(CreateOrEdit.CREATE);
+  }
+
+  @FXML
   protected void editItem(ActionEvent event) {
     String listType = Settings.currentListType;
     switch (listType) {
@@ -87,6 +93,9 @@ public class MenuBarController {
         break;
       case "Team":
         mainApp.showTeamDialog(CreateOrEdit.EDIT);
+        break;
+      case "Release":
+        mainApp.showReleaseDialog(CreateOrEdit.EDIT);
         break;
     }
   }
@@ -252,6 +261,13 @@ public class MenuBarController {
     mainApp.getLMPC().refreshList();
   }
 
+  @FXML
+  protected void btnShowReleases() {
+    Settings.currentListType = "Release";
+    deselectList("Release");
+    mainApp.getLMPC().refreshList();
+  }
+
 
   /**
    *
@@ -262,6 +278,7 @@ public class MenuBarController {
     showPeopleMenuItem.setSelected(false);
     showTeamsMenuItem.setSelected(false);
     showSkillsMenuItem.setSelected(false);
+    showReleasesMenuItem.setSelected(false);
     if (!(selectedList == "")) {
       switch (selectedList) {
         case "Project":
@@ -275,6 +292,9 @@ public class MenuBarController {
           break;
         case "Team":
           showTeamsMenuItem.setSelected(true);
+          break;
+        case "Release":
+          showReleasesMenuItem.setSelected(true);
           break;
       }
     }
