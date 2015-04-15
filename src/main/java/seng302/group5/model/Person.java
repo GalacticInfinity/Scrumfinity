@@ -52,31 +52,10 @@ public class Person implements AgileItem {
     this.personID = clone.getPersonID();
     this.firstName = clone.getFirstName();
     this.lastName = clone.getLastName();
-    for (Skill skill : clone.getSkillSet()) {
-      this.skillSet.add(new Skill(skill));
-    }
-    if (clone.getTeam() != null) {
-      this.team = new Team(clone.getTeam(), this);
-    }
+    this.skillSet.clear();
+    this.skillSet.addAll(clone.getSkillSet());
+    this.team = clone.getTeam();
     this.assignedToTeam = clone.isInTeam();
-  }
-
-  /**
-   * Constructor to create a clone of an existing person if the team is known.
-   * This is to avoid stack overflows since the Team and Person clone functions call each other.
-   *
-   * @param clone Person to clone
-   * @param team Team to set
-   */
-  public Person(Person clone, Team team) {
-    this.personID = clone.getPersonID();
-    this.firstName = clone.getFirstName();
-    this.lastName = clone.getLastName();
-    for (Skill skill : clone.getSkillSet()) {
-      this.skillSet.add(new Skill(skill));
-    }
-    this.team = team;
-    this.assignedToTeam = true;
   }
 
   public String getPersonID() {
@@ -141,6 +120,16 @@ public class Person implements AgileItem {
    */
   public Boolean isInTeam() {
     return assignedToTeam;
+  }
+
+  public void copyValues(Person clone) {
+    this.personID = clone.getPersonID();
+    this.firstName = clone.getFirstName();
+    this.lastName = clone.getLastName();
+    this.skillSet.clear();
+    this.skillSet.addAll(clone.getSkillSet());
+    this.team = clone.getTeam();
+    this.assignedToTeam = clone.isInTeam();
   }
 
   /**

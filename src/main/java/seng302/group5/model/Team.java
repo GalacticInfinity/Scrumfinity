@@ -44,28 +44,8 @@ public class Team implements AgileItem {
   public Team(Team clone) {
     this.teamID = clone.getTeamID();
     this.teamDescription = clone.getTeamDescription();
-    for (Person member : clone.getTeamMembers()) {
-      this.teamMembers.add(new Person(member, this));
-    }
-  }
-
-  /**
-   * Constructor to create a clone of an existing team if one member is known.
-   * This is to avoid stack overflows since the Team and Person clone functions call each other.
-   *
-   * @param clone Person to clone
-   * @param person One of the members
-   */
-  public Team(Team clone, Person person) {
-    this.teamID = clone.getTeamID();
-    this.teamDescription = clone.getTeamDescription();
-    for (Person member : clone.getTeamMembers()) {
-      if (member.equals(person)) {
-        this.teamMembers.add(person);
-      } else {
-        this.teamMembers.add(new Person(member, this));
-      }
-    }
+    this.teamMembers.clear();
+    this.teamMembers.addAll(clone.getTeamMembers());
   }
 
   public String getTeamID() {
@@ -90,6 +70,13 @@ public class Team implements AgileItem {
 
   public void setTeamMembers(ObservableList<Person> teamMembers) {
     this.teamMembers = teamMembers;
+  }
+
+  public void copyValues(Team clone) {
+    this.teamID = clone.getTeamID();
+    this.teamDescription = clone.getTeamDescription();
+    this.teamMembers.clear();
+    this.teamMembers.addAll(clone.getTeamMembers());
   }
 
   /**

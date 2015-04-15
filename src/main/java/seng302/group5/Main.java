@@ -429,7 +429,8 @@ public class Main extends Application {
         System.err.println("Unhandled case for generating undo/redo delete object");
     }
 
-    undoRedoObject.addDatum(itemToStore);
+    undoRedoObject.setAgileItem(agileItem); // store original
+    undoRedoObject.addDatum(itemToStore);   // store clone
 
     return undoRedoObject;
   }

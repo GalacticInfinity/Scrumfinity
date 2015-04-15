@@ -362,36 +362,16 @@ public class UndoRedoHandler {
       throw new Exception("Can't undo/redo person creation - No variables");
     }
 
-    // Get the person ID which is currently in the list and the person to change
-    Person person = (Person) data.get(0);
-    String personID = person.getPersonID();
+    Person personToChange = (Person) undoRedoObject.getAgileItem();
+    Person personData = (Person) data.get(0);
 
     // Make the changes and refresh the list
     if (undoOrRedo == UndoOrRedo.UNDO) {
       // Find the person in the list and ensure it exists so it can be deleted
-      Person personToDelete = null;
-      for (Person personInList : mainApp.getPeople()) {
-        if (personInList.getPersonID().equals(personID)) {
-          personToDelete = personInList;
-          break;
-        }
-      }
-      if (personToDelete == null) {
-        throw new Exception("Can't undo person creation - Can't find the created person");
-      }
-      mainApp.deletePerson(personToDelete);
+      mainApp.deletePerson(personToChange);
     } else {
-      ArrayList<Skill> skills = new ArrayList<>();
-
-      for (Skill skillInList : mainApp.getSkills()) {
-        if (person.getSkillSet().contains(skillInList)) {
-          // Store the existing skill in a new list to avoid reference problems
-          skills.add(skillInList);
-        }
-      }
-      Person personToAdd = new Person(person);
-      personToAdd.setSkillSet(FXCollections.observableArrayList(skills));
-      mainApp.addPerson(personToAdd);
+      personToChange.copyValues(personData);
+      mainApp.addPerson(personToChange);
     }
     mainApp.refreshList();
   }
@@ -412,47 +392,17 @@ public class UndoRedoHandler {
       throw new Exception("Can't undo/redo person edit - Less than 2 variables");
     }
 
-    // Get the person ID which is currently in the list and the person to edit
-    Person currentPerson;
-    String currentPersonID;
-    Person newPerson;
+    Person personToChange = (Person) undoRedoObject.getAgileItem();
+    Person personData;
 
     if (undoOrRedo == UndoOrRedo.UNDO) {
-      currentPerson = (Person) data.get(1);
-      currentPersonID = currentPerson.getPersonID();
-      newPerson = (Person) data.get(0);
+      personData = (Person) data.get(0);
     } else {
-      currentPerson = (Person) data.get(0);
-      currentPersonID = currentPerson.getPersonID();
-      newPerson = (Person) data.get(1);
-    }
-
-    // Find the person in the list and ensure it exists
-    Person personToEdit = null;
-    for (Person personInList : mainApp.getPeople()) {
-      if (personInList.getPersonID().equals(currentPersonID)) {
-        personToEdit = personInList;
-        break;
-      }
-    }
-    if (personToEdit == null) {
-      throw new Exception("Can't undo/redo person edit - Can't find the edited person");
+      personData = (Person) data.get(1);
     }
 
     // Make the changes and refresh the list
-    ArrayList<Skill> newSkills = new ArrayList<>();
-
-    for (Skill skillInList : mainApp.getSkills()) {
-      if (newPerson.getSkillSet().contains(skillInList)) {
-        // Store the existing skill in a new list to avoid reference problems
-        newSkills.add(skillInList);
-      }
-    }
-
-    personToEdit.setPersonID(newPerson.getPersonID());
-    personToEdit.setFirstName(newPerson.getFirstName());
-    personToEdit.setLastName(newPerson.getLastName());
-    personToEdit.setSkillSet(FXCollections.observableArrayList(newSkills));
+    personToChange.copyValues(personData);
     mainApp.refreshList();
   }
 
@@ -472,45 +422,25 @@ public class UndoRedoHandler {
       throw new Exception("Can't undo/redo person deletion - No variables");
     }
 
-    // Get the person and ID to undo/redo deletion of
-    Person person = (Person) data.get(0);
-    String personID = person.getPersonID();
+    Person personToChange = (Person) undoRedoObject.getAgileItem();
+    Person personData = (Person) data.get(0);
 
     // Get the person's team which is in the list
-    Team team = null;
-    if (person.getTeam() != null) {
-      for (Team teamInList : mainApp.getTeams()) {
-        if (teamInList.equals(person.getTeam())) {
-          team = teamInList;
-          break;
-        }
-      }
-    }
+    Team team = personToChange.getTeam();
 
     // Make the changes and refresh the list
     if (undoOrRedo == UndoOrRedo.UNDO) {
       // Create the deleted person again
-      Person personToAdd = new Person(person);
-      mainApp.addPerson(personToAdd);
+      personToChange.copyValues(personData);
+      mainApp.addPerson(personToChange);
       if (team != null) {
-        team.getTeamMembers().add(personToAdd);
+        team.getTeamMembers().add(personToChange);
       }
     } else {
-      // Find the person in list and ensure it exists so it can be deleted again
-      Person personToDelete = null;
-      for (Person personInList : mainApp.getPeople()) {
-        if (personInList.getPersonID().equals(personID)) {
-          personToDelete = personInList;
-          break;
-        }
-      }
-      if (personToDelete == null) {
-        throw new Exception("Can't redo person deletion - Can't find the created person");
-      }
       if (team != null) {
-        team.getTeamMembers().remove(personToDelete);
+        team.getTeamMembers().remove(personToChange);
       }
-      mainApp.deletePerson(personToDelete);
+      mainApp.deletePerson(personToChange);
     }
     mainApp.refreshList();
   }
@@ -531,27 +461,15 @@ public class UndoRedoHandler {
       throw new Exception("Can't undo/redo skill creation - No variables");
     }
 
-    // Get the skill name which is currently in the list and the skill to change
-    Skill skill = (Skill) data.get(0);
-    String skillName = skill.getSkillName();
+    Skill skillToChange = (Skill) undoRedoObject.getAgileItem();
+    Skill skillData = (Skill) data.get(0);
 
     // Make the changes and refresh the list
     if (undoOrRedo == UndoOrRedo.UNDO) {
-      // Find the skill in the list and ensure it exists so it can be deleted
-      Skill skillToDelete = null;
-      for (Skill skillInList : mainApp.getSkills()) {
-        if (skillInList.getSkillName().equals(skillName)) {
-          skillToDelete = skillInList;
-          break;
-        }
-      }
-      if (skillToDelete == null) {
-        throw new Exception("Can't undo skill creation - Can't find the created skill");
-      }
-      mainApp.deleteSkill(skillToDelete);
+      mainApp.deleteSkill(skillToChange);
     } else {
-      Skill skillToAdd = new Skill(skill);
-      mainApp.addSkill(skillToAdd);
+      skillToChange.copyValues(skillData);
+      mainApp.addSkill(skillToChange);
     }
     mainApp.refreshList();
   }
@@ -572,36 +490,16 @@ public class UndoRedoHandler {
       throw new Exception("Can't undo/redo skill edit - Less than 2 variables");
     }
 
-    // Get the skill name which is currently in the list and the skill to edit
-    Skill currentSkill;
-    String currentSkillName;
-    Skill newSkill;
+    Skill skillToChange = (Skill) undoRedoObject.getAgileItem();
+    Skill skillData;
 
     if (undoOrRedo == UndoOrRedo.UNDO) {
-      currentSkill = (Skill) data.get(1);
-      currentSkillName = currentSkill.getSkillName();
-      newSkill = (Skill) data.get(0);
+      skillData = (Skill) data.get(0);
     } else {
-      currentSkill = (Skill) data.get(0);
-      currentSkillName = currentSkill.getSkillName();
-      newSkill = (Skill) data.get(1);
+      skillData = (Skill) data.get(1);
     }
 
-    // Find the skill in the list and ensure it exists
-    Skill skillToEdit = null;
-    for (Skill skillInList : mainApp.getSkills()) {
-      if (skillInList.getSkillName().equals(currentSkillName)) {
-        skillToEdit = skillInList;
-        break;
-      }
-    }
-    if (skillToEdit == null) {
-      throw new Exception("Can't undo/redo skill edit - Can't find the edited skill");
-    }
-
-    // Make the changes and refresh the list
-    skillToEdit.setSkillName(newSkill.getSkillName());
-    skillToEdit.setSkillDescription(newSkill.getSkillDescription());
+    skillToChange.copyValues(skillData);
     mainApp.refreshList();
   }
 
@@ -621,45 +519,29 @@ public class UndoRedoHandler {
       throw new Exception("Can't undo/redo skill deletion - No variables");
     }
 
-    // Get the skill and name to undo/redo deletion of
-    Skill skill = (Skill) data.get(0);
-    String skillName = skill.getSkillName();
+    Skill skillToChange = (Skill) undoRedoObject.getAgileItem();
+    Skill skillData = (Skill) data.get(0);
 
     // Get the skill users
-    List<AgileItem> savedUsers = data.subList(1, data.size());
-    ArrayList<Person> skillUsers = new ArrayList<>();
-    for (Person personInList : mainApp.getPeople()) {
-      if (savedUsers.contains(personInList)) {
-        skillUsers.add(personInList);
-      }
-    }
+    List<AgileItem> skillUsers = data.subList(1, data.size());
 
     // Make the changes and refresh the list
     if (undoOrRedo == UndoOrRedo.UNDO) {
       // Create the deleted skill again
-      Skill skillToAdd = new Skill(skill);
-      mainApp.addSkill(skillToAdd);
+      skillToChange.copyValues(skillData);
+      mainApp.addSkill(skillToChange);
       // For each person stored, add the skill to their skill set
-      for (Person skillUser : skillUsers) {
-        skillUser.getSkillSet().add(skill);
+      for (AgileItem agileItem : skillUsers) {
+        Person skillUser = (Person) agileItem;
+        skillUser.getSkillSet().add(skillToChange);
       }
     } else {
-      // Find the skill in list and ensure it exists so it can be deleted again
-      Skill skillToDelete = null;
-      for (Skill skillInList : mainApp.getSkills()) {
-        if (skillInList.getSkillName().equals(skillName)) {
-          skillToDelete = skillInList;
-          break;
-        }
-      }
-      if (skillToDelete == null) {
-        throw new Exception("Can't redo skill deletion - Can't find the created skill");
-      }
       // For each person stored, remove the skill to their skill set
-      for (Person skillUser : skillUsers) {
-        skillUser.getSkillSet().remove(skill);
+      for (AgileItem agileItem : skillUsers) {
+        Person skillUser = (Person) agileItem;
+        skillUser.getSkillSet().remove(skillToChange);
       }
-      mainApp.deleteSkill(skillToDelete);
+      mainApp.deleteSkill(skillToChange);
     }
     mainApp.refreshList();
   }
@@ -681,38 +563,21 @@ public class UndoRedoHandler {
     }
 
     // Get the team name which is currently in the list and the team to change
-    Team team = (Team) data.get(0);
-    String teamID = team.getTeamID();
+    Team teamToChange = (Team) undoRedoObject.getAgileItem();
+    Team teamData = (Team) data.get(0);
 
     // Make the changes and refresh the list
     if (undoOrRedo == UndoOrRedo.UNDO) {
-      // Find the team in the list and ensure it exists so it can be deleted
-      Team teamToDelete = null;
-      for (Team teamInList : mainApp.getTeams()) {
-        if (teamInList.getTeamID().equals(teamID)) {
-          teamToDelete = teamInList;
-          break;
-        }
-      }
-      if (teamToDelete == null) {
-        throw new Exception("Can't undo team creation - Can't find the created team");
-      }
-      for (Person person : teamToDelete.getTeamMembers()) {
+      for (Person person : teamToChange.getTeamMembers()) {
         person.removeFromTeam();
       }
-      mainApp.deleteTeam(teamToDelete);
+      mainApp.deleteTeam(teamToChange);
     } else {
-      Team teamToAdd = new Team(team);
-      ArrayList<Person> newMembers = new ArrayList<>();
-      for (Person personInList : mainApp.getPeople()) {
-        if (team.getTeamMembers().contains(personInList)) {
-          // Store the existing person in a new list to avoid reference problems and assign to team
-          newMembers.add(personInList);
-          personInList.assignToTeam(teamToAdd);
-        }
+      teamToChange.copyValues(teamData);
+      mainApp.addTeam(teamToChange);
+      for (Person member : teamToChange.getTeamMembers()) {
+        member.assignToTeam(teamToChange);
       }
-      teamToAdd.setTeamMembers(FXCollections.observableArrayList(newMembers));
-      mainApp.addTeam(teamToAdd);
     }
     mainApp.refreshList();
   }
@@ -734,49 +599,26 @@ public class UndoRedoHandler {
     }
 
     // Get the team name which is currently in the list and the team to edit
-    Team currentTeam;
-    String currentTeamID;
-    Team newTeam;
+    Team teamToChange = (Team) undoRedoObject.getAgileItem();
+    Team teamOldData;
+    Team teamData;
 
     if (undoOrRedo == UndoOrRedo.UNDO) {
-      currentTeam = (Team) data.get(1);
-      currentTeamID = currentTeam.getTeamID();
-      newTeam = (Team) data.get(0);
+      teamData = (Team) data.get(0);
+      teamOldData = (Team) data.get(1);
     } else {
-      currentTeam = (Team) data.get(0);
-      currentTeamID = currentTeam.getTeamID();
-      newTeam = (Team) data.get(1);
-    }
-
-    // Find the team in the list and ensure it exists
-    Team teamToEdit = null;
-    for (Team teamInList : mainApp.getTeams()) {
-      if (teamInList.getTeamID().equals(currentTeamID)) {
-        teamToEdit = teamInList;
-        break;
-      }
-    }
-    if (teamToEdit == null) {
-      throw new Exception("Can't undo/redo team edit - Can't find the edited team");
+      teamData = (Team) data.get(1);
+      teamOldData = (Team) data.get(0);
     }
 
     // Make the changes and refresh the list
-    ArrayList<Person> newMembers = new ArrayList<>();
-
-    for (Person personInList : mainApp.getPeople()) {
-      if (newTeam.getTeamMembers().contains(personInList)) {
-        // Store the existing person in a new list to avoid reference problems and assign to team
-        newMembers.add(personInList);
-        personInList.assignToTeam(teamToEdit);
-      } else if (currentTeam.getTeamMembers().contains(personInList)) {
-        // Remove the person from the team
-        personInList.removeFromTeam();
-      }
+    for (Person oldMember : teamOldData.getTeamMembers()) {
+      oldMember.removeFromTeam();
     }
-
-    teamToEdit.setTeamID(newTeam.getTeamID());
-    teamToEdit.setTeamDescription(newTeam.getTeamDescription());
-    teamToEdit.setTeamMembers(FXCollections.observableArrayList(newMembers));
+    for (Person newMember : teamData.getTeamMembers()) {
+      newMember.assignToTeam(teamToChange);
+    }
+    teamToChange.copyValues(teamData);
 
     mainApp.refreshList();
   }
@@ -799,33 +641,22 @@ public class UndoRedoHandler {
     }
 
     // Get the team and id to undo/redo deletion of
-    Team team = (Team) data.get(0);
-    String teamID = team.getTeamID();
+    Team teamToChange = (Team) undoRedoObject.getAgileItem();
+    Team teamData = (Team) data.get(0);
 
     // Make the changes and refresh the list
     if (undoOrRedo == UndoOrRedo.UNDO) {
       // Create the deleted team again
-      Team teamToAdd = new Team(team);
-      for (Person teamMember : teamToAdd.getTeamMembers()) {
+      teamToChange.copyValues(teamData);
+      for (Person teamMember : teamToChange.getTeamMembers()) {
         mainApp.addPerson(teamMember);
       }
-      mainApp.addTeam(teamToAdd);
+      mainApp.addTeam(teamToChange);
     } else {
-      // Find the team in list and ensure it exists so it can be deleted again
-      Team teamToDelete = null;
-      for (Team teamInList : mainApp.getTeams()) {
-        if (teamInList.getTeamID().equals(teamID)) {
-          teamToDelete = teamInList;
-          break;
-        }
-      }
-      if (teamToDelete == null) {
-        throw new Exception("Can't redo team deletion - Can't find the created team");
-      }
-      for (Person teamMember : teamToDelete.getTeamMembers()) {
+      for (Person teamMember : teamToChange.getTeamMembers()) {
         mainApp.deletePerson(teamMember);
       }
-      mainApp.deleteTeam(teamToDelete);
+      mainApp.deleteTeam(teamToChange);
     }
     mainApp.refreshList();
   }

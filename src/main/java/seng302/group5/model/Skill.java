@@ -77,6 +77,11 @@ public class Skill implements AgileItem{
     return this.skillDescription;
   }
 
+  public void copyValues(Skill clone) {
+    this.skillName = clone.getSkillName();
+    this.skillDescription = clone.getSkillDescription();
+  }
+
   /**
    * Return a formatted skill name along with its description.
    * @return skill name and description

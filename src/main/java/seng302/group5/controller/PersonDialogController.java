@@ -100,6 +100,7 @@ public class PersonDialogController {
     }
 
     // Store a copy of person to edit in stack to avoid reference problems
+    undoRedoObject.setAgileItem(person);
     Person personToStore = new Person(person);
     undoRedoObject.addDatum(personToStore);
 

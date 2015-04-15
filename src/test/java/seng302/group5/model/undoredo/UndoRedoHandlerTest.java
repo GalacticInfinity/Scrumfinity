@@ -72,6 +72,7 @@ public class UndoRedoHandlerTest {
 
     UndoRedoObject undoRedoObject = new UndoRedoObject();
     undoRedoObject.setAction(Action.PERSON_CREATE);
+    undoRedoObject.setAgileItem(person);
     undoRedoObject.addDatum(new Person(person));
 
     undoRedoHandler.newAction(undoRedoObject);
@@ -85,6 +86,7 @@ public class UndoRedoHandlerTest {
 
     UndoRedoObject undoRedoObject = new UndoRedoObject();
     undoRedoObject.setAction(Action.PERSON_DELETE);
+    undoRedoObject.setAgileItem(person);
     undoRedoObject.addDatum(new Person(person));
 
     undoRedoHandler.newAction(undoRedoObject);
@@ -107,6 +109,7 @@ public class UndoRedoHandlerTest {
 
     UndoRedoObject undoRedoObject = new UndoRedoObject();
     undoRedoObject.setAction(Action.PERSON_EDIT);
+    undoRedoObject.setAgileItem(person);
     undoRedoObject.addDatum(lastPerson);
     undoRedoObject.addDatum(newPerson);
 
@@ -120,11 +123,13 @@ public class UndoRedoHandlerTest {
     skillSet = FXCollections.observableArrayList();
     skillSet.add(skill);
     person = new Person(personID, firstName, lastName, skillSet);
+    skillSet = FXCollections.observableArrayList(skillSet); // save a copy
 
     mainApp.addPerson(person);
 
     UndoRedoObject undoRedoObject = new UndoRedoObject();
     undoRedoObject.setAction(Action.PERSON_CREATE);
+    undoRedoObject.setAgileItem(person);
     undoRedoObject.addDatum(new Person(person));
 
     undoRedoHandler.newAction(undoRedoObject);
@@ -143,11 +148,13 @@ public class UndoRedoHandlerTest {
     person.setFirstName(newFirstName);
     person.setLastName(newLastName);
     person.setSkillSet(newSkillSet);
+    newSkillSet = FXCollections.observableArrayList(newSkillSet); // save a copy
 
     Person newPerson = new Person(person);
 
     UndoRedoObject undoRedoObject = new UndoRedoObject();
     undoRedoObject.setAction(Action.PERSON_EDIT);
+    undoRedoObject.setAgileItem(person);
     undoRedoObject.addDatum(lastPerson);
     undoRedoObject.addDatum(newPerson);
 
@@ -163,6 +170,7 @@ public class UndoRedoHandlerTest {
 
     UndoRedoObject undoRedoObject = new UndoRedoObject();
     undoRedoObject.setAction(Action.SKILL_CREATE);
+    undoRedoObject.setAgileItem(skill);
     undoRedoObject.addDatum(new Skill(skill));
 
     undoRedoHandler.newAction(undoRedoObject);
@@ -183,10 +191,11 @@ public class UndoRedoHandlerTest {
 
     UndoRedoObject undoRedoObject = new UndoRedoObject();
     undoRedoObject.setAction(Action.SKILL_DELETE);
+    undoRedoObject.setAgileItem(skill);
     undoRedoObject.addDatum(new Skill(skill));
     for (Person skillUser : skillUsers) {
       // Add data so users can get the skill back after undo
-      undoRedoObject.addDatum(new Person(skillUser));
+      undoRedoObject.addDatum(skillUser);
     }
 
     undoRedoHandler.newAction(undoRedoObject);
@@ -204,6 +213,7 @@ public class UndoRedoHandlerTest {
 
     UndoRedoObject undoRedoObject = new UndoRedoObject();
     undoRedoObject.setAction(Action.SKILL_EDIT);
+    undoRedoObject.setAgileItem(skill);
     undoRedoObject.addDatum(lastSkill);
     undoRedoObject.addDatum(newSkill);
 
@@ -220,6 +230,7 @@ public class UndoRedoHandlerTest {
 
     UndoRedoObject undoRedoObject = new UndoRedoObject();
     undoRedoObject.setAction(Action.TEAM_CREATE);
+    undoRedoObject.setAgileItem(team);
     undoRedoObject.addDatum(new Team(team));
 
     undoRedoHandler.newAction(undoRedoObject);
@@ -233,6 +244,7 @@ public class UndoRedoHandlerTest {
 
     UndoRedoObject undoRedoObject = new UndoRedoObject();
     undoRedoObject.setAction(Action.TEAM_DELETE);
+    undoRedoObject.setAgileItem(team);
     undoRedoObject.addDatum(new Team(team));
 
     undoRedoHandler.newAction(undoRedoObject);
@@ -252,6 +264,7 @@ public class UndoRedoHandlerTest {
 
     UndoRedoObject undoRedoObject = new UndoRedoObject();
     undoRedoObject.setAction(Action.TEAM_EDIT);
+    undoRedoObject.setAgileItem(team);
     undoRedoObject.addDatum(lastTeam);
     undoRedoObject.addDatum(newTeam);
 
@@ -270,6 +283,7 @@ public class UndoRedoHandlerTest {
 
     UndoRedoObject undoRedoObject = new UndoRedoObject();
     undoRedoObject.setAction(Action.TEAM_CREATE);
+    undoRedoObject.setAgileItem(team);
     undoRedoObject.addDatum(new Team(team));
 
     undoRedoHandler.newAction(undoRedoObject);
@@ -292,6 +306,7 @@ public class UndoRedoHandlerTest {
 
     UndoRedoObject undoRedoObject = new UndoRedoObject();
     undoRedoObject.setAction(Action.TEAM_EDIT);
+    undoRedoObject.setAgileItem(team);
     undoRedoObject.addDatum(lastTeam);
     undoRedoObject.addDatum(newTeam);
 
@@ -355,6 +370,9 @@ public class UndoRedoHandlerTest {
 
   @Test
   public void testPersonCreateRedo() throws Exception {
+    Person before;
+    Person after;
+
     assertTrue(mainApp.getPeople().isEmpty());
     assertTrue(undoRedoHandler.getUndoStack().empty());
     assertTrue(undoRedoHandler.getRedoStack().empty());
@@ -363,6 +381,8 @@ public class UndoRedoHandlerTest {
     assertEquals(1, mainApp.getPeople().size());
     assertEquals(1, undoRedoHandler.getUndoStack().size());
     assertTrue(undoRedoHandler.getRedoStack().empty());
+    before = mainApp.getPeople().get(0);
+    assertNotNull(before);
 
     undoRedoHandler.undo();
     assertTrue(mainApp.getPeople().isEmpty());
@@ -373,16 +393,25 @@ public class UndoRedoHandlerTest {
     assertEquals(1, mainApp.getPeople().size());
     assertEquals(1, undoRedoHandler.getUndoStack().size());
     assertTrue(undoRedoHandler.getRedoStack().empty());
+    after = mainApp.getPeople().get(0);
+    assertNotNull(after);
+
+    assertSame(before, after);
   }
 
   @Test
   public void testPersonDeleteUndo() throws Exception {
+    Person before;
+    Person after;
+
     assertTrue(mainApp.getPeople().isEmpty());
     assertTrue(undoRedoHandler.getUndoStack().empty());
 
     newPerson();
     assertEquals(1, mainApp.getPeople().size());
     assertEquals(1, undoRedoHandler.getUndoStack().size());
+    before = mainApp.getPeople().get(0);
+    assertNotNull(before);
 
     deleteNewestPerson();
     assertEquals(0, mainApp.getPeople().size());
@@ -391,10 +420,17 @@ public class UndoRedoHandlerTest {
     undoRedoHandler.undo();
     assertEquals(1, mainApp.getPeople().size());
     assertEquals(1, undoRedoHandler.getUndoStack().size());
+    after = mainApp.getPeople().get(0);
+    assertNotNull(after);
+
+    assertSame(before, after);
   }
 
   @Test
   public void testPersonDeleteRedo() throws Exception {
+    Person before;
+    Person after;
+
     assertTrue(mainApp.getPeople().isEmpty());
     assertTrue(undoRedoHandler.getUndoStack().empty());
     assertTrue(undoRedoHandler.getRedoStack().empty());
@@ -403,6 +439,8 @@ public class UndoRedoHandlerTest {
     assertEquals(1, mainApp.getPeople().size());
     assertEquals(1, undoRedoHandler.getUndoStack().size());
     assertTrue(undoRedoHandler.getRedoStack().empty());
+    before = mainApp.getPeople().get(0);
+    assertNotNull(before);
 
     deleteNewestPerson();
     assertEquals(0, mainApp.getPeople().size());
@@ -413,6 +451,10 @@ public class UndoRedoHandlerTest {
     assertEquals(1, mainApp.getPeople().size());
     assertEquals(1, undoRedoHandler.getUndoStack().size());
     assertEquals(1, undoRedoHandler.getRedoStack().size());
+    after = mainApp.getPeople().get(0);
+    assertNotNull(after);
+
+    assertSame(before, after);
 
     undoRedoHandler.redo();
     assertEquals(0, mainApp.getPeople().size());
@@ -674,12 +716,17 @@ public class UndoRedoHandlerTest {
 
   @Test
   public void testSkillCreateRedo() throws Exception {
+    Skill before;
+    Skill after;
+
     assertTrue(mainApp.getSkills().isEmpty());
     assertTrue(undoRedoHandler.getRedoStack().empty());
 
     newSkill();
     assertEquals(1, mainApp.getSkills().size());
     assertTrue(undoRedoHandler.getRedoStack().empty());
+    before = mainApp.getSkills().get(0);
+    assertNotNull(before);
 
     undoRedoHandler.undo();
     assertTrue(mainApp.getSkills().isEmpty());
@@ -689,16 +736,25 @@ public class UndoRedoHandlerTest {
     assertEquals(1, mainApp.getSkills().size());
     assertEquals(1, undoRedoHandler.getUndoStack().size());
     assertTrue(undoRedoHandler.getRedoStack().empty());
+    after = mainApp.getSkills().get(0);
+    assertNotNull(after);
+
+    assertSame(before, after);
   }
 
   @Test
   public void testSkillDeleteUndo() throws Exception {
+    Skill before;
+    Skill after;
+
     assertTrue(mainApp.getSkills().isEmpty());
     assertTrue(undoRedoHandler.getUndoStack().empty());
 
     newSkill();
     assertEquals(1, mainApp.getSkills().size());
     assertEquals(1, undoRedoHandler.getUndoStack().size());
+    before = mainApp.getSkills().get(0);
+    assertNotNull(before);
 
     deleteNewestSkill();
     assertEquals(0, mainApp.getSkills().size());
@@ -707,10 +763,17 @@ public class UndoRedoHandlerTest {
     undoRedoHandler.undo();
     assertEquals(1, mainApp.getSkills().size());
     assertEquals(1, undoRedoHandler.getUndoStack().size());
+    after = mainApp.getSkills().get(0);
+    assertNotNull(after);
+
+    assertSame(before, after);
   }
 
   @Test
   public void testSkillDeleteRedo() throws Exception {
+    Skill before;
+    Skill after;
+
     assertTrue(mainApp.getSkills().isEmpty());
     assertTrue(undoRedoHandler.getUndoStack().empty());
     assertTrue(undoRedoHandler.getRedoStack().empty());
@@ -719,6 +782,8 @@ public class UndoRedoHandlerTest {
     assertEquals(1, mainApp.getSkills().size());
     assertEquals(1, undoRedoHandler.getUndoStack().size());
     assertTrue(undoRedoHandler.getRedoStack().empty());
+    before = mainApp.getSkills().get(0);
+    assertNotNull(before);
 
     deleteNewestSkill();
     assertEquals(0, mainApp.getSkills().size());
@@ -729,6 +794,10 @@ public class UndoRedoHandlerTest {
     assertEquals(1, mainApp.getSkills().size());
     assertEquals(1, undoRedoHandler.getUndoStack().size());
     assertEquals(1, undoRedoHandler.getRedoStack().size());
+    after = mainApp.getSkills().get(0);
+    assertNotNull(after);
+
+    assertSame(before, after);
 
     undoRedoHandler.redo();
     assertEquals(0, mainApp.getSkills().size());
@@ -829,6 +898,9 @@ public class UndoRedoHandlerTest {
 
   @Test
   public void testTeamCreateRedo() throws Exception {
+    Team before;
+    Team after;
+
     //testing creating and redoing an empty team
     assertTrue(mainApp.getTeams().isEmpty());
     assertTrue(undoRedoHandler.getRedoStack().isEmpty());
@@ -837,6 +909,8 @@ public class UndoRedoHandlerTest {
 
     assertEquals(1, mainApp.getTeams().size());
     assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+    before = mainApp.getTeams().get(0);
+    assertNotNull(before);
 
     undoRedoHandler.undo();
 
@@ -846,10 +920,17 @@ public class UndoRedoHandlerTest {
     undoRedoHandler.redo();
     assertEquals(1, mainApp.getTeams().size());
     assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+    after = mainApp.getTeams().get(0);
+    assertNotNull(after);
+
+    assertSame(before, after);
   }
 
   @Test
   public void testTeamDeleteUndo() throws Exception {
+    Team before;
+    Team after;
+
     //testing deleting and undoing an empty team
     assertTrue(mainApp.getTeams().isEmpty());
     assertTrue(undoRedoHandler.getUndoStack().isEmpty());
@@ -858,6 +939,8 @@ public class UndoRedoHandlerTest {
 
     assertEquals(1, mainApp.getTeams().size());
     assertEquals(1, undoRedoHandler.getUndoStack().size());
+    before = mainApp.getTeams().get(0);
+    assertNotNull(before);
 
     deleteNewestTeam();
 
@@ -868,11 +951,17 @@ public class UndoRedoHandlerTest {
 
     assertEquals(1, mainApp.getTeams().size());
     assertEquals(1, undoRedoHandler.getUndoStack().size());
+    after = mainApp.getTeams().get(0);
+    assertNotNull(after);
 
+    assertSame(before, after);
   }
 
   @Test
   public void testTeamDeleteRedo() throws Exception {
+    Team before;
+    Team after;
+
     //testing deleting and redoing an empty team
     assertTrue(mainApp.getTeams().isEmpty());
     assertTrue(undoRedoHandler.getUndoStack().isEmpty());
@@ -883,6 +972,8 @@ public class UndoRedoHandlerTest {
     assertEquals(1, mainApp.getTeams().size());
     assertEquals(1, undoRedoHandler.getUndoStack().size());
     assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+    before = mainApp.getTeams().get(0);
+    assertNotNull(before);
 
     deleteNewestTeam();
 
@@ -895,6 +986,10 @@ public class UndoRedoHandlerTest {
     assertEquals(1, mainApp.getTeams().size());
     assertEquals(1, undoRedoHandler.getUndoStack().size());
     assertEquals(1, undoRedoHandler.getRedoStack().size());
+    after = mainApp.getTeams().get(0);
+    assertNotNull(after);
+
+    assertSame(before, after);
 
     undoRedoHandler.redo();
     assertTrue(mainApp.getTeams().isEmpty());
