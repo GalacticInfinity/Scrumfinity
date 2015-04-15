@@ -72,11 +72,15 @@ public class Team implements AgileItem {
     this.teamMembers = teamMembers;
   }
 
-  public void copyValues(Team clone) {
-    this.teamID = clone.getTeamID();
-    this.teamDescription = clone.getTeamDescription();
-    this.teamMembers.clear();
-    this.teamMembers.addAll(clone.getTeamMembers());
+  @Override
+  public void copyValues(AgileItem agileItem) {
+    if (agileItem instanceof Team) {
+      Team clone = (Team) agileItem;
+      this.teamID = clone.getTeamID();
+      this.teamDescription = clone.getTeamDescription();
+      this.teamMembers.clear();
+      this.teamMembers.addAll(clone.getTeamMembers());
+    }
   }
 
   /**

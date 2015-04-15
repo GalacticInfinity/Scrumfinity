@@ -77,9 +77,13 @@ public class Skill implements AgileItem{
     return this.skillDescription;
   }
 
-  public void copyValues(Skill clone) {
-    this.skillName = clone.getSkillName();
-    this.skillDescription = clone.getSkillDescription();
+  @Override
+  public void copyValues(AgileItem agileItem) {
+    if (agileItem instanceof Skill) {
+      Skill clone = (Skill) agileItem;
+      this.skillName = clone.getSkillName();
+      this.skillDescription = clone.getSkillDescription();
+    }
   }
 
   /**

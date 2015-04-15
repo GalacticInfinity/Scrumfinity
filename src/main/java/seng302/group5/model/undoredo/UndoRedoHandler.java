@@ -230,26 +230,15 @@ public class UndoRedoHandler {
     }
 
     // Get the project ID which is currently in the list and the project to change
-    Project project = (Project) data.get(0);
-    String projectID = project.getProjectID();
+    Project projectToChange = (Project) undoRedoObject.getAgileItem();
+    Project projectData = (Project) data.get(0);
 
     // Make the changes and refresh the list
     if (undoOrRedo == UndoOrRedo.UNDO) {
-      // Find the project in the list and ensure it exists so it can be deleted
-      Project projectToDelete = null;
-      for (Project projectInList : mainApp.getProjects()) {
-        if (projectInList.getProjectID().equals(projectID)) {
-          projectToDelete = projectInList;
-          break;
-        }
-      }
-      if (projectToDelete == null) {
-        throw new Exception("Can't undo project creation - Can't find the created project");
-      }
-      mainApp.deleteProject(projectToDelete);
+      mainApp.deleteProject(projectToChange);
     } else {
-      Project projectToAdd = new Project(project);
-      mainApp.addProject(projectToAdd);
+      projectToChange.copyValues(projectData);
+      mainApp.addProject(projectToChange);
     }
     mainApp.refreshList();
   }
@@ -271,36 +260,17 @@ public class UndoRedoHandler {
     }
 
     // Get the project ID which is currently in the list and the project to edit
-    Project currentProject;
-    String currentProjectID;
-    Project newProject;
+    Project projectToChange = (Project) undoRedoObject.getAgileItem();
+    Project projectData;
 
     if (undoOrRedo == UndoOrRedo.UNDO) {
-      currentProject = (Project) data.get(1);
-      currentProjectID = currentProject.getProjectID();
-      newProject = (Project) data.get(0);
+      projectData = (Project) data.get(0);
     } else {
-      currentProject = (Project) data.get(0);
-      currentProjectID = currentProject.getProjectID();
-      newProject = (Project) data.get(1);
-    }
-
-    // Find the project in the list and ensure it exists
-    Project projectToEdit = null;
-    for (Project projectInList : mainApp.getProjects()) {
-      if (projectInList.getProjectID().equals(currentProjectID)) {
-        projectToEdit = projectInList;
-        break;
-      }
-    }
-    if (projectToEdit == null) {
-      throw new Exception("Can't undo/redo project edit - Can't find the edited project");
+      projectData = (Project) data.get(1);
     }
 
     // Make the changes and refresh the list
-    projectToEdit.setProjectID(newProject.getProjectID());
-    projectToEdit.setProjectName(newProject.getProjectName());
-    projectToEdit.setProjectDescription(newProject.getProjectDescription());
+    projectToChange.copyValues(projectData);
     mainApp.refreshList();
   }
 
@@ -321,27 +291,16 @@ public class UndoRedoHandler {
     }
 
     // Get the project and ID to undo/redo deletion of
-    Project project = (Project) data.get(0);
-    String projectID = project.getProjectID();
+    Project projectToChange = (Project) undoRedoObject.getAgileItem();
+    Project projectData = (Project) data.get(0);
 
     // Make the changes and refresh the list
     if (undoOrRedo == UndoOrRedo.UNDO) {
       // Create the deleted project again
-      Project projectToAdd = new Project(project);
-      mainApp.addProject(projectToAdd);
+      projectToChange.copyValues(projectData);
+      mainApp.addProject(projectToChange);
     } else {
-      // Find the project in list and ensure it exists so it can be deleted again
-      Project projectToDelete = null;
-      for (Project projectInList : mainApp.getProjects()) {
-        if (projectInList.getProjectID().equals(projectID)) {
-          projectToDelete = projectInList;
-          break;
-        }
-      }
-      if (projectToDelete == null) {
-        throw new Exception("Can't redo project deletion - Can't find the created project");
-      }
-      mainApp.deleteProject(projectToDelete);
+      mainApp.deleteProject(projectToChange);
     }
     mainApp.refreshList();
   }

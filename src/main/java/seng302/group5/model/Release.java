@@ -74,6 +74,14 @@ public class Release implements AgileItem {
   }
 
   @Override
+  public void copyValues(AgileItem agileItem) {
+    if (agileItem instanceof Release) {
+      Release clone = (Release) agileItem;
+      // TODO: do it
+    }
+  }
+
+  @Override
   public String toString() {
     return this.releaseName;
   }

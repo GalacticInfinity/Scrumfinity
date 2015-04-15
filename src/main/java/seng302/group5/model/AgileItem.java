@@ -7,6 +7,8 @@ package seng302.group5.model;
  */
 public interface AgileItem {
 
+  void copyValues(AgileItem agileItem);
+
   /**
    * What will display in the list.
    * @return String representation of item.

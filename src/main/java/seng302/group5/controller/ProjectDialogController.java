@@ -140,6 +140,7 @@ public class ProjectDialogController {
     }
 
     // Store a copy of project to edit in stack to avoid reference problems
+    undoRedoObject.setAgileItem(project);
     Project projectToStore = new Project(project);
     undoRedoObject.addDatum(projectToStore);
 

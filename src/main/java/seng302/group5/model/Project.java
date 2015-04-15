@@ -64,6 +64,16 @@ public class Project implements AgileItem {
     this.projectDescription = projectDescription;
   }
 
+  @Override
+  public void copyValues(AgileItem agileItem) {
+    if (agileItem instanceof Project) {
+      Project clone = (Project) agileItem;
+      this.projectID = clone.getProjectID();
+      this.projectName = clone.getProjectName();
+      this.projectDescription = clone.getProjectDescription();
+    }
+  }
+
   // New toString method, for list
   @Override
   public String toString() {

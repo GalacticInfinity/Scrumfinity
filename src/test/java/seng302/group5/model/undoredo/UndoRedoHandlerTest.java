@@ -11,6 +11,7 @@ import seng302.group5.Main;
 import seng302.group5.controller.ListMainPaneController;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Person;
+import seng302.group5.model.Project;
 import seng302.group5.model.Skill;
 import seng302.group5.model.Team;
 
@@ -43,9 +44,17 @@ public class UndoRedoHandlerTest {
   private String newTeamDescription;
   private ObservableList<Person> newTeamMembers;
 
+  private String projectID;
+  private String projectName;
+  private String projectDescription;
+  private String newProjectID;
+  private String newProjectName;
+  private String newProjectDescription;
+
   private Person person;
   private Skill skill;
   private Team team;
+  private Project project;
 
   private UndoRedoHandler undoRedoHandler;
   private Main mainApp;
@@ -309,6 +318,55 @@ public class UndoRedoHandlerTest {
     undoRedoObject.setAgileItem(team);
     undoRedoObject.addDatum(lastTeam);
     undoRedoObject.addDatum(newTeam);
+
+    undoRedoHandler.newAction(undoRedoObject);
+  }
+
+  private void newProject() {
+    projectID = "proj";
+    projectName = "The Project's Name";
+    projectDescription = "This is a description for the project";
+    project = new Project(projectID, projectName, projectDescription);
+
+    mainApp.addProject(project);
+
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+    undoRedoObject.setAction(Action.PROJECT_CREATE);
+    undoRedoObject.setAgileItem(project);
+    undoRedoObject.addDatum(new Project(project));
+
+    undoRedoHandler.newAction(undoRedoObject);
+  }
+
+  private void deleteNewestProject() {
+    mainApp.deleteProject(project);
+
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+    undoRedoObject.setAction(Action.PROJECT_DELETE);
+    undoRedoObject.setAgileItem(project);
+    undoRedoObject.addDatum(new Project(project));
+
+    undoRedoHandler.newAction(undoRedoObject);
+  }
+
+  private void editNewestProject() {
+    Project lastProject = new Project(project);
+
+    newProjectID = "New Proj";
+    newProjectName = "The New Project's Name";
+    newProjectDescription = "This is a new description";
+
+    project.setProjectID(newProjectID);
+    project.setProjectName(newProjectName);
+    project.setProjectDescription(newProjectDescription);
+
+    Project newProject = new Project(project);
+
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+    undoRedoObject.setAction(Action.PROJECT_EDIT);
+    undoRedoObject.setAgileItem(project);
+    undoRedoObject.addDatum(lastProject);
+    undoRedoObject.addDatum(newProject);
 
     undoRedoHandler.newAction(undoRedoObject);
   }
@@ -1228,6 +1286,191 @@ public class UndoRedoHandlerTest {
     assertEquals(newFirstName, teamMember.getFirstName());
     assertEquals(newLastName, teamMember.getLastName());
   }
+
+  @Test
+  public void testProjectCreateUndo() throws Exception {
+    assertTrue(mainApp.getProjects().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+
+    newProject();
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+
+    undoRedoHandler.undo();
+    assertTrue(mainApp.getProjects().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+  }
+
+  @Test
+  public void testProjectCreateRedo() throws Exception {
+    Project before;
+    Project after;
+
+    assertTrue(mainApp.getProjects().isEmpty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    newProject();
+    assertEquals(1, mainApp.getProjects().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+    before = mainApp.getProjects().get(0);
+    assertNotNull(before);
+
+    undoRedoHandler.undo();
+    assertTrue(mainApp.getProjects().isEmpty());
+    assertEquals(1, undoRedoHandler.getRedoStack().size());
+
+    undoRedoHandler.redo();
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+    after = mainApp.getProjects().get(0);
+    assertNotNull(after);
+
+    assertSame(before, after);
+  }
+
+  @Test
+  public void testProjectDeleteUndo() throws Exception {
+    Project before;
+    Project after;
+
+    assertTrue(mainApp.getProjects().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+
+    newProject();
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+    before = mainApp.getProjects().get(0);
+    assertNotNull(before);
+
+    deleteNewestProject();
+    assertEquals(0, mainApp.getProjects().size());
+    assertEquals(2, undoRedoHandler.getUndoStack().size());
+
+    undoRedoHandler.undo();
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+    after = mainApp.getProjects().get(0);
+    assertNotNull(after);
+
+    assertSame(before, after);
+  }
+
+  @Test
+  public void testProjectDeleteRedo() throws Exception {
+    Project before;
+    Project after;
+
+    assertTrue(mainApp.getProjects().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    newProject();
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+    before = mainApp.getProjects().get(0);
+    assertNotNull(before);
+
+    deleteNewestProject();
+    assertEquals(0, mainApp.getProjects().size());
+    assertEquals(2, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    undoRedoHandler.undo();
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+    assertEquals(1, undoRedoHandler.getRedoStack().size());
+    after = mainApp.getProjects().get(0);
+    assertNotNull(after);
+
+    assertSame(before, after);
+
+    undoRedoHandler.redo();
+    assertEquals(0, mainApp.getProjects().size());
+    assertEquals(2, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+  }
+
+  @Test
+  public void testProjectEditUndo() throws Exception {
+    assertTrue(mainApp.getProjects().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+
+    newProject();
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+
+    Project createdProject = mainApp.getProjects().get(mainApp.getProjects().size() - 1);
+    assertEquals(projectID, createdProject.getProjectID());
+    assertEquals(projectName, createdProject.getProjectName());
+    assertEquals(projectDescription, createdProject.getProjectDescription());
+
+    editNewestProject();
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(2, undoRedoHandler.getUndoStack().size());
+
+    Project editedProject = mainApp.getProjects().get(mainApp.getProjects().size() - 1);
+    assertEquals(newProjectID, createdProject.getProjectID());
+    assertEquals(newProjectName, editedProject.getProjectName());
+    assertEquals(newProjectDescription, editedProject.getProjectDescription());
+
+    undoRedoHandler.undo();
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+
+    Project undoneProject = mainApp.getProjects().get(mainApp.getProjects().size() - 1);
+    assertEquals(projectID, createdProject.getProjectID());
+    assertEquals(projectName, undoneProject.getProjectName());
+    assertEquals(projectDescription, undoneProject.getProjectDescription());
+  }
+
+  @Test
+  public void testProjectEditRedo() throws Exception {
+    assertTrue(mainApp.getProjects().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    newProject();
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    Project createdProject = mainApp.getProjects().get(mainApp.getProjects().size() - 1);
+    assertEquals(projectID, createdProject.getProjectID());
+    assertEquals(projectName, createdProject.getProjectName());
+    assertEquals(projectDescription, createdProject.getProjectDescription());
+
+    editNewestProject();
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(2, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    Project editedProject = mainApp.getProjects().get(mainApp.getProjects().size() - 1);
+    assertEquals(newProjectName, editedProject.getProjectName());
+    assertEquals(newProjectDescription, editedProject.getProjectDescription());
+
+    undoRedoHandler.undo();
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+    assertEquals(1, undoRedoHandler.getRedoStack().size());
+
+    Project undoneProject = mainApp.getProjects().get(mainApp.getProjects().size() - 1);
+    assertEquals(projectID, createdProject.getProjectID());
+    assertEquals(projectName, undoneProject.getProjectName());
+    assertEquals(projectDescription, undoneProject.getProjectDescription());
+
+    undoRedoHandler.redo();
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(2, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    Project redoneProject = mainApp.getProjects().get(mainApp.getProjects().size() - 1);
+    assertEquals(newProjectID, createdProject.getProjectID());
+    assertEquals(newProjectName, redoneProject.getProjectName());
+    assertEquals(newProjectDescription, redoneProject.getProjectDescription());
+  }
+
 
   @Test
   public void testSpecialDeleteSkillUndo() throws Exception {

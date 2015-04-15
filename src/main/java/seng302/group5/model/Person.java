@@ -122,14 +122,18 @@ public class Person implements AgileItem {
     return assignedToTeam;
   }
 
-  public void copyValues(Person clone) {
-    this.personID = clone.getPersonID();
-    this.firstName = clone.getFirstName();
-    this.lastName = clone.getLastName();
-    this.skillSet.clear();
-    this.skillSet.addAll(clone.getSkillSet());
-    this.team = clone.getTeam();
-    this.assignedToTeam = clone.isInTeam();
+  @Override
+  public void copyValues(AgileItem agileItem) {
+    if (agileItem instanceof Person) {
+      Person clone = (Person) agileItem;
+      this.personID = clone.getPersonID();
+      this.firstName = clone.getFirstName();
+      this.lastName = clone.getLastName();
+      this.skillSet.clear();
+      this.skillSet.addAll(clone.getSkillSet());
+      this.team = clone.getTeam();
+      this.assignedToTeam = clone.isInTeam();
+    }
   }
 
   /**
