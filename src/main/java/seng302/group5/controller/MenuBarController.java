@@ -95,7 +95,8 @@ public class MenuBarController {
         mainApp.showTeamDialog(CreateOrEdit.EDIT);
         break;
       case "Release":
-        // TODO add this when the dialog done
+        mainApp.showReleaseDialog(CreateOrEdit.EDIT);
+        break;
     }
   }
 

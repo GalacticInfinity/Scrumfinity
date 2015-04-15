@@ -210,6 +210,14 @@ public class ListMainPaneController {
       sampleTextArea.appendText(project.getProjectName());
       sampleTextArea.appendText("\nProject Description: \n");
       sampleTextArea.appendText(project.getProjectDescription());
+      sampleTextArea.appendText("\nAssigned Teams: \n");
+      for (Team team : mainApp.getTeams()) {
+        if (team.getCurrentProject() != null && team.getCurrentProject().getProjectID() == project.getProjectID()) {
+          sampleTextArea.appendText(team.getTeamID());
+          sampleTextArea.appendText(": Start Date: " + team.getStartDate().toString() + " End Date: ");
+          sampleTextArea.appendText(team.getEndDate().toString() + "\n");
+        }
+      }
 
     } else if (Settings.currentListType == "Skills") {
       sampleTextArea.clear();
