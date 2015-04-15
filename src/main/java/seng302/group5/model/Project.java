@@ -1,5 +1,10 @@
 package seng302.group5.model;
 
+import java.time.LocalDate;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 /**
  * Created by @author Alex Woo
  */
@@ -8,6 +13,8 @@ public class Project implements AgileItem {
   private String projectID;
   private String projectName;
   private String projectDescription;
+  private ObservableList<Team> allocatedTeams = FXCollections.observableArrayList();
+
 
   /**
    * Default constructor
@@ -58,6 +65,18 @@ public class Project implements AgileItem {
 
   public String getProjectDescription() {
     return projectDescription;
+  }
+
+  public void addTeam(Team team) {
+    this.allocatedTeams.add(team);
+  }
+
+  public ObservableList<Team> getTeam() {
+    return this.allocatedTeams;
+  }
+
+  public void removeTeam(Team team) {
+    this.allocatedTeams.remove(team);
   }
 
   public void setProjectDescription(String projectDescription) {

@@ -1,5 +1,9 @@
 package seng302.group5.model;
 
+import org.mockito.cglib.core.Local;
+
+import java.time.LocalDate;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -11,6 +15,9 @@ public class Team implements AgileItem {
 
   private String teamID;
   private String teamDescription;
+  private LocalDate startDate;
+  private LocalDate endDate;
+  private Project currentProject = null;
 
   private ObservableList<Person> teamMembers = FXCollections.observableArrayList();
 
@@ -69,6 +76,30 @@ public class Team implements AgileItem {
 
   public void setTeamMembers(ObservableList<Person> teamMembers) {
     this.teamMembers = teamMembers;
+  }
+
+  public void setStartDate(LocalDate startDate) {
+    this.startDate = startDate;
+  }
+
+  public void setEndDate(LocalDate endDate) {
+    this.endDate = endDate;
+  }
+
+  public void setCurrentProject(Project project) {
+    this.currentProject = project;
+  }
+
+  public LocalDate getStartDate() {
+    return this.startDate;
+  }
+
+  public LocalDate getEndDate() {
+    return this.endDate;
+  }
+
+  public Project getCurrentProject() {
+    return this.currentProject;
   }
 
   public void delete(){}

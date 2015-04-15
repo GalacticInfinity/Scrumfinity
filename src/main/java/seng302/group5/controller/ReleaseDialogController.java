@@ -10,7 +10,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
@@ -23,6 +22,8 @@ import seng302.group5.model.undoredo.UndoRedoObject;
 
 /**
  * Created by Craig Barnard on 7/04/2015.
+ * Release Dialog Controller, manages the usage of Dialogs involved in the creating and editing
+ * of releases.
  */
 public class ReleaseDialogController {
 
@@ -95,6 +96,9 @@ public class ReleaseDialogController {
         release.setReleaseDate(releaseDate);
         release.setReleaseNotes(releaseNotes);
         release.setProjectRelease(project);
+
+        releaseDateField.setValue(release.getReleaseDate());
+        projectList.setValue(release.getProjectRelease());
         mainApp.refreshList();
       }
 
@@ -119,9 +123,9 @@ public class ReleaseDialogController {
 
       releaseIDField.setText(release.getReleaseName());
       releaseDescriptionField.setText(release.getReleaseDescription());
-      releaseDateField.setUserData(release.getReleaseDate());
+      this.selectedProject.add(release.getProjectRelease());
+      this.releaseDateField.setValue(release.getReleaseDate());
       releaseNotesField.setText(release.getReleaseNotes());
-      projectLists.setItems(selectedProject);
       initialiseLists(CreateOrEdit.EDIT, release);
     }
     this.createOrEdit = createOrEdit;
@@ -150,7 +154,9 @@ public class ReleaseDialogController {
       this.projectList.setVisibleRowCount(5);
       this.projectList.setPromptText("Available Projects");
 
+
       this.projectList.setItems(availableProjects);
+
       this.projectLists.setItems(selectedProject);
     }
     catch (Exception e) {

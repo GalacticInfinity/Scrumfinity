@@ -55,6 +55,7 @@ public class TeamDialogController {
       teamIDField.setText(team.getTeamID());
       initialiseLists(CreateOrEdit.EDIT, team);
       teamDescriptionField.setText(team.getTeamDescription());
+
     }
     this.createOrEdit = createOrEdit;
 
