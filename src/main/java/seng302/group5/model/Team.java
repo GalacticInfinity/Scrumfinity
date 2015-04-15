@@ -51,7 +51,8 @@ public class Team implements AgileItem {
   public Team(Team clone) {
     this.teamID = clone.getTeamID();
     this.teamDescription = clone.getTeamDescription();
-    this.teamMembers = FXCollections.observableArrayList(clone.getTeamMembers());
+    this.teamMembers.clear();
+    this.teamMembers.addAll(clone.getTeamMembers());
   }
 
   public String getTeamID() {
@@ -102,9 +103,16 @@ public class Team implements AgileItem {
     return this.currentProject;
   }
 
-  public void delete(){}
-
-  public void create(){}
+  @Override
+  public void copyValues(AgileItem agileItem) {
+    if (agileItem instanceof Team) {
+      Team clone = (Team) agileItem;
+      this.teamID = clone.getTeamID();
+      this.teamDescription = clone.getTeamDescription();
+      this.teamMembers.clear();
+      this.teamMembers.addAll(clone.getTeamMembers());
+    }
+  }
 
   /**
    * Overrides to toString method with the
@@ -115,5 +123,15 @@ public class Team implements AgileItem {
   @Override
   public String toString() {
     return teamID;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    boolean result = false;
+    if (obj instanceof Team) {
+      Team team = (Team) obj;
+      result = this.teamID.equals(team.getTeamID());
+    }
+    return result;
   }
 }

@@ -73,14 +73,26 @@ public class Release implements AgileItem {
     this.releaseNotes = releaseNotes;
   }
 
-  public void create() {
-
-  }
-
-  public void delete() {
-
+  @Override
+  public void copyValues(AgileItem agileItem) {
+    if (agileItem instanceof Release) {
+      Release clone = (Release) agileItem;
+      // TODO: do it
+    }
   }
 
   @Override
-  public String toString() {return this.releaseName;}
+  public String toString() {
+    return this.releaseName;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    boolean result = false;
+    if (obj instanceof Release) {
+      Release release = (Release) obj;
+      result = this.releaseName.equals(release.getReleaseName());
+    }
+    return result;
+  }
 }

@@ -10,6 +10,7 @@ import seng302.group5.model.AgileItem;
 public class UndoRedoObject {
 
   private Action action;
+  private AgileItem agileItem;
   private ArrayList<AgileItem> data;
 
   public UndoRedoObject() {
@@ -23,6 +24,14 @@ public class UndoRedoObject {
 
   public void setAction(Action action) {
     this.action = action;
+  }
+
+  public AgileItem getAgileItem() {
+    return agileItem;
+  }
+
+  public void setAgileItem(AgileItem agileItem) {
+    this.agileItem = agileItem;
   }
 
   public ArrayList<AgileItem> getData() {

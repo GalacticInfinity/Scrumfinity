@@ -52,7 +52,10 @@ public class Person implements AgileItem {
     this.personID = clone.getPersonID();
     this.firstName = clone.getFirstName();
     this.lastName = clone.getLastName();
-    this.skillSet = FXCollections.observableArrayList(clone.getSkillSet());
+    this.skillSet.clear();
+    this.skillSet.addAll(clone.getSkillSet());
+    this.team = clone.getTeam();
+    this.assignedToTeam = clone.isInTeam();
   }
 
   public String getPersonID() {
@@ -119,9 +122,19 @@ public class Person implements AgileItem {
     return assignedToTeam;
   }
 
-  public void delete(){}
-
-  public void create(){}
+  @Override
+  public void copyValues(AgileItem agileItem) {
+    if (agileItem instanceof Person) {
+      Person clone = (Person) agileItem;
+      this.personID = clone.getPersonID();
+      this.firstName = clone.getFirstName();
+      this.lastName = clone.getLastName();
+      this.skillSet.clear();
+      this.skillSet.addAll(clone.getSkillSet());
+      this.team = clone.getTeam();
+      this.assignedToTeam = clone.isInTeam();
+    }
+  }
 
   /**
    * Overrides to toString method with the
@@ -132,5 +145,15 @@ public class Person implements AgileItem {
   @Override
   public String toString() {
     return personID;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    boolean result = false;
+    if (obj instanceof Person) {
+      Person person = (Person) obj;
+      result = this.personID.equals(person.getPersonID());
+    }
+    return result;
   }
 }

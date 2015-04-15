@@ -149,6 +149,7 @@ public class TeamDialogController {
     }
 
     // Store a copy of skill to edit in stack to avoid reference problems
+    undoRedoObject.setAgileItem(team);
     Team teamToStore = new Team(team);
     undoRedoObject.addDatum(teamToStore);
 
