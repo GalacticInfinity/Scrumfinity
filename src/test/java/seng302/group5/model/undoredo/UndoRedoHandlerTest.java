@@ -3,6 +3,8 @@ package seng302.group5.model.undoredo;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 
 import javafx.collections.FXCollections;
@@ -12,6 +14,7 @@ import seng302.group5.controller.ListMainPaneController;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
+import seng302.group5.model.Release;
 import seng302.group5.model.Skill;
 import seng302.group5.model.Team;
 
@@ -51,10 +54,22 @@ public class UndoRedoHandlerTest {
   private String newProjectName;
   private String newProjectDescription;
 
+  private String releaseName;
+  private String releaseDescription;
+  private LocalDate releaseDate;
+  private String releaseNotes;
+  private Project projectRelease;
+  private String newReleaseName;
+  private String newReleaseDescription;
+  private LocalDate newReleaseDate;
+  private String newReleaseNotes;
+  private Project newProjectRelease;
+
   private Person person;
   private Skill skill;
   private Team team;
   private Project project;
+  private Release release;
 
   private UndoRedoHandler undoRedoHandler;
   private Main mainApp;
@@ -367,6 +382,63 @@ public class UndoRedoHandlerTest {
     undoRedoObject.setAgileItem(project);
     undoRedoObject.addDatum(lastProject);
     undoRedoObject.addDatum(newProject);
+
+    undoRedoHandler.newAction(undoRedoObject);
+  }
+
+  private void newRelease() {
+    releaseName = "TheRelease";
+    releaseDescription = "The descriptioning";
+    releaseDate = LocalDate.of(1994, Month.JANUARY, 06);
+    releaseNotes = "Wagga wagga";
+    projectRelease = project;
+
+    release = new Release(releaseName, releaseDescription, releaseNotes,
+                          releaseDate, projectRelease);
+
+    mainApp.addRelease(release);
+
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+    undoRedoObject.setAction(Action.RELEASE_CREATE);
+    undoRedoObject.setAgileItem(release);
+    undoRedoObject.addDatum(new Release(release));
+
+    undoRedoHandler.newAction(undoRedoObject);
+  }
+
+  private void deleteNewestRelease() {
+    mainApp.deleteRelease(release);
+
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+    undoRedoObject.setAction(Action.RELEASE_DELETE);
+    undoRedoObject.setAgileItem(release);
+    undoRedoObject.addDatum(new Release(release));
+
+    undoRedoHandler.newAction(undoRedoObject);
+  }
+
+  private void editNewestRelease() {
+    Release lastRelease = new Release(release);
+
+    newReleaseName = "NewRelease";
+    newReleaseDescription = "The new descriptioning";
+    newReleaseDate = LocalDate.of(1994, Month.JULY, 06);
+    newReleaseNotes = "New Wagga wagga wagga";
+    newProjectRelease = project;
+
+    release.setReleaseName(newReleaseName);
+    release.setReleaseDescription(newReleaseDescription);
+    release.setReleaseDate(newReleaseDate);
+    release.setReleaseNotes(newReleaseNotes);
+    release.setProjectRelease(projectRelease);
+
+    Release newRelease = new Release(release);
+
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+    undoRedoObject.setAction(Action.RELEASE_EDIT);
+    undoRedoObject.setAgileItem(release);
+    undoRedoObject.addDatum(lastRelease);
+    undoRedoObject.addDatum(newRelease);
 
     undoRedoHandler.newAction(undoRedoObject);
   }
@@ -1469,6 +1541,205 @@ public class UndoRedoHandlerTest {
     assertEquals(newProjectID, createdProject.getProjectID());
     assertEquals(newProjectName, redoneProject.getProjectName());
     assertEquals(newProjectDescription, redoneProject.getProjectDescription());
+  }
+
+  @Test
+  public void testReleaseCreateUndo() throws Exception {
+    assertTrue(mainApp.getReleases().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+
+    newRelease();
+    assertEquals(1, mainApp.getReleases().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+
+    undoRedoHandler.undo();
+    assertTrue(mainApp.getReleases().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+  }
+
+  @Test
+  public void testReleaseCreateRedo() throws Exception {
+    Release before;
+    Release after;
+
+    assertTrue(mainApp.getReleases().isEmpty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    newRelease();
+    assertEquals(1, mainApp.getReleases().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+    before = mainApp.getReleases().get(0);
+    assertNotNull(before);
+
+    undoRedoHandler.undo();
+    assertTrue(mainApp.getReleases().isEmpty());
+    assertEquals(1, undoRedoHandler.getRedoStack().size());
+
+    undoRedoHandler.redo();
+    assertEquals(1, mainApp.getReleases().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+    after = mainApp.getReleases().get(0);
+    assertNotNull(after);
+
+    assertSame(before, after);
+  }
+
+  @Test
+  public void testReleaseDeleteUndo() throws Exception {
+    Release before;
+    Release after;
+
+    assertTrue(mainApp.getReleases().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+
+    newRelease();
+    assertEquals(1, mainApp.getReleases().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+    before = mainApp.getReleases().get(0);
+    assertNotNull(before);
+
+    deleteNewestRelease();
+    assertEquals(0, mainApp.getReleases().size());
+    assertEquals(2, undoRedoHandler.getUndoStack().size());
+
+    undoRedoHandler.undo();
+    assertEquals(1, mainApp.getReleases().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+    after = mainApp.getReleases().get(0);
+    assertNotNull(after);
+
+    assertSame(before, after);
+  }
+
+  @Test
+  public void testReleaseDeleteRedo() throws Exception {
+    Release before;
+    Release after;
+
+    assertTrue(mainApp.getReleases().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    newRelease();
+    assertEquals(1, mainApp.getReleases().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+    before = mainApp.getReleases().get(0);
+    assertNotNull(before);
+
+    deleteNewestRelease();
+    assertEquals(0, mainApp.getReleases().size());
+    assertEquals(2, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    undoRedoHandler.undo();
+    assertEquals(1, mainApp.getReleases().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+    assertEquals(1, undoRedoHandler.getRedoStack().size());
+    after = mainApp.getReleases().get(0);
+    assertNotNull(after);
+
+    assertSame(before, after);
+
+    undoRedoHandler.redo();
+    assertEquals(0, mainApp.getReleases().size());
+    assertEquals(2, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+  }
+
+  @Test
+  public void testReleaseEditUndo() throws Exception {
+    assertTrue(mainApp.getReleases().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+
+    newRelease();
+    assertEquals(1, mainApp.getReleases().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+
+    Release createdRelease = mainApp.getReleases().get(mainApp.getReleases().size() - 1);
+    assertEquals(releaseName, createdRelease.getReleaseName());
+    assertEquals(releaseDescription, createdRelease.getReleaseDescription());
+    assertEquals(releaseDate, createdRelease.getReleaseDate());
+    assertEquals(releaseNotes, createdRelease.getReleaseNotes());
+    assertEquals(projectRelease, createdRelease.getProjectRelease());
+
+    editNewestRelease();
+    assertEquals(1, mainApp.getReleases().size());
+    assertEquals(2, undoRedoHandler.getUndoStack().size());
+
+    Release editedRelease = mainApp.getReleases().get(mainApp.getReleases().size() - 1);
+    assertEquals(newReleaseName, editedRelease.getReleaseName());
+    assertEquals(newReleaseDescription, editedRelease.getReleaseDescription());
+    assertEquals(newReleaseDate, editedRelease.getReleaseDate());
+    assertEquals(newReleaseNotes, editedRelease.getReleaseNotes());
+    assertEquals(newProjectRelease, editedRelease.getProjectRelease());
+
+    undoRedoHandler.undo();
+    assertEquals(1, mainApp.getReleases().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+
+    Release undoneRelease = mainApp.getReleases().get(mainApp.getReleases().size() - 1);
+    assertEquals(releaseName, undoneRelease.getReleaseName());
+    assertEquals(releaseDescription, undoneRelease.getReleaseDescription());
+    assertEquals(releaseDate, undoneRelease.getReleaseDate());
+    assertEquals(releaseNotes, undoneRelease.getReleaseNotes());
+    assertEquals(projectRelease, undoneRelease.getProjectRelease());
+  }
+
+  @Test
+  public void testReleaseEditRedo() throws Exception {
+    assertTrue(mainApp.getReleases().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    newRelease();
+    assertEquals(1, mainApp.getReleases().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    Release createdRelease = mainApp.getReleases().get(mainApp.getReleases().size() - 1);
+    assertEquals(releaseName, createdRelease.getReleaseName());
+    assertEquals(releaseDescription, createdRelease.getReleaseDescription());
+    assertEquals(releaseDate, createdRelease.getReleaseDate());
+    assertEquals(releaseNotes, createdRelease.getReleaseNotes());
+    assertEquals(projectRelease, createdRelease.getProjectRelease());
+
+    editNewestRelease();
+    assertEquals(1, mainApp.getReleases().size());
+    assertEquals(2, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    Release editedRelease = mainApp.getReleases().get(mainApp.getReleases().size() - 1);
+    assertEquals(newReleaseName, editedRelease.getReleaseName());
+    assertEquals(newReleaseDescription, editedRelease.getReleaseDescription());
+    assertEquals(newReleaseDate, editedRelease.getReleaseDate());
+    assertEquals(newReleaseNotes, editedRelease.getReleaseNotes());
+    assertEquals(newProjectRelease, editedRelease.getProjectRelease());
+
+    undoRedoHandler.undo();
+    assertEquals(1, mainApp.getReleases().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+    assertEquals(1, undoRedoHandler.getRedoStack().size());
+
+    Release undoneRelease = mainApp.getReleases().get(mainApp.getReleases().size() - 1);
+    assertEquals(releaseName, undoneRelease.getReleaseName());
+    assertEquals(releaseDescription, undoneRelease.getReleaseDescription());
+    assertEquals(releaseDate, undoneRelease.getReleaseDate());
+    assertEquals(releaseNotes, undoneRelease.getReleaseNotes());
+    assertEquals(projectRelease, undoneRelease.getProjectRelease());
+
+    undoRedoHandler.redo();
+    assertEquals(1, mainApp.getReleases().size());
+    assertEquals(2, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    Release redoneRelease = mainApp.getReleases().get(mainApp.getReleases().size() - 1);
+    assertEquals(newReleaseName, redoneRelease.getReleaseName());
+    assertEquals(newReleaseDescription, redoneRelease.getReleaseDescription());
+    assertEquals(newReleaseDate, redoneRelease.getReleaseDate());
+    assertEquals(newReleaseNotes, redoneRelease.getReleaseNotes());
+    assertEquals(newProjectRelease, redoneRelease.getProjectRelease());
   }
 
 
