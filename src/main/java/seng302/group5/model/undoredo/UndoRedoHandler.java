@@ -621,42 +621,31 @@ public class UndoRedoHandler {
   }
 
   /**
-   * Undo or redo a skill creation
+   * Undo or redo a release creation
    *
    * @param undoRedoObject Object containing the action data
    * @param undoOrRedo Whether undoing or redoing the action
    * @throws Exception Error message if data is invalid
    */
   private void handleReleaseCreate(UndoRedoObject undoRedoObject,
-                                 UndoOrRedo undoOrRedo) throws Exception {
+                                UndoOrRedo undoOrRedo) throws Exception {
 
-    // Get the data and ensure it has data for the skill
+    // Get the data and ensure it has data for the team
     ArrayList<AgileItem> data = undoRedoObject.getData();
     if (data.size() < 1) {
-      throw new Exception("Can't undo/redo release creation - No variables");
+      throw new Exception("Can't undo/redo team creation - No variables");
     }
 
-    // Get the Release name which is currently in the list and the release to change
-    Release release = (Release) data.get(0);
-    String releaseName = release.getReleaseName();
+    // Get the team name which is currently in the list and the team to change
+    Release releaseToChange = (Release) undoRedoObject.getAgileItem();
+    Release releaseData = (Release) data.get(0);
 
     // Make the changes and refresh the list
     if (undoOrRedo == UndoOrRedo.UNDO) {
-      // Find the release in the list and ensure it exists so it can be deleted
-      Release releaseToDelete = null;
-      for (Release releaseInList : mainApp.getReleases()) {
-        if (releaseInList.getReleaseName().equals(releaseName)) {
-          releaseToDelete = releaseInList;
-          break;
-        }
-      }
-      if (releaseToDelete == null) {
-        throw new Exception("Can't undo release creation - Can't find the created release");
-      }
-      mainApp.deleteRelease(releaseToDelete);
+      mainApp.deleteRelease(releaseToChange);
     } else {
-      Release releaseToAdd = new Release(release);
-      mainApp.addRelease(releaseToAdd);
+      releaseToChange.copyValues(releaseData);
+      mainApp.addRelease(releaseToChange);
     }
     mainApp.refreshList();
   }
@@ -677,39 +666,18 @@ public class UndoRedoHandler {
       throw new Exception("Can't undo/redo release edit - Less than 2 variables");
     }
 
-    // Get the release name which is currently in the list and the release to edit
-    Release currentRelease;
-    String currentReleaseName;
-    Release newRelease;
+    Release releaseToChange = (Release) undoRedoObject.getAgileItem();
+    Release releaseData;
 
     if (undoOrRedo == UndoOrRedo.UNDO) {
-      currentRelease = (Release) data.get(1);
-      currentReleaseName = currentRelease.getReleaseName();
-      newRelease = (Release) data.get(0);
+//      currentRelease = (Release) data.get(1);
+      releaseData = (Release) data.get(0);
     } else {
-      currentRelease = (Release) data.get(0);
-      currentReleaseName = currentRelease.getReleaseName();
-      newRelease = (Release) data.get(1);
+//      currentRelease = (Release) data.get(0);
+      releaseData = (Release) data.get(1);
     }
 
-    // Finds the release in the list and ensure it exists
-    Release releaseToEdit = null;
-    for (Release releaseInList : mainApp.getReleases()) {
-      if (releaseInList.getReleaseName().equals(currentReleaseName)) {
-        releaseToEdit = releaseInList;
-        break;
-      }
-    }
-    if (releaseToEdit == null) {
-      throw new Exception("Can't undo/redo release edit - Can't find the edited release");
-    }
-
-    // Make the changes and refresh the list
-    releaseToEdit.setReleaseName(newRelease.getReleaseName());
-    releaseToEdit.setReleaseDescription(newRelease.getReleaseDescription());
-    releaseToEdit.setReleaseDate(newRelease.getReleaseDate());
-    releaseToEdit.setReleaseNotes(newRelease.getReleaseNotes());
-    releaseToEdit.setProjectRelease(newRelease.getProjectRelease());
+    releaseToChange.copyValues(releaseData);
     mainApp.refreshList();
   }
 
@@ -729,28 +697,16 @@ public class UndoRedoHandler {
       throw new Exception("Can't undo/redo release deletion - No variables");
     }
 
-    // Get the skill and name to undo/redo deletion of
-    Release release = (Release) data.get(0);
-    String releaseName = release.getReleaseName();
+    // Get the Release to undo/redo deletion of
+    Release releaseToChange = (Release) undoRedoObject.getAgileItem();
+    Release releaseData = (Release) data.get(0);
 
     // Make the changes and refresh the list
     if (undoOrRedo == UndoOrRedo.UNDO) {
-      // Create the deleted skill again
-      Release releaseToAdd = new Release(release);
-      mainApp.addRelease(releaseToAdd);
+      releaseToChange.copyValues(releaseData);
+      mainApp.addRelease(releaseToChange);
     } else {
-      // Find the skill in list and ensure it exists so it can be deleted again
-      Release releaseToDelete = null;
-      for (Release releaseInList : mainApp.getReleases()) {
-        if (releaseInList.getReleaseName().equals(releaseName)) {
-          releaseToDelete = releaseInList;
-          break;
-        }
-      }
-      if (releaseToDelete == null) {
-        throw new Exception("Can't redo release deletion - Can't find the created release");
-      }
-      mainApp.deleteRelease(releaseToDelete);
+      mainApp.deleteRelease(releaseToChange);
     }
     mainApp.refreshList();
   }
