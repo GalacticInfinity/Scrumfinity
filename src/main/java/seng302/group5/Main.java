@@ -518,7 +518,7 @@ public class Main extends Application {
         undoRedoObject = generateDelUndoRedoObject(Action.SKILL_DELETE, agileItem);
         for (Person skillUser : skillUsers) {
           // Add data so users can get the skill back after undo
-          undoRedoObject.addDatum(new Person(skillUser));
+          undoRedoObject.addDatum(skillUser);
         }
         newAction(undoRedoObject);
         break;
