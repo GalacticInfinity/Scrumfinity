@@ -41,6 +41,7 @@ public class TeamDialogController {
           "Scrum Master",
           "Development Team Member"
       );
+  private PersonRole role;
 
   @FXML private TextField teamIDField;
   @FXML private ListView teamMembersList;
@@ -128,23 +129,20 @@ public class TeamDialogController {
       Person selectedPerson = (Person) teamMemberAddCombo.getSelectionModel().getSelectedItem();
       String selectedRole = (String) teamMemberRoleCombo.getSelectionModel().getSelectedItem();
 
-      PersonRole roleType;
       if (selectedPerson != null) {
-        selectedPerson.addRole(selectedRole);
+
         this.selectedMembers.add(selectedPerson);
         this.availableMembers.remove(selectedPerson);
         if (selectedRole == "Product Owner") {
-          PersonRole.ProductOwner productOwner = (PersonRole.ProductOwner) new PersonRole();
-          roleType = productOwner;
+          role = new PersonRole.ProductOwner();
+          roles.remove(selectedRole);
         } else if (selectedRole == "Scrum Master") {
-          PersonRole.ScrumMaster scrumMaster = (PersonRole.ScrumMaster) new PersonRole();
-          roleType = scrumMaster;
+          roles.remove(selectedRole);
+          role = new PersonRole.ScrumMaster();
         } else {
-          PersonRole.DevelopmentTeamMember developmentTeamMember
-              = (PersonRole.DevelopmentTeamMember) new PersonRole();
-          roleType = developmentTeamMember;
+          role = new PersonRole.DevelopmentTeamMember();
         }
-        this.team.addRole(roleType);
+        selectedPerson.addRole(selectedRole);
       }
     }
     catch (Exception e) {
@@ -161,6 +159,7 @@ public class TeamDialogController {
         this.availableMembers.add(selectedPerson);
         this.selectedMembers.remove(selectedPerson);
         selectedPerson.removeFromTeam();
+        roles.add(selectedPerson.getRoles().toString());
       }
     }
     catch (Exception e) {
@@ -223,9 +222,11 @@ public class TeamDialogController {
       if (createOrEdit == CreateOrEdit.CREATE) {
         team = new Team(teamID, selectedMembers, teamDescription);
         for (Person person : selectedMembers) {
+
           person.assignToTeam(team);
         }
         mainApp.addTeam(team);
+
       } else if (createOrEdit == CreateOrEdit.EDIT) {
 
         team.setTeamID(teamID);
