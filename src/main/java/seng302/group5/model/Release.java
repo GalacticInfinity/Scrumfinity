@@ -77,7 +77,11 @@ public class Release implements AgileItem {
   public void copyValues(AgileItem agileItem) {
     if (agileItem instanceof Release) {
       Release clone = (Release) agileItem;
-      // TODO: do it
+      this.releaseName = clone.getReleaseName();
+      this.releaseDescription = clone.getReleaseDescription();
+      this.releaseDate = clone.getReleaseDate();
+      this.releaseNotes = clone.getReleaseNotes();
+      this.projectRelease = clone.getProjectRelease();
     }
   }
 
