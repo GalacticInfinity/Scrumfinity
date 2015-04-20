@@ -75,7 +75,7 @@ public class Project implements AgileItem {
     return this.allocatedTeams;
   }
 
-  public void removeTeam(Team team) {
+  public void removeTeam(AgileHistory team) {
     this.allocatedTeams.remove(team);
   }
 

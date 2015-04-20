@@ -50,7 +50,8 @@ public class ProjectDialogController {
   private CreateOrEdit createOrEdit;
   private Project project = new Project();
   private Project lastProject;
-  private ObservableList<Team> allocatedTeams = FXCollections.observableArrayList();
+  private ObservableList<AgileHistory> allocatedTeams = FXCollections.observableArrayList();
+  private ObservableList<Team> teamsName = FXCollections.observableArrayList();
   private ObservableList<Team> availableTeams =  FXCollections.observableArrayList();
   private Team selectedTeam;
   private AgileHistory projectHistory = new AgileHistory();
@@ -86,9 +87,9 @@ public class ProjectDialogController {
       projectIDField.setText(project.getProjectID());
       projectNameField.setText(project.getProjectName());
       projectDescriptionField.setText(project.getProjectDescription());
-      teamStartDate.setValue(selectedTeam.getStartDate());
+      //teamStartDate.setValue(selectedTeam.getStartDate());
 
-      teamEndDate.setValue(selectedTeam.getEndDate());
+      //teamEndDate.setValue(selectedTeam.getEndDate());
 
     }
     this.createOrEdit = createOrEdit;
@@ -120,18 +121,22 @@ public class ProjectDialogController {
         }
       }
       else if (createOrEdit == CreateOrEdit.EDIT) {
+
+        for (AgileHistory team : project.getTeam()) {
+          teamsName.add((Team) team.getAgileItem());
+
+
+        }
         for (Team team : mainApp.getTeams()) {
-          if (team.getCurrentProject() == null) {
+          if (team.getCurrentProject() == null && teamsName.contains(team) == false) {
             availableTeams.add(team);
           }
         }
-        for (AgileHistory team : project.getTeam()) {
-          allocatedTeams.add((Team) team.getAgileItem());
-        }
+
       }
 
       this.availableTeamsList.setItems(availableTeams);
-      this.allocatedTeamsList.setItems(allocatedTeams);
+      this.allocatedTeamsList.setItems(teamsName);
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -226,7 +231,12 @@ public class ProjectDialogController {
       Team selectedTeam = (Team) availableTeamsList.getSelectionModel().getSelectedItem();
       parseProjectDates(teamStartDate.getValue(), teamEndDate.getValue());
       if (selectedTeam != null) {
-        this.allocatedTeams.add(selectedTeam);
+        AgileHistory temp = new AgileHistory();
+        temp.setAgileItem(selectedTeam);
+        temp.setStartDate(teamStartDate.getValue());
+        temp.setEndDate(teamEndDate.getValue());
+        this.teamsName.add(selectedTeam);
+        this.allocatedTeams.add(temp);
         this.availableTeams.remove(selectedTeam);
         //add parse date function.
 
@@ -251,6 +261,9 @@ public class ProjectDialogController {
       Team selectedTeam = (Team) allocatedTeamsList.getSelectionModel().getSelectedItem();
 
       if (selectedTeam != null) {
+
+
+        this.teamsName.remove(selectedTeam);
         this.availableTeams.add(selectedTeam);
         this.allocatedTeams.remove(selectedTeam);
         //project.removeTeam(selectedTeam);
@@ -301,17 +314,25 @@ public class ProjectDialogController {
 
       if (createOrEdit == CreateOrEdit.CREATE) {
         project = new Project(projectID, projectName, projectDescription);
-        project.addTeam(projectHistory);
-        mainApp.addProject(project);
-      } else if (createOrEdit == CreateOrEdit.EDIT) {
-        project.setProjectID(projectID);
-        project.setProjectName(projectName);
-        project.setProjectDescription(projectDescription);
-        for (Team team : this.allocatedTeams) {
-          team.setCurrentProject(project);
+        for (AgileHistory team : this.allocatedTeams) {
+          project.addTeam(team);
         }
+        mainApp.addProject(project);
+      } else {
+        if (createOrEdit == CreateOrEdit.EDIT) {
+          project.setProjectID(projectID);
+          project.setProjectName(projectName);
+          project.setProjectDescription(projectDescription);
+          project.getTeam().clear();
 
-        mainApp.refreshList();
+
+          for (AgileHistory team : this.allocatedTeams) {
+            System.out.println(team.getAgileItem().toString());
+            project.addTeam(team);
+          }
+
+          mainApp.refreshList();
+        }
       }
 
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
