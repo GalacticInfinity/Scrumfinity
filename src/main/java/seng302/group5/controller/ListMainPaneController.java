@@ -12,6 +12,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import seng302.group5.Main;
+import seng302.group5.model.AgileHistory;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Release;
 import seng302.group5.model.util.Settings;
@@ -220,13 +221,12 @@ public class ListMainPaneController {
       sampleTextArea.appendText("\nProject Description: \n");
       sampleTextArea.appendText(project.getProjectDescription());
       sampleTextArea.appendText("\nAssigned Teams: \n");
-      for (Team team : mainApp.getTeams()) {
-        if (team.getCurrentProject() != null && team.getCurrentProject().getProjectID() == project.getProjectID()) {
-          sampleTextArea.appendText(team.getTeamID());
-          sampleTextArea.appendText(": Start Date: " + team.getStartDate().toString() + " End Date: ");
-          sampleTextArea.appendText(team.getEndDate().toString() + "\n");
+      for (AgileHistory team : project.getTeam()) {
+        sampleTextArea.appendText(team.getAgileItem().toString());
+        sampleTextArea.appendText(": Start Date: " + team.getStartDate().toString() + " End Date: ");
+        sampleTextArea.appendText(team.getEndDate().toString() + "\n");
         }
-      }
+
 
     } else if (Settings.currentListType == "Skills") {
       sampleTextArea.clear();

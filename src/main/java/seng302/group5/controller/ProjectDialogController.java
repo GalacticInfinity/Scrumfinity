@@ -21,6 +21,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
+import seng302.group5.model.AgileHistory;
 import seng302.group5.model.Project;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
@@ -42,6 +43,8 @@ public class ProjectDialogController {
   @FXML private Button btnAddTeam;
   @FXML private Button btnRemoveTeam;
 
+
+  private LocalDate defaultDate;
   private Main mainApp;
   private Stage thisStage;
   private CreateOrEdit createOrEdit;
@@ -50,6 +53,7 @@ public class ProjectDialogController {
   private ObservableList<Team> allocatedTeams = FXCollections.observableArrayList();
   private ObservableList<Team> availableTeams =  FXCollections.observableArrayList();
   private Team selectedTeam;
+  private AgileHistory projectHistory = new AgileHistory();
   private LocalDate startDate;
   private LocalDate endDate;
 
@@ -69,7 +73,8 @@ public class ProjectDialogController {
                               Project project) {
     this.mainApp = mainApp;
     this.thisStage = thisStage;
-
+    teamStartDate.setValue(LocalDate.now());
+    teamEndDate.setValue(LocalDate.now());
     if (createOrEdit == CreateOrEdit.CREATE) {
       thisStage.setTitle("Create New Project");
       btnConfirm.setText("Create");
@@ -81,7 +86,8 @@ public class ProjectDialogController {
       projectIDField.setText(project.getProjectID());
       projectNameField.setText(project.getProjectName());
       projectDescriptionField.setText(project.getProjectDescription());
-      teamStartDate.setValue(selectedTeam.getEndDate());
+      teamStartDate.setValue(selectedTeam.getStartDate());
+
       teamEndDate.setValue(selectedTeam.getEndDate());
 
     }
@@ -119,8 +125,8 @@ public class ProjectDialogController {
             availableTeams.add(team);
           }
         }
-        for (Team team : project.getTeam()) {
-          allocatedTeams.add(team);
+        for (AgileHistory team : project.getTeam()) {
+          allocatedTeams.add((Team) team.getAgileItem());
         }
       }
 
@@ -179,6 +185,13 @@ public class ProjectDialogController {
     }
   }
 
+  private void parseProjectDates(LocalDate startDate, LocalDate endDate) throws Exception {
+    if (startDate.isAfter(endDate)) {
+      throw new Exception("Start date must be before End Date");
+    }
+
+  }
+
   /**
    * Generate an UndoRedoObject to place in the stack
    * @return the UndoRedoObject to store
@@ -201,6 +214,8 @@ public class ProjectDialogController {
     return undoRedoObject;
   }
 
+
+
   /**
    * Handles when the create button is pushed
    */
@@ -209,19 +224,24 @@ public class ProjectDialogController {
   protected void btnAddTeam(ActionEvent event) {
     try {
       Team selectedTeam = (Team) availableTeamsList.getSelectionModel().getSelectedItem();
-
+      parseProjectDates(teamStartDate.getValue(), teamEndDate.getValue());
       if (selectedTeam != null) {
         this.allocatedTeams.add(selectedTeam);
         this.availableTeams.remove(selectedTeam);
         //add parse date function.
 
-        selectedTeam.setStartDate(teamStartDate.getValue());
-        selectedTeam.setEndDate(teamEndDate.getValue());
-
+        projectHistory.setAgileItem(selectedTeam);
+        projectHistory.setStartDate(teamStartDate.getValue());
+        projectHistory.setEndDate(teamEndDate.getValue());
       }
-    }
-    catch (Exception e) {
-      e.printStackTrace();
+      } catch (Exception e1) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+       alert.setTitle("Invalid Dates");
+        alert.setHeaderText(null);
+        alert.setContentText(e1.getMessage());
+        alert.showAndWait();
+        mainApp.refreshList();
+        return;
     }
   }
 
@@ -233,7 +253,7 @@ public class ProjectDialogController {
       if (selectedTeam != null) {
         this.availableTeams.add(selectedTeam);
         this.allocatedTeams.remove(selectedTeam);
-        project.removeTeam(selectedTeam);
+        //project.removeTeam(selectedTeam);
         //Add function to remove the team from the project on the team object level
       }
     }
@@ -265,6 +285,7 @@ public class ProjectDialogController {
       errors.append(String.format("%s\n", e.getMessage()));
     }
 
+
     // Display all errors if they exist
     if (noErrors > 0) {
       String title = String.format("%d Invalid Field", noErrors);
@@ -280,6 +301,7 @@ public class ProjectDialogController {
 
       if (createOrEdit == CreateOrEdit.CREATE) {
         project = new Project(projectID, projectName, projectDescription);
+        project.addTeam(projectHistory);
         mainApp.addProject(project);
       } else if (createOrEdit == CreateOrEdit.EDIT) {
         project.setProjectID(projectID);

@@ -13,7 +13,7 @@ public class Project implements AgileItem {
   private String projectID;
   private String projectName;
   private String projectDescription;
-  private ObservableList<Team> allocatedTeams = FXCollections.observableArrayList();
+  private ObservableList<AgileHistory> allocatedTeams = FXCollections.observableArrayList();
 
 
   /**
@@ -67,11 +67,11 @@ public class Project implements AgileItem {
     return projectDescription;
   }
 
-  public void addTeam(Team team) {
+  public void addTeam(AgileHistory team) {
     this.allocatedTeams.add(team);
   }
 
-  public ObservableList<Team> getTeam() {
+  public ObservableList<AgileHistory> getTeam() {
     return this.allocatedTeams;
   }
 
