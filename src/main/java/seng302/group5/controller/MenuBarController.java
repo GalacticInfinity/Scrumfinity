@@ -15,6 +15,8 @@ import javafx.scene.input.KeyCombination;
 import javafx.stage.FileChooser;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
+import seng302.group5.model.NewLoading;
+import seng302.group5.model.NewSaving;
 import seng302.group5.model.Saving;
 import seng302.group5.model.util.Settings;
 
@@ -179,7 +181,9 @@ public class MenuBarController {
 
       if (file != null) {
         Settings.currentFile = file;
-        Saving.saveDataToFile(file, mainApp);
+        NewSaving save = new NewSaving(mainApp);
+        save.saveData(file);
+        //Saving.saveDataToFile(file, mainApp);
 
         // Refresh the last saved action
         mainApp.refreshLastSaved();
@@ -207,7 +211,10 @@ public class MenuBarController {
       File file = fileChooser.showOpenDialog(mainApp.getPrimaryStage());
       if (file != null) {
         Settings.currentFile = file;
-        Saving.loadDataFromFile(file, mainApp);
+        //Saving.loadDataFromFile(file, mainApp);
+        NewLoading load = new NewLoading(mainApp);
+        load.loadFile(file);
+
         mainApp.getLMPC().refreshList();
         showListMenuItem.setSelected(true);
         deselectList(Settings.currentListType);

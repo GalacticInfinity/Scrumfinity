@@ -24,6 +24,7 @@ public class Saving {
   private List<Project> projects;
   private List<Skill> skills;
   private List<Team> teams;
+  private List<Release> releases;
 
   @XmlElement(name = "person")
   public List<Person> getPersons() {
@@ -61,6 +62,15 @@ public class Saving {
     this.teams = teams;
   }
 
+  @XmlElement(name = "release")
+  public List<Release> getReleases() {
+    return releases;
+  }
+
+  public void setReleases(List<Release> releases) {
+    this.releases = releases;
+  }
+
   /**
    * Saves all data currently stored in Main in CSV format to specified file.
    * Overwrites any file chosen without checks currently.
@@ -81,6 +91,7 @@ public class Saving {
       wrapper.setProjects(main.getProjects());
       wrapper.setSkills(main.getSkills());
       wrapper.setTeams(main.getTeams());
+      wrapper.setReleases(main.getReleases());
 
 
       // Checks if file ends with .xml, appends if does not.
@@ -129,6 +140,7 @@ public class Saving {
       List<Project> xmlProjects = wrapper.getProjects();
       List<Skill> xmlSkills = wrapper.getSkills();
       List<Team> xmlTeams = wrapper.getTeams();
+      List<Release> xmlReleases = wrapper.getReleases();
 
       // TODO comments
       if (xmlProjects != null) {
@@ -146,6 +158,10 @@ public class Saving {
         main.getTeams().addAll(xmlTeams);
       }
       syncTeams(main);
+
+      if (xmlReleases != null) {
+        main.getReleases().addAll(xmlReleases);
+      }
 
       // Save the file path to Settings class
       Settings.defaultFilepath = file.getParentFile();
