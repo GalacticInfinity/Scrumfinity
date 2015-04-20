@@ -116,6 +116,13 @@ public class TeamDialogController {
       this.teamMembersList.setItems(selectedMembers);
 
       this.teamMemberRoleCombo.setPromptText("Person's Role");
+      for (Person member : selectedMembers) {
+        if (member.getRoles() == "[Product Owner]") {
+          roles.remove("Product Owner");
+        } else if (member.getRoles() == "[Scrum Master]") {
+          roles.remove("Scrum Master");
+        }
+      }
       this.teamMemberRoleCombo.setItems(roles);
     }
     catch (Exception e) {
@@ -159,7 +166,11 @@ public class TeamDialogController {
         this.availableMembers.add(selectedPerson);
         this.selectedMembers.remove(selectedPerson);
         selectedPerson.removeFromTeam();
-        roles.add(selectedPerson.getRoles().toString());
+        if (selectedPerson.getRoles() == "[Product Owner]") {
+          roles.add("Product Owner");
+        } else if (selectedPerson.getRoles() == "[Scrum Master]") {
+          roles.add("Scrum Master");
+        }
       }
     }
     catch (Exception e) {

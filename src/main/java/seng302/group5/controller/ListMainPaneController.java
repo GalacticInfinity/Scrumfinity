@@ -250,7 +250,7 @@ public class ListMainPaneController {
         sampleTextArea.appendText(member.getPersonID());
         sampleTextArea.appendText(" Role: ");
         if (member.hasRole()) {
-          sampleTextArea.appendText(member.getRoles().toString());
+          sampleTextArea.appendText(member.getRoles());
         } else {
           sampleTextArea.appendText("Not assigned to a role yet.");
         }
