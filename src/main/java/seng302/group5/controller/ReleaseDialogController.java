@@ -171,11 +171,10 @@ public class ReleaseDialogController {
   @FXML
   protected void btnRemoveSkill(ActionEvent event) {
     try {
-      Project selectedItem = (Project) projectLists.getSelectionModel().getSelectedItem();
-
-      if (selectedProject != null) {
-        this.availableProjects.add(selectedItem);
-        this.selectedProject.remove(selectedItem);
+      if (this.selectedProject != null) {
+        this.availableProjects.add(selectedProject.get(0));
+        this.selectedProject.remove(0);
+        projectLists.setItems(this.selectedProject);
       }
     }
     catch (Exception e) {
@@ -188,7 +187,7 @@ public class ReleaseDialogController {
     try {
       Project selectedProject = (Project) projectList.getSelectionModel().getSelectedItem();
 
-      if (selectedProject != null) {
+      if (selectedProject != null && this.selectedProject.isEmpty()) {
         this.selectedProject.add(selectedProject);
         this.availableProjects.remove(availableProjects);
       }
