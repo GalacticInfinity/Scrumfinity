@@ -99,6 +99,7 @@ public class ListMainPaneController {
     checkListType();
     listView.getSelectionModel().clearSelection();
     sampleTextArea.clear();
+    selectedItem = null;
   }
 
   /**

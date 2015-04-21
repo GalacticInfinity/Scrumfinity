@@ -306,7 +306,7 @@ public class MenuBarController {
           break;
       }
     }
-    }
+  }
 
   @FXML
   protected void btnDelete(){
