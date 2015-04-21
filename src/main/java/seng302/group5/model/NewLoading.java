@@ -31,10 +31,15 @@ public class NewLoading {
     try {
       String currentLine;
       loadedFile = new BufferedReader(new FileReader(filename));
-      while ((currentLine = loadedFile.readLine()) != null) {
-        loadListType(currentLine);
-        loadedFile.readLine();
-      }
+      // TODO panic
+//      while ((currentLine = loadedFile.readLine()) != null) {
+//        System.out.println(currentLine);
+//        loadListType(currentLine);
+//        loadedFile.readLine();
+//      }
+      loadProjects();
+      loadPeople();
+      //loadSkills();
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
@@ -46,12 +51,40 @@ public class NewLoading {
     }
   }
 
-  private void loadListType(String typeLine) throws Exception{
-    switch (typeLine) {
-      case "<People>":
-        loadPeople();
-        break;
+  private void loadProjects() throws Exception {
+    String projectLine;
+    String projectData;
+
+    // Untill Project end tag
+    while ((!(projectLine = loadedFile.readLine()).equals("</Projects>"))) {
+      //System.out.println(projectLine);
+      // On new Person tag
+      if (projectLine.matches(".*<Project>")) {
+        Project newProject = new Project();
+
+        // Mandatory fields
+        projectLine = loadedFile.readLine();
+        projectData = projectLine.replaceAll("(?i)(.*<projectID.*?>)(.+?)(</projectID>)", "$2");
+        //System.out.println(projectData);
+        newProject.setProjectID(projectData);
+        projectLine = loadedFile.readLine();
+        projectData = projectLine.replaceAll("(?i)(.*<projectName.*?>)(.+?)(</projectName>)", "$2");
+        //System.out.println(projectData);
+        newProject.setProjectName(projectData);
+
+        // Non mandatory fields.
+        while ((!(projectLine = loadedFile.readLine()).equals("\t</Project>"))) {
+          if (projectLine.startsWith("\t\t<projectDescription>")) {
+            projectData = projectLine.replaceAll("(?i)(.*<projectDescription.*?>)(.+?)(</projectDescription>)", "$2");
+            //System.out.println(projectData);
+            newProject.setProjectDescription(projectData);
+          }
+        }
+        // Add the loaded project into main
+        main.addProject(newProject);
+      }
     }
+    //System.out.println(projectLine);
   }
 
   /**
@@ -60,6 +93,7 @@ public class NewLoading {
    */
   private void loadPeople() throws Exception{
     String personLine;
+    String personData;
 
     // Untill People end tag
     while ((!(personLine = loadedFile.readLine()).equals("</People>"))) {
@@ -69,31 +103,32 @@ public class NewLoading {
         Person newPerson = new Person();
         ObservableList<Skill> skills = FXCollections.observableArrayList();
         Skill tempSkill;
+
         // Mandatory data
         personLine = loadedFile.readLine();
-        String data = personLine.replaceAll("(?i)(.*<PersonID.*?>)(.+?)(</PersonID>)", "$2");
-        System.out.println(data);
-        newPerson.setPersonID(data);
+        personData = personLine.replaceAll("(?i)(.*<personID.*?>)(.+?)(</personID>)", "$2");
+        //System.out.println(personData);
+        newPerson.setPersonID(personData);
 
         // Optional data
         while ((!(personLine = loadedFile.readLine()).equals("\t</Person>"))) {
           if (personLine.startsWith("\t\t<firstName>")) {
-            data = personLine.replaceAll("(?i)(.*<firstName.*?>)(.+?)(</firstName>)", "$2");
-            System.out.println(data);
-            newPerson.setFirstName(data);
+            personData = personLine.replaceAll("(?i)(.*<firstName.*?>)(.+?)(</firstName>)", "$2");
+            //System.out.println(personData);
+            newPerson.setFirstName(personData);
           }
           if (personLine.startsWith("\t\t<lastName>")) {
-            data = personLine.replaceAll("(?i)(.*<lastName.*?>)(.+?)(</lastName>)", "$2");
-            System.out.println(data);
-            newPerson.setLastName(data);
+            personData = personLine.replaceAll("(?i)(.*<lastName.*?>)(.+?)(</lastName>)", "$2");
+            //System.out.println(personData);
+            newPerson.setLastName(personData);
           }
           if (personLine.startsWith("\t\t<Skills>")) {
             while ((!(personLine = loadedFile.readLine()).equals("\t\t</Skills>"))) {
               if (personLine.startsWith("\t\t\t<skill>")) {
                 tempSkill = new Skill();
-                data = personLine.replaceAll("(?i)(.*<skill.*?>)(.+?)(</skill>)", "$2");
-                System.out.println(data);
-                tempSkill.setSkillName(data);
+                personData = personLine.replaceAll("(?i)(.*<skill.*?>)(.+?)(</skill>)", "$2");
+                //System.out.println(personData);
+                tempSkill.setSkillName(personData);
                 skills.add(tempSkill);
               }
             }
@@ -106,4 +141,33 @@ public class NewLoading {
       }
     }
   }
+
+//  /**
+//   * Loads all Skills into main app
+//   * @throws Exception
+//   */
+//  private void loadSkills() throws Exception{
+//    String skillLine;
+//    String skillData;
+//
+//    // Untill skill end tag
+//    while ((!(skillLine = loadedFile.readLine()).equals("</Skills>"))) {
+//      // For each new skill
+//      if (skillLine.matches(".*<Skill>")) {
+//        Skill newSkill = new Skill();
+//
+//        // Mandatory data
+//        skillLine = loadedFile.readLine();
+//        skillData = skillLine.replaceAll("(?i)(.*<skillID.*?>)(.+?)(</skillID>)", "$2");
+//        newSkill.setSkillName(skillData);
+//
+//        // Non mandatory data
+//        while ((!(skillLine = loadedFile.readLine()).equals("</Skill>"))) {
+//          if (skillLine.matches(".*<skillDescription")) {
+//
+//          }
+//        }
+//      }
+//    }
+//  }
 }

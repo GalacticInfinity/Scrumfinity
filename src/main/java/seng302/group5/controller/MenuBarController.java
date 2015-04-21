@@ -212,6 +212,7 @@ public class MenuBarController {
       if (file != null) {
         Settings.currentFile = file;
         //Saving.loadDataFromFile(file, mainApp);
+        mainApp.resetAll();
         NewLoading load = new NewLoading(mainApp);
         load.loadFile(file);
 
