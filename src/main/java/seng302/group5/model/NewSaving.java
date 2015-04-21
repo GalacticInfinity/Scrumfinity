@@ -50,6 +50,7 @@ public class NewSaving {
       saveProjects(saveFile);
       savePeople(saveFile);
       saveSkills(saveFile);
+      saveTeams(saveFile);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -122,5 +123,30 @@ public class NewSaving {
       saveFile.write("\t</Skill>\n");
     }
     saveFile.write("</Skills>\n");
+  }
+
+  /**
+   * Writes the main app Team data to xml
+   * @param saveFile
+   * @throws Exception
+   */
+  private void saveTeams(Writer saveFile) throws Exception {
+    saveFile.write("<Teams>\n");
+    for (Team team : this.teams) {
+      saveFile.write("\t<Team>\n");
+      saveFile.write("\t\t<teamID>" + team.getTeamID() + "</teamID>\n");
+      if (team.getTeamDescription() != null && !team.getTeamDescription().isEmpty()) {
+        saveFile.write("\t\t<teamDescription>" + team.getTeamDescription() + "</teamDescription>\n");
+      }
+      if (!team.getTeamMembers().isEmpty()) {
+        saveFile.write("\t\t<TeamPeople>\n");
+        for (Person person : team.getTeamMembers()) {
+          saveFile.write("\t\t\t<teamPersonID>" + person.getPersonID() + "</teamPersonID>\n");
+        }
+        saveFile.write("\t\t</TeamPeople>\n");
+      }
+      saveFile.write("\t</Team>\n");
+    }
+    saveFile.write("</Teams>\n");
   }
 }
