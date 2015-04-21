@@ -1742,6 +1742,185 @@ public class UndoRedoHandlerTest {
     assertEquals(newProjectRelease, redoneRelease.getProjectRelease());
   }
 
+  /**
+   * Undo an edit for a Release which is part of a Project
+   */
+  @Test
+  public void testReleaseEditExistingProjectUndo() throws Exception {
+    assertTrue(mainApp.getReleases().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+
+    newProject();
+    newRelease();
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(1, mainApp.getReleases().size());
+    assertEquals(2, undoRedoHandler.getUndoStack().size());
+
+    Release oldRelease = mainApp.getReleases().get(0);
+    assertEquals(releaseName, oldRelease.getReleaseName());
+    assertEquals(releaseDescription, oldRelease.getReleaseDescription());
+    assertEquals(releaseDate, oldRelease.getReleaseDate());
+    assertEquals(releaseNotes, oldRelease.getReleaseNotes());
+    assertEquals(projectRelease, oldRelease.getProjectRelease());
+
+    editNewestRelease();
+    Release newRelease = mainApp.getReleases().get(0);
+    assertEquals(newReleaseName, newRelease.getReleaseName());
+    assertEquals(newReleaseDescription, newRelease.getReleaseDescription());
+    assertEquals(newReleaseDate, newRelease.getReleaseDate());
+    assertEquals(newReleaseNotes, newRelease.getReleaseNotes());
+    assertEquals(newProjectRelease, newRelease.getProjectRelease());
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(1, mainApp.getReleases().size());
+    assertEquals(3, undoRedoHandler.getUndoStack().size());
+
+    undoRedoHandler.undo();
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(1, mainApp.getReleases().size());
+    assertEquals(2, undoRedoHandler.getUndoStack().size());
+
+    Release undoneRelease = mainApp.getReleases().get(0);
+    assertEquals(releaseName, undoneRelease.getReleaseName());
+    assertEquals(releaseDescription, undoneRelease.getReleaseDescription());
+    assertEquals(releaseDate, undoneRelease.getReleaseDate());
+    assertEquals(releaseNotes, undoneRelease.getReleaseNotes());
+    assertEquals(projectRelease, undoneRelease.getProjectRelease());
+
+  }
+
+  /**
+   * Redo an edit for a release which is part of a project
+   */
+  @Test
+  public void testReleaseEditExistingProjectRedo() throws Exception {
+    assertTrue(mainApp.getReleases().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    newProject();
+    newRelease();
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(1, mainApp.getReleases().size());
+    assertEquals(2, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    Release oldRelease = mainApp.getReleases().get(0);
+    assertEquals(releaseName, oldRelease.getReleaseName());
+    assertEquals(releaseDescription, oldRelease.getReleaseDescription());
+    assertEquals(releaseDate, oldRelease.getReleaseDate());
+    assertEquals(releaseNotes, oldRelease.getReleaseNotes());
+    assertEquals(projectRelease, oldRelease.getProjectRelease());
+
+    editNewestRelease();
+    Release newRelease = mainApp.getReleases().get(0);
+    assertEquals(newReleaseName, newRelease.getReleaseName());
+    assertEquals(newReleaseDescription, newRelease.getReleaseDescription());
+    assertEquals(newReleaseDate, newRelease.getReleaseDate());
+    assertEquals(newReleaseNotes, newRelease.getReleaseNotes());
+    assertEquals(newProjectRelease, newRelease.getProjectRelease());
+
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(1, mainApp.getReleases().size());
+    assertEquals(3, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    undoRedoHandler.undo();
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(1, mainApp.getReleases().size());
+    assertEquals(2, undoRedoHandler.getUndoStack().size());
+    assertEquals(1, undoRedoHandler.getRedoStack().size());
+
+    Release undoneRelease = mainApp.getReleases().get(0);
+    assertEquals(releaseName, undoneRelease.getReleaseName());
+    assertEquals(releaseDescription, undoneRelease.getReleaseDescription());
+    assertEquals(releaseDate, undoneRelease.getReleaseDate());
+    assertEquals(releaseNotes, undoneRelease.getReleaseNotes());
+    assertEquals(projectRelease, undoneRelease.getProjectRelease());
+
+    undoRedoHandler.redo();
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(1, mainApp.getReleases().size());
+    assertEquals(3, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    Release redoneRelease = mainApp.getReleases().get(0);
+    assertEquals(newReleaseName, redoneRelease.getReleaseName());
+    assertEquals(newReleaseDescription, redoneRelease.getReleaseDescription());
+    assertEquals(newReleaseDate, redoneRelease.getReleaseDate());
+    assertEquals(newReleaseNotes, redoneRelease.getReleaseNotes());
+    assertEquals(newProjectRelease, redoneRelease.getProjectRelease());
+  }
+
+  /**
+   * Redo an edit for a release which is part of a project  but undo back to beginning
+   */
+  @Test
+  public void testReleaseEditExistingProjectRedoDeep() throws Exception {
+    assertTrue(mainApp.getReleases().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+
+    newProject();
+    newRelease();
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(1, mainApp.getReleases().size());
+    assertEquals(2, undoRedoHandler.getUndoStack().size());
+
+    Release oldRelease = mainApp.getReleases().get(0);
+    assertEquals(releaseName, oldRelease.getReleaseName());
+    assertEquals(releaseDescription, oldRelease.getReleaseDescription());
+    assertEquals(releaseDate, oldRelease.getReleaseDate());
+    assertEquals(releaseNotes, oldRelease.getReleaseNotes());
+    assertEquals(projectRelease, oldRelease.getProjectRelease());
+
+    editNewestRelease();
+    Release newRelease = mainApp.getReleases().get(0);
+    assertEquals(newReleaseName, newRelease.getReleaseName());
+    assertEquals(newReleaseDescription, newRelease.getReleaseDescription());
+    assertEquals(newReleaseDate, newRelease.getReleaseDate());
+    assertEquals(newReleaseNotes, newRelease.getReleaseNotes());
+    assertEquals(newProjectRelease, newRelease.getProjectRelease());
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(1, mainApp.getReleases().size());
+    assertEquals(3, undoRedoHandler.getUndoStack().size());
+
+    undoRedoHandler.undo(); //edit release
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(1, mainApp.getReleases().size());
+    assertEquals(2, undoRedoHandler.getUndoStack().size());
+
+    Release undoneRelease = mainApp.getReleases().get(0);
+    assertEquals(releaseName, undoneRelease.getReleaseName());
+    assertEquals(releaseDescription, undoneRelease.getReleaseDescription());
+    assertEquals(releaseDate, undoneRelease.getReleaseDate());
+    assertEquals(releaseNotes, undoneRelease.getReleaseNotes());
+    assertEquals(projectRelease, undoneRelease.getProjectRelease());
+
+    undoRedoHandler.undo(); // new release
+    undoRedoHandler.undo(); // new project
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+    undoRedoHandler.redo(); // new project
+    undoRedoHandler.redo(); // new release
+
+    oldRelease = mainApp.getReleases().get(0); //before the edit redo is done
+    assertEquals(releaseName, oldRelease.getReleaseName());
+    assertEquals(releaseDescription, oldRelease.getReleaseDescription());
+    assertEquals(releaseDate, oldRelease.getReleaseDate());
+    assertEquals(releaseNotes, oldRelease.getReleaseNotes());
+    assertEquals(projectRelease, oldRelease.getProjectRelease());
+
+    undoRedoHandler.redo(); //redoes the edit
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(1, mainApp.getReleases().size());
+    assertEquals(3, undoRedoHandler.getUndoStack().size());
+
+    newRelease = mainApp.getReleases().get(0);
+    assertEquals(newReleaseName, newRelease.getReleaseName());
+    assertEquals(newReleaseDescription, newRelease.getReleaseDescription());
+    assertEquals(newReleaseDate, newRelease.getReleaseDate());
+    assertEquals(newReleaseNotes, newRelease.getReleaseNotes());
+    assertEquals(newProjectRelease, newRelease.getProjectRelease());
+  }
+
 
   @Test
   public void testSpecialDeleteSkillUndo() throws Exception {
