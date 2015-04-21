@@ -22,6 +22,7 @@ import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.AgileHistory;
+import seng302.group5.model.AgileItem;
 import seng302.group5.model.Project;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
@@ -128,12 +129,11 @@ public class ProjectDialogController {
 
         }
         for (Team team : mainApp.getTeams()) {
-          if (team.getCurrentProject() == null && teamsName.contains(team) == false) {
-            availableTeams.add(team);
-          }
+          availableTeams.add(team);
         }
-
       }
+
+
 
       this.availableTeamsList.setItems(availableTeams);
       this.allocatedTeamsList.setItems(teamsName);
@@ -190,11 +190,53 @@ public class ProjectDialogController {
     }
   }
 
-  private void parseProjectDates(LocalDate startDate, LocalDate endDate) throws Exception {
+  /**
+   * Parses the selected dates and checks that all inputs are valid, that the selected team
+   * is not currently assigned during the chosen dates to any projects.
+   *
+   * @param startDate
+   * @param endDate
+   * @param team
+   * @throws Exception with message describing why the input is invalid.
+   */
+  private void parseProjectDates(LocalDate startDate, LocalDate endDate, Team team) throws Exception {
     if (startDate.isAfter(endDate)) {
       throw new Exception("Start date must be before End Date");
     }
-
+    else {
+      for (Project project1 : mainApp.getProjects()) {
+        for (AgileHistory team1 : project1.getTeam()) {
+          if (team.toString() == team1.getAgileItem().toString()) {
+            if (team1.getStartDate().isEqual(startDate) || team1.getEndDate().isEqual(endDate)) {
+              throw new Exception("The selected team is already assigned during selected dates.");
+            }
+            if (startDate.isAfter(team1.getStartDate()) && startDate.isBefore(team1.getEndDate())) {
+              throw new Exception("The selected team is already assigned during selected dates.");
+            } else if (endDate.isAfter(team1.getStartDate()) && endDate.isBefore(team1.getEndDate())) {
+              throw new Exception("The selected team is already assigned during selected dates.");
+            }
+            else if (startDate.isBefore(team1.getStartDate()) && endDate.isAfter(team1.getStartDate())) {
+              throw new Exception("The selected team is already assigned during selected dates.");
+            }
+          }
+        }
+      }
+      for (AgileHistory team2 : allocatedTeams) {
+        if (team.toString() == team2.getAgileItem().toString()) {
+          if (team2.getStartDate().isEqual(startDate) || team2.getEndDate().isEqual(endDate)) {
+            throw new Exception("The selected team is already assigned during selected dates.");
+          }
+          if (startDate.isAfter(team2.getStartDate()) && startDate.isBefore(team2.getEndDate())) {
+            throw new Exception("The selected team is already assigned during selected dates.");
+          } else if (endDate.isAfter(team2.getStartDate()) && endDate.isBefore(team2.getEndDate())) {
+            throw new Exception("The selected team is already assigned during selected dates.");
+          }
+          else if (startDate.isBefore(team2.getStartDate()) && endDate.isAfter(team2.getStartDate())) {
+            throw new Exception("The selected team is already assigned during selected dates.");
+          }
+        }
+      }
+    }
   }
 
   /**
@@ -221,6 +263,8 @@ public class ProjectDialogController {
 
 
 
+
+
   /**
    * Handles when the create button is pushed
    */
@@ -229,7 +273,7 @@ public class ProjectDialogController {
   protected void btnAddTeam(ActionEvent event) {
     try {
       Team selectedTeam = (Team) availableTeamsList.getSelectionModel().getSelectedItem();
-      parseProjectDates(teamStartDate.getValue(), teamEndDate.getValue());
+      parseProjectDates(teamStartDate.getValue(), teamEndDate.getValue(), selectedTeam);
       if (selectedTeam != null) {
         AgileHistory temp = new AgileHistory();
         temp.setAgileItem(selectedTeam);
@@ -237,7 +281,7 @@ public class ProjectDialogController {
         temp.setEndDate(teamEndDate.getValue());
         this.teamsName.add(selectedTeam);
         this.allocatedTeams.add(temp);
-        this.availableTeams.remove(selectedTeam);
+        //this.availableTeams.remove(selectedTeam);
         //add parse date function.
 
         projectHistory.setAgileItem(selectedTeam);
@@ -246,7 +290,7 @@ public class ProjectDialogController {
       }
       } catch (Exception e1) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-       alert.setTitle("Invalid Dates");
+        alert.setTitle("Invalid Dates");
         alert.setHeaderText(null);
         alert.setContentText(e1.getMessage());
         alert.showAndWait();
@@ -261,11 +305,14 @@ public class ProjectDialogController {
       Team selectedTeam = (Team) allocatedTeamsList.getSelectionModel().getSelectedItem();
 
       if (selectedTeam != null) {
-
-
         this.teamsName.remove(selectedTeam);
         this.availableTeams.add(selectedTeam);
-        this.allocatedTeams.remove(selectedTeam);
+        for (AgileHistory t : allocatedTeams) {
+          if (t.getAgileItem().toString() == selectedTeam.toString()) {
+            this.allocatedTeams.remove(t);
+          }
+        }
+
         //project.removeTeam(selectedTeam);
         //Add function to remove the team from the project on the team object level
       }
