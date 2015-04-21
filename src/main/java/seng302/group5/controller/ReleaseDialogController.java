@@ -60,19 +60,23 @@ public class ReleaseDialogController {
     LocalDate releaseDate = releaseDateField.getValue();
     String releaseNotes = releaseNotesField.getText().trim();
     ObservableList<Project> projects = projectLists.getItems();
-    Project project = new Project();
+    Project releaseProject = new Project();
 
     for (Project item : projects) {
-      project = item;
+      releaseProject = item;
     }
 
-    //try {
-    //  releaseId = parseReleaseID(releaseIDField.getText()); ToDo ParseReleaseID method
-   // }
-   // catch (Exception e) {
-    //  noErrors++;
-    //  errors.append(String.format("\n\t%s", e.getMessage()));
-  //}
+    try {
+      releaseId = parseReleaseID(releaseIDField.getText());
+      releaseDescription = parseReleaseDescription(releaseDescription);
+      releaseDate = parseReleaseDate(releaseDate);
+      releaseNotes = parseReleaseNotes(releaseNotes);
+      releaseProject = parseReleaseProject(selectedProject);
+   }
+   catch (Exception e) {
+      noErrors++;
+      errors.append(String.format("\n\t%s", e.getMessage()));
+  }
 
     // Display all errors if they exist
     if (noErrors > 0) {
@@ -88,14 +92,14 @@ public class ReleaseDialogController {
     }
     else {
       if (createOrEdit == CreateOrEdit.CREATE) {
-        release = new Release(releaseId, releaseDescription, releaseNotes, releaseDate, project);
+        release = new Release(releaseId, releaseDescription, releaseNotes, releaseDate, releaseProject);
         mainApp.addRelease(release);
       } else if (createOrEdit == CreateOrEdit.EDIT) {
         release.setReleaseName(releaseId);
         release.setReleaseDescription(releaseDescription);
         release.setReleaseDate(releaseDate);
         release.setReleaseNotes(releaseNotes);
-        release.setProjectRelease(project);
+        release.setProjectRelease(releaseProject);
 
         releaseDateField.setValue(release.getReleaseDate());
         projectList.setValue(release.getProjectRelease());
@@ -118,7 +122,7 @@ public class ReleaseDialogController {
       btnConfirm.setText("Create");
       initialiseLists(CreateOrEdit.CREATE, release);
     } else if (createOrEdit == CreateOrEdit.EDIT) {
-      thisStage.setTitle("Edit Person");
+      thisStage.setTitle("Edit Release");
       btnConfirm.setText("Save");
 
       releaseIDField.setText(release.getReleaseName());
@@ -167,11 +171,10 @@ public class ReleaseDialogController {
   @FXML
   protected void btnRemoveSkill(ActionEvent event) {
     try {
-      Project selectedItem = (Project) projectLists.getSelectionModel().getSelectedItem();
-
-      if (selectedProject != null) {
-        this.availableProjects.add(selectedItem);
-        this.selectedProject.remove(selectedItem);
+      if (this.selectedProject != null) {
+        this.availableProjects.add(selectedProject.get(0));
+        this.selectedProject.remove(0);
+        projectLists.setItems(this.selectedProject);
       }
     }
     catch (Exception e) {
@@ -184,7 +187,7 @@ public class ReleaseDialogController {
     try {
       Project selectedProject = (Project) projectList.getSelectionModel().getSelectedItem();
 
-      if (selectedProject != null) {
+      if (selectedProject != null && this.selectedProject.isEmpty()) {
         this.selectedProject.add(selectedProject);
         this.availableProjects.remove(availableProjects);
       }
@@ -192,6 +195,65 @@ public class ReleaseDialogController {
     catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  private String parseReleaseID(String inputReleaseID) throws Exception {
+    inputReleaseID = inputReleaseID.trim();
+
+    if (inputReleaseID.isEmpty()) {
+      throw new Exception("Release ID is empty.");
+    }
+    else if (inputReleaseID.length() > 8) {
+      throw new Exception("Release ID is more than 8 characters long");
+    }
+    else {
+      String lastReleaseID;
+      if (lastRelease == null) {
+        lastReleaseID = "";
+      } else {
+        lastReleaseID = lastRelease.getReleaseName();
+      }
+      for (Release releaseInList : mainApp.getReleases()) {
+        String releaseName = releaseInList.getReleaseName();
+        if (releaseName.equals(inputReleaseID) && !releaseName.equals(lastReleaseID)) {
+          throw new Exception("Person ID is not unique");
+        }
+      }
+    }
+    return inputReleaseID;
+  }
+
+
+  private String parseReleaseDescription(String inputReleaseDescription) throws Exception {
+
+    if (inputReleaseDescription.isEmpty()) {
+      throw new Exception("Release Description is empty.");
+    }
+    return inputReleaseDescription;
+  }
+
+  private String parseReleaseNotes(String inputReleaseNotes) throws Exception {
+
+    if (inputReleaseNotes.isEmpty()) {
+      throw new Exception("Release Notes is empty.");
+    }
+    return inputReleaseNotes;
+  }
+
+  private LocalDate parseReleaseDate(LocalDate inputReleaseDate) throws Exception {
+
+    if (inputReleaseDate == null) {
+      throw new Exception("Release Date is empty.");
+    }
+    return inputReleaseDate;
+  }
+
+  private Project parseReleaseProject(ObservableList inputReleaseProject) throws Exception {
+
+    if (inputReleaseProject.isEmpty()) {
+      throw new Exception("Assign a project to this release.");
+    }
+    return (Project) inputReleaseProject.get(0);
   }
 
   @FXML

@@ -138,7 +138,8 @@ public class MenuBarController {
      */
     if (Settings.currentFile != null) {
       try {
-        Saving.saveDataToFile(Settings.currentFile, mainApp);
+        NewSaving save = new NewSaving(mainApp);
+        save.saveData(Settings.currentFile);
         mainApp.refreshLastSaved();
       } catch (Exception a) {
         System.out.println("Current File does not exist");
@@ -155,7 +156,9 @@ public class MenuBarController {
 
         if (file != null) {
           Settings.currentFile = file;
-          Saving.saveDataToFile(file, mainApp);
+          //Saving.saveDataToFile(file, mainApp);
+          NewSaving save = new NewSaving(mainApp);
+          save.saveData(file);
 
           // Refresh the last saved action
           mainApp.refreshLastSaved();
@@ -306,7 +309,7 @@ public class MenuBarController {
           break;
       }
     }
-    }
+  }
 
   @FXML
   protected void btnDelete(){

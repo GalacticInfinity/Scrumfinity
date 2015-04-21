@@ -41,30 +41,33 @@
             <TextField fx:id="releaseNotesField" prefHeight="100.0" prefWidth="289.0" />
          </children>
       </HBox>
-        <HBox alignment="CENTER_LEFT" layoutY="1.0" prefHeight="85.0" prefWidth="369.0" spacing="10.0">
+        <HBox alignment="CENTER_LEFT" layoutY="1.0" prefHeight="51.0" prefWidth="515.0" spacing="10.0">
             <children>
                 <Label prefHeight="25.0" prefWidth="115.0" text="Project">
                     <font>
                         <Font size="15.0" />
                     </font>
                 </Label>
-                <ListView fx:id="projectLists" maxHeight="25.0" prefHeight="16.0" prefWidth="200.0" />
-                <Button fx:id="btnRemoveProject" mnemonicParsing="false" onAction="#btnRemoveSkill" text="Remove" />
-            </children>
-        </HBox>
-        <HBox prefHeight="30.0" prefWidth="200.0">
-            <children>
                 <ComboBox fx:id="projectList" prefHeight="25.0" prefWidth="200.0">
                     <HBox.margin>
                         <Insets right="10.0" />
                     </HBox.margin></ComboBox>
                 <Button fx:id="btnAddProject" mnemonicParsing="false" onAction="#btnAddProject" text="Add" />
             </children>
+        </HBox>
+        <HBox prefHeight="30.0" prefWidth="200.0">
+            <children>
+                <ListView fx:id="projectLists" maxHeight="25.0" prefHeight="16.0" prefWidth="200.0" />
+                <Button fx:id="btnRemoveProject" mnemonicParsing="false" onAction="#btnRemoveSkill" text="Remove">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin></Button>
+            </children>
             <VBox.margin>
                 <Insets left="125.0" />
             </VBox.margin>
         </HBox>
-      <HBox prefHeight="50.0" prefWidth="515.0" spacing="10.0">
+      <HBox prefHeight="81.0" prefWidth="515.0" spacing="10.0">
          <children>
             <Label prefHeight="37.0" prefWidth="115.0" text="Release Date:">
                <font>
@@ -74,12 +77,15 @@
                   <Insets top="2.0" />
                </HBox.margin>
             </Label>
-            <DatePicker fx:id="releaseDateField" prefHeight="40.0" prefWidth="174.0">
+            <DatePicker fx:id="releaseDateField" editable="false" prefHeight="40.0" prefWidth="174.0">
                <HBox.margin>
                   <Insets top="5.0" />
                </HBox.margin>
             </DatePicker>
          </children>
+         <padding>
+            <Insets top="10.0" />
+         </padding>
       </HBox>
         <HBox alignment="BOTTOM_RIGHT" prefHeight="24.0" prefWidth="420.0" spacing="10.0">
             <opaqueInsets>

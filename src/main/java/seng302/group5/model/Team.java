@@ -59,6 +59,7 @@ public class Team implements AgileItem {
     this.teamDescription = clone.getTeamDescription();
     this.teamMembers.clear();
     this.teamMembers.addAll(clone.getTeamMembers());
+    this._roles = clone.get_roles();
   }
 
   public String getTeamID() {
@@ -107,6 +108,10 @@ public class Team implements AgileItem {
     }
   }
 
+  public Vector get_roles() {
+    return _roles;
+  }
+
   private boolean canAddRole(PersonRole role) {
     if (role.hasType("ProductOwner") || role.hasType("ScrumMaster") ||
         role.hasType("DevelopmentTeamMember")) {
@@ -143,6 +148,7 @@ public class Team implements AgileItem {
       this.teamDescription = clone.getTeamDescription();
       this.teamMembers.clear();
       this.teamMembers.addAll(clone.getTeamMembers());
+      this._roles = clone.get_roles();
     }
   }
 
