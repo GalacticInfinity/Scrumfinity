@@ -52,7 +52,7 @@ public class ProjectDialogController {
   private Project project = new Project();
   private Project lastProject;
   private ObservableList<AgileHistory> allocatedTeams = FXCollections.observableArrayList();
-  private ObservableList<Team> teamsName = FXCollections.observableArrayList();
+  private ObservableList<String> teamsName = FXCollections.observableArrayList();
   private ObservableList<Team> availableTeams =  FXCollections.observableArrayList();
   private Team selectedTeam;
   private AgileHistory projectHistory = new AgileHistory();
@@ -124,7 +124,7 @@ public class ProjectDialogController {
       else if (createOrEdit == CreateOrEdit.EDIT) {
 
         for (AgileHistory team : project.getTeam()) {
-          teamsName.add((Team) team.getAgileItem());
+          teamsName.add(team.toString());
 
 
         }
@@ -133,10 +133,9 @@ public class ProjectDialogController {
         }
       }
 
-
-
       this.availableTeamsList.setItems(availableTeams);
-      this.allocatedTeamsList.setItems(teamsName);
+//      this.allocatedTeamsList.setItems(teamsName);
+      this.allocatedTeamsList.setItems(allocatedTeams);
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -279,7 +278,7 @@ public class ProjectDialogController {
         temp.setAgileItem(selectedTeam);
         temp.setStartDate(teamStartDate.getValue());
         temp.setEndDate(teamEndDate.getValue());
-        this.teamsName.add(selectedTeam);
+        this.teamsName.add(temp.toString());
         this.allocatedTeams.add(temp);
         //this.availableTeams.remove(selectedTeam);
         //add parse date function.
@@ -302,16 +301,21 @@ public class ProjectDialogController {
   @FXML
   protected void btnRemoveTeam(ActionEvent event) {
     try {
-      Team selectedTeam = (Team) allocatedTeamsList.getSelectionModel().getSelectedItem();
+//      Team selectedTeam = (Team) allocatedTeamsList.getSelectionModel().getSelectedItem();
+      AgileHistory selectedAgileHistory = (AgileHistory) allocatedTeamsList.getSelectionModel().getSelectedItem();
+      Team selectedTeam = (Team) selectedAgileHistory.getAgileItem();
 
       if (selectedTeam != null) {
         this.teamsName.remove(selectedTeam);
-        this.availableTeams.add(selectedTeam);
+//        this.availableTeams.add(selectedTeam);
+        AgileHistory temp = new AgileHistory();
         for (AgileHistory t : allocatedTeams) {
           if (t.getAgileItem().toString() == selectedTeam.toString()) {
-            this.allocatedTeams.remove(t);
+            temp = t;
+            break;
           }
         }
+        this.allocatedTeams.remove(temp);
 
         //project.removeTeam(selectedTeam);
         //Add function to remove the team from the project on the team object level
@@ -370,9 +374,6 @@ public class ProjectDialogController {
           project.setProjectID(projectID);
           project.setProjectName(projectName);
           project.setProjectDescription(projectDescription);
-          project.getTeam().clear();
-
-
           for (AgileHistory team : this.allocatedTeams) {
             System.out.println(team.getAgileItem().toString());
             project.addTeam(team);

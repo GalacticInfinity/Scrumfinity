@@ -33,4 +33,9 @@ public class AgileHistory {
   public void setEndDate(LocalDate endDate) {
     this.endDate = endDate;
   }
+
+  @Override
+  public String toString() {
+    return agileItem.toString() + " " + startDate.toString() + " " + endDate.toString();
+  }
 }
