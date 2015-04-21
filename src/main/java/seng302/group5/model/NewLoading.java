@@ -31,15 +31,9 @@ public class NewLoading {
     try {
       String currentLine;
       loadedFile = new BufferedReader(new FileReader(filename));
-      // TODO panic
-//      while ((currentLine = loadedFile.readLine()) != null) {
-//        System.out.println(currentLine);
-//        loadListType(currentLine);
-//        loadedFile.readLine();
-//      }
       loadProjects();
       loadPeople();
-      //loadSkills();
+      loadSkills();
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
@@ -122,11 +116,11 @@ public class NewLoading {
             //System.out.println(personData);
             newPerson.setLastName(personData);
           }
-          if (personLine.startsWith("\t\t<Skills>")) {
-            while ((!(personLine = loadedFile.readLine()).equals("\t\t</Skills>"))) {
-              if (personLine.startsWith("\t\t\t<skill>")) {
+          if (personLine.startsWith("\t\t<PersonSkills>")) {
+            while ((!(personLine = loadedFile.readLine()).equals("\t\t</PersonSkills>"))) {
+              if (personLine.startsWith("\t\t\t<PersonSkill>")) {
                 tempSkill = new Skill();
-                personData = personLine.replaceAll("(?i)(.*<skill.*?>)(.+?)(</skill>)", "$2");
+                personData = personLine.replaceAll("(?i)(.*<PersonSkill.*?>)(.+?)(</PersonSkill>)", "$2");
                 //System.out.println(personData);
                 tempSkill.setSkillName(personData);
                 skills.add(tempSkill);
@@ -142,32 +136,54 @@ public class NewLoading {
     }
   }
 
-//  /**
-//   * Loads all Skills into main app
-//   * @throws Exception
-//   */
-//  private void loadSkills() throws Exception{
-//    String skillLine;
-//    String skillData;
-//
-//    // Untill skill end tag
-//    while ((!(skillLine = loadedFile.readLine()).equals("</Skills>"))) {
-//      // For each new skill
-//      if (skillLine.matches(".*<Skill>")) {
-//        Skill newSkill = new Skill();
-//
-//        // Mandatory data
-//        skillLine = loadedFile.readLine();
-//        skillData = skillLine.replaceAll("(?i)(.*<skillID.*?>)(.+?)(</skillID>)", "$2");
-//        newSkill.setSkillName(skillData);
-//
-//        // Non mandatory data
-//        while ((!(skillLine = loadedFile.readLine()).equals("</Skill>"))) {
-//          if (skillLine.matches(".*<skillDescription")) {
-//
-//          }
-//        }
-//      }
-//    }
-//  }
+  /**
+   * Loads all Skills into main app
+   * @throws Exception
+   */
+  private void loadSkills() throws Exception{
+    String skillLine;
+    String skillData;
+
+    // Untill skill end tag
+    while ((!(skillLine = loadedFile.readLine()).equals("</Skills>"))) {
+      // For each new skill
+      if (skillLine.matches(".*<Skill>")) {
+        Skill newSkill = new Skill();
+
+        // Mandatory data
+        skillLine = loadedFile.readLine();
+        skillData = skillLine.replaceAll("(?i)(.*<skillID.*?>)(.+?)(</skillID>)", "$2");
+        newSkill.setSkillName(skillData);
+
+        // Non mandatory data
+        while ((!(skillLine = loadedFile.readLine()).equals("\t</Skill>"))) {
+          if (skillLine.startsWith("\t\t<skillDescription>")) {
+            skillData = skillLine.replaceAll("(?i)(.*<skillDescription.*?>)(.+?)(</skillDescription>)", "$2");
+            newSkill.setSkillDescription(skillData);
+          }
+        }
+        main.addSkill(newSkill);
+      }
+    }
+
+    // Now sync Skills and people skills
+    for (Person person : main.getPeople()) {
+      ArrayList<Skill> skillArray = new ArrayList<>();
+      // For every skill in that person
+      for (Skill personSkill : person.getSkillSet()) {
+        // For every skill in main app
+        for (Skill mainSkill : main.getSkills()) {
+          if (mainSkill.getSkillName().equals(personSkill.getSkillName())) {
+            // Remove loaded skill object
+            skillArray.add(mainSkill);
+          }
+        }
+      }
+      // To fix Concurrent Modification Exception
+      person.getSkillSet().clear();
+      for (Skill arraySkill : skillArray) {
+        person.getSkillSet().add(arraySkill);
+      }
+    }
+  }
 }

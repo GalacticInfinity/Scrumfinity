@@ -30,6 +30,10 @@ public class NewSaving {
     releases = main.getReleases();
   }
 
+  /**
+   * Takes file destination and creates xml save file at specified location
+   * @param file File destination
+   */
   public void saveData(File file) {
     // Turns the file into a string
     String filename = file.toString();
@@ -45,6 +49,7 @@ public class NewSaving {
       //saveProjects(saveFile);
       saveProjects(saveFile);
       savePeople(saveFile);
+      saveSkills(saveFile);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -53,6 +58,7 @@ public class NewSaving {
   /**
    * Write main app project data to xml file
    * @param saveFile
+   * @throws Exception
    */
   private void saveProjects(Writer saveFile) throws Exception{
     saveFile.write("<Projects>\n");
@@ -89,14 +95,32 @@ public class NewSaving {
         saveFile.write("\t\t<team>" + person.getTeamID() + "</team>\n");
       }
       if (!person.getSkillSet().isEmpty()) {
-        saveFile.write("\t\t<Skills>\n");
+        saveFile.write("\t\t<PersonSkills>\n");
         for (Skill skill : person.getSkillSet()) {
-          saveFile.write("\t\t\t<skill>" + skill.getSkillName() + "</skill>\n");
+          saveFile.write("\t\t\t<PersonSkill>" + skill.getSkillName() + "</PersonSkill>\n");
         }
-        saveFile.write("\t\t</Skills>\n");
+        saveFile.write("\t\t</PersonSkills>\n");
       }
       saveFile.write("\t</Person>\n");
     }
     saveFile.write("</People>\n");
+  }
+
+  /**
+   * Writes the main app Skill data to xml
+   * @param saveFile
+   * @throws Exception
+   */
+  private void saveSkills(Writer saveFile) throws Exception {
+    saveFile.write("<Skills>\n");
+    for (Skill skill : this.skills) {
+      saveFile.write("\t<Skill>\n");
+      saveFile.write("\t\t<skillID>" + skill.getSkillName() + "</skillID>\n");
+      if (skill.getSkillDescription() != null && !skill.getSkillDescription().isEmpty()) {
+        saveFile.write("\t\t<skillDescription>" + skill.getSkillDescription() + "</skillDescription>\n");
+      }
+      saveFile.write("\t</Skill>\n");
+    }
+    saveFile.write("</Skills>\n");
   }
 }
