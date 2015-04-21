@@ -82,6 +82,10 @@ public class Person implements AgileItem {
     return _roles.toString();
   }
 
+  public void setRoles(Vector role) {
+    _roles = role;
+  }
+
   public String getPersonID() {
     return personID;
   }
