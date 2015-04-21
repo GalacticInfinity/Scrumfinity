@@ -34,6 +34,7 @@ public class NewLoading {
       loadProjects();
       loadPeople();
       loadSkills();
+      loadTeams();
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
@@ -88,14 +89,16 @@ public class NewLoading {
   private void loadPeople() throws Exception{
     String personLine;
     String personData;
+    Person newPerson;
+    ObservableList<Skill> skills;
 
     // Untill People end tag
     while ((!(personLine = loadedFile.readLine()).equals("</People>"))) {
       // On new Person tag
       if (personLine.matches(".*<Person>")) {
         // Required initializers
-        Person newPerson = new Person();
-        ObservableList<Skill> skills = FXCollections.observableArrayList();
+        newPerson = new Person();
+        skills = FXCollections.observableArrayList();
         Skill tempSkill;
 
         // Mandatory data
@@ -183,6 +186,74 @@ public class NewLoading {
       person.getSkillSet().clear();
       for (Skill arraySkill : skillArray) {
         person.getSkillSet().add(arraySkill);
+      }
+    }
+  }
+
+  /**
+   * Loads all teams into main app
+   * @throws Exception
+   */
+  private void loadTeams() throws Exception {
+    String teamLine;
+    String teamData;
+    Team newTeam;
+    Person tempPerson;
+    ObservableList<Person> people;
+
+    // Untill Team end tag
+    while (!(teamLine = loadedFile.readLine()).startsWith("</Teams>")) {
+      // For each new Team
+      if (teamLine.matches(".*<Team>")) {
+        // New team loading
+        newTeam = new Team();
+        people = FXCollections.observableArrayList();
+
+        // Mandatory fields
+        teamLine = loadedFile.readLine();
+        teamData = teamLine.replaceAll("(?i)(.*<teamID.*?>)(.+?)(</teamID>)", "$2");
+        newTeam.setTeamID(teamData);
+
+        // Non mandatory fields
+        while (!(teamLine = loadedFile.readLine()).equals("\t</Team>")) {
+          if (teamLine.startsWith("\t\t<teamDescription>")) {
+            teamData = teamLine.replaceAll("(?i)(.*<teamDescription.*?>)(.+?)(</teamDescription>)", "$2");
+            newTeam.setTeamDescription(teamData);
+          }
+          // Going through teams
+          if (teamLine.startsWith("\t\t<TeamPeople>")) {
+            while (!(teamLine = loadedFile.readLine()).equals("\t\t</TeamPeople>")) {
+              tempPerson = new Person();
+              teamData = teamLine.replaceAll("(?i)(.*<TeamPersonID.*?>)(.+?)(</TeamPersonID>)", "$2");
+              tempPerson.setPersonID(teamData);
+              people.add(tempPerson);
+            }
+            if (people.size() != 0) {
+              newTeam.setTeamMembers(people);
+            }
+          }
+        }
+        main.addTeam(newTeam);
+      }
+    }
+
+    // Now sync Team and People
+    for (Team team : main.getTeams()) {
+      ArrayList<Person> personArray = new ArrayList<>();
+      // For every person in that team
+      for (Person teamPerson : team.getTeamMembers()) {
+        // For every person that is in Main App
+        for (Person mainPerson : main.getPeople()) {
+          if (teamPerson.getPersonID().equals(mainPerson.getPersonID())) {
+            personArray.add(mainPerson);
+          }
+        }
+      }
+      // To fix Concurrent Modification Exception
+      team.getTeamMembers().clear();
+      for (Person person : personArray) {
+        person.assignToTeam(team);
+        team.getTeamMembers().add(person);
       }
     }
   }
