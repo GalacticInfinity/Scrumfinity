@@ -5,14 +5,14 @@ package seng302.group5.model;
  */
 public class Skill implements AgileItem{
 
-  private String skillName;
+  private String skillID;
   private String skillDescription;
 
   /**
    * Default constructor for skill
    */
   public Skill () {
-    this.skillName = "";
+    this.skillID = "";
     this.skillDescription = "";
   }
 
@@ -22,7 +22,7 @@ public class Skill implements AgileItem{
    * @param skillName short skillName of a skill
    */
   public Skill(String skillName) {
-    this.skillName = skillName;
+    this.skillID = skillName;
   }
 
   /**
@@ -32,7 +32,7 @@ public class Skill implements AgileItem{
    * @param skillDescription Description of the skill
    */
   public Skill(String skillName, String skillDescription) {
-    this.skillName = skillName;
+    this.skillID = skillName;
     this.skillDescription = skillDescription;
   }
 
@@ -41,7 +41,7 @@ public class Skill implements AgileItem{
    * @param clone Skill to clone
    */
   public Skill(Skill clone) {
-    this.skillName = clone.getSkillName();
+    this.skillID = clone.getSkillName();
     this.skillDescription = clone.getSkillDescription();
   }
 
@@ -50,7 +50,7 @@ public class Skill implements AgileItem{
    * @param skillName skillName of the skill
    */
   public void setSkillName(String skillName) {
-    this.skillName = skillName;
+    this.skillID = skillName;
   }
 
   /**
@@ -58,7 +58,7 @@ public class Skill implements AgileItem{
    * @return skillName of the skill
    */
   public String getSkillName() {
-    return skillName;
+    return skillID;
   }
 
   /**
@@ -81,7 +81,7 @@ public class Skill implements AgileItem{
   public void copyValues(AgileItem agileItem) {
     if (agileItem instanceof Skill) {
       Skill clone = (Skill) agileItem;
-      this.skillName = clone.getSkillName();
+      this.skillID = clone.getSkillName();
       this.skillDescription = clone.getSkillDescription();
     }
   }
@@ -100,7 +100,7 @@ public class Skill implements AgileItem{
     boolean result = false;
     if (obj instanceof Skill) {
       Skill skill = (Skill) obj;
-      result = this.skillName.equals(skill.getSkillName());
+      result = this.skillID.equals(skill.getSkillName());
     }
     return result;
   }

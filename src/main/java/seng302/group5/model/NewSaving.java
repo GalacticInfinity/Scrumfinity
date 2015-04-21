@@ -43,6 +43,7 @@ public class NewSaving {
         new FileOutputStream(filename), "utf-8"))) {
       //saveFile.write("<root>\n");
       //saveProjects(saveFile);
+      saveProjects(saveFile);
       savePeople(saveFile);
     } catch (Exception e) {
       e.printStackTrace();
@@ -55,8 +56,17 @@ public class NewSaving {
    */
   private void saveProjects(Writer saveFile) throws Exception{
     saveFile.write("<Projects>\n");
+    for (Project project : this.projects) {
+      saveFile.write("\t<Project>\n");
+      saveFile.write("\t\t<projectID>" + project.getProjectID() + "</projectID>\n");
+      saveFile.write("\t\t<projectName>" + project.getProjectName() + "</projectName>\n");
+      if (project.getProjectDescription() != null && !project.getProjectDescription().isEmpty()) {
+        saveFile.write("\t\t<projectDescription>" + project.getProjectDescription() + "</projectDescription>\n");
+      }
+      //TODO Save projects too
+      saveFile.write("\t</Project>\n");
+    }
     saveFile.write("</Projects>\n");
-    //for (Project )
   }
 
   /**
