@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 import seng302.group5.Main;
 
@@ -37,6 +36,7 @@ public class NewLoading {
       loadSkills();
       loadTeams();
       loadReleases();
+      syncTeamAllocation();
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
@@ -48,13 +48,20 @@ public class NewLoading {
     }
   }
 
-  private void loadProjects() throws Exception {
+  /**
+   * Loads Projects from xml files into main app
+   * @throws Exception
+   */
+  private void loadProjects()throws Exception {
     String projectLine;
     String projectData;
+    AgileHistory teamHistoryItem;
+    Team tempTeam;
+    LocalDate startDate;
+    LocalDate endDate;
 
     // Untill Project end tag
     while ((!(projectLine = loadedFile.readLine()).equals("</Projects>"))) {
-      //System.out.println(projectLine);
       // On new Person tag
       if (projectLine.matches(".*<Project>")) {
         Project newProject = new Project();
@@ -62,30 +69,54 @@ public class NewLoading {
         // Mandatory fields
         projectLine = loadedFile.readLine();
         projectData = projectLine.replaceAll("(?i)(.*<projectID.*?>)(.+?)(</projectID>)", "$2");
-        //System.out.println(projectData);
         newProject.setProjectID(projectData);
         projectLine = loadedFile.readLine();
         projectData = projectLine.replaceAll("(?i)(.*<projectName.*?>)(.+?)(</projectName>)", "$2");
-        //System.out.println(projectData);
         newProject.setProjectName(projectData);
 
         // Non mandatory fields.
         while ((!(projectLine = loadedFile.readLine()).equals("\t</Project>"))) {
           if (projectLine.startsWith("\t\t<projectDescription>")) {
             projectData = projectLine.replaceAll("(?i)(.*<projectDescription.*?>)(.+?)(</projectDescription>)", "$2");
-            //System.out.println(projectData);
             newProject.setProjectDescription(projectData);
+          }
+          // Loads list of AgileHistory items
+          if (projectLine.startsWith("\t\t<AllocatedTeams>")) {
+            while (!(projectLine = loadedFile.readLine()).startsWith("\t\t</AllocatedTeams>")) {
+              if (projectLine.startsWith("\t\t\t<allocatedTeam>")) {
+                teamHistoryItem = new AgileHistory();
+                tempTeam = new Team();
+
+                projectLine = loadedFile.readLine();
+                projectData = projectLine.replaceAll("(?i)(.*<agileTeam.*?>)(.+?)(</agileTeam>)", "$2");
+                tempTeam.setTeamID(projectData);
+                teamHistoryItem.setAgileItem(tempTeam);
+                projectLine = loadedFile.readLine();
+                projectData = projectLine.replaceAll("(?i)(.*<startDate.*?>)(.+?)(</startDate>)", "$2");
+                startDate = LocalDate.of(Integer.parseInt(projectData.substring(0, 4)),
+                                         Integer.parseInt(projectData.substring(5, 7)),
+                                         Integer.parseInt(projectData.substring(8, 10)));
+                teamHistoryItem.setStartDate(startDate);
+                projectLine = loadedFile.readLine();
+                projectData = projectLine.replaceAll("(?i)(.*<endDate.*?>)(.+?)(</endDate>)", "$2");
+                endDate = LocalDate.of(Integer.parseInt(projectData.substring(0, 4)),
+                                       Integer.parseInt(projectData.substring(5, 7)),
+                                       Integer.parseInt(projectData.substring(8, 10)));
+                teamHistoryItem.setEndDate(endDate);
+
+                newProject.addTeam(teamHistoryItem);
+              }
+            }
           }
         }
         // Add the loaded project into main
         main.addProject(newProject);
       }
     }
-    //System.out.println(projectLine);
   }
 
   /**
-   * Loads all people from the loaded xml file into main app
+   * Loads People from xml files into main app
    * @throws Exception
    */
   private void loadPeople() throws Exception{
@@ -106,19 +137,16 @@ public class NewLoading {
         // Mandatory data
         personLine = loadedFile.readLine();
         personData = personLine.replaceAll("(?i)(.*<personID.*?>)(.+?)(</personID>)", "$2");
-        //System.out.println(personData);
         newPerson.setPersonID(personData);
 
         // Optional data
         while ((!(personLine = loadedFile.readLine()).equals("\t</Person>"))) {
           if (personLine.startsWith("\t\t<firstName>")) {
             personData = personLine.replaceAll("(?i)(.*<firstName.*?>)(.+?)(</firstName>)", "$2");
-            //System.out.println(personData);
             newPerson.setFirstName(personData);
           }
           if (personLine.startsWith("\t\t<lastName>")) {
             personData = personLine.replaceAll("(?i)(.*<lastName.*?>)(.+?)(</lastName>)", "$2");
-            //System.out.println(personData);
             newPerson.setLastName(personData);
           }
           if (personLine.startsWith("\t\t<PersonSkills>")) {
@@ -126,7 +154,6 @@ public class NewLoading {
               if (personLine.startsWith("\t\t\t<PersonSkill>")) {
                 tempSkill = new Skill();
                 personData = personLine.replaceAll("(?i)(.*<PersonSkill.*?>)(.+?)(</PersonSkill>)", "$2");
-                //System.out.println(personData);
                 tempSkill.setSkillName(personData);
                 skills.add(tempSkill);
               }
@@ -142,7 +169,7 @@ public class NewLoading {
   }
 
   /**
-   * Loads all Skills into main app
+   * Loads Skills from xml files into main app and updates skill references inside people objects
    * @throws Exception
    */
   private void loadSkills() throws Exception{
@@ -193,7 +220,8 @@ public class NewLoading {
   }
 
   /**
-   * Loads all teams into main app
+   * Loads teams from xml files into main app, and updates references inside people objects
+   * to the newly loaded teams
    * @throws Exception
    */
   private void loadTeams() throws Exception {
@@ -234,6 +262,14 @@ public class NewLoading {
               newTeam.setTeamMembers(people);
             }
           }
+          if (teamLine.startsWith("\t\t<teamProject>")) {
+            teamData = teamLine.replaceAll("(?i)(.*<teamProject.*?>)(.+?)(</teamProject>)", "$2");
+            for (Project project : main.getProjects()) {
+              if (teamData.equals(project.getProjectID())) {
+                newTeam.setCurrentProject(project);
+              }
+            }
+          }
         }
         main.addTeam(newTeam);
       }
@@ -268,6 +304,7 @@ public class NewLoading {
     String releaseLine;
     String releaseData;
     Release newRelease;
+    LocalDate releaseDate;
 
     // Untill Releases end tag
     while (!(releaseLine = loadedFile.readLine()).startsWith("</Releases>")) {
@@ -288,7 +325,7 @@ public class NewLoading {
         releaseLine = loadedFile.readLine();
         releaseData = releaseLine.replaceAll("(?i)(.*<releaseProject>)(.+?)(</releaseProject>)",
                                              "$2");
-        // Get correct project from main
+        // Get correct project from main for concurrency
         for (Project project : main.getProjects()) {
           if (project.getProjectID().equals(releaseData)) {
             newRelease.setProjectRelease(project);
@@ -296,13 +333,39 @@ public class NewLoading {
         }
         releaseLine = loadedFile.readLine();
         releaseData = releaseLine.replaceAll("(?i)(.*<releaseDate>)(.+?)(</releaseDate>)", "$2");
-        LocalDate releaseDate = LocalDate.of(Integer.parseInt(releaseData.substring(0,4)),
-                                             Integer.parseInt(releaseData.substring(5,7)),
-                                             Integer.parseInt(releaseData.substring(8,10)));
+        releaseDate = LocalDate.of(Integer.parseInt(releaseData.substring(0, 4)),
+                                   Integer.parseInt(releaseData.substring(5, 7)),
+                                   Integer.parseInt(releaseData.substring(8, 10)));
         newRelease.setReleaseDate(releaseDate);
 
         main.addRelease(newRelease);
       }
+    }
+  }
+
+  /**
+   * Syncs temporary teams inside agile history items in projects with the real team objects
+   */
+  private void syncTeamAllocation() {
+    ArrayList<Team> teamArray;
+
+    for (Project project : main.getProjects()) {
+      // For every AgileHistory in the project
+      for (AgileHistory teamHistory : project.getTeam()) {
+        // For every Team that is in Main App
+        for (Team team : main.getTeams()) {
+          Team historyTeam = (Team) teamHistory.getAgileItem();
+          if (team.getTeamID().equals(historyTeam.getTeamID())) {
+            teamHistory.setAgileItem(team);
+          }
+        }
+      }
+//      // To fix Concurrent Modification Exception
+//      team.getTeamMembers().clear();
+//      for (Person person : personArray) {
+//        person.assignToTeam(team);
+//        team.getTeamMembers().add(person);
+//      }
     }
   }
 }
