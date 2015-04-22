@@ -1,8 +1,6 @@
 package seng302.group5.controller;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,7 +15,6 @@ import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.NewLoading;
 import seng302.group5.model.NewSaving;
-import seng302.group5.model.Saving;
 import seng302.group5.model.util.Settings;
 
 /**
@@ -156,7 +153,6 @@ public class MenuBarController {
 
         if (file != null) {
           Settings.currentFile = file;
-          //Saving.saveDataToFile(file, mainApp);
           NewSaving save = new NewSaving(mainApp);
           save.saveData(file);
 
@@ -186,7 +182,6 @@ public class MenuBarController {
         Settings.currentFile = file;
         NewSaving save = new NewSaving(mainApp);
         save.saveData(file);
-        //Saving.saveDataToFile(file, mainApp);
 
         // Refresh the last saved action
         mainApp.refreshLastSaved();
@@ -214,7 +209,6 @@ public class MenuBarController {
       File file = fileChooser.showOpenDialog(mainApp.getPrimaryStage());
       if (file != null) {
         Settings.currentFile = file;
-        //Saving.loadDataFromFile(file, mainApp);
         mainApp.resetAll();
         NewLoading load = new NewLoading(mainApp);
         load.loadFile(file);
