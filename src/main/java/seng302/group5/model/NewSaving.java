@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.time.LocalDate;
 import java.util.List;
 
 import seng302.group5.Main;
@@ -50,6 +51,8 @@ public class NewSaving {
       saveProjects(saveFile);
       savePeople(saveFile);
       saveSkills(saveFile);
+      saveTeams(saveFile);
+      saveReleases(saveFile);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -122,5 +125,49 @@ public class NewSaving {
       saveFile.write("\t</Skill>\n");
     }
     saveFile.write("</Skills>\n");
+  }
+
+  /**
+   * Writes the main app Team data to xml
+   * @param saveFile
+   * @throws Exception
+   */
+  private void saveTeams(Writer saveFile) throws Exception {
+    saveFile.write("<Teams>\n");
+    for (Team team : this.teams) {
+      saveFile.write("\t<Team>\n");
+      saveFile.write("\t\t<teamID>" + team.getTeamID() + "</teamID>\n");
+      if (team.getTeamDescription() != null && !team.getTeamDescription().isEmpty()) {
+        saveFile.write("\t\t<teamDescription>" + team.getTeamDescription() + "</teamDescription>\n");
+      }
+      if (!team.getTeamMembers().isEmpty()) {
+        saveFile.write("\t\t<TeamPeople>\n");
+        for (Person person : team.getTeamMembers()) {
+          saveFile.write("\t\t\t<teamPersonID>" + person.getPersonID() + "</teamPersonID>\n");
+        }
+        saveFile.write("\t\t</TeamPeople>\n");
+      }
+      saveFile.write("\t</Team>\n");
+    }
+    saveFile.write("</Teams>\n");
+  }
+
+  /**
+   * Appends the main app release data to the save file
+   * @param saveFile
+   * @throws Exception
+   */
+  private void saveReleases(Writer saveFile) throws Exception {
+    saveFile.write("<Releases>\n");
+    for (Release release : this.releases) {
+      saveFile.write("\t<Release>\n");
+      saveFile.write("\t\t<releaseID>" + release.getReleaseName() + "</releaseID>\n");
+      saveFile.write("\t\t<releaseDescription>" + release.getReleaseDescription() + "</releaseDescription>\n");
+      saveFile.write("\t\t<releaseNotes>" + release.getReleaseNotes() + "</releaseNotes>\n");
+      saveFile.write("\t\t<releaseProject>" + release.getProjectRelease().getProjectID() + "</releaseProject>\n");
+      saveFile.write("\t\t<releaseDate>" + release.getReleaseDate() + "</releaseDate>\n");
+      saveFile.write("\t</Release>\n");
+    }
+    saveFile.write("</Releases>\n");
   }
 }

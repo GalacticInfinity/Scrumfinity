@@ -45,6 +45,8 @@ public class Project implements AgileItem {
     this.projectID = clone.getProjectID();
     this.projectName = clone.getProjectName();
     this.projectDescription = clone.getProjectDescription();
+    this.allocatedTeams.clear();
+    this.allocatedTeams.addAll(clone.getTeam());
   }
 
   public String getProjectID() {
@@ -90,6 +92,8 @@ public class Project implements AgileItem {
       this.projectID = clone.getProjectID();
       this.projectName = clone.getProjectName();
       this.projectDescription = clone.getProjectDescription();
+      this.allocatedTeams.clear();
+      this.allocatedTeams.addAll(clone.getTeam());
     }
   }
 

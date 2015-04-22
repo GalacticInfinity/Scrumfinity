@@ -31,7 +31,10 @@
                         <Font size="15.0" />
                     </font>
                 </Label>
-                <TextField fx:id="releaseDescriptionField" maxHeight="75.0" prefHeight="90.0" prefWidth="290.0" />
+                <TextField fx:id="releaseDescriptionField" alignment="TOP_LEFT" maxHeight="75.0" prefHeight="75.0" prefWidth="292.0">
+               <HBox.margin>
+                  <Insets top="2.0" />
+               </HBox.margin></TextField>
             </children>
         </HBox>
       <HBox prefHeight="100.0" prefWidth="200.0">
@@ -41,7 +44,7 @@
                   <Font size="15.0" />
                </font>
             </Label>
-            <TextField fx:id="releaseNotesField" prefHeight="100.0" prefWidth="289.0" />
+            <TextField fx:id="releaseNotesField" alignment="TOP_LEFT" prefHeight="100.0" prefWidth="293.0" />
          </children>
       </HBox>
         <HBox alignment="CENTER_LEFT" layoutY="1.0" prefHeight="51.0" prefWidth="515.0" spacing="10.0">

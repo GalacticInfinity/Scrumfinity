@@ -559,13 +559,10 @@ public class Main extends Application {
         break;
       case "Release":
         Release release = (Release) agileItem;
-        if (release.getProjectRelease() != null) {
-          System.err.println("Unhandled case for deleting agile item");
-        } else {
-          deleteRelease(release);
-          undoRedoObject = generateDelUndoRedoObject(Action.RELEASE_DELETE, agileItem);
-          newAction(undoRedoObject);
-        }
+        deleteRelease(release);
+        undoRedoObject = generateDelUndoRedoObject(Action.RELEASE_DELETE, agileItem);
+        newAction(undoRedoObject);
+        break;
       default:
         System.err.println("Unhandled case for deleting agile item");
         break;
