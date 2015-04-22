@@ -446,8 +446,45 @@ public class Main extends Application {
     UndoRedoObject undoRedoObject;
     switch (listType) {
       case "Project":
-        deleteProject((Project) agileItem);
+        Project project = (Project) agileItem;
+
+        ArrayList<Release> projectsReleases = new ArrayList<>();
+
+        for (Release release : releases) {
+          if (release.getProjectRelease().equals(project)) {
+            projectsReleases.add(release);
+          }
+        }
+        if (!projectsReleases.isEmpty()) {
+          //if so open a yes/no dialog
+          Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+          alert.setTitle("Releases still exist for this project");
+          alert.setHeaderText(null);
+          int messageLength = 1;
+          String message = String.format("Do you want to delete project '%s' and its releases:\n",
+                                         project.getProjectName());
+          for (Release releases: projectsReleases) {
+            messageLength ++;
+            message += String.format("%s\n",
+                                     releases.getReleaseName());
+          }
+          alert.getDialogPane().setPrefHeight(60 + 30 * messageLength);
+          alert.setContentText(message);
+          //checks response
+          Optional<ButtonType> result = alert.showAndWait();
+          if (result.get() == ButtonType.OK) {
+            for (Release release : projectsReleases) {
+              deleteRelease(release);
+            }
+            deleteProject(project);
+          }
+        } else {
+          deleteProject(project);
+        }
         undoRedoObject = generateDelUndoRedoObject(Action.PROJECT_DELETE, agileItem);
+        for (Release release : projectsReleases) {
+          undoRedoObject.addDatum(release);
+        }
         newAction(undoRedoObject);
         break;
       case "People":

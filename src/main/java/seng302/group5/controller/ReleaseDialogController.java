@@ -105,9 +105,33 @@ public class ReleaseDialogController {
         projectList.setValue(release.getProjectRelease());
         mainApp.refreshList();
       }
+      UndoRedoObject undoRedoObject = generateUndoRedoObject();
+      mainApp.newAction(undoRedoObject);
 
       thisStage.close();
     }
+  }
+
+  /**
+   * Generate an UndoRedoObject to place in the stack
+   * @return the UndoRedoObject to store
+   */
+  private UndoRedoObject generateUndoRedoObject() {
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+
+    if (createOrEdit == CreateOrEdit.CREATE) {
+      undoRedoObject.setAction(Action.RELEASE_CREATE);
+    } else {
+      undoRedoObject.setAction(Action.RELEASE_EDIT);
+      undoRedoObject.addDatum(lastRelease);
+    }
+
+    // Store a copy of project to edit in stack to avoid reference problems
+    undoRedoObject.setAgileItem(release);
+    Release releaseToStore = new Release(release);
+    undoRedoObject.addDatum(releaseToStore);
+
+    return undoRedoObject;
   }
 
   public void setupController(Main mainApp,
@@ -136,7 +160,7 @@ public class ReleaseDialogController {
 
     if (release != null) {
       this.release = release;
-      this.lastRelease = new Release();
+      this.lastRelease = new Release(release);
     } else {
       this.release = null;
       this.lastRelease = null;
@@ -216,7 +240,7 @@ public class ReleaseDialogController {
       for (Release releaseInList : mainApp.getReleases()) {
         String releaseName = releaseInList.getReleaseName();
         if (releaseName.equals(inputReleaseID) && !releaseName.equals(lastReleaseID)) {
-          throw new Exception("Person ID is not unique");
+          throw new Exception("Release ID is not unique");
         }
       }
     }
