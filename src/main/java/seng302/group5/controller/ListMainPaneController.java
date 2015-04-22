@@ -1,5 +1,7 @@
 package seng302.group5.controller;
 
+import java.time.format.DateTimeFormatter;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -265,7 +267,8 @@ public class ListMainPaneController {
       sampleTextArea.appendText("\nRelease description: ");
       sampleTextArea.appendText(release.getReleaseDescription());
       sampleTextArea.appendText("\nRelease Date: ");
-      sampleTextArea.appendText(release.getReleaseDate().toString());
+      sampleTextArea.appendText(release.getReleaseDate().format(
+          DateTimeFormatter.ofPattern("dd/MM/yyyy")));
       sampleTextArea.appendText("\nRelease Notes: ");
       sampleTextArea.appendText(release.getReleaseNotes());
       sampleTextArea.appendText("\nProject: ");

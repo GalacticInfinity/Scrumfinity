@@ -193,7 +193,7 @@ public class ProjectDialogController {
       for (Project project1 : mainApp.getProjects()) {
         for (AgileHistory team1 : project1.getTeam()) {
           if (Objects.equals(team.toString(), team1.getAgileItem().toString()) &&
-              project.getProjectID() != project1.getProjectID()) {
+              !project.getProjectID().equals(project1.getProjectID())) {
             if (team1.getStartDate().isEqual(startDate) || team1.getEndDate().isEqual(endDate)) {
               throw new Exception("The selected team is already assigned during selected dates.");
             }
