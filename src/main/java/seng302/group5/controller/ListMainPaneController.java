@@ -223,9 +223,9 @@ public class ListMainPaneController {
       sampleTextArea.appendText(project.getProjectDescription());
       sampleTextArea.appendText("\nAssigned Teams: \n");
       for (AgileHistory team : project.getTeam()) {
-        sampleTextArea.appendText(team.getAgileItem().toString());
-        sampleTextArea.appendText(": Start Date: " + team.getStartDate().toString() + " End Date: ");
-        sampleTextArea.appendText(team.getEndDate().toString() + "\n");
+        sampleTextArea.appendText("" + team.toString() + "\n");
+        //sampleTextArea.appendText(": Start Date: " + team.getStartDate().toString() + " End Date: ");
+        //sampleTextArea.appendText(team.getEndDate().toString() + "\n");
         }
 
 

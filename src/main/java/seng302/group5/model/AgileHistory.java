@@ -1,6 +1,7 @@
 package seng302.group5.model;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Created by Michael on 4/13/2015.
@@ -36,6 +37,8 @@ public class AgileHistory {
 
   @Override
   public String toString() {
-    return agileItem.toString() + " " + startDate.toString() + " " + endDate.toString();
+    String dateFormat = "dd/MM/yyyy";
+    return agileItem.toString() + ": " + startDate.format(DateTimeFormatter.ofPattern(dateFormat)) +
+           " - " + endDate.format(DateTimeFormatter.ofPattern(dateFormat));
   }
 }
