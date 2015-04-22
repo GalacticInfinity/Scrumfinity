@@ -294,13 +294,26 @@ public class UndoRedoHandler {
     Project projectToChange = (Project) undoRedoObject.getAgileItem();
     Project projectData = (Project) data.get(0);
 
+
+    // Get the projects releases
+    List<AgileItem> releases = data.subList(1, data.size());
+
     // Make the changes and refresh the list
     if (undoOrRedo == UndoOrRedo.UNDO) {
       // Create the deleted project again
       projectToChange.copyValues(projectData);
       mainApp.addProject(projectToChange);
+      //for each of its releases make them again and add them to the project
+      for (AgileItem agileItem : releases) {
+        Release theRelease = (Release) agileItem;
+        mainApp.addRelease(theRelease);
+      }
     } else {
       mainApp.deleteProject(projectToChange);
+      for (AgileItem agileItem : releases) {
+        Release theRelease = (Release) agileItem;
+        mainApp.deleteRelease(theRelease);
+      }
     }
     mainApp.refreshList();
   }
