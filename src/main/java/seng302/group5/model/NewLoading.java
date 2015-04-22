@@ -3,6 +3,7 @@ package seng302.group5.model;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import javafx.collections.FXCollections;
@@ -35,6 +36,7 @@ public class NewLoading {
       loadPeople();
       loadSkills();
       loadTeams();
+      loadReleases();
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
@@ -254,6 +256,52 @@ public class NewLoading {
       for (Person person : personArray) {
         person.assignToTeam(team);
         team.getTeamMembers().add(person);
+      }
+    }
+  }
+
+  /**
+   * Loads releases from xml files into main app
+   * @throws Exception
+   */
+  private void loadReleases() throws Exception {
+    String releaseLine;
+    String releaseData;
+    Release newRelease;
+
+    // Untill Releases end tag
+    while (!(releaseLine = loadedFile.readLine()).startsWith("</Releases>")) {
+      // For each new release
+      if (releaseLine.matches(".*<Release>")) {
+        newRelease = new Release();
+
+        releaseLine = loadedFile.readLine();
+        releaseData = releaseLine.replaceAll("(?i)(.*<releaseID.*?>)(.+?)(</releaseID>)", "$2");
+        newRelease.setReleaseName(releaseData);
+        releaseLine = loadedFile.readLine();
+        releaseData = releaseLine.replaceAll(
+            "(?i)(.*<releaseDescription.*?>)(.+?)(</releaseDescription>)", "$2");
+        newRelease.setReleaseDescription(releaseData);
+        releaseLine = loadedFile.readLine();
+        releaseData = releaseLine.replaceAll("(?i)(.*<releaseNotes>)(.+?)(</releaseNotes>)", "$2");
+        newRelease.setReleaseNotes(releaseData);
+        releaseLine = loadedFile.readLine();
+        releaseData = releaseLine.replaceAll("(?i)(.*<releaseProject>)(.+?)(</releaseProject>)",
+                                             "$2");
+        // Get correct project from main
+        for (Project project : main.getProjects()) {
+          if (project.getProjectID().equals(releaseData)) {
+            newRelease.setProjectRelease(project);
+          }
+        }
+        releaseLine = loadedFile.readLine();
+        releaseData = releaseLine.replaceAll("(?i)(.*<releaseDate>)(.+?)(</releaseDate>)", "$2");
+        LocalDate releaseDate = LocalDate.of(Integer.parseInt(releaseData.substring(0,4)),
+                                             Integer.parseInt(releaseData.substring(5,7)),
+                                             Integer.parseInt(releaseData.substring(8,10)));
+        newRelease.setReleaseDate(releaseDate);
+
+        main.addRelease(newRelease);
       }
     }
   }

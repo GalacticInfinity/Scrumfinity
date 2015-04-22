@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.time.LocalDate;
 import java.util.List;
 
 import seng302.group5.Main;
@@ -51,6 +52,7 @@ public class NewSaving {
       savePeople(saveFile);
       saveSkills(saveFile);
       saveTeams(saveFile);
+      saveReleases(saveFile);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -148,5 +150,24 @@ public class NewSaving {
       saveFile.write("\t</Team>\n");
     }
     saveFile.write("</Teams>\n");
+  }
+
+  /**
+   * Appends the main app release data to the save file
+   * @param saveFile
+   * @throws Exception
+   */
+  private void saveReleases(Writer saveFile) throws Exception {
+    saveFile.write("<Releases>\n");
+    for (Release release : this.releases) {
+      saveFile.write("\t<Release>\n");
+      saveFile.write("\t\t<releaseID>" + release.getReleaseName() + "</releaseID>\n");
+      saveFile.write("\t\t<releaseDescription>" + release.getReleaseDescription() + "</releaseDescription>\n");
+      saveFile.write("\t\t<releaseNotes>" + release.getReleaseNotes() + "</releaseNotes>\n");
+      saveFile.write("\t\t<releaseProject>" + release.getProjectRelease().getProjectID() + "</releaseProject>\n");
+      saveFile.write("\t\t<releaseDate>" + release.getReleaseDate() + "</releaseDate>\n");
+      saveFile.write("\t</Release>\n");
+    }
+    saveFile.write("</Releases>\n");
   }
 }
