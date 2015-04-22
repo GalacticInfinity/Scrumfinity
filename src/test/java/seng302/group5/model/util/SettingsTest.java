@@ -20,7 +20,7 @@ public class SettingsTest {
     String sysName = System.getProperty("os.name");
     if (sysName.startsWith("Windows")) {
       Settings.setSysDefault();
-      File windowsDir = new File("C:\\Users\\"+System.getProperty("user.name")+"\\Scrumfinity");
+      File windowsDir = new File(System.getProperty("user.home")+"\\Scrumfinity");
       assertEquals(Settings.defaultFilepath, windowsDir);
     }
     //TODO find out how to simulate OSX and Linux environments t test
