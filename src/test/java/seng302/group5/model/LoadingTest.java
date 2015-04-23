@@ -40,6 +40,9 @@ public class LoadingTest {
   Release release1;
   Release release2;
   Release release3;
+  AgileHistory teamHistory1;
+  AgileHistory teamHistory2;
+  AgileHistory teamHistory3;
 
   @Before
   public void setUp() {
@@ -140,7 +143,7 @@ public class LoadingTest {
     release2.setReleaseDescription("Description Release2");
     release2.setReleaseNotes("Notes Release2");
     release2.setProjectRelease(project1);
-    release2.setReleaseDate(LocalDate.of(3602, 01, 05));
+    release2.setReleaseDate(LocalDate.of(3602, 1, 5));
     savedMain.addRelease(release2);
     release3 = new Release();
     release3.setReleaseName("Release3");
@@ -149,6 +152,17 @@ public class LoadingTest {
     release3.setProjectRelease(project1);
     release3.setReleaseDate(LocalDate.of(1765, 10, 27));
     savedMain.addRelease(release3);
+  }
+
+  public void allocateTeams() {
+    createVanillaProjects();
+    createTeamWithDependency();
+    teamHistory1 = new AgileHistory(team1, LocalDate.of(2000, 3, 4), LocalDate.of(2000, 3, 5));
+    project1.addTeam(teamHistory1);
+    teamHistory2 = new AgileHistory(team3, LocalDate.of(1860, 5, 12), LocalDate.of(1861, 2, 17));
+    teamHistory3 = new AgileHistory(team3, LocalDate.of(1861, 2, 18), LocalDate.of(1861, 2, 19));
+    project2.addTeam(teamHistory2);
+    project2.addTeam(teamHistory3);
   }
 
   @Test
@@ -171,7 +185,9 @@ public class LoadingTest {
     assertEquals(loadedMain.getProjects().get(2).getProjectID(), "Project3");
     assertEquals(loadedMain.getProjects().get(2).getProjectName(), "Back to no description");
 
-    file.delete();
+    if (!file.delete()) {
+      fail();
+    }
   }
 
   @Test
@@ -194,7 +210,9 @@ public class LoadingTest {
     assertEquals(loadedMain.getPeople().get(2).getPersonID(), "Person3");
     assertEquals(loadedMain.getPeople().get(2).getLastName(), "Only last name");
 
-    file.delete();
+    if (!file.delete()) {
+      fail();
+    }
   }
 
   @Test
@@ -230,7 +248,9 @@ public class LoadingTest {
     assertEquals(person3.getSkillSet().get(1), skill2);
     assertEquals(person3.getSkillSet().get(2), skill1);
 
-    file.delete();
+    if (!file.delete()) {
+      fail();
+    }
   }
 
   @Test
@@ -261,7 +281,9 @@ public class LoadingTest {
     assertEquals("Team3", team3.getTeamID());
     assertEquals("Description Team2", team3.getTeamDescription());
 
-    file.delete();
+    if (!file.delete()) {
+      fail();
+    }
   }
 
   @Test
@@ -292,7 +314,7 @@ public class LoadingTest {
     assertEquals("Description Release2", release2.getReleaseDescription());
     assertEquals("Notes Release2", release2.getReleaseNotes());
     assertEquals(project1, release2.getProjectRelease());
-    assertEquals(LocalDate.of(3602, 01, 05).toString(),
+    assertEquals(LocalDate.of(3602, 1, 5).toString(),
                  release2.getReleaseDate().toString());
     assertEquals("Release3", release3.getReleaseName());
     assertEquals("Description Release3", release3.getReleaseDescription());
@@ -301,6 +323,47 @@ public class LoadingTest {
     assertEquals(LocalDate.of(1765, 10, 27).toString(),
                  release3.getReleaseDate().toString());
 
-    file.delete();
+    if (!file.delete()) {
+      fail();
+    }
+  }
+
+  @Test
+  public void testTeamAllocation() {
+    allocateTeams();
+    saving = new NewSaving(savedMain);
+    File file = new File(System.getProperty("user.dir")
+                         + File.separator
+                         + "DependantReleaseSave.xml");
+    saving.saveData(file);
+
+    loading = new NewLoading(loadedMain);
+    loading.loadFile(file);
+
+    team1 = loadedMain.getTeams().get(0);
+    team3 = loadedMain.getTeams().get(2);
+
+    project1 = loadedMain.getProjects().get(0);
+    assertEquals(team1, project1.getTeam().get(0).getAgileItem());
+    assertEquals(LocalDate.of(2000, 3, 4).toString(),
+                 project1.getTeam().get(0).getStartDate().toString());
+    assertEquals(LocalDate.of(2000, 3, 5).toString(),
+                 project1.getTeam().get(0).getEndDate().toString());
+    project2 = loadedMain.getProjects().get(1);
+    assertEquals(team3, project2.getTeam().get(0).getAgileItem());
+    assertEquals(LocalDate.of(1860, 5, 12).toString(),
+                 project2.getTeam().get(0).getStartDate().toString());
+    assertEquals(LocalDate.of(1861, 2, 17).toString(),
+                 project2.getTeam().get(0).getEndDate().toString());
+
+    assertEquals(team3, project2.getTeam().get(1).getAgileItem());
+    assertEquals(LocalDate.of(1861, 2, 18).toString(),
+                 project2.getTeam().get(1).getStartDate().toString());
+    assertEquals(LocalDate.of(1861, 2, 19).toString(),
+                 project2.getTeam().get(1).getEndDate().toString());
+
+    if (!file.delete()) {
+      fail();
+    }
   }
 }
