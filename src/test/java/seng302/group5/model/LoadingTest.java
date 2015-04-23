@@ -6,9 +6,12 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import seng302.group5.Main;
 
 /**
+ * Testing loading functionality
  * Created by Michael on 4/23/2015.
  */
 public class LoadingTest {
@@ -16,10 +19,18 @@ public class LoadingTest {
   NewLoading loading;
   Main savedMain;
   Main loadedMain;
-  Project project;
-  Person person;
-
-
+  Project project1;
+  Project project2;
+  Project project3;
+  Person person1;
+  Person person2;
+  Person person3;
+  Skill skill1;
+  Skill skill2;
+  Skill skill3;
+  ObservableList<Skill> skillSet1;
+  ObservableList<Skill> skillSet2;
+  ObservableList<Skill> skillSet3;
 
   @Before
   public void setUp() {
@@ -29,35 +40,60 @@ public class LoadingTest {
   }
 
   public void createVanillaProjects() {
-    project = new Project();
-    project.setProjectID("Project1");
-    project.setProjectName("No Project Description");
-    savedMain.addProject(project);
-    project = new Project();
-    project.setProjectID("Project2");
-    project.setProjectName("Has Description");
-    project.setProjectDescription("Proj Descroption");
-    savedMain.addProject(project);
-    project = new Project();
-    project.setProjectID("Project3");
-    project.setProjectName("Back to no description");
-    savedMain.addProject(project);
+    project1 = new Project();
+    project1.setProjectID("Project1");
+    project1.setProjectName("No Project Description");
+    savedMain.addProject(project1);
+    project2 = new Project();
+    project2.setProjectID("Project2");
+    project2.setProjectName("Has Description");
+    project2.setProjectDescription("Proj Descroption");
+    savedMain.addProject(project2);
+    project3 = new Project();
+    project3.setProjectID("Project3");
+    project3.setProjectName("Back to no description");
+    savedMain.addProject(project3);
   }
 
   public void createVanillaPeople() {
-    person = new Person();
-    person.setPersonID("Person1");
-    person.setFirstName("Only first name");
-    savedMain.addPerson(person);
-    person = new Person();
-    person.setPersonID("Person2");
-    person.setFirstName("Both first");
-    person.setLastName("And last");
-    savedMain.addPerson(person);
-    person = new Person();
-    person.setPersonID("Person3");
-    person.setLastName("Only last name");
-    savedMain.addPerson(person);
+    person1 = new Person();
+    person1.setPersonID("Person1");
+    person1.setFirstName("Only first name");
+    savedMain.addPerson(person1);
+    person2 = new Person();
+    person2.setPersonID("Person2");
+    person2.setFirstName("Both first");
+    person2.setLastName("And last");
+    savedMain.addPerson(person2);
+    person3 = new Person();
+    person3.setPersonID("Person3");
+    person3.setLastName("Only last name");
+    savedMain.addPerson(person3);
+  }
+
+  public void createSkillsWithDependency() {
+    skill1 = new Skill();
+    skill1.setSkillName("Skill1");
+    skill1.setSkillDescription("Skill description 1");
+    savedMain.addSkill(skill1);
+    skill2 = new Skill();
+    skill2.setSkillName("Skill2");
+    savedMain.addSkill(skill2);
+    skill3 = new Skill();
+    skill3.setSkillName("Skill3");
+    skill3.setSkillDescription("Skill description 3");
+    savedMain.addSkill(skill3);
+
+    createVanillaPeople();
+    skillSet1 = FXCollections.observableArrayList();
+    skillSet1.add(skill2);
+    person1.setSkillSet(skillSet1);
+    skillSet2 = FXCollections.observableArrayList();
+    skillSet2.addAll(skill1, skill3);
+    person2.setSkillSet(skillSet2);
+    skillSet3 = FXCollections.observableArrayList();
+    skillSet3.addAll(skill3, skill2, skill1);
+    person3.setSkillSet(skillSet3);
   }
 
   @Test
@@ -95,7 +131,6 @@ public class LoadingTest {
     loading = new NewLoading(loadedMain);
     loading.loadFile(file);
 
-    person = new Person();
     assertEquals(loadedMain.getPeople().get(0).getPersonID(), "Person1");
     assertEquals(loadedMain.getPeople().get(0).getFirstName(), "Only first name");
     assertEquals(loadedMain.getPeople().get(1).getPersonID(), "Person2");
@@ -105,5 +140,40 @@ public class LoadingTest {
     assertEquals(loadedMain.getPeople().get(2).getLastName(), "Only last name");
 
     file.delete();
+  }
+
+  @Test
+  public void dependantSkillTest() {
+    createSkillsWithDependency();
+    saving = new NewSaving(savedMain);
+    File file = new File(System.getProperty("user.dir")
+                         + File.separator
+                         + "DependantSkillSave.xml");
+    saving.saveData(file);
+
+    loading = new NewLoading(loadedMain);
+    loading.loadFile(file);
+
+    // Check skills loaded properly
+    skill1 = loadedMain.getSkills().get(0);
+    assertEquals(skill1.getSkillName(), "Skill1");
+    assertEquals(skill1.getSkillDescription(), "Skill description 1");
+    skill2 = loadedMain.getSkills().get(1);
+    assertEquals(skill2.getSkillName(), "Skill2");
+    skill3 = loadedMain.getSkills().get(2);
+    assertEquals(skill3.getSkillName(), "Skill3");
+    assertEquals(skill3.getSkillDescription(), "Skill description 3");
+
+
+    person1 = loadedMain.getPeople().get(0);
+    assertEquals(person1.getSkillSet().get(0), skill2);
+    person2 = loadedMain.getPeople().get(1);
+    assertEquals(person2.getSkillSet().get(0), skill1);
+    assertEquals(person2.getSkillSet().get(1), skill3);
+    person2 = loadedMain.getPeople().get(2);
+    assertEquals(person3.getSkillSet().get(0), skill3);
+    assertEquals(person3.getSkillSet().get(1), skill2);
+    assertEquals(person3.getSkillSet().get(2), skill1);
+
   }
 }
