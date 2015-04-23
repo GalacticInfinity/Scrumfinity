@@ -30,7 +30,7 @@
                   <Insets right="10.0" />
                </HBox.margin>
             </ComboBox>
-            <ComboBox fx:id="teamMemberRoleCombo" prefHeight="25.0" prefWidth="200.0" promptText="Available roles.">
+            <ComboBox fx:id="teamMemberRoleCombo" prefHeight="25.0" prefWidth="200.0" promptText="Persons role.">
                <HBox.margin>
                   <Insets right="10.0" />
                </HBox.margin>

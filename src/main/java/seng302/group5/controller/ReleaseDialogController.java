@@ -181,7 +181,6 @@ public class ReleaseDialogController {
       }
 
       this.projectList.setVisibleRowCount(5);
-      this.projectList.setPromptText("Available Projects");
 
 
       this.projectList.setItems(availableProjects);

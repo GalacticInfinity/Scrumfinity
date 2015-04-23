@@ -111,7 +111,6 @@ public class TeamDialogController {
       this.teamMemberAddCombo.setItems(availableMembers);
       this.teamMembersList.setItems(selectedMembers);
 
-      this.teamMemberRoleCombo.setPromptText("Person's Role");
       this.teamMemberRoleCombo.setItems(mainApp.getRoles());
     }
     catch (Exception e) {
