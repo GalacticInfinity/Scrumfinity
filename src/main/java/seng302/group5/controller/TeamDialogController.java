@@ -133,16 +133,21 @@ public class TeamDialogController {
         }
       }
 
-      if (selectedRole != null && roleTally >= selectedRole.getMemberLimit()) {
-        // TODO dialog
-        System.out.println(String.format("Max number of %s already assigned", selectedRole));
-      } else if (selectedPerson != null) {
-
+      if (selectedPerson != null) {
         if (selectedRole != null && selectedRole.getRequiredSkill() != null &&
             !selectedPerson.getSkillSet().contains(selectedRole.getRequiredSkill())) {
-
-          System.out.println(String.format("%s does not have the required skill of %s",
-                                           selectedPerson, selectedRole.getRequiredSkill()));
+          Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setTitle("Required skill not found");
+          alert.setHeaderText(null);
+          alert.setContentText(String.format("%s does not have the required skill of %s",
+                                             selectedPerson, selectedRole.getRequiredSkill()));
+          alert.showAndWait();
+        } else if (selectedRole != null && roleTally >= selectedRole.getMemberLimit()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Role taken");
+            alert.setHeaderText(null);
+            alert.setContentText(String.format("Max number of %s already assigned", selectedRole));
+            alert.showAndWait();
         } else {
           this.selectedMembers.add(new PersonRole(selectedPerson, selectedRole));
           this.availableMembers.remove(selectedPerson);
