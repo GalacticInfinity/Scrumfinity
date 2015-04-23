@@ -28,6 +28,7 @@ import seng302.group5.controller.SkillsDialogController;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
+import seng302.group5.model.Role;
 import seng302.group5.model.Skill;
 import seng302.group5.model.Person;
 import seng302.group5.model.Team;
@@ -51,6 +52,7 @@ public class Main extends Application {
   private ObservableList<Skill> skills = FXCollections.observableArrayList();
   private ObservableList<Person> people = FXCollections.observableArrayList();
   private ObservableList<Release> releases = FXCollections.observableArrayList();
+  private ObservableList<Role> roles = FXCollections.observableArrayList();
 
   private UndoRedoHandler undoRedoHandler = new UndoRedoHandler(this);
 
@@ -64,6 +66,20 @@ public class Main extends Application {
     initRootLayout();
     showMenuBar();
     showListMainPane();
+
+    //Set predetermined roles and skills
+    Skill smSkill = new Skill("Scrum Master", "Trained to be a Scrum Master");
+    Skill poSkill = new Skill("Product Owner", "Trained to be a Product Owner");
+    addSkill(smSkill);
+    addSkill(poSkill);
+
+    Role smRole = new Role("SM", "Scrum Master", smSkill, 1);
+    Role poRole = new Role("PO", "Product Owner", poSkill, 1);
+    Role devRole = new Role("DEV", "Developer");
+    addRole(poRole);
+    addRole(smRole);
+    addRole(devRole);
+
   }
 
 
@@ -652,6 +668,10 @@ public class Main extends Application {
     return releases;
   }
 
+  public ObservableList<Role> getRoles() {
+    return roles;
+  }
+
   public void addProject(Project project) {
     projects.add(project);
   }
@@ -670,6 +690,10 @@ public class Main extends Application {
 
   public void addRelease(Release release) {
     releases.add(release);
+  }
+
+  public void addRole(Role role) {
+    this.roles.add(role);
   }
 
   public UndoRedoHandler getUndoRedoHandler() {

@@ -5,6 +5,7 @@ import org.mockito.cglib.core.Local;
 import java.time.LocalDate;
 
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Vector;
 
 import javafx.collections.FXCollections;
@@ -19,13 +20,10 @@ public class Team implements AgileItem {
 
   private String teamID;
   private String teamDescription;
-  private LocalDate startDate;
-  private LocalDate endDate;
   private Project currentProject = null;
 
   private ObservableList<Person> teamMembers = FXCollections.observableArrayList();
-
-  private Vector _roles = new Vector();
+  private HashMap<Person, Role> membersRole;
 
   /**
    * Default constructor.
@@ -33,6 +31,13 @@ public class Team implements AgileItem {
   public Team() {
     this.teamID = "";
     this.teamDescription = "";
+    this.membersRole = new HashMap<>();
+  }
+
+  public Team(String teamID, String teamDescription) {
+    this.teamID = teamID;
+    this.teamDescription = teamDescription;
+    this.membersRole = new HashMap<>();
   }
 
   /**
@@ -46,6 +51,10 @@ public class Team implements AgileItem {
     this.teamID = teamID;
     this.teamMembers = teamMembers;
     this.teamDescription = teamDescription;
+    this.membersRole = new HashMap<>();
+    for (Person member : this.teamMembers) {
+      this.membersRole.put(member, null);
+    }
   }
 
 
@@ -59,7 +68,18 @@ public class Team implements AgileItem {
     this.teamDescription = clone.getTeamDescription();
     this.teamMembers.clear();
     this.teamMembers.addAll(clone.getTeamMembers());
-    this._roles = clone.get_roles();
+    this.membersRole = new HashMap<>();
+    for (Person member : this.teamMembers) {
+      this.membersRole.put(member, clone.getMembersRole().get(member));
+    }
+  }
+
+  public HashMap<Person, Role> getMembersRole() {
+    return membersRole;
+  }
+
+  public void setMembersRole(HashMap<Person, Role> membersRole) {
+    this.membersRole = membersRole;
   }
 
   public String getTeamID() {
@@ -86,54 +106,23 @@ public class Team implements AgileItem {
     this.teamMembers = teamMembers;
   }
 
-  public void setStartDate(LocalDate startDate) {
-    this.startDate = startDate;
+  public void addTeamMember(Person person, Role role) {
+    this.teamMembers.add(person);
+    this.membersRole.put(person, role);
   }
 
-  public void setEndDate(LocalDate endDate) {
-    this.endDate = endDate;
-  }
-  public void create(){}
-
-  public void addRole(PersonRole role) {
-    if (canAddRole(role)) {
-      _roles.addElement(role);
-    }
-    else {
-      Alert alert = new Alert(Alert.AlertType.ERROR);
-      alert.setTitle("Cannot Add Role");
-      alert.setHeaderText(null);
-      alert.setContentText("There only can be 1 Product Owner and 1 Scrum Master in the team.");
-      alert.showAndWait();
-    }
+  public void addTeamMember(Person person) {
+    this.teamMembers.add(person);
+    this.membersRole.put(person, null);
   }
 
-  public Vector get_roles() {
-    return _roles;
-  }
-
-  private boolean canAddRole(PersonRole role) {
-    if (role.hasType("ProductOwner") || role.hasType("ScrumMaster") ||
-        role.hasType("DevelopmentTeamMember")) {
-      Enumeration e = _roles.elements();
-      while (e.hasMoreElements()) {
-        PersonRole each = (PersonRole) e.nextElement();
-        if (each.hasType("ProductOwner") || each.hasType("ScrumMaster")) return false;
-      }
-    }
-      return true;
+  public void removeTeamMember(Person person) {
+    this.teamMembers.remove(person);
+    this.membersRole.remove(person);
   }
 
   public void setCurrentProject(Project project) {
     this.currentProject = project;
-  }
-
-  public LocalDate getStartDate() {
-    return this.startDate;
-  }
-
-  public LocalDate getEndDate() {
-    return this.endDate;
   }
 
   public Project getCurrentProject() {
@@ -148,7 +137,10 @@ public class Team implements AgileItem {
       this.teamDescription = clone.getTeamDescription();
       this.teamMembers.clear();
       this.teamMembers.addAll(clone.getTeamMembers());
-      this._roles = clone.get_roles();
+      this.membersRole.clear();
+      for (Person member : this.teamMembers) {
+        this.membersRole.put(member, clone.getMembersRole().get(member));
+      }
     }
   }
 

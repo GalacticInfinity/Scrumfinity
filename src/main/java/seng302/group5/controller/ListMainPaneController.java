@@ -17,6 +17,7 @@ import seng302.group5.Main;
 import seng302.group5.model.AgileHistory;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Release;
+import seng302.group5.model.Role;
 import seng302.group5.model.util.Settings;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
@@ -208,12 +209,6 @@ public class ListMainPaneController {
       } else {
         sampleTextArea.appendText(listOfSkills.substring(0, listOfSkills.length() - 2));
       }
-      sampleTextArea.appendText("\nRole: ");
-      if (person.hasRole()) {
-        sampleTextArea.appendText(person.getRoles().toString());
-      } else {
-        sampleTextArea.appendText("Not assigned to a team yet.");
-      }
     } else if (Settings.currentListType == "Project") {
       sampleTextArea.clear();
       Project project = (Project) next;
@@ -252,8 +247,9 @@ public class ListMainPaneController {
         sampleTextArea.appendText(" - ");
         sampleTextArea.appendText(member.getPersonID());
         sampleTextArea.appendText(" Role: ");
-        if (member.hasRole()) {
-          sampleTextArea.appendText(member.getRoles());
+        Role role = team.getMembersRole().get(member);
+        if (role != null) {
+          sampleTextArea.appendText(role.toString());
         } else {
           sampleTextArea.appendText("Not assigned to a role yet.");
         }
