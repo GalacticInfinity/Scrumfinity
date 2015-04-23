@@ -3,10 +3,8 @@ package seng302.group5.model;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.time.LocalDate;
 import java.util.List;
 
 import seng302.group5.Main;
@@ -60,10 +58,11 @@ public class NewSaving {
 
   /**
    * Write main app project data to xml file
-   * @param saveFile
-   * @throws Exception
+   * @param saveFile Save file being written to
+   * @throws Exception Required field is mission/ error with writer
    */
   private void saveProjects(Writer saveFile) throws Exception{
+    Team agileTeam;
     saveFile.write("<Projects>\n");
     for (Project project : this.projects) {
       saveFile.write("\t<Project>\n");
@@ -72,7 +71,18 @@ public class NewSaving {
       if (project.getProjectDescription() != null && !project.getProjectDescription().isEmpty()) {
         saveFile.write("\t\t<projectDescription>" + project.getProjectDescription() + "</projectDescription>\n");
       }
-      //TODO Save projects too
+      if (!project.getTeam().isEmpty()) {
+        saveFile.write("\t\t<AllocatedTeams>\n");
+        for (AgileHistory allocatedTeam : project.getTeam()) {
+          saveFile.write("\t\t\t<allocatedTeam>\n");
+          agileTeam = (Team) allocatedTeam.getAgileItem();
+          saveFile.write("\t\t\t\t<agileTeam>" + agileTeam.getTeamID() + "</agileTeam>\n");
+          saveFile.write("\t\t\t\t<startDate>" + allocatedTeam.getStartDate() + "</startDate>\n");
+          saveFile.write("\t\t\t\t<endDate>" + allocatedTeam.getEndDate() + "</endDate>\n");
+          saveFile.write("\t\t\t</allocatedTeam>\n");
+        }
+        saveFile.write("\t\t</AllocatedTeams>\n");
+      }
       saveFile.write("\t</Project>\n");
     }
     saveFile.write("</Projects>\n");
@@ -80,8 +90,8 @@ public class NewSaving {
 
   /**
    * Writes main app people data to xml file
-   * @param saveFile File to write
-   * @throws Exception
+   * @param saveFile Save file being written to
+   * @throws Exception Required field is mission/ error with writer
    */
   private void savePeople(Writer saveFile) throws Exception {
     saveFile.write("<People>\n");
@@ -111,8 +121,8 @@ public class NewSaving {
 
   /**
    * Writes the main app Skill data to xml
-   * @param saveFile
-   * @throws Exception
+   * @param saveFile Save file being written to
+   * @throws Exception Required field is mission/ error with writer
    */
   private void saveSkills(Writer saveFile) throws Exception {
     saveFile.write("<Skills>\n");
@@ -129,8 +139,8 @@ public class NewSaving {
 
   /**
    * Writes the main app Team data to xml
-   * @param saveFile
-   * @throws Exception
+   * @param saveFile Save file being written to
+   * @throws Exception Required field is mission/ error with writer
    */
   private void saveTeams(Writer saveFile) throws Exception {
     saveFile.write("<Teams>\n");
@@ -147,6 +157,9 @@ public class NewSaving {
         }
         saveFile.write("\t\t</TeamPeople>\n");
       }
+      if (team.getCurrentProject() != null) {
+        saveFile.write("\t\t<teamProject>" + team.getCurrentProject().getProjectID() + "</teamProject>\n");
+      }
       saveFile.write("\t</Team>\n");
     }
     saveFile.write("</Teams>\n");
@@ -154,8 +167,8 @@ public class NewSaving {
 
   /**
    * Appends the main app release data to the save file
-   * @param saveFile
-   * @throws Exception
+   * @param saveFile Save file being written to
+   * @throws Exception Required field is mission/ error with writer
    */
   private void saveReleases(Writer saveFile) throws Exception {
     saveFile.write("<Releases>\n");
