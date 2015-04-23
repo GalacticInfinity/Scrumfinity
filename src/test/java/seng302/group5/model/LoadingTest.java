@@ -31,6 +31,11 @@ public class LoadingTest {
   ObservableList<Skill> skillSet1;
   ObservableList<Skill> skillSet2;
   ObservableList<Skill> skillSet3;
+  Team team1;
+  Team team2;
+  Team team3;
+  ObservableList<Person> memberList1;
+  ObservableList<Person> memberList2;
 
   @Before
   public void setUp() {
@@ -94,6 +99,27 @@ public class LoadingTest {
     skillSet3 = FXCollections.observableArrayList();
     skillSet3.addAll(skill3, skill2, skill1);
     person3.setSkillSet(skillSet3);
+  }
+
+  public void createTeamWithDependency() {
+    createVanillaPeople();
+    team1 = new Team();
+    team1.setTeamID("Team1");
+    team1.setTeamDescription("Description Team1");
+    memberList1 = FXCollections.observableArrayList();
+    memberList1.addAll(person1);
+    team1.setTeamMembers(memberList1);
+    savedMain.addTeam(team1);
+    team2 = new Team();
+    team2.setTeamID("Team2");
+    memberList2 = FXCollections.observableArrayList();
+    memberList2.addAll(person3, person2);
+    team2.setTeamMembers(memberList2);
+    savedMain.addTeam(team2);
+    team3 = new Team();
+    team3.setTeamID("Team3");
+    team3.setTeamDescription("Description Team2");
+    savedMain.addTeam(team3);
   }
 
   @Test
@@ -175,5 +201,37 @@ public class LoadingTest {
     assertEquals(person3.getSkillSet().get(1), skill2);
     assertEquals(person3.getSkillSet().get(2), skill1);
 
+    file.delete();
+  }
+
+  @Test
+  public void dependantTeamTest() {
+    createTeamWithDependency();
+    saving = new NewSaving(savedMain);
+    File file = new File(System.getProperty("user.dir")
+                         + File.separator
+                         + "DependantTeamSave.xml");
+    saving.saveData(file);
+
+    loading = new NewLoading(loadedMain);
+    loading.loadFile(file);
+
+    person1 = loadedMain.getPeople().get(0);
+    person2 = loadedMain.getPeople().get(1);
+    person3 = loadedMain.getPeople().get(2);
+
+    team1 = loadedMain.getTeams().get(0);
+    assertEquals("Team1", team1.getTeamID());
+    assertEquals("Description Team1", team1.getTeamDescription());
+    assertEquals(person1, team1.getTeamMembers().get(0));
+    team2 = loadedMain.getTeams().get(1);
+    assertEquals("Team2", team2.getTeamID());
+    assertEquals(person3, team2.getTeamMembers().get(0));
+    assertEquals(person2, team2.getTeamMembers().get(1));
+    team3 = loadedMain.getTeams().get(2);
+    assertEquals("Team3", team3.getTeamID());
+    assertEquals("Description Team2", team3.getTeamDescription());
+
+    file.delete();
   }
 }
