@@ -5,6 +5,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.time.LocalDate;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -36,6 +37,9 @@ public class LoadingTest {
   Team team3;
   ObservableList<Person> memberList1;
   ObservableList<Person> memberList2;
+  Release release1;
+  Release release2;
+  Release release3;
 
   @Before
   public void setUp() {
@@ -120,6 +124,31 @@ public class LoadingTest {
     team3.setTeamID("Team3");
     team3.setTeamDescription("Description Team2");
     savedMain.addTeam(team3);
+  }
+
+  public void createReleaseWithDependency() {
+    createVanillaProjects();
+    release1 = new Release();
+    release1.setReleaseName("Release1");
+    release1.setReleaseDescription("Description Release1");
+    release1.setReleaseNotes("Notes Release1");
+    release1.setProjectRelease(project3);
+    release1.setReleaseDate(LocalDate.of(1765, 10, 27));
+    savedMain.addRelease(release1);
+    release2 = new Release();
+    release2.setReleaseName("Release2");
+    release2.setReleaseDescription("Description Release2");
+    release2.setReleaseNotes("Notes Release2");
+    release2.setProjectRelease(project1);
+    release2.setReleaseDate(LocalDate.of(3602, 01, 05));
+    savedMain.addRelease(release2);
+    release3 = new Release();
+    release3.setReleaseName("Release3");
+    release3.setReleaseDescription("Description Release3");
+    release3.setReleaseNotes("Notes Release3");
+    release3.setProjectRelease(project1);
+    release3.setReleaseDate(LocalDate.of(1765, 10, 27));
+    savedMain.addRelease(release3);
   }
 
   @Test
@@ -231,6 +260,46 @@ public class LoadingTest {
     team3 = loadedMain.getTeams().get(2);
     assertEquals("Team3", team3.getTeamID());
     assertEquals("Description Team2", team3.getTeamDescription());
+
+    file.delete();
+  }
+
+  @Test
+  public void dependantReleaseTest() {
+    createReleaseWithDependency();
+    saving = new NewSaving(savedMain);
+    File file = new File(System.getProperty("user.dir")
+                         + File.separator
+                         + "DependantReleaseSave.xml");
+    saving.saveData(file);
+
+    loading = new NewLoading(loadedMain);
+    loading.loadFile(file);
+
+    project1 = loadedMain.getProjects().get(0);
+    project2 = loadedMain.getProjects().get(1);
+    project3 = loadedMain.getProjects().get(2);
+
+    release1 = loadedMain.getReleases().get(0);
+    assertEquals("Release1", release1.getReleaseName());
+    assertEquals("Description Release1", release1.getReleaseDescription());
+    assertEquals("Notes Release1", release1.getReleaseNotes());
+    assertEquals(project3, release1.getProjectRelease());
+    assertEquals(LocalDate.of(1765, 10, 27).toString(),
+                 release1.getReleaseDate().toString());
+    release2 = loadedMain.getReleases().get(1);
+    assertEquals("Release2", release2.getReleaseName());
+    assertEquals("Description Release2", release2.getReleaseDescription());
+    assertEquals("Notes Release2", release2.getReleaseNotes());
+    assertEquals(project1, release2.getProjectRelease());
+    assertEquals(LocalDate.of(3602, 01, 05).toString(),
+                 release2.getReleaseDate().toString());
+    assertEquals("Release3", release3.getReleaseName());
+    assertEquals("Description Release3", release3.getReleaseDescription());
+    assertEquals("Notes Release3", release3.getReleaseNotes());
+    assertEquals(project1, release3.getProjectRelease());
+    assertEquals(LocalDate.of(1765, 10, 27).toString(),
+                 release3.getReleaseDate().toString());
 
     file.delete();
   }
