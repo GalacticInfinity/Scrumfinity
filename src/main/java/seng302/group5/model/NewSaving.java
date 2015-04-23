@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.time.LocalDate;
 import java.util.List;
 
 import seng302.group5.Main;
@@ -59,8 +58,8 @@ public class NewSaving {
 
   /**
    * Write main app project data to xml file
-   * @param saveFile
-   * @throws Exception
+   * @param saveFile Save file being written to
+   * @throws Exception Required field is mission/ error with writer
    */
   private void saveProjects(Writer saveFile) throws Exception{
     Team agileTeam;
@@ -91,8 +90,8 @@ public class NewSaving {
 
   /**
    * Writes main app people data to xml file
-   * @param saveFile File to write
-   * @throws Exception
+   * @param saveFile Save file being written to
+   * @throws Exception Required field is mission/ error with writer
    */
   private void savePeople(Writer saveFile) throws Exception {
     saveFile.write("<People>\n");
@@ -122,8 +121,8 @@ public class NewSaving {
 
   /**
    * Writes the main app Skill data to xml
-   * @param saveFile
-   * @throws Exception
+   * @param saveFile Save file being written to
+   * @throws Exception Required field is mission/ error with writer
    */
   private void saveSkills(Writer saveFile) throws Exception {
     saveFile.write("<Skills>\n");
@@ -140,8 +139,8 @@ public class NewSaving {
 
   /**
    * Writes the main app Team data to xml
-   * @param saveFile
-   * @throws Exception
+   * @param saveFile Save file being written to
+   * @throws Exception Required field is mission/ error with writer
    */
   private void saveTeams(Writer saveFile) throws Exception {
     saveFile.write("<Teams>\n");
@@ -168,8 +167,8 @@ public class NewSaving {
 
   /**
    * Appends the main app release data to the save file
-   * @param saveFile
-   * @throws Exception
+   * @param saveFile Save file being written to
+   * @throws Exception Required field is mission/ error with writer
    */
   private void saveReleases(Writer saveFile) throws Exception {
     saveFile.write("<Releases>\n");

@@ -11,6 +11,7 @@ import javafx.collections.ObservableList;
 import seng302.group5.Main;
 
 /**
+ * Class for loading xml save files
  * Created by Michael on 4/21/2015.
  */
 public class NewLoading {
@@ -29,7 +30,6 @@ public class NewLoading {
       System.out.println(filename);
     }
     try {
-      String currentLine;
       loadedFile = new BufferedReader(new FileReader(filename));
       loadProjects();
       loadPeople();
