@@ -11,12 +11,12 @@
    <children>
       <HBox alignment="BOTTOM_LEFT" prefHeight="35.0" prefWidth="434.0" spacing="10.0">
          <children>
-            <Label prefHeight="25.0" prefWidth="98.0" text="Project ID:">
+            <Label prefHeight="25.0" prefWidth="98.0" text="Project ID:*">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
-            <TextField fx:id="projectIDField" alignment="TOP_LEFT">
+            <TextField fx:id="projectIDField" alignment="TOP_LEFT" promptText="Unique project ID.">
                <HBox.margin>
                   <Insets left="8.0" />
                </HBox.margin></TextField>
@@ -24,14 +24,14 @@
       </HBox>
       <HBox alignment="CENTER_LEFT" prefHeight="38.0" prefWidth="369.0" spacing="10.0">
          <children>
-            <Label prefHeight="25.0" prefWidth="98.0" text="Project Name:">
+            <Label prefHeight="25.0" prefWidth="105.0" text="Project Name:*">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
-            <TextField fx:id="projectNameField" alignment="TOP_LEFT">
+            <TextField fx:id="projectNameField" alignment="TOP_LEFT" promptText="Name of project.">
                <HBox.margin>
-                  <Insets left="8.0" />
+                  <Insets left="1.0" />
                </HBox.margin></TextField>
          </children>
       </HBox>
@@ -42,7 +42,7 @@
                   <Font size="15.0" />
                </font>
             </Label>
-            <TextArea fx:id="projectDescriptionField" prefHeight="94.0" prefWidth="310.0" wrapText="true">
+            <TextArea fx:id="projectDescriptionField" prefHeight="94.0" prefWidth="310.0" promptText="Description of project." wrapText="true">
                <HBox.margin>
                   <Insets left="8.0" />
                </HBox.margin></TextArea>
@@ -77,8 +77,8 @@
                   </DatePicker>
                   <HBox prefHeight="39.0" prefWidth="232.0">
                      <children>
-                        <Button fx:id="btnAddTeam" mnemonicParsing="false" onAction="#btnAddTeam" text="Add" />
-                        <Button fx:id="btnRemoveTeam" mnemonicParsing="false" onAction="#btnRemoveTeam" text="Remove">
+                        <Button fx:id="btnAddTeam" mnemonicParsing="false" onAction="#btnAddTeam" prefWidth="60.0" text="Add" />
+                        <Button fx:id="btnRemoveTeam" mnemonicParsing="false" onAction="#btnRemoveTeam" prefWidth="60.0" text="Remove">
                            <HBox.margin>
                               <Insets left="5.0" />
                            </HBox.margin>
@@ -93,8 +93,13 @@
       </HBox>
       <HBox alignment="BOTTOM_RIGHT" prefHeight="39.0" prefWidth="434.0" spacing="10.0">
          <children>
-            <Button fx:id="btnConfirm" mnemonicParsing="false" onAction="#btnConfirmClick" prefHeight="26.0" prefWidth="67.0" text="Save" />
-            <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#btnCancelClick" text="Cancel" />
+            <Label prefHeight="25.0" prefWidth="307.0" text="* Fields cannot be empty.">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Button fx:id="btnConfirm" mnemonicParsing="false" onAction="#btnConfirmClick" prefWidth="60.0" text="Save" />
+            <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#btnCancelClick" prefWidth="60.0" text="Cancel" />
          </children>
          <opaqueInsets>
             <Insets />
@@ -103,7 +108,7 @@
             <Insets bottom="5.0" right="5.0" />
          </padding>
          <VBox.margin>
-            <Insets right="5.0" />
+            <Insets right="5.0" top="3.0" />
          </VBox.margin>
       </HBox>
    </children>

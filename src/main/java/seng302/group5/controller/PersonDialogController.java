@@ -222,7 +222,6 @@ public class PersonDialogController {
       }
 
       this.skillsList.setVisibleRowCount(5);
-      this.skillsList.setPromptText("Available Skills");
 
       this.skillsList.setItems(availableSkills);
       this.personSkillList.setItems(selectedSkills);

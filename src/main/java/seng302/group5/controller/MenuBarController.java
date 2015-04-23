@@ -81,7 +81,7 @@ public class MenuBarController {
   protected void editItem(ActionEvent event) {
     String listType = Settings.currentListType;
     switch (listType) {
-      case "Project":
+      case "Projects":
         mainApp.showProjectDialog(CreateOrEdit.EDIT);
         break;
       case "People":
@@ -90,10 +90,10 @@ public class MenuBarController {
       case "Skills":
         mainApp.showSkillCreationDialog(CreateOrEdit.EDIT);
         break;
-      case "Team":
+      case "Teams":
         mainApp.showTeamDialog(CreateOrEdit.EDIT);
         break;
-      case "Release":
+      case "Releases":
         mainApp.showReleaseDialog(CreateOrEdit.EDIT);
         break;
     }
@@ -112,11 +112,6 @@ public class MenuBarController {
   @FXML
   protected void createTeam(ActionEvent event) {
     mainApp.showTeamDialog(CreateOrEdit.CREATE);
-  }
-
-  @FXML
-  protected void editTeam(ActionEvent event) {
-    mainApp.showTeamDialog(CreateOrEdit.EDIT);
   }
 
   /**
@@ -228,8 +223,8 @@ public class MenuBarController {
    */
   @FXML
   protected void btnShowProjects() {
-    Settings.currentListType = "Project";
-    deselectList("Project");
+    Settings.currentListType = "Projects";
+    deselectList("Projects");
     showProjectsMenuItem.setSelected(true);
     mainApp.getLMPC().refreshList();
   }
@@ -251,7 +246,7 @@ public class MenuBarController {
   @FXML
   protected void btnShowSkills() {
     Settings.currentListType = "Skills";
-    deselectList("Skill");
+    deselectList("Skills");
     showSkillsMenuItem.setSelected(true);
     mainApp.getLMPC().refreshList();
   }
@@ -261,15 +256,15 @@ public class MenuBarController {
    */
   @FXML
   protected void btnShowTeams() {
-    Settings.currentListType = "Team";
-    deselectList("Team");
+    Settings.currentListType = "Teams";
+    deselectList("Teams");
     mainApp.getLMPC().refreshList();
   }
 
   @FXML
   protected void btnShowReleases() {
-    Settings.currentListType = "Release";
-    deselectList("Release");
+    Settings.currentListType = "Releases";
+    deselectList("Releases");
     mainApp.getLMPC().refreshList();
   }
 
@@ -286,19 +281,19 @@ public class MenuBarController {
     showReleasesMenuItem.setSelected(false);
     if (!(selectedList == "")) {
       switch (selectedList) {
-        case "Project":
+        case "Projects":
           showProjectsMenuItem.setSelected(true);
           break;
         case "People":
           showPeopleMenuItem.setSelected(true);
           break;
-        case "Skill":
+        case "Skills":
           showSkillsMenuItem.setSelected(true);
           break;
-        case "Team":
+        case "Teams":
           showTeamsMenuItem.setSelected(true);
           break;
-        case "Release":
+        case "Releases":
           showReleasesMenuItem.setSelected(true);
           break;
       }

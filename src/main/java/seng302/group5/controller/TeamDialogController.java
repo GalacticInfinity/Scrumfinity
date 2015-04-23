@@ -108,7 +108,6 @@ public class TeamDialogController {
       }
 
       this.teamMemberAddCombo.setVisibleRowCount(5);
-      this.teamMemberAddCombo.setPromptText("Available People");
       this.teamMemberAddCombo.setItems(availableMembers);
       this.teamMembersList.setItems(selectedMembers);
 

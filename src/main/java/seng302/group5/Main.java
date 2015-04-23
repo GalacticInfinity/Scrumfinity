@@ -461,7 +461,7 @@ public class Main extends Application {
     String listType = LMPC.getCurrentListType();
     UndoRedoObject undoRedoObject;
     switch (listType) {
-      case "Project":
+      case "Projects":
         Project project = (Project) agileItem;
 
         ArrayList<Release> projectsReleases = new ArrayList<>();
@@ -575,7 +575,7 @@ public class Main extends Application {
         }
         newAction(undoRedoObject);
         break;
-      case "Team":
+      case "Teams":
         Team team = (Team) agileItem;
         if (team.getTeamMembers().isEmpty()) {
           deleteTeam(team);
@@ -610,7 +610,7 @@ public class Main extends Application {
           }
         }
         break;
-      case "Release":
+      case "Releases":
         Release release = (Release) agileItem;
         deleteRelease(release);
         undoRedoObject = generateDelUndoRedoObject(Action.RELEASE_DELETE, agileItem);

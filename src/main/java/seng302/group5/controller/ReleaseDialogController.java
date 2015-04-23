@@ -140,6 +140,7 @@ public class ReleaseDialogController {
                               Release release) {
     this.mainApp = mainApp;
     this.thisStage = thisStage;
+    releaseDateField.setValue(LocalDate.now());
 
     if (createOrEdit == CreateOrEdit.CREATE) {
       thisStage.setTitle("Create New Release");
