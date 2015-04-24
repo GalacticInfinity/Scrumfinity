@@ -222,7 +222,6 @@ public class PersonDialogController {
       }
 
       this.skillsList.setVisibleRowCount(5);
-      this.skillsList.setPromptText("Available Skills");
 
       this.skillsList.setItems(availableSkills);
       this.personSkillList.setItems(selectedSkills);
@@ -239,6 +238,9 @@ public class PersonDialogController {
       if (selectedSkill != null) {
         this.selectedSkills.add(selectedSkill);
         this.availableSkills.remove(selectedSkill);
+
+        this.skillsList.getSelectionModel().clearSelection();
+        this.skillsList.setValue(null);
       }
     }
     catch (Exception e) {

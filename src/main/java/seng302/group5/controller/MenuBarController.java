@@ -13,6 +13,7 @@ import javafx.scene.input.KeyCombination;
 import javafx.stage.FileChooser;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
+import seng302.group5.model.AgileItem;
 import seng302.group5.model.NewLoading;
 import seng302.group5.model.NewSaving;
 import seng302.group5.model.util.Settings;
@@ -31,6 +32,7 @@ public class MenuBarController {
   @FXML private MenuItem undoMenuItem;
   @FXML private MenuItem redoMenuItem;
   @FXML private MenuItem deleteMenuItem;
+  @FXML private MenuItem editMenuItem;
 
   @FXML private CheckMenuItem showListMenuItem;
   @FXML private CheckMenuItem showProjectsMenuItem;
@@ -52,6 +54,7 @@ public class MenuBarController {
     undoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN));
     redoMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN));
     deleteMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DELETE));
+    editMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.E, KeyCombination.CONTROL_DOWN));
 
     // Ticks the project menu item
     showProjectsMenuItem.setSelected(true);
@@ -79,23 +82,32 @@ public class MenuBarController {
 
   @FXML
   protected void editItem(ActionEvent event) {
-    String listType = Settings.currentListType;
-    switch (listType) {
-      case "Project":
-        mainApp.showProjectDialog(CreateOrEdit.EDIT);
-        break;
-      case "People":
-        mainApp.showPersonDialog(CreateOrEdit.EDIT);
-        break;
-      case "Skills":
-        mainApp.showSkillCreationDialog(CreateOrEdit.EDIT);
-        break;
-      case "Team":
-        mainApp.showTeamDialog(CreateOrEdit.EDIT);
-        break;
-      case "Release":
-        mainApp.showReleaseDialog(CreateOrEdit.EDIT);
-        break;
+    AgileItem selectedItem = mainApp.getLMPC().getSelected();
+    if (selectedItem != null && mainApp.getNonRemovable().contains(selectedItem)) {
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Cannot edit");
+      alert.setHeaderText(null);
+      alert.setContentText(String.format("The item %s cannot be modified", selectedItem));
+      alert.showAndWait();
+    } else {
+      String listType = Settings.currentListType;
+      switch (listType) {
+        case "Projects":
+          mainApp.showProjectDialog(CreateOrEdit.EDIT);
+          break;
+        case "People":
+          mainApp.showPersonDialog(CreateOrEdit.EDIT);
+          break;
+        case "Skills":
+          mainApp.showSkillCreationDialog(CreateOrEdit.EDIT);
+          break;
+        case "Teams":
+          mainApp.showTeamDialog(CreateOrEdit.EDIT);
+          break;
+        case "Releases":
+          mainApp.showReleaseDialog(CreateOrEdit.EDIT);
+          break;
+      }
     }
   }
 
@@ -112,11 +124,6 @@ public class MenuBarController {
   @FXML
   protected void createTeam(ActionEvent event) {
     mainApp.showTeamDialog(CreateOrEdit.CREATE);
-  }
-
-  @FXML
-  protected void editTeam(ActionEvent event) {
-    mainApp.showTeamDialog(CreateOrEdit.EDIT);
   }
 
   /**
@@ -228,8 +235,8 @@ public class MenuBarController {
    */
   @FXML
   protected void btnShowProjects() {
-    Settings.currentListType = "Project";
-    deselectList("Project");
+    Settings.currentListType = "Projects";
+    deselectList("Projects");
     showProjectsMenuItem.setSelected(true);
     mainApp.getLMPC().refreshList();
   }
@@ -251,7 +258,7 @@ public class MenuBarController {
   @FXML
   protected void btnShowSkills() {
     Settings.currentListType = "Skills";
-    deselectList("Skill");
+    deselectList("Skills");
     showSkillsMenuItem.setSelected(true);
     mainApp.getLMPC().refreshList();
   }
@@ -261,15 +268,15 @@ public class MenuBarController {
    */
   @FXML
   protected void btnShowTeams() {
-    Settings.currentListType = "Team";
-    deselectList("Team");
+    Settings.currentListType = "Teams";
+    deselectList("Teams");
     mainApp.getLMPC().refreshList();
   }
 
   @FXML
   protected void btnShowReleases() {
-    Settings.currentListType = "Release";
-    deselectList("Release");
+    Settings.currentListType = "Releases";
+    deselectList("Releases");
     mainApp.getLMPC().refreshList();
   }
 
@@ -286,19 +293,19 @@ public class MenuBarController {
     showReleasesMenuItem.setSelected(false);
     if (!(selectedList == "")) {
       switch (selectedList) {
-        case "Project":
+        case "Projects":
           showProjectsMenuItem.setSelected(true);
           break;
         case "People":
           showPeopleMenuItem.setSelected(true);
           break;
-        case "Skill":
+        case "Skills":
           showSkillsMenuItem.setSelected(true);
           break;
-        case "Team":
+        case "Teams":
           showTeamsMenuItem.setSelected(true);
           break;
-        case "Release":
+        case "Releases":
           showReleasesMenuItem.setSelected(true);
           break;
       }
@@ -306,15 +313,22 @@ public class MenuBarController {
   }
 
   @FXML
-  protected void btnDelete(){
-    if (mainApp.getLMPC().getSelected() == null) {
+  protected void btnDelete() {
+    AgileItem selectedItem = mainApp.getLMPC().getSelected();
+    if (selectedItem == null) {
       Alert alert = new Alert(Alert.AlertType.ERROR);
       alert.setTitle("Cannot delete");
       alert.setHeaderText(null);
       alert.setContentText("Deleting failed - No item selected");
       alert.showAndWait();
+    } else if (mainApp.getNonRemovable().contains(selectedItem)) {
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Cannot delete");
+      alert.setHeaderText(null);
+      alert.setContentText(String.format("The item %s cannot be modified", selectedItem));
+      alert.showAndWait();
     } else {
-      mainApp.delete(mainApp.getLMPC().getSelected());
+      mainApp.delete(selectedItem);
       mainApp.refreshList();
     }
   }

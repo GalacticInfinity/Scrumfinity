@@ -169,6 +169,7 @@ public class ReleaseDialogController {
                               Release release) {
     this.mainApp = mainApp;
     this.thisStage = thisStage;
+    releaseDateField.setValue(LocalDate.now());
 
     if (createOrEdit == CreateOrEdit.CREATE) {
       thisStage.setTitle("Create New Release");
@@ -209,7 +210,6 @@ public class ReleaseDialogController {
       }
 
       this.projectList.setVisibleRowCount(5);
-      this.projectList.setPromptText("Available Projects");
 
 
       this.projectList.setItems(availableProjects);
@@ -243,6 +243,9 @@ public class ReleaseDialogController {
       if (selectedProject != null && this.selectedProject.isEmpty()) {
         this.selectedProject.add(selectedProject);
         this.availableProjects.remove(availableProjects);
+
+        this.projectList.getSelectionModel().clearSelection();
+        this.projectList.setValue(null);
       }
     }
     catch (Exception e) {

@@ -1,5 +1,7 @@
 package seng302.group5.controller;
 
+import java.util.ArrayList;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -15,7 +17,7 @@ import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Person;
-import seng302.group5.model.PersonRole;
+import seng302.group5.model.Role;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoObject;
@@ -34,19 +36,13 @@ public class TeamDialogController {
   private CreateOrEdit createOrEdit;
 
   private ObservableList<Person> availableMembers = FXCollections.observableArrayList();
-  private ObservableList<Person> selectedMembers = FXCollections.observableArrayList();
-  ObservableList<String> roles =
-      FXCollections.observableArrayList(
-          "Product Owner",
-          "Scrum Master",
-          "Development Team Member"
-      );
-  private PersonRole role;
+  private ObservableList<PersonRole> selectedMembers = FXCollections.observableArrayList();
+  private ArrayList<Person> membersToRemove = new ArrayList<>();
 
   @FXML private TextField teamIDField;
-  @FXML private ListView teamMembersList;
-  @FXML private ComboBox teamMemberAddCombo;
-  @FXML private ComboBox teamMemberRoleCombo;
+  @FXML private ListView<PersonRole> teamMembersList;
+  @FXML private ComboBox<Person> teamMemberAddCombo;
+  @FXML private ComboBox<Role> teamMemberRoleCombo;
   @FXML private TextArea teamDescriptionField;
   @FXML private Button btnConfirm;
 
@@ -106,24 +102,16 @@ public class TeamDialogController {
           }
         }
         for (Person person : team.getTeamMembers()) {
-          selectedMembers.add(person);
+          Role role = team.getMembersRole().get(person);
+          selectedMembers.add(new PersonRole(person, role));
         }
       }
 
       this.teamMemberAddCombo.setVisibleRowCount(5);
-      this.teamMemberAddCombo.setPromptText("Available People");
       this.teamMemberAddCombo.setItems(availableMembers);
       this.teamMembersList.setItems(selectedMembers);
 
-      this.teamMemberRoleCombo.setPromptText("Person's Role");
-      for (Person member : selectedMembers) {
-        if (member.getRoles() == "[Product Owner]") {
-          roles.remove("Product Owner");
-        } else if (member.getRoles() == "[Scrum Master]") {
-          roles.remove("Scrum Master");
-        }
-      }
-      this.teamMemberRoleCombo.setItems(roles);
+      this.teamMemberRoleCombo.setItems(mainApp.getRoles());
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -133,23 +121,42 @@ public class TeamDialogController {
   @FXML
   protected void btnAddMemberClick(ActionEvent event) {
     try {
-      Person selectedPerson = (Person) teamMemberAddCombo.getSelectionModel().getSelectedItem();
-      String selectedRole = (String) teamMemberRoleCombo.getSelectionModel().getSelectedItem();
+      Person selectedPerson = teamMemberAddCombo.getSelectionModel().getSelectedItem();
+      Role selectedRole = teamMemberRoleCombo.getSelectionModel().getSelectedItem();
+
+      int roleTally = 0;
+      for (PersonRole personRole : selectedMembers) {
+        if (personRole.getRole() == selectedRole) {
+          roleTally++;
+        }
+      }
 
       if (selectedPerson != null) {
-
-        this.selectedMembers.add(selectedPerson);
-        this.availableMembers.remove(selectedPerson);
-        if (selectedRole == "Product Owner") {
-          role = new PersonRole.ProductOwner();
-          roles.remove(selectedRole);
-        } else if (selectedRole == "Scrum Master") {
-          roles.remove(selectedRole);
-          role = new PersonRole.ScrumMaster();
+        if (selectedRole != null && selectedRole.getRequiredSkill() != null &&
+            !selectedPerson.getSkillSet().contains(selectedRole.getRequiredSkill())) {
+          Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setTitle("Required skill not found");
+          alert.setHeaderText(null);
+          alert.setContentText(String.format("%s does not have the required skill of %s",
+                                             selectedPerson, selectedRole.getRequiredSkill()));
+          alert.showAndWait();
+        } else if (selectedRole != null && roleTally >= selectedRole.getMemberLimit()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Role taken");
+            alert.setHeaderText(null);
+            alert.setContentText(String.format("Max number of %s already assigned", selectedRole));
+            alert.showAndWait();
         } else {
-          role = new PersonRole.DevelopmentTeamMember();
+          this.selectedMembers.add(new PersonRole(selectedPerson, selectedRole));
+          this.availableMembers.remove(selectedPerson);
+          this.membersToRemove.remove(selectedPerson);
+          this.teamMemberAddCombo.setItems(availableMembers);
+
+          this.teamMemberRoleCombo.getSelectionModel().clearSelection();
+          this.teamMemberRoleCombo.setValue(null);
+          this.teamMemberAddCombo.getSelectionModel().clearSelection();
+          this.teamMemberAddCombo.setValue(null);
         }
-        selectedPerson.addRole(selectedRole);
       }
     }
     catch (Exception e) {
@@ -160,17 +167,13 @@ public class TeamDialogController {
   @FXML
   protected void btnRemoveMemberClick(ActionEvent event) {
     try {
-      Person selectedPerson = (Person) teamMembersList.getSelectionModel().getSelectedItem();
+      PersonRole selectedPersonRole = teamMembersList.getSelectionModel().getSelectedItem();
 
-      if (selectedPerson != null) {
+      if (selectedPersonRole != null) {
+        Person selectedPerson = selectedPersonRole.getPerson();
         this.availableMembers.add(selectedPerson);
-        this.selectedMembers.remove(selectedPerson);
-        selectedPerson.removeFromTeam();
-        if (selectedPerson.getRoles() == "[Product Owner]") {
-          roles.add("Product Owner");
-        } else if (selectedPerson.getRoles() == "[Scrum Master]") {
-          roles.add("Scrum Master");
-        }
+        this.selectedMembers.remove(selectedPersonRole);
+        this.membersToRemove.add(selectedPerson);
       }
     }
     catch (Exception e) {
@@ -231,10 +234,10 @@ public class TeamDialogController {
     }
     else {
       if (createOrEdit == CreateOrEdit.CREATE) {
-        team = new Team(teamID, selectedMembers, teamDescription);
-        for (Person person : selectedMembers) {
-
-          person.assignToTeam(team);
+        team = new Team(teamID, teamDescription);
+        for (PersonRole personRole : selectedMembers) {
+          team.addTeamMember(personRole.getPerson(), personRole.getRole());
+          personRole.getPerson().assignToTeam(team);
         }
         mainApp.addTeam(team);
 
@@ -242,9 +245,14 @@ public class TeamDialogController {
 
         team.setTeamID(teamID);
         team.setTeamDescription(teamDescription);
-        team.setTeamMembers(selectedMembers);
-        for (Person person : selectedMembers) {
-          person.assignToTeam(team);
+        team.getTeamMembers().clear();
+        team.getMembersRole().clear();
+        for (PersonRole personRole : selectedMembers) {
+          team.addTeamMember(personRole.getPerson(), personRole.getRole());
+          personRole.getPerson().assignToTeam(team);
+        }
+        for (Person memberToRemove : membersToRemove) {
+          memberToRemove.removeFromTeam();
         }
         mainApp.refreshList();
       }
@@ -291,5 +299,37 @@ public class TeamDialogController {
       }
       return inputTeamID;
     }
+  }
+
+  /**
+   * Inner class for storing/displaying allocated team members with their respective roles
+   */
+  private class PersonRole {
+
+    private Person person;
+    private Role role;
+
+    public PersonRole(Person person, Role role) {
+      this.person = person;
+      this.role = role;
+    }
+
+    public Person getPerson() {
+      return person;
+    }
+
+    public Role getRole() {
+      return role;
+    }
+
+    @Override
+    public String toString() {
+      if (role != null) {
+        return person.toString() + " - Role: " + role.toString();
+      } else {
+        return person.toString();
+      }
+    }
+
   }
 }

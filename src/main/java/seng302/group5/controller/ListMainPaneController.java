@@ -17,6 +17,7 @@ import seng302.group5.Main;
 import seng302.group5.model.AgileHistory;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Release;
+import seng302.group5.model.Role;
 import seng302.group5.model.util.Settings;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
@@ -47,7 +48,7 @@ public class ListMainPaneController {
    */
   @FXML
   private void initialize() {
-    Settings.currentListType = "Project";
+    Settings.currentListType = "Projects";
     Settings.setSysDefault();
     iniActorList();
   }
@@ -111,7 +112,7 @@ public class ListMainPaneController {
   public void checkListType(){
     String listType = Settings.currentListType;
     switch (listType) {
-      case "Project":
+      case "Projects":
         isListShown = true;
         listView.setItems(mainApp.getProjects());
         break;
@@ -123,11 +124,11 @@ public class ListMainPaneController {
         isListShown = true;
         listView.setItems(mainApp.getSkills());
         break;
-      case "Team":
+      case "Teams":
         isListShown = true;
         listView.setItems(mainApp.getTeams());
         break;
-      case "Release":
+      case "Releases":
         isListShown = true;
         listView.setItems(mainApp.getReleases());
         break;
@@ -143,13 +144,13 @@ public class ListMainPaneController {
   public AgileItem getSelected(){
     String listType = Settings.currentListType;
     switch (listType) {
-      case "Project":
-        if (isListShown == false || listType != "Project") {
+      case "Projects":
+        if (isListShown == false || listType != "Projects") {
           return null;
         }
         return selectedItem;
       case "People":
-        if (isListShown == false) {
+        if (isListShown == false || listType != "People") {
           return null;
         }
         return selectedItem;
@@ -158,13 +159,13 @@ public class ListMainPaneController {
           return null;
         }
         return selectedItem;
-      case "Team":
-        if (isListShown == false || listType != "Team") {
+      case "Teams":
+        if (isListShown == false || listType != "Teams") {
           return null;
         }
         return selectedItem;
-      case "Release":
-        if (isListShown == false || listType != "Release") {
+      case "Releases":
+        if (isListShown == false || listType != "Releases") {
           return null;
         }
         return  selectedItem;
@@ -185,7 +186,7 @@ public class ListMainPaneController {
     if (Settings.currentListType == "People") {
       sampleTextArea.clear();
       Person person = (Person) next;
-      sampleTextArea.appendText("Person information \nPerson ID: ");
+      sampleTextArea.appendText("Person Information \nPerson ID: ");
       sampleTextArea.appendText(person.getPersonID());
       sampleTextArea.appendText("\nFirst Name: ");
       sampleTextArea.appendText(person.getFirstName());
@@ -208,16 +209,10 @@ public class ListMainPaneController {
       } else {
         sampleTextArea.appendText(listOfSkills.substring(0, listOfSkills.length() - 2));
       }
-      sampleTextArea.appendText("\nRole: ");
-      if (person.hasRole()) {
-        sampleTextArea.appendText(person.getRoles().toString());
-      } else {
-        sampleTextArea.appendText("Not assigned to a team yet.");
-      }
-    } else if (Settings.currentListType == "Project") {
+    } else if (Settings.currentListType == "Projects") {
       sampleTextArea.clear();
       Project project = (Project) next;
-      sampleTextArea.appendText("Project information \nProject ID: ");
+      sampleTextArea.appendText("Project Information \nProject ID: ");
       sampleTextArea.appendText(project.getProjectID());
       sampleTextArea.appendText("\nProject Name: ");
       sampleTextArea.appendText(project.getProjectName());
@@ -234,37 +229,38 @@ public class ListMainPaneController {
     } else if (Settings.currentListType == "Skills") {
       sampleTextArea.clear();
       Skill skill = (Skill) next;
-      sampleTextArea.appendText("Skills information \nSkill Name: ");
+      sampleTextArea.appendText("Skill Information \nSkill Name: ");
       sampleTextArea.appendText(skill.getSkillName().toString());
       sampleTextArea.appendText("\nSkill Description: ");
       sampleTextArea.appendText(skill.getSkillDescription());
 
-    } else if (Settings.currentListType == "Team") {
+    } else if (Settings.currentListType == "Teams") {
       sampleTextArea.clear();
       Team team = (Team) next; //Casts next as Team object
-      sampleTextArea.appendText("Team information \nTeam ID: ");
+      sampleTextArea.appendText("Team Information \nTeam ID: ");
       sampleTextArea.appendText(team.getTeamID());
       sampleTextArea.appendText("\nTeam Description: ");
       sampleTextArea.appendText(team.getTeamDescription());
-      sampleTextArea.appendText("\nTeam members: \n");
+      sampleTextArea.appendText("\nTeam Members: \n");
       for (Person member : team.getTeamMembers()) {
         sampleTextArea.appendText(member.getFirstName());
         sampleTextArea.appendText(" - ");
         sampleTextArea.appendText(member.getPersonID());
         sampleTextArea.appendText(" Role: ");
-        if (member.hasRole()) {
-          sampleTextArea.appendText(member.getRoles());
+        Role role = team.getMembersRole().get(member);
+        if (role != null) {
+          sampleTextArea.appendText(role.toString());
         } else {
           sampleTextArea.appendText("Not assigned to a role yet.");
         }
         sampleTextArea.appendText("\n");
       }
-    } else if (Settings.currentListType == "Release") {
+    } else if (Settings.currentListType == "Releases") {
       sampleTextArea.clear();
       Release release = (Release) next;
-      sampleTextArea.appendText("Release information \nRelease Name: ");
+      sampleTextArea.appendText("Release Information \nRelease Name: ");
       sampleTextArea.appendText(release.getReleaseName());
-      sampleTextArea.appendText("\nRelease description: ");
+      sampleTextArea.appendText("\nRelease Description: ");
       sampleTextArea.appendText(release.getReleaseDescription());
       sampleTextArea.appendText("\nRelease Date: ");
       sampleTextArea.appendText(release.getReleaseDate().format(
