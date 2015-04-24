@@ -115,7 +115,7 @@ public class MenuBarController {
           mainApp.showPersonDialog(CreateOrEdit.EDIT);
           break;
         case "Skills":
-          mainApp.showSkillCreationDialog(CreateOrEdit.EDIT);
+          mainApp.showSkillDialog(CreateOrEdit.EDIT);
           break;
         case "Teams":
           mainApp.showTeamDialog(CreateOrEdit.EDIT);
@@ -133,7 +133,7 @@ public class MenuBarController {
    */
   @FXML
   protected void createSkill(ActionEvent event) {
-    mainApp.showSkillCreationDialog(CreateOrEdit.CREATE);
+    mainApp.showSkillDialog(CreateOrEdit.CREATE);
   }
 
   /**

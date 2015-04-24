@@ -63,6 +63,12 @@ public class Main extends Application {
 
   private UndoRedoObject lastSavedObject = null;
 
+  /**
+   * Starts up the app creating the stage and setting up the window
+   * creates the default skills and roles that are needed
+   *
+   * @param primaryStage The main stage for the app
+   */
   @Override
   public void start(Stage primaryStage) {
     this.primaryStage = primaryStage;
@@ -97,6 +103,10 @@ public class Main extends Application {
     });
   }
 
+  /**
+   * Handles exiting the app.
+   * checks if there are unsaved changes if so displays a popup warning otherwise closes.
+   */
   public void exitScrumfinity() {
     if (!checkSaved()) {
       Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -173,6 +183,10 @@ public class Main extends Application {
     }
   }
 
+  /**
+   * sets up the dialog box for creating/editing a project
+   * @param createOrEdit the createOrEdit object that decides if you are creating or editing
+   */
   public void showProjectDialog(CreateOrEdit createOrEdit) {
     try {
       FXMLLoader loader = new FXMLLoader();
@@ -208,6 +222,10 @@ public class Main extends Application {
     }
   }
 
+  /**
+   * sets up the dialog box for creating/editing a Team
+   * @param createOrEdit the createOrEdit object that decides if you are creating or editing
+   */
   public void showTeamDialog(CreateOrEdit createOrEdit) {
     try {
       FXMLLoader loader = new FXMLLoader();
@@ -244,6 +262,10 @@ public class Main extends Application {
     }
   }
 
+  /**
+   * sets up the dialog box for creating/editing a Release
+   * @param createOrEdit the createOrEdit object that decides if you are creating or editing
+   */
   public void showReleaseDialog(CreateOrEdit createOrEdit) {
     try {
       FXMLLoader loader = new FXMLLoader();
@@ -278,7 +300,10 @@ public class Main extends Application {
     }
   }
 
-
+  /**
+   * sets up the dialog box for creating/editing a person
+   * @param createOrEdit the createOrEdit object that decides if you are creating or editing
+   */
   public void showPersonDialog(CreateOrEdit createOrEdit) {
     try {
       FXMLLoader loader = new FXMLLoader();
@@ -313,7 +338,11 @@ public class Main extends Application {
     }
   }
 
-  public void showSkillCreationDialog(CreateOrEdit createOrEdit) {
+  /**
+   * sets up the dialog box for creating/editing a skill
+   * @param createOrEdit the createOrEdit object that decides if you are creating or editing
+   */
+  public void showSkillDialog(CreateOrEdit createOrEdit) {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/SkillsDialog.fxml"));
@@ -360,7 +389,7 @@ public class Main extends Application {
   }
 
   /**
-   * Redo last action
+   * Redo last undo
    */
   public void redo() {
     try {
@@ -390,6 +419,7 @@ public class Main extends Application {
 
   /**
    * Check if the newest action was the saved action and adjust the window title
+   * @return Boolean returns true if the project is saved returns true else false
    */
   public boolean checkSaved() {
     UndoRedoObject topObject = undoRedoHandler.peekUndoStack();
@@ -747,6 +777,9 @@ public class Main extends Application {
     this.LMPC = LMPC;
   }
 
+  /**
+   * Refreshes the listview
+   */
   public void refreshList() {
     LMPC.refreshList();
   }
