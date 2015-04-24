@@ -1,12 +1,11 @@
 package seng302.group5.controller;
 
 import java.io.File;
-import java.util.Optional;
+import java.util.Objects;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
@@ -285,7 +284,7 @@ public class MenuBarController {
 
   /**
    *
-   * @param selectedList
+   * @param selectedList The list you wish to deselect.
    */
   protected void deselectList(String selectedList) {
     showProjectsMenuItem.setSelected(false);
@@ -293,7 +292,7 @@ public class MenuBarController {
     showTeamsMenuItem.setSelected(false);
     showSkillsMenuItem.setSelected(false);
     showReleasesMenuItem.setSelected(false);
-    if (!(selectedList == "")) {
+    if (!(Objects.equals(selectedList, ""))) {
       switch (selectedList) {
         case "Projects":
           showProjectsMenuItem.setSelected(true);
