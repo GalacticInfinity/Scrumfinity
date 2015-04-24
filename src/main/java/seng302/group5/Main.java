@@ -54,6 +54,8 @@ public class Main extends Application {
   private ObservableList<Release> releases = FXCollections.observableArrayList();
   private ObservableList<Role> roles = FXCollections.observableArrayList();
 
+  private ArrayList<AgileItem> nonRemovable = new ArrayList<>();
+
   private UndoRedoHandler undoRedoHandler = new UndoRedoHandler(this);
 
   private UndoRedoObject lastSavedObject = null;
@@ -72,6 +74,8 @@ public class Main extends Application {
     Skill poSkill = new Skill("Product Owner", "Trained to be a Product Owner");
     addSkill(smSkill);
     addSkill(poSkill);
+    nonRemovable.add(smSkill);
+    nonRemovable.add(poSkill);
 
     Role smRole = new Role("SM", "Scrum Master", smSkill, 1);
     Role poRole = new Role("PO", "Product Owner", poSkill, 1);
@@ -79,7 +83,6 @@ public class Main extends Application {
     addRole(poRole);
     addRole(smRole);
     addRole(devRole);
-
   }
 
 
@@ -670,6 +673,10 @@ public class Main extends Application {
 
   public ObservableList<Role> getRoles() {
     return roles;
+  }
+
+  public ArrayList<AgileItem> getNonRemovable() {
+    return nonRemovable;
   }
 
   public void addProject(Project project) {

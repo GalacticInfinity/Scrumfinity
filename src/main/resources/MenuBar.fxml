@@ -31,7 +31,7 @@
             <MenuItem fx:id="redoMenuItem" mnemonicParsing="false" onAction="#btnRedoClick" text="Redo" />
             <MenuItem fx:id="deleteMenuItem" mnemonicParsing="false" onAction="#btnDelete" text="Delete" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" onAction="#editItem" text="Edit Item" />
+            <MenuItem fx:id="editMenuItem" mnemonicParsing="false" onAction="#editItem" text="Edit Item" />
          </items>
       </Menu>
       <Menu mnemonicParsing="false" text="Display">
