@@ -109,7 +109,7 @@ public class TeamDialogController {
       }
       else if (createOrEdit == CreateOrEdit.EDIT) {
         for (Person person : mainApp.getPeople()) {
-          if (person.isInTeam() == false) {
+          if (!person.isInTeam()) {
             availableMembers.add(person);
           }
         }

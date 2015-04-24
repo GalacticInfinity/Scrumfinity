@@ -149,27 +149,27 @@ public class ListMainPaneController {
     String listType = Settings.currentListType;
     switch (listType) {
       case "Projects":
-        if (isListShown == false || listType != "Projects") {
+        if (!isListShown || listType != "Projects") {
           return null;
         }
         return selectedItem;
       case "People":
-        if (isListShown == false || listType != "People") {
+        if (!isListShown || listType != "People") {
           return null;
         }
         return selectedItem;
       case "Skills":
-        if (isListShown == false || listType != "Skills") {
+        if (!isListShown || listType != "Skills") {
           return null;
         }
         return selectedItem;
       case "Teams":
-        if (isListShown == false || listType != "Teams") {
+        if (!isListShown || listType != "Teams") {
           return null;
         }
         return selectedItem;
       case "Releases":
-        if (isListShown == false || listType != "Releases") {
+        if (!isListShown || listType != "Releases") {
           return null;
         }
         return  selectedItem;
