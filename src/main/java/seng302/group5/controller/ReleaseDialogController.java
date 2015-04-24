@@ -214,6 +214,9 @@ public class ReleaseDialogController {
       if (selectedProject != null && this.selectedProject.isEmpty()) {
         this.selectedProject.add(selectedProject);
         this.availableProjects.remove(availableProjects);
+
+        this.projectList.getSelectionModel().clearSelection();
+        this.projectList.setValue(null);
       }
     }
     catch (Exception e) {

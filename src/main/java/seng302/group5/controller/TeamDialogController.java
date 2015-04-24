@@ -151,10 +151,15 @@ public class TeamDialogController {
           this.availableMembers.remove(selectedPerson);
           this.membersToRemove.remove(selectedPerson);
           this.teamMemberAddCombo.setItems(availableMembers);
+
+          this.teamMemberRoleCombo.getSelectionModel().clearSelection();
+          this.teamMemberRoleCombo.setValue(null);
+          this.teamMemberAddCombo.getSelectionModel().clearSelection();
+          this.teamMemberAddCombo.setValue(null);
         }
       }
     }
-    catch(Exception e){
+    catch (Exception e) {
       e.printStackTrace();
     }
   }
