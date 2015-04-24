@@ -75,6 +75,8 @@ public class ListMainPaneController {
 
   /**
    * Shows/Hides items in list.
+   * @param item a CheckMenuItem is used to select the current item or deselect it depending on
+   *             if you're hiding or showing the list
    */
   public void showHideList(CheckMenuItem item) {
     if(!isListShown){
@@ -95,7 +97,6 @@ public class ListMainPaneController {
 
   /**
    * Refreshes listView and text area text for when edits occur.
-   * TODO Testing
    */
   public void refreshList() {
     listView.setItems(null);
@@ -107,7 +108,6 @@ public class ListMainPaneController {
 
   /**
    * Checks list type currently set as viewed list by user.
-   * TODO testing
    */
   public void checkListType(){
     String listType = Settings.currentListType;
@@ -141,6 +141,10 @@ public class ListMainPaneController {
     }
   }
 
+  /**
+   * Gets the currently selected item in the listview.
+   * @return AgileItem which is the item selected in the list.
+   */
   public AgileItem getSelected(){
     String listType = Settings.currentListType;
     switch (listType) {
@@ -172,7 +176,10 @@ public class ListMainPaneController {
     }
     return null;
   }
-
+  /**
+   * Gets the current list type being displayed
+   * @return String, a string of the current list type.
+   */
   public String getCurrentListType() {
     return Settings.currentListType;
   }
@@ -272,6 +279,10 @@ public class ListMainPaneController {
     }
   }
 
+  /**
+   * Sets the main app to the param
+   * @param mainApp
+   */
   public void setMainApp(Main mainApp) {
     this.mainApp = mainApp;
   }

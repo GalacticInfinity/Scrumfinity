@@ -76,7 +76,7 @@
                <HBox.margin>
                   <Insets />
                </HBox.margin></ListView>
-                <Button fx:id="btnRemoveProject" mnemonicParsing="false" onAction="#btnRemoveSkill" prefWidth="60.0" text="Remove">
+                <Button fx:id="btnRemoveProject" mnemonicParsing="false" onAction="#btnRemoveProject" prefWidth="60.0" text="Remove">
                <HBox.margin>
                   <Insets left="10.0" />
                </HBox.margin></Button>

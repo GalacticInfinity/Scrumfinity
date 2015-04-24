@@ -25,7 +25,8 @@ import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoObject;
 
 /**
- * Created by @author Alex Woo
+ * @author Alex Woo
+ * The controller for the project dialog when creating a new project or editing an existing one
  */
 public class ProjectDialogController {
 
@@ -55,10 +56,10 @@ public class ProjectDialogController {
   /**
    * Setup the project dialog controller
    *
-   * @param mainApp - The main application object
-   * @param thisStage - The stage of the dialog
-   * @param createOrEdit - If dialog is for creating or editing a project
-   * @param project - The project object if editing, null otherwise
+   * @param mainApp The main application object
+   * @param thisStage The stage of the dialog
+   * @param createOrEdit If dialog is for creating or editing a project
+   * @param project The project object if editing, null otherwise
    */
   public void setupController(Main mainApp,
                               Stage thisStage,
@@ -266,9 +267,8 @@ public class ProjectDialogController {
 
 
   /**
-   * Handles when the create button is pushed
+   * Handles when the add button is pushed
    */
-
   @FXML
   protected void btnAddTeam() {
     try {
@@ -295,6 +295,9 @@ public class ProjectDialogController {
     }
   }
 
+  /**
+   * Handles when the remove button is pushed. Removes the selected team from the project.
+   */
   @FXML
   protected void btnRemoveTeam() {
     try {
@@ -317,6 +320,10 @@ public class ProjectDialogController {
     }
   }
 
+  /**
+   * Handles when the Create button is pushed by finalising the changes, creating the object and
+   * adding it to the session and list.
+   */
   @FXML
   protected void btnConfirmClick() {
     StringBuilder errors = new StringBuilder();
