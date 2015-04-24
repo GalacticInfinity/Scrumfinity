@@ -10,6 +10,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
@@ -28,9 +29,9 @@ import seng302.group5.model.undoredo.UndoRedoObject;
 public class ReleaseDialogController {
 
   @FXML private TextField releaseIDField;
-  @FXML private TextField releaseDescriptionField;
+  @FXML private TextArea releaseDescriptionField;
   @FXML private DatePicker releaseDateField;
-  @FXML private TextField releaseNotesField;
+  @FXML private TextArea releaseNotesField;
 
   @FXML private Button btnConfirm;
   @FXML private Button btnAddProject;
@@ -73,15 +74,41 @@ public class ReleaseDialogController {
 
     try {
       releaseId = parseReleaseID(releaseIDField.getText());
-      releaseDescription = parseReleaseDescription(releaseDescription);
-      releaseDate = parseReleaseDate(releaseDate);
-      releaseNotes = parseReleaseNotes(releaseNotes);
-      releaseProject = parseReleaseProject(selectedProject);
    }
-   catch (Exception e) {
+    catch (Exception e) {
       noErrors++;
       errors.append(String.format("\n\t%s", e.getMessage()));
-  }
+    }
+
+    try {
+      releaseDescription = parseReleaseDescription(releaseDescription);
+    }
+    catch (Exception e) {
+      noErrors++;
+      errors.append(String.format("\n\t%s", e.getMessage()));
+    }
+    try {
+      releaseDate = parseReleaseDate(releaseDate);
+    }
+    catch (Exception e) {
+      noErrors++;
+      errors.append(String.format("\n\t%s", e.getMessage()));
+    }
+    try {
+      releaseProject = parseReleaseProject(selectedProject);
+    }
+    catch (Exception e) {
+      noErrors++;
+      errors.append(String.format("\n\t%s", e.getMessage()));
+    }
+    try {
+      releaseNotes = parseReleaseNotes(releaseNotes);
+    }
+    catch (Exception e) {
+      noErrors++;
+      errors.append(String.format("\n\t%s", e.getMessage()));
+    }
+
 
     // Display all errors if they exist
     if (noErrors > 0) {
@@ -92,6 +119,8 @@ public class ReleaseDialogController {
       Alert alert = new Alert(Alert.AlertType.ERROR);
       alert.setTitle(title);
       alert.setHeaderText(null);
+      noErrors += 1;
+      alert.getDialogPane().setPrefHeight(60 + 30 * noErrors);
       alert.setContentText(errors.toString());
       alert.showAndWait();
     }

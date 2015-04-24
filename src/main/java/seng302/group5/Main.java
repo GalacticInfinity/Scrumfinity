@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -17,6 +19,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import seng302.group5.controller.ListMainPaneController;
 import seng302.group5.controller.MenuBarController;
 import seng302.group5.controller.ReleaseDialogController;
@@ -83,6 +86,33 @@ public class Main extends Application {
     addRole(poRole);
     addRole(smRole);
     addRole(devRole);
+
+    Platform.setImplicitExit(false);
+    this.primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+      @Override
+      public void handle(WindowEvent event) {
+        event.consume();
+        exitScrumfinity();
+      }
+    });
+  }
+
+  public void exitScrumfinity() {
+    if (!checkSaved()) {
+      Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+      alert.setTitle("Unsaved changes");
+      alert.setHeaderText(null);
+      alert.setContentText("There are unsaved changes, are you sure you wish to quit?");
+      Optional<ButtonType> result = alert.showAndWait();
+      if (result.get() == ButtonType.OK) {
+        System.exit(0);
+      }
+      else if (result.get() == ButtonType.CANCEL) {
+        return;
+      }
+    } else {
+      System.exit(0);
+    }
   }
 
 
@@ -361,15 +391,18 @@ public class Main extends Application {
   /**
    * Check if the newest action was the saved action and adjust the window title
    */
-  private void checkSaved() {
+  public boolean checkSaved() {
     UndoRedoObject topObject = undoRedoHandler.peekUndoStack();
+
     boolean neverSaved = lastSavedObject == null && topObject == null;
 
     // Adjust the window title
     if (neverSaved || topObject == lastSavedObject) {
       primaryStage.setTitle("Scrumfinity");
+      return true;
     } else {
       primaryStage.setTitle("Scrumfinity *");
+      return false;
     }
   }
 
@@ -636,6 +669,7 @@ public class Main extends Application {
     people.clear();
     skills.clear();
     releases.clear();
+    nonRemovable.clear();
   }
 
 
