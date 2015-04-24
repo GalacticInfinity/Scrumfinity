@@ -269,7 +269,7 @@ public class NewLoading {
         main.addTeam(newTeam);
       }
     }
-
+/*
     // Now sync Team and People
     for (Team team : main.getTeams()) {
       ArrayList<Person> personArray = new ArrayList<>();
@@ -288,10 +288,17 @@ public class NewLoading {
         person.assignToTeam(team);
         team.getTeamMembers().add(person);
       }
-    }
+    }*/
+
   }
 
+  /**
+   * Loads team members for a team object.
+   * @param newTeam
+   * @throws Exception
+   */
   private void loadTeamMembers(Team newTeam) throws Exception {
+    // Definers
     String teamLine;
     String teamData;
     Person tempPerson;
@@ -299,14 +306,22 @@ public class NewLoading {
     ObservableList<Person> people = FXCollections.observableArrayList();
     HashMap<Person, Role> roles = new HashMap<>();
 
+    // Untill end tag team people
     while (!(teamLine = loadedFile.readLine()).equals("\t\t</TeamPeople>")) {
-      if (teamLine.startsWith("\t\t\t<TeamPerson>")) {
+      // For each new person
+      if (teamLine.startsWith("\t\t\t<TeamMember>")) {
         tempPerson = new Person();
         tempRole = null;
-        while (!(teamLine = loadedFile.readLine()).equals("\t\t\t</TeamPerson>")) {
+        while (!(teamLine = loadedFile.readLine()).equals("\t\t\t</TeamMember>")) {
           if (teamLine.startsWith("\t\t\t\t<teamPersonID>")) {
             teamData = teamLine.replaceAll("(?i)(.*<teamPersonID.*?>)(.+?)(</teamPersonID>)", "$2");
-            tempPerson.setPersonID(teamData);
+            for (Person person : main.getPeople()) {
+              if (person.getPersonID().equals(teamData)) {
+                people.add(person);
+                tempPerson = person;
+                break;
+              }
+            }
           }
           if (teamLine.startsWith("\t\t\t\t<personRole>")) {
             tempRole = new Role();
@@ -314,13 +329,12 @@ public class NewLoading {
             tempRole.setRoleID(teamData);
           }
         }
-        people.add(tempPerson);
         roles.put(tempPerson, tempRole);
       }
-      if (people.size() != 0) {
-        newTeam.setTeamMembers(people);
-        newTeam.setMembersRole(roles);
-      }
+    }
+    if (people.size() != 0) {
+      newTeam.setTeamMembers(people);
+      newTeam.setMembersRole(roles);
     }
   }
 
@@ -438,6 +452,19 @@ public class NewLoading {
    * Syncs the hashmap in teams with roles
    */
   private void syncRoles() {
-
+    Role tempRole;
+    for (Team team : main.getTeams()) {
+      for (Person person : team.getTeamMembers()) {
+        tempRole = team.getMembersRole().get(person);
+        if (tempRole != null) {
+          for (Role role : main.getRoles()) {
+            if (tempRole.getRoleID().equals(role.getRoleID())) {
+              team.getMembersRole().put(person, role);
+              break;
+            }
+          }
+        }
+      }
+    }
   }
 }
