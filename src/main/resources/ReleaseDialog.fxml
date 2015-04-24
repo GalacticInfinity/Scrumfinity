@@ -34,7 +34,7 @@
                 <TextArea fx:id="releaseDescriptionField" maxHeight="75.0" prefHeight="75.0" prefWidth="292.0">
                <HBox.margin>
                   <Insets top="2.0" />
-               </HBox.margin></TextField>
+               </HBox.margin></TextArea>
             </children>
         </HBox>
       <HBox prefHeight="100.0" prefWidth="200.0">
