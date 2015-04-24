@@ -44,6 +44,11 @@ public class Role {
     this.memberLimit = memberLimit;
   }
 
+  public Role() {
+    this.requiredSkill = null;
+    this.memberLimit = Integer.MAX_VALUE;
+  }
+
 
   public String getRoleID() {
     return roleID;
