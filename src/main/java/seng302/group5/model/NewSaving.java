@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.List;
 
 import seng302.group5.Main;
@@ -20,6 +21,7 @@ public class NewSaving {
   private List<Skill> skills;
   private List<Team> teams;
   private List<Release> releases;
+  private List<Role> roles;
 
   public NewSaving(Main main) {
     projects = main.getProjects();
@@ -27,6 +29,7 @@ public class NewSaving {
     skills = main.getSkills();
     teams = main.getTeams();
     releases = main.getReleases();
+    roles = main.getRoles();
   }
 
   /**
@@ -51,6 +54,7 @@ public class NewSaving {
       saveSkills(saveFile);
       saveTeams(saveFile);
       saveReleases(saveFile);
+      saveRoles(saveFile);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -143,6 +147,8 @@ public class NewSaving {
    * @throws Exception Required field is mission/ error with writer
    */
   private void saveTeams(Writer saveFile) throws Exception {
+    Role personRole;
+
     saveFile.write("<Teams>\n");
     for (Team team : this.teams) {
       saveFile.write("\t<Team>\n");
@@ -153,7 +159,13 @@ public class NewSaving {
       if (!team.getTeamMembers().isEmpty()) {
         saveFile.write("\t\t<TeamPeople>\n");
         for (Person person : team.getTeamMembers()) {
-          saveFile.write("\t\t\t<teamPersonID>" + person.getPersonID() + "</teamPersonID>\n");
+          saveFile.write("\t\t\t<TeamMember>\n");
+          saveFile.write("\t\t\t\t<teamPersonID>" + person.getPersonID() + "</teamPersonID>\n");
+          personRole = team.getMembersRole().get(person);
+          if (personRole != null) {
+            saveFile.write("\t\t\t\t<personRole>" + personRole.getRoleID() + "</personRole>\n");
+          }
+          saveFile.write("\t\t\t</TeamMember>\n");
         }
         saveFile.write("\t\t</TeamPeople>\n");
       }
@@ -182,5 +194,22 @@ public class NewSaving {
       saveFile.write("\t</Release>\n");
     }
     saveFile.write("</Releases>\n");
+  }
+
+  private void saveRoles(Writer saveFile) throws Exception {
+    saveFile.write("<Roles>\n");
+    for (Role role : this.roles) {
+      saveFile.write("\t<Role>\n");
+      saveFile.write("\t\t<roleID>" + role.getRoleID() + "</roleID>\n");
+      saveFile.write("\t\t<roleName>" +role.getRoleName() + "</roleName>\n");
+      if (role.getRequiredSkill() != null) {
+        saveFile.write("\t\t<roleSkill>" + role.getRequiredSkill().getSkillName() + "</roleSkill>\n");
+      }
+      if (role.getMemberLimit() != Integer.MAX_VALUE) {
+        saveFile.write("\t\t<memberLimit>" + role.getMemberLimit() + "</memberLimit>\n");
+      }
+      saveFile.write("\t</Role>\n");
+    }
+    saveFile.write("</Roles>\n");
   }
 }

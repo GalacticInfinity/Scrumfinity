@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -37,6 +38,8 @@ public class NewLoading {
       loadTeams();
       loadReleases();
       syncTeamAllocation();
+      loadRoles();
+      syncRoles();
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
@@ -194,6 +197,9 @@ public class NewLoading {
             newSkill.setSkillDescription(skillData);
           }
         }
+        if (newSkill.getSkillName().equals("PO") || newSkill.getSkillName().equals("SM")) {
+          main.getNonRemovable().add(newSkill);
+        }
         main.addSkill(newSkill);
       }
     }
@@ -228,8 +234,6 @@ public class NewLoading {
     String teamLine;
     String teamData;
     Team newTeam;
-    Person tempPerson;
-    ObservableList<Person> people;
 
     // Untill Team end tag
     while (!(teamLine = loadedFile.readLine()).startsWith("</Teams>")) {
@@ -237,7 +241,6 @@ public class NewLoading {
       if (teamLine.matches(".*<Team>")) {
         // New team loading
         newTeam = new Team();
-        people = FXCollections.observableArrayList();
 
         // Mandatory fields
         teamLine = loadedFile.readLine();
@@ -252,15 +255,7 @@ public class NewLoading {
           }
           // Going through teams
           if (teamLine.startsWith("\t\t<TeamPeople>")) {
-            while (!(teamLine = loadedFile.readLine()).equals("\t\t</TeamPeople>")) {
-              tempPerson = new Person();
-              teamData = teamLine.replaceAll("(?i)(.*<TeamPersonID.*?>)(.+?)(</TeamPersonID>)", "$2");
-              tempPerson.setPersonID(teamData);
-              people.add(tempPerson);
-            }
-            if (people.size() != 0) {
-              newTeam.setTeamMembers(people);
-            }
+            loadTeamMembers(newTeam);
           }
           if (teamLine.startsWith("\t\t<teamProject>")) {
             teamData = teamLine.replaceAll("(?i)(.*<teamProject.*?>)(.+?)(</teamProject>)", "$2");
@@ -274,7 +269,7 @@ public class NewLoading {
         main.addTeam(newTeam);
       }
     }
-
+/*
     // Now sync Team and People
     for (Team team : main.getTeams()) {
       ArrayList<Person> personArray = new ArrayList<>();
@@ -293,6 +288,53 @@ public class NewLoading {
         person.assignToTeam(team);
         team.getTeamMembers().add(person);
       }
+    }*/
+
+  }
+
+  /**
+   * Loads team members for a team object.
+   * @param newTeam
+   * @throws Exception
+   */
+  private void loadTeamMembers(Team newTeam) throws Exception {
+    // Definers
+    String teamLine;
+    String teamData;
+    Person tempPerson;
+    Role tempRole;
+    ObservableList<Person> people = FXCollections.observableArrayList();
+    HashMap<Person, Role> roles = new HashMap<>();
+
+    // Untill end tag team people
+    while (!(teamLine = loadedFile.readLine()).equals("\t\t</TeamPeople>")) {
+      // For each new person
+      if (teamLine.startsWith("\t\t\t<TeamMember>")) {
+        tempPerson = new Person();
+        tempRole = null;
+        while (!(teamLine = loadedFile.readLine()).equals("\t\t\t</TeamMember>")) {
+          if (teamLine.startsWith("\t\t\t\t<teamPersonID>")) {
+            teamData = teamLine.replaceAll("(?i)(.*<teamPersonID.*?>)(.+?)(</teamPersonID>)", "$2");
+            for (Person person : main.getPeople()) {
+              if (person.getPersonID().equals(teamData)) {
+                people.add(person);
+                tempPerson = person;
+                break;
+              }
+            }
+          }
+          if (teamLine.startsWith("\t\t\t\t<personRole>")) {
+            tempRole = new Role();
+            teamData = teamLine.replaceAll("(?i)(.*<personRole.*?>)(.+?)(</personRole>)", "$2");
+            tempRole.setRoleID(teamData);
+          }
+        }
+        roles.put(tempPerson, tempRole);
+      }
+    }
+    if (people.size() != 0) {
+      newTeam.setTeamMembers(people);
+      newTeam.setMembersRole(roles);
     }
   }
 
@@ -344,6 +386,49 @@ public class NewLoading {
   }
 
   /**
+   * Loads roles from xml files into main app
+   * @throws Exception
+   */
+  private void loadRoles() throws Exception{
+    String roleLine;
+    String roleData;
+    Role newRole;
+
+    // Untill Role end tag
+    while (!(roleLine = loadedFile.readLine()).startsWith("</Roles>")) {
+      // For each new role
+      if (roleLine.matches(".*<Release>")) {
+        newRole = new Role();
+
+        // Mandatory fields
+        roleLine = loadedFile.readLine();
+        roleData = roleLine.replaceAll("(?i)(.*<roleID.*?>)(.+?)(</roleID>)", "$2");
+        newRole.setRoleID(roleData);
+        roleLine = loadedFile.readLine();
+        roleData = roleLine.replaceAll("(?i)(.*<roleName.*?>)(.+?)(</roleName>)", "$2");
+        newRole.setRoleName(roleData);
+
+        // Non Mandatory fields
+        while ((!(roleLine = loadedFile.readLine()).matches(".*</Release>"))) {
+          if (roleLine.startsWith("\t\t<roleSkill>")) {
+            roleData = roleLine.replaceAll("(?i)(.*<roleSkill.*?>)(.+?)(</roleSkill>)", "$2");
+            for (Skill skill : main.getSkills()) {
+              if (skill.getSkillName().equals(roleData)) {
+                newRole.setRequiredSkill(skill);
+              }
+            }
+          }
+          if (roleLine.startsWith("\t\t<memberLimit>")) {
+            roleData = roleLine.replaceAll("(?i)(.*<memberLimit.*?>)(.+?)(</memberLimit>)", "$2");
+            newRole.setMemberLimit(Integer.parseInt(roleData));
+          }
+        }
+        main.addRole(newRole);
+      }
+    }
+  }
+
+  /**
    * Syncs temporary teams inside agile history items in projects with the real team objects
    */
   private void syncTeamAllocation() {
@@ -360,12 +445,26 @@ public class NewLoading {
           }
         }
       }
-//      // To fix Concurrent Modification Exception
-//      team.getTeamMembers().clear();
-//      for (Person person : personArray) {
-//        person.assignToTeam(team);
-//        team.getTeamMembers().add(person);
-//      }
+    }
+  }
+
+  /**
+   * Syncs the hashmap in teams with roles
+   */
+  private void syncRoles() {
+    Role tempRole;
+    for (Team team : main.getTeams()) {
+      for (Person person : team.getTeamMembers()) {
+        tempRole = team.getMembersRole().get(person);
+        if (tempRole != null) {
+          for (Role role : main.getRoles()) {
+            if (tempRole.getRoleID().equals(role.getRoleID())) {
+              team.getMembersRole().put(person, role);
+              break;
+            }
+          }
+        }
+      }
     }
   }
 }
