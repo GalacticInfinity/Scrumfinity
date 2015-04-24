@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 import seng302.group5.Main;
 
 /**
@@ -23,6 +24,10 @@ public class NewLoading {
     this.main = main;
   }
 
+  /**
+   * Loads all the data from the xml file into main app
+   * @param file File to load from
+   */
   public void loadFile(File file) {
     // Turns the file into a string
     String filename = file.toString();
@@ -41,10 +46,15 @@ public class NewLoading {
       loadRoles();
       syncRoles();
     } catch (Exception e) {
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Loading Error");
+      alert.setHeaderText(null);
+      alert.setContentText("There was a problem with loading, file is corrupted.");
+      alert.showAndWait();
       e.printStackTrace();
     } finally {
       try {
-        if (loadedFile != null)loadedFile.close();
+        if (loadedFile != null) loadedFile.close();
       } catch (Exception ex) {
         ex.printStackTrace();
       }
@@ -269,32 +279,11 @@ public class NewLoading {
         main.addTeam(newTeam);
       }
     }
-/*
-    // Now sync Team and People
-    for (Team team : main.getTeams()) {
-      ArrayList<Person> personArray = new ArrayList<>();
-      // For every person in that team
-      for (Person teamPerson : team.getTeamMembers()) {
-        // For every person that is in Main App
-        for (Person mainPerson : main.getPeople()) {
-          if (teamPerson.getPersonID().equals(mainPerson.getPersonID())) {
-            personArray.add(mainPerson);
-          }
-        }
-      }
-      // To fix Concurrent Modification Exception
-      team.getTeamMembers().clear();
-      for (Person person : personArray) {
-        person.assignToTeam(team);
-        team.getTeamMembers().add(person);
-      }
-    }*/
-
   }
 
   /**
    * Loads team members for a team object.
-   * @param newTeam
+   * @param newTeam Team currently being loaded
    * @throws Exception
    */
   private void loadTeamMembers(Team newTeam) throws Exception {
@@ -449,7 +438,7 @@ public class NewLoading {
   }
 
   /**
-   * Syncs the hashmap in teams with roles
+   * Syncs the hashmap of Person,Role in teams with roles from main app
    */
   private void syncRoles() {
     Role tempRole;
