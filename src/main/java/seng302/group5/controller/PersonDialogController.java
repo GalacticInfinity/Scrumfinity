@@ -21,6 +21,7 @@ import seng302.group5.model.undoredo.UndoRedoObject;
 
 /**
  * Created by Zander on 18/03/2015.
+ * The controller for the project dialog when creating a new project or editing an existing one
  */
 public class PersonDialogController {
 
@@ -44,10 +45,10 @@ public class PersonDialogController {
   /**
    * Setup the person dialog controller
    *
-   * @param mainApp - The main application object
-   * @param thisStage - The stage of the dialog
-   * @param createOrEdit - If dialog is for creating or editing a person
-   * @param person - The person object if editing, null otherwise
+   * @param mainApp The main application object
+   * @param thisStage The stage of the dialog
+   * @param createOrEdit If dialog is for creating or editing a person
+   * @param person The person object if editing, null otherwise
    */
   public void setupController(Main mainApp,
                               Stage thisStage,
@@ -210,6 +211,8 @@ public class PersonDialogController {
 
   /**
    * Populates a list of available skills for assigning them to people
+   * @param createOrEdit an enum deciding if the action is creating or editing
+   * @param person
    */
   private void initialiseLists(CreateOrEdit createOrEdit, Person person) {
     try {
@@ -231,6 +234,10 @@ public class PersonDialogController {
     }
   }
 
+  /**
+   * Adds in a skill to the person once add is click and a skill is selected.
+   * @param event
+   */
   @FXML
   protected void btnAddSkillClick(ActionEvent event) {
     try {
@@ -248,6 +255,10 @@ public class PersonDialogController {
     }
   }
 
+  /**
+   * removes the selected skill from the person.
+   * @param event
+   */
   @FXML
   protected void btnRemoveSkillClick(ActionEvent event) {
     try {
