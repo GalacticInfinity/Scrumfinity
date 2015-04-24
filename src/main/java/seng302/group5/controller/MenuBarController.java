@@ -1,10 +1,12 @@
 package seng302.group5.controller;
 
 import java.io.File;
+import java.util.Optional;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
@@ -131,7 +133,7 @@ public class MenuBarController {
    */
   @FXML
   protected void btnQuitClick(ActionEvent event){
-    System.exit(0);
+    mainApp.exitScrumfinity();
   }
 
 
