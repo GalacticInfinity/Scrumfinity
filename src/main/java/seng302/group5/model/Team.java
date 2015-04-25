@@ -131,7 +131,6 @@ public class Team implements AgileItem {
 
   /**
    * Get the description of the team.
-   * @return description of the team
    */
   @Override
   public void copyValues(AgileItem agileItem) {

@@ -35,6 +35,7 @@ public class Person implements AgileItem {
    * @param personID Unique, non-null person ID.
    * @param firstName First name of person.
    * @param lastName Last name of person.
+   * @param skills List of person's skills
    */
   public Person(String personID, String firstName, String lastName, ObservableList<Skill> skills) {
     this.personID = personID;
