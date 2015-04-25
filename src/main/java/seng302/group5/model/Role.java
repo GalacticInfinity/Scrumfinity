@@ -45,6 +45,8 @@ public class Role {
   }
 
   public Role() {
+    this.roleID = "";
+    this.roleName = "";
     this.requiredSkill = null;
     this.memberLimit = Integer.MAX_VALUE;
   }

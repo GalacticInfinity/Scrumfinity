@@ -1,7 +1,5 @@
 package seng302.group5.model;
 
-import java.time.LocalDate;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 

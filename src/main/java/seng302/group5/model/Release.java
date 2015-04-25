@@ -15,9 +15,10 @@ public class Release implements AgileItem {
   private Project projectRelease = null;
 
   public Release() {
-    releaseName = "";
-    releaseDescription = "";
-    releaseNotes = "";
+    this.releaseName = "";
+    this.releaseDescription = "";
+    this.releaseDate = null;
+    this.releaseNotes = "";
   }
 
   /**
@@ -99,9 +100,9 @@ public class Release implements AgileItem {
   }
 
   /**
-   * Check if two release's ids are equal
+   * Check if two releases' ids are equal
    * @param obj Object to compare to.
-   * @return Whether release's ids are equal
+   * @return Whether releases' ids are equal
    */
   @Override
   public boolean equals(Object obj) {

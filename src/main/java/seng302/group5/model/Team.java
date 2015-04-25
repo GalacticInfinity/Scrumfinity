@@ -1,16 +1,9 @@
 package seng302.group5.model;
 
-import org.mockito.cglib.core.Local;
-
-import java.time.LocalDate;
-
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Vector;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Alert;
 
 /**Basic model of a Team.
  *
