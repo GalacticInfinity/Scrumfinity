@@ -344,23 +344,23 @@ public class LoadingTest {
     team3 = loadedMain.getTeams().get(2);
 
     project1 = loadedMain.getProjects().get(0);
-    assertEquals(team1, project1.getTeam().get(0).getAgileItem());
+    assertEquals(team1, project1.getAllocatedTeams().get(0).getAgileItem());
     assertEquals(LocalDate.of(2000, 3, 4).toString(),
-                 project1.getTeam().get(0).getStartDate().toString());
+                 project1.getAllocatedTeams().get(0).getStartDate().toString());
     assertEquals(LocalDate.of(2000, 3, 5).toString(),
-                 project1.getTeam().get(0).getEndDate().toString());
+                 project1.getAllocatedTeams().get(0).getEndDate().toString());
     project2 = loadedMain.getProjects().get(1);
-    assertEquals(team3, project2.getTeam().get(0).getAgileItem());
+    assertEquals(team3, project2.getAllocatedTeams().get(0).getAgileItem());
     assertEquals(LocalDate.of(1860, 5, 12).toString(),
-                 project2.getTeam().get(0).getStartDate().toString());
+                 project2.getAllocatedTeams().get(0).getStartDate().toString());
     assertEquals(LocalDate.of(1861, 2, 17).toString(),
-                 project2.getTeam().get(0).getEndDate().toString());
+                 project2.getAllocatedTeams().get(0).getEndDate().toString());
 
-    assertEquals(team3, project2.getTeam().get(1).getAgileItem());
+    assertEquals(team3, project2.getAllocatedTeams().get(1).getAgileItem());
     assertEquals(LocalDate.of(1861, 2, 18).toString(),
-                 project2.getTeam().get(1).getStartDate().toString());
+                 project2.getAllocatedTeams().get(1).getStartDate().toString());
     assertEquals(LocalDate.of(1861, 2, 19).toString(),
-                 project2.getTeam().get(1).getEndDate().toString());
+                 project2.getAllocatedTeams().get(1).getEndDate().toString());
 
     if (!file.delete()) {
       fail();

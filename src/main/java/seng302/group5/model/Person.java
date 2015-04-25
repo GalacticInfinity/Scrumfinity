@@ -125,7 +125,7 @@ public class Person implements AgileItem {
   }
 
   /**
-   * Copies the person input person's fields into current object.
+   * Copies the input person's fields into current object.
    * @param agileItem Person who's fields are to be copied
    */
   @Override

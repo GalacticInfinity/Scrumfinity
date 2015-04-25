@@ -74,9 +74,9 @@ public class NewSaving {
       if (project.getProjectDescription() != null && !project.getProjectDescription().isEmpty()) {
         saveFile.write("\t\t<projectDescription>" + project.getProjectDescription() + "</projectDescription>\n");
       }
-      if (!project.getTeam().isEmpty()) {
+      if (!project.getAllocatedTeams().isEmpty()) {
         saveFile.write("\t\t<AllocatedTeams>\n");
-        for (AgileHistory allocatedTeam : project.getTeam()) {
+        for (AgileHistory allocatedTeam : project.getAllocatedTeams()) {
           saveFile.write("\t\t\t<allocatedTeam>\n");
           agileTeam = (Team) allocatedTeam.getAgileItem();
           saveFile.write("\t\t\t\t<agileTeam>" + agileTeam.getTeamID() + "</agileTeam>\n");

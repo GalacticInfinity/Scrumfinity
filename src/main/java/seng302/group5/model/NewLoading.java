@@ -424,7 +424,7 @@ public class NewLoading {
   private void syncTeamAllocation() {
     for (Project project : main.getProjects()) {
       // For every AgileHistory in the project
-      for (AgileHistory teamHistory : project.getTeam()) {
+      for (AgileHistory teamHistory : project.getAllocatedTeams()) {
         // For every Team that is in Main App
         for (Team team : main.getTeams()) {
           Team historyTeam = (Team) teamHistory.getAgileItem();
