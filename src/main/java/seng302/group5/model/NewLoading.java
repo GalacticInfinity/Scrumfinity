@@ -207,7 +207,8 @@ public class NewLoading {
             newSkill.setSkillDescription(skillData);
           }
         }
-        if (newSkill.getSkillName().equals("PO") || newSkill.getSkillName().equals("SM")) {
+        if (newSkill.getSkillName().equals("Product Owner") ||
+            newSkill.getSkillName().equals("Scrum Master")) {
           main.getNonRemovable().add(newSkill);
         }
         main.addSkill(newSkill);
