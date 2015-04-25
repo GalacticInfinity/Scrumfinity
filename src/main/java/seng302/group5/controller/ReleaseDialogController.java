@@ -186,7 +186,7 @@ public class ReleaseDialogController {
     if (createOrEdit == CreateOrEdit.CREATE) {
       thisStage.setTitle("Create New Release");
       btnConfirm.setText("Create");
-      initialiseLists(CreateOrEdit.CREATE, release);
+      initialiseLists();
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       thisStage.setTitle("Edit Release");
       btnConfirm.setText("Save");
@@ -196,7 +196,7 @@ public class ReleaseDialogController {
       this.selectedProject.add(release.getProjectRelease());
       this.releaseDateField.setValue(release.getReleaseDate());
       releaseNotesField.setText(release.getReleaseNotes());
-      initialiseLists(CreateOrEdit.EDIT, release);
+      initialiseLists();
     }
     this.createOrEdit = createOrEdit;
 
@@ -213,10 +213,8 @@ public class ReleaseDialogController {
 
   /**Initialise the contents of the lists according to whether the user is creating a new
    * Release or editing an existing one.
-   * @param createOrEdit identify whether the user is creating or editing a Release.
-   * @param release the Release that is being created or edited
    */
-  private void initialiseLists(CreateOrEdit createOrEdit, Release release) {
+  private void initialiseLists() {
     try {
 
       // loop for adding the specific project to release.
