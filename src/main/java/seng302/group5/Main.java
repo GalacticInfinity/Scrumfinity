@@ -164,7 +164,7 @@ public class Main extends Application {
   public void showListMainPane() {
     try {
       FXMLLoader loader = new FXMLLoader();
-      loader.setLocation(ListMainPaneController.class.getResource("/ListMainPaneController.fxml"));
+      loader.setLocation(ListMainPaneController.class.getResource("/ListMainPane.fxml"));
       SplitPane splitPane = (SplitPane) loader.load();
 
       ListMainPaneController controller = loader.getController();

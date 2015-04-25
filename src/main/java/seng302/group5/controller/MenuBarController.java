@@ -321,7 +321,7 @@ public class MenuBarController {
   /**
    * Used to deselect all lists except for the list you want to be showed (selectedList)
    * Show/hide lists uses this to show no lists.
-   * @param selectedList
+   * @param selectedList The currently displayed list
    */
   protected void deselectList(String selectedList) {
     showProjectsMenuItem.setSelected(false);
@@ -392,7 +392,7 @@ public class MenuBarController {
 
   /**
    * sets the main app to the param
-   * @param mainApp
+   * @param mainApp The main application object
    */
   public void setMainApp(Main mainApp){
     this.mainApp = mainApp;

@@ -33,7 +33,7 @@ import seng302.group5.model.Skill;
 public class ListMainPaneController {
 
   @FXML private ListView listView;
-  @FXML private TextArea sampleTextArea;
+  @FXML private TextArea displayTextArea;
   @FXML private SplitPane splitPane;
   @FXML private AnchorPane listViewPane;
   @FXML private Label listViewLabel;
@@ -102,7 +102,7 @@ public class ListMainPaneController {
     listView.setItems(null);
     checkListType();
     listView.getSelectionModel().clearSelection();
-    sampleTextArea.clear();
+    displayTextArea.clear();
     selectedItem = null;
   }
 
@@ -149,27 +149,27 @@ public class ListMainPaneController {
     String listType = Settings.currentListType;
     switch (listType) {
       case "Projects":
-        if (!isListShown || listType != "Projects") {
+        if (!isListShown || !listType.equals("Projects")) {
           return null;
         }
         return selectedItem;
       case "People":
-        if (!isListShown || listType != "People") {
+        if (!isListShown || !listType.equals("People")) {
           return null;
         }
         return selectedItem;
       case "Skills":
-        if (!isListShown || listType != "Skills") {
+        if (!isListShown || !listType.equals("Skills")) {
           return null;
         }
         return selectedItem;
       case "Teams":
-        if (!isListShown || listType != "Teams") {
+        if (!isListShown || !listType.equals("Teams")) {
           return null;
         }
         return selectedItem;
       case "Releases":
-        if (!isListShown || listType != "Releases") {
+        if (!isListShown || !listType.equals("Releases")) {
           return null;
         }
         return  selectedItem;
@@ -187,101 +187,105 @@ public class ListMainPaneController {
   /**
    * Takes the current selected item (next) as an AgileItem and then casts it to the correct object
    * based on what the current selected list is.
-   * @param next
+   * @param next Next selected item
    */
   public void displayInfo(AgileItem next) {
-    if (Settings.currentListType == "People") {
-      sampleTextArea.clear();
-      Person person = (Person) next;
-      sampleTextArea.appendText("Person Information \nPerson ID: ");
-      sampleTextArea.appendText(person.getPersonID());
-      sampleTextArea.appendText("\nFirst Name: ");
-      sampleTextArea.appendText(person.getFirstName());
-      sampleTextArea.appendText("\nLast Name: ");
-      sampleTextArea.appendText(person.getLastName());
-      sampleTextArea.appendText("\nTeam: ");
-      if (person.isInTeam()) {
-        sampleTextArea.appendText(person.getTeamID());
-      } else {
-        sampleTextArea.appendText("Not assigned.");
-      }
-      sampleTextArea.appendText("\nSkills: ");
-      StringBuilder listOfSkills = new StringBuilder();
-      for (Skill skill : person.getSkillSet()) {
-        listOfSkills.append(skill.getSkillName());
-        listOfSkills.append(", ");
-      }
-      if (listOfSkills.length() == 0) {
-        sampleTextArea.appendText("No known skills. Please add skills to this person.");
-      } else {
-        sampleTextArea.appendText(listOfSkills.substring(0, listOfSkills.length() - 2));
-      }
-    } else if (Settings.currentListType == "Projects") {
-      sampleTextArea.clear();
-      Project project = (Project) next;
-      sampleTextArea.appendText("Project Information \nProject ID: ");
-      sampleTextArea.appendText(project.getProjectID());
-      sampleTextArea.appendText("\nProject Name: ");
-      sampleTextArea.appendText(project.getProjectName());
-      sampleTextArea.appendText("\nProject Description: \n");
-      sampleTextArea.appendText(project.getProjectDescription());
-      sampleTextArea.appendText("\nAssigned Teams: \n");
-      for (AgileHistory team : project.getTeam()) {
-        sampleTextArea.appendText("" + team.toString() + "\n");
-        //sampleTextArea.appendText(": Start Date: " + team.getStartDate().toString() + " End Date: ");
-        //sampleTextArea.appendText(team.getEndDate().toString() + "\n");
-        }
+    displayTextArea.clear();
 
+    switch (Settings.currentListType) {
+      case "People":
+        Person person = (Person) next;
 
-    } else if (Settings.currentListType == "Skills") {
-      sampleTextArea.clear();
-      Skill skill = (Skill) next;
-      sampleTextArea.appendText("Skill Information \nSkill Name: ");
-      sampleTextArea.appendText(skill.getSkillName().toString());
-      sampleTextArea.appendText("\nSkill Description: ");
-      sampleTextArea.appendText(skill.getSkillDescription());
-
-    } else if (Settings.currentListType == "Teams") {
-      sampleTextArea.clear();
-      Team team = (Team) next; //Casts next as Team object
-      sampleTextArea.appendText("Team Information \nTeam ID: ");
-      sampleTextArea.appendText(team.getTeamID());
-      sampleTextArea.appendText("\nTeam Description: ");
-      sampleTextArea.appendText(team.getTeamDescription());
-      sampleTextArea.appendText("\nTeam Members: \n");
-      for (Person member : team.getTeamMembers()) {
-        sampleTextArea.appendText(member.getFirstName());
-        sampleTextArea.appendText(" - ");
-        sampleTextArea.appendText(member.getPersonID());
-        sampleTextArea.appendText(" Role: ");
-        Role role = team.getMembersRole().get(member);
-        if (role != null) {
-          sampleTextArea.appendText(role.toString());
+        displayTextArea.appendText("Person Information \nPerson ID: ");
+        displayTextArea.appendText(person.getPersonID());
+        displayTextArea.appendText("\nFirst Name: ");
+        displayTextArea.appendText(person.getFirstName());
+        displayTextArea.appendText("\nLast Name: ");
+        displayTextArea.appendText(person.getLastName());
+        displayTextArea.appendText("\nTeam: ");
+        if (person.isInTeam()) {
+          displayTextArea.appendText(person.getTeamID());
         } else {
-          sampleTextArea.appendText("Not assigned to a role yet.");
+          displayTextArea.appendText("Not assigned.");
         }
-        sampleTextArea.appendText("\n");
-      }
-    } else if (Settings.currentListType == "Releases") {
-      sampleTextArea.clear();
-      Release release = (Release) next;
-      sampleTextArea.appendText("Release Information \nRelease Name: ");
-      sampleTextArea.appendText(release.getReleaseName());
-      sampleTextArea.appendText("\nRelease Description: ");
-      sampleTextArea.appendText(release.getReleaseDescription());
-      sampleTextArea.appendText("\nRelease Date: ");
-      sampleTextArea.appendText(release.getReleaseDate().format(
-          DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-      sampleTextArea.appendText("\nRelease Notes: ");
-      sampleTextArea.appendText(release.getReleaseNotes());
-      sampleTextArea.appendText("\nProject: ");
-      sampleTextArea.appendText(release.getProjectRelease().toString());
+        displayTextArea.appendText("\nSkills: ");
+        StringBuilder listOfSkills = new StringBuilder();
+        for (Skill skill : person.getSkillSet()) {
+          listOfSkills.append(skill.getSkillName());
+          listOfSkills.append(", ");
+        }
+        if (listOfSkills.length() == 0) {
+          displayTextArea.appendText("No known skills. Please add skills to this person.");
+        } else {
+          displayTextArea.appendText(listOfSkills.substring(0, listOfSkills.length() - 2));
+        }
+        break;
+      case "Projects":
+        Project project = (Project) next;
+
+        displayTextArea.appendText("Project Information \nProject ID: ");
+        displayTextArea.appendText(project.getProjectID());
+        displayTextArea.appendText("\nProject Name: ");
+        displayTextArea.appendText(project.getProjectName());
+        displayTextArea.appendText("\nProject Description: \n");
+        displayTextArea.appendText(project.getProjectDescription());
+        displayTextArea.appendText("\nAssigned Teams: \n");
+        for (AgileHistory team : project.getTeam()) {
+          displayTextArea.appendText("" + team.toString() + "\n");
+        }
+        break;
+      case "Skills":
+        Skill skill = (Skill) next;
+
+        displayTextArea.appendText("Skill Information \nSkill Name: ");
+        displayTextArea.appendText(skill.getSkillName());
+        displayTextArea.appendText("\nSkill Description: ");
+        displayTextArea.appendText(skill.getSkillDescription());
+
+        break;
+      case "Teams":
+        Team team = (Team) next; //Casts next as Team object
+
+        displayTextArea.appendText("Team Information \nTeam ID: ");
+        displayTextArea.appendText(team.getTeamID());
+        displayTextArea.appendText("\nTeam Description: ");
+        displayTextArea.appendText(team.getTeamDescription());
+        displayTextArea.appendText("\nTeam Members: \n");
+        for (Person member : team.getTeamMembers()) {
+          displayTextArea.appendText(member.getFirstName());
+          displayTextArea.appendText(" - ");
+          displayTextArea.appendText(member.getPersonID());
+          displayTextArea.appendText(" Role: ");
+          Role role = team.getMembersRole().get(member);
+          if (role != null) {
+            displayTextArea.appendText(role.toString());
+          } else {
+            displayTextArea.appendText("Not assigned to a role yet.");
+          }
+          displayTextArea.appendText("\n");
+        }
+        break;
+      case "Releases":
+        Release release = (Release) next;
+
+        displayTextArea.appendText("Release Information \nRelease Name: ");
+        displayTextArea.appendText(release.getReleaseName());
+        displayTextArea.appendText("\nRelease Description: ");
+        displayTextArea.appendText(release.getReleaseDescription());
+        displayTextArea.appendText("\nRelease Date: ");
+        displayTextArea.appendText(release.getReleaseDate().format(
+            DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        displayTextArea.appendText("\nRelease Notes: ");
+        displayTextArea.appendText(release.getReleaseNotes());
+        displayTextArea.appendText("\nProject: ");
+        displayTextArea.appendText(release.getProjectRelease().toString());
+        break;
     }
   }
 
   /**
    * Sets the main app to the param
-   * @param mainApp
+   * @param mainApp The main application object
    */
   public void setMainApp(Main mainApp) {
     this.mainApp = mainApp;

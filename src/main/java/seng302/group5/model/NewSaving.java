@@ -63,7 +63,7 @@ public class NewSaving {
   /**
    * Write main app project data to xml file
    * @param saveFile Save file being written to
-   * @throws Exception Required field is mission/ error with writer
+   * @throws Exception Required field is missing/ error with writer
    */
   private void saveProjects(Writer saveFile) throws Exception{
     Team agileTeam;
@@ -95,7 +95,7 @@ public class NewSaving {
   /**
    * Writes main app people data to xml file
    * @param saveFile Save file being written to
-   * @throws Exception Required field is mission/ error with writer
+   * @throws Exception Required field is missing/ error with writer
    */
   private void savePeople(Writer saveFile) throws Exception {
     saveFile.write("<People>\n");
@@ -126,7 +126,7 @@ public class NewSaving {
   /**
    * Writes the main app Skill data to xml
    * @param saveFile Save file being written to
-   * @throws Exception Required field is mission/ error with writer
+   * @throws Exception Required field is missing/ error with writer
    */
   private void saveSkills(Writer saveFile) throws Exception {
     saveFile.write("<Skills>\n");
@@ -144,7 +144,7 @@ public class NewSaving {
   /**
    * Writes the main app Team data to xml
    * @param saveFile Save file being written to
-   * @throws Exception Required field is mission/ error with writer
+   * @throws Exception Required field is missing/ error with writer
    */
   private void saveTeams(Writer saveFile) throws Exception {
     Role personRole;
@@ -180,7 +180,7 @@ public class NewSaving {
   /**
    * Appends the main app release data to the save file
    * @param saveFile Save file being written to
-   * @throws Exception Required field is mission/ error with writer
+   * @throws Exception Required field is missing/ error with writer
    */
   private void saveReleases(Writer saveFile) throws Exception {
     saveFile.write("<Releases>\n");
