@@ -57,7 +57,7 @@
                         <Font size="15.0" />
                     </font>
                 </Label>
-                <ComboBox fx:id="projectList" prefHeight="25.0" prefWidth="200.0" promptText="Available projects.">
+                <ComboBox fx:id="projectComboBox" prefHeight="25.0" prefWidth="200.0" promptText="Available projects.">
                     <HBox.margin>
                         <Insets />
                     </HBox.margin></ComboBox>
@@ -69,7 +69,7 @@
         </HBox>
         <HBox prefHeight="30.0" prefWidth="200.0">
             <children>
-                <ListView fx:id="projectLists" maxHeight="25.0" prefHeight="25.0" prefWidth="200.0">
+                <ListView fx:id="projectList" maxHeight="25.0" prefHeight="25.0" prefWidth="200.0">
                <HBox.margin>
                   <Insets />
                </HBox.margin></ListView>

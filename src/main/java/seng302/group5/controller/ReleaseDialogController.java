@@ -37,8 +37,8 @@ public class ReleaseDialogController {
   @FXML private Button btnAddProject;
   @FXML private Button btnRemoveProject;
   @FXML private Button btnCancel;
-  @FXML private ComboBox projectList;
-  @FXML private ListView projectLists;
+  @FXML private ComboBox<Project> projectComboBox;
+  @FXML private ListView<Project> projectList;
 
   private Main mainApp;
   private Stage thisStage;
@@ -60,12 +60,11 @@ public class ReleaseDialogController {
     errors.append("Invalid Fields:");
     int noErrors = 0;
 
-
     String releaseId = releaseIDField.getText().trim();
     String releaseDescription = releaseDescriptionField.getText().trim();
     LocalDate releaseDate = releaseDateField.getValue();
     String releaseNotes = releaseNotesField.getText().trim();
-    ObservableList<Project> projects = projectLists.getItems();
+    ObservableList<Project> projects = projectList.getItems();
     Project releaseProject = new Project();
 
     for (Project item : projects) {
@@ -136,7 +135,7 @@ public class ReleaseDialogController {
         release.setProjectRelease(releaseProject);
 
         releaseDateField.setValue(release.getReleaseDate());
-        projectList.setValue(release.getProjectRelease());
+        projectComboBox.setValue(release.getProjectRelease());
         mainApp.refreshList();
       }
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
@@ -186,7 +185,7 @@ public class ReleaseDialogController {
     if (createOrEdit == CreateOrEdit.CREATE) {
       thisStage.setTitle("Create New Release");
       btnConfirm.setText("Create");
-      initialiseLists(CreateOrEdit.CREATE, release);
+      initialiseLists();
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       thisStage.setTitle("Edit Release");
       btnConfirm.setText("Save");
@@ -196,7 +195,7 @@ public class ReleaseDialogController {
       this.selectedProject.add(release.getProjectRelease());
       this.releaseDateField.setValue(release.getReleaseDate());
       releaseNotesField.setText(release.getReleaseNotes());
-      initialiseLists(CreateOrEdit.EDIT, release);
+      initialiseLists();
     }
     this.createOrEdit = createOrEdit;
 
@@ -213,12 +212,9 @@ public class ReleaseDialogController {
 
   /**Initialise the contents of the lists according to whether the user is creating a new
    * Release or editing an existing one.
-   * @param createOrEdit identify whether the user is creating or editing a Release.
-   * @param release the Release that is being created or edited
    */
-  private void initialiseLists(CreateOrEdit createOrEdit, Release release) {
+  private void initialiseLists() {
     try {
-
       // loop for adding the specific project to release.
       for (Project item : mainApp.getProjects()) {
         if(!selectedProject.contains(item)) {
@@ -226,12 +222,9 @@ public class ReleaseDialogController {
         }
       }
 
-      this.projectList.setVisibleRowCount(5);
-
-
-      this.projectList.setItems(availableProjects);
-
-      this.projectLists.setItems(selectedProject);
+      this.projectComboBox.setVisibleRowCount(5);
+      this.projectComboBox.setItems(availableProjects);
+      this.projectList.setItems(selectedProject);
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -247,7 +240,7 @@ public class ReleaseDialogController {
     try {
       if (this.selectedProject != null) {
         this.selectedProject.remove(0);
-        projectLists.setItems(this.selectedProject);
+        projectList.setItems(this.selectedProject);
       }
     }
     catch (Exception e) {
@@ -263,14 +256,14 @@ public class ReleaseDialogController {
   @FXML
   protected void btnAddProject(ActionEvent event) {
     try {
-      Project selectedProject = (Project) projectList.getSelectionModel().getSelectedItem();
+      Project selectedProject = projectComboBox.getSelectionModel().getSelectedItem();
 
       if (selectedProject != null && this.selectedProject.isEmpty()) {
         this.selectedProject.add(selectedProject);
         this.availableProjects.remove(availableProjects);
 
-        this.projectList.getSelectionModel().clearSelection();
-        this.projectList.setValue(null);
+        this.projectComboBox.getSelectionModel().clearSelection();
+        this.projectComboBox.setValue(null);
       }
     }
     catch (Exception e) {

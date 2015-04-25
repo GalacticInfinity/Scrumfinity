@@ -33,8 +33,8 @@ public class ProjectDialogController {
   @FXML private TextField projectIDField;
   @FXML private TextField projectNameField;
   @FXML private TextArea projectDescriptionField;
-  @FXML private ListView availableTeamsList;
-  @FXML private ListView allocatedTeamsList;
+  @FXML private ListView<Team> availableTeamsList;
+  @FXML private ListView<AgileHistory> allocatedTeamsList;
   @FXML private DatePicker teamStartDate;
   @FXML private DatePicker teamEndDate;
   @FXML private Button btnConfirm;
@@ -272,7 +272,7 @@ public class ProjectDialogController {
   @FXML
   protected void btnAddTeam() {
     try {
-      Team selectedTeam = (Team) availableTeamsList.getSelectionModel().getSelectedItem();
+      Team selectedTeam = availableTeamsList.getSelectionModel().getSelectedItem();
       parseProjectDates(teamStartDate.getValue(), teamEndDate.getValue(), selectedTeam);
       if (selectedTeam != null) {
         AgileHistory temp = new AgileHistory();
@@ -301,7 +301,7 @@ public class ProjectDialogController {
   @FXML
   protected void btnRemoveTeam() {
     try {
-      AgileHistory selectedAgileHistory = (AgileHistory) allocatedTeamsList.getSelectionModel().getSelectedItem();
+      AgileHistory selectedAgileHistory = allocatedTeamsList.getSelectionModel().getSelectedItem();
       Team selectedTeam = (Team) selectedAgileHistory.getAgileItem();
 
       if (selectedTeam != null) {
