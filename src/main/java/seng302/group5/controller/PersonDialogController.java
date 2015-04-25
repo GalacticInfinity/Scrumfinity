@@ -1,7 +1,5 @@
 package seng302.group5.controller;
 
-import java.util.stream.Collectors;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -29,8 +27,8 @@ public class PersonDialogController {
   @FXML private TextField personFirstNameField;
   @FXML private TextField personLastNameField;
   @FXML private Button btnCreatePerson;
-  @FXML private ComboBox skillsList;
-  @FXML private ListView personSkillList;
+  @FXML private ComboBox<Skill> skillsList;
+  @FXML private ListView<Skill> personSkillList;
 
   private Main mainApp;
   private Stage thisStage;
@@ -61,7 +59,7 @@ public class PersonDialogController {
       thisStage.setTitle("Create New Person");
       btnCreatePerson.setText("Create");
 
-      initialiseLists(CreateOrEdit.CREATE, person);
+      initialiseLists();
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       thisStage.setTitle("Edit Person");
       btnCreatePerson.setText("Save");
@@ -71,7 +69,7 @@ public class PersonDialogController {
       personLastNameField.setText(person.getLastName());
       selectedSkills = person.getSkillSet();
       personSkillList.setItems(selectedSkills);
-      initialiseLists(CreateOrEdit.EDIT, person);
+      initialiseLists();
     }
     this.createOrEdit = createOrEdit;
 
@@ -211,10 +209,8 @@ public class PersonDialogController {
 
   /**
    * Populates a list of available skills for assigning them to people
-   * @param createOrEdit an enum deciding if the action is creating or editing
-   * @param person Person to be created/edited
    */
-  private void initialiseLists(CreateOrEdit createOrEdit, Person person) {
+  private void initialiseLists() {
     try {
 
       // loop for adding the skills that you can assign to someone.
@@ -241,7 +237,7 @@ public class PersonDialogController {
   @FXML
   protected void btnAddSkillClick(ActionEvent event) {
     try {
-      Skill selectedSkill = (Skill) skillsList.getSelectionModel().getSelectedItem();
+      Skill selectedSkill = skillsList.getSelectionModel().getSelectedItem();
       if (selectedSkill != null) {
         this.selectedSkills.add(selectedSkill);
         this.availableSkills.remove(selectedSkill);
@@ -262,7 +258,7 @@ public class PersonDialogController {
   @FXML
   protected void btnRemoveSkillClick(ActionEvent event) {
     try {
-      Skill selectedSkill = (Skill) personSkillList.getSelectionModel().getSelectedItem();
+      Skill selectedSkill = personSkillList.getSelectionModel().getSelectedItem();
 
       if (selectedSkill != null) {
         this.availableSkills.add(selectedSkill);

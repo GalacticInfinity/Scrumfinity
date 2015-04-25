@@ -329,24 +329,22 @@ public class MenuBarController {
     showTeamsMenuItem.setSelected(false);
     showSkillsMenuItem.setSelected(false);
     showReleasesMenuItem.setSelected(false);
-    if (!(selectedList == "")) {
-      switch (selectedList) {
-        case "Projects":
-          showProjectsMenuItem.setSelected(true);
-          break;
-        case "People":
-          showPeopleMenuItem.setSelected(true);
-          break;
-        case "Skills":
-          showSkillsMenuItem.setSelected(true);
-          break;
-        case "Teams":
-          showTeamsMenuItem.setSelected(true);
-          break;
-        case "Releases":
-          showReleasesMenuItem.setSelected(true);
-          break;
-      }
+    switch (selectedList) {
+      case "Projects":
+        showProjectsMenuItem.setSelected(true);
+        break;
+      case "People":
+        showPeopleMenuItem.setSelected(true);
+        break;
+      case "Skills":
+        showSkillsMenuItem.setSelected(true);
+        break;
+      case "Teams":
+        showTeamsMenuItem.setSelected(true);
+        break;
+      case "Releases":
+        showReleasesMenuItem.setSelected(true);
+        break;
     }
   }
 
