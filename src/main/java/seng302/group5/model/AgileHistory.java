@@ -20,6 +20,9 @@ public class AgileHistory {
   }
 
   public AgileHistory() {
+    this.agileItem = null;
+    this.startDate = null;
+    this.endDate = null;
   }
 
   public AgileItem getAgileItem() {

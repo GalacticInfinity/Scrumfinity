@@ -7,6 +7,10 @@ package seng302.group5.model;
  */
 public interface AgileItem {
 
+  /**
+   * Copy values from an existing AgileItem object to the current AgileItem
+   * @param agileItem The AgileItem object to copy values from
+   */
   void copyValues(AgileItem agileItem);
 
   /**

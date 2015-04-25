@@ -422,8 +422,6 @@ public class NewLoading {
    * Syncs temporary teams inside agile history items in projects with the real team objects
    */
   private void syncTeamAllocation() {
-    ArrayList<Team> teamArray;
-
     for (Project project : main.getProjects()) {
       // For every AgileHistory in the project
       for (AgileHistory teamHistory : project.getTeam()) {

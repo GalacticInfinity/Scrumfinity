@@ -17,11 +17,11 @@ public class Settings {
    */
   public static void setSysDefault() {
     File scrumHome;
-    String dirz;
+    String directory;
 
-    dirz = System.getProperty("user.home");
-    dirz = dirz + File.separator + "Scrumfinity";
-    scrumHome = new File(dirz);
+    directory = System.getProperty("user.home");
+    directory = directory + File.separator + "Scrumfinity";
+    scrumHome = new File(directory);
 
 //    if (!scrumHome.exists()) {
 //      scrumHome.mkdir();
