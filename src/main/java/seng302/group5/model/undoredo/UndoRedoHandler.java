@@ -19,18 +19,9 @@ import seng302.group5.model.Team;
  */
 public class UndoRedoHandler {
 
-  /**
-   * Local enum for denoting whether the action is an undo or a redo
-   */
-  private enum UndoOrRedo {
-    UNDO, REDO
-  }
-
   private Main mainApp;
-
   private Stack<UndoRedoObject> undoStack;
   private Stack<UndoRedoObject> redoStack;
-
   /**
    * Constructor. Set the main app to communicate with and initialise stacks
    *
@@ -594,7 +585,6 @@ public class UndoRedoHandler {
     mainApp.refreshList();
   }
 
-
   /**
    * Undo or redo a team deletion
    *
@@ -729,5 +719,12 @@ public class UndoRedoHandler {
 
   public Stack<UndoRedoObject> getRedoStack() {
     return redoStack;
+  }
+
+  /**
+   * Local enum for denoting whether the action is an undo or a redo
+   */
+  private enum UndoOrRedo {
+    UNDO, REDO
   }
 }

@@ -60,6 +60,10 @@ public class Main extends Application {
 
   private UndoRedoObject lastSavedObject = null;
 
+  public static void main(String[] args) {
+    launch(args);
+  }
+
   /**
    * Starts up the app creating the stage and setting up the window creates the default skills and
    * roles that are needed
@@ -114,7 +118,6 @@ public class Main extends Application {
       primaryStage.close();
     }
   }
-
 
   /**
    * Initializes the root layout.
@@ -704,13 +707,17 @@ public class Main extends Application {
     nonRemovable.clear();
   }
 
-
   public Stage getPrimaryStage() {
     return primaryStage;
   }
 
   public ListMainPaneController getLMPC() {
     return LMPC;
+  }
+
+  public void setLMPC(ListMainPaneController LMPC) {
+    // This is for tests
+    this.LMPC = LMPC;
   }
 
   public MenuBarController getMBC() {
@@ -774,19 +781,10 @@ public class Main extends Application {
     return undoRedoHandler;
   }
 
-  public void setLMPC(ListMainPaneController LMPC) {
-    // This is for tests
-    this.LMPC = LMPC;
-  }
-
   /**
    * Refreshes the listview
    */
   public void refreshList() {
     LMPC.refreshList();
-  }
-
-  public static void main(String[] args) {
-    launch(args);
   }
 }

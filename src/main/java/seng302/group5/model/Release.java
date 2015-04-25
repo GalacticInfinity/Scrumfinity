@@ -51,40 +51,40 @@ public class Release implements AgileItem {
     return this.releaseName;
   }
 
-  public String getReleaseDescription() {
-    return this.releaseDescription;
-  }
-
-  public LocalDate getReleaseDate() {
-    return this.releaseDate;
-  }
-
-  public String getReleaseNotes() {
-    return this.releaseNotes;
-  }
-
-  public Project getProjectRelease() {
-    return this.projectRelease;
-  }
-
   public void setReleaseName(String releaseName) {
     this.releaseName = releaseName;
+  }
+
+  public String getReleaseDescription() {
+    return this.releaseDescription;
   }
 
   public void setReleaseDescription(String releaseDescription) {
     this.releaseDescription = releaseDescription;
   }
 
+  public LocalDate getReleaseDate() {
+    return this.releaseDate;
+  }
+
   public void setReleaseDate(LocalDate releaseDate) {
     this.releaseDate = releaseDate;
   }
 
-  public void setProjectRelease(Project projectRelease) {
-    this.projectRelease = projectRelease;
+  public String getReleaseNotes() {
+    return this.releaseNotes;
   }
 
   public void setReleaseNotes(String releaseNotes) {
     this.releaseNotes = releaseNotes;
+  }
+
+  public Project getProjectRelease() {
+    return this.projectRelease;
+  }
+
+  public void setProjectRelease(Project projectRelease) {
+    this.projectRelease = projectRelease;
   }
 
   /**

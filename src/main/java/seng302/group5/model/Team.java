@@ -131,12 +131,12 @@ public class Team implements AgileItem {
     this.membersRole.remove(person);
   }
 
-  public void setCurrentProject(Project project) {
-    this.currentProject = project;
-  }
-
   public Project getCurrentProject() {
     return this.currentProject;
+  }
+
+  public void setCurrentProject(Project project) {
+    this.currentProject = project;
   }
 
   /**

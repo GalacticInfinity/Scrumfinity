@@ -47,15 +47,6 @@ public class Skill implements AgileItem {
   }
 
   /**
-   * Set skillName for a skill.
-   *
-   * @param skillName skillName of the skill
-   */
-  public void setSkillName(String skillName) {
-    this.skillID = skillName;
-  }
-
-  /**
    * Get skillName of a skill.
    *
    * @return skillName of the skill
@@ -65,12 +56,12 @@ public class Skill implements AgileItem {
   }
 
   /**
-   * Set the skillDescription of a skill.
+   * Set skillName for a skill.
    *
-   * @param skillDescription skillDescription of the skill
+   * @param skillName skillName of the skill
    */
-  public void setSkillDescription(String skillDescription) {
-    this.skillDescription = skillDescription;
+  public void setSkillName(String skillName) {
+    this.skillID = skillName;
   }
 
   /**
@@ -80,6 +71,15 @@ public class Skill implements AgileItem {
    */
   public String getSkillDescription() {
     return this.skillDescription;
+  }
+
+  /**
+   * Set the skillDescription of a skill.
+   *
+   * @param skillDescription skillDescription of the skill
+   */
+  public void setSkillDescription(String skillDescription) {
+    this.skillDescription = skillDescription;
   }
 
   @Override
