@@ -46,6 +46,10 @@ public class AgileHistory {
     this.endDate = endDate;
   }
 
+  /**
+   * Makes the toString() methord return the date in a readable format
+   * @return Formatted string
+   */
   @Override
   public String toString() {
     String dateFormat = "dd/MM/yyyy";

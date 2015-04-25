@@ -22,11 +22,11 @@ public class Release implements AgileItem {
 
   /**
    * Constructor for Release object.
-   * @param releaseName
-   * @param releaseDescription
-   * @param //releaseDate
-   * @param releaseNotes
-   * @param //projectRelease
+   * @param releaseName name of release
+   * @param releaseDescription description of release
+   * @param releaseDate date of release
+   * @param releaseNotes release notes
+   * @param projectRelease project allocated to
    */
   public Release(String releaseName, String releaseDescription, String releaseNotes,
                  LocalDate releaseDate, Project projectRelease) {
@@ -73,6 +73,10 @@ public class Release implements AgileItem {
     this.releaseNotes = releaseNotes;
   }
 
+  /**
+   * Copies the release input fields into current object.
+   * @param agileItem Person who's fields are to be copied
+   */
   @Override
   public void copyValues(AgileItem agileItem) {
     if (agileItem instanceof Release) {
@@ -85,11 +89,20 @@ public class Release implements AgileItem {
     }
   }
 
+  /**
+   * toString override
+   * @return Release's name
+   */
   @Override
   public String toString() {
     return this.releaseName;
   }
 
+  /**
+   * Check if two release's ids are equal
+   * @param obj Object to compare to.
+   * @return Whether release's ids are equal
+   */
   @Override
   public boolean equals(Object obj) {
     boolean result = false;

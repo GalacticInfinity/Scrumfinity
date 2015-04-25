@@ -129,6 +129,10 @@ public class Team implements AgileItem {
     return this.currentProject;
   }
 
+  /**
+   * Get the description of the team.
+   * @return description of the team
+   */
   @Override
   public void copyValues(AgileItem agileItem) {
     if (agileItem instanceof Team) {
@@ -155,6 +159,11 @@ public class Team implements AgileItem {
     return teamID;
   }
 
+  /**
+   * Check if two team's ids are equal
+   * @param obj Object to compare to.
+   * @return Whether team's ids are equal
+   */
   @Override
   public boolean equals(Object obj) {
     boolean result = false;
