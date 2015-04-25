@@ -218,12 +218,9 @@ public class ReleaseDialogController {
     try {
 
       // loop for adding the specific project to release.
-      for (Project item : mainApp.getProjects()) {
-        availableProjects.add(item);
-      }
+      availableProjects.addAll(mainApp.getProjects());
 
       this.projectList.setVisibleRowCount(5);
-
 
       this.projectList.setItems(availableProjects);
 
@@ -267,7 +264,6 @@ public class ReleaseDialogController {
         }
         this.selectedProject.add(selectedProject);
         projectLists.setItems(this.selectedProject);
-        this.availableProjects.remove(availableProjects);
         this.projectList.getSelectionModel().clearSelection();
         this.projectList.setValue(null);
       }
