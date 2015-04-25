@@ -95,6 +95,11 @@ public class Skill implements AgileItem{
     return this.getSkillName();
   }
 
+  /**
+   * Check if two skill's ids are equal
+   * @param obj Object to compare to.
+   * @return Whether skill's ids are equal
+   */
   @Override
   public boolean equals(Object obj) {
     boolean result = false;

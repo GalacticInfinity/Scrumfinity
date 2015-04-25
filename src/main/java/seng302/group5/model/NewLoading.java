@@ -63,7 +63,7 @@ public class NewLoading {
 
   /**
    * Loads Projects from xml files into main app
-   * @throws Exception
+   * @throws Exception Problem with loading
    */
   private void loadProjects()throws Exception {
     String projectLine;
@@ -130,7 +130,7 @@ public class NewLoading {
 
   /**
    * Loads People from xml files into main app
-   * @throws Exception
+   * @throws Exception Problem with loading
    */
   private void loadPeople() throws Exception{
     String personLine;
@@ -183,7 +183,7 @@ public class NewLoading {
 
   /**
    * Loads Skills from xml files into main app and updates skill references inside people objects
-   * @throws Exception
+   * @throws Exception Problem with loading
    */
   private void loadSkills() throws Exception{
     String skillLine;
@@ -239,7 +239,7 @@ public class NewLoading {
   /**
    * Loads teams from xml files into main app, and updates references inside people objects
    * to the newly loaded teams
-   * @throws Exception
+   * @throws Exception Problem with loading
    */
   private void loadTeams() throws Exception {
     String teamLine;
@@ -285,7 +285,7 @@ public class NewLoading {
   /**
    * Loads team members for a team object.
    * @param newTeam Team currently being loaded
-   * @throws Exception
+   * @throws Exception Problem with loading
    */
   private void loadTeamMembers(Team newTeam) throws Exception {
     // Definers
@@ -330,7 +330,7 @@ public class NewLoading {
 
   /**
    * Loads releases from xml files into main app
-   * @throws Exception
+   * @throws Exception Problem with loading
    */
   private void loadReleases() throws Exception {
     String releaseLine;
@@ -377,7 +377,7 @@ public class NewLoading {
 
   /**
    * Loads roles from xml files into main app
-   * @throws Exception
+   * @throws Exception Problem with loading
    */
   private void loadRoles() throws Exception{
     String roleLine;

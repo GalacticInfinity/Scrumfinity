@@ -82,6 +82,10 @@ public class Role {
     this.memberLimit = memberLimit;
   }
 
+  /**
+   * toString override.
+   * @return Role's roleName
+   */
   @Override
   public String toString() {
     return roleName;

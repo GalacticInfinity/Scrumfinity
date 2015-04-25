@@ -187,7 +187,7 @@ public class ListMainPaneController {
   /**
    * Takes the current selected item (next) as an AgileItem and then casts it to the correct object
    * based on what the current selected list is.
-   * @param next
+   * @param next Next selected item
    */
   public void displayInfo(AgileItem next) {
     displayTextArea.clear();
@@ -285,7 +285,7 @@ public class ListMainPaneController {
 
   /**
    * Sets the main app to the param
-   * @param mainApp
+   * @param mainApp The main application object
    */
   public void setMainApp(Main mainApp) {
     this.mainApp = mainApp;

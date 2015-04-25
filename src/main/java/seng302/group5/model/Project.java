@@ -85,6 +85,10 @@ public class Project implements AgileItem {
     this.projectDescription = projectDescription;
   }
 
+  /**
+   * Copies the Project input person's fields into current object.
+   * @param agileItem project who's fields are to be copied
+   */
   @Override
   public void copyValues(AgileItem agileItem) {
     if (agileItem instanceof Project) {
@@ -97,12 +101,19 @@ public class Project implements AgileItem {
     }
   }
 
-  // New toString method, for list
+  /**
+   *  toString method just return projectID
+   */
   @Override
   public String toString() {
     return this.projectID;
   }
 
+  /**
+   * Check if two project's ids are equal
+   * @param obj Object to compare to.
+   * @return Whether project's ids are equal
+   */
   @Override
   public boolean equals(Object obj) {
     boolean result = false;

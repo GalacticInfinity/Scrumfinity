@@ -123,6 +123,10 @@ public class Person implements AgileItem {
     return assignedToTeam;
   }
 
+  /**
+   * Copies the person input person's fields into current object.
+   * @param agileItem Person who's fields are to be copied
+   */
   @Override
   public void copyValues(AgileItem agileItem) {
     if (agileItem instanceof Person) {
@@ -148,6 +152,11 @@ public class Person implements AgileItem {
     return personID;
   }
 
+  /**
+   * Overrides default to just check if the project's IDs are the same
+   * @param obj Object to compare to.
+   * @return Whether the IDs are equal or not
+   */
   @Override
   public boolean equals(Object obj) {
     boolean result = false;
