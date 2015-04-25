@@ -1,11 +1,9 @@
 package seng302.group5.model.undoredo;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import javafx.collections.FXCollections;
 import seng302.group5.Main;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Person;
@@ -121,87 +119,87 @@ public class UndoRedoHandler {
 
     Action action = undoRedoObject.getAction();
 
-    // TODO: remove temp debug printing below
-    String undoOrRedoStr;
-    if (undoOrRedo == UndoOrRedo.UNDO) {
-      undoOrRedoStr = "undo";
-    } else {
-      undoOrRedoStr = "redo";
-    }
+//    TODO: Put commented printlns into a JavaFX status bar
+//    String undoOrRedoStr;
+//    if (undoOrRedo == UndoOrRedo.UNDO) {
+//      undoOrRedoStr = "undo";
+//    } else {
+//      undoOrRedoStr = "redo";
+//    }
 
     switch(action) {
       case PROJECT_CREATE:
-        System.out.println(String.format("I am %sing a project creation", undoOrRedoStr)); // temp
+//        System.out.println(String.format("I am %sing a project creation", undoOrRedoStr)); // temp
         handleProjectCreate(undoRedoObject, undoOrRedo);
         break;
 
       case PROJECT_EDIT:
-        System.out.println(String.format("I am %sing a project edit", undoOrRedoStr));      // temp
+//        System.out.println(String.format("I am %sing a project edit", undoOrRedoStr));     // temp
         handleProjectEdit(undoRedoObject, undoOrRedo);
         break;
 
       case PROJECT_DELETE:
-        System.out.println(String.format("I am %sing a project deletion", undoOrRedoStr));   // temp
+//        System.out.println(String.format("I am %sing a project deletion", undoOrRedoStr)); // temp
         handleProjectDelete(undoRedoObject, undoOrRedo);
         break;
 
       case PERSON_CREATE:
-        System.out.println(String.format("I am %sing a person creation", undoOrRedoStr)); // temp
+//        System.out.println(String.format("I am %sing a person creation", undoOrRedoStr)); // temp
         handlePersonCreate(undoRedoObject, undoOrRedo);
         break;
 
       case PERSON_EDIT:
-        System.out.println(String.format("I am %sing a person edit", undoOrRedoStr)); // temp
+//        System.out.println(String.format("I am %sing a person edit", undoOrRedoStr)); // temp
         handlePersonEdit(undoRedoObject, undoOrRedo);
         break;
 
       case PERSON_DELETE:
-        System.out.println(String.format("I am %sing a person deletion", undoOrRedoStr)); // temp
+//        System.out.println(String.format("I am %sing a person deletion", undoOrRedoStr)); // temp
         handlePersonDelete(undoRedoObject, undoOrRedo);
         break;
 
       case SKILL_CREATE:
-        System.out.println(String.format("I am %sing a skill creation", undoOrRedoStr)); // temp
+//        System.out.println(String.format("I am %sing a skill creation", undoOrRedoStr)); // temp
         handleSkillCreate(undoRedoObject, undoOrRedo);
         break;
 
       case SKILL_EDIT:
-        System.out.println(String.format("I am %sing a skill edit", undoOrRedoStr)); // temp
+//        System.out.println(String.format("I am %sing a skill edit", undoOrRedoStr)); // temp
         handleSkillEdit(undoRedoObject, undoOrRedo);
         break;
 
       case SKILL_DELETE:
-        System.out.println(String.format("I am %sing a skill deletion", undoOrRedoStr));   // temp
+//        System.out.println(String.format("I am %sing a skill deletion", undoOrRedoStr));   // temp
         handleSkillDelete(undoRedoObject, undoOrRedo);
         break;
 
       case TEAM_CREATE:
-        System.out.println(String.format("I am %sing a team creation", undoOrRedoStr));   // temp
+//        System.out.println(String.format("I am %sing a team creation", undoOrRedoStr));   // temp
         handleTeamCreate(undoRedoObject, undoOrRedo);
         break;
 
       case TEAM_EDIT:
-        System.out.println(String.format("I am %sing a team edit", undoOrRedoStr));   // temp
+//        System.out.println(String.format("I am %sing a team edit", undoOrRedoStr));   // temp
         handleTeamEdit(undoRedoObject, undoOrRedo);
         break;
 
       case TEAM_DELETE:
-        System.out.println(String.format("I am %sing a team deletion", undoOrRedoStr));   // temp
+//        System.out.println(String.format("I am %sing a team deletion", undoOrRedoStr));   // temp
         handleTeamDelete(undoRedoObject, undoOrRedo);
         break;
 
       case RELEASE_CREATE:
-        System.out.println(String.format("I am %sing a release creation", undoOrRedoStr));   // temp
+//        System.out.println(String.format("I am %sing a release creation", undoOrRedoStr)); // temp
         handleReleaseCreate(undoRedoObject, undoOrRedo);
         break;
 
       case RELEASE_EDIT:
-        System.out.println(String.format("I am %sing a release edit", undoOrRedoStr));   // temp
+//        System.out.println(String.format("I am %sing a release edit", undoOrRedoStr));   // temp
         handleReleaseEdit(undoRedoObject, undoOrRedo);
         break;
 
       case RELEASE_DELETE:
-        System.out.println(String.format("I am %sing a release delete", undoOrRedoStr));   // temp
+//        System.out.println(String.format("I am %sing a release delete", undoOrRedoStr));   // temp
         handleReleaseDelete(undoRedoObject, undoOrRedo);
         break;
 
