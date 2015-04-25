@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -93,7 +92,6 @@ public class Main extends Application {
     addRole(smRole);
     addRole(devRole);
 
-    Platform.setImplicitExit(false);
     this.primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
       @Override
       public void handle(WindowEvent event) {
@@ -115,13 +113,10 @@ public class Main extends Application {
       alert.setContentText("There are unsaved changes, are you sure you wish to quit?");
       Optional<ButtonType> result = alert.showAndWait();
       if (result.get() == ButtonType.OK) {
-        System.exit(0);
-      }
-      else if (result.get() == ButtonType.CANCEL) {
-        return;
+        primaryStage.close();
       }
     } else {
-      System.exit(0);
+      primaryStage.close();
     }
   }
 
