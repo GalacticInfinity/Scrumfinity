@@ -325,6 +325,9 @@ public class NewLoading {
     if (people.size() != 0) {
       newTeam.setTeamMembers(people);
       newTeam.setMembersRole(roles);
+      for (Person person : people) {
+        person.assignToTeam(newTeam);
+      }
     }
   }
 
