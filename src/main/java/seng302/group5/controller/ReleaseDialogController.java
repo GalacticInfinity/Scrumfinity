@@ -216,11 +216,7 @@ public class ReleaseDialogController {
   private void initialiseLists() {
     try {
       // loop for adding the specific project to release.
-      for (Project item : mainApp.getProjects()) {
-        if(!selectedProject.contains(item)) {
-          availableProjects.add(item);
-        }
-      }
+      availableProjects.addAll(mainApp.getProjects());
 
       this.projectComboBox.setVisibleRowCount(5);
       this.projectComboBox.setItems(availableProjects);
@@ -258,10 +254,12 @@ public class ReleaseDialogController {
     try {
       Project selectedProject = projectComboBox.getSelectionModel().getSelectedItem();
 
-      if (selectedProject != null && this.selectedProject.isEmpty()) {
+      if (selectedProject != null) {
+        if (!this.selectedProject.isEmpty()) {
+          this.selectedProject.remove(0);
+        }
         this.selectedProject.add(selectedProject);
-        this.availableProjects.remove(availableProjects);
-
+        this.projectList.setItems(this.selectedProject);
         this.projectComboBox.getSelectionModel().clearSelection();
         this.projectComboBox.setValue(null);
       }
