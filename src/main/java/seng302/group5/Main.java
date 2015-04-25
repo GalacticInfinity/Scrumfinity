@@ -92,12 +92,9 @@ public class Main extends Application {
     addRole(smRole);
     addRole(devRole);
 
-    this.primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-      @Override
-      public void handle(WindowEvent event) {
-        event.consume();
-        exitScrumfinity();
-      }
+    this.primaryStage.setOnCloseRequest(event -> {
+      event.consume();
+      exitScrumfinity();
     });
   }
 
@@ -128,7 +125,7 @@ public class Main extends Application {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/Main.fxml"));
-      rootLayout = (BorderPane) loader.load();
+      rootLayout = loader.load();
 
       Scene scene = new Scene(rootLayout);
       primaryStage.setScene(scene);
@@ -146,7 +143,7 @@ public class Main extends Application {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(MenuBarController.class.getResource("/MenuBar.fxml"));
-      MenuBar menuBar = (MenuBar) loader.load();
+      MenuBar menuBar = loader.load();
 
       MenuBarController controller = loader.getController();
       controller.setMainApp(this);
@@ -165,7 +162,7 @@ public class Main extends Application {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(ListMainPaneController.class.getResource("/ListMainPane.fxml"));
-      SplitPane splitPane = (SplitPane) loader.load();
+      SplitPane splitPane = loader.load();
 
       ListMainPaneController controller = loader.getController();
       controller.setMainApp(this);
@@ -186,7 +183,7 @@ public class Main extends Application {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/ProjectDialog.fxml"));
-      VBox projectDialogLayout = (VBox) loader.load();
+      VBox projectDialogLayout = loader.load();
 
       ProjectDialogController controller = loader.getController();
       Scene projectDialogScene = new Scene(projectDialogLayout);
@@ -225,7 +222,7 @@ public class Main extends Application {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/TeamDialog.fxml"));
-      VBox teamDialogLayout = (VBox) loader.load();
+      VBox teamDialogLayout = loader.load();
 
       TeamDialogController controller = loader.getController();
 
@@ -265,7 +262,7 @@ public class Main extends Application {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/ReleaseDialog.fxml"));
-      VBox releaseDialogLayout = (VBox) loader.load();
+      VBox releaseDialogLayout = loader.load();
 
       ReleaseDialogController controller = loader.getController();
       Scene releaseDialogScene = new Scene(releaseDialogLayout);
@@ -303,7 +300,7 @@ public class Main extends Application {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/PersonDialog.fxml"));
-      VBox personDialogLayout = (VBox) loader.load();
+      VBox personDialogLayout = loader.load();
 
       PersonDialogController controller = loader.getController();
       Scene personDialogScene = new Scene(personDialogLayout);
@@ -341,7 +338,7 @@ public class Main extends Application {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/SkillsDialog.fxml"));
-      VBox SkillsDialogLayout = (VBox) loader.load();
+      VBox SkillsDialogLayout = loader.load();
 
       SkillsDialogController controller = loader.getController();
       Scene skillDialogScene = new Scene(SkillsDialogLayout);
