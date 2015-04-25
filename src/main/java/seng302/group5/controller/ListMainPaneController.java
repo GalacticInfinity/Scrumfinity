@@ -24,11 +24,10 @@ import seng302.group5.model.Project;
 import seng302.group5.model.Team;
 import seng302.group5.model.Skill;
 
-
 /**
  * Created by Michael on 3/15/2015.
- * ListManePane fxml contains styling for both List and MainPane, still
- * requires asthetic tweaks, doesn't scale properly.
+ * ListManePane fxml contains styling for both List and MainPane,
+ * still requires asthetic tweaks, doesn't scale properly.
  */
 public class ListMainPaneController {
 
@@ -40,7 +39,6 @@ public class ListMainPaneController {
   private Main mainApp;
   private boolean isListShown = true;
 
-  public ListMainPaneController() {}
   private AgileItem selectedItem;
 
   /**
@@ -75,11 +73,12 @@ public class ListMainPaneController {
 
   /**
    * Shows/Hides items in list.
-   * @param item a CheckMenuItem is used to select the current item or deselect it depending on
-   *             if you're hiding or showing the list
+   *
+   * @param item a CheckMenuItem is used to select the current item or deselect it depending on if
+   *             you're hiding or showing the list
    */
   public void showHideList(CheckMenuItem item) {
-    if(!isListShown){
+    if (!isListShown) {
       checkListType();
       item.setSelected(true);
       mainApp.getMBC().deselectList(Settings.currentListType);
@@ -109,7 +108,7 @@ public class ListMainPaneController {
   /**
    * Checks list type currently set as viewed list by user.
    */
-  public void checkListType(){
+  public void checkListType() {
     String listType = Settings.currentListType;
     switch (listType) {
       case "Projects":
@@ -143,9 +142,10 @@ public class ListMainPaneController {
 
   /**
    * Gets the currently selected item in the listview.
+   *
    * @return AgileItem which is the item selected in the list.
    */
-  public AgileItem getSelected(){
+  public AgileItem getSelected() {
     String listType = Settings.currentListType;
     switch (listType) {
       case "Projects":
@@ -172,12 +172,14 @@ public class ListMainPaneController {
         if (!isListShown || !listType.equals("Releases")) {
           return null;
         }
-        return  selectedItem;
+        return selectedItem;
     }
     return null;
   }
+
   /**
    * Gets the current list type being displayed
+   *
    * @return String, a string of the current list type.
    */
   public String getCurrentListType() {
@@ -187,6 +189,7 @@ public class ListMainPaneController {
   /**
    * Takes the current selected item (next) as an AgileItem and then casts it to the correct object
    * based on what the current selected list is.
+   *
    * @param next Next selected item
    */
   public void displayInfo(AgileItem next) {
@@ -285,6 +288,7 @@ public class ListMainPaneController {
 
   /**
    * Sets the main app to the param
+   *
    * @param mainApp The main application object
    */
   public void setMainApp(Main mainApp) {

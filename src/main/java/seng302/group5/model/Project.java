@@ -26,8 +26,8 @@ public class Project implements AgileItem {
   /**
    * Constructor.
    *
-   * @param projectID Name of Person, Unique, Non-Null, can't be greater then 8 characters.
-   * @param projectName Description of person
+   * @param projectID          Name of Person, Unique, Non-Null, can't be greater then 8 characters.
+   * @param projectName        Description of person
    * @param projectDescription Date of birth of person?
    */
   public Project(String projectID, String projectName, String projectDescription) {
@@ -38,6 +38,7 @@ public class Project implements AgileItem {
 
   /**
    * Constructor to create a clone of an existing project
+   *
    * @param clone Project to clone
    */
   public Project(Project clone) {
@@ -78,6 +79,7 @@ public class Project implements AgileItem {
 
   /**
    * Add a team to the project as an AgileHistory object containing the team and dates
+   *
    * @param team AgileHistory object to add
    */
   public void addTeam(AgileHistory team) {
@@ -86,6 +88,7 @@ public class Project implements AgileItem {
 
   /**
    * Remove a team to the project as an AgileHistory object containing the team and dates
+   *
    * @param team AgileHistory object to remove
    */
   public void removeTeam(AgileHistory team) {
@@ -94,6 +97,7 @@ public class Project implements AgileItem {
 
   /**
    * Copies the Project input person's fields into current object.
+   *
    * @param agileItem project who's fields are to be copied
    */
   @Override
@@ -109,7 +113,7 @@ public class Project implements AgileItem {
   }
 
   /**
-   *  toString method just return projectID
+   * toString method just return projectID
    */
   @Override
   public String toString() {
@@ -118,6 +122,7 @@ public class Project implements AgileItem {
 
   /**
    * Check if two project's ids are equal
+   *
    * @param obj Object to compare to.
    * @return Whether project's ids are equal
    */

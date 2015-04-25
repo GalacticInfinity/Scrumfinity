@@ -5,7 +5,8 @@ import java.util.HashMap;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-/**Basic model of a Team.
+/**
+ * Basic model of a Team.
  *
  * Created by Zander on 24/03/2015.
  */
@@ -36,8 +37,8 @@ public class Team implements AgileItem {
   /**
    * Team constructor.
    *
-   * @param teamID Unique, non-null team ID.
-   * @param teamMembers List of people in the team.
+   * @param teamID          Unique, non-null team ID.
+   * @param teamMembers     List of people in the team.
    * @param teamDescription Description of the team.
    */
   public Team(String teamID, ObservableList<Person> teamMembers, String teamDescription) {
@@ -101,8 +102,9 @@ public class Team implements AgileItem {
 
   /**
    * Add a Person to the Team as a team member and assign a role
+   *
    * @param person The team member to add
-   * @param role The team member's role
+   * @param role   The team member's role
    */
   public void addTeamMember(Person person, Role role) {
     this.teamMembers.add(person);
@@ -111,6 +113,7 @@ public class Team implements AgileItem {
 
   /**
    * Add a Person to the Team as a team member when a role is not specified
+   *
    * @param person The team member to add
    */
   public void addTeamMember(Person person) {
@@ -120,6 +123,7 @@ public class Team implements AgileItem {
 
   /**
    * Remove a team member from the team
+   *
    * @param person The team member to remove
    */
   public void removeTeamMember(Person person) {
@@ -137,6 +141,7 @@ public class Team implements AgileItem {
 
   /**
    * Copies the input team's fields into current object.
+   *
    * @param agileItem Team who's fields are to be copied
    */
   @Override
@@ -155,8 +160,7 @@ public class Team implements AgileItem {
   }
 
   /**
-   * Overrides to toString method with the
-   * ID of team.
+   * Overrides to toString method with the ID of team.
    *
    * @return Unique ID of team.
    */
@@ -167,6 +171,7 @@ public class Team implements AgileItem {
 
   /**
    * Check if two team's ids are equal
+   *
    * @param obj Object to compare to.
    * @return Whether team's ids are equal
    */

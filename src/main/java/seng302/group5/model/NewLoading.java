@@ -17,6 +17,7 @@ import seng302.group5.Main;
  * Created by Michael on 4/21/2015.
  */
 public class NewLoading {
+
   private Main main;
   private BufferedReader loadedFile;
 
@@ -26,6 +27,7 @@ public class NewLoading {
 
   /**
    * Loads all the data from the xml file into main app
+   *
    * @param file File to load from
    */
   public void loadFile(File file) {
@@ -54,7 +56,9 @@ public class NewLoading {
       e.printStackTrace();
     } finally {
       try {
-        if (loadedFile != null) loadedFile.close();
+        if (loadedFile != null) {
+          loadedFile.close();
+        }
       } catch (Exception ex) {
         ex.printStackTrace();
       }
@@ -63,9 +67,10 @@ public class NewLoading {
 
   /**
    * Loads Projects from xml files into main app
+   *
    * @throws Exception Problem with loading
    */
-  private void loadProjects()throws Exception {
+  private void loadProjects() throws Exception {
     String projectLine;
     String projectData;
     AgileHistory teamHistoryItem;
@@ -73,7 +78,7 @@ public class NewLoading {
     LocalDate startDate;
     LocalDate endDate;
 
-    // Untill Project end tag
+    // Until Project end tag
     while ((!(projectLine = loadedFile.readLine()).equals("</Projects>"))) {
       // On new Person tag
       if (projectLine.matches(".*<Project>")) {
@@ -130,9 +135,10 @@ public class NewLoading {
 
   /**
    * Loads People from xml files into main app
+   *
    * @throws Exception Problem with loading
    */
-  private void loadPeople() throws Exception{
+  private void loadPeople() throws Exception {
     String personLine;
     String personData;
     Person newPerson;
@@ -183,9 +189,10 @@ public class NewLoading {
 
   /**
    * Loads Skills from xml files into main app and updates skill references inside people objects
+   *
    * @throws Exception Problem with loading
    */
-  private void loadSkills() throws Exception{
+  private void loadSkills() throws Exception {
     String skillLine;
     String skillData;
 
@@ -237,8 +244,9 @@ public class NewLoading {
   }
 
   /**
-   * Loads teams from xml files into main app, and updates references inside people objects
-   * to the newly loaded teams
+   * Loads teams from xml files into main app, and updates references inside people objects to the
+   * newly loaded teams
+   *
    * @throws Exception Problem with loading
    */
   private void loadTeams() throws Exception {
@@ -284,6 +292,7 @@ public class NewLoading {
 
   /**
    * Loads team members for a team object.
+   *
    * @param newTeam Team currently being loaded
    * @throws Exception Problem with loading
    */
@@ -333,6 +342,7 @@ public class NewLoading {
 
   /**
    * Loads releases from xml files into main app
+   *
    * @throws Exception Problem with loading
    */
   private void loadReleases() throws Exception {
@@ -380,9 +390,10 @@ public class NewLoading {
 
   /**
    * Loads roles from xml files into main app
+   *
    * @throws Exception Problem with loading
    */
-  private void loadRoles() throws Exception{
+  private void loadRoles() throws Exception {
     String roleLine;
     String roleData;
     Role newRole;

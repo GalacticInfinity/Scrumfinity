@@ -7,7 +7,6 @@ import java.util.Optional;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -18,7 +17,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import seng302.group5.controller.ListMainPaneController;
 import seng302.group5.controller.MenuBarController;
 import seng302.group5.controller.ReleaseDialogController;
@@ -63,8 +61,8 @@ public class Main extends Application {
   private UndoRedoObject lastSavedObject = null;
 
   /**
-   * Starts up the app creating the stage and setting up the window
-   * creates the default skills and roles that are needed
+   * Starts up the app creating the stage and setting up the window creates the default skills and
+   * roles that are needed
    *
    * @param primaryStage The main stage for the app
    */
@@ -99,8 +97,8 @@ public class Main extends Application {
   }
 
   /**
-   * Handles exiting the app.
-   * checks if there are unsaved changes if so displays a popup warning otherwise closes.
+   * Handles exiting the app. checks if there are unsaved changes if so displays a popup warning
+   * otherwise closes.
    */
   public void exitScrumfinity() {
     if (!checkSaved()) {
@@ -149,7 +147,7 @@ public class Main extends Application {
       controller.setMainApp(this);
       MBC = controller;
 
-     rootLayout.setTop(menuBar);
+      rootLayout.setTop(menuBar);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -177,6 +175,7 @@ public class Main extends Application {
 
   /**
    * sets up the dialog box for creating/editing a project
+   *
    * @param createOrEdit the createOrEdit object that decides if you are creating or editing
    */
   public void showProjectDialog(CreateOrEdit createOrEdit) {
@@ -216,6 +215,7 @@ public class Main extends Application {
 
   /**
    * sets up the dialog box for creating/editing a Team
+   *
    * @param createOrEdit the createOrEdit object that decides if you are creating or editing
    */
   public void showTeamDialog(CreateOrEdit createOrEdit) {
@@ -256,6 +256,7 @@ public class Main extends Application {
 
   /**
    * sets up the dialog box for creating/editing a Release
+   *
    * @param createOrEdit the createOrEdit object that decides if you are creating or editing
    */
   public void showReleaseDialog(CreateOrEdit createOrEdit) {
@@ -280,7 +281,7 @@ public class Main extends Application {
           return;
         }
       }
-      controller.setupController(this ,releaseDialogStage, createOrEdit, release);
+      controller.setupController(this, releaseDialogStage, createOrEdit, release);
 
       releaseDialogStage.initModality(Modality.APPLICATION_MODAL);
       releaseDialogStage.initOwner(primaryStage);
@@ -294,6 +295,7 @@ public class Main extends Application {
 
   /**
    * sets up the dialog box for creating/editing a person
+   *
    * @param createOrEdit the createOrEdit object that decides if you are creating or editing
    */
   public void showPersonDialog(CreateOrEdit createOrEdit) {
@@ -332,6 +334,7 @@ public class Main extends Application {
 
   /**
    * sets up the dialog box for creating/editing a skill
+   *
    * @param createOrEdit the createOrEdit object that decides if you are creating or editing
    */
   public void showSkillDialog(CreateOrEdit createOrEdit) {
@@ -347,7 +350,7 @@ public class Main extends Application {
       Skill skill = null;
       if (createOrEdit == CreateOrEdit.EDIT) {
         skill = (Skill) LMPC.getSelected();    // TODO: Fix
-        if (skill == null){
+        if (skill == null) {
           Alert alert = new Alert(Alert.AlertType.ERROR);
           alert.setTitle("Error");
           alert.setHeaderText(null);
@@ -394,6 +397,7 @@ public class Main extends Application {
 
   /**
    * Add a new action to the undo/redo stack
+   *
    * @param undoRedoObject Action to store
    */
   public void newAction(UndoRedoObject undoRedoObject) {
@@ -411,6 +415,7 @@ public class Main extends Application {
 
   /**
    * Check if the newest action was the saved action and adjust the window title
+   *
    * @return Boolean returns true if the project is saved returns true else false
    */
   public boolean checkSaved() {
@@ -430,6 +435,7 @@ public class Main extends Application {
 
   /**
    * Delete a project from the list of projects
+   *
    * @param inputProject Project to delete - must be same object reference
    */
   public void deleteProject(Project inputProject) {
@@ -438,6 +444,7 @@ public class Main extends Application {
 
   /**
    * Delete a person from the list of people
+   *
    * @param inputPerson Person to delete - must be the same object reference
    */
   public void deletePerson(Person inputPerson) {
@@ -446,6 +453,7 @@ public class Main extends Application {
 
   /**
    * Delete a skill from the list of skills
+   *
    * @param inputSkill Skill to delete - must be the same object reference
    */
   public void deleteSkill(Skill inputSkill) {
@@ -454,6 +462,7 @@ public class Main extends Application {
 
   /**
    * Delete a team from the list of teams
+   *
    * @param inputTeam Team to delete - must be the same object reference
    */
   public void deleteTeam(Team inputTeam) {
@@ -462,16 +471,17 @@ public class Main extends Application {
 
   /**
    * Delete a release from the list of releases
+   *
    * @param inputRelease release to be deleted
    */
   public void deleteRelease(Release inputRelease) {
     releases.remove(inputRelease);
   }
 
-    /**
+  /**
    * Generate an UndoRedoObject to place in the stack
-     *
-   * @param action The action to store in the object
+   *
+   * @param action    The action to store in the object
    * @param agileItem The item to store in the object
    * @return the UndoRedoObject to store
    */
@@ -510,8 +520,8 @@ public class Main extends Application {
   }
 
   /**
-   * Generic delete function which deletes an item from the appropriate list and then adds
-   * the action to the undo/redo stack
+   * Generic delete function which deletes an item from the appropriate list and then adds the
+   * action to the undo/redo stack
    *
    * @param agileItem Item to delete
    */
@@ -537,8 +547,8 @@ public class Main extends Application {
           int messageLength = 1;
           String message = String.format("Do you want to delete project '%s' and its releases:\n",
                                          project.getProjectName());
-          for (Release releases: projectsReleases) {
-            messageLength ++;
+          for (Release releases : projectsReleases) {
+            messageLength++;
             message += String.format("%s\n",
                                      releases.getReleaseName());
           }
@@ -575,7 +585,7 @@ public class Main extends Application {
           alert.setContentText(message);
           //checks response
           Optional<ButtonType> result = alert.showAndWait();
-          if (result.get() == ButtonType.OK){
+          if (result.get() == ButtonType.OK) {
             //if yes then remove
             person.getTeam().getTeamMembers().remove(person);
             deletePerson(person);
@@ -604,8 +614,8 @@ public class Main extends Application {
           int messageLength = 1;
           String message = String.format("Do you want to delete skill '%s' and remove it from:\n",
                                          skill.getSkillName());
-          for (Person skillUser: skillUsers) {
-            messageLength ++;
+          for (Person skillUser : skillUsers) {
+            messageLength++;
             message += String.format("%s - %s %s\n",
                                      skillUser.getPersonID(),
                                      skillUser.getFirstName(),
@@ -615,7 +625,7 @@ public class Main extends Application {
           alert.setContentText(message);
           //checks response
           Optional<ButtonType> result = alert.showAndWait();
-          if (result.get() == ButtonType.OK){
+          if (result.get() == ButtonType.OK) {
             //if yes then remove skill from all who have it
             for (Person skillUser : skillUsers) {
               skillUser.getSkillSet().remove(skill);
@@ -647,18 +657,18 @@ public class Main extends Application {
           int messageLength = 1;
           String message = String.format("Are you sure you want to delete team '%s' and people:\n",
                                          team.getTeamID());
-          for (Person teamMember: team.getTeamMembers()) {
-            messageLength ++;
+          for (Person teamMember : team.getTeamMembers()) {
+            messageLength++;
             message += String.format("%s - %s %s\n",
                                      teamMember.getPersonID(),
                                      teamMember.getFirstName(),
                                      teamMember.getLastName());
           }
-          alert.getDialogPane().setPrefHeight(60 + 30*messageLength);
+          alert.getDialogPane().setPrefHeight(60 + 30 * messageLength);
           alert.setContentText(message);
 
           Optional<ButtonType> result = alert.showAndWait();
-          if (result.get() == ButtonType.OK){
+          if (result.get() == ButtonType.OK) {
             for (Person teamPerson : team.getTeamMembers()) {
               deletePerson(teamPerson);
             }
@@ -695,7 +705,7 @@ public class Main extends Application {
   }
 
 
-  public Stage getPrimaryStage(){
+  public Stage getPrimaryStage() {
     return primaryStage;
   }
 

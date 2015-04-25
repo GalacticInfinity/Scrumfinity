@@ -15,7 +15,7 @@ import seng302.group5.model.Team;
 /**
  * Created by Michael on 3/17/2015.
  *
- * Work in progess, may scrap alltogether
+ * The handler for all undo/redo functionality
  */
 public class UndoRedoHandler {
 
@@ -33,6 +33,7 @@ public class UndoRedoHandler {
 
   /**
    * Constructor. Set the main app to communicate with and initialise stacks
+   *
    * @param mainApp Main app to communicate with
    */
   public UndoRedoHandler(Main mainApp) {
@@ -43,6 +44,7 @@ public class UndoRedoHandler {
 
   /**
    * Peek at what is on top of the undo stack
+   *
    * @return The top element of the undo stack, or null if it's empty
    */
   public UndoRedoObject peekUndoStack() {
@@ -111,7 +113,7 @@ public class UndoRedoHandler {
    * Handle a undo or redo call
    *
    * @param undoRedoObject Object containing the action data
-   * @param undoOrRedo Whether undoing or redoing the action
+   * @param undoOrRedo     Whether undoing or redoing the action
    * @throws Exception Error message if data is invalid
    */
   private void handleUndoRedoObject(UndoRedoObject undoRedoObject,
@@ -127,7 +129,7 @@ public class UndoRedoHandler {
 //      undoOrRedoStr = "redo";
 //    }
 
-    switch(action) {
+    switch (action) {
       case PROJECT_CREATE:
 //        System.out.println(String.format("I am %sing a project creation", undoOrRedoStr)); // temp
         handleProjectCreate(undoRedoObject, undoOrRedo);
@@ -215,7 +217,7 @@ public class UndoRedoHandler {
    * Undo or redo a project creation
    *
    * @param undoRedoObject Object containing the action data
-   * @param undoOrRedo Whether undoing or redoing the action
+   * @param undoOrRedo     Whether undoing or redoing the action
    * @throws Exception Error message if data is invalid
    */
   private void handleProjectCreate(UndoRedoObject undoRedoObject,
@@ -245,7 +247,7 @@ public class UndoRedoHandler {
    * Undo or redo a project edit
    *
    * @param undoRedoObject Object containing the action data
-   * @param undoOrRedo Whether undoing or redoing the action
+   * @param undoOrRedo     Whether undoing or redoing the action
    * @throws Exception Error message if data is invalid
    */
   private void handleProjectEdit(UndoRedoObject undoRedoObject,
@@ -276,7 +278,7 @@ public class UndoRedoHandler {
    * Undo or redo a project deletion
    *
    * @param undoRedoObject Object containing the action data
-   * @param undoOrRedo Whether undoing or redoing the action
+   * @param undoOrRedo     Whether undoing or redoing the action
    * @throws Exception Error message if data is invalid
    */
   private void handleProjectDelete(UndoRedoObject undoRedoObject,
@@ -291,7 +293,6 @@ public class UndoRedoHandler {
     // Get the project and ID to undo/redo deletion of
     Project projectToChange = (Project) undoRedoObject.getAgileItem();
     Project projectData = (Project) data.get(0);
-
 
     // Get the projects releases
     List<AgileItem> releases = data.subList(1, data.size());
@@ -320,7 +321,7 @@ public class UndoRedoHandler {
    * Undo or redo a person creation
    *
    * @param undoRedoObject Object containing the action data
-   * @param undoOrRedo Whether undoing or redoing the action
+   * @param undoOrRedo     Whether undoing or redoing the action
    * @throws Exception Error message if data is invalid
    */
   private void handlePersonCreate(UndoRedoObject undoRedoObject,
@@ -350,7 +351,7 @@ public class UndoRedoHandler {
    * Undo or redo a person edit
    *
    * @param undoRedoObject Object containing the action data
-   * @param undoOrRedo Whether undoing or redoing the action
+   * @param undoOrRedo     Whether undoing or redoing the action
    * @throws Exception Error message if data is invalid
    */
   private void handlePersonEdit(UndoRedoObject undoRedoObject,
@@ -380,7 +381,7 @@ public class UndoRedoHandler {
    * Undo or redo a person deletion
    *
    * @param undoRedoObject Object containing the action data
-   * @param undoOrRedo Whether undoing or redoing the action
+   * @param undoOrRedo     Whether undoing or redoing the action
    * @throws Exception Error message if data is invalid
    */
   private void handlePersonDelete(UndoRedoObject undoRedoObject,
@@ -419,7 +420,7 @@ public class UndoRedoHandler {
    * Undo or redo a skill creation
    *
    * @param undoRedoObject Object containing the action data
-   * @param undoOrRedo Whether undoing or redoing the action
+   * @param undoOrRedo     Whether undoing or redoing the action
    * @throws Exception Error message if data is invalid
    */
   private void handleSkillCreate(UndoRedoObject undoRedoObject,
@@ -448,7 +449,7 @@ public class UndoRedoHandler {
    * Undo or redo a skill edit
    *
    * @param undoRedoObject Object containing the action data
-   * @param undoOrRedo Whether undoing or redoing the action
+   * @param undoOrRedo     Whether undoing or redoing the action
    * @throws Exception Error message if data is invalid
    */
   private void handleSkillEdit(UndoRedoObject undoRedoObject,
@@ -477,7 +478,7 @@ public class UndoRedoHandler {
    * Undo or redo a skill deletion
    *
    * @param undoRedoObject Object containing the action data
-   * @param undoOrRedo Whether undoing or redoing the action
+   * @param undoOrRedo     Whether undoing or redoing the action
    * @throws Exception Error message if data is invalid
    */
   private void handleSkillDelete(UndoRedoObject undoRedoObject,
@@ -520,11 +521,11 @@ public class UndoRedoHandler {
    * Undo or redo a team creation
    *
    * @param undoRedoObject Object containing the action data
-   * @param undoOrRedo Whether undoing or redoing the action
+   * @param undoOrRedo     Whether undoing or redoing the action
    * @throws Exception Error message if data is invalid
    */
   private void handleTeamCreate(UndoRedoObject undoRedoObject,
-                                 UndoOrRedo undoOrRedo) throws Exception {
+                                UndoOrRedo undoOrRedo) throws Exception {
 
     // Get the data and ensure it has data for the team
     ArrayList<AgileItem> data = undoRedoObject.getData();
@@ -556,11 +557,11 @@ public class UndoRedoHandler {
    * Undo or redo a team edit
    *
    * @param undoRedoObject Object containing the action data
-   * @param undoOrRedo Whether undoing or redoing the action
+   * @param undoOrRedo     Whether undoing or redoing the action
    * @throws Exception Error message if data is invalid
    */
   private void handleTeamEdit(UndoRedoObject undoRedoObject,
-                               UndoOrRedo undoOrRedo) throws Exception {
+                              UndoOrRedo undoOrRedo) throws Exception {
 
     // Get the data and ensure it has data for the teams both before and after
     ArrayList<AgileItem> data = undoRedoObject.getData();
@@ -598,7 +599,7 @@ public class UndoRedoHandler {
    * Undo or redo a team deletion
    *
    * @param undoRedoObject Object containing the action data
-   * @param undoOrRedo Whether undoing or redoing the action
+   * @param undoOrRedo     Whether undoing or redoing the action
    * @throws Exception Error message if data is invalid
    */
   private void handleTeamDelete(UndoRedoObject undoRedoObject,
@@ -635,11 +636,11 @@ public class UndoRedoHandler {
    * Undo or redo a release creation
    *
    * @param undoRedoObject Object containing the action data
-   * @param undoOrRedo Whether undoing or redoing the action
+   * @param undoOrRedo     Whether undoing or redoing the action
    * @throws Exception Error message if data is invalid
    */
   private void handleReleaseCreate(UndoRedoObject undoRedoObject,
-                                UndoOrRedo undoOrRedo) throws Exception {
+                                   UndoOrRedo undoOrRedo) throws Exception {
 
     // Get the data and ensure it has data for the team
     ArrayList<AgileItem> data = undoRedoObject.getData();
@@ -665,11 +666,11 @@ public class UndoRedoHandler {
    * Undo or redo a release edit
    *
    * @param undoRedoObject Object containing the action data
-   * @param undoOrRedo Whether undoing or redoing the action
+   * @param undoOrRedo     Whether undoing or redoing the action
    * @throws Exception Error message if data is invalid
    */
   private void handleReleaseEdit(UndoRedoObject undoRedoObject,
-                               UndoOrRedo undoOrRedo) throws Exception {
+                                 UndoOrRedo undoOrRedo) throws Exception {
 
     // Get the data and ensure it has data for the releases both before and after
     ArrayList<AgileItem> data = undoRedoObject.getData();
@@ -696,11 +697,11 @@ public class UndoRedoHandler {
    * Undo or redo a release deletion
    *
    * @param undoRedoObject Object containing the action data
-   * @param undoOrRedo Whether undoing or redoing the action
+   * @param undoOrRedo     Whether undoing or redoing the action
    * @throws Exception Error message if data is invalid
    */
   private void handleReleaseDelete(UndoRedoObject undoRedoObject,
-                                 UndoOrRedo undoOrRedo) throws Exception {
+                                   UndoOrRedo undoOrRedo) throws Exception {
 
     // Get the data and ensure it has data for the skill
     ArrayList<AgileItem> data = undoRedoObject.getData();

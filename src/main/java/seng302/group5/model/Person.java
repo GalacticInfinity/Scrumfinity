@@ -32,10 +32,10 @@ public class Person implements AgileItem {
   /**
    * Person constructor.
    *
-   * @param personID Unique, non-null person ID. Can't be greater than 8 characters.
+   * @param personID  Unique, non-null person ID. Can't be greater than 8 characters.
    * @param firstName First name of person.
-   * @param lastName Last name of person.
-   * @param skills List of person's skills
+   * @param lastName  Last name of person.
+   * @param skills    List of person's skills
    */
   public Person(String personID, String firstName, String lastName, ObservableList<Skill> skills) {
     this.personID = personID;
@@ -93,7 +93,9 @@ public class Person implements AgileItem {
     this.lastName = lastName;
   }
 
-  public ObservableList<Skill> getSkillSet() { return skillSet;}
+  public ObservableList<Skill> getSkillSet() {
+    return skillSet;
+  }
 
   public void setSkillSet(ObservableList<Skill> skillSet) {
     this.skillSet = skillSet;
@@ -101,6 +103,7 @@ public class Person implements AgileItem {
 
   /**
    * Assigns this person to a team.
+   *
    * @param team Team object that person is assigned to.
    */
   public void assignToTeam(Team team) {
@@ -118,6 +121,7 @@ public class Person implements AgileItem {
 
   /**
    * Checks if person is in a team.
+   *
    * @return True, if person is in team. False, if not.
    */
   public Boolean isInTeam() {
@@ -126,6 +130,7 @@ public class Person implements AgileItem {
 
   /**
    * Copies the input person's fields into current object.
+   *
    * @param agileItem Person who's fields are to be copied
    */
   @Override
@@ -143,8 +148,7 @@ public class Person implements AgileItem {
   }
 
   /**
-   * Overrides to toString method with the
-   * ID of person.
+   * Overrides to toString method with the ID of person.
    *
    * @return Unique ID of person.
    */
@@ -155,6 +159,7 @@ public class Person implements AgileItem {
 
   /**
    * Overrides default to just check if the project's IDs are the same
+   *
    * @param obj Object to compare to.
    * @return Whether the IDs are equal or not
    */
