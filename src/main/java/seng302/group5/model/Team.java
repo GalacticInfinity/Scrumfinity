@@ -99,16 +99,29 @@ public class Team implements AgileItem {
     this.teamMembers = teamMembers;
   }
 
+  /**
+   * Add a Person to the Team as a team member and assign a role
+   * @param person The team member to add
+   * @param role The team member's role
+   */
   public void addTeamMember(Person person, Role role) {
     this.teamMembers.add(person);
     this.membersRole.put(person, role);
   }
 
+  /**
+   * Add a Person to the Team as a team member when a role is not specified
+   * @param person The team member to add
+   */
   public void addTeamMember(Person person) {
     this.teamMembers.add(person);
     this.membersRole.put(person, null);
   }
 
+  /**
+   * Remove a team member from the team
+   * @param person The team member to remove
+   */
   public void removeTeamMember(Person person) {
     this.teamMembers.remove(person);
     this.membersRole.remove(person);
@@ -123,7 +136,8 @@ public class Team implements AgileItem {
   }
 
   /**
-   * Get the description of the team.
+   * Copies the input team's fields into current object.
+   * @param agileItem Team who's fields are to be copied
    */
   @Override
   public void copyValues(AgileItem agileItem) {

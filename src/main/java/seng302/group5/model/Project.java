@@ -45,7 +45,7 @@ public class Project implements AgileItem {
     this.projectName = clone.getProjectName();
     this.projectDescription = clone.getProjectDescription();
     this.allocatedTeams.clear();
-    this.allocatedTeams.addAll(clone.getTeam());
+    this.allocatedTeams.addAll(clone.getAllocatedTeams());
   }
 
   public String getProjectID() {
@@ -68,20 +68,28 @@ public class Project implements AgileItem {
     return projectDescription;
   }
 
+  public void setProjectDescription(String projectDescription) {
+    this.projectDescription = projectDescription;
+  }
+
+  public ObservableList<AgileHistory> getAllocatedTeams() {
+    return this.allocatedTeams;
+  }
+
+  /**
+   * Add a team to the project as an AgileHistory object containing the team and dates
+   * @param team AgileHistory object to add
+   */
   public void addTeam(AgileHistory team) {
     this.allocatedTeams.add(team);
   }
 
-  public ObservableList<AgileHistory> getTeam() {
-    return this.allocatedTeams;
-  }
-
+  /**
+   * Remove a team to the project as an AgileHistory object containing the team and dates
+   * @param team AgileHistory object to remove
+   */
   public void removeTeam(AgileHistory team) {
     this.allocatedTeams.remove(team);
-  }
-
-  public void setProjectDescription(String projectDescription) {
-    this.projectDescription = projectDescription;
   }
 
   /**
@@ -96,7 +104,7 @@ public class Project implements AgileItem {
       this.projectName = clone.getProjectName();
       this.projectDescription = clone.getProjectDescription();
       this.allocatedTeams.clear();
-      this.allocatedTeams.addAll(clone.getTeam());
+      this.allocatedTeams.addAll(clone.getAllocatedTeams());
     }
   }
 

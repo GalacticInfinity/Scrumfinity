@@ -230,7 +230,7 @@ public class ListMainPaneController {
         displayTextArea.appendText("\nProject Description: \n");
         displayTextArea.appendText(project.getProjectDescription());
         displayTextArea.appendText("\nAssigned Teams: \n");
-        for (AgileHistory team : project.getTeam()) {
+        for (AgileHistory team : project.getAllocatedTeams()) {
           displayTextArea.appendText("" + team.toString() + "\n");
         }
         break;

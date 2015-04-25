@@ -116,7 +116,7 @@ public class ProjectDialogController {
       }
       else if (createOrEdit == CreateOrEdit.EDIT) {
 
-        allocatedTeams.addAll(project.getTeam().stream().collect(Collectors.toList()));
+        allocatedTeams.addAll(project.getAllocatedTeams().stream().collect(Collectors.toList()));
         availableTeams.addAll(mainApp.getTeams().stream().collect(Collectors.toList()));
       }
 
@@ -193,7 +193,7 @@ public class ProjectDialogController {
     }
     else {
       for (Project project1 : mainApp.getProjects()) {
-        for (AgileHistory team1 : project1.getTeam()) {
+        for (AgileHistory team1 : project1.getAllocatedTeams()) {
           if (Objects.equals(team.toString(), team1.getAgileItem().toString()) &&
               !project.getProjectID().equals(project1.getProjectID())) {
             if (team1.getStartDate().isEqual(startDate) || team1.getEndDate().isEqual(endDate)) {
@@ -372,7 +372,7 @@ public class ProjectDialogController {
           project.setProjectID(projectID);
           project.setProjectName(projectName);
           project.setProjectDescription(projectDescription);
-          project.getTeam().clear();
+          project.getAllocatedTeams().clear();
           for (AgileHistory team : this.allocatedTeams) {
             project.addTeam(team);
           }
