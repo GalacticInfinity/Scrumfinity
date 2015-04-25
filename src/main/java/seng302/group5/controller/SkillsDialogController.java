@@ -1,14 +1,12 @@
 package seng302.group5.controller;
 
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
@@ -170,53 +168,5 @@ public class SkillsDialogController {
     thisStage.close();
   }
 
-  /**
-   * Sets the dialog to be creating or editing depending on the input
-   * @param createOrEdit the enum object to decide if its creating or editing
-   */
-  public void setCreateOrEdit(CreateOrEdit createOrEdit) {
-    this.createOrEdit = createOrEdit;
-    if (createOrEdit == CreateOrEdit.CREATE) {
-      thisStage.setTitle("Create New Skill");
-      skillCreation.setText("Create");
-    } else if (createOrEdit == CreateOrEdit.EDIT) {
-      thisStage.setTitle("Edit Skill");
-      skillCreation.setText("Save");
-
-      skillName.setText(skill.getSkillName());
-      skillDescription.setText(skill.getSkillDescription());
-    }
-  }
-
-  /**
-   * assigns this objects skill to the input skill
-   * @param skill the skill to be assigned to this object
-   */
-  public void setSkill(Skill skill) {
-    this.skill = skill;
-  }
-
-  /**
-   * Checks the name of the skill to make sure that it is in the wanted format other wise it catches
-   * @param name The name of the skill to be checked
-   * @return Returns the skill name if it passes checks
-   */
-  public String checkName(String name) {
-    String error = null;
-    String nameOfSkill = null;
-    try {
-      nameOfSkill = parseSkillName(name);
-    } catch (Exception e1) {
-      error = e1.getMessage();
-    }
-    if (error != null) {
-      Alert alert = new Alert(Alert.AlertType.ERROR);
-      alert.setTitle("Input Error");
-      alert.setHeaderText(null);
-      alert.setContentText(error.toString());
-      alert.showAndWait();
-    }
-    return nameOfSkill;
-  }
 }
 

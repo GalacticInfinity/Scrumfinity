@@ -102,7 +102,7 @@ public class TeamDialogController {
     try {
       if (createOrEdit == CreateOrEdit.CREATE) {
         for (Person person : mainApp.getPeople()) {
-          if (person.isInTeam() == false) {
+          if (!person.isInTeam()) {
             availableMembers.add(person);
           }
         }
@@ -140,6 +140,7 @@ public class TeamDialogController {
       Person selectedPerson = teamMemberAddCombo.getSelectionModel().getSelectedItem();
       Role selectedRole = teamMemberRoleCombo.getSelectionModel().getSelectedItem();
 
+      // Get the number of times the selected role is already used
       int roleTally = 0;
       for (PersonRole personRole : selectedMembers) {
         if (personRole.getRole() == selectedRole) {
