@@ -45,10 +45,10 @@
             <CheckMenuItem fx:id="showReleasesMenuItem" mnemonicParsing="false" onAction="#btnShowReleases" text="Show Releases" />
          </items>
       </Menu>
-      <Menu mnemonicParsing="false" text="Help">
-         <items>
-            <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
-         </items>
-      </Menu>
+      <!--<Menu mnemonicParsing="false" text="Help">-->
+         <!--<items>-->
+            <!--<MenuItem mnemonicParsing="false" text="About MyHelloApp" />-->
+         <!--</items>-->
+      <!--</Menu>-->
    </menus>
 </MenuBar>
