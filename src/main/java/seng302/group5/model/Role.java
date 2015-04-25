@@ -16,7 +16,7 @@ public class Role {
   /**
    * Simple Constructor.
    *
-   * @param roleID Unique, non-null ID for the role.
+   * @param roleID   Unique, non-null ID for the role.
    * @param roleName Name of the role.
    */
   public Role(String roleID, String roleName) {
@@ -29,9 +29,9 @@ public class Role {
   /**
    * Constructor.
    *
-   * @param roleID Unique, non-null ID for role.
-   * @param roleName Name of the role.
-   * @param skill The skill required to be assigned this role.
+   * @param roleID      Unique, non-null ID for role.
+   * @param roleName    Name of the role.
+   * @param skill       The skill required to be assigned this role.
    * @param memberLimit The number of members allowed to have this role.
    */
   public Role(String roleID, String roleName, Skill skill, int memberLimit) {
@@ -86,6 +86,7 @@ public class Role {
 
   /**
    * toString override.
+   *
    * @return Role's roleName
    */
   @Override

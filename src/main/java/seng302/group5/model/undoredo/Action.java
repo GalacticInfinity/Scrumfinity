@@ -2,6 +2,7 @@ package seng302.group5.model.undoredo;
 
 /**
  * Defines actions to be stored into the undo/redo handler
+ *
  * @author Su-Shing Chen
  */
 public enum Action {

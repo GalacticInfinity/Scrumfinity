@@ -4,20 +4,22 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Agile history class to store any item in program (currently on teams) and the start date/end
- * date for allocation.
+ * Agile history class to store any item in program (currently on teams) and the start date/end date
+ * for allocation.
  * Created by Michael on 4/13/2015.
  */
 public class AgileHistory {
+
   AgileItem agileItem;
   LocalDate startDate;
   LocalDate endDate;
 
   /**
    * Create an agile history item that stores an agile item and a start and end date.
+   *
    * @param agileItem An Agileitem that the start and end date will be assigned to.
    * @param startDate The Start date assigned to the Agileitem.
-   * @param endDate The End Date assigned to the Agileitem
+   * @param endDate   The End Date assigned to the Agileitem
    */
   public AgileHistory(AgileItem agileItem, LocalDate startDate, LocalDate endDate) {
     this.agileItem = agileItem;
@@ -57,6 +59,7 @@ public class AgileHistory {
 
   /**
    * Makes the toString() methord return the date in a readable format
+   *
    * @return Formatted string
    */
   @Override

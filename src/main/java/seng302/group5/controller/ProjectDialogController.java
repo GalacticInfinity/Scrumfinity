@@ -25,8 +25,9 @@ import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoObject;
 
 /**
- * @author Alex Woo
  * The controller for the project dialog when creating a new project or editing an existing one
+ *
+ * @author Alex Woo
  */
 public class ProjectDialogController {
 
@@ -48,18 +49,17 @@ public class ProjectDialogController {
   private Project project = new Project();
   private Project lastProject;
   private ObservableList<AgileHistory> allocatedTeams = FXCollections.observableArrayList();
-  private ObservableList<Team> availableTeams =  FXCollections.observableArrayList();
+  private ObservableList<Team> availableTeams = FXCollections.observableArrayList();
   private AgileHistory projectHistory = new AgileHistory();
-
 
 
   /**
    * Setup the project dialog controller
    *
-   * @param mainApp The main application object
-   * @param thisStage The stage of the dialog
+   * @param mainApp      The main application object
+   * @param thisStage    The stage of the dialog
    * @param createOrEdit If dialog is for creating or editing a project
-   * @param project The project object if editing, null otherwise
+   * @param project      The project object if editing, null otherwise
    */
   public void setupController(Main mainApp,
                               Stage thisStage,
@@ -102,10 +102,12 @@ public class ProjectDialogController {
     btnConfirm.setDefaultButton(true);
   }
 
-  /** Initialise the contents of the lists according to whether the user is creating a new
-   * project or editing an existing one.
+  /**
+   * Initialise the contents of the lists according to whether the user is creating a new project or
+   * editing an existing one.
+   *
    * @param createOrEdit identifiy whether the user is creating or editing a project.
-   * @param project The project that is being created or edited.
+   * @param project      The project that is being created or edited.
    */
   private void initialiseLists(CreateOrEdit createOrEdit, Project project) {
     try {
@@ -113,8 +115,7 @@ public class ProjectDialogController {
         availableTeams.addAll(
             mainApp.getTeams().stream().filter(team -> team.getCurrentProject() == null)
                 .collect(Collectors.toList()));
-      }
-      else if (createOrEdit == CreateOrEdit.EDIT) {
+      } else if (createOrEdit == CreateOrEdit.EDIT) {
 
         allocatedTeams.addAll(project.getAllocatedTeams().stream().collect(Collectors.toList()));
         availableTeams.addAll(mainApp.getTeams().stream().collect(Collectors.toList()));
@@ -122,13 +123,14 @@ public class ProjectDialogController {
 
       this.availableTeamsList.setItems(availableTeams);
       this.allocatedTeamsList.setItems(allocatedTeams);
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
   }
+
   /**
    * Parse a string containing a project ID. Throws exceptions if input is not valid.
+   *
    * @param inputProjectID String of project ID
    * @return Inputted project ID if it is valid.
    * @throws Exception Exception with message explaining why input is invalid.
@@ -159,6 +161,7 @@ public class ProjectDialogController {
 
   /**
    * Parse a string containing a project name. Throws exceptions if input is not valid.
+   *
    * @param inputProjectName String of project name
    * @return Inputted project name if it is valid.
    * @throws Exception Exception with message explaining why input is invalid.
@@ -176,22 +179,21 @@ public class ProjectDialogController {
   }
 
   /**
-   * Parses the selected dates and checks that all inputs are valid, that the selected team
-   * is not currently assigned during the chosen dates to any projects.
+   * Parses the selected dates and checks that all inputs are valid, that the selected team is not
+   * currently assigned during the chosen dates to any projects.
    *
    * @param startDate The selected start date for the selected team.
-   * @param endDate The selected end date for the selected team.
-   * @param team The selected team that is going to be assigned if dates are valid.
+   * @param endDate   The selected end date for the selected team.
+   * @param team      The selected team that is going to be assigned if dates are valid.
    * @throws Exception with message describing why the input is invalid.
    */
-  private void parseProjectDates(LocalDate startDate, LocalDate endDate, Team team) throws Exception {
+  private void parseProjectDates(LocalDate startDate, LocalDate endDate, Team team)
+      throws Exception {
     if (startDate.isAfter(endDate)) {
       throw new Exception("Start date must be before End Date");
-    }
-    else if (team == null) {
+    } else if (team == null) {
       throw new Exception("Please select a team to assign.");
-    }
-    else {
+    } else {
       for (Project project1 : mainApp.getProjects()) {
         for (AgileHistory team1 : project1.getAllocatedTeams()) {
           if (Objects.equals(team.toString(), team1.getAgileItem().toString()) &&
@@ -201,16 +203,15 @@ public class ProjectDialogController {
             }
             if (startDate.isAfter(team1.getStartDate()) && startDate.isBefore(team1.getEndDate())) {
               throw new Exception("The selected team is already assigned during selected dates.");
-            } else if (endDate.isAfter(team1.getStartDate()) && endDate.isBefore(team1.getEndDate())) {
+            } else if (endDate.isAfter(team1.getStartDate()) && endDate
+                .isBefore(team1.getEndDate())) {
               throw new Exception("The selected team is already assigned during selected dates.");
-            }
-            else if (startDate.isBefore(team1.getStartDate()) && endDate.isAfter(team1.getStartDate())) {
+            } else if (startDate.isBefore(team1.getStartDate()) && endDate
+                .isAfter(team1.getStartDate())) {
               throw new Exception("The selected team is already assigned during selected dates.");
-            }
-            else if (startDate.isEqual(team1.getEndDate())) {
+            } else if (startDate.isEqual(team1.getEndDate())) {
               throw new Exception("The selected team is already assigned during selected dates.");
-            }
-            else if (endDate.isEqual(team1.getStartDate())) {
+            } else if (endDate.isEqual(team1.getStartDate())) {
               throw new Exception("The selected team is already assigned during selected dates.");
             }
           }
@@ -223,16 +224,15 @@ public class ProjectDialogController {
           }
           if (startDate.isAfter(team2.getStartDate()) && startDate.isBefore(team2.getEndDate())) {
             throw new Exception("The selected team is already assigned during selected dates.");
-          } else if (endDate.isAfter(team2.getStartDate()) && endDate.isBefore(team2.getEndDate())) {
+          } else if (endDate.isAfter(team2.getStartDate()) && endDate
+              .isBefore(team2.getEndDate())) {
             throw new Exception("The selected team is already assigned during selected dates.");
-          }
-          else if (startDate.isBefore(team2.getStartDate()) && endDate.isAfter(team2.getStartDate())) {
+          } else if (startDate.isBefore(team2.getStartDate()) && endDate
+              .isAfter(team2.getStartDate())) {
             throw new Exception("The selected team is already assigned during selected dates.");
-          }
-          else if (startDate.isEqual(team2.getEndDate())) {
+          } else if (startDate.isEqual(team2.getEndDate())) {
             throw new Exception("The selected team is already assigned during selected dates.");
-          }
-          else if (endDate.isEqual(team2.getStartDate())) {
+          } else if (endDate.isEqual(team2.getStartDate())) {
             throw new Exception("The selected team is already assigned during selected dates.");
           }
         }
@@ -242,6 +242,7 @@ public class ProjectDialogController {
 
   /**
    * Generate an UndoRedoObject to place in the stack
+   *
    * @return the UndoRedoObject to store
    */
   private UndoRedoObject generateUndoRedoObject() {
@@ -263,9 +264,6 @@ public class ProjectDialogController {
   }
 
 
-
-
-
   /**
    * Handles when the add button is pushed
    */
@@ -285,13 +283,13 @@ public class ProjectDialogController {
         projectHistory.setStartDate(teamStartDate.getValue());
         projectHistory.setEndDate(teamEndDate.getValue());
       }
-      } catch (Exception e1) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Invalid Dates");
-        alert.setHeaderText(null);
-        alert.setContentText(e1.getMessage());
-        alert.showAndWait();
-        mainApp.refreshList();
+    } catch (Exception e1) {
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Invalid Dates");
+      alert.setHeaderText(null);
+      alert.setContentText(e1.getMessage());
+      alert.showAndWait();
+      mainApp.refreshList();
     }
   }
 
@@ -314,8 +312,7 @@ public class ProjectDialogController {
         }
         this.allocatedTeams.remove(temp);
       }
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
   }
@@ -346,7 +343,6 @@ public class ProjectDialogController {
       noErrors++;
       errors.append(String.format("%s\n", e.getMessage()));
     }
-
 
     // Display all errors if they exist
     if (noErrors > 0) {

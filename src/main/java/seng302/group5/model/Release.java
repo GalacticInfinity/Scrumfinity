@@ -24,11 +24,11 @@ public class Release implements AgileItem {
   /**
    * Constructor for Release object.
    *
-   * @param releaseName name of release, None-Null, Can't be greater than 8 characters.
+   * @param releaseName        name of release, None-Null, Can't be greater than 8 characters.
    * @param releaseDescription description of release
-   * @param releaseDate date of release
-   * @param releaseNotes release notes
-   * @param projectRelease project allocated to
+   * @param releaseDate        date of release
+   * @param releaseNotes       release notes
+   * @param projectRelease     project allocated to
    */
   public Release(String releaseName, String releaseDescription, String releaseNotes,
                  LocalDate releaseDate, Project projectRelease) {
@@ -47,17 +47,29 @@ public class Release implements AgileItem {
     this.projectRelease = clone.getProjectRelease();
   }
 
-  public String getReleaseName() {return this.releaseName;}
+  public String getReleaseName() {
+    return this.releaseName;
+  }
 
-  public String getReleaseDescription() {return this.releaseDescription;}
+  public String getReleaseDescription() {
+    return this.releaseDescription;
+  }
 
-  public LocalDate getReleaseDate() {return  this.releaseDate;}
+  public LocalDate getReleaseDate() {
+    return this.releaseDate;
+  }
 
-  public String getReleaseNotes() {return  this.releaseNotes;}
+  public String getReleaseNotes() {
+    return this.releaseNotes;
+  }
 
-  public Project getProjectRelease() {return  this.projectRelease;}
+  public Project getProjectRelease() {
+    return this.projectRelease;
+  }
 
-  public void setReleaseName(String releaseName) {this.releaseName = releaseName;}
+  public void setReleaseName(String releaseName) {
+    this.releaseName = releaseName;
+  }
 
   public void setReleaseDescription(String releaseDescription) {
     this.releaseDescription = releaseDescription;
@@ -77,6 +89,7 @@ public class Release implements AgileItem {
 
   /**
    * Copies the release input fields into current object.
+   *
    * @param agileItem Person who's fields are to be copied
    */
   @Override
@@ -93,6 +106,7 @@ public class Release implements AgileItem {
 
   /**
    * toString override
+   *
    * @return Release's name
    */
   @Override
@@ -102,6 +116,7 @@ public class Release implements AgileItem {
 
   /**
    * Check if two releases' ids are equal
+   *
    * @param obj Object to compare to.
    * @return Whether releases' ids are equal
    */

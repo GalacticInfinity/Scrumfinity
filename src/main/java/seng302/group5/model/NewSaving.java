@@ -33,6 +33,7 @@ public class NewSaving {
 
   /**
    * Takes file destination and creates xml save file at specified location
+   *
    * @param file File destination
    */
   public void saveData(File file) {
@@ -61,10 +62,11 @@ public class NewSaving {
 
   /**
    * Write main app project data to xml file
+   *
    * @param saveFile Save file being written to
    * @throws Exception Required field is missing/ error with writer
    */
-  private void saveProjects(Writer saveFile) throws Exception{
+  private void saveProjects(Writer saveFile) throws Exception {
     Team agileTeam;
     saveFile.write("<Projects>\n");
     for (Project project : this.projects) {
@@ -93,6 +95,7 @@ public class NewSaving {
 
   /**
    * Writes main app people data to xml file
+   *
    * @param saveFile Save file being written to
    * @throws Exception Required field is missing/ error with writer
    */
@@ -124,6 +127,7 @@ public class NewSaving {
 
   /**
    * Writes the main app Skill data to xml
+   *
    * @param saveFile Save file being written to
    * @throws Exception Required field is missing/ error with writer
    */
@@ -142,6 +146,7 @@ public class NewSaving {
 
   /**
    * Writes the main app Team data to xml
+   *
    * @param saveFile Save file being written to
    * @throws Exception Required field is missing/ error with writer
    */
@@ -178,6 +183,7 @@ public class NewSaving {
 
   /**
    * Appends the main app release data to the save file
+   *
    * @param saveFile Save file being written to
    * @throws Exception Required field is missing/ error with writer
    */
@@ -200,7 +206,7 @@ public class NewSaving {
     for (Role role : this.roles) {
       saveFile.write("\t<Role>\n");
       saveFile.write("\t\t<roleID>" + role.getRoleID() + "</roleID>\n");
-      saveFile.write("\t\t<roleName>" +role.getRoleName() + "</roleName>\n");
+      saveFile.write("\t\t<roleName>" + role.getRoleName() + "</roleName>\n");
       if (role.getRequiredSkill() != null) {
         saveFile.write("\t\t<roleSkill>" + role.getRequiredSkill().getSkillName() + "</roleSkill>\n");
       }
