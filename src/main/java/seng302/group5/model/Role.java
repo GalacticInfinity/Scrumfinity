@@ -13,8 +13,11 @@ public class Role {
   private int memberLimit;
 
 
-  /*
-   *Constructors for the class
+  /**
+   * Simple Constructor.
+   *
+   * @param roleID Unique, non-null ID for the role.
+   * @param roleName Name of the role.
    */
   public Role(String roleID, String roleName) {
     this.roleID = roleID;
@@ -23,20 +26,14 @@ public class Role {
     this.memberLimit = Integer.MAX_VALUE; // Infinity
   }
 
-  public Role(String roleID, String roleName, int memberLimit) {
-    this.roleID = roleID;
-    this.roleName = roleName;
-    this.requiredSkill = null;
-    this.memberLimit = memberLimit;
-  }
-
-  public Role(String roleID, String roleName, Skill skill) {
-    this.roleID = roleID;
-    this.roleName = roleName;
-    this.requiredSkill = skill;
-    this.memberLimit = Integer.MAX_VALUE; // Infinity
-  }
-
+  /**
+   * Constructor.
+   *
+   * @param roleID Unique, non-null ID for role.
+   * @param roleName Name of the role.
+   * @param skill The skill required to be assigned this role.
+   * @param memberLimit The number of members allowed to have this role.
+   */
   public Role(String roleID, String roleName, Skill skill, int memberLimit) {
     this.roleID = roleID;
     this.roleName = roleName;
@@ -44,6 +41,9 @@ public class Role {
     this.memberLimit = memberLimit;
   }
 
+  /**
+   * Default Constructor.
+   */
   public Role() {
     this.roleID = "";
     this.roleName = "";

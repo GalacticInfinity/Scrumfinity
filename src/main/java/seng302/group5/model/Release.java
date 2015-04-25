@@ -23,7 +23,8 @@ public class Release implements AgileItem {
 
   /**
    * Constructor for Release object.
-   * @param releaseName name of release
+   *
+   * @param releaseName name of release, None-Null, Can't be greater than 8 characters.
    * @param releaseDescription description of release
    * @param releaseDate date of release
    * @param releaseNotes release notes

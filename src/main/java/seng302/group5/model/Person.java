@@ -32,7 +32,7 @@ public class Person implements AgileItem {
   /**
    * Person constructor.
    *
-   * @param personID Unique, non-null person ID.
+   * @param personID Unique, non-null person ID. Can't be greater than 8 characters.
    * @param firstName First name of person.
    * @param lastName Last name of person.
    * @param skills List of person's skills

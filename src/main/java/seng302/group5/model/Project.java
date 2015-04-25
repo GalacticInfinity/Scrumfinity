@@ -24,8 +24,9 @@ public class Project implements AgileItem {
   }
 
   /**
-   * Project
-   * @param projectID Name of Person
+   * Constructor.
+   *
+   * @param projectID Name of Person, Unique, Non-Null, can't be greater then 8 characters.
    * @param projectName Description of person
    * @param projectDescription Date of birth of person?
    */

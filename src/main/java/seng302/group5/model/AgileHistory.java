@@ -13,6 +13,12 @@ public class AgileHistory {
   LocalDate startDate;
   LocalDate endDate;
 
+  /**
+   * Create an agile history item that stores an agile item and a start and end date.
+   * @param agileItem An Agileitem that the start and end date will be assigned to.
+   * @param startDate The Start date assigned to the Agileitem.
+   * @param endDate The End Date assigned to the Agileitem
+   */
   public AgileHistory(AgileItem agileItem, LocalDate startDate, LocalDate endDate) {
     this.agileItem = agileItem;
     this.startDate = startDate;
