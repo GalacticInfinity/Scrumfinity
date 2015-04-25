@@ -3,10 +3,10 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>seng302.group5</groupId>
     <artifactId>galactic_infinity</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0-SHOCK</version>
+
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -106,6 +106,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.4</version>
                 <configuration>
                     <linkXref>true</linkXref>
                     <targetjdk>1.8</targetjdk>
@@ -125,4 +126,69 @@
             </plugin>
         </plugins>
     </reporting>
+    <name>Scrumfinity</name>
+    <description>Application to assist the management of Agile projects.</description>
+    <inceptionYear>2015</inceptionYear>
+    <licenses>
+        <license>
+            <name>The MIT License (MIT)</name>
+            <url>http://opensource.org/licenses/MIT</url>
+            <distribution>jar</distribution>
+            <comments>Copyright (c) 2015 SENG302 Group 5 and members</comments>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>ssc55</id>
+            <name>Su-Shing Chen</name>
+            <email>ssc55@uclive.ac.nz</email>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>msr51</id>
+            <name>Michael Roman</name>
+            <email>msr51@uclive.ac.nz</email>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>zma16</id>
+            <name>Liang Ma</name>
+            <email>zma16@uclive.ac.nz</email>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>cab183</id>
+            <name>Craig Barnard</name>
+            <email>cab183@uclive.ac.nz</email>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>apw76</id>
+            <name>Alex Woo</name>
+            <email>apw76@uclive.ac.nz</email>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>adl52</id>
+            <name>Zander Latimer</name>
+            <email>adl52@uclive.ac.nz</email>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
+    <ciManagement>
+        <system>Jenkins</system>
+        <url>http://csse-s302g5.canterbury.ac.nz:8080/job/project-5/</url>
+    </ciManagement>
 </project>

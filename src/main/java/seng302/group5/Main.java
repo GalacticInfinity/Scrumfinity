@@ -465,7 +465,7 @@ public class Main extends Application {
 
   /**
    * Delete a release from the list of releases
-   * @param inputRelease
+   * @param inputRelease release to be deleted
    */
   public void deleteRelease(Release inputRelease) {
     releases.remove(inputRelease);
