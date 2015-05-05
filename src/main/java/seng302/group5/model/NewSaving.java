@@ -71,7 +71,7 @@ public class NewSaving {
     saveFile.write("<Projects>\n");
     for (Project project : this.projects) {
       saveFile.write("\t<Project>\n");
-      saveFile.write("\t\t<projectID>" + project.getLabel() + "</projectID>\n");
+      saveFile.write("\t\t<projectLabel>" + project.getLabel() + "</projectLabel>\n");
       saveFile.write("\t\t<projectName>" + project.getProjectName() + "</projectName>\n");
       if (project.getProjectDescription() != null && !project.getProjectDescription().isEmpty()) {
         saveFile.write("\t\t<projectDescription>" + project.getProjectDescription() + "</projectDescription>\n");
@@ -103,7 +103,7 @@ public class NewSaving {
     saveFile.write("<People>\n");
     for (Person person : this.people) {
       saveFile.write("\t<Person>\n");
-      saveFile.write("\t\t<personID>" + person.getLabel() + "</personID>\n");
+      saveFile.write("\t\t<personLabel>" + person.getLabel() + "</personLabel>\n");
       if (person.getFirstName() != null && !person.getFirstName().isEmpty()) {
         saveFile.write("\t\t<firstName>" + person.getFirstName() + "</firstName>\n");
       }
@@ -135,7 +135,7 @@ public class NewSaving {
     saveFile.write("<Skills>\n");
     for (Skill skill : this.skills) {
       saveFile.write("\t<Skill>\n");
-      saveFile.write("\t\t<skillID>" + skill.getLabel() + "</skillID>\n");
+      saveFile.write("\t\t<skillLabel>" + skill.getLabel() + "</skillLabel>\n");
       if (skill.getSkillDescription() != null && !skill.getSkillDescription().isEmpty()) {
         saveFile.write("\t\t<skillDescription>" + skill.getSkillDescription() + "</skillDescription>\n");
       }
@@ -156,7 +156,7 @@ public class NewSaving {
     saveFile.write("<Teams>\n");
     for (Team team : this.teams) {
       saveFile.write("\t<Team>\n");
-      saveFile.write("\t\t<teamID>" + team.getLabel() + "</teamID>\n");
+      saveFile.write("\t\t<teamLabel>" + team.getLabel() + "</teamLabel>\n");
       if (team.getTeamDescription() != null && !team.getTeamDescription().isEmpty()) {
         saveFile.write("\t\t<teamDescription>" + team.getTeamDescription() + "</teamDescription>\n");
       }
@@ -164,7 +164,7 @@ public class NewSaving {
         saveFile.write("\t\t<TeamPeople>\n");
         for (Person person : team.getTeamMembers()) {
           saveFile.write("\t\t\t<TeamMember>\n");
-          saveFile.write("\t\t\t\t<teamPersonID>" + person.getLabel() + "</teamPersonID>\n");
+          saveFile.write("\t\t\t\t<teamPersonLabel>" + person.getLabel() + "</teamPersonLabel>\n");
           personRole = team.getMembersRole().get(person);
           if (personRole != null) {
             saveFile.write("\t\t\t\t<personRole>" + personRole.getLabel() + "</personRole>\n");
@@ -191,7 +191,7 @@ public class NewSaving {
     saveFile.write("<Releases>\n");
     for (Release release : this.releases) {
       saveFile.write("\t<Release>\n");
-      saveFile.write("\t\t<releaseID>" + release.getLabel() + "</releaseID>\n");
+      saveFile.write("\t\t<releaseLabel>" + release.getLabel() + "</releaseLabel>\n");
       saveFile.write("\t\t<releaseDescription>" + release.getReleaseDescription() + "</releaseDescription>\n");
       saveFile.write("\t\t<releaseNotes>" + release.getReleaseNotes() + "</releaseNotes>\n");
       saveFile.write("\t\t<releaseProject>" + release.getProjectRelease().getLabel() + "</releaseProject>\n");
@@ -205,7 +205,7 @@ public class NewSaving {
     saveFile.write("<Roles>\n");
     for (Role role : this.roles) {
       saveFile.write("\t<Role>\n");
-      saveFile.write("\t\t<roleID>" + role.getLabel() + "</roleID>\n");
+      saveFile.write("\t\t<roleLabel>" + role.getLabel() + "</roleLabel>\n");
       saveFile.write("\t\t<roleName>" + role.getRoleName() + "</roleName>\n");
       if (role.getRequiredSkill() != null) {
         saveFile.write("\t\t<roleSkill>" + role.getRequiredSkill().getLabel() + "</roleSkill>\n");

@@ -297,19 +297,19 @@ public class TeamDialogController {
   }
 
   /**
-   * Checks if teamID field contains valid input.
+   * Checks if team label field contains valid input.
    *
    * @param inputTeamLabel String team label.
-   * @return teamID if team label is valid.
+   * @return team label if team label is valid.
    * @throws Exception If team label is not valid.
    */
   private String parseTeamLabel(String inputTeamLabel) throws Exception {
     inputTeamLabel = inputTeamLabel.trim();
 
     if (inputTeamLabel.isEmpty()) {
-      throw new Exception("Team ID is empty.");
+      throw new Exception("Team label is empty.");
     } else if (inputTeamLabel.length() > 8) {
-      throw new Exception("Team ID is more than 8 characters long");
+      throw new Exception("Team label is more than 8 characters long");
     } else {
       String lastTeamLabel;
       if (lastTeam == null) {
@@ -320,7 +320,7 @@ public class TeamDialogController {
       for (Team team : mainApp.getTeams()) {
         String teamLabel = team.getLabel();
         if (team.getLabel().equals(inputTeamLabel) && !teamLabel.equals(lastTeamLabel)) {
-          throw new Exception("Team ID is not unique.");
+          throw new Exception("Team label is not unique.");
         }
       }
       return inputTeamLabel;

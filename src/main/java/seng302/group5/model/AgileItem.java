@@ -16,8 +16,6 @@ public interface AgileItem {
 
   /**
    * Set the label.
-   *
-   * @return The label
    */
   void setLabel(String label);
 
@@ -36,10 +34,10 @@ public interface AgileItem {
   String toString();
 
   /**
-   * The function which will be used to compare AgileItems. Assumes IDs are unique and non null.
+   * The function which will be used to compare AgileItems. Assumes labels are unique and non null.
    *
    * @param obj Object to compare to.
-   * @return Whether IDs are equal or not.
+   * @return Whether labels are equal or not.
    */
   boolean equals(Object obj);
 

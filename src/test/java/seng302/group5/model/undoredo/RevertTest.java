@@ -3,7 +3,6 @@ package seng302.group5.model.undoredo;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.awt.*;
 import java.time.LocalDate;
 import java.time.Month;
 
@@ -39,11 +38,11 @@ public class RevertTest {
   private String skillName;
   private String skillDescription;
 
-  private String teamID;
+  private String teamLabel;
   private ObservableList<Person> teamMembers;
   private String teamDescription;
 
-  private String projectID;
+  private String projectLabel;
   private String projectName;
   private String projectDescription;
 
@@ -125,10 +124,10 @@ public class RevertTest {
   }
 
   private void newTeam() {
-    teamID = "TheMen";
+    teamLabel = "TheMen";
     teamMembers = FXCollections.observableArrayList();
     teamDescription = "This is a manly team";
-    team = new Team(teamID, teamMembers, teamDescription);
+    team = new Team(teamLabel, teamMembers, teamDescription);
 
     mainApp.addTeam(team);
 
@@ -141,11 +140,11 @@ public class RevertTest {
   }
 
   private void newTeamWithMember() {
-    teamID = "TheMen";
+    teamLabel = "TheMen";
     teamMembers = FXCollections.observableArrayList();
     teamMembers.add(person);
     teamDescription = "This is a manly team";
-    team = new Team(teamID, teamMembers, teamDescription);
+    team = new Team(teamLabel, teamMembers, teamDescription);
     person.assignToTeam(team);
 
     mainApp.addTeam(team);
@@ -159,10 +158,10 @@ public class RevertTest {
   }
 
   private void newProject() {
-    projectID = "proj";
+    projectLabel = "proj";
     projectName = "The Project's Name";
     projectDescription = "This is a description for the project";
-    project = new Project(projectID, projectName, projectDescription);
+    project = new Project(projectLabel, projectName, projectDescription);
 
     mainApp.addProject(project);
 

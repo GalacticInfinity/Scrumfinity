@@ -18,6 +18,7 @@ import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.NewLoading;
 import seng302.group5.model.NewSaving;
+import seng302.group5.model.util.ReportWriter;
 import seng302.group5.model.util.Settings;
 
 
@@ -296,6 +297,17 @@ public class MenuBarController {
     } catch (Exception e) {
       System.out.println("No file selected");
     }
+  }
+
+
+  @FXML
+  protected void btnClickReport() {
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Save Report");
+    File file = fileChooser.showSaveDialog(mainApp.getPrimaryStage());
+
+    ReportWriter report = new ReportWriter();
+    report.writeReport(mainApp, file);
   }
 
 

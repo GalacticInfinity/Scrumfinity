@@ -15,7 +15,7 @@
                         <Font size="15.0" />
                     </font>
                 </Label>
-                <TextField fx:id="teamLabelField" alignment="TOP_LEFT" prefWidth="200.0" promptText="Unique team ID." />
+                <TextField fx:id="teamLabelField" alignment="TOP_LEFT" prefWidth="200.0" promptText="Unique team label." />
             </children>
         </HBox>
       <HBox layoutX="140.0" layoutY="130.0" prefHeight="30.0" prefWidth="200.0">
