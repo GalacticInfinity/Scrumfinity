@@ -55,8 +55,8 @@ public class Project implements AgileItem {
   }
 
   @Override
-  public void setLabel(String name) {
-    this.label = name;
+  public void setLabel(String label) {
+    this.label = label;
   }
 
   public String getProjectName() {

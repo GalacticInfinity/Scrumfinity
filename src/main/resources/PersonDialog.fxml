@@ -15,7 +15,7 @@
                         <Font size="15.0" />
                     </font>
                 </Label>
-                <TextField fx:id="personLabelField" alignment="TOP_LEFT" prefWidth="160.0" promptText="Unique person ID." />
+                <TextField fx:id="personLabelField" alignment="TOP_LEFT" prefWidth="160.0" promptText="Unique person label." />
             </children>
         </HBox>
         <HBox alignment="CENTER_LEFT" prefHeight="38.0" prefWidth="369.0" spacing="10.0">

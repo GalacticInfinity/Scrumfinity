@@ -35,9 +35,9 @@ public class UndoRedoHandlerTest {
   private String newLastName;
   private ObservableList<Skill> newSkillSet;
 
-  private String skillName;
+  private String skillLabel;
   private String skillDescription;
-  private String newSkillName;
+  private String newSkillLabel;
   private String newSkillDescription;
 
   private String teamLabel;
@@ -54,12 +54,12 @@ public class UndoRedoHandlerTest {
   private String newProjectName;
   private String newProjectDescription;
 
-  private String releaseName;
+  private String releaseLabel;
   private String releaseDescription;
   private LocalDate releaseDate;
   private String releaseNotes;
   private Project projectRelease;
-  private String newReleaseName;
+  private String newReleaseLabel;
   private String newReleaseDescription;
   private LocalDate newReleaseDate;
   private String newReleaseNotes;
@@ -186,9 +186,9 @@ public class UndoRedoHandlerTest {
   }
 
   private void newSkill() {
-    skillName = "C#";
+    skillLabel = "C#";
     skillDescription = "Person can program in the C# language";
-    skill = new Skill(skillName, skillDescription);
+    skill = new Skill(skillLabel, skillDescription);
 
     mainApp.addSkill(skill);
 
@@ -228,9 +228,9 @@ public class UndoRedoHandlerTest {
   private void editNewestSkill() {
     Skill lastSkill = new Skill(skill);
 
-    newSkillName = "Python";
+    newSkillLabel = "Python";
     newSkillDescription = "Person can program in the Python language";
-    skill.setLabel(newSkillName);
+    skill.setLabel(newSkillLabel);
     skill.setSkillDescription(newSkillDescription);
 
     Skill newSkill = new Skill(skill);
@@ -387,13 +387,13 @@ public class UndoRedoHandlerTest {
   }
 
   private void newRelease() {
-    releaseName = "TheRelease";
+    releaseLabel = "TheRelease";
     releaseDescription = "The descriptioning";
     releaseDate = LocalDate.of(1994, Month.JANUARY, 06);
     releaseNotes = "Wagga wagga";
     projectRelease = project;
 
-    release = new Release(releaseName, releaseDescription, releaseNotes,
+    release = new Release(releaseLabel, releaseDescription, releaseNotes,
                           releaseDate, projectRelease);
 
     mainApp.addRelease(release);
@@ -420,13 +420,13 @@ public class UndoRedoHandlerTest {
   private void editNewestRelease() {
     Release lastRelease = new Release(release);
 
-    newReleaseName = "NewRelease";
+    newReleaseLabel = "NewRelease";
     newReleaseDescription = "The new descriptioning";
     newReleaseDate = LocalDate.of(1994, Month.JULY, 06);
     newReleaseNotes = "New Wagga wagga wagga";
     newProjectRelease = project;
 
-    release.setLabel(newReleaseName);
+    release.setLabel(newReleaseLabel);
     release.setReleaseDescription(newReleaseDescription);
     release.setReleaseDate(newReleaseDate);
     release.setReleaseNotes(newReleaseNotes);
@@ -699,7 +699,7 @@ public class UndoRedoHandlerTest {
     assertEquals(2, undoRedoHandler.getUndoStack().size());
 
     Skill oldSkill = person.getSkillSet().get(0);
-    assertEquals(skillName, oldSkill.getLabel());
+    assertEquals(skillLabel, oldSkill.getLabel());
     assertEquals(skillDescription, oldSkill.getSkillDescription());
 
     editNewestSkill();
@@ -708,7 +708,7 @@ public class UndoRedoHandlerTest {
     assertEquals(3, undoRedoHandler.getUndoStack().size());
 
     Skill newSkill = person.getSkillSet().get(0);
-    assertEquals(newSkillName, newSkill.getLabel());
+    assertEquals(newSkillLabel, newSkill.getLabel());
     assertEquals(newSkillDescription, newSkill.getSkillDescription());
 
     undoRedoHandler.undo();
@@ -716,7 +716,7 @@ public class UndoRedoHandlerTest {
     assertEquals(2, undoRedoHandler.getUndoStack().size());
 
     Skill undoneSkill = person.getSkillSet().get(0);
-    assertEquals(skillName, undoneSkill.getLabel());
+    assertEquals(skillLabel, undoneSkill.getLabel());
     assertEquals(skillDescription, undoneSkill.getSkillDescription());
   }
 
@@ -737,7 +737,7 @@ public class UndoRedoHandlerTest {
     assertTrue(undoRedoHandler.getRedoStack().empty());
 
     Skill oldSkill = person.getSkillSet().get(0);
-    assertEquals(skillName, oldSkill.getLabel());
+    assertEquals(skillLabel, oldSkill.getLabel());
     assertEquals(skillDescription, oldSkill.getSkillDescription());
 
     editNewestSkill();
@@ -747,7 +747,7 @@ public class UndoRedoHandlerTest {
     assertTrue(undoRedoHandler.getRedoStack().empty());
 
     Skill newSkill = person.getSkillSet().get(0);
-    assertEquals(newSkillName, newSkill.getLabel());
+    assertEquals(newSkillLabel, newSkill.getLabel());
     assertEquals(newSkillDescription, newSkill.getSkillDescription());
 
     undoRedoHandler.undo();
@@ -756,7 +756,7 @@ public class UndoRedoHandlerTest {
     assertEquals(1, undoRedoHandler.getRedoStack().size());
 
     Skill undoneSkill = person.getSkillSet().get(0);
-    assertEquals(skillName, undoneSkill.getLabel());
+    assertEquals(skillLabel, undoneSkill.getLabel());
     assertEquals(skillDescription, undoneSkill.getSkillDescription());
 
     undoRedoHandler.redo();
@@ -765,7 +765,7 @@ public class UndoRedoHandlerTest {
     assertEquals(0, undoRedoHandler.getRedoStack().size());
 
     Skill redoneSkill = person.getSkillSet().get(0);
-    assertEquals(newSkillName, redoneSkill.getLabel());
+    assertEquals(newSkillLabel, redoneSkill.getLabel());
     assertEquals(newSkillDescription, redoneSkill.getSkillDescription());
   }
 
@@ -788,7 +788,7 @@ public class UndoRedoHandlerTest {
     assertTrue(undoRedoHandler.getRedoStack().empty());
 
     skillOfPerson = mainApp.getPeople().get(0).getSkillSet().get(0);
-    assertEquals(skillName, skillOfPerson.getLabel());
+    assertEquals(skillLabel, skillOfPerson.getLabel());
     assertEquals(skillDescription, skillOfPerson.getSkillDescription());
 
     editNewestSkill();
@@ -798,7 +798,7 @@ public class UndoRedoHandlerTest {
     assertTrue(undoRedoHandler.getRedoStack().empty());
 
     skillOfPerson = mainApp.getPeople().get(0).getSkillSet().get(0);
-    assertEquals(newSkillName, skillOfPerson.getLabel());
+    assertEquals(newSkillLabel, skillOfPerson.getLabel());
     assertEquals(newSkillDescription, skillOfPerson.getSkillDescription());
 
     undoRedoHandler.undo(); // edit skill
@@ -807,7 +807,7 @@ public class UndoRedoHandlerTest {
     assertEquals(1, undoRedoHandler.getRedoStack().size());
 
     skillOfPerson = mainApp.getPeople().get(0).getSkillSet().get(0);
-    assertEquals(skillName, skillOfPerson.getLabel());
+    assertEquals(skillLabel, skillOfPerson.getLabel());
     assertEquals(skillDescription, skillOfPerson.getSkillDescription());
 
     undoRedoHandler.undo(); // new person
@@ -817,7 +817,7 @@ public class UndoRedoHandlerTest {
     undoRedoHandler.redo(); // new person
 
     skillOfPerson = mainApp.getPeople().get(0).getSkillSet().get(0);
-    assertEquals(skillName, skillOfPerson.getLabel());
+    assertEquals(skillLabel, skillOfPerson.getLabel());
     assertEquals(skillDescription, skillOfPerson.getSkillDescription());
 
     undoRedoHandler.redo(); // edit skill
@@ -826,7 +826,7 @@ public class UndoRedoHandlerTest {
     assertEquals(0, undoRedoHandler.getRedoStack().size());
 
     skillOfPerson = mainApp.getPeople().get(0).getSkillSet().get(0);
-    assertEquals(newSkillName, skillOfPerson.getLabel());
+    assertEquals(newSkillLabel, skillOfPerson.getLabel());
     assertEquals(newSkillDescription, skillOfPerson.getSkillDescription());
   }
 
@@ -945,7 +945,7 @@ public class UndoRedoHandlerTest {
     assertEquals(1, undoRedoHandler.getUndoStack().size());
 
     Skill createdSkill = mainApp.getSkills().get(mainApp.getSkills().size() - 1);
-    assertEquals(skillName, createdSkill.getLabel());
+    assertEquals(skillLabel, createdSkill.getLabel());
     assertEquals(skillDescription, createdSkill.getSkillDescription());
 
     editNewestSkill();
@@ -953,7 +953,7 @@ public class UndoRedoHandlerTest {
     assertEquals(2, undoRedoHandler.getUndoStack().size());
 
     Skill editedSkill = mainApp.getSkills().get(mainApp.getSkills().size() - 1);
-    assertEquals(newSkillName, editedSkill.getLabel());
+    assertEquals(newSkillLabel, editedSkill.getLabel());
     assertEquals(newSkillDescription, editedSkill.getSkillDescription());
 
     undoRedoHandler.undo();
@@ -961,7 +961,7 @@ public class UndoRedoHandlerTest {
     assertEquals(1, undoRedoHandler.getUndoStack().size());
 
     Skill undoneSkill = mainApp.getSkills().get(mainApp.getSkills().size() - 1);
-    assertEquals(skillName, undoneSkill.getLabel());
+    assertEquals(skillLabel, undoneSkill.getLabel());
     assertEquals(skillDescription, undoneSkill.getSkillDescription());
   }
 
@@ -977,7 +977,7 @@ public class UndoRedoHandlerTest {
     assertTrue(undoRedoHandler.getRedoStack().empty());
 
     Skill createdSkill = mainApp.getSkills().get(mainApp.getSkills().size() - 1);
-    assertEquals(skillName, createdSkill.getLabel());
+    assertEquals(skillLabel, createdSkill.getLabel());
     assertEquals(skillDescription, createdSkill.getSkillDescription());
 
     editNewestSkill();
@@ -986,7 +986,7 @@ public class UndoRedoHandlerTest {
     assertTrue(undoRedoHandler.getRedoStack().empty());
 
     Skill editedSkill = mainApp.getSkills().get(mainApp.getSkills().size() - 1);
-    assertEquals(newSkillName, editedSkill.getLabel());
+    assertEquals(newSkillLabel, editedSkill.getLabel());
     assertEquals(newSkillDescription, editedSkill.getSkillDescription());
 
     undoRedoHandler.undo();
@@ -995,7 +995,7 @@ public class UndoRedoHandlerTest {
     assertEquals(1, undoRedoHandler.getRedoStack().size());
 
     Skill undoneSkill = mainApp.getSkills().get(mainApp.getSkills().size() - 1);
-    assertEquals(skillName, undoneSkill.getLabel());
+    assertEquals(skillLabel, undoneSkill.getLabel());
     assertEquals(skillDescription, undoneSkill.getSkillDescription());
 
     undoRedoHandler.redo();
@@ -1004,7 +1004,7 @@ public class UndoRedoHandlerTest {
     assertTrue(undoRedoHandler.getRedoStack().empty());
 
     Skill redoneSkill = mainApp.getSkills().get(mainApp.getSkills().size() - 1);
-    assertEquals(newSkillName, redoneSkill.getLabel());
+    assertEquals(newSkillLabel, redoneSkill.getLabel());
     assertEquals(newSkillDescription, redoneSkill.getSkillDescription());
   }
 
@@ -1658,7 +1658,7 @@ public class UndoRedoHandlerTest {
     assertEquals(1, undoRedoHandler.getUndoStack().size());
 
     Release createdRelease = mainApp.getReleases().get(mainApp.getReleases().size() - 1);
-    assertEquals(releaseName, createdRelease.getLabel());
+    assertEquals(releaseLabel, createdRelease.getLabel());
     assertEquals(releaseDescription, createdRelease.getReleaseDescription());
     assertEquals(releaseDate, createdRelease.getReleaseDate());
     assertEquals(releaseNotes, createdRelease.getReleaseNotes());
@@ -1669,7 +1669,7 @@ public class UndoRedoHandlerTest {
     assertEquals(2, undoRedoHandler.getUndoStack().size());
 
     Release editedRelease = mainApp.getReleases().get(mainApp.getReleases().size() - 1);
-    assertEquals(newReleaseName, editedRelease.getLabel());
+    assertEquals(newReleaseLabel, editedRelease.getLabel());
     assertEquals(newReleaseDescription, editedRelease.getReleaseDescription());
     assertEquals(newReleaseDate, editedRelease.getReleaseDate());
     assertEquals(newReleaseNotes, editedRelease.getReleaseNotes());
@@ -1680,7 +1680,7 @@ public class UndoRedoHandlerTest {
     assertEquals(1, undoRedoHandler.getUndoStack().size());
 
     Release undoneRelease = mainApp.getReleases().get(mainApp.getReleases().size() - 1);
-    assertEquals(releaseName, undoneRelease.getLabel());
+    assertEquals(releaseLabel, undoneRelease.getLabel());
     assertEquals(releaseDescription, undoneRelease.getReleaseDescription());
     assertEquals(releaseDate, undoneRelease.getReleaseDate());
     assertEquals(releaseNotes, undoneRelease.getReleaseNotes());
@@ -1699,7 +1699,7 @@ public class UndoRedoHandlerTest {
     assertTrue(undoRedoHandler.getRedoStack().empty());
 
     Release createdRelease = mainApp.getReleases().get(mainApp.getReleases().size() - 1);
-    assertEquals(releaseName, createdRelease.getLabel());
+    assertEquals(releaseLabel, createdRelease.getLabel());
     assertEquals(releaseDescription, createdRelease.getReleaseDescription());
     assertEquals(releaseDate, createdRelease.getReleaseDate());
     assertEquals(releaseNotes, createdRelease.getReleaseNotes());
@@ -1711,7 +1711,7 @@ public class UndoRedoHandlerTest {
     assertTrue(undoRedoHandler.getRedoStack().empty());
 
     Release editedRelease = mainApp.getReleases().get(mainApp.getReleases().size() - 1);
-    assertEquals(newReleaseName, editedRelease.getLabel());
+    assertEquals(newReleaseLabel, editedRelease.getLabel());
     assertEquals(newReleaseDescription, editedRelease.getReleaseDescription());
     assertEquals(newReleaseDate, editedRelease.getReleaseDate());
     assertEquals(newReleaseNotes, editedRelease.getReleaseNotes());
@@ -1723,7 +1723,7 @@ public class UndoRedoHandlerTest {
     assertEquals(1, undoRedoHandler.getRedoStack().size());
 
     Release undoneRelease = mainApp.getReleases().get(mainApp.getReleases().size() - 1);
-    assertEquals(releaseName, undoneRelease.getLabel());
+    assertEquals(releaseLabel, undoneRelease.getLabel());
     assertEquals(releaseDescription, undoneRelease.getReleaseDescription());
     assertEquals(releaseDate, undoneRelease.getReleaseDate());
     assertEquals(releaseNotes, undoneRelease.getReleaseNotes());
@@ -1735,7 +1735,7 @@ public class UndoRedoHandlerTest {
     assertTrue(undoRedoHandler.getRedoStack().empty());
 
     Release redoneRelease = mainApp.getReleases().get(mainApp.getReleases().size() - 1);
-    assertEquals(newReleaseName, redoneRelease.getLabel());
+    assertEquals(newReleaseLabel, redoneRelease.getLabel());
     assertEquals(newReleaseDescription, redoneRelease.getReleaseDescription());
     assertEquals(newReleaseDate, redoneRelease.getReleaseDate());
     assertEquals(newReleaseNotes, redoneRelease.getReleaseNotes());
@@ -1757,7 +1757,7 @@ public class UndoRedoHandlerTest {
     assertEquals(2, undoRedoHandler.getUndoStack().size());
 
     Release oldRelease = mainApp.getReleases().get(0);
-    assertEquals(releaseName, oldRelease.getLabel());
+    assertEquals(releaseLabel, oldRelease.getLabel());
     assertEquals(releaseDescription, oldRelease.getReleaseDescription());
     assertEquals(releaseDate, oldRelease.getReleaseDate());
     assertEquals(releaseNotes, oldRelease.getReleaseNotes());
@@ -1765,7 +1765,7 @@ public class UndoRedoHandlerTest {
 
     editNewestRelease();
     Release newRelease = mainApp.getReleases().get(0);
-    assertEquals(newReleaseName, newRelease.getLabel());
+    assertEquals(newReleaseLabel, newRelease.getLabel());
     assertEquals(newReleaseDescription, newRelease.getReleaseDescription());
     assertEquals(newReleaseDate, newRelease.getReleaseDate());
     assertEquals(newReleaseNotes, newRelease.getReleaseNotes());
@@ -1780,7 +1780,7 @@ public class UndoRedoHandlerTest {
     assertEquals(2, undoRedoHandler.getUndoStack().size());
 
     Release undoneRelease = mainApp.getReleases().get(0);
-    assertEquals(releaseName, undoneRelease.getLabel());
+    assertEquals(releaseLabel, undoneRelease.getLabel());
     assertEquals(releaseDescription, undoneRelease.getReleaseDescription());
     assertEquals(releaseDate, undoneRelease.getReleaseDate());
     assertEquals(releaseNotes, undoneRelease.getReleaseNotes());
@@ -1805,7 +1805,7 @@ public class UndoRedoHandlerTest {
     assertTrue(undoRedoHandler.getRedoStack().empty());
 
     Release oldRelease = mainApp.getReleases().get(0);
-    assertEquals(releaseName, oldRelease.getLabel());
+    assertEquals(releaseLabel, oldRelease.getLabel());
     assertEquals(releaseDescription, oldRelease.getReleaseDescription());
     assertEquals(releaseDate, oldRelease.getReleaseDate());
     assertEquals(releaseNotes, oldRelease.getReleaseNotes());
@@ -1813,7 +1813,7 @@ public class UndoRedoHandlerTest {
 
     editNewestRelease();
     Release newRelease = mainApp.getReleases().get(0);
-    assertEquals(newReleaseName, newRelease.getLabel());
+    assertEquals(newReleaseLabel, newRelease.getLabel());
     assertEquals(newReleaseDescription, newRelease.getReleaseDescription());
     assertEquals(newReleaseDate, newRelease.getReleaseDate());
     assertEquals(newReleaseNotes, newRelease.getReleaseNotes());
@@ -1831,7 +1831,7 @@ public class UndoRedoHandlerTest {
     assertEquals(1, undoRedoHandler.getRedoStack().size());
 
     Release undoneRelease = mainApp.getReleases().get(0);
-    assertEquals(releaseName, undoneRelease.getLabel());
+    assertEquals(releaseLabel, undoneRelease.getLabel());
     assertEquals(releaseDescription, undoneRelease.getReleaseDescription());
     assertEquals(releaseDate, undoneRelease.getReleaseDate());
     assertEquals(releaseNotes, undoneRelease.getReleaseNotes());
@@ -1844,7 +1844,7 @@ public class UndoRedoHandlerTest {
     assertTrue(undoRedoHandler.getRedoStack().empty());
 
     Release redoneRelease = mainApp.getReleases().get(0);
-    assertEquals(newReleaseName, redoneRelease.getLabel());
+    assertEquals(newReleaseLabel, redoneRelease.getLabel());
     assertEquals(newReleaseDescription, redoneRelease.getReleaseDescription());
     assertEquals(newReleaseDate, redoneRelease.getReleaseDate());
     assertEquals(newReleaseNotes, redoneRelease.getReleaseNotes());
@@ -1866,7 +1866,7 @@ public class UndoRedoHandlerTest {
     assertEquals(2, undoRedoHandler.getUndoStack().size());
 
     Release oldRelease = mainApp.getReleases().get(0);
-    assertEquals(releaseName, oldRelease.getLabel());
+    assertEquals(releaseLabel, oldRelease.getLabel());
     assertEquals(releaseDescription, oldRelease.getReleaseDescription());
     assertEquals(releaseDate, oldRelease.getReleaseDate());
     assertEquals(releaseNotes, oldRelease.getReleaseNotes());
@@ -1874,7 +1874,7 @@ public class UndoRedoHandlerTest {
 
     editNewestRelease();
     Release newRelease = mainApp.getReleases().get(0);
-    assertEquals(newReleaseName, newRelease.getLabel());
+    assertEquals(newReleaseLabel, newRelease.getLabel());
     assertEquals(newReleaseDescription, newRelease.getReleaseDescription());
     assertEquals(newReleaseDate, newRelease.getReleaseDate());
     assertEquals(newReleaseNotes, newRelease.getReleaseNotes());
@@ -1889,7 +1889,7 @@ public class UndoRedoHandlerTest {
     assertEquals(2, undoRedoHandler.getUndoStack().size());
 
     Release undoneRelease = mainApp.getReleases().get(0);
-    assertEquals(releaseName, undoneRelease.getLabel());
+    assertEquals(releaseLabel, undoneRelease.getLabel());
     assertEquals(releaseDescription, undoneRelease.getReleaseDescription());
     assertEquals(releaseDate, undoneRelease.getReleaseDate());
     assertEquals(releaseNotes, undoneRelease.getReleaseNotes());
@@ -1902,7 +1902,7 @@ public class UndoRedoHandlerTest {
     undoRedoHandler.redo(); // new release
 
     oldRelease = mainApp.getReleases().get(0); //before the edit redo is done
-    assertEquals(releaseName, oldRelease.getLabel());
+    assertEquals(releaseLabel, oldRelease.getLabel());
     assertEquals(releaseDescription, oldRelease.getReleaseDescription());
     assertEquals(releaseDate, oldRelease.getReleaseDate());
     assertEquals(releaseNotes, oldRelease.getReleaseNotes());
@@ -1914,7 +1914,7 @@ public class UndoRedoHandlerTest {
     assertEquals(3, undoRedoHandler.getUndoStack().size());
 
     newRelease = mainApp.getReleases().get(0);
-    assertEquals(newReleaseName, newRelease.getLabel());
+    assertEquals(newReleaseLabel, newRelease.getLabel());
     assertEquals(newReleaseDescription, newRelease.getReleaseDescription());
     assertEquals(newReleaseDate, newRelease.getReleaseDate());
     assertEquals(newReleaseNotes, newRelease.getReleaseNotes());

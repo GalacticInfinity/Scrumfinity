@@ -297,10 +297,10 @@ public class TeamDialogController {
   }
 
   /**
-   * Checks if teamID field contains valid input.
+   * Checks if team label field contains valid input.
    *
    * @param inputTeamLabel String team label.
-   * @return teamID if team label is valid.
+   * @return team label if team label is valid.
    * @throws Exception If team label is not valid.
    */
   private String parseTeamLabel(String inputTeamLabel) throws Exception {

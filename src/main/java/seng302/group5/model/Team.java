@@ -37,7 +37,7 @@ public class Team implements AgileItem {
   /**
    * Team constructor.
    *
-   * @param label           Unique, non-null team ID.
+   * @param label           Unique, non-null team label.
    * @param teamMembers     List of people in the team.
    * @param teamDescription Description of the team.
    */
@@ -162,9 +162,9 @@ public class Team implements AgileItem {
   }
 
   /**
-   * Overrides to toString method with the ID of team.
+   * Overrides to toString method with the label of team.
    *
-   * @return Unique ID of team.
+   * @return Unique label of team.
    */
   @Override
   public String toString() {
