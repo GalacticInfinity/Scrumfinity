@@ -581,7 +581,7 @@ public class Main extends Application {
           String message = String.format(
               "Do you want to delete '%s' and remove him/her from the team '%s'?",
               person.getLabel(),
-              person.getTeamID());
+              person.getTeamLabel());
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
           alert.setTitle("Person is in team");
           alert.setHeaderText(null);

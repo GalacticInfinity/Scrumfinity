@@ -111,7 +111,7 @@ public class NewSaving {
         saveFile.write("\t\t<lastName>" + person.getLastName() + "</lastName>\n");
       }
       if (person.getTeam() != null) {
-        saveFile.write("\t\t<team>" + person.getTeamID() + "</team>\n");
+        saveFile.write("\t\t<team>" + person.getTeamLabel() + "</team>\n");
       }
       if (!person.getSkillSet().isEmpty()) {
         saveFile.write("\t\t<PersonSkills>\n");

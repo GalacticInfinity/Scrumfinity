@@ -41,7 +41,7 @@ public class TeamDialogController {
   private ObservableList<PersonRole> selectedMembers = FXCollections.observableArrayList();
   private ArrayList<Person> membersToRemove = new ArrayList<>();
 
-  @FXML private TextField teamIDField;
+  @FXML private TextField teamLabelField;
   @FXML private ListView<PersonRole> teamMembersList;
   @FXML private ComboBox<Person> teamMemberAddCombo;
   @FXML private ComboBox<Role> teamMemberRoleCombo;
@@ -68,7 +68,7 @@ public class TeamDialogController {
       thisStage.setTitle("Edit Team");
       btnConfirm.setText("Save");
 
-      teamIDField.setText(team.getLabel());
+      teamLabelField.setText(team.getLabel());
       initialiseLists(CreateOrEdit.EDIT, team);
       teamDescriptionField.setText(team.getTeamDescription());
 
@@ -234,11 +234,11 @@ public class TeamDialogController {
     errors.append("Invalid Fields:");
     int noErrors = 0;
 
-    String teamID = "";
+    String teamLabel = "";
     String teamDescription = teamDescriptionField.getText().trim();
 
     try {
-      teamID = parseTeamID(teamIDField.getText());
+      teamLabel = parseTeamLabel(teamLabelField.getText());
     } catch (Exception e) {
       noErrors++;
       errors.append(String.format("\n\t%s", e.getMessage()));
@@ -257,7 +257,7 @@ public class TeamDialogController {
       alert.showAndWait();
     } else {
       if (createOrEdit == CreateOrEdit.CREATE) {
-        team = new Team(teamID, teamDescription);
+        team = new Team(teamLabel, teamDescription);
         for (PersonRole personRole : selectedMembers) {
           team.addTeamMember(personRole.getPerson(), personRole.getRole());
           personRole.getPerson().assignToTeam(team);
@@ -266,7 +266,7 @@ public class TeamDialogController {
 
       } else if (createOrEdit == CreateOrEdit.EDIT) {
 
-        team.setLabel(teamID);
+        team.setLabel(teamLabel);
         team.setTeamDescription(teamDescription);
         team.getTeamMembers().clear();
         team.getMembersRole().clear();
@@ -299,31 +299,31 @@ public class TeamDialogController {
   /**
    * Checks if teamID field contains valid input.
    *
-   * @param inputTeamID String teamID.
-   * @return teamID if teamID is valid.
-   * @throws Exception If teamID is not valid.
+   * @param inputTeamLabel String team label.
+   * @return teamID if team label is valid.
+   * @throws Exception If team label is not valid.
    */
-  private String parseTeamID(String inputTeamID) throws Exception {
-    inputTeamID = inputTeamID.trim();
+  private String parseTeamLabel(String inputTeamLabel) throws Exception {
+    inputTeamLabel = inputTeamLabel.trim();
 
-    if (inputTeamID.isEmpty()) {
+    if (inputTeamLabel.isEmpty()) {
       throw new Exception("Team ID is empty.");
-    } else if (inputTeamID.length() > 8) {
+    } else if (inputTeamLabel.length() > 8) {
       throw new Exception("Team ID is more than 8 characters long");
     } else {
-      String lastTeamID;
+      String lastTeamLabel;
       if (lastTeam == null) {
-        lastTeamID = "";
+        lastTeamLabel = "";
       } else {
-        lastTeamID = lastTeam.getLabel();
+        lastTeamLabel = lastTeam.getLabel();
       }
       for (Team team : mainApp.getTeams()) {
-        String teamID = team.getLabel();
-        if (team.getLabel().equals(inputTeamID) && !teamID.equals(lastTeamID)) {
+        String teamLabel = team.getLabel();
+        if (team.getLabel().equals(inputTeamLabel) && !teamLabel.equals(lastTeamLabel)) {
           throw new Exception("Team ID is not unique.");
         }
       }
-      return inputTeamID;
+      return inputTeamLabel;
     }
   }
 

@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
  */
 public class PersonTest {
 
-  private String personID;
+  private String personLabel;
   private String firstName;
   private String lastName;
   private ObservableList<Skill> skillSet = FXCollections.observableArrayList();
@@ -24,12 +24,12 @@ public class PersonTest {
   @Before
   public void setUp() throws Exception {
     //create the person to be used for testing
-    personID = "ssc55";
+    personLabel = "ssc55";
     firstName = "Su-Shing";
     lastName = "Chen";
     skillSet.addAll(new Skill("C", "C skill"));
     skillSet.add(new Skill("Java", "java Skill"));
-    person = new Person(personID, firstName, lastName, skillSet);
+    person = new Person(personLabel, firstName, lastName, skillSet);
 
     //create the team to be used for testing
     team = new Team();
@@ -79,6 +79,6 @@ public class PersonTest {
   @Test
   public void testToString() throws Exception {
     String result = person.getLabel();
-    assertEquals(personID, result);
+    assertEquals(personLabel, result);
   }
 }

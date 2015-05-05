@@ -10,22 +10,22 @@ import static org.junit.Assert.*;
  */
 public class ProjectTest {
 
-  private String projectID;
+  private String projectLabel;
   private String projectName;
   private String projectDescription;
   private Project project;
 
   @Before
   public void setUp() throws Exception {
-    projectID = "abcedef";
+    projectLabel = "abcedef";
     projectName = "New Project";
     projectDescription = "This is a description. This field can be much longer than the others.";
-    project = new Project(projectID, projectName, projectDescription);
+    project = new Project(projectLabel, projectName, projectDescription);
   }
 
   @Test
   public void testToString() {
     String result = project.toString();
-    assertEquals(projectID, result);
+    assertEquals(projectLabel, result);
   }
 }

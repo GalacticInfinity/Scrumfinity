@@ -82,7 +82,7 @@ public class Person implements AgileItem {
     return team;
   }
 
-  public String getTeamID() {
+  public String getTeamLabel() {
     return team.getLabel();
   }
 

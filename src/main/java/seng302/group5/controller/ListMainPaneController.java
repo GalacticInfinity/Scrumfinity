@@ -207,7 +207,7 @@ public class ListMainPaneController {
         displayTextArea.appendText(person.getLastName());
         displayTextArea.appendText("\nTeam: ");
         if (person.isInTeam()) {
-          displayTextArea.appendText(person.getTeamID());
+          displayTextArea.appendText(person.getTeamLabel());
         } else {
           displayTextArea.appendText("Not assigned.");
         }

@@ -26,11 +26,11 @@ import static org.mockito.Mockito.mock;
  */
 public class UndoRedoHandlerTest {
 
-  private String personID;
+  private String personLabel;
   private String firstName;
   private String lastName;
   private ObservableList<Skill> skillSet;
-  private String newPersonID;
+  private String newPersonLabel;
   private String newFirstName;
   private String newLastName;
   private ObservableList<Skill> newSkillSet;
@@ -40,17 +40,17 @@ public class UndoRedoHandlerTest {
   private String newSkillName;
   private String newSkillDescription;
 
-  private String teamID;
+  private String teamLabel;
   private ObservableList<Person> teamMembers;
   private String teamDescription;
-  private String newTeamID;
+  private String newTeamLabel;
   private String newTeamDescription;
   private ObservableList<Person> newTeamMembers;
 
-  private String projectID;
+  private String projectLabel;
   private String projectName;
   private String projectDescription;
-  private String newProjectID;
+  private String newProjectLabel;
   private String newProjectName;
   private String newProjectDescription;
 
@@ -86,11 +86,11 @@ public class UndoRedoHandlerTest {
   }
 
   private void newPerson() {
-    personID = "ssc55";
+    personLabel = "ssc55";
     firstName = "Su-Shing";
     lastName = "Chen";
     skillSet = FXCollections.observableArrayList();
-    person = new Person(personID, firstName, lastName, skillSet);
+    person = new Person(personLabel, firstName, lastName, skillSet);
 
     mainApp.addPerson(person);
 
@@ -119,12 +119,12 @@ public class UndoRedoHandlerTest {
   private void editNewestPerson() {
     Person lastPerson = new Person(person);
 
-    newPersonID = "apw76";
+    newPersonLabel = "apw76";
     newFirstName = "Alex";
     newLastName = "Woo";
     newSkillSet = FXCollections.observableArrayList();
 
-    person.setLabel(newPersonID);
+    person.setLabel(newPersonLabel);
     person.setFirstName(newFirstName);
     person.setLastName(newLastName);
     person.setSkillSet(newSkillSet);
@@ -141,12 +141,12 @@ public class UndoRedoHandlerTest {
   }
 
   private void newPersonWithSkill() {
-    personID = "ssc55";
+    personLabel = "ssc55";
     firstName = "Su-Shing";
     lastName = "Chen";
     skillSet = FXCollections.observableArrayList();
     skillSet.add(skill);
-    person = new Person(personID, firstName, lastName, skillSet);
+    person = new Person(personLabel, firstName, lastName, skillSet);
     skillSet = FXCollections.observableArrayList(skillSet); // save a copy
 
     mainApp.addPerson(person);
@@ -162,13 +162,13 @@ public class UndoRedoHandlerTest {
   private void editNewestPersonWithSkill() {
     Person lastPerson = new Person(person);
 
-    newPersonID = "apw76";
+    newPersonLabel = "apw76";
     newFirstName = "Alex";
     newLastName = "Woo";
     newSkillSet = FXCollections.observableArrayList();
     newSkillSet.add(skill);
 
-    person.setLabel(newPersonID);
+    person.setLabel(newPersonLabel);
     person.setFirstName(newFirstName);
     person.setLastName(newLastName);
     person.setSkillSet(newSkillSet);
@@ -245,10 +245,10 @@ public class UndoRedoHandlerTest {
   }
 
   private void newTeam() {
-    teamID = "TheMen";
+    teamLabel = "TheMen";
     teamMembers = FXCollections.observableArrayList();
     teamDescription = "This is a manly team";
-    team = new Team(teamID, teamMembers, teamDescription);
+    team = new Team(teamLabel, teamMembers, teamDescription);
 
     mainApp.addTeam(team);
 
@@ -277,11 +277,11 @@ public class UndoRedoHandlerTest {
   private void editNewestTeam() {
     Team lastTeam = new Team(team);
 
-    newTeamID = "TheWomen";
+    newTeamLabel = "TheWomen";
     newTeamDescription = "This is a womanly team";
     newTeamMembers = FXCollections.observableArrayList();
 
-    team.setLabel(newTeamID);
+    team.setLabel(newTeamLabel);
     team.setTeamDescription(newTeamDescription);
 
     Team newTeam = new Team(team);
@@ -296,11 +296,11 @@ public class UndoRedoHandlerTest {
   }
 
   private void newTeamWithMember() {
-    teamID = "TheMen";
+    teamLabel = "TheMen";
     teamMembers = FXCollections.observableArrayList();
     teamMembers.add(person);
     teamDescription = "This is a manly team";
-    team = new Team(teamID, teamMembers, teamDescription);
+    team = new Team(teamLabel, teamMembers, teamDescription);
     person.assignToTeam(team);
 
     mainApp.addTeam(team);
@@ -316,13 +316,13 @@ public class UndoRedoHandlerTest {
   private void editNewestTeamWithMember() {
     Team lastTeam = new Team(team);
 
-    newTeamID = "TheWomen";
+    newTeamLabel = "TheWomen";
     newTeamDescription = "This is a womanly team";
     newTeamMembers = FXCollections.observableArrayList();
     newTeamMembers.add(person);
     person.assignToTeam(team);
 
-    team.setLabel(newTeamID);
+    team.setLabel(newTeamLabel);
     team.setTeamDescription(newTeamDescription);
     team.setTeamMembers(newTeamMembers);
 
@@ -338,10 +338,10 @@ public class UndoRedoHandlerTest {
   }
 
   private void newProject() {
-    projectID = "proj";
+    projectLabel = "proj";
     projectName = "The Project's Name";
     projectDescription = "This is a description for the project";
-    project = new Project(projectID, projectName, projectDescription);
+    project = new Project(projectLabel, projectName, projectDescription);
 
     mainApp.addProject(project);
 
@@ -367,11 +367,11 @@ public class UndoRedoHandlerTest {
   private void editNewestProject() {
     Project lastProject = new Project(project);
 
-    newProjectID = "New Proj";
+    newProjectLabel = "New Proj";
     newProjectName = "The New Project's Name";
     newProjectDescription = "This is a new description";
 
-    project.setLabel(newProjectID);
+    project.setLabel(newProjectLabel);
     project.setProjectName(newProjectName);
     project.setProjectDescription(newProjectDescription);
 
@@ -454,7 +454,7 @@ public class UndoRedoHandlerTest {
     Person peekPerson = (Person) data.get(0);
 
     assertEquals(Action.PERSON_CREATE, peekObject.getAction());
-    assertEquals(personID, peekPerson.getLabel());
+    assertEquals(personLabel, peekPerson.getLabel());
     assertEquals(firstName, peekPerson.getFirstName());
     assertEquals(lastName, peekPerson.getLastName());
   }
@@ -469,7 +469,7 @@ public class UndoRedoHandlerTest {
     assertTrue(undoRedoHandler.getRedoStack().empty());
 
     // Add a random person to the redo stack
-    Person tempPerson = new Person(personID, firstName, lastName, skillSet);
+    Person tempPerson = new Person(personLabel, firstName, lastName, skillSet);
     UndoRedoObject undoRedoObject = new UndoRedoObject();
     undoRedoObject.setAction(Action.PERSON_CREATE);
     undoRedoObject.addDatum(new Person(tempPerson));
@@ -604,7 +604,7 @@ public class UndoRedoHandlerTest {
     assertEquals(2, undoRedoHandler.getUndoStack().size());
 
     Person createdPerson = mainApp.getPeople().get(mainApp.getPeople().size() - 1);
-    assertEquals(personID, createdPerson.getLabel());
+    assertEquals(personLabel, createdPerson.getLabel());
     assertEquals(firstName, createdPerson.getFirstName());
     assertEquals(lastName, createdPerson.getLastName());
     assertTrue(createdPerson.getSkillSet().isEmpty());  // no skills yet
@@ -614,7 +614,7 @@ public class UndoRedoHandlerTest {
     assertEquals(3, undoRedoHandler.getUndoStack().size());
 
     Person editedPerson = mainApp.getPeople().get(mainApp.getPeople().size() - 1);
-    assertEquals(newPersonID, editedPerson.getLabel());
+    assertEquals(newPersonLabel, editedPerson.getLabel());
     assertEquals(newFirstName, editedPerson.getFirstName());
     assertEquals(newLastName, editedPerson.getLastName());
     assertEquals(newSkillSet, editedPerson.getSkillSet());
@@ -624,7 +624,7 @@ public class UndoRedoHandlerTest {
     assertEquals(2, undoRedoHandler.getUndoStack().size());
 
     Person undonePerson = mainApp.getPeople().get(mainApp.getPeople().size() - 1);
-    assertEquals(personID, undonePerson.getLabel());
+    assertEquals(personLabel, undonePerson.getLabel());
     assertEquals(firstName, undonePerson.getFirstName());
     assertEquals(lastName, undonePerson.getLastName());
     assertTrue(undonePerson.getSkillSet().isEmpty());  // no skills now
@@ -645,7 +645,7 @@ public class UndoRedoHandlerTest {
     assertTrue(undoRedoHandler.getRedoStack().empty());
 
     Person createdPerson = mainApp.getPeople().get(mainApp.getPeople().size() - 1);
-    assertEquals(personID, createdPerson.getLabel());
+    assertEquals(personLabel, createdPerson.getLabel());
     assertEquals(firstName, createdPerson.getFirstName());
     assertEquals(lastName, createdPerson.getLastName());
     assertTrue(createdPerson.getSkillSet().isEmpty());  // no skills yet
@@ -656,7 +656,7 @@ public class UndoRedoHandlerTest {
     assertTrue(undoRedoHandler.getRedoStack().empty());
 
     Person editedPerson = mainApp.getPeople().get(mainApp.getPeople().size() - 1);
-    assertEquals(newPersonID, editedPerson.getLabel());
+    assertEquals(newPersonLabel, editedPerson.getLabel());
     assertEquals(newFirstName, editedPerson.getFirstName());
     assertEquals(newLastName, editedPerson.getLastName());
     assertEquals(newSkillSet, editedPerson.getSkillSet());
@@ -667,7 +667,7 @@ public class UndoRedoHandlerTest {
     assertEquals(1, undoRedoHandler.getRedoStack().size());
 
     Person undonePerson = mainApp.getPeople().get(mainApp.getPeople().size() - 1);
-    assertEquals(personID, undonePerson.getLabel());
+    assertEquals(personLabel, undonePerson.getLabel());
     assertEquals(firstName, undonePerson.getFirstName());
     assertEquals(lastName, undonePerson.getLastName());
     assertTrue(undonePerson.getSkillSet().isEmpty());  // no skills now
@@ -678,7 +678,7 @@ public class UndoRedoHandlerTest {
     assertTrue(undoRedoHandler.getRedoStack().empty());
 
     Person redonePerson = mainApp.getPeople().get(mainApp.getPeople().size() - 1);
-    assertEquals(newPersonID, redonePerson.getLabel());
+    assertEquals(newPersonLabel, redonePerson.getLabel());
     assertEquals(newFirstName, redonePerson.getFirstName());
     assertEquals(newLastName, redonePerson.getLastName());
     assertEquals(newSkillSet, redonePerson.getSkillSet()); // has skills again
@@ -1138,7 +1138,7 @@ public class UndoRedoHandlerTest {
     assertEquals(1, undoRedoHandler.getUndoStack().size());
 
     Team createdTeam = mainApp.getTeams().get(mainApp.getTeams().size() - 1);
-    assertEquals(teamID, createdTeam.getLabel());
+    assertEquals(teamLabel, createdTeam.getLabel());
     assertEquals(teamMembers, createdTeam.getTeamMembers());
     assertEquals(teamDescription, createdTeam.getTeamDescription());
 
@@ -1147,7 +1147,7 @@ public class UndoRedoHandlerTest {
     assertEquals(2, undoRedoHandler.getUndoStack().size());
 
     Team editedTeam = mainApp.getTeams().get(mainApp.getTeams().size() - 1);
-    assertEquals(newTeamID, editedTeam.getLabel());
+    assertEquals(newTeamLabel, editedTeam.getLabel());
     assertEquals(newTeamMembers, editedTeam.getTeamMembers());
     assertEquals(newTeamDescription, editedTeam.getTeamDescription());
 
@@ -1156,7 +1156,7 @@ public class UndoRedoHandlerTest {
     assertEquals(1, undoRedoHandler.getUndoStack().size());
 
     Team undoneTeam = mainApp.getTeams().get(mainApp.getTeams().size() - 1);
-    assertEquals(teamID, undoneTeam.getLabel());
+    assertEquals(teamLabel, undoneTeam.getLabel());
     assertEquals(teamMembers, undoneTeam.getTeamMembers());
     assertEquals(teamDescription, undoneTeam.getTeamDescription());
   }
@@ -1174,7 +1174,7 @@ public class UndoRedoHandlerTest {
     assertTrue(undoRedoHandler.getRedoStack().empty());
 
     Team createdTeam = mainApp.getTeams().get(mainApp.getTeams().size() - 1);
-    assertEquals(teamID, createdTeam.getLabel());
+    assertEquals(teamLabel, createdTeam.getLabel());
     assertEquals(teamMembers, createdTeam.getTeamMembers());
     assertEquals(teamDescription, createdTeam.getTeamDescription());
 
@@ -1184,7 +1184,7 @@ public class UndoRedoHandlerTest {
     assertTrue(undoRedoHandler.getRedoStack().empty());
 
     Team editedTeam = mainApp.getTeams().get(mainApp.getTeams().size() - 1);
-    assertEquals(newTeamID, editedTeam.getLabel());
+    assertEquals(newTeamLabel, editedTeam.getLabel());
     assertEquals(newTeamMembers, editedTeam.getTeamMembers());
     assertEquals(newTeamDescription, editedTeam.getTeamDescription());
 
@@ -1194,7 +1194,7 @@ public class UndoRedoHandlerTest {
     assertEquals(1, undoRedoHandler.getRedoStack().size());
 
     Team undoneTeam = mainApp.getTeams().get(mainApp.getTeams().size() - 1);
-    assertEquals(teamID, undoneTeam.getLabel());
+    assertEquals(teamLabel, undoneTeam.getLabel());
     assertEquals(teamMembers, undoneTeam.getTeamMembers());
     assertEquals(teamDescription, undoneTeam.getTeamDescription());
 
@@ -1204,7 +1204,7 @@ public class UndoRedoHandlerTest {
     assertTrue(undoRedoHandler.getRedoStack().empty());
 
     Team redoneTeam = mainApp.getTeams().get(mainApp.getTeams().size() - 1);
-    assertEquals(newTeamID, redoneTeam.getLabel());
+    assertEquals(newTeamLabel, redoneTeam.getLabel());
     assertEquals(newTeamMembers, redoneTeam.getTeamMembers());
     assertEquals(newTeamDescription, redoneTeam.getTeamDescription());
   }
@@ -1224,7 +1224,7 @@ public class UndoRedoHandlerTest {
     assertEquals(2, undoRedoHandler.getUndoStack().size());
 
     Person oldPerson = team.getTeamMembers().get(0);
-    assertEquals(personID, oldPerson.getLabel());
+    assertEquals(personLabel, oldPerson.getLabel());
     assertEquals(firstName, oldPerson.getFirstName());
     assertEquals(lastName, oldPerson.getLastName());
 
@@ -1234,7 +1234,7 @@ public class UndoRedoHandlerTest {
     assertEquals(3, undoRedoHandler.getUndoStack().size());
 
     Person newPerson = team.getTeamMembers().get(0);
-    assertEquals(newPersonID, newPerson.getLabel());
+    assertEquals(newPersonLabel, newPerson.getLabel());
     assertEquals(newFirstName, newPerson.getFirstName());
     assertEquals(newLastName, newPerson.getLastName());
 
@@ -1243,7 +1243,7 @@ public class UndoRedoHandlerTest {
     assertEquals(2, undoRedoHandler.getUndoStack().size());
 
     Person undonePerson = team.getTeamMembers().get(0);
-    assertEquals(personID, undonePerson.getLabel());
+    assertEquals(personLabel, undonePerson.getLabel());
     assertEquals(firstName, undonePerson.getFirstName());
     assertEquals(lastName, undonePerson.getLastName());
   }
@@ -1263,7 +1263,7 @@ public class UndoRedoHandlerTest {
     assertEquals(2, undoRedoHandler.getUndoStack().size());
 
     Person oldPerson = team.getTeamMembers().get(0);
-    assertEquals(personID, oldPerson.getLabel());
+    assertEquals(personLabel, oldPerson.getLabel());
     assertEquals(firstName, oldPerson.getFirstName());
     assertEquals(lastName, oldPerson.getLastName());
 
@@ -1273,7 +1273,7 @@ public class UndoRedoHandlerTest {
     assertEquals(3, undoRedoHandler.getUndoStack().size());
 
     Person newPerson = team.getTeamMembers().get(0);
-    assertEquals(newPersonID, newPerson.getLabel());
+    assertEquals(newPersonLabel, newPerson.getLabel());
     assertEquals(newFirstName, newPerson.getFirstName());
     assertEquals(newLastName, newPerson.getLastName());
 
@@ -1282,7 +1282,7 @@ public class UndoRedoHandlerTest {
     assertEquals(2, undoRedoHandler.getUndoStack().size());
 
     Person undonePerson = team.getTeamMembers().get(0);
-    assertEquals(personID, undonePerson.getLabel());
+    assertEquals(personLabel, undonePerson.getLabel());
     assertEquals(firstName, undonePerson.getFirstName());
     assertEquals(lastName, undonePerson.getLastName());
 
@@ -1292,7 +1292,7 @@ public class UndoRedoHandlerTest {
     assertEquals(0, undoRedoHandler.getRedoStack().size());
 
     Person redonePerson = team.getTeamMembers().get(0);
-    assertEquals(newPersonID, redonePerson.getLabel());
+    assertEquals(newPersonLabel, redonePerson.getLabel());
     assertEquals(newFirstName, redonePerson.getFirstName());
     assertEquals(newLastName, redonePerson.getLastName());
   }
@@ -1314,7 +1314,7 @@ public class UndoRedoHandlerTest {
     assertEquals(2, undoRedoHandler.getUndoStack().size());
 
     teamMember = mainApp.getTeams().get(0).getTeamMembers().get(0);
-    assertEquals(personID, teamMember.getLabel());
+    assertEquals(personLabel, teamMember.getLabel());
     assertEquals(firstName, teamMember.getFirstName());
     assertEquals(lastName, teamMember.getLastName());
 
@@ -1324,7 +1324,7 @@ public class UndoRedoHandlerTest {
     assertEquals(3, undoRedoHandler.getUndoStack().size());
 
     teamMember = mainApp.getTeams().get(0).getTeamMembers().get(0);
-    assertEquals(newPersonID, teamMember.getLabel());
+    assertEquals(newPersonLabel, teamMember.getLabel());
     assertEquals(newFirstName, teamMember.getFirstName());
     assertEquals(newLastName, teamMember.getLastName());
 
@@ -1333,7 +1333,7 @@ public class UndoRedoHandlerTest {
     assertEquals(2, undoRedoHandler.getUndoStack().size());
 
     teamMember = mainApp.getTeams().get(0).getTeamMembers().get(0);
-    assertEquals(personID, teamMember.getLabel());
+    assertEquals(personLabel, teamMember.getLabel());
     assertEquals(firstName, teamMember.getFirstName());
     assertEquals(lastName, teamMember.getLastName());
 
@@ -1344,7 +1344,7 @@ public class UndoRedoHandlerTest {
     undoRedoHandler.redo(); // new team
 
     teamMember = mainApp.getTeams().get(0).getTeamMembers().get(0);
-    assertEquals(personID, teamMember.getLabel());
+    assertEquals(personLabel, teamMember.getLabel());
     assertEquals(firstName, teamMember.getFirstName());
     assertEquals(lastName, teamMember.getLastName());
 
@@ -1354,7 +1354,7 @@ public class UndoRedoHandlerTest {
     assertEquals(0, undoRedoHandler.getRedoStack().size());
 
     teamMember = mainApp.getTeams().get(0).getTeamMembers().get(0);
-    assertEquals(newPersonID, teamMember.getLabel());
+    assertEquals(newPersonLabel, teamMember.getLabel());
     assertEquals(newFirstName, teamMember.getFirstName());
     assertEquals(newLastName, teamMember.getLastName());
   }
@@ -1474,7 +1474,7 @@ public class UndoRedoHandlerTest {
     assertEquals(1, undoRedoHandler.getUndoStack().size());
 
     Project createdProject = mainApp.getProjects().get(mainApp.getProjects().size() - 1);
-    assertEquals(projectID, createdProject.getLabel());
+    assertEquals(projectLabel, createdProject.getLabel());
     assertEquals(projectName, createdProject.getProjectName());
     assertEquals(projectDescription, createdProject.getProjectDescription());
 
@@ -1483,7 +1483,7 @@ public class UndoRedoHandlerTest {
     assertEquals(2, undoRedoHandler.getUndoStack().size());
 
     Project editedProject = mainApp.getProjects().get(mainApp.getProjects().size() - 1);
-    assertEquals(newProjectID, createdProject.getLabel());
+    assertEquals(newProjectLabel, createdProject.getLabel());
     assertEquals(newProjectName, editedProject.getProjectName());
     assertEquals(newProjectDescription, editedProject.getProjectDescription());
 
@@ -1492,7 +1492,7 @@ public class UndoRedoHandlerTest {
     assertEquals(1, undoRedoHandler.getUndoStack().size());
 
     Project undoneProject = mainApp.getProjects().get(mainApp.getProjects().size() - 1);
-    assertEquals(projectID, createdProject.getLabel());
+    assertEquals(projectLabel, createdProject.getLabel());
     assertEquals(projectName, undoneProject.getProjectName());
     assertEquals(projectDescription, undoneProject.getProjectDescription());
   }
@@ -1509,7 +1509,7 @@ public class UndoRedoHandlerTest {
     assertTrue(undoRedoHandler.getRedoStack().empty());
 
     Project createdProject = mainApp.getProjects().get(mainApp.getProjects().size() - 1);
-    assertEquals(projectID, createdProject.getLabel());
+    assertEquals(projectLabel, createdProject.getLabel());
     assertEquals(projectName, createdProject.getProjectName());
     assertEquals(projectDescription, createdProject.getProjectDescription());
 
@@ -1528,7 +1528,7 @@ public class UndoRedoHandlerTest {
     assertEquals(1, undoRedoHandler.getRedoStack().size());
 
     Project undoneProject = mainApp.getProjects().get(mainApp.getProjects().size() - 1);
-    assertEquals(projectID, createdProject.getLabel());
+    assertEquals(projectLabel, createdProject.getLabel());
     assertEquals(projectName, undoneProject.getProjectName());
     assertEquals(projectDescription, undoneProject.getProjectDescription());
 
@@ -1538,7 +1538,7 @@ public class UndoRedoHandlerTest {
     assertTrue(undoRedoHandler.getRedoStack().empty());
 
     Project redoneProject = mainApp.getProjects().get(mainApp.getProjects().size() - 1);
-    assertEquals(newProjectID, createdProject.getLabel());
+    assertEquals(newProjectLabel, createdProject.getLabel());
     assertEquals(newProjectName, redoneProject.getProjectName());
     assertEquals(newProjectDescription, redoneProject.getProjectDescription());
   }

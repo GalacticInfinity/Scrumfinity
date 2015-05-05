@@ -16,7 +16,7 @@
                   <Font size="15.0" />
                </font>
             </Label>
-            <TextField fx:id="projectIDField" alignment="TOP_LEFT" promptText="Unique project ID.">
+            <TextField fx:id="projectLabelField" alignment="TOP_LEFT" promptText="Unique project ID.">
                <HBox.margin>
                   <Insets left="8.0" />
                </HBox.margin></TextField>
