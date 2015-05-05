@@ -108,9 +108,9 @@
                 <artifactId>maven-pmd-plugin</artifactId>
                 <version>3.4</version>
                 <configuration>
-                    <linkXref>true</linkXref>
-                    <targetjdk>1.8</targetjdk>
-                    <minimumtokencount>100</minimumtokencount>
+                    <linkXRef>true</linkXRef>
+                    <targetJdk>1.8</targetJdk>
+                    <!--<minimumtokencount>100</minimumtokencount>-->
                     <rulesets>
                         <ruleset>/rulesets/java/basic.xml</ruleset>
                         <ruleset>/rulesets/java/imports.xml</ruleset>

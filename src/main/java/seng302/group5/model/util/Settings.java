@@ -23,9 +23,9 @@ public class Settings {
     directory = directory + File.separator + "Scrumfinity";
     scrumHome = new File(directory);
 
-//    if (!scrumHome.exists()) {
-//      scrumHome.mkdir();
-//    }
+    if (!scrumHome.exists()) {
+      scrumHome.mkdir();
+    }
 
     defaultFilepath = scrumHome;
   }
