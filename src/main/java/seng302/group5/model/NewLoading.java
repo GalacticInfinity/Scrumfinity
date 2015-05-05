@@ -86,7 +86,7 @@ public class NewLoading {
 
         // Mandatory fields
         projectLine = loadedFile.readLine();
-        projectData = projectLine.replaceAll("(?i)(.*<projectID.*?>)(.+?)(</projectID>)", "$2");
+        projectData = projectLine.replaceAll("(?i)(.*<projectLabel.*?>)(.+?)(</projectLabel>)", "$2");
         newProject.setLabel(projectData);
         projectLine = loadedFile.readLine();
         projectData = projectLine.replaceAll("(?i)(.*<projectName.*?>)(.+?)(</projectName>)", "$2");
@@ -155,7 +155,7 @@ public class NewLoading {
 
         // Mandatory data
         personLine = loadedFile.readLine();
-        personData = personLine.replaceAll("(?i)(.*<personID.*?>)(.+?)(</personID>)", "$2");
+        personData = personLine.replaceAll("(?i)(.*<personLabel.*?>)(.+?)(</personLabel>)", "$2");
         newPerson.setLabel(personData);
 
         // Optional data
@@ -204,7 +204,7 @@ public class NewLoading {
 
         // Mandatory data
         skillLine = loadedFile.readLine();
-        skillData = skillLine.replaceAll("(?i)(.*<skillID.*?>)(.+?)(</skillID>)", "$2");
+        skillData = skillLine.replaceAll("(?i)(.*<skillLabel.*?>)(.+?)(</skillLabel>)", "$2");
         newSkill.setLabel(skillData);
 
         // Non mandatory data
@@ -263,7 +263,7 @@ public class NewLoading {
 
         // Mandatory fields
         teamLine = loadedFile.readLine();
-        teamData = teamLine.replaceAll("(?i)(.*<teamID.*?>)(.+?)(</teamID>)", "$2");
+        teamData = teamLine.replaceAll("(?i)(.*<teamLabel.*?>)(.+?)(</teamLabel>)", "$2");
         newTeam.setLabel(teamData);
 
         // Non mandatory fields
@@ -312,8 +312,8 @@ public class NewLoading {
         tempPerson = new Person();
         tempRole = null;
         while (!(teamLine = loadedFile.readLine()).equals("\t\t\t</TeamMember>")) {
-          if (teamLine.startsWith("\t\t\t\t<teamPersonID>")) {
-            teamData = teamLine.replaceAll("(?i)(.*<teamPersonID.*?>)(.+?)(</teamPersonID>)", "$2");
+          if (teamLine.startsWith("\t\t\t\t<teamPersonLabel>")) {
+            teamData = teamLine.replaceAll("(?i)(.*<teamPersonLabel.*?>)(.+?)(</teamPersonLabel>)", "$2");
             for (Person person : main.getPeople()) {
               if (person.getLabel().equals(teamData)) {
                 people.add(person);
@@ -358,7 +358,7 @@ public class NewLoading {
         newRelease = new Release();
 
         releaseLine = loadedFile.readLine();
-        releaseData = releaseLine.replaceAll("(?i)(.*<releaseID.*?>)(.+?)(</releaseID>)", "$2");
+        releaseData = releaseLine.replaceAll("(?i)(.*<releaseLabel.*?>)(.+?)(</releaseLabel>)", "$2");
         newRelease.setLabel(releaseData);
         releaseLine = loadedFile.readLine();
         releaseData = releaseLine.replaceAll(
@@ -401,12 +401,12 @@ public class NewLoading {
     // Untill Role end tag
     while (!(roleLine = loadedFile.readLine()).startsWith("</Roles>")) {
       // For each new role
-      if (roleLine.matches(".*<Release>")) {
+      if (roleLine.matches(".*<Role>")) {
         newRole = new Role();
 
         // Mandatory fields
         roleLine = loadedFile.readLine();
-        roleData = roleLine.replaceAll("(?i)(.*<roleID.*?>)(.+?)(</roleID>)", "$2");
+        roleData = roleLine.replaceAll("(?i)(.*<roleLabel.*?>)(.+?)(</roleLabel>)", "$2");
         newRole.setLabel(roleData);
         roleLine = loadedFile.readLine();
         roleData = roleLine.replaceAll("(?i)(.*<roleName.*?>)(.+?)(</roleName>)", "$2");

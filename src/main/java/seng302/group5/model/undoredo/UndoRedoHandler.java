@@ -220,7 +220,7 @@ public class UndoRedoHandler {
       throw new Exception("Can't undo/redo project creation - No variables");
     }
 
-    // Get the project ID which is currently in the list and the project to change
+    // Get the project label which is currently in the list and the project to change
     Project projectToChange = (Project) undoRedoObject.getAgileItem();
     Project projectData = (Project) data.get(0);
 
@@ -250,7 +250,7 @@ public class UndoRedoHandler {
       throw new Exception("Can't undo/redo project edit - Less than 2 variables");
     }
 
-    // Get the project ID which is currently in the list and the project to edit
+    // Get the project label which is currently in the list and the project to edit
     Project projectToChange = (Project) undoRedoObject.getAgileItem();
     Project projectData;
 
@@ -281,7 +281,7 @@ public class UndoRedoHandler {
       throw new Exception("Can't undo/redo project deletion - No variables");
     }
 
-    // Get the project and ID to undo/redo deletion of
+    // Get the project and label to undo/redo deletion of
     Project projectToChange = (Project) undoRedoObject.getAgileItem();
     Project projectData = (Project) data.get(0);
 
@@ -524,7 +524,7 @@ public class UndoRedoHandler {
       throw new Exception("Can't undo/redo team creation - No variables");
     }
 
-    // Get the team name which is currently in the list and the team to change
+    // Get the team to change which is currently in the list and the target team data
     Team teamToChange = (Team) undoRedoObject.getAgileItem();
     Team teamData = (Team) data.get(0);
 

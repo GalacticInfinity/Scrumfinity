@@ -27,7 +27,7 @@ import seng302.group5.model.undoredo.UndoRedoObject;
  */
 public class ReleaseDialogController {
 
-  @FXML private TextField releaseIDField;
+  @FXML private TextField releaseLabelField;
   @FXML private TextArea releaseDescriptionField;
   @FXML private DatePicker releaseDateField;
   @FXML private TextArea releaseNotesField;
@@ -60,7 +60,7 @@ public class ReleaseDialogController {
     errors.append("Invalid Fields:");
     int noErrors = 0;
 
-    String releaseId = releaseIDField.getText().trim();
+    String releaseId = releaseLabelField.getText().trim();
     String releaseDescription = releaseDescriptionField.getText().trim();
     LocalDate releaseDate = releaseDateField.getValue();
     String releaseNotes = releaseNotesField.getText().trim();
@@ -72,7 +72,7 @@ public class ReleaseDialogController {
     }
 
     try {
-      releaseId = parseReleaseID(releaseIDField.getText());
+      releaseId = parseReleaseLabel(releaseLabelField.getText());
     } catch (Exception e) {
       noErrors++;
       errors.append(String.format("\n\t%s", e.getMessage()));
@@ -185,7 +185,7 @@ public class ReleaseDialogController {
       thisStage.setTitle("Edit Release");
       btnConfirm.setText("Save");
 
-      releaseIDField.setText(release.getLabel());
+      releaseLabelField.setText(release.getLabel());
       releaseDescriptionField.setText(release.getReleaseDescription());
       this.selectedProject.add(release.getProjectRelease());
       this.releaseDateField.setValue(release.getReleaseDate());
@@ -265,34 +265,34 @@ public class ReleaseDialogController {
   }
 
   /**
-   * Takes the inputReleaseID and checks to see if it is allowed to be used as an ID
+   * Takes the inputReleaseLabel and checks to see if it is allowed to be used as an label
    *
-   * @param inputReleaseID the ID that the user wants for this release
-   * @return String returns this only if its an allowed ID
-   * @throws Exception Throws an exception if the ID is not allowed
+   * @param inputReleaseLabel the label that the user wants for this release
+   * @return String returns this only if its an allowed label
+   * @throws Exception Throws an exception if the label is not allowed
    */
-  private String parseReleaseID(String inputReleaseID) throws Exception {
-    inputReleaseID = inputReleaseID.trim();
+  private String parseReleaseLabel(String inputReleaseLabel) throws Exception {
+    inputReleaseLabel = inputReleaseLabel.trim();
 
-    if (inputReleaseID.isEmpty()) {
-      throw new Exception("Release ID is empty.");
-    } else if (inputReleaseID.length() > 8) {
-      throw new Exception("Release ID is more than 8 characters long");
+    if (inputReleaseLabel.isEmpty()) {
+      throw new Exception("Release label is empty.");
+    } else if (inputReleaseLabel.length() > 8) {
+      throw new Exception("Release label is more than 8 characters long");
     } else {
-      String lastReleaseID;
+      String lastReleaseLabel;
       if (lastRelease == null) {
-        lastReleaseID = "";
+        lastReleaseLabel = "";
       } else {
-        lastReleaseID = lastRelease.getLabel();
+        lastReleaseLabel = lastRelease.getLabel();
       }
       for (Release releaseInList : mainApp.getReleases()) {
-        String releaseName = releaseInList.getLabel();
-        if (releaseName.equals(inputReleaseID) && !releaseName.equals(lastReleaseID)) {
-          throw new Exception("Release ID is not unique");
+        String releaseLabel = releaseInList.getLabel();
+        if (releaseLabel.equals(inputReleaseLabel) && !releaseLabel.equals(lastReleaseLabel)) {
+          throw new Exception("Release label is not unique");
         }
       }
     }
-    return inputReleaseID;
+    return inputReleaseLabel;
   }
 
   /**

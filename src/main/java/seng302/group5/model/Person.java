@@ -32,7 +32,7 @@ public class Person implements AgileItem {
   /**
    * Person constructor.
    *
-   * @param label  Unique, non-null person ID. Can't be greater than 8 characters.
+   * @param label  Unique, non-null person label. Can't be greater than 8 characters.
    * @param firstName First name of person.
    * @param lastName  Last name of person.
    * @param skills    List of person's skills
@@ -82,7 +82,7 @@ public class Person implements AgileItem {
     return team;
   }
 
-  public String getTeamID() {
+  public String getTeamLabel() {
     return team.getLabel();
   }
 
@@ -150,9 +150,9 @@ public class Person implements AgileItem {
   }
 
   /**
-   * Overrides to toString method with the ID of person.
+   * Overrides to toString method with the label of person.
    *
-   * @return Unique ID of person.
+   * @return Unique label of person.
    */
   @Override
   public String toString() {
@@ -160,10 +160,10 @@ public class Person implements AgileItem {
   }
 
   /**
-   * Overrides default to just check if the project's IDs are the same
+   * Overrides default to just check if the project's labels are the same
    *
    * @param obj Object to compare to.
-   * @return Whether the IDs are equal or not
+   * @return Whether the labels are equal or not
    */
   @Override
   public boolean equals(Object obj) {

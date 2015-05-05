@@ -59,11 +59,11 @@ public class Skill implements AgileItem {
   /**
    * Set skillName for a skill.
    *
-   * @param skillName skillName of the skill
+   * @param label skillName of the skill
    */
   @Override
-  public void setLabel(String skillName) {
-    this.label = skillName;
+  public void setLabel(String label) {
+    this.label = label;
   }
 
   /**
