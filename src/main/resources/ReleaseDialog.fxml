@@ -21,7 +21,10 @@
                 <TextField fx:id="releaseLabelField" alignment="TOP_LEFT" layoutX="1.0" layoutY="10.0" prefWidth="200.0" promptText="Unique release label.">
                <HBox.margin>
                   <Insets bottom="5.0" />
-               </HBox.margin></TextField>
+               </HBox.margin>
+               <tooltip>
+                  <Tooltip text="Label should be 20 characters or less or application may not behave as expected." />
+               </tooltip></TextField>
             </children>
         </HBox>
         <HBox prefHeight="100.0" prefWidth="434.0" spacing="10.0">
@@ -44,7 +47,7 @@
                   <Font size="15.0" />
                </font>
             </Label>
-            <TextArea fx:id="releaseNotesField" maxWidth="292.0" prefHeight="100.0" prefWidth="293.0"  promptText="Release notes." />
+            <TextArea fx:id="releaseNotesField" maxWidth="292.0" prefHeight="100.0" prefWidth="293.0" promptText="Release notes." />
          </children>
          <VBox.margin>
             <Insets top="7.0" />

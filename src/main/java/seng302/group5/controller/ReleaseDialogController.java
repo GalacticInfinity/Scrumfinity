@@ -203,6 +203,15 @@ public class ReleaseDialogController {
     }
 
     btnConfirm.setDefaultButton(true);
+
+    // Handle TextField text changes.
+    releaseLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
+      if (newValue.trim().length() > 20) {
+        releaseLabelField.setStyle("-fx-text-inner-color: red;");
+      } else {
+        releaseLabelField.setStyle("-fx-text-inner-color: black;");
+      }
+    });
   }
 
   /**
@@ -276,8 +285,6 @@ public class ReleaseDialogController {
 
     if (inputReleaseLabel.isEmpty()) {
       throw new Exception("Release label is empty.");
-    } else if (inputReleaseLabel.length() > 8) {
-      throw new Exception("Release label is more than 8 characters long");
     } else {
       String lastReleaseLabel;
       if (lastRelease == null) {

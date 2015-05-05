@@ -19,7 +19,10 @@
             <TextField fx:id="projectLabelField" alignment="TOP_LEFT" promptText="Unique project label.">
                <HBox.margin>
                   <Insets left="8.0" />
-               </HBox.margin></TextField>
+               </HBox.margin>
+               <tooltip>
+                  <Tooltip text="Label should be 20 characters or less or application may not behave as expected." />
+               </tooltip></TextField>
          </children>
       </HBox>
       <HBox alignment="CENTER_LEFT" prefHeight="38.0" prefWidth="369.0" spacing="10.0">

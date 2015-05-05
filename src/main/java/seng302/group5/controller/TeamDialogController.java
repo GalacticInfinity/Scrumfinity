@@ -89,6 +89,15 @@ public class TeamDialogController {
       }
     });
     btnConfirm.setDefaultButton(true);
+
+    // Handle TextField text changes.
+    teamLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
+      if (newValue.trim().length() > 20) {
+        teamLabelField.setStyle("-fx-text-inner-color: red;");
+      } else {
+        teamLabelField.setStyle("-fx-text-inner-color: black;");
+      }
+    });
   }
 
   /**
@@ -308,8 +317,6 @@ public class TeamDialogController {
 
     if (inputTeamLabel.isEmpty()) {
       throw new Exception("Team label is empty.");
-    } else if (inputTeamLabel.length() > 8) {
-      throw new Exception("Team label is more than 8 characters long");
     } else {
       String lastTeamLabel;
       if (lastTeam == null) {

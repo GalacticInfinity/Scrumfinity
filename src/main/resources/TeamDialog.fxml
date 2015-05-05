@@ -15,7 +15,10 @@
                         <Font size="15.0" />
                     </font>
                 </Label>
-                <TextField fx:id="teamLabelField" alignment="TOP_LEFT" prefWidth="200.0" promptText="Unique team label." />
+                <TextField fx:id="teamLabelField" alignment="TOP_LEFT" prefWidth="200.0" promptText="Unique team label.">
+               <tooltip>
+                  <Tooltip text="Label should be 20 characters or less or application may not behave as expected." />
+               </tooltip></TextField>
             </children>
         </HBox>
       <HBox layoutX="140.0" layoutY="130.0" prefHeight="30.0" prefWidth="200.0">
