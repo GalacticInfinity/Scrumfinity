@@ -75,7 +75,7 @@ public class Main extends Application {
   @Override
   public void start(Stage primaryStage) {
     this.primaryStage = primaryStage;
-    this.primaryStage.setTitle("Scrumfinity");
+    this.primaryStage.setTitle(mainTitle);
     // Constructs the application
     initRootLayout();
     showMenuBar();
@@ -382,7 +382,7 @@ public class Main extends Application {
   public void undo() {
     try {
       undoRedoHandler.undo();
-      toggleName(checkSaved(), mainTitle);
+      toggleName();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -394,7 +394,7 @@ public class Main extends Application {
   public void redo() {
     try {
       undoRedoHandler.redo();
-      toggleName(checkSaved(), mainTitle);
+      toggleName();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -422,7 +422,7 @@ public class Main extends Application {
    */
   public void newAction(UndoRedoObject undoRedoObject) {
     undoRedoHandler.newAction(undoRedoObject);
-    toggleName(checkSaved(), mainTitle);
+    toggleName();
   }
 
   /**
@@ -430,7 +430,7 @@ public class Main extends Application {
    */
   public void refreshLastSaved() {
     lastSavedObject = undoRedoHandler.peekUndoStack();
-    toggleName(checkSaved(), mainTitle);
+    toggleName();
   }
 
   /**
@@ -453,11 +453,11 @@ public class Main extends Application {
     }
   }
 
-  public void toggleName (boolean saved, String title) {
-    if (saved) {
-      primaryStage.setTitle(title);
+  public void toggleName () {
+    if (checkSaved()) {
+      primaryStage.setTitle(mainTitle);
     } else {
-      primaryStage.setTitle(title + " *");
+      primaryStage.setTitle(mainTitle + " *");
     }
   }
 

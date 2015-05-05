@@ -9,6 +9,7 @@ import java.time.Month;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.ListMainPaneController;
 import seng302.group5.controller.MenuBarController;
@@ -25,11 +26,12 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 /**
- * Created by @author Alex Woo
+ * Unit testing for revert function.
+ * @author Alex Woo, Liang Ma
  */
 public class RevertTest {
 
-  private String personID;
+  private String personLabel;
   private String firstName;
   private String lastName;
   private ObservableList<Skill> skillSet;
@@ -58,7 +60,6 @@ public class RevertTest {
   private Release release;
 
   private UndoRedoHandler undoRedoHandler;
-  private MenuBarController MBC;
   private Main mainApp;
 
   @Before
@@ -68,17 +69,16 @@ public class RevertTest {
 
     mainApp = new Main();
     mainApp.setLMPC(listMainPaneController);
-    mainApp.setMBC(MBC);
 
     undoRedoHandler = mainApp.getUndoRedoHandler();
   }
 
   private void newPerson() {
-    personID = "ssc55";
+    personLabel = "ssc55";
     firstName = "Su-Shing";
     lastName = "Chen";
     skillSet = FXCollections.observableArrayList();
-    person = new Person(personID, firstName, lastName, skillSet);
+    person = new Person(personLabel, firstName, lastName, skillSet);
 
     mainApp.addPerson(person);
 
@@ -91,12 +91,12 @@ public class RevertTest {
   }
 
   private void newPersonWithSkill() {
-    personID = "ssc55";
+    personLabel = "ssc55";
     firstName = "Su-Shing";
     lastName = "Chen";
     skillSet = FXCollections.observableArrayList();
     skillSet.add(skill);
-    person = new Person(personID, firstName, lastName, skillSet);
+    person = new Person(personLabel, firstName, lastName, skillSet);
     skillSet = FXCollections.observableArrayList(skillSet); // save a copy
 
     mainApp.addPerson(person);
@@ -198,7 +198,7 @@ public class RevertTest {
 
 
   @Test
-  public void testPersonDeleteUndo() throws Exception {
+  public void testPersonRevert() throws Exception {
 
     assertTrue(mainApp.getPeople().isEmpty());
     assertTrue(undoRedoHandler.getUndoStack().empty());
@@ -219,4 +219,49 @@ public class RevertTest {
 
   }
 
+  @Test
+  public void testProjectRevert() throws Exception {
+
+    assertTrue(mainApp.getProjects().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    newProject();
+
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    mainApp.revert();
+
+    assertTrue(mainApp.getProjects().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+    
+  }
+
+  @Test
+  public void testClearStacks() throws Exception {
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+
+    newPerson();
+    newPerson();
+    assertEquals(2, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    // Add a random person to the redo stack
+    Person tempPerson = new Person(personLabel, firstName, lastName, skillSet);
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+    undoRedoObject.setAction(Action.PERSON_CREATE);
+    undoRedoObject.addDatum(new Person(tempPerson));
+    undoRedoHandler.getRedoStack().add(undoRedoObject);
+
+    assertEquals(2, undoRedoHandler.getUndoStack().size());
+    assertEquals(1, undoRedoHandler.getRedoStack().size());
+
+    // Clear stacks
+    mainApp.revert();
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+  }
 }
