@@ -20,6 +20,9 @@ import seng302.group5.model.NewLoading;
 import seng302.group5.model.NewSaving;
 import seng302.group5.model.util.Settings;
 
+
+import seng302.group5.model.undoredo.UndoRedoObject;
+
 /**
  * Created by Michael on 3/15/2015. Controller for MenuBar
  *
@@ -237,6 +240,29 @@ public class MenuBarController {
     } catch (Exception e) {
       System.out.println("No filename specified");
     }
+  }
+
+
+  /**
+   * Handles the event of the REVERT button being pushed.
+   * @param event
+   */
+  @FXML
+  protected void btnRevert(ActionEvent event) {
+
+    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+    alert.setTitle("Are you sure?!");
+    alert.setHeaderText(null);
+
+    String message = "This cannot be undone! Are you sure you want to do this? We suggest doing a \"Save as..\" first!";
+    alert.getDialogPane().setPrefHeight(100);
+    alert.setContentText(message);
+
+    Optional<ButtonType> result = alert.showAndWait();
+    if (result.get() == ButtonType.OK) {
+      mainApp.revert();
+    }
+
   }
 
   /**
