@@ -10,7 +10,7 @@
     <children>
         <HBox alignment="CENTER_LEFT" prefHeight="39.0" prefWidth="429.0" spacing="10.0">
             <children>
-                <Label prefWidth="100.0" text="Skill Name:*">
+                <Label prefWidth="100.0" text="Skill Label:*">
                     <font>
                         <Font size="15.0" />
                     </font>

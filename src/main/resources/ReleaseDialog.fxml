@@ -10,7 +10,7 @@
     <children>
         <HBox alignment="BOTTOM_LEFT" prefHeight="44.0" prefWidth="515.0" spacing="10.0">
             <children>
-                <Label prefHeight="25.0" prefWidth="115.0" text="Release ID:*">
+                <Label prefHeight="25.0" prefWidth="115.0" text="Release Label:*">
                     <font>
                         <Font size="15.0" />
                     </font>
