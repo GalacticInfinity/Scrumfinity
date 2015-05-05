@@ -60,6 +60,8 @@ public class Main extends Application {
 
   private UndoRedoObject lastSavedObject = null;
 
+  private String mainTitle = "Scrumfinity"; //THIS CAN BE USED FOR ORGANIZATION
+
   public static void main(String[] args) {
     launch(args);
   }
@@ -380,7 +382,7 @@ public class Main extends Application {
   public void undo() {
     try {
       undoRedoHandler.undo();
-      checkSaved();
+      toggleName(checkSaved(), mainTitle);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -392,10 +394,25 @@ public class Main extends Application {
   public void redo() {
     try {
       undoRedoHandler.redo();
-      checkSaved();
+      toggleName(checkSaved(), mainTitle);
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  /**
+   * Used when the revert button is pushed.
+   * It undoes until it is in the previously saved state. IT then clears the undo and redo stacks
+   */
+  public void revert() {
+    while (!this.checkSaved()) {
+      try {
+        this.undo();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+    this.undoRedoHandler.clearStacks();
   }
 
   /**
@@ -405,7 +422,7 @@ public class Main extends Application {
    */
   public void newAction(UndoRedoObject undoRedoObject) {
     undoRedoHandler.newAction(undoRedoObject);
-    checkSaved();
+    toggleName(checkSaved(), mainTitle);
   }
 
   /**
@@ -413,7 +430,7 @@ public class Main extends Application {
    */
   public void refreshLastSaved() {
     lastSavedObject = undoRedoHandler.peekUndoStack();
-    checkSaved();
+    toggleName(checkSaved(), mainTitle);
   }
 
   /**
@@ -428,11 +445,19 @@ public class Main extends Application {
 
     // Adjust the window title
     if (neverSaved || topObject == lastSavedObject) {
-      primaryStage.setTitle("Scrumfinity");
+//      primaryStage.setTitle("Scrumfinity");
       return true;
     } else {
-      primaryStage.setTitle("Scrumfinity *");
+//      primaryStage.setTitle("Scrumfinity *");
       return false;
+    }
+  }
+
+  public void toggleName (boolean saved, String title) {
+    if (saved) {
+      primaryStage.setTitle(title);
+    } else {
+      primaryStage.setTitle(title + " *");
     }
   }
 
@@ -718,6 +743,11 @@ public class Main extends Application {
   public void setLMPC(ListMainPaneController LMPC) {
     // This is for tests
     this.LMPC = LMPC;
+  }
+
+  public void setMBC(MenuBarController MBC) {
+    // This is for tests
+    this.MBC = MBC;
   }
 
   public MenuBarController getMBC() {
