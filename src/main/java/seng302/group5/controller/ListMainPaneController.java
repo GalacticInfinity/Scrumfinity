@@ -199,7 +199,7 @@ public class ListMainPaneController {
       case "People":
         Person person = (Person) next;
 
-        displayTextArea.appendText("Person Information \nPerson ID: ");
+        displayTextArea.appendText("Person Information \nPerson Label: ");
         displayTextArea.appendText(person.getLabel());
         displayTextArea.appendText("\nFirst Name: ");
         displayTextArea.appendText(person.getFirstName());
@@ -226,7 +226,7 @@ public class ListMainPaneController {
       case "Projects":
         Project project = (Project) next;
 
-        displayTextArea.appendText("Project Information \nProject ID: ");
+        displayTextArea.appendText("Project Information \nProject Label: ");
         displayTextArea.appendText(project.getLabel());
         displayTextArea.appendText("\nProject Name: ");
         displayTextArea.appendText(project.getProjectName());
@@ -240,7 +240,7 @@ public class ListMainPaneController {
       case "Skills":
         Skill skill = (Skill) next;
 
-        displayTextArea.appendText("Skill Information \nSkill Name: ");
+        displayTextArea.appendText("Skill Information \nSkill Label: ");
         displayTextArea.appendText(skill.getLabel());
         displayTextArea.appendText("\nSkill Description: ");
         displayTextArea.appendText(skill.getSkillDescription());
@@ -249,7 +249,7 @@ public class ListMainPaneController {
       case "Teams":
         Team team = (Team) next; //Casts next as Team object
 
-        displayTextArea.appendText("Team Information \nTeam ID: ");
+        displayTextArea.appendText("Team Information \nTeam Label: ");
         displayTextArea.appendText(team.getLabel());
         displayTextArea.appendText("\nTeam Description: ");
         displayTextArea.appendText(team.getTeamDescription());
@@ -271,7 +271,7 @@ public class ListMainPaneController {
       case "Releases":
         Release release = (Release) next;
 
-        displayTextArea.appendText("Release Information \nRelease Name: ");
+        displayTextArea.appendText("Release Information \nRelease Label: ");
         displayTextArea.appendText(release.getLabel());
         displayTextArea.appendText("\nRelease Description: ");
         displayTextArea.appendText(release.getReleaseDescription());
