@@ -10,7 +10,7 @@ import javafx.collections.ObservableList;
  */
 public class Person implements AgileItem {
 
-  private String personID;
+  private String label;
   private String firstName;
   private String lastName;
 
@@ -23,7 +23,7 @@ public class Person implements AgileItem {
    * Default constructor.
    */
   public Person() {
-    personID = "";
+    label = "";
     firstName = "";
     lastName = "";
 
@@ -32,13 +32,13 @@ public class Person implements AgileItem {
   /**
    * Person constructor.
    *
-   * @param personID  Unique, non-null person ID. Can't be greater than 8 characters.
+   * @param label  Unique, non-null person ID. Can't be greater than 8 characters.
    * @param firstName First name of person.
    * @param lastName  Last name of person.
    * @param skills    List of person's skills
    */
-  public Person(String personID, String firstName, String lastName, ObservableList<Skill> skills) {
-    this.personID = personID;
+  public Person(String label, String firstName, String lastName, ObservableList<Skill> skills) {
+    this.label = label;
     this.firstName = firstName;
     this.lastName = lastName;
     this.skillSet = skills;
@@ -50,7 +50,7 @@ public class Person implements AgileItem {
    * @param clone Person to clone
    */
   public Person(Person clone) {
-    this.personID = clone.getPersonID();
+    this.label = clone.getLabel();
     this.firstName = clone.getFirstName();
     this.lastName = clone.getLastName();
     this.skillSet.clear();
@@ -60,12 +60,14 @@ public class Person implements AgileItem {
   }
 
 
-  public String getPersonID() {
-    return personID;
+  @Override
+  public String getLabel() {
+    return label;
   }
 
-  public void setPersonID(String personID) {
-    this.personID = personID;
+  @Override
+  public void setLabel(String label) {
+    this.label = label;
   }
 
   public String getFirstName() {
@@ -81,7 +83,7 @@ public class Person implements AgileItem {
   }
 
   public String getTeamID() {
-    return team.getTeamID();
+    return team.getLabel();
   }
 
 
@@ -137,7 +139,7 @@ public class Person implements AgileItem {
   public void copyValues(AgileItem agileItem) {
     if (agileItem instanceof Person) {
       Person clone = (Person) agileItem;
-      this.personID = clone.getPersonID();
+      this.label = clone.getLabel();
       this.firstName = clone.getFirstName();
       this.lastName = clone.getLastName();
       this.skillSet.clear();
@@ -154,7 +156,7 @@ public class Person implements AgileItem {
    */
   @Override
   public String toString() {
-    return personID;
+    return label;
   }
 
   /**
@@ -168,7 +170,7 @@ public class Person implements AgileItem {
     boolean result = false;
     if (obj instanceof Person) {
       Person person = (Person) obj;
-      result = this.personID.equals(person.getPersonID());
+      result = this.label.equals(person.getLabel());
     }
     return result;
   }

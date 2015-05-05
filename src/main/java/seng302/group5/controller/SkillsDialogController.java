@@ -53,7 +53,7 @@ public class SkillsDialogController {
       thisStage.setTitle("Edit Skill");
       skillCreation.setText("Save");
 
-      skillName.setText(skill.getSkillName());
+      skillName.setText(skill.getLabel());
       skillDescription.setText(skill.getSkillDescription());
     }
     this.createOrEdit = createOrEdit;
@@ -94,10 +94,10 @@ public class SkillsDialogController {
       if (lastSkill == null) {
         lastSkillName = "";
       } else {
-        lastSkillName = lastSkill.getSkillName();
+        lastSkillName = lastSkill.getLabel();
       }
       for (Skill aSkill : mainApp.getSkills()) {
-        String aSkillName = aSkill.getSkillName();
+        String aSkillName = aSkill.getLabel();
         if (aSkillName.equals(inputSkillName) && !aSkillName.equals(lastSkillName)) {
           throw new Exception("Skill name is not unique.");
         }
@@ -152,7 +152,7 @@ public class SkillsDialogController {
       skill = new Skill(nameOfSkill, skillDescription.getText());
       mainApp.addSkill(skill);
     } else if (createOrEdit == CreateOrEdit.EDIT) {
-      skill.setSkillName(nameOfSkill);
+      skill.setLabel(nameOfSkill);
       skill.setSkillDescription(skillDescription.getText());
       mainApp.refreshList();
     }

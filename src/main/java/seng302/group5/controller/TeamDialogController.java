@@ -68,7 +68,7 @@ public class TeamDialogController {
       thisStage.setTitle("Edit Team");
       btnConfirm.setText("Save");
 
-      teamIDField.setText(team.getTeamID());
+      teamIDField.setText(team.getLabel());
       initialiseLists(CreateOrEdit.EDIT, team);
       teamDescriptionField.setText(team.getTeamDescription());
 
@@ -266,7 +266,7 @@ public class TeamDialogController {
 
       } else if (createOrEdit == CreateOrEdit.EDIT) {
 
-        team.setTeamID(teamID);
+        team.setLabel(teamID);
         team.setTeamDescription(teamDescription);
         team.getTeamMembers().clear();
         team.getMembersRole().clear();
@@ -315,11 +315,11 @@ public class TeamDialogController {
       if (lastTeam == null) {
         lastTeamID = "";
       } else {
-        lastTeamID = lastTeam.getTeamID();
+        lastTeamID = lastTeam.getLabel();
       }
       for (Team team : mainApp.getTeams()) {
-        String teamID = team.getTeamID();
-        if (team.getTeamID().equals(inputTeamID) && !teamID.equals(lastTeamID)) {
+        String teamID = team.getLabel();
+        if (team.getLabel().equals(inputTeamID) && !teamID.equals(lastTeamID)) {
           throw new Exception("Team ID is not unique.");
         }
       }

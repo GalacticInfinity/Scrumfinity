@@ -8,14 +8,14 @@ import java.time.LocalDate;
  */
 public class Release implements AgileItem {
 
-  private String releaseName;
+  private String label;
   private String releaseDescription;
   private LocalDate releaseDate;
   private String releaseNotes;
   private Project projectRelease = null;
 
   public Release() {
-    this.releaseName = "";
+    this.label = "";
     this.releaseDescription = "";
     this.releaseDate = null;
     this.releaseNotes = "";
@@ -24,15 +24,15 @@ public class Release implements AgileItem {
   /**
    * Constructor for Release object.
    *
-   * @param releaseName        name of release, None-Null, Can't be greater than 8 characters.
+   * @param label              name of release, None-Null, Can't be greater than 8 characters.
    * @param releaseDescription description of release
    * @param releaseDate        date of release
    * @param releaseNotes       release notes
    * @param projectRelease     project allocated to
    */
-  public Release(String releaseName, String releaseDescription, String releaseNotes,
+  public Release(String label, String releaseDescription, String releaseNotes,
                  LocalDate releaseDate, Project projectRelease) {
-    this.releaseName = releaseName;
+    this.label = label;
     this.releaseDescription = releaseDescription;
     this.releaseDate = releaseDate;
     this.releaseNotes = releaseNotes;
@@ -40,19 +40,21 @@ public class Release implements AgileItem {
   }
 
   public Release(Release clone) {
-    this.releaseName = clone.getReleaseName();
+    this.label = clone.getLabel();
     this.releaseDescription = clone.getReleaseDescription();
     this.releaseDate = clone.getReleaseDate();
     this.releaseNotes = clone.getReleaseNotes();
     this.projectRelease = clone.getProjectRelease();
   }
 
-  public String getReleaseName() {
-    return this.releaseName;
+  @Override
+  public String getLabel() {
+    return this.label;
   }
 
-  public void setReleaseName(String releaseName) {
-    this.releaseName = releaseName;
+  @Override
+  public void setLabel(String label) {
+    this.label = label;
   }
 
   public String getReleaseDescription() {
@@ -96,7 +98,7 @@ public class Release implements AgileItem {
   public void copyValues(AgileItem agileItem) {
     if (agileItem instanceof Release) {
       Release clone = (Release) agileItem;
-      this.releaseName = clone.getReleaseName();
+      this.label = clone.getLabel();
       this.releaseDescription = clone.getReleaseDescription();
       this.releaseDate = clone.getReleaseDate();
       this.releaseNotes = clone.getReleaseNotes();
@@ -111,7 +113,7 @@ public class Release implements AgileItem {
    */
   @Override
   public String toString() {
-    return this.releaseName;
+    return this.label;
   }
 
   /**
@@ -125,7 +127,7 @@ public class Release implements AgileItem {
     boolean result = false;
     if (obj instanceof Release) {
       Release release = (Release) obj;
-      result = this.releaseName.equals(release.getReleaseName());
+      result = this.label.equals(release.getLabel());
     }
     return result;
   }
