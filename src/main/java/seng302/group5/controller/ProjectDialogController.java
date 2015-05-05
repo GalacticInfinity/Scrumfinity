@@ -31,7 +31,7 @@ import seng302.group5.model.undoredo.UndoRedoObject;
  */
 public class ProjectDialogController {
 
-  @FXML private TextField projectIDField;
+  @FXML private TextField projectLabelField;
   @FXML private TextField projectNameField;
   @FXML private TextArea projectDescriptionField;
   @FXML private ListView<Team> availableTeamsList;
@@ -78,7 +78,7 @@ public class ProjectDialogController {
       thisStage.setTitle("Edit Project");
       btnConfirm.setText("Save");
       initialiseLists(CreateOrEdit.EDIT, project);
-      projectIDField.setText(project.getProjectID());
+      projectLabelField.setText(project.getLabel());
       projectNameField.setText(project.getProjectName());
       projectDescriptionField.setText(project.getProjectDescription());
 
@@ -129,34 +129,34 @@ public class ProjectDialogController {
   }
 
   /**
-   * Parse a string containing a project ID. Throws exceptions if input is not valid.
+   * Parse a string containing a project label. Throws exceptions if input is not valid.
    *
-   * @param inputProjectID String of project ID
-   * @return Inputted project ID if it is valid.
+   * @param inputProjectLabel String of project label
+   * @return Inputted project label if it is valid.
    * @throws Exception Exception with message explaining why input is invalid.
    */
-  private String parseProjectID(String inputProjectID) throws Exception {
-    inputProjectID = inputProjectID.trim();
+  private String parseProjectLabel(String inputProjectLabel) throws Exception {
+    inputProjectLabel = inputProjectLabel.trim();
 
-    if (inputProjectID.isEmpty()) {
-      throw new Exception("Project ID is empty");
-    } else if (inputProjectID.length() > 8) {
-      throw new Exception("Project ID is more than 8 characters long");
+    if (inputProjectLabel.isEmpty()) {
+      throw new Exception("Project label is empty");
+    } else if (inputProjectLabel.length() > 8) {
+      throw new Exception("Project label is more than 8 characters long");
     } else {
-      String lastProjectID;
+      String lastProjectLabel;
       if (lastProject == null) {
-        lastProjectID = "";
+        lastProjectLabel = "";
       } else {
-        lastProjectID = lastProject.getProjectID();
+        lastProjectLabel = lastProject.getLabel();
       }
       for (Project projectInList : mainApp.getProjects()) {
-        String projectID = projectInList.getProjectID();
-        if (projectID.equals(inputProjectID) && !projectID.equals(lastProjectID)) {
-          throw new Exception("Project ID is not unique.");
+        String projectLabel = projectInList.getLabel();
+        if (projectLabel.equals(inputProjectLabel) && !projectLabel.equals(lastProjectLabel)) {
+          throw new Exception("Project label is not unique.");
         }
       }
     }
-    return inputProjectID;
+    return inputProjectLabel;
   }
 
   /**
@@ -197,7 +197,7 @@ public class ProjectDialogController {
       for (Project project1 : mainApp.getProjects()) {
         for (AgileHistory team1 : project1.getAllocatedTeams()) {
           if (Objects.equals(team.toString(), team1.getAgileItem().toString()) &&
-              !project.getProjectID().equals(project1.getProjectID())) {
+              !project.getLabel().equals(project1.getLabel())) {
             if (team1.getStartDate().isEqual(startDate) || team1.getEndDate().isEqual(endDate)) {
               throw new Exception("The selected team is already assigned during selected dates.");
             }
@@ -326,12 +326,12 @@ public class ProjectDialogController {
     StringBuilder errors = new StringBuilder();
     int noErrors = 0;
 
-    String projectID = "";
+    String projectLabel = "";
     String projectName = "";
     String projectDescription = projectDescriptionField.getText().trim();
 
     try {
-      projectID = parseProjectID(projectIDField.getText());
+      projectLabel = parseProjectLabel(projectLabelField.getText());
     } catch (Exception e) {
       noErrors++;
       errors.append(String.format("%s\n", e.getMessage()));
@@ -358,14 +358,14 @@ public class ProjectDialogController {
     } else {
 
       if (createOrEdit == CreateOrEdit.CREATE) {
-        project = new Project(projectID, projectName, projectDescription);
+        project = new Project(projectLabel, projectName, projectDescription);
         for (AgileHistory team : this.allocatedTeams) {
           project.addTeam(team);
         }
         mainApp.addProject(project);
       } else {
         if (createOrEdit == CreateOrEdit.EDIT) {
-          project.setProjectID(projectID);
+          project.setLabel(projectLabel);
           project.setProjectName(projectName);
           project.setProjectDescription(projectDescription);
           project.getAllocatedTeams().clear();

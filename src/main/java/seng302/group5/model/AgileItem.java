@@ -8,6 +8,20 @@ package seng302.group5.model;
 public interface AgileItem {
 
   /**
+   * Get the label.
+   *
+   * @return The label
+   */
+  String getLabel();
+
+  /**
+   * Set the label.
+   *
+   * @return The label
+   */
+  void setLabel(String label);
+
+  /**
    * Copy values from an existing AgileItem object to the current AgileItem
    *
    * @param agileItem The AgileItem object to copy values from

@@ -21,7 +21,7 @@ import seng302.group5.model.undoredo.UndoRedoObject;
  */
 public class SkillsDialogController {
 
-  @FXML private TextField skillName;
+  @FXML private TextField skillLabel;
   @FXML private TextArea skillDescription;
   @FXML private Button skillCreation;
 
@@ -53,7 +53,7 @@ public class SkillsDialogController {
       thisStage.setTitle("Edit Skill");
       skillCreation.setText("Save");
 
-      skillName.setText(skill.getSkillName());
+      skillLabel.setText(skill.getLabel());
       skillDescription.setText(skill.getSkillDescription());
     }
     this.createOrEdit = createOrEdit;
@@ -76,34 +76,34 @@ public class SkillsDialogController {
   }
 
   /**
-   * Parse a string containing a skill name. Throws exceptions if input is not valid.
+   * Parse a string containing a skill label. Throws exceptions if input is not valid.
    *
-   * @param inputSkillName String of skill name
-   * @return Input project name if it is valid.
+   * @param inputSkillLabel String of skill label
+   * @return Input project label if it is valid.
    * @throws Exception Exception with message explaining why input is invalid.
    */
-  private String parseSkillName(String inputSkillName) throws Exception {
-    inputSkillName = inputSkillName.trim();
+  private String parseSkillLabel(String inputSkillLabel) throws Exception {
+    inputSkillLabel = inputSkillLabel.trim();
 
-    if (inputSkillName.isEmpty()) {
-      throw new Exception("Skill Name is empty");
-    } else if (inputSkillName.length() > 32) {
-      throw new Exception("Skill Name is more than 32 characters long");
+    if (inputSkillLabel.isEmpty()) {
+      throw new Exception("Skill label is empty");
+    } else if (inputSkillLabel.length() > 32) {
+      throw new Exception("Skill label is more than 32 characters long");
     } else {
-      String lastSkillName;
+      String lastSkillLabel;
       if (lastSkill == null) {
-        lastSkillName = "";
+        lastSkillLabel = "";
       } else {
-        lastSkillName = lastSkill.getSkillName();
+        lastSkillLabel = lastSkill.getLabel();
       }
       for (Skill aSkill : mainApp.getSkills()) {
-        String aSkillName = aSkill.getSkillName();
-        if (aSkillName.equals(inputSkillName) && !aSkillName.equals(lastSkillName)) {
-          throw new Exception("Skill name is not unique.");
+        String aSkillLabel = aSkill.getLabel();
+        if (aSkillLabel.equals(inputSkillLabel) && !aSkillLabel.equals(lastSkillLabel)) {
+          throw new Exception("Skill label is not unique.");
         }
       }
     }
-    return inputSkillName;
+    return inputSkillLabel;
   }
 
   /**
@@ -136,9 +136,9 @@ public class SkillsDialogController {
    */
   @FXML
   protected void SkillCreation(ActionEvent e) {
-    String nameOfSkill = null;
+    String labelOfSkill = null;
     try {
-      nameOfSkill = parseSkillName(skillName.getText());
+      labelOfSkill = parseSkillLabel(skillLabel.getText());
     } catch (Exception e1) {
       // Error - Don't create the object
       Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -149,10 +149,10 @@ public class SkillsDialogController {
       return;
     }
     if (createOrEdit == CreateOrEdit.CREATE) {
-      skill = new Skill(nameOfSkill, skillDescription.getText());
+      skill = new Skill(labelOfSkill, skillDescription.getText());
       mainApp.addSkill(skill);
     } else if (createOrEdit == CreateOrEdit.EDIT) {
-      skill.setSkillName(nameOfSkill);
+      skill.setLabel(labelOfSkill);
       skill.setSkillDescription(skillDescription.getText());
       mainApp.refreshList();
     }

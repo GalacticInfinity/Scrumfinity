@@ -10,21 +10,21 @@ import static org.junit.Assert.*;
  */
 public class SkillTest {
 
-  private String skillName;
+  private String skillLabel;
   private String skillDescription;
 
   private Skill skill;
 
   @Before
   public void setUp() throws Exception {
-    skillName = "C++";
+    skillLabel = "C++";
     skillDescription = "Can program in C++";
-    skill = new Skill(skillName, skillDescription);
+    skill = new Skill(skillLabel, skillDescription);
   }
 
   @Test
   public void testToString() throws Exception {
-    String result = skill.getSkillName();
-    assertEquals(skillName, result);
+    String result = skill.getLabel();
+    assertEquals(skillLabel, result);
   }
 }

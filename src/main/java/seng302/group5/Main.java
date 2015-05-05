@@ -578,7 +578,7 @@ public class Main extends Application {
           for (Release releases : projectsReleases) {
             messageLength++;
             message += String.format("%s\n",
-                                     releases.getReleaseName());
+                                     releases.getLabel());
           }
           alert.getDialogPane().setPrefHeight(60 + 30 * messageLength);
           alert.setContentText(message);
@@ -605,8 +605,8 @@ public class Main extends Application {
         if (person.isInTeam()) {
           String message = String.format(
               "Do you want to delete '%s' and remove him/her from the team '%s'?",
-              person.getPersonID(),
-              person.getTeamID());
+              person.getLabel(),
+              person.getTeamLabel());
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
           alert.setTitle("Person is in team");
           alert.setHeaderText(null);
@@ -641,11 +641,11 @@ public class Main extends Application {
           alert.setHeaderText(null);
           int messageLength = 1;
           String message = String.format("Do you want to delete skill '%s' and remove it from:\n",
-                                         skill.getSkillName());
+                                         skill.getLabel());
           for (Person skillUser : skillUsers) {
             messageLength++;
             message += String.format("%s - %s %s\n",
-                                     skillUser.getPersonID(),
+                                     skillUser.getLabel(),
                                      skillUser.getFirstName(),
                                      skillUser.getLastName());
           }
@@ -684,11 +684,11 @@ public class Main extends Application {
 
           int messageLength = 1;
           String message = String.format("Are you sure you want to delete team '%s' and people:\n",
-                                         team.getTeamID());
+                                         team.getLabel());
           for (Person teamMember : team.getTeamMembers()) {
             messageLength++;
             message += String.format("%s - %s %s\n",
-                                     teamMember.getPersonID(),
+                                     teamMember.getLabel(),
                                      teamMember.getFirstName(),
                                      teamMember.getLastName());
           }

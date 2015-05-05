@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
  */
 public class TeamTest {
 
-  private String teamID;
+  private String teamLabel;
   private String teamDescription;
   private ObservableList<Person> teamMembers = FXCollections.observableArrayList();
 
@@ -22,13 +22,13 @@ public class TeamTest {
   @Before
   public void setUp() throws Exception {
     //creating the team to be tested
-    teamID = "TheTeam";
+    teamLabel = "TheTeam";
     teamDescription = "This is the team to end all teams";
-    team = new Team(teamID,teamMembers,teamDescription);  //has no team members
+    team = new Team(teamLabel,teamMembers,teamDescription);  //has no team members
   }
 
   @Test
   public void testToString() throws Exception {
-    assertEquals(team.toString(), teamID);
+    assertEquals(team.toString(), teamLabel);
   }
 }

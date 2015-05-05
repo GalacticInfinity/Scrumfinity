@@ -12,7 +12,7 @@ import javafx.collections.ObservableList;
  */
 public class Team implements AgileItem {
 
-  private String teamID;
+  private String label;
   private String teamDescription;
   private Project currentProject = null;
 
@@ -23,13 +23,13 @@ public class Team implements AgileItem {
    * Default constructor.
    */
   public Team() {
-    this.teamID = "";
+    this.label = "";
     this.teamDescription = "";
     this.membersRole = new HashMap<>();
   }
 
-  public Team(String teamID, String teamDescription) {
-    this.teamID = teamID;
+  public Team(String label, String teamDescription) {
+    this.label = label;
     this.teamDescription = teamDescription;
     this.membersRole = new HashMap<>();
   }
@@ -37,12 +37,12 @@ public class Team implements AgileItem {
   /**
    * Team constructor.
    *
-   * @param teamID          Unique, non-null team ID.
+   * @param label           Unique, non-null team ID.
    * @param teamMembers     List of people in the team.
    * @param teamDescription Description of the team.
    */
-  public Team(String teamID, ObservableList<Person> teamMembers, String teamDescription) {
-    this.teamID = teamID;
+  public Team(String label, ObservableList<Person> teamMembers, String teamDescription) {
+    this.label = label;
     this.teamMembers = teamMembers;
     this.teamDescription = teamDescription;
     this.membersRole = new HashMap<>();
@@ -58,7 +58,7 @@ public class Team implements AgileItem {
    * @param clone Person to clone
    */
   public Team(Team clone) {
-    this.teamID = clone.getTeamID();
+    this.label = clone.getLabel();
     this.teamDescription = clone.getTeamDescription();
     this.teamMembers.clear();
     this.teamMembers.addAll(clone.getTeamMembers());
@@ -76,12 +76,14 @@ public class Team implements AgileItem {
     this.membersRole = membersRole;
   }
 
-  public String getTeamID() {
-    return this.teamID;
+  @Override
+  public String getLabel() {
+    return this.label;
   }
 
-  public void setTeamID(String teamID) {
-    this.teamID = teamID;
+  @Override
+  public void setLabel(String label) {
+    this.label = label;
   }
 
   public String getTeamDescription() {
@@ -148,7 +150,7 @@ public class Team implements AgileItem {
   public void copyValues(AgileItem agileItem) {
     if (agileItem instanceof Team) {
       Team clone = (Team) agileItem;
-      this.teamID = clone.getTeamID();
+      this.label = clone.getLabel();
       this.teamDescription = clone.getTeamDescription();
       this.teamMembers.clear();
       this.teamMembers.addAll(clone.getTeamMembers());
@@ -166,7 +168,7 @@ public class Team implements AgileItem {
    */
   @Override
   public String toString() {
-    return teamID;
+    return label;
   }
 
   /**
@@ -180,7 +182,7 @@ public class Team implements AgileItem {
     boolean result = false;
     if (obj instanceof Team) {
       Team team = (Team) obj;
-      result = this.teamID.equals(team.getTeamID());
+      result = this.label.equals(team.getLabel());
     }
     return result;
   }

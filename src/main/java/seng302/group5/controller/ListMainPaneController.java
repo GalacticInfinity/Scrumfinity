@@ -200,21 +200,21 @@ public class ListMainPaneController {
         Person person = (Person) next;
 
         displayTextArea.appendText("Person Information \nPerson ID: ");
-        displayTextArea.appendText(person.getPersonID());
+        displayTextArea.appendText(person.getLabel());
         displayTextArea.appendText("\nFirst Name: ");
         displayTextArea.appendText(person.getFirstName());
         displayTextArea.appendText("\nLast Name: ");
         displayTextArea.appendText(person.getLastName());
         displayTextArea.appendText("\nTeam: ");
         if (person.isInTeam()) {
-          displayTextArea.appendText(person.getTeamID());
+          displayTextArea.appendText(person.getTeamLabel());
         } else {
           displayTextArea.appendText("Not assigned.");
         }
         displayTextArea.appendText("\nSkills: ");
         StringBuilder listOfSkills = new StringBuilder();
         for (Skill skill : person.getSkillSet()) {
-          listOfSkills.append(skill.getSkillName());
+          listOfSkills.append(skill.getLabel());
           listOfSkills.append(", ");
         }
         if (listOfSkills.length() == 0) {
@@ -227,7 +227,7 @@ public class ListMainPaneController {
         Project project = (Project) next;
 
         displayTextArea.appendText("Project Information \nProject ID: ");
-        displayTextArea.appendText(project.getProjectID());
+        displayTextArea.appendText(project.getLabel());
         displayTextArea.appendText("\nProject Name: ");
         displayTextArea.appendText(project.getProjectName());
         displayTextArea.appendText("\nProject Description: \n");
@@ -241,7 +241,7 @@ public class ListMainPaneController {
         Skill skill = (Skill) next;
 
         displayTextArea.appendText("Skill Information \nSkill Name: ");
-        displayTextArea.appendText(skill.getSkillName());
+        displayTextArea.appendText(skill.getLabel());
         displayTextArea.appendText("\nSkill Description: ");
         displayTextArea.appendText(skill.getSkillDescription());
 
@@ -250,14 +250,14 @@ public class ListMainPaneController {
         Team team = (Team) next; //Casts next as Team object
 
         displayTextArea.appendText("Team Information \nTeam ID: ");
-        displayTextArea.appendText(team.getTeamID());
+        displayTextArea.appendText(team.getLabel());
         displayTextArea.appendText("\nTeam Description: ");
         displayTextArea.appendText(team.getTeamDescription());
         displayTextArea.appendText("\nTeam Members: \n");
         for (Person member : team.getTeamMembers()) {
           displayTextArea.appendText(member.getFirstName());
           displayTextArea.appendText(" - ");
-          displayTextArea.appendText(member.getPersonID());
+          displayTextArea.appendText(member.getLabel());
           displayTextArea.appendText(" Role: ");
           Role role = team.getMembersRole().get(member);
           if (role != null) {
@@ -272,7 +272,7 @@ public class ListMainPaneController {
         Release release = (Release) next;
 
         displayTextArea.appendText("Release Information \nRelease Name: ");
-        displayTextArea.appendText(release.getReleaseName());
+        displayTextArea.appendText(release.getLabel());
         displayTextArea.appendText("\nRelease Description: ");
         displayTextArea.appendText(release.getReleaseDescription());
         displayTextArea.appendText("\nRelease Date: ");

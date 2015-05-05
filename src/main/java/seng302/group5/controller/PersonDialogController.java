@@ -23,7 +23,7 @@ import seng302.group5.model.undoredo.UndoRedoObject;
  */
 public class PersonDialogController {
 
-  @FXML private TextField personIDField;
+  @FXML private TextField personLabelField;
   @FXML private TextField personFirstNameField;
   @FXML private TextField personLastNameField;
   @FXML private Button btnCreatePerson;
@@ -64,7 +64,7 @@ public class PersonDialogController {
       thisStage.setTitle("Edit Person");
       btnCreatePerson.setText("Save");
 
-      personIDField.setText(person.getPersonID());
+      personLabelField.setText(person.getLabel());
       personFirstNameField.setText(person.getFirstName());
       personLastNameField.setText(person.getLastName());
       selectedSkills = person.getSkillSet();
@@ -118,13 +118,13 @@ public class PersonDialogController {
     errors.append("Invalid Fields:");
     int noErrors = 0;
 
-    String personID = "";
+    String personLabel = "";
     String personFirstName = personFirstNameField.getText().trim();
     String personLastName = personLastNameField.getText().trim();
     ObservableList<Skill> personSkillSet = personSkillList.getItems();
 
     try {
-      personID = parsePersonID(personIDField.getText());
+      personLabel = parsePersonLabel(personLabelField.getText());
     } catch (Exception e) {
       noErrors++;
       errors.append(String.format("\n\t%s", e.getMessage()));
@@ -143,10 +143,10 @@ public class PersonDialogController {
       alert.showAndWait();
     } else {
       if (createOrEdit == CreateOrEdit.CREATE) {
-        person = new Person(personID, personFirstName, personLastName, personSkillSet);
+        person = new Person(personLabel, personFirstName, personLastName, personSkillSet);
         mainApp.addPerson(person);
       } else if (createOrEdit == CreateOrEdit.EDIT) {
-        person.setPersonID(personID);
+        person.setLabel(personLabel);
         person.setFirstName(personFirstName);
         person.setLastName(personLastName);
         person.setSkillSet(personSkillSet);
@@ -171,34 +171,34 @@ public class PersonDialogController {
   }
 
   /**
-   * Checks that the Person ID entry box contains valid input.
+   * Checks that the Person label entry box contains valid input.
    *
-   * @param inputPersonID Person ID from entry field.
-   * @return Person ID if ID is valid.
+   * @param inputPersonLabel Person label from entry field.
+   * @return Person label if label is valid.
    * @throws Exception Any invalid input.
    */
-  private String parsePersonID(String inputPersonID) throws Exception {
-    inputPersonID = inputPersonID.trim();
+  private String parsePersonLabel(String inputPersonLabel) throws Exception {
+    inputPersonLabel = inputPersonLabel.trim();
 
-    if (inputPersonID.isEmpty()) {
-      throw new Exception("Person ID is empty.");
-    } else if (inputPersonID.length() > 8) {
-      throw new Exception("Person ID is more than 8 characters long");
+    if (inputPersonLabel.isEmpty()) {
+      throw new Exception("Person label is empty.");
+    } else if (inputPersonLabel.length() > 8) {
+      throw new Exception("Person label is more than 8 characters long");
     } else {
-      String lastPersonID;
+      String lastPersonLabel;
       if (lastPerson == null) {
-        lastPersonID = "";
+        lastPersonLabel = "";
       } else {
-        lastPersonID = lastPerson.getPersonID();
+        lastPersonLabel = lastPerson.getLabel();
       }
       for (Person personInList : mainApp.getPeople()) {
-        String personID = personInList.getPersonID();
-        if (personID.equals(inputPersonID) && !personID.equals(lastPersonID)) {
-          throw new Exception("Person ID is not unique");
+        String personLabel = personInList.getLabel();
+        if (personLabel.equals(inputPersonLabel) && !personLabel.equals(lastPersonLabel)) {
+          throw new Exception("Person label is not unique");
         }
       }
     }
-    return inputPersonID;
+    return inputPersonLabel;
   }
 
   /**
