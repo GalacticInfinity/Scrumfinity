@@ -87,7 +87,7 @@ public class NewLoading {
         // Mandatory fields
         projectLine = loadedFile.readLine();
         projectData = projectLine.replaceAll("(?i)(.*<projectID.*?>)(.+?)(</projectID>)", "$2");
-        newProject.setProjectID(projectData);
+        newProject.setLabel(projectData);
         projectLine = loadedFile.readLine();
         projectData = projectLine.replaceAll("(?i)(.*<projectName.*?>)(.+?)(</projectName>)", "$2");
         newProject.setProjectName(projectData);
@@ -107,7 +107,7 @@ public class NewLoading {
 
                 projectLine = loadedFile.readLine();
                 projectData = projectLine.replaceAll("(?i)(.*<agileTeam.*?>)(.+?)(</agileTeam>)", "$2");
-                tempTeam.setTeamID(projectData);
+                tempTeam.setLabel(projectData);
                 teamHistoryItem.setAgileItem(tempTeam);
                 projectLine = loadedFile.readLine();
                 projectData = projectLine.replaceAll("(?i)(.*<startDate.*?>)(.+?)(</startDate>)", "$2");
@@ -156,7 +156,7 @@ public class NewLoading {
         // Mandatory data
         personLine = loadedFile.readLine();
         personData = personLine.replaceAll("(?i)(.*<personID.*?>)(.+?)(</personID>)", "$2");
-        newPerson.setPersonID(personData);
+        newPerson.setLabel(personData);
 
         // Optional data
         while ((!(personLine = loadedFile.readLine()).equals("\t</Person>"))) {
@@ -173,7 +173,7 @@ public class NewLoading {
               if (personLine.startsWith("\t\t\t<PersonSkill>")) {
                 tempSkill = new Skill();
                 personData = personLine.replaceAll("(?i)(.*<PersonSkill.*?>)(.+?)(</PersonSkill>)", "$2");
-                tempSkill.setSkillName(personData);
+                tempSkill.setLabel(personData);
                 skills.add(tempSkill);
               }
             }
@@ -205,7 +205,7 @@ public class NewLoading {
         // Mandatory data
         skillLine = loadedFile.readLine();
         skillData = skillLine.replaceAll("(?i)(.*<skillID.*?>)(.+?)(</skillID>)", "$2");
-        newSkill.setSkillName(skillData);
+        newSkill.setLabel(skillData);
 
         // Non mandatory data
         while ((!(skillLine = loadedFile.readLine()).equals("\t</Skill>"))) {
@@ -214,8 +214,8 @@ public class NewLoading {
             newSkill.setSkillDescription(skillData);
           }
         }
-        if (newSkill.getSkillName().equals("Product Owner") ||
-            newSkill.getSkillName().equals("Scrum Master")) {
+        if (newSkill.getLabel().equals("Product Owner") ||
+            newSkill.getLabel().equals("Scrum Master")) {
           main.getNonRemovable().add(newSkill);
         }
         main.addSkill(newSkill);
@@ -229,7 +229,7 @@ public class NewLoading {
       for (Skill personSkill : person.getSkillSet()) {
         // For every skill in main app
         for (Skill mainSkill : main.getSkills()) {
-          if (mainSkill.getSkillName().equals(personSkill.getSkillName())) {
+          if (mainSkill.getLabel().equals(personSkill.getLabel())) {
             // Remove loaded skill object
             skillArray.add(mainSkill);
           }
@@ -264,7 +264,7 @@ public class NewLoading {
         // Mandatory fields
         teamLine = loadedFile.readLine();
         teamData = teamLine.replaceAll("(?i)(.*<teamID.*?>)(.+?)(</teamID>)", "$2");
-        newTeam.setTeamID(teamData);
+        newTeam.setLabel(teamData);
 
         // Non mandatory fields
         while (!(teamLine = loadedFile.readLine()).equals("\t</Team>")) {
@@ -279,7 +279,7 @@ public class NewLoading {
           if (teamLine.startsWith("\t\t<teamProject>")) {
             teamData = teamLine.replaceAll("(?i)(.*<teamProject.*?>)(.+?)(</teamProject>)", "$2");
             for (Project project : main.getProjects()) {
-              if (teamData.equals(project.getProjectID())) {
+              if (teamData.equals(project.getLabel())) {
                 newTeam.setCurrentProject(project);
               }
             }
@@ -315,7 +315,7 @@ public class NewLoading {
           if (teamLine.startsWith("\t\t\t\t<teamPersonID>")) {
             teamData = teamLine.replaceAll("(?i)(.*<teamPersonID.*?>)(.+?)(</teamPersonID>)", "$2");
             for (Person person : main.getPeople()) {
-              if (person.getPersonID().equals(teamData)) {
+              if (person.getLabel().equals(teamData)) {
                 people.add(person);
                 tempPerson = person;
                 break;
@@ -325,7 +325,7 @@ public class NewLoading {
           if (teamLine.startsWith("\t\t\t\t<personRole>")) {
             tempRole = new Role();
             teamData = teamLine.replaceAll("(?i)(.*<personRole.*?>)(.+?)(</personRole>)", "$2");
-            tempRole.setRoleID(teamData);
+            tempRole.setLabel(teamData);
           }
         }
         roles.put(tempPerson, tempRole);
@@ -359,7 +359,7 @@ public class NewLoading {
 
         releaseLine = loadedFile.readLine();
         releaseData = releaseLine.replaceAll("(?i)(.*<releaseID.*?>)(.+?)(</releaseID>)", "$2");
-        newRelease.setReleaseName(releaseData);
+        newRelease.setLabel(releaseData);
         releaseLine = loadedFile.readLine();
         releaseData = releaseLine.replaceAll(
             "(?i)(.*<releaseDescription.*?>)(.+?)(</releaseDescription>)", "$2");
@@ -372,7 +372,7 @@ public class NewLoading {
                                              "$2");
         // Get correct project from main for concurrency
         for (Project project : main.getProjects()) {
-          if (project.getProjectID().equals(releaseData)) {
+          if (project.getLabel().equals(releaseData)) {
             newRelease.setProjectRelease(project);
           }
         }
@@ -407,7 +407,7 @@ public class NewLoading {
         // Mandatory fields
         roleLine = loadedFile.readLine();
         roleData = roleLine.replaceAll("(?i)(.*<roleID.*?>)(.+?)(</roleID>)", "$2");
-        newRole.setRoleID(roleData);
+        newRole.setLabel(roleData);
         roleLine = loadedFile.readLine();
         roleData = roleLine.replaceAll("(?i)(.*<roleName.*?>)(.+?)(</roleName>)", "$2");
         newRole.setRoleName(roleData);
@@ -417,7 +417,7 @@ public class NewLoading {
           if (roleLine.startsWith("\t\t<roleSkill>")) {
             roleData = roleLine.replaceAll("(?i)(.*<roleSkill.*?>)(.+?)(</roleSkill>)", "$2");
             for (Skill skill : main.getSkills()) {
-              if (skill.getSkillName().equals(roleData)) {
+              if (skill.getLabel().equals(roleData)) {
                 newRole.setRequiredSkill(skill);
               }
             }
@@ -442,7 +442,7 @@ public class NewLoading {
         // For every Team that is in Main App
         for (Team team : main.getTeams()) {
           Team historyTeam = (Team) teamHistory.getAgileItem();
-          if (team.getTeamID().equals(historyTeam.getTeamID())) {
+          if (team.getLabel().equals(historyTeam.getLabel())) {
             teamHistory.setAgileItem(team);
           }
         }
@@ -460,7 +460,7 @@ public class NewLoading {
         tempRole = team.getMembersRole().get(person);
         if (tempRole != null) {
           for (Role role : main.getRoles()) {
-            if (tempRole.getRoleID().equals(role.getRoleID())) {
+            if (tempRole.getLabel().equals(role.getLabel())) {
               team.getMembersRole().put(person, role);
               break;
             }

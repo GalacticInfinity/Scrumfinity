@@ -33,7 +33,7 @@ public class PersonTest {
 
     //create the team to be used for testing
     team = new Team();
-    team.setTeamID("Team1");
+    team.setLabel("Team1");
     team.setTeamDescription("For the tests");
   }
 
@@ -78,7 +78,7 @@ public class PersonTest {
 
   @Test
   public void testToString() throws Exception {
-    String result = person.getPersonID();
+    String result = person.getLabel();
     assertEquals(personID, result);
   }
 }

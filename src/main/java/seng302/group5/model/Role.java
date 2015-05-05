@@ -7,7 +7,7 @@ package seng302.group5.model;
  */
 public class Role {
 
-  private String roleID;
+  private String label;
   private String roleName;
   private Skill requiredSkill;
   private int memberLimit;
@@ -16,11 +16,11 @@ public class Role {
   /**
    * Simple Constructor.
    *
-   * @param roleID   Unique, non-null ID for the role.
+   * @param label    Unique, non-null label for the role.
    * @param roleName Name of the role.
    */
-  public Role(String roleID, String roleName) {
-    this.roleID = roleID;
+  public Role(String label, String roleName) {
+    this.label = label;
     this.roleName = roleName;
     this.requiredSkill = null;
     this.memberLimit = Integer.MAX_VALUE; // Infinity
@@ -29,13 +29,13 @@ public class Role {
   /**
    * Constructor.
    *
-   * @param roleID      Unique, non-null ID for role.
+   * @param label       Unique, non-null label for role.
    * @param roleName    Name of the role.
    * @param skill       The skill required to be assigned this role.
    * @param memberLimit The number of members allowed to have this role.
    */
-  public Role(String roleID, String roleName, Skill skill, int memberLimit) {
-    this.roleID = roleID;
+  public Role(String label, String roleName, Skill skill, int memberLimit) {
+    this.label = label;
     this.roleName = roleName;
     this.requiredSkill = skill;
     this.memberLimit = memberLimit;
@@ -45,19 +45,19 @@ public class Role {
    * Default Constructor.
    */
   public Role() {
-    this.roleID = "";
+    this.label = "";
     this.roleName = "";
     this.requiredSkill = null;
     this.memberLimit = Integer.MAX_VALUE;
   }
 
 
-  public String getRoleID() {
-    return roleID;
+  public String getLabel() {
+    return label;
   }
 
-  public void setRoleID(String roleID) {
-    this.roleID = roleID;
+  public void setLabel(String label) {
+    this.label = label;
   }
 
   public String getRoleName() {

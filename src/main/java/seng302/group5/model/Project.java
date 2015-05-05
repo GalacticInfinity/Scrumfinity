@@ -8,7 +8,7 @@ import javafx.collections.ObservableList;
  */
 public class Project implements AgileItem {
 
-  private String projectID;
+  private String label;
   private String projectName;
   private String projectDescription;
   private ObservableList<AgileHistory> allocatedTeams = FXCollections.observableArrayList();
@@ -18,7 +18,7 @@ public class Project implements AgileItem {
    * Default constructor
    */
   public Project() {
-    projectID = "";
+    label = "";
     projectName = "";
     projectDescription = "";
   }
@@ -26,12 +26,12 @@ public class Project implements AgileItem {
   /**
    * Constructor.
    *
-   * @param projectID          Name of Person, Unique, Non-Null, can't be greater then 8 characters.
+   * @param label              Name of Person, Unique, Non-Null, can't be greater then 8 characters.
    * @param projectName        Description of person
    * @param projectDescription Date of birth of person?
    */
-  public Project(String projectID, String projectName, String projectDescription) {
-    this.projectID = projectID;
+  public Project(String label, String projectName, String projectDescription) {
+    this.label = label;
     this.projectName = projectName;
     this.projectDescription = projectDescription;
   }
@@ -42,19 +42,21 @@ public class Project implements AgileItem {
    * @param clone Project to clone
    */
   public Project(Project clone) {
-    this.projectID = clone.getProjectID();
+    this.label = clone.getLabel();
     this.projectName = clone.getProjectName();
     this.projectDescription = clone.getProjectDescription();
     this.allocatedTeams.clear();
     this.allocatedTeams.addAll(clone.getAllocatedTeams());
   }
 
-  public String getProjectID() {
-    return projectID;
+  @Override
+  public String getLabel() {
+    return label;
   }
 
-  public void setProjectID(String name) {
-    this.projectID = name;
+  @Override
+  public void setLabel(String name) {
+    this.label = name;
   }
 
   public String getProjectName() {
@@ -104,7 +106,7 @@ public class Project implements AgileItem {
   public void copyValues(AgileItem agileItem) {
     if (agileItem instanceof Project) {
       Project clone = (Project) agileItem;
-      this.projectID = clone.getProjectID();
+      this.label = clone.getLabel();
       this.projectName = clone.getProjectName();
       this.projectDescription = clone.getProjectDescription();
       this.allocatedTeams.clear();
@@ -113,11 +115,11 @@ public class Project implements AgileItem {
   }
 
   /**
-   * toString method just return projectID
+   * toString method just return label
    */
   @Override
   public String toString() {
-    return this.projectID;
+    return this.label;
   }
 
   /**
@@ -131,7 +133,7 @@ public class Project implements AgileItem {
     boolean result = false;
     if (obj instanceof Project) {
       Project project = (Project) obj;
-      result = this.projectID.equals(project.getProjectID());
+      result = this.label.equals(project.getLabel());
     }
     return result;
   }

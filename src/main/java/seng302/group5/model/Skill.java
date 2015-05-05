@@ -5,34 +5,34 @@ package seng302.group5.model;
  */
 public class Skill implements AgileItem {
 
-  private String skillID;
+  private String label;
   private String skillDescription;
 
   /**
    * Default constructor for skill
    */
   public Skill() {
-    this.skillID = "";
+    this.label = "";
     this.skillDescription = "";
   }
 
   /**
    * Skill constructor with skill skillName only.
    *
-   * @param skillName short skillName of a skill
+   * @param label short name of a skill
    */
-  public Skill(String skillName) {
-    this.skillID = skillName;
+  public Skill(String label) {
+    this.label = label;
   }
 
   /**
    * Skill constructor with both skill skillName and skill skillDescription.
    *
-   * @param skillName        short skillName of a skill
+   * @param label            short name of a skill
    * @param skillDescription Description of the skill
    */
-  public Skill(String skillName, String skillDescription) {
-    this.skillID = skillName;
+  public Skill(String label, String skillDescription) {
+    this.label = label;
     this.skillDescription = skillDescription;
   }
 
@@ -42,7 +42,7 @@ public class Skill implements AgileItem {
    * @param clone Skill to clone
    */
   public Skill(Skill clone) {
-    this.skillID = clone.getSkillName();
+    this.label = clone.getLabel();
     this.skillDescription = clone.getSkillDescription();
   }
 
@@ -51,8 +51,9 @@ public class Skill implements AgileItem {
    *
    * @return skillName of the skill
    */
-  public String getSkillName() {
-    return skillID;
+  @Override
+  public String getLabel() {
+    return label;
   }
 
   /**
@@ -60,8 +61,9 @@ public class Skill implements AgileItem {
    *
    * @param skillName skillName of the skill
    */
-  public void setSkillName(String skillName) {
-    this.skillID = skillName;
+  @Override
+  public void setLabel(String skillName) {
+    this.label = skillName;
   }
 
   /**
@@ -86,7 +88,7 @@ public class Skill implements AgileItem {
   public void copyValues(AgileItem agileItem) {
     if (agileItem instanceof Skill) {
       Skill clone = (Skill) agileItem;
-      this.skillID = clone.getSkillName();
+      this.label = clone.getLabel();
       this.skillDescription = clone.getSkillDescription();
     }
   }
@@ -98,7 +100,7 @@ public class Skill implements AgileItem {
    */
   @Override
   public String toString() {
-    return this.getSkillName();
+    return this.getLabel();
   }
 
   /**
@@ -112,7 +114,7 @@ public class Skill implements AgileItem {
     boolean result = false;
     if (obj instanceof Skill) {
       Skill skill = (Skill) obj;
-      result = this.skillID.equals(skill.getSkillName());
+      result = this.label.equals(skill.getLabel());
     }
     return result;
   }

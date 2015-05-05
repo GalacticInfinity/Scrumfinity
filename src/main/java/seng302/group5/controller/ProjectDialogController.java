@@ -78,7 +78,7 @@ public class ProjectDialogController {
       thisStage.setTitle("Edit Project");
       btnConfirm.setText("Save");
       initialiseLists(CreateOrEdit.EDIT, project);
-      projectIDField.setText(project.getProjectID());
+      projectIDField.setText(project.getLabel());
       projectNameField.setText(project.getProjectName());
       projectDescriptionField.setText(project.getProjectDescription());
 
@@ -147,10 +147,10 @@ public class ProjectDialogController {
       if (lastProject == null) {
         lastProjectID = "";
       } else {
-        lastProjectID = lastProject.getProjectID();
+        lastProjectID = lastProject.getLabel();
       }
       for (Project projectInList : mainApp.getProjects()) {
-        String projectID = projectInList.getProjectID();
+        String projectID = projectInList.getLabel();
         if (projectID.equals(inputProjectID) && !projectID.equals(lastProjectID)) {
           throw new Exception("Project ID is not unique.");
         }
@@ -197,7 +197,7 @@ public class ProjectDialogController {
       for (Project project1 : mainApp.getProjects()) {
         for (AgileHistory team1 : project1.getAllocatedTeams()) {
           if (Objects.equals(team.toString(), team1.getAgileItem().toString()) &&
-              !project.getProjectID().equals(project1.getProjectID())) {
+              !project.getLabel().equals(project1.getLabel())) {
             if (team1.getStartDate().isEqual(startDate) || team1.getEndDate().isEqual(endDate)) {
               throw new Exception("The selected team is already assigned during selected dates.");
             }
@@ -365,7 +365,7 @@ public class ProjectDialogController {
         mainApp.addProject(project);
       } else {
         if (createOrEdit == CreateOrEdit.EDIT) {
-          project.setProjectID(projectID);
+          project.setLabel(projectID);
           project.setProjectName(projectName);
           project.setProjectDescription(projectDescription);
           project.getAllocatedTeams().clear();

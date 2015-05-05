@@ -24,7 +24,7 @@ public class SkillTest {
 
   @Test
   public void testToString() throws Exception {
-    String result = skill.getSkillName();
+    String result = skill.getLabel();
     assertEquals(skillName, result);
   }
 }

@@ -64,7 +64,7 @@ public class PersonDialogController {
       thisStage.setTitle("Edit Person");
       btnCreatePerson.setText("Save");
 
-      personIDField.setText(person.getPersonID());
+      personIDField.setText(person.getLabel());
       personFirstNameField.setText(person.getFirstName());
       personLastNameField.setText(person.getLastName());
       selectedSkills = person.getSkillSet();
@@ -146,7 +146,7 @@ public class PersonDialogController {
         person = new Person(personID, personFirstName, personLastName, personSkillSet);
         mainApp.addPerson(person);
       } else if (createOrEdit == CreateOrEdit.EDIT) {
-        person.setPersonID(personID);
+        person.setLabel(personID);
         person.setFirstName(personFirstName);
         person.setLastName(personLastName);
         person.setSkillSet(personSkillSet);
@@ -189,10 +189,10 @@ public class PersonDialogController {
       if (lastPerson == null) {
         lastPersonID = "";
       } else {
-        lastPersonID = lastPerson.getPersonID();
+        lastPersonID = lastPerson.getLabel();
       }
       for (Person personInList : mainApp.getPeople()) {
-        String personID = personInList.getPersonID();
+        String personID = personInList.getLabel();
         if (personID.equals(inputPersonID) && !personID.equals(lastPersonID)) {
           throw new Exception("Person ID is not unique");
         }

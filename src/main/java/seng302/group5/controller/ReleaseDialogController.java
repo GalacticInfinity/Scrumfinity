@@ -121,7 +121,7 @@ public class ReleaseDialogController {
         release = new Release(releaseId, releaseDescription, releaseNotes, releaseDate, releaseProject);
         mainApp.addRelease(release);
       } else if (createOrEdit == CreateOrEdit.EDIT) {
-        release.setReleaseName(releaseId);
+        release.setLabel(releaseId);
         release.setReleaseDescription(releaseDescription);
         release.setReleaseDate(releaseDate);
         release.setReleaseNotes(releaseNotes);
@@ -185,7 +185,7 @@ public class ReleaseDialogController {
       thisStage.setTitle("Edit Release");
       btnConfirm.setText("Save");
 
-      releaseIDField.setText(release.getReleaseName());
+      releaseIDField.setText(release.getLabel());
       releaseDescriptionField.setText(release.getReleaseDescription());
       this.selectedProject.add(release.getProjectRelease());
       this.releaseDateField.setValue(release.getReleaseDate());
@@ -283,10 +283,10 @@ public class ReleaseDialogController {
       if (lastRelease == null) {
         lastReleaseID = "";
       } else {
-        lastReleaseID = lastRelease.getReleaseName();
+        lastReleaseID = lastRelease.getLabel();
       }
       for (Release releaseInList : mainApp.getReleases()) {
-        String releaseName = releaseInList.getReleaseName();
+        String releaseName = releaseInList.getLabel();
         if (releaseName.equals(inputReleaseID) && !releaseName.equals(lastReleaseID)) {
           throw new Exception("Release ID is not unique");
         }
