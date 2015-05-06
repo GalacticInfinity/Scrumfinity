@@ -15,8 +15,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import seng302.group5.Main;
+import seng302.group5.model.AgileHistory;
+import seng302.group5.model.Person;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
+import seng302.group5.model.Team;
+
 
 /**
  * Created by Michael + Craig on 5/5/2015.
@@ -27,6 +31,9 @@ public class ReportWriter {
   private Document report;
   private Element rootElement;
   Element projElem;
+  Element releasesElement;
+  Element teamElement;
+  Element membersElement;
 
   /**
    * Creates a report based on data currently stored in the main application memory.
@@ -58,10 +65,18 @@ public class ReportWriter {
         }
         projElem.appendChild(projDesc);
 
+        releasesElement = report.createElement("Releases");
+        projElem.appendChild(releasesElement);
+
         for (Release release : mainApp.getReleases()) {
           if (release.getProjectRelease().getLabel().equals(project.getLabel())) {
             createReleaseChild(release);
           }
+        }
+        teamElement = report.createElement("Teams");
+        projElem.appendChild(teamElement);
+        for (AgileHistory team : project.getAllocatedTeams()) {
+          createTeamChild(mainApp, team);
         }
         //  For allocated releases
         //    create release child
@@ -100,7 +115,7 @@ public class ReportWriter {
 
   public void createReleaseChild(Release release) {
     Element releaseElem = report.createElement("Release");
-    projElem.appendChild(releaseElem);
+    releasesElement.appendChild(releaseElem);
     releaseElem.setAttribute("label", release.getLabel());
 
     Element releaseDesc = report.createElement("Description");
@@ -114,5 +129,47 @@ public class ReportWriter {
     Element releaseDate = report.createElement("ReleaseDate");
     releaseDate.appendChild(report.createTextNode(release.getReleaseDate().toString()));
     releaseElem.appendChild(releaseDate);
+  }
+
+
+  public void createTeamChild(Main mainApp, AgileHistory team) {
+
+    Element teamElem = report.createElement("Team");
+    teamElement.appendChild(teamElem);
+    teamElem.setAttribute("label", team.getAgileItem().getLabel());
+
+    Element teamStartDate = report.createElement("StartDate");
+    teamStartDate.appendChild(report.createTextNode(team.getStartDate().toString()));
+    teamElem.appendChild(teamStartDate);
+
+    Element teamEndDate = report.createElement("EndDate");
+    teamEndDate.appendChild(report.createTextNode(team.getEndDate().toString()));
+    teamElem.appendChild(teamEndDate);
+
+    membersElement = report.createElement("Members");
+    teamElement.appendChild(membersElement);
+    for (Team listTeam : mainApp.getTeams()) {
+
+      if (team.getAgileItem().getLabel().equals(listTeam.getLabel())) {
+        System.out.println(listTeam.getLabel());
+        createPersonChild(listTeam, teamElem);
+      }
+    }
+  }
+
+  public void createPersonChild(Team listTeam, Element teamElem) {
+    for (Person member : listTeam.getTeamMembers()) {
+      Element memberElem = report.createElement("Member");
+      membersElement.appendChild(memberElem);
+      memberElem.setAttribute("label", member.getLabel());
+
+      Element teamMemberName = report.createElement("FirstName");
+      teamMemberName.appendChild(report.createTextNode(member.getFirstName()));
+      memberElem.appendChild(teamMemberName);
+
+      Element teamMemberLastName = report.createElement("LastName");
+      teamMemberLastName.appendChild(report.createTextNode(member.getLastName()));
+      memberElem.appendChild(teamMemberLastName);
+    }
   }
 }
