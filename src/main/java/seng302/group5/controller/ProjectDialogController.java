@@ -39,9 +39,6 @@ public class ProjectDialogController {
   @FXML private DatePicker teamStartDate;
   @FXML private DatePicker teamEndDate;
   @FXML private Button btnConfirm;
-  @FXML private Button btnAddTeam;
-  @FXML private Button btnRemoveTeam;
-
 
   private Main mainApp;
   private Stage thisStage;
@@ -68,7 +65,6 @@ public class ProjectDialogController {
     this.mainApp = mainApp;
     this.thisStage = thisStage;
     teamStartDate.setValue(LocalDate.now());
-    teamEndDate.setValue(LocalDate.now());
 
     if (createOrEdit == CreateOrEdit.CREATE) {
       thisStage.setTitle("Create New Project");
@@ -194,7 +190,7 @@ public class ProjectDialogController {
    */
   private void parseProjectDates(LocalDate startDate, LocalDate endDate, Team team)
       throws Exception {
-    if (startDate.isAfter(endDate)) {
+    if (endDate != null && startDate.isAfter(endDate)) {
       throw new Exception("Start date must be before End Date");
     } else if (team == null) {
       throw new Exception("Please select a team to assign.");

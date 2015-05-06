@@ -18,8 +18,9 @@ import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoObject;
 
 /**
+ * The controller for the person dialog when creating a new person or editing an existing one.
+ *
  * Created by Zander on 18/03/2015.
- * The controller for the person dialog when creating a new person or editing an existing one
  */
 public class PersonDialogController {
 

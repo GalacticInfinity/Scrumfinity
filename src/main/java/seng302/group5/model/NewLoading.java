@@ -6,11 +6,13 @@ import java.io.FileReader;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import seng302.group5.Main;
+import seng302.group5.model.util.Settings;
 
 /**
  * Class for loading xml save files
@@ -20,6 +22,7 @@ public class NewLoading {
 
   private Main main;
   private BufferedReader loadedFile;
+  private double saveVersion = 0;
 
   public NewLoading(Main main) {
     this.main = main;
@@ -39,6 +42,7 @@ public class NewLoading {
     }
     try {
       loadedFile = new BufferedReader(new FileReader(filename));
+      loadHeader();
       loadProjects();
       loadPeople();
       loadSkills();
@@ -47,6 +51,9 @@ public class NewLoading {
       syncTeamAllocation();
       loadRoles();
       syncRoles();
+      if (saveVersion >= 0.2) {
+        //Load stories
+      }
     } catch (Exception e) {
       Alert alert = new Alert(Alert.AlertType.ERROR);
       alert.setTitle("Loading Error");
@@ -62,6 +69,23 @@ public class NewLoading {
       } catch (Exception ex) {
         ex.printStackTrace();
       }
+    }
+  }
+
+  /**
+   * Loads the header, if no header available, assumes saveFile is version 0.1
+   * @throws Exception Could not read line from file.
+   */
+  private void loadHeader() throws Exception {
+    String headerLine;
+    String progVersion;
+    String orgName;
+    headerLine = loadedFile.readLine();
+    if (headerLine.startsWith("<scrumfinity")) {
+      progVersion = headerLine.replaceAll("(?i)(.*version=\")(.+?)(\" org.*)", "$2");
+      orgName = headerLine.replaceAll("(?i)(.*organization=\")(.+?)(\">)", "$2");
+      Settings.organizationName = orgName;
+      saveVersion = Double.parseDouble(progVersion);
     }
   }
 
