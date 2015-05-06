@@ -3,12 +3,17 @@ package seng302.group5.controller;
 import java.io.File;
 import java.util.Optional;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -299,7 +304,9 @@ public class MenuBarController {
     }
   }
 
-
+  /**
+   * Handles menu item Revert, initiates report creation process.
+   */
   @FXML
   protected void btnClickReport() {
     FileChooser fileChooser = new FileChooser();
@@ -310,6 +317,52 @@ public class MenuBarController {
     report.writeReport(mainApp, file);
   }
 
+  /**
+   * Handles menu item Org. Name, lets user assign organization name through dialog.
+   */
+  @FXML
+  protected void btnClickOrganization() {
+    // Basic setup
+    Dialog<String> orgDialog = new Dialog<>();
+    orgDialog.setTitle("Organization Name");
+    orgDialog.setHeaderText("Enter organization name");
+    orgDialog.setGraphic(null);
+
+    ButtonType acceptButtonType = new ButtonType("Accept", ButtonBar.ButtonData.OK_DONE);
+    orgDialog.getDialogPane().getButtonTypes().addAll(acceptButtonType, ButtonType.CANCEL);
+
+    TextField orgField = new TextField();
+    if (!Settings.organizationName.isEmpty()) {
+      orgField.setText(Settings.organizationName);
+    } else {
+      orgField.setPromptText("Default");
+    }
+
+    Node acceptButton = orgDialog.getDialogPane().lookupButton(acceptButtonType);
+    acceptButton.setDisable(true);
+
+    orgField.textProperty().addListener((observable, oldValue, newValue) -> {
+      acceptButton.setDisable(newValue.equals(Settings.organizationName));
+    });
+
+    orgDialog.getDialogPane().setContent(orgField);
+    Platform.runLater(() -> orgField.requestFocus());
+
+    orgDialog.setResultConverter(dialogButton -> {
+      if (dialogButton == acceptButtonType) {
+        return new String(orgField.getText());
+      }
+      return null;
+    });
+
+    Optional<String> result = orgDialog.showAndWait();
+
+    result.ifPresent(newField -> {
+      Settings.organizationName = result.get();
+      mainApp.setMainTitle("Scrumfinity - " + Settings.organizationName);
+      mainApp.toggleName();
+    });
+  }
 
   /**
    * Populates left side with projects.

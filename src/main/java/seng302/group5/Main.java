@@ -35,6 +35,7 @@ import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoHandler;
 import seng302.group5.model.undoredo.UndoRedoObject;
+import seng302.group5.model.util.Settings;
 
 /**
  * Main class to run the application
@@ -809,6 +810,10 @@ public class Main extends Application {
   public UndoRedoHandler getUndoRedoHandler() {
     // This is for tests
     return undoRedoHandler;
+  }
+
+  public void setMainTitle(String title) {
+    this.mainTitle = title;
   }
 
   /**
