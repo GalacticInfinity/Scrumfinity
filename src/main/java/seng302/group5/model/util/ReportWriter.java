@@ -96,7 +96,6 @@ public class ReportWriter {
         for (AgileHistory team : project.getAllocatedTeams()) {
           if (orphanTeamsList.contains(team.getAgileItem())) {
             orphanTeamsList.remove(team.getAgileItem());
-            System.out.println("Removed");
           }
           createTeamChild(mainApp, team);
         }
@@ -177,7 +176,7 @@ public class ReportWriter {
     teamElem.appendChild(teamEndDate);
 
     membersElement = report.createElement("Members");
-    teamElement.appendChild(membersElement);
+    teamElem.appendChild(membersElement);
     for (Team listTeam : mainApp.getTeams()) {
       if (team.getAgileItem().getLabel().equals(listTeam.getLabel())) {
         createPersonChild(listTeam, teamElem);
