@@ -51,45 +51,55 @@
                </HBox.margin></TextArea>
          </children>
       </HBox>
+      <Label prefHeight="21.0" prefWidth="117.0" text="Team Allocation:">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
       <HBox prefHeight="202.0" prefWidth="472.0">
          <children>
-            <Label prefHeight="21.0" prefWidth="117.0" text="Team Allocation:">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <VBox prefHeight="202.0" prefWidth="119.0">
+            <VBox prefHeight="200.0" prefWidth="170.0">
                <children>
                   <Label text="Available Teams:" />
-                  <ListView fx:id="availableTeamsList" prefHeight="187.0" prefWidth="118.0">
+                  <ListView fx:id="availableTeamsList" prefHeight="183.0" prefWidth="131.0">
                      <VBox.margin>
                         <Insets right="5.0" />
                      </VBox.margin>
                   </ListView>
                </children>
             </VBox>
-            <VBox prefHeight="202.0" prefWidth="220.0">
+            <VBox prefHeight="199.0" prefWidth="128.0">
                <children>
                   <Label text="Start Date:" />
-                  <DatePicker fx:id="teamStartDate" />
+                  <DatePicker fx:id="teamStartDate" prefHeight="26.0" prefWidth="125.0" />
                   <Label text="End Date:" />
-                  <DatePicker fx:id="teamEndDate">
+                  <DatePicker fx:id="teamEndDate" prefHeight="26.0" prefWidth="125.0">
                      <VBox.margin>
                         <Insets bottom="5.0" />
                      </VBox.margin>
                   </DatePicker>
-                  <HBox prefHeight="39.0" prefWidth="232.0">
-                     <children>
-                        <Button fx:id="btnAddTeam" mnemonicParsing="false" onAction="#btnAddTeam" prefWidth="60.0" text="Add" />
-                        <Button fx:id="btnRemoveTeam" mnemonicParsing="false" onAction="#btnRemoveTeam" prefWidth="60.0" text="Remove">
-                           <HBox.margin>
-                              <Insets left="5.0" />
-                           </HBox.margin>
-                        </Button>
-                     </children>
-                  </HBox>
+                  <Button fx:id="btnAddTeam" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#btnAddTeam" prefWidth="60.0" text="--&gt;" textAlignment="CENTER">
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="30.0" />
+                     </VBox.margin>
+                     <tooltip>
+                        <Tooltip text="Allocate selected team to this project" />
+                     </tooltip>
+                  </Button>
+                  <Button fx:id="btnRemoveTeam" mnemonicParsing="false" onAction="#btnRemoveTeam" prefWidth="60.0" text="&lt;--">
+                     <VBox.margin>
+                        <Insets left="30.0" />
+                     </VBox.margin>
+                     <tooltip>
+                        <Tooltip text="Remove selected team from this project" />
+                     </tooltip>
+                  </Button>
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="170.0">
+               <children>
                   <Label text="Allocated Teams:" />
-                  <ListView fx:id="allocatedTeamsList" prefHeight="200.0" prefWidth="200.0" />
+                  <ListView fx:id="allocatedTeamsList" prefHeight="183.0" prefWidth="150.0" />
                </children>
             </VBox>
          </children>
