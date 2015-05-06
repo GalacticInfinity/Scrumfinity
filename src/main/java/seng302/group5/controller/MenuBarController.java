@@ -66,6 +66,20 @@ public class MenuBarController {
     deleteMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DELETE));
     editMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.E, KeyCombination.CONTROL_DOWN));
 
+    // Alt + digit to change list view
+    showProjectsMenuItem.setAccelerator(
+        new KeyCodeCombination(KeyCode.DIGIT1, KeyCombination.ALT_DOWN));
+    showTeamsMenuItem.setAccelerator(
+        new KeyCodeCombination(KeyCode.DIGIT2, KeyCombination.ALT_DOWN));
+    showPeopleMenuItem.setAccelerator(
+        new KeyCodeCombination(KeyCode.DIGIT3, KeyCombination.ALT_DOWN));
+    showSkillsMenuItem.setAccelerator(
+        new KeyCodeCombination(KeyCode.DIGIT4, KeyCombination.ALT_DOWN));
+    showReleasesMenuItem.setAccelerator(
+        new KeyCodeCombination(KeyCode.DIGIT5, KeyCombination.ALT_DOWN));
+    showStoriesMenuItem.setAccelerator(
+        new KeyCodeCombination(KeyCode.DIGIT6, KeyCombination.ALT_DOWN));
+
     // Ticks the project menu item
     showProjectsMenuItem.setSelected(true);
     showListMenuItem.setSelected(true);
