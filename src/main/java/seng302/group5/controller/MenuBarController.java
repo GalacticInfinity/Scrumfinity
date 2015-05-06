@@ -197,6 +197,7 @@ public class MenuBarController {
         NewSaving save = new NewSaving(mainApp);
         save.saveData(Settings.currentFile);
         mainApp.refreshLastSaved();
+        mainApp.setLastSaved(); //for revert
       } catch (Exception a) {
         System.out.println("Current File does not exist");
       }
@@ -216,6 +217,7 @@ public class MenuBarController {
 
           // Refresh the last saved action
           mainApp.refreshLastSaved();
+          mainApp.setLastSaved(); //for revert
         }
       } catch (Exception e) {
         System.out.println("No filename specified");
@@ -247,6 +249,7 @@ public class MenuBarController {
 
         // Refresh the last saved action
         mainApp.refreshLastSaved();
+        mainApp.setLastSaved(); //for revert
       }
     } catch (Exception e) {
       System.out.println("No filename specified");
@@ -307,6 +310,7 @@ public class MenuBarController {
         }
         showListMenuItem.setSelected(true);
         deselectList(Settings.currentListType);
+        mainApp.setLastSaved(); //for revert
       }
     } catch (Exception e) {
       System.out.println("No file selected");

@@ -51,6 +51,18 @@ public class Role {
     this.memberLimit = Integer.MAX_VALUE;
   }
 
+  /**
+   * Cloning constructor
+   *
+   * @param clone Role object to clone
+   */
+  public Role(Role clone) {
+    this.label = clone.getLabel();
+    this.roleName = clone.getRoleName();
+    this.requiredSkill = clone.getRequiredSkill();
+    this.memberLimit = clone.getMemberLimit();
+  }
+
 
   public String getLabel() {
     return label;

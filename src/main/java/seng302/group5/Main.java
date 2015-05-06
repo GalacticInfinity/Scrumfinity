@@ -38,6 +38,7 @@ import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoHandler;
 import seng302.group5.model.undoredo.UndoRedoObject;
 import seng302.group5.model.util.Settings;
+import seng302.group5.model.util.RevertHandler;
 
 /**
  * Main class to run the application
@@ -58,11 +59,14 @@ public class Main extends Application {
   private ObservableList<Role> roles = FXCollections.observableArrayList();
   private ObservableList<Story> stories = FXCollections.observableArrayList();
 
+
   private ArrayList<AgileItem> nonRemovable = new ArrayList<>();
 
   private UndoRedoHandler undoRedoHandler = new UndoRedoHandler(this);
 
   private UndoRedoObject lastSavedObject = null;
+
+  private RevertHandler revertHandler = new RevertHandler(this);
 
   private String mainTitle = "Scrumfinity"; //THIS CAN BE USED FOR ORGANIZATION
 
@@ -101,6 +105,8 @@ public class Main extends Application {
     addRole(poRole);
     addRole(smRole);
     addRole(devRole);
+
+    revertHandler.setLastSaved();
 
     this.primaryStage.setOnCloseRequest(event -> {
       event.consume();
@@ -422,6 +428,20 @@ public class Main extends Application {
   }
 
   /**
+   * Sets the cloned lists for revert to be what it is now.
+   */
+  public void setLastSaved() {
+    revertHandler.setLastSaved();
+  }
+
+  /**
+   * Reverts the current state to the last saved state.
+   */
+  public void revert() {
+    revertHandler.revert();
+  }
+
+  /**
    * Undo last action
    */
   public void undo() {
@@ -443,21 +463,6 @@ public class Main extends Application {
     } catch (Exception e) {
       e.printStackTrace();
     }
-  }
-
-  /**
-   * Used when the revert button is pushed.
-   * It undoes until it is in the previously saved state. IT then clears the undo and redo stacks
-   */
-  public void revert() {
-    while (!this.checkSaved()) {
-      try {
-        this.undo();
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
-    this.undoRedoHandler.clearStacks();
   }
 
   /**
