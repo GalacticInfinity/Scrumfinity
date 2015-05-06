@@ -68,7 +68,6 @@ public class ProjectDialogController {
     this.mainApp = mainApp;
     this.thisStage = thisStage;
     teamStartDate.setValue(LocalDate.now());
-    teamEndDate.setValue(LocalDate.now());
 
     if (createOrEdit == CreateOrEdit.CREATE) {
       thisStage.setTitle("Create New Project");
