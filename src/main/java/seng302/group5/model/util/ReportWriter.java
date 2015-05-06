@@ -1,6 +1,8 @@
 package seng302.group5.model.util;
 
 import java.io.File;
+import java.util.ArrayList;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -14,11 +16,15 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import seng302.group5.Main;
 import seng302.group5.model.AgileHistory;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
+import seng302.group5.model.Role;
+import seng302.group5.model.Skill;
 import seng302.group5.model.Team;
 
 
@@ -34,6 +40,10 @@ public class ReportWriter {
   Element releasesElement;
   Element teamElement;
   Element membersElement;
+  Element skillElement;
+  Element orphanTeam;
+  Element orphanPeople;
+  ObservableList<Team> orphanTeamsList = FXCollections.observableArrayList();
 
   /**
    * Creates a report based on data currently stored in the main application memory.
@@ -51,6 +61,7 @@ public class ReportWriter {
       report.appendChild(rootElement);
 
       for (Project project : mainApp.getProjects()) {
+        orphanTeamsList.setAll(mainApp.getTeams());
         projElem = report.createElement("Project");
         rootElement.appendChild(projElem);
         projElem.setAttribute("label", project.getLabel());
@@ -76,29 +87,29 @@ public class ReportWriter {
         teamElement = report.createElement("Teams");
         projElem.appendChild(teamElement);
         for (AgileHistory team : project.getAllocatedTeams()) {
+          if (orphanTeamsList.contains(team.getAgileItem())) {
+            orphanTeamsList.remove(team.getAgileItem());
+            System.out.println("Removed");
+          }
           createTeamChild(mainApp, team);
         }
-        //  For allocated releases
-        //    create release child
-        //    add description
-        //    add release notes
-        //    add release date
-        //
-        //    add to project
-        //  For allocated teams
-        //    Create child team element with team label
-        //    add desc field
-        //    for available members
-        //      create child persom element with label
-        //      add fname field
-        //      add lname field
-        //      for skill in person
-        //        create skill child element
-        //        add skill desc
-        //
-        //    add to project
-        //  add to root
+
       }
+
+      orphanTeam = report.createElement("UnassignedTeams");
+      rootElement.appendChild(orphanTeam);
+      for (Team team : orphanTeamsList) {
+          createOrphanTeam(team);
+        }
+
+      orphanPeople = report.createElement("UnassignedPeople");
+      rootElement.appendChild(orphanPeople);
+      for (Person person : mainApp.getPeople()) {
+        if (!person.isInTeam()) {
+          createOrphanPeople(person);
+        }
+      }
+
 
       TransformerFactory transformerFactory = TransformerFactory.newInstance();
       Transformer transformer = transformerFactory.newTransformer();
@@ -149,9 +160,7 @@ public class ReportWriter {
     membersElement = report.createElement("Members");
     teamElement.appendChild(membersElement);
     for (Team listTeam : mainApp.getTeams()) {
-
       if (team.getAgileItem().getLabel().equals(listTeam.getLabel())) {
-        System.out.println(listTeam.getLabel());
         createPersonChild(listTeam, teamElem);
       }
     }
@@ -170,6 +179,98 @@ public class ReportWriter {
       Element teamMemberLastName = report.createElement("LastName");
       teamMemberLastName.appendChild(report.createTextNode(member.getLastName()));
       memberElem.appendChild(teamMemberLastName);
+
+      Role role = listTeam.getMembersRole().get(member);
+      Element teamMemberRole = report.createElement("Role");
+      if (role != null) {
+        teamMemberRole.appendChild(report.createTextNode(role.toString()));
+      } else {
+        teamMemberRole.appendChild(report.createTextNode("No role"));
+      }
+      memberElem.appendChild(teamMemberRole);
+
+      skillElement = report.createElement("Skills");
+      memberElem.appendChild(skillElement);
+      for (Skill skill : member.getSkillSet()) {
+        Element skillElem = report.createElement("Skill");
+        skillElement.appendChild(skillElem);
+        skillElem.setAttribute("label", skill.getLabel());
+
+        Element skillDescription = report.createElement("Description");
+        skillDescription.appendChild(report.createTextNode(skill.getSkillDescription()));
+        skillElem.appendChild(skillDescription);
+      }
     }
   }
+
+  public void createOrphanTeam(Team team) {
+
+    Element orphanTeamElem = report.createElement("Team");
+    orphanTeamElem.setAttribute("label", team.getLabel());
+    orphanTeam.appendChild(orphanTeamElem);
+
+    for (Person person : team.getTeamMembers()) {
+      Element memberElem = report.createElement("Member");
+      orphanTeamElem.appendChild(memberElem);
+      memberElem.setAttribute("label", person.getLabel());
+
+      Element teamMemberName = report.createElement("FirstName");
+      teamMemberName.appendChild(report.createTextNode(person.getFirstName()));
+      memberElem.appendChild(teamMemberName);
+
+      Element teamMemberLastName = report.createElement("LastName");
+      teamMemberLastName.appendChild(report.createTextNode(person.getLastName()));
+      memberElem.appendChild(teamMemberLastName);
+
+      Role role = team.getMembersRole().get(person);
+      Element teamMemberRole = report.createElement("Role");
+      if (role != null) {
+        teamMemberRole.appendChild(report.createTextNode(role.toString()));
+      } else {
+        teamMemberRole.appendChild(report.createTextNode("No role"));
+      }
+      memberElem.appendChild(teamMemberRole);
+
+      skillElement = report.createElement("Skills");
+      memberElem.appendChild(skillElement);
+      for (Skill skill : person.getSkillSet()) {
+        Element skillElem = report.createElement("Skill");
+        skillElement.appendChild(skillElem);
+        skillElem.setAttribute("label", skill.getLabel());
+
+        Element skillDescription = report.createElement("Description");
+        skillDescription.appendChild(report.createTextNode(skill.getSkillDescription()));
+        skillElem.appendChild(skillDescription);
+      }
+    }
+  }
+
+  public void createOrphanPeople(Person person) {
+
+    Element orphanPersonElem = report.createElement("Person");
+    orphanPersonElem.setAttribute("label", person.getLabel());
+    orphanPeople.appendChild(orphanPersonElem);
+
+    Element teamMemberName = report.createElement("FirstName");
+    teamMemberName.appendChild(report.createTextNode(person.getFirstName()));
+    orphanPersonElem.appendChild(teamMemberName);
+
+    Element teamMemberLastName = report.createElement("LastName");
+    teamMemberLastName.appendChild(report.createTextNode(person.getLastName()));
+    orphanPersonElem.appendChild(teamMemberLastName);
+
+    skillElement = report.createElement("Skills");
+    orphanPersonElem.appendChild(skillElement);
+    for (Skill skill : person.getSkillSet()) {
+      Element skillElem = report.createElement("Skill");
+      skillElement.appendChild(skillElem);
+      skillElem.setAttribute("label", skill.getLabel());
+
+      Element skillDescription = report.createElement("Description");
+      skillDescription.appendChild(report.createTextNode(skill.getSkillDescription()));
+      skillElem.appendChild(skillDescription);
+    }
+  }
+
+
 }
