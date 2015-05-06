@@ -73,6 +73,15 @@ public class SkillsDialogController {
       }
     });
     skillCreation.setDefaultButton(true);
+
+    // Handle TextField text changes.
+    skillLabel.textProperty().addListener((observable, oldValue, newValue) -> {
+      if (newValue.trim().length() > 20) {
+        skillLabel.setStyle("-fx-text-inner-color: red;");
+      } else {
+        skillLabel.setStyle("-fx-text-inner-color: black;");
+      }
+    });
   }
 
   /**
@@ -87,8 +96,6 @@ public class SkillsDialogController {
 
     if (inputSkillLabel.isEmpty()) {
       throw new Exception("Skill label is empty");
-    } else if (inputSkillLabel.length() > 32) {
-      throw new Exception("Skill label is more than 32 characters long");
     } else {
       String lastSkillLabel;
       if (lastSkill == null) {

@@ -100,6 +100,15 @@ public class ProjectDialogController {
       }
     });
     btnConfirm.setDefaultButton(true);
+
+    // Handle TextField text changes.
+    projectLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
+      if (newValue.trim().length() > 20) {
+        projectLabelField.setStyle("-fx-text-inner-color: red;");
+      } else {
+        projectLabelField.setStyle("-fx-text-inner-color: black;");
+      }
+    });
   }
 
   /**
@@ -140,8 +149,6 @@ public class ProjectDialogController {
 
     if (inputProjectLabel.isEmpty()) {
       throw new Exception("Project label is empty");
-    } else if (inputProjectLabel.length() > 8) {
-      throw new Exception("Project label is more than 8 characters long");
     } else {
       String lastProjectLabel;
       if (lastProject == null) {
@@ -171,8 +178,6 @@ public class ProjectDialogController {
 
     if (inputProjectName.isEmpty()) {
       throw new Exception("Project Name is empty");
-    } else if (inputProjectName.length() > 16) {
-      throw new Exception("Project Name is more than 16 characters long");
     } else {
       return inputProjectName;
     }

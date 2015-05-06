@@ -413,7 +413,7 @@ public class NewLoading {
         newRole.setRoleName(roleData);
 
         // Non Mandatory fields
-        while ((!(roleLine = loadedFile.readLine()).matches(".*</Release>"))) {
+        while ((!(roleLine = loadedFile.readLine()).matches(".*</Role>"))) {
           if (roleLine.startsWith("\t\t<roleSkill>")) {
             roleData = roleLine.replaceAll("(?i)(.*<roleSkill.*?>)(.+?)(</roleSkill>)", "$2");
             for (Skill skill : main.getSkills()) {

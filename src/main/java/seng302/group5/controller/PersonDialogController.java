@@ -82,6 +82,15 @@ public class PersonDialogController {
     }
 
     btnCreatePerson.setDefaultButton(true);
+
+    // Handle TextField text changes.
+    personLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
+      if (newValue.trim().length() > 20) {
+        personLabelField.setStyle("-fx-text-inner-color: red;");
+      } else {
+        personLabelField.setStyle("-fx-text-inner-color: black;");
+      }
+    });
   }
 
   /**
@@ -182,8 +191,6 @@ public class PersonDialogController {
 
     if (inputPersonLabel.isEmpty()) {
       throw new Exception("Person label is empty.");
-    } else if (inputPersonLabel.length() > 8) {
-      throw new Exception("Person label is more than 8 characters long");
     } else {
       String lastPersonLabel;
       if (lastPerson == null) {

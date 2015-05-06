@@ -15,7 +15,10 @@
                         <Font size="15.0" />
                     </font>
                 </Label>
-                <TextField fx:id="personLabelField" alignment="TOP_LEFT" prefWidth="160.0" promptText="Unique person label." />
+                <TextField fx:id="personLabelField" alignment="TOP_LEFT" prefWidth="160.0" promptText="Unique person label.">
+               <tooltip>
+                  <Tooltip text="Label should be 20 characters or less or application may not behave as expected." />
+               </tooltip></TextField>
             </children>
         </HBox>
         <HBox alignment="CENTER_LEFT" prefHeight="38.0" prefWidth="369.0" spacing="10.0">
