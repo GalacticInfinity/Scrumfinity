@@ -110,26 +110,26 @@ public class MenuBarController {
    */
   @FXML
   protected void editItem(ActionEvent event) {
-      String listType = Settings.currentListType;
-      switch (listType) {
-        case "Projects":
-          mainApp.showProjectDialog(CreateOrEdit.EDIT);
-          break;
-        case "People":
-          mainApp.showPersonDialog(CreateOrEdit.EDIT);
-          break;
-        case "Skills":
-          mainApp.showSkillDialog(CreateOrEdit.EDIT);
-          break;
-        case "Teams":
-          mainApp.showTeamDialog(CreateOrEdit.EDIT);
-          break;
-        case "Releases":
-          mainApp.showReleaseDialog(CreateOrEdit.EDIT);
-          break;
-        case "Stories":
-          mainApp.showStoryDialog(CreateOrEdit.EDIT);
-          break;
+    String listType = Settings.currentListType;
+    switch (listType) {
+      case "Projects":
+        mainApp.showProjectDialog(CreateOrEdit.EDIT);
+        break;
+      case "People":
+        mainApp.showPersonDialog(CreateOrEdit.EDIT);
+        break;
+      case "Skills":
+        mainApp.showSkillDialog(CreateOrEdit.EDIT);
+        break;
+      case "Teams":
+        mainApp.showTeamDialog(CreateOrEdit.EDIT);
+        break;
+      case "Releases":
+        mainApp.showReleaseDialog(CreateOrEdit.EDIT);
+        break;
+      case "Stories":
+        mainApp.showStoryDialog(CreateOrEdit.EDIT);
+        break;
     }
   }
 

@@ -727,7 +727,6 @@ public class Main extends Application {
           undoRedoObject.addDatum(skillUser);
         }
         newAction(undoRedoObject);
-        newAction(undoRedoObject);
         break;
       case "Teams":
         Team team = (Team) agileItem;
