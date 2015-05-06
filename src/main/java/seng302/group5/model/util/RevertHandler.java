@@ -2,6 +2,7 @@ package seng302.group5.model.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javafx.collections.FXCollections;
@@ -22,7 +23,6 @@ public class RevertHandler {
 
   private Main mainApp;
 
-
   private ObservableList<Project> projectsLastSaved;
   private ObservableList<Team> teamsLastSaved;
   private ObservableList<Skill> skillsLastSaved;
@@ -37,12 +37,12 @@ public class RevertHandler {
    */
   public RevertHandler(Main mainApp) {
     this.mainApp = mainApp;
-    rolesLastSaved = FXCollections.observableArrayList();
-    releasesLastSaved = FXCollections.observableArrayList();
-    peopleLastSaved = FXCollections.observableArrayList();
-    skillsLastSaved = FXCollections.observableArrayList();
-    teamsLastSaved = FXCollections.observableArrayList();
-    projectsLastSaved = FXCollections.observableArrayList();
+    this.projectsLastSaved = FXCollections.observableArrayList();
+    this.teamsLastSaved = FXCollections.observableArrayList();
+    this.skillsLastSaved = FXCollections.observableArrayList();
+    this.peopleLastSaved = FXCollections.observableArrayList();
+    this.releasesLastSaved = FXCollections.observableArrayList();
+    this.rolesLastSaved = FXCollections.observableArrayList();
   }
 
 
@@ -81,67 +81,36 @@ public class RevertHandler {
       mainApp.getRoles().add(new Role(role));
     }
 
-    syncPeopleWithSkills();
-    syncTeamsWithPeople();
-    syncProjectsWithTeams();
-    syncReleasesWithProjects();
-    syncRolesWithSkills();
+    // Ensure data in main refer to each other
+    syncPeopleWithSkills(mainApp.getPeople(), mainApp.getSkills());
+    syncTeamsWithPeople(mainApp.getTeams(), mainApp.getPeople(), mainApp.getRoles());
+    syncProjectsWithTeams(mainApp.getProjects(), mainApp.getTeams());
+    syncReleasesWithProjects(mainApp.getReleases(), mainApp.getProjects());
+    syncRolesWithSkills(mainApp.getRoles(), mainApp.getSkills());
 
     mainApp.refreshLastSaved();
     mainApp.refreshList();
   }
 
   /**
-   * makes the last saved lists copy the current state list.
+   * Makes the last saved lists copy the current state list.
    * used when saving so that a revert maybe done.
    */
   public void setLastSaved() {
-    Map<String, Project> projectMap = new HashMap<>();
-    Map<String, Team> teamMap = new HashMap<>();
-    Map<String, Person> personMap = new HashMap<>();
-    Map<String, Skill> skillMap = new HashMap<>();
-    // nothing refers to releases
-
-    for (Project mainProject : mainApp.getProjects()) {
-      projectMap.put(mainProject.getLabel(), mainProject);
-    }
-    for (Team mainTeam : mainApp.getTeams()) {
-      teamMap.put(mainTeam.getLabel(), mainTeam);
-    }
-    for (Person mainPerson : mainApp.getPeople()) {
-      personMap.put(mainPerson.getLabel(), mainPerson);
-    }
-    for (Skill mainSkill : mainApp.getSkills()) {
-      skillMap.put(mainSkill.getLabel(), mainSkill);
-    }
 
     projectsLastSaved.clear();
     for (Project project : mainApp.getProjects()) {
-      //TODO AH shit
       projectsLastSaved.add(new Project(project));
     }
 
     teamsLastSaved.clear();
     for (Team team : mainApp.getTeams()) {
-      Team deepTeamClone = new Team(team);
-      deepTeamClone.getTeamMembers().clear();
-      for (Person teamMember : team.getTeamMembers()) {
-        Person personClone = new Person(personMap.get(teamMember.getLabel()));
-        deepTeamClone.getTeamMembers().add(personClone);
-      }
-
-      teamsLastSaved.add(deepTeamClone);
+      teamsLastSaved.add(new Team(team));
     }
 
     peopleLastSaved.clear();
     for (Person person : mainApp.getPeople()) {
-      Person deepPersonClone = new Person(person);
-      deepPersonClone.getSkillSet().clear();
-      for (Skill personSkill : person.getSkillSet()) {
-        Skill skillClone = new Skill(skillMap.get(personSkill.getLabel()));
-        deepPersonClone.getSkillSet().add(skillClone);
-      }
-      peopleLastSaved.add(deepPersonClone);
+      peopleLastSaved.add(new Person(person));
     }
 
     skillsLastSaved.clear();
@@ -151,37 +120,38 @@ public class RevertHandler {
 
     releasesLastSaved.clear();
     for (Release release : mainApp.getReleases()) {
-      Release deepReleaseClone = new Release(release);
-      Project projectClone = new Project(projectMap.get(release.getProjectRelease().getLabel()));
-      deepReleaseClone.setProjectRelease(projectClone);
-      releasesLastSaved.add(deepReleaseClone);
+      releasesLastSaved.add(new Release(release));
     }
 
     rolesLastSaved.clear();
     for (Role role : mainApp.getRoles()) {
-      Role deepRoleClone = new Role(role);
-      if (role.getRequiredSkill() != null) {
-        Skill skillClone = new Skill(role.getRequiredSkill());
-        deepRoleClone.setRequiredSkill(skillClone);
-      }
-      rolesLastSaved.add(deepRoleClone);
+      rolesLastSaved.add(new Role(role));
     }
 
+    // Ensure data in the copies refer to each other
+    syncPeopleWithSkills(peopleLastSaved, skillsLastSaved);
+    syncTeamsWithPeople(teamsLastSaved, peopleLastSaved, rolesLastSaved);
+    syncProjectsWithTeams(projectsLastSaved, teamsLastSaved);
+    syncReleasesWithProjects(releasesLastSaved, projectsLastSaved);
+    syncRolesWithSkills(rolesLastSaved, skillsLastSaved);
   }
 
   /**
    * Creates proper object reference between people and skills.
+   *
+   * @param people Reference Person objects to link together
+   * @param skills Reference Skill objects to link together
    */
-  private void syncPeopleWithSkills() {
+  private void syncPeopleWithSkills(List<Person> people, List<Skill> skills) {
     Map<String, Skill> skillMap = new HashMap<>();
 
-    for (Skill mainSkill : mainApp.getSkills()) {
+    for (Skill mainSkill : skills) {
       skillMap.put(mainSkill.getLabel(), mainSkill);
     }
 
     // For every available person
-    for (Person person : mainApp.getPeople()) {
-      ArrayList<Skill> skillArray = new ArrayList<>();
+    for (Person person : people) {
+      List<Skill> skillArray = new ArrayList<>();
       // For every skill in that person
       for (Skill personSkill : person.getSkillSet()) {
         // For every skill in main app
@@ -193,21 +163,25 @@ public class RevertHandler {
 
   /**
    * Creates concurrency between people in main app and people in teams.
+   *
+   * @param teams Reference Team objects to link together
+   * @param people Reference Person objects to link together
+   * @param roles Reference Role objects to link together
    */
-  private void syncTeamsWithPeople() {
+  private void syncTeamsWithPeople(List<Team> teams, List<Person> people, List<Role> roles) {
     Map<String, Person> personMap = new HashMap<>();
     Map<String, Role> roleMap = new HashMap<>();
 
-    for (Person mainPerson : mainApp.getPeople()) {
+    for (Person mainPerson : people) {
       personMap.put(mainPerson.getLabel(), mainPerson);
     }
-    for (Role mainRole : mainApp.getRoles()) {
+    for (Role mainRole : roles) {
       roleMap.put(mainRole.getLabel(), mainRole);
     }
 
     // For every available team
-    for (Team team : mainApp.getTeams()) {
-      ArrayList<Person> personArray = new ArrayList<>();
+    for (Team team : teams) {
+      List<Person> personArray = new ArrayList<>();
       Map<Person, Role> personRoleMap = new HashMap<>();
       // For every person in that team
       for (Person teamPerson : team.getTeamMembers()) {
@@ -231,18 +205,21 @@ public class RevertHandler {
   }
 
   /**
-   * Creates concurrency between people in main app and people in teams.
+   * Creates proper object reference between projects and skills.
+   *
+   * @param projects Reference Project objects to link together
+   * @param teams Reference Team objects to link together
    */
-  private void syncProjectsWithTeams() {
+  private void syncProjectsWithTeams(List<Project> projects, List<Team> teams) {
     Map<String, Team> teamMap = new HashMap<>();
 
-    for (Team mainTeam : mainApp.getTeams()) {
+    for (Team mainTeam : teams) {
       teamMap.put(mainTeam.getLabel(), mainTeam);
     }
 
     // For every available project
-    for (Project project : mainApp.getProjects()) {
-      ArrayList<AgileHistory> agileHistoryArray = new ArrayList<>();
+    for (Project project : projects) {
+      List<AgileHistory> agileHistoryArray = new ArrayList<>();
       // For every team in that project
       for (AgileHistory projectAH : project.getAllocatedTeams()) {
         // For every team that is in Main App
@@ -259,29 +236,41 @@ public class RevertHandler {
     }
   }
 
-  private void syncReleasesWithProjects() {
+  /**
+   * Creates proper object reference between releases and projects.
+   *
+   * @param releases Reference Release objects to link together
+   * @param projects Reference Project objects to link together
+   */
+  private void syncReleasesWithProjects(List<Release> releases, List<Project> projects) {
     Map<String, Project> projectMap = new HashMap<>();
 
-    for (Project mainProject : mainApp.getProjects()) {
+    for (Project mainProject : projects) {
       projectMap.put(mainProject.getLabel(), mainProject);
     }
 
     // For every available release
-    for (Release release : mainApp.getReleases()) {
+    for (Release release : releases) {
       Project mainProject = projectMap.get(release.getProjectRelease().getLabel());
       release.setProjectRelease(mainProject);
     }
   }
 
-  private void syncRolesWithSkills() {
+  /**
+   * Creates proper object reference between roles and required skills.
+   *
+   * @param roles Reference Role objects to link together
+   * @param skills Reference Skill objects to link together
+   */
+  private void syncRolesWithSkills(List<Role> roles, List<Skill> skills) {
     Map<String, Skill> skillMap = new HashMap<>();
 
-    for (Skill mainSkill : mainApp.getSkills()) {
+    for (Skill mainSkill : skills) {
       skillMap.put(mainSkill.getLabel(), mainSkill);
     }
 
     // Update required skill in existing role objects
-    for (Role mainRole : mainApp.getRoles()) {
+    for (Role mainRole : roles) {
       if (mainRole.getRequiredSkill() != null) {
         Skill mainSkill = skillMap.get(mainRole.getRequiredSkill().getLabel());
         mainRole.setRequiredSkill(mainSkill);
