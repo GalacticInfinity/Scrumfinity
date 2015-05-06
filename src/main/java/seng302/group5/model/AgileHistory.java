@@ -65,7 +65,13 @@ public class AgileHistory {
   @Override
   public String toString() {
     String dateFormat = "dd/MM/yyyy";
-    return agileItem.toString() + ": " + startDate.format(DateTimeFormatter.ofPattern(dateFormat)) +
-           " - " + endDate.format(DateTimeFormatter.ofPattern(dateFormat));
+    String theString = agileItem.toString() + ": " + startDate.format(DateTimeFormatter.ofPattern(dateFormat));
+
+    if (endDate != null) {
+      theString += " - " + endDate.format(DateTimeFormatter.ofPattern(dateFormat));
+    } else {
+      theString += " - no end date";
+    }
+    return theString;
   }
 }
