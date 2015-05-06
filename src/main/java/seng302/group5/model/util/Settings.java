@@ -11,6 +11,9 @@ public class Settings {
   public static File defaultFilepath;
   public static File currentFile;
   public static String currentListType;
+  public static String organizationName = "";
+  public static double progVersion = 0.2;
+
 
   /**
    * Sets default scrumfinity filepath for open/load.
