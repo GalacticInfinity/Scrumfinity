@@ -287,6 +287,10 @@ public class MenuBarController {
         load.loadFile(file);
 
         mainApp.getLMPC().refreshList();
+        if (!Settings.organizationName.isEmpty()) {
+          mainApp.setMainTitle("Scrumfinity - " + Settings.organizationName);
+          mainApp.toggleName();
+        }
         showListMenuItem.setSelected(true);
         deselectList(Settings.currentListType);
       }
@@ -332,6 +336,7 @@ public class MenuBarController {
     Node acceptButton = orgDialog.getDialogPane().lookupButton(acceptButtonType);
     acceptButton.setDisable(true);
 
+    // Deactivates button if no changes.
     orgField.textProperty().addListener((observable, oldValue, newValue) -> {
       acceptButton.setDisable(newValue.equals(Settings.organizationName));
     });

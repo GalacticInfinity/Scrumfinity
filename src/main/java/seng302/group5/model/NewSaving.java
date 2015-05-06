@@ -8,6 +8,7 @@ import java.io.Writer;
 import java.util.List;
 
 import seng302.group5.Main;
+import seng302.group5.model.util.Settings;
 
 /**
  * Class which creates an xml file to save. Manually formats the document
@@ -49,6 +50,7 @@ public class NewSaving {
         new FileOutputStream(filename), "utf-8"))) {
       //saveFile.write("<root>\n");
       //saveProjects(saveFile);
+      saveHeader(saveFile);
       saveProjects(saveFile);
       savePeople(saveFile);
       saveSkills(saveFile);
@@ -58,6 +60,16 @@ public class NewSaving {
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  /**
+   * Write organization and app version to save file
+   *
+   * @param saveFile Save file being written to
+   * @throws Exception Required field is missing/ error with writer
+   */
+  private void saveHeader(Writer saveFile) throws Exception{
+    saveFile.write("<scrumfinity version=\"0.2\" organization=\"" + Settings.organizationName + "\">\n");
   }
 
   /**
