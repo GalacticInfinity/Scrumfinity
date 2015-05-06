@@ -25,7 +25,9 @@ import seng302.group5.model.Project;
 import seng302.group5.model.Release;
 import seng302.group5.model.Role;
 import seng302.group5.model.Skill;
+import seng302.group5.model.Story;
 import seng302.group5.model.Team;
+import seng302.group5.model.util.Settings;
 
 
 /**
@@ -43,6 +45,9 @@ public class ReportWriter {
   Element skillElement;
   Element orphanTeam;
   Element orphanPeople;
+  Element allSkills;
+  Element allStories;
+
   ObservableList<Team> orphanTeamsList = FXCollections.observableArrayList();
 
   /**
@@ -58,6 +63,8 @@ public class ReportWriter {
 
       report = docBuilder.newDocument();
       rootElement = report.createElement("Company");
+      String orgName = Settings.organizationName;
+      rootElement.setAttribute("Label", orgName);
       report.appendChild(rootElement);
 
       for (Project project : mainApp.getProjects()) {
@@ -108,6 +115,18 @@ public class ReportWriter {
         if (!person.isInTeam()) {
           createOrphanPeople(person);
         }
+      }
+
+      allSkills = report.createElement("AllSkills");
+      rootElement.appendChild(allSkills);
+      for (Skill skill : mainApp.getSkills()) {
+        createSkillChild(skill);
+      }
+
+      allStories = report.createElement("AllStories");
+      rootElement.appendChild(allStories);
+      for (Story story : mainApp.getStories()) {
+        createStoryChild(story);
       }
 
 
@@ -272,5 +291,32 @@ public class ReportWriter {
     }
   }
 
+  public void createSkillChild(Skill skill) {
+    Element skillElem = report.createElement("Skill");
+    allSkills.appendChild(skillElem);
+    skillElem.setAttribute("label", skill.getLabel());
+
+    Element skillDescription = report.createElement("Description");
+    skillDescription.appendChild(report.createTextNode(skill.getSkillDescription()));
+    skillElem.appendChild(skillDescription);
+  }
+
+  public void createStoryChild(Story story) {
+    Element storyElem = report.createElement("Story");
+    allStories.appendChild(storyElem);
+    storyElem.setAttribute("label", story.getLabel());
+
+    Element storyName = report.createElement("Name");
+    storyName.appendChild(report.createTextNode(story.getLongName()));
+    storyElem.appendChild(storyName);
+
+    Element storyDescription = report.createElement("Description");
+    storyDescription.appendChild(report.createTextNode(story.getDescription()));
+    storyElem.appendChild(storyDescription);
+
+    Element storyCreator = report.createElement("Creator");
+    storyCreator.appendChild(report.createTextNode(story.getCreator().getLabel()));
+    storyElem.appendChild(storyCreator);
+  }
 
 }
