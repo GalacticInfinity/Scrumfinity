@@ -14,6 +14,7 @@
                        <MenuItem mnemonicParsing="false" onAction="#createPerson" text="Person" />
                        <MenuItem mnemonicParsing="false" onAction="#createSkill" text="Skill" />
                        <MenuItem mnemonicParsing="false" onAction="#createRelease" text="Release" />
+                  <MenuItem mnemonicParsing="false" onAction="#createStory" text="Story" />
                    </items>
                </Menu>
             <MenuItem mnemonicParsing="false" onAction="#btnClickOrganization" text="Org. Name" />
@@ -46,6 +47,7 @@
             <CheckMenuItem fx:id="showPeopleMenuItem" mnemonicParsing="false" onAction="#btnShowPeople" text="Show People" />
             <CheckMenuItem fx:id="showSkillsMenuItem" mnemonicParsing="false" onAction="#btnShowSkills" text="Show Skills" />
             <CheckMenuItem fx:id="showReleasesMenuItem" mnemonicParsing="false" onAction="#btnShowReleases" text="Show Releases" />
+            <CheckMenuItem fx:id="showStoriesMenuItem" mnemonicParsing="false" onAction="#btnShowStories" text="Show Stories" />
          </items>
       </Menu>
       <!--<Menu mnemonicParsing="false" text="Help">-->

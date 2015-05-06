@@ -10,6 +10,7 @@ import seng302.group5.model.Person;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
 import seng302.group5.model.Skill;
+import seng302.group5.model.Story;
 import seng302.group5.model.Team;
 
 /**
@@ -194,6 +195,21 @@ public class UndoRedoHandler {
       case RELEASE_DELETE:
 //        System.out.println(String.format("I am %sing a release delete", undoOrRedoStr));   // temp
         handleReleaseDelete(undoRedoObject, undoOrRedo);
+        break;
+
+      case STORY_CREATE:
+//        System.out.println(String.format("I am %sing a story creation", undoOrRedoStr));   // temp
+        handleStoryCreate(undoRedoObject, undoOrRedo);
+        break;
+
+      case STORY_EDIT:
+//        System.out.println(String.format("I am %sing a story creation", undoOrRedoStr));   // temp
+        handleStoryEdit(undoRedoObject, undoOrRedo);
+        break;
+
+      case STORY_DELETE:
+//        System.out.println(String.format("I am %sing a story creation", undoOrRedoStr));   // temp
+        handleStoryDelete(undoRedoObject, undoOrRedo);
         break;
 
       case UNDEFINED:
@@ -710,6 +726,97 @@ public class UndoRedoHandler {
     } else {
       mainApp.deleteRelease(releaseToChange);
     }
+    mainApp.refreshList();
+  }
+
+  /**
+   * Undo or redo a story creation
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handleStoryCreate(UndoRedoObject undoRedoObject,
+                                 UndoOrRedo undoOrRedo) throws Exception {
+    // Get the data and ensure it has data for the team
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 1) {
+      throw new Exception("Can't undo/redo story creation - No variables");
+    }
+
+    // Get the team name which is currently in the list and the team to change
+    Story storyToChange = (Story) undoRedoObject.getAgileItem();
+    Story storyData = (Story) data.get(0);
+
+    // Make the changes and refresh the list
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+      mainApp.deleteStory(storyToChange);
+    } else {
+      storyToChange.copyValues(storyData);
+      mainApp.addStory(storyToChange);
+    }
+    mainApp.refreshList();
+  }
+
+  /**
+   * Undo or redo a story edit
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handleStoryEdit(UndoRedoObject undoRedoObject,
+                                 UndoOrRedo undoOrRedo) throws Exception {
+
+    // Get the data and ensure it has data for the releases both before and after
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 2) {
+      throw new Exception("Can't undo/redo story edit - Less than 2 variables");
+    }
+
+    Story storyToChange = (Story) undoRedoObject.getAgileItem();
+    Story storyData;
+
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+//      currentStory = (Story) data.get(1);
+      storyData = (Story) data.get(0);
+    } else {
+//      currentStory = (Story) data.get(0);
+      storyData = (Story) data.get(1);
+    }
+
+    storyToChange.copyValues(storyData);
+    mainApp.refreshList();
+  }
+
+  /**
+   * Undo or redo a story deletion
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo     Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handleStoryDelete(UndoRedoObject undoRedoObject,
+                                   UndoOrRedo undoOrRedo) throws Exception {
+
+    // Get the data and ensure it has data for the skill
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 1) {
+      throw new Exception("Can't undo/redo story deletion - No variables");
+    }
+
+    // Get the Release to undo/redo deletion of
+    Story storyToChange = (Story) undoRedoObject.getAgileItem();
+    Story storyData = (Story) data.get(0);
+
+    // Make the changes and refresh the list
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+      storyToChange.copyValues(storyData);
+      mainApp.addStory(storyToChange);
+    } else {
+      mainApp.deleteStory(storyToChange);
+    }
+
     mainApp.refreshList();
   }
 

@@ -18,6 +18,7 @@ import seng302.group5.model.AgileHistory;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Release;
 import seng302.group5.model.Role;
+import seng302.group5.model.Story;
 import seng302.group5.model.util.Settings;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
@@ -131,6 +132,10 @@ public class ListMainPaneController {
         isListShown = true;
         listView.setItems(mainApp.getReleases());
         break;
+      case "Stories":
+        isListShown = true;
+        listView.setItems(mainApp.getStories());
+        break;
     }
     // Set the list label
     listViewLabel.setText(listType);
@@ -170,6 +175,11 @@ public class ListMainPaneController {
         return selectedItem;
       case "Releases":
         if (!isListShown || !listType.equals("Releases")) {
+          return null;
+        }
+        return selectedItem;
+      case "Stories":
+        if (!isListShown || !listType.equals("Stories")) {
           return null;
         }
         return selectedItem;
@@ -282,6 +292,18 @@ public class ListMainPaneController {
         displayTextArea.appendText(release.getReleaseNotes());
         displayTextArea.appendText("\nProject: ");
         displayTextArea.appendText(release.getProjectRelease().toString());
+        break;
+      case "Stories":
+        Story story = (Story) next; //Casts next as Story object.
+
+        displayTextArea.appendText("Story Information \nStory Label: ");
+        displayTextArea.appendText(story.getLabel());
+        displayTextArea.appendText("\nStory Long Name: ");
+        displayTextArea.appendText(story.getLongName());
+        displayTextArea.appendText("\nStory Description: ");
+        displayTextArea.appendText(story.getDescription());
+        displayTextArea.appendText("\nCreator: ");
+        displayTextArea.appendText(story.getCreator().toString());
         break;
     }
   }

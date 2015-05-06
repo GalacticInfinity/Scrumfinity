@@ -22,6 +22,7 @@ import seng302.group5.controller.MenuBarController;
 import seng302.group5.controller.ReleaseDialogController;
 import seng302.group5.controller.PersonDialogController;
 import seng302.group5.controller.ProjectDialogController;
+import seng302.group5.controller.StoryDialogController;
 import seng302.group5.controller.TeamDialogController;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.controller.SkillsDialogController;
@@ -31,6 +32,7 @@ import seng302.group5.model.Release;
 import seng302.group5.model.Role;
 import seng302.group5.model.Skill;
 import seng302.group5.model.Person;
+import seng302.group5.model.Story;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoHandler;
@@ -54,6 +56,7 @@ public class Main extends Application {
   private ObservableList<Person> people = FXCollections.observableArrayList();
   private ObservableList<Release> releases = FXCollections.observableArrayList();
   private ObservableList<Role> roles = FXCollections.observableArrayList();
+  private ObservableList<Story> stories = FXCollections.observableArrayList();
 
   private ArrayList<AgileItem> nonRemovable = new ArrayList<>();
 
@@ -378,6 +381,45 @@ public class Main extends Application {
   }
 
   /**
+   * Sets up a dialog box for creating/editing a Story.
+   *
+   * @param createOrEdit The CreateOrEdit object that determines whether you are creating or editing.
+   */
+  public void showStoryDialog(CreateOrEdit createOrEdit) {
+    try {
+      FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(Main.class.getResource("/StoryDialog.fxml"));
+      VBox StoryDialogLayout = loader.load();
+
+      StoryDialogController controller = loader.getController();
+      Scene storyDialogScene = new Scene(StoryDialogLayout);
+      Stage storyDialogStage = new Stage();
+
+      Story story = null;
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        story = (Story) LMPC.getSelected();    // TODO: Fix
+        if (story == null) {
+          Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setTitle("Error");
+          alert.setHeaderText(null);
+          alert.setContentText("No story selected");
+          alert.showAndWait();
+          return;
+        }
+      }
+      controller.setupController(this, storyDialogStage, createOrEdit, story);
+
+      storyDialogStage.initModality(Modality.APPLICATION_MODAL);
+      storyDialogStage.initOwner(primaryStage);
+      storyDialogStage.setScene(storyDialogScene);
+      storyDialogStage.show();
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
    * Undo last action
    */
   public void undo() {
@@ -508,6 +550,15 @@ public class Main extends Application {
   }
 
   /**
+   * Delete a story from the of stories.
+   *
+   * @param inputStory Story to be deleted.
+   */
+  public void deleteStory(Story inputStory) {
+    stories.remove(inputStory);
+  }
+
+  /**
    * Generate an UndoRedoObject to place in the stack
    *
    * @param action    The action to store in the object
@@ -536,6 +587,9 @@ public class Main extends Application {
         break;
       case RELEASE_DELETE:
         itemToStore = new Release((Release) agileItem);
+        break;
+      case STORY_DELETE:
+        itemToStore = new Story((Story) agileItem);
         break;
       default:
         itemToStore = null;
@@ -671,6 +725,7 @@ public class Main extends Application {
           undoRedoObject.addDatum(skillUser);
         }
         newAction(undoRedoObject);
+        newAction(undoRedoObject);
         break;
       case "Teams":
         Team team = (Team) agileItem;
@@ -711,6 +766,12 @@ public class Main extends Application {
         Release release = (Release) agileItem;
         deleteRelease(release);
         undoRedoObject = generateDelUndoRedoObject(Action.RELEASE_DELETE, agileItem);
+        newAction(undoRedoObject);
+        break;
+      case "Stories":
+        Story story = (Story) agileItem;
+        deleteStory(story);
+        undoRedoObject = generateDelUndoRedoObject(Action.STORY_DELETE, agileItem);
         newAction(undoRedoObject);
         break;
       default:
@@ -779,6 +840,10 @@ public class Main extends Application {
     return roles;
   }
 
+  public ObservableList<Story> getStories() {
+    return stories;
+  }
+
   public ArrayList<AgileItem> getNonRemovable() {
     return nonRemovable;
   }
@@ -805,6 +870,10 @@ public class Main extends Application {
 
   public void addRole(Role role) {
     this.roles.add(role);
+  }
+
+  public void addStory(Story story) {
+    stories.add(story);
   }
 
   public UndoRedoHandler getUndoRedoHandler() {

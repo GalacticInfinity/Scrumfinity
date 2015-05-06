@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="279.0" prefWidth="434.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.StoryDialogController">
+    <children>
+        <HBox alignment="BOTTOM_LEFT" prefHeight="35.0" prefWidth="434.0" spacing="10.0">
+            <children>
+                <Label prefHeight="25.0" prefWidth="125.0" text="Story Label:*">
+                    <font>
+                        <Font size="15.0" />
+                    </font>
+                </Label>
+                <TextField fx:id="storyLabelField" alignment="TOP_LEFT" prefWidth="160.0" promptText="Unique label of story." />
+            </children>
+        </HBox>
+        <HBox alignment="CENTER_LEFT" prefHeight="38.0" prefWidth="369.0" spacing="10.0">
+            <children>
+                <Label prefHeight="25.0" prefWidth="125.0" text="Long Name:">
+                    <font>
+                        <Font size="15.0" />
+                    </font>
+                </Label>
+                <TextField fx:id="storyLongNameField" alignment="TOP_LEFT" prefWidth="160.0" promptText="Long name of story." />
+            </children>
+        </HBox>
+        <HBox prefHeight="30.0" prefWidth="429.0" spacing="10.0">
+            <children>
+                <Label prefHeight="25.0" prefWidth="125.0" text="Description:">
+                    <font>
+                        <Font size="15.0" />
+                    </font>
+                </Label>
+            <TextArea fx:id="storyDescriptionField" minHeight="130.0" prefHeight="140.0" prefWidth="250.0" promptText="Description of story." />
+            </children>
+        </HBox>
+        <HBox prefHeight="21.0" prefWidth="429.0">
+            <children>
+                <Label prefHeight="25.0" prefWidth="135.0" text="Creator:*">
+                    <font>
+                        <Font size="15.0" />
+                    </font>
+                    <HBox.margin>
+                        <Insets />
+                    </HBox.margin>
+                </Label>
+                <ComboBox fx:id="storyCreatorList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" promptText="Available people.">
+               <HBox.margin>
+                  <Insets top="2.0" />
+               </HBox.margin></ComboBox>
+            </children>
+            <VBox.margin>
+                <Insets top="2.0" />
+            </VBox.margin>
+        </HBox>
+        <HBox alignment="BOTTOM_RIGHT" prefHeight="39.0" prefWidth="434.0" spacing="10.0">
+            <children>
+                <Label prefHeight="25.0" prefWidth="275.0" text="* Fields cannot be empty.">
+                    <font>
+                        <Font size="15.0" />
+                    </font>
+                    <padding>
+                        <Insets left="10.0" />
+                    </padding>
+                </Label>
+                <Button fx:id="btnCreateStory" mnemonicParsing="false" onAction="#btnCreateStoryClick" prefWidth="60.0" text="Save" />
+                <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#btnCancelClick" prefWidth="60.0" text="Cancel" />
+            </children>
+            <opaqueInsets>
+                <Insets />
+            </opaqueInsets>
+            <padding>
+                <Insets bottom="5.0" right="5.0" />
+            </padding>
+            <VBox.margin>
+                <Insets right="5.0" top="5.0" />
+            </VBox.margin>
+        </HBox>
+    </children>
+    <padding>
+        <Insets left="5.0" />
+    </padding>
+</VBox>

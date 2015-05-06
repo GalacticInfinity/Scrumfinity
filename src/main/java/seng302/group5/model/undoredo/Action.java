@@ -21,5 +21,8 @@ public enum Action {
   RELEASE_CREATE, // Release creation - 1 AgileItem
   RELEASE_EDIT,   // Release edit - 2 AgileItem
   RELEASE_DELETE, // Release delete - 1 AgileItem
+  STORY_CREATE,   // Story creation - 1 AgileItem
+  STORY_EDIT,     // Story edit - 2 AgileItem
+  STORY_DELETE,   // Story delete - 1 AgileItem
   UNDEFINED       // Undefined action - no AgileItems
 }

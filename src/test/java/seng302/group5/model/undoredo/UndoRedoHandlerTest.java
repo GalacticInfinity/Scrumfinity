@@ -16,6 +16,7 @@ import seng302.group5.model.Person;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
 import seng302.group5.model.Skill;
+import seng302.group5.model.Story;
 import seng302.group5.model.Team;
 
 import static org.junit.Assert.*;
@@ -65,11 +66,21 @@ public class UndoRedoHandlerTest {
   private String newReleaseNotes;
   private Project newProjectRelease;
 
+  private String storyLabel;
+  private String storyLongName;
+  private String storyDescription;
+  private Person storyCreator;
+  private String newStoryLabel;
+  private String newStoryLongName;
+  private String newStoryDescription;
+  private Person newStoryCreator;
+
   private Person person;
   private Skill skill;
   private Team team;
   private Project project;
   private Release release;
+  private Story story;
 
   private UndoRedoHandler undoRedoHandler;
   private Main mainApp;
@@ -333,6 +344,58 @@ public class UndoRedoHandlerTest {
     undoRedoObject.setAgileItem(team);
     undoRedoObject.addDatum(lastTeam);
     undoRedoObject.addDatum(newTeam);
+
+    undoRedoHandler.newAction(undoRedoObject);
+  }
+
+  private void newStory() {
+    storyLabel = "Story";
+    storyLongName = "This is a story";
+    storyDescription = "Once upon a time...";
+    storyCreator = new Person("Joe", "Joe", "Bloggs", null);
+    story = new Story(storyLabel, storyLongName, storyDescription, storyCreator);
+
+    mainApp.addStory(story);
+
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+    undoRedoObject.setAction(Action.STORY_CREATE);
+    undoRedoObject.setAgileItem(story);
+    undoRedoObject.addDatum(new Story(story));
+
+    undoRedoHandler.newAction(undoRedoObject);
+  }
+
+  private void deleteNewestStory() {
+    mainApp.deleteStory(story);
+
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+    undoRedoObject.setAction(Action.STORY_DELETE);
+    undoRedoObject.setAgileItem(story);
+    undoRedoObject.addDatum(new Story(story));
+
+    undoRedoHandler.newAction(undoRedoObject);
+  }
+
+  private void editNewestStory() {
+    Story lastStory = new Story(story);
+
+    newStoryLabel = "NewStory";
+    newStoryLongName = "New story name";
+    newStoryDescription = "Once upon a time... Again!";
+    newStoryCreator = new Person("Seamus", "Sandy", "Devil", null);
+
+    story.setLabel(newStoryLabel);
+    story.setLongName(newStoryLongName);
+    story.setDescription(newStoryDescription);
+    story.setCreator(newStoryCreator);
+
+    Story newStory = new Story(story);
+
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+    undoRedoObject.setAction(Action.STORY_EDIT);
+    undoRedoObject.setAgileItem(story);
+    undoRedoObject.addDatum(lastStory);
+    undoRedoObject.addDatum(newStory);
 
     undoRedoHandler.newAction(undoRedoObject);
   }
@@ -1008,6 +1071,214 @@ public class UndoRedoHandlerTest {
     assertEquals(newSkillDescription, redoneSkill.getSkillDescription());
   }
 
+  @Test
+  public void testStoryCreateUndo() throws Exception {
+    assertTrue(mainApp.getStories().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().isEmpty());
+
+    newStory();
+
+    assertEquals(1, mainApp.getStories().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+
+    undoRedoHandler.undo();
+
+    assertTrue(mainApp.getStories().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().isEmpty());
+  }
+
+  @Test
+  public void testStoryCreateRedo() throws Exception {
+    Story before;
+    Story after;
+
+    assertTrue(mainApp.getStories().isEmpty());
+    assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+
+    newStory();
+
+    assertEquals(1, mainApp.getStories().size());
+    assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+    before = mainApp.getStories().get(0);
+    assertNotNull(before);
+
+    undoRedoHandler.undo();
+
+    assertTrue(mainApp.getStories().isEmpty());
+    assertEquals(1, undoRedoHandler.getRedoStack().size());
+
+    undoRedoHandler.redo();
+    assertEquals(1, mainApp.getStories().size());
+    assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+    after = mainApp.getStories().get(0);
+    assertNotNull(after);
+
+    assertSame(before, after);
+  }
+
+  @Test
+  public void testStoryDeleteUndo() throws Exception {
+    Story before;
+    Story after;
+
+    //testing deleting and undoing an empty team
+    assertTrue(mainApp.getStories().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().isEmpty());
+
+    newStory();
+
+    assertEquals(1, mainApp.getStories().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+    before = mainApp.getStories().get(0);
+    assertNotNull(before);
+
+    deleteNewestStory();
+
+    assertTrue(mainApp.getStories().isEmpty());
+    assertEquals(2, undoRedoHandler.getUndoStack().size());
+
+    undoRedoHandler.undo();
+
+    assertEquals(1, mainApp.getStories().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+    after = mainApp.getStories().get(0);
+    assertNotNull(after);
+
+    assertSame(before, after);
+  }
+
+  @Test
+  public void testStoryDeleteRedo() throws Exception {
+    Story before;
+    Story after;
+
+    //testing deleting and redoing an empty team
+    assertTrue(mainApp.getStories().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().isEmpty());
+    assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+
+    newStory();
+
+    assertEquals(1, mainApp.getStories().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+    before = mainApp.getStories().get(0);
+    assertNotNull(before);
+
+    deleteNewestStory();
+
+    assertTrue(mainApp.getStories().isEmpty());
+    assertEquals(2, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+
+    undoRedoHandler.undo();
+
+    assertEquals(1, mainApp.getStories().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+    assertEquals(1, undoRedoHandler.getRedoStack().size());
+    after = mainApp.getStories().get(0);
+    assertNotNull(after);
+
+    assertSame(before, after);
+
+    undoRedoHandler.redo();
+    assertTrue(mainApp.getStories().isEmpty());
+    assertEquals(2, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+  }
+
+  @Test
+  public void testStoryEditUndo() throws Exception {
+    //testing editing and redoing an empty team
+    assertTrue(mainApp.getStories().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+
+    newStory();
+
+    assertEquals(1, mainApp.getStories().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+
+    Story createdStory = mainApp.getStories().get(mainApp.getStories().size() - 1);
+    assertEquals(storyLabel, createdStory.getLabel());
+    assertEquals(storyLongName, createdStory.getLongName());
+    assertEquals(storyDescription, createdStory.getDescription());
+    assertEquals(storyCreator, createdStory.getCreator());
+
+    editNewestStory();
+
+    assertEquals(1, mainApp.getStories().size());
+    assertEquals(2, undoRedoHandler.getUndoStack().size());
+
+    Story editedStory = mainApp.getStories().get(mainApp.getStories().size() - 1);
+    assertEquals(newStoryLabel, editedStory.getLabel());
+    assertEquals(newStoryLongName, editedStory.getLongName());
+    assertEquals(newStoryDescription, editedStory.getDescription());
+    assertEquals(newStoryCreator, editedStory.getCreator());
+
+    undoRedoHandler.undo();
+    assertEquals(1, mainApp.getStories().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+
+    Story undoneStory = mainApp.getStories().get(mainApp.getStories().size() - 1);
+    assertEquals(storyLabel, undoneStory.getLabel());
+    assertEquals(storyLongName, undoneStory.getLongName());
+    assertEquals(storyDescription, undoneStory.getDescription());
+    assertEquals(storyCreator, undoneStory.getCreator());
+  }
+
+  @Test
+  public void testStoryEditRedo() throws Exception {
+    //testing editing and redoing an empty team
+    assertTrue(mainApp.getStories().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    newStory();
+
+    assertEquals(1, mainApp.getStories().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    Story createdStory = mainApp.getStories().get(mainApp.getStories().size() - 1);
+    assertEquals(storyLabel, createdStory.getLabel());
+    assertEquals(storyLongName, createdStory.getLongName());
+    assertEquals(storyDescription, createdStory.getDescription());
+    assertEquals(storyCreator, createdStory.getCreator());
+
+    editNewestStory();
+
+    assertEquals(1, mainApp.getStories().size());
+    assertEquals(2, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    Story editedStory = mainApp.getStories().get(mainApp.getStories().size() - 1);
+    assertEquals(newStoryLabel, editedStory.getLabel());
+    assertEquals(newStoryLongName, editedStory.getLongName());
+    assertEquals(newStoryDescription, editedStory.getDescription());
+    assertEquals(newStoryCreator, editedStory.getCreator());
+
+    undoRedoHandler.undo();
+    assertEquals(1, mainApp.getStories().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+    assertEquals(1, undoRedoHandler.getRedoStack().size());
+
+    Story undoneStory = mainApp.getStories().get(mainApp.getStories().size() - 1);
+    assertEquals(storyLabel, undoneStory.getLabel());
+    assertEquals(storyLongName, undoneStory.getLongName());
+    assertEquals(storyDescription, undoneStory.getDescription());
+    assertEquals(storyCreator, undoneStory.getCreator());
+
+    undoRedoHandler.redo();
+    assertEquals(1, mainApp.getStories().size());
+    assertEquals(2, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    Story redoneStory = mainApp.getStories().get(mainApp.getStories().size() - 1);
+    assertEquals(newStoryLabel, redoneStory.getLabel());
+    assertEquals(newStoryLongName, redoneStory.getLongName());
+    assertEquals(newStoryDescription, redoneStory.getDescription());
+    assertEquals(newStoryCreator, redoneStory.getCreator());
+  }
 
   @Test
   public void testTeamCreateUndo() throws Exception {
