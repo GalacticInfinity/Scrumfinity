@@ -797,6 +797,8 @@ public class Main extends Application {
     people.clear();
     skills.clear();
     releases.clear();
+    roles.clear();
+    stories.clear();
     nonRemovable.clear();
   }
 
