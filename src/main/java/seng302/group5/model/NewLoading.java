@@ -52,7 +52,7 @@ public class NewLoading {
       loadRoles();
       syncRoles();
       if (saveVersion >= 0.2) {
-        //Load stories
+        loadStories();
       }
     } catch (Exception e) {
       Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -74,6 +74,7 @@ public class NewLoading {
 
   /**
    * Loads the header, if no header available, assumes saveFile is version 0.1
+   *
    * @throws Exception Could not read line from file.
    */
   private void loadHeader() throws Exception {
@@ -113,7 +114,8 @@ public class NewLoading {
 
         // Mandatory fields
         projectLine = loadedFile.readLine();
-        projectData = projectLine.replaceAll("(?i)(.*<projectLabel.*?>)(.+?)(</projectLabel>)", "$2");
+        projectData =
+            projectLine.replaceAll("(?i)(.*<projectLabel.*?>)(.+?)(</projectLabel>)", "$2");
         newProject.setLabel(projectData);
         projectLine = loadedFile.readLine();
         projectData = projectLine.replaceAll("(?i)(.*<projectName.*?>)(.+?)(</projectName>)", "$2");
@@ -122,7 +124,10 @@ public class NewLoading {
         // Non mandatory fields.
         while ((!(projectLine = loadedFile.readLine()).equals("\t</Project>"))) {
           if (projectLine.startsWith("\t\t<projectDescription>")) {
-            projectData = projectLine.replaceAll("(?i)(.*<projectDescription.*?>)(.+?)(</projectDescription>)", "$2");
+            projectData =
+                projectLine
+                    .replaceAll("(?i)(.*<projectDescription.*?>)(.+?)(</projectDescription>)",
+                                "$2");
             newProject.setProjectDescription(projectData);
           }
           // Loads list of AgileHistory items
@@ -133,11 +138,13 @@ public class NewLoading {
                 tempTeam = new Team();
 
                 projectLine = loadedFile.readLine();
-                projectData = projectLine.replaceAll("(?i)(.*<agileTeam.*?>)(.+?)(</agileTeam>)", "$2");
+                projectData =
+                    projectLine.replaceAll("(?i)(.*<agileTeam.*?>)(.+?)(</agileTeam>)", "$2");
                 tempTeam.setLabel(projectData);
                 teamHistoryItem.setAgileItem(tempTeam);
                 projectLine = loadedFile.readLine();
-                projectData = projectLine.replaceAll("(?i)(.*<startDate.*?>)(.+?)(</startDate>)", "$2");
+                projectData =
+                    projectLine.replaceAll("(?i)(.*<startDate.*?>)(.+?)(</startDate>)", "$2");
                 startDate = LocalDate.of(Integer.parseInt(projectData.substring(0, 4)),
                                          Integer.parseInt(projectData.substring(5, 7)),
                                          Integer.parseInt(projectData.substring(8, 10)));
@@ -203,7 +210,8 @@ public class NewLoading {
             while ((!(personLine = loadedFile.readLine()).equals("\t\t</PersonSkills>"))) {
               if (personLine.startsWith("\t\t\t<PersonSkill>")) {
                 tempSkill = new Skill();
-                personData = personLine.replaceAll("(?i)(.*<PersonSkill.*?>)(.+?)(</PersonSkill>)", "$2");
+                personData =
+                    personLine.replaceAll("(?i)(.*<PersonSkill.*?>)(.+?)(</PersonSkill>)", "$2");
                 tempSkill.setLabel(personData);
                 skills.add(tempSkill);
               }
@@ -241,7 +249,9 @@ public class NewLoading {
         // Non mandatory data
         while ((!(skillLine = loadedFile.readLine()).equals("\t</Skill>"))) {
           if (skillLine.startsWith("\t\t<skillDescription>")) {
-            skillData = skillLine.replaceAll("(?i)(.*<skillDescription.*?>)(.+?)(</skillDescription>)", "$2");
+            skillData =
+                skillLine
+                    .replaceAll("(?i)(.*<skillDescription.*?>)(.+?)(</skillDescription>)", "$2");
             newSkill.setSkillDescription(skillData);
           }
         }
@@ -296,7 +306,8 @@ public class NewLoading {
         // Non mandatory fields
         while (!(teamLine = loadedFile.readLine()).equals("\t</Team>")) {
           if (teamLine.startsWith("\t\t<teamDescription>")) {
-            teamData = teamLine.replaceAll("(?i)(.*<teamDescription.*?>)(.+?)(</teamDescription>)", "$2");
+            teamData =
+                teamLine.replaceAll("(?i)(.*<teamDescription.*?>)(.+?)(</teamDescription>)", "$2");
             newTeam.setTeamDescription(teamData);
           }
           // Going through teams
@@ -332,7 +343,8 @@ public class NewLoading {
         tempRole = null;
         while (!(teamLine = loadedFile.readLine()).equals("\t\t\t</TeamMember>")) {
           if (teamLine.startsWith("\t\t\t\t<teamPersonLabel>")) {
-            teamData = teamLine.replaceAll("(?i)(.*<teamPersonLabel.*?>)(.+?)(</teamPersonLabel>)", "$2");
+            teamData =
+                teamLine.replaceAll("(?i)(.*<teamPersonLabel.*?>)(.+?)(</teamPersonLabel>)", "$2");
             for (Person person : main.getPeople()) {
               if (person.getLabel().equals(teamData)) {
                 people.add(person);
@@ -377,7 +389,8 @@ public class NewLoading {
         newRelease = new Release();
 
         releaseLine = loadedFile.readLine();
-        releaseData = releaseLine.replaceAll("(?i)(.*<releaseLabel.*?>)(.+?)(</releaseLabel>)", "$2");
+        releaseData =
+            releaseLine.replaceAll("(?i)(.*<releaseLabel.*?>)(.+?)(</releaseLabel>)", "$2");
         newRelease.setLabel(releaseData);
         releaseLine = loadedFile.readLine();
         releaseData = releaseLine.replaceAll(
@@ -486,6 +499,51 @@ public class NewLoading {
             }
           }
         }
+      }
+    }
+  }
+
+  /**
+   * Loads stories from xml into main app
+   */
+  private void loadStories() throws Exception {
+    Story newStory;
+    String storyLine;
+    String storyData;
+
+    // Untill Releases end tag
+    while (!(storyLine = loadedFile.readLine()).startsWith("</Stories>")) {
+      // For each new release
+      if (storyLine.matches(".*<Story>")) {
+        newStory = new Story();
+
+        // Mandatory fields
+        storyLine = loadedFile.readLine();
+        storyData = storyLine.replaceAll("(?i)(.*<storyLabel.*?>)(.+?)(</storyLabel>)", "$2");
+        newStory.setLabel(storyData);
+        storyLine = loadedFile.readLine();
+        storyData = storyLine.replaceAll("(?i)(.*<creator.*?>)(.+?)(</creator>)", "$2");
+        // Syncs with current people objects
+        for (Person person : main.getPeople()) {
+          if (person.getLabel().equals(storyData)) {
+            newStory.setCreator(person);
+            break;
+          }
+        }
+
+        // Non-mandatory fields
+        while ((!(storyLine = loadedFile.readLine()).matches(".*</Story>"))) {
+          if (storyLine.startsWith("\t\t<longName>")) {
+            storyData = storyLine.replaceAll("(?i)(.*<longName.*?>)(.+?)(</longName>)", "$2");
+            newStory.setLongName(storyData);
+          }
+          if (storyLine.startsWith("\t\t<description>")) {
+            storyData = storyLine.replaceAll("(?i)(.*<description.*?>)(.+?)(</description>)", "$2");
+            newStory.setDescription(storyData);
+          }
+        }
+
+        main.addStory(newStory);
       }
     }
   }
