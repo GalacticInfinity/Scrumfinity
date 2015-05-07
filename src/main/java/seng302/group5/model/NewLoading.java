@@ -84,6 +84,9 @@ public class NewLoading {
     if (headerLine.startsWith("<scrumfinity")) {
       progVersion = headerLine.replaceAll("(?i)(.*version=\")(.+?)(\" org.*)", "$2");
       orgName = headerLine.replaceAll("(?i)(.*organization=\")(.+?)(\">)", "$2");
+      if (orgName.equals("__undefined__")) {
+        orgName = "";
+      }
       Settings.organizationName = orgName;
       saveVersion = Double.parseDouble(progVersion);
     }

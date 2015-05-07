@@ -14,6 +14,7 @@ import seng302.group5.model.Project;
 import seng302.group5.model.Release;
 import seng302.group5.model.Role;
 import seng302.group5.model.Skill;
+import seng302.group5.model.Story;
 import seng302.group5.model.Team;
 
 /**
@@ -29,6 +30,7 @@ public class RevertHandler {
   private ObservableList<Person> peopleLastSaved;
   private ObservableList<Release> releasesLastSaved;
   private ObservableList<Role> rolesLastSaved;
+  private ObservableList<Story> storiesLastSaved;
 
   /**
    * Constructor. Set the main app to communicate with and initialise lists
@@ -43,6 +45,7 @@ public class RevertHandler {
     this.peopleLastSaved = FXCollections.observableArrayList();
     this.releasesLastSaved = FXCollections.observableArrayList();
     this.rolesLastSaved = FXCollections.observableArrayList();
+    this.storiesLastSaved = FXCollections.observableArrayList();
   }
 
 
@@ -81,12 +84,18 @@ public class RevertHandler {
       mainApp.getRoles().add(new Role(role));
     }
 
+    mainApp.getStories().clear();
+    for (Story story : storiesLastSaved) {
+      mainApp.getStories().add(new Story(story));
+    }
+
     // Ensure data in main refer to each other
     syncPeopleWithSkills(mainApp.getPeople(), mainApp.getSkills());
     syncTeamsWithPeople(mainApp.getTeams(), mainApp.getPeople(), mainApp.getRoles());
     syncProjectsWithTeams(mainApp.getProjects(), mainApp.getTeams());
     syncReleasesWithProjects(mainApp.getReleases(), mainApp.getProjects());
     syncRolesWithSkills(mainApp.getRoles(), mainApp.getSkills());
+    syncStoriesWithPeople(mainApp.getStories(), mainApp.getPeople());
 
     mainApp.refreshLastSaved();
     mainApp.refreshList();
@@ -128,12 +137,18 @@ public class RevertHandler {
       rolesLastSaved.add(new Role(role));
     }
 
+    storiesLastSaved.clear();
+    for (Story story : mainApp.getStories()) {
+      storiesLastSaved.add(new Story(story));
+    }
+
     // Ensure data in the copies refer to each other
     syncPeopleWithSkills(peopleLastSaved, skillsLastSaved);
     syncTeamsWithPeople(teamsLastSaved, peopleLastSaved, rolesLastSaved);
     syncProjectsWithTeams(projectsLastSaved, teamsLastSaved);
     syncReleasesWithProjects(releasesLastSaved, projectsLastSaved);
     syncRolesWithSkills(rolesLastSaved, skillsLastSaved);
+    syncStoriesWithPeople(storiesLastSaved, peopleLastSaved);
   }
 
   /**
@@ -273,6 +288,27 @@ public class RevertHandler {
       if (mainRole.getRequiredSkill() != null) {
         Skill mainSkill = skillMap.get(mainRole.getRequiredSkill().getLabel());
         mainRole.setRequiredSkill(mainSkill);
+      }
+    }
+  }
+
+  /**
+   * Creates the proper reference to the Person object (Creator) related to the story.
+   *
+   * @param stories Reference story objects to link to the person
+   * @param people Reference person object to link to the story
+   */
+  private void syncStoriesWithPeople (List<Story> stories, List<Person> people) {
+    Map<String, Person> personMap = new HashMap<>();
+
+    for (Person mainPerson : people) {
+      personMap.put(mainPerson.getLabel(), mainPerson);
+    }
+
+    for (Story mainStory : stories) {
+      if (mainStory.getCreator() != null) {
+        Person mainPerson = personMap.get(mainStory.getCreator().getLabel());
+        mainStory.setCreator(mainPerson);
       }
     }
   }

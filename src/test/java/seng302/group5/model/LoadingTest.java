@@ -11,6 +11,7 @@ import java.time.Month;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seng302.group5.Main;
+import seng302.group5.model.util.Settings;
 
 /**
  * Testing loading functionality
@@ -437,6 +438,46 @@ public class LoadingTest {
                  project2.getAllocatedTeams().get(1).getStartDate().toString());
     assertEquals(LocalDate.of(1861, 2, 19).toString(),
                  project2.getAllocatedTeams().get(1).getEndDate().toString());
+
+    if (!file.delete()) {
+      fail();
+    }
+  }
+
+  @Test
+  public void testingBlankHeader() {
+    Settings.organizationName = "";
+    saving = new NewSaving(savedMain);
+    File file = new File(System.getProperty("user.dir")
+                         + File.separator
+                         + "BlankHeader.xml");
+    saving.saveData(file);
+
+    loading = new NewLoading(loadedMain);
+    loading.loadFile(file);
+
+    assertEquals("", Settings.organizationName);
+
+    if (!file.delete()) {
+      fail();
+    }
+  }
+
+  @Test
+  public void testingFilledHeader() {
+    String expectedName = "test";
+    Settings.organizationName = expectedName;
+    saving = new NewSaving(savedMain);
+    File file = new File(System.getProperty("user.dir")
+                         + File.separator
+                         + "FilledHeader.xml");
+    saving.saveData(file);
+
+    Settings.organizationName = "";
+    loading = new NewLoading(loadedMain);
+    loading.loadFile(file);
+
+    assertEquals(expectedName, Settings.organizationName);
 
     if (!file.delete()) {
       fail();
