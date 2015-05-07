@@ -543,7 +543,7 @@ public class MenuBarController {
       Alert alert = new Alert(Alert.AlertType.ERROR);
       alert.setTitle("Cannot delete");
       alert.setHeaderText(null);
-      alert.setContentText(String.format("The item %s cannot be modified", selectedItem));
+      alert.setContentText(String.format("The item %s cannot be deleted", selectedItem));
       alert.showAndWait();
     } else {
       mainApp.delete(selectedItem);
