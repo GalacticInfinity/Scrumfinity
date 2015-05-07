@@ -178,6 +178,11 @@ public class Team implements AgileItem, Comparable<Team> {
     return result;
   }
 
+  /**
+   * Compares the team labels.
+   * @param o the team you wish to compare to.
+   * @return return whether its greater or lesser.
+   */
   @Override
   public int compareTo(Team o) {
     return this.label.toLowerCase().compareTo(o.label.toLowerCase());

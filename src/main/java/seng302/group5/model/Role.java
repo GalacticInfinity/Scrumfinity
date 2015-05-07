@@ -5,7 +5,7 @@ package seng302.group5.model;
  *
  * @author Alex Woo
  */
-public class Role {
+public class Role implements Comparable<Role> {
 
   private String label;
   private String roleName;
@@ -104,5 +104,15 @@ public class Role {
   @Override
   public String toString() {
     return roleName;
+  }
+
+  /**
+   * Compares the labels of this role and the role o
+   * @param o the role you wish to compare with.
+   * @return
+   */
+  @Override
+  public int compareTo(Role o) {
+    return this.label.toLowerCase().compareTo(o.label.toLowerCase());
   }
 }

@@ -132,6 +132,11 @@ public class Release implements AgileItem, Comparable<Release> {
     return result;
   }
 
+  /**
+   * Compare the release label to o's label
+   * @param o the release you wish to compare to.
+   * @return whether its greater or lesser than o.
+   */
   @Override
   public int compareTo(Release o) {
     return this.label.toLowerCase().compareTo(o.label.toLowerCase());

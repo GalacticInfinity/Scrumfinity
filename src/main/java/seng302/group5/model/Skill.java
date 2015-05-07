@@ -119,6 +119,11 @@ public class Skill implements AgileItem, Comparable<Skill> {
     return result;
   }
 
+  /**
+   * Compare the skill label to o label
+   * @param o the skill you wish to compare to
+   * @return whether it is greater or lesser
+   */
   @Override
   public int compareTo(Skill o) {
     return this.label.toLowerCase().compareTo(o.label.toLowerCase());

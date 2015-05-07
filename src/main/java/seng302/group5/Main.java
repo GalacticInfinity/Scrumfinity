@@ -849,7 +849,7 @@ public class Main extends Application {
   }
 
   public ObservableList<Role> getRoles() {
-    return roles;
+    return roles.sorted(Comparator.<Role>naturalOrder());
   }
 
   public ObservableList<Story> getStories() {

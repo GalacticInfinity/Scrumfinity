@@ -177,6 +177,11 @@ public class Person implements AgileItem, Comparable<Person> {
     return result;
   }
 
+  /**
+   * Compares the person labels
+   * @param o the person you wish to compare to.
+   * @return whether or not it is greater or lesser
+   */
   @Override
   public int compareTo(Person o) {
     return this.label.toLowerCase().compareTo(o.label.toLowerCase());
