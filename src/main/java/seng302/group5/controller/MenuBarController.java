@@ -66,6 +66,20 @@ public class MenuBarController {
     deleteMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.DELETE));
     editMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.E, KeyCombination.CONTROL_DOWN));
 
+    // Alt + digit to change list view
+    showProjectsMenuItem.setAccelerator(
+        new KeyCodeCombination(KeyCode.DIGIT1, KeyCombination.ALT_DOWN));
+    showTeamsMenuItem.setAccelerator(
+        new KeyCodeCombination(KeyCode.DIGIT2, KeyCombination.ALT_DOWN));
+    showPeopleMenuItem.setAccelerator(
+        new KeyCodeCombination(KeyCode.DIGIT3, KeyCombination.ALT_DOWN));
+    showSkillsMenuItem.setAccelerator(
+        new KeyCodeCombination(KeyCode.DIGIT4, KeyCombination.ALT_DOWN));
+    showReleasesMenuItem.setAccelerator(
+        new KeyCodeCombination(KeyCode.DIGIT5, KeyCombination.ALT_DOWN));
+    showStoriesMenuItem.setAccelerator(
+        new KeyCodeCombination(KeyCode.DIGIT6, KeyCombination.ALT_DOWN));
+
     // Ticks the project menu item
     showProjectsMenuItem.setSelected(true);
     showListMenuItem.setSelected(true);
@@ -110,26 +124,26 @@ public class MenuBarController {
    */
   @FXML
   protected void editItem(ActionEvent event) {
-      String listType = Settings.currentListType;
-      switch (listType) {
-        case "Projects":
-          mainApp.showProjectDialog(CreateOrEdit.EDIT);
-          break;
-        case "People":
-          mainApp.showPersonDialog(CreateOrEdit.EDIT);
-          break;
-        case "Skills":
-          mainApp.showSkillDialog(CreateOrEdit.EDIT);
-          break;
-        case "Teams":
-          mainApp.showTeamDialog(CreateOrEdit.EDIT);
-          break;
-        case "Releases":
-          mainApp.showReleaseDialog(CreateOrEdit.EDIT);
-          break;
-        case "Stories":
-          mainApp.showStoryDialog(CreateOrEdit.EDIT);
-          break;
+    String listType = Settings.currentListType;
+    switch (listType) {
+      case "Projects":
+        mainApp.showProjectDialog(CreateOrEdit.EDIT);
+        break;
+      case "People":
+        mainApp.showPersonDialog(CreateOrEdit.EDIT);
+        break;
+      case "Skills":
+        mainApp.showSkillDialog(CreateOrEdit.EDIT);
+        break;
+      case "Teams":
+        mainApp.showTeamDialog(CreateOrEdit.EDIT);
+        break;
+      case "Releases":
+        mainApp.showReleaseDialog(CreateOrEdit.EDIT);
+        break;
+      case "Stories":
+        mainApp.showStoryDialog(CreateOrEdit.EDIT);
+        break;
     }
   }
 
@@ -197,6 +211,7 @@ public class MenuBarController {
         NewSaving save = new NewSaving(mainApp);
         save.saveData(Settings.currentFile);
         mainApp.refreshLastSaved();
+        mainApp.setLastSaved(); //for revert
       } catch (Exception a) {
         System.out.println("Current File does not exist");
       }
@@ -216,6 +231,7 @@ public class MenuBarController {
 
           // Refresh the last saved action
           mainApp.refreshLastSaved();
+          mainApp.setLastSaved(); //for revert
         }
       } catch (Exception e) {
         System.out.println("No filename specified");
@@ -247,6 +263,7 @@ public class MenuBarController {
 
         // Refresh the last saved action
         mainApp.refreshLastSaved();
+        mainApp.setLastSaved(); //for revert
       }
     } catch (Exception e) {
       System.out.println("No filename specified");
@@ -307,6 +324,7 @@ public class MenuBarController {
         }
         showListMenuItem.setSelected(true);
         deselectList(Settings.currentListType);
+        mainApp.setLastSaved(); //for revert
       }
     } catch (Exception e) {
       System.out.println("No file selected");
@@ -450,25 +468,28 @@ public class MenuBarController {
     showSkillsMenuItem.setSelected(false);
     showReleasesMenuItem.setSelected(false);
     showStoriesMenuItem.setSelected(false);
-    switch (selectedList) {
-      case "Projects":
-        showProjectsMenuItem.setSelected(true);
-        break;
-      case "People":
-        showPeopleMenuItem.setSelected(true);
-        break;
-      case "Skills":
-        showSkillsMenuItem.setSelected(true);
-        break;
-      case "Teams":
-        showTeamsMenuItem.setSelected(true);
-        break;
-      case "Releases":
-        showReleasesMenuItem.setSelected(true);
-        break;
-      case "Stories":
-        showStoriesMenuItem.setSelected(true);
-        break;
+    if (!selectedList.equals("")) {
+      showListMenuItem.setSelected(true);
+      switch (selectedList) {
+        case "Projects":
+          showProjectsMenuItem.setSelected(true);
+          break;
+        case "People":
+          showPeopleMenuItem.setSelected(true);
+          break;
+        case "Skills":
+          showSkillsMenuItem.setSelected(true);
+          break;
+        case "Teams":
+          showTeamsMenuItem.setSelected(true);
+          break;
+        case "Releases":
+          showReleasesMenuItem.setSelected(true);
+          break;
+        case "Stories":
+          showStoriesMenuItem.setSelected(true);
+          break;
+      }
     }
   }
 

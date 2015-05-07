@@ -117,9 +117,7 @@ public class ProjectDialogController {
   private void initialiseLists(CreateOrEdit createOrEdit, Project project) {
     try {
       if (createOrEdit == CreateOrEdit.CREATE) {
-        availableTeams.addAll(
-            mainApp.getTeams().stream().filter(team -> team.getCurrentProject() == null)
-                .collect(Collectors.toList()));
+        availableTeams.addAll(mainApp.getTeams());
       } else if (createOrEdit == CreateOrEdit.EDIT) {
 
         allocatedTeams.addAll(project.getAllocatedTeams().stream().collect(Collectors.toList()));
