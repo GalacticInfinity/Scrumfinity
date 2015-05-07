@@ -84,6 +84,9 @@ public class NewLoading {
     if (headerLine.startsWith("<scrumfinity")) {
       progVersion = headerLine.replaceAll("(?i)(.*version=\")(.+?)(\" org.*)", "$2");
       orgName = headerLine.replaceAll("(?i)(.*organization=\")(.+?)(\">)", "$2");
+      if (orgName.equals("__undefined__")) {
+        orgName = "";
+      }
       Settings.organizationName = orgName;
       saveVersion = Double.parseDouble(progVersion);
     }
@@ -141,9 +144,13 @@ public class NewLoading {
                 teamHistoryItem.setStartDate(startDate);
                 projectLine = loadedFile.readLine();
                 projectData = projectLine.replaceAll("(?i)(.*<endDate.*?>)(.+?)(</endDate>)", "$2");
-                endDate = LocalDate.of(Integer.parseInt(projectData.substring(0, 4)),
-                                       Integer.parseInt(projectData.substring(5, 7)),
-                                       Integer.parseInt(projectData.substring(8, 10)));
+                if (projectData.equals("null")) {
+                  endDate = null;
+                } else {
+                  endDate = LocalDate.of(Integer.parseInt(projectData.substring(0, 4)),
+                                         Integer.parseInt(projectData.substring(5, 7)),
+                                         Integer.parseInt(projectData.substring(8, 10)));
+                }
                 teamHistoryItem.setEndDate(endDate);
 
                 newProject.addTeam(teamHistoryItem);

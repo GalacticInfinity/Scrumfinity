@@ -69,7 +69,13 @@ public class NewSaving {
    * @throws Exception Required field is missing/ error with writer
    */
   private void saveHeader(Writer saveFile) throws Exception{
-    saveFile.write("<scrumfinity version=\"0.2\" organization=\"" + Settings.organizationName + "\">\n");
+    String orgName;
+    if (!Settings.organizationName.isEmpty()) {
+      orgName = Settings.organizationName;
+    } else {
+      orgName = "__undefined__";
+    }
+    saveFile.write("<scrumfinity version=\"0.2\" organization=\"" + orgName + "\">\n");
   }
 
   /**

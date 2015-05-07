@@ -6,10 +6,12 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.time.LocalDate;
+import java.time.Month;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seng302.group5.Main;
+import seng302.group5.model.util.Settings;
 
 /**
  * Testing loading functionality
@@ -152,6 +154,35 @@ public class LoadingTest {
     release3.setProjectRelease(project1);
     release3.setReleaseDate(LocalDate.of(1765, 10, 27));
     savedMain.addRelease(release3);
+  }
+
+  public void createProjectsWithDependency() {
+    createVanillaPeople();
+    createTeamWithDependency();
+    project1 = new Project();
+    project1.setLabel("Project1");
+    project1.setProjectName("Name Project1");
+    project1.setProjectDescription("Description Project1");
+    project1.getAllocatedTeams().add(new AgileHistory(team1,
+                                                      LocalDate.of(2010, Month.APRIL, 3),
+                                                      LocalDate.of(2010, Month.APRIL, 3)));
+    savedMain.addProject(project1);
+    project2 = new Project();
+    project2.setLabel("Project2");
+    project2.setProjectName("Name Project2");
+    project2.setProjectDescription("Description Project2");
+    project2.getAllocatedTeams().add(new AgileHistory(team2,
+                                                      LocalDate.of(2010, Month.APRIL, 3),
+                                                      LocalDate.of(2014, Month.DECEMBER, 30)));
+    savedMain.addProject(project2);
+    project3 = new Project();
+    project3.setLabel("Project3");
+    project3.setProjectName("Name Project3");
+    project3.setProjectDescription("Description Project3");
+    project3.getAllocatedTeams().add(new AgileHistory(team3,
+                                                      LocalDate.of(2012, Month.APRIL, 5),
+                                                      null));
+    savedMain.addProject(project3);
   }
 
   public void allocateTeams() {
@@ -316,12 +347,58 @@ public class LoadingTest {
     assertEquals(project1, release2.getProjectRelease());
     assertEquals(LocalDate.of(3602, 1, 5).toString(),
                  release2.getReleaseDate().toString());
+    release3 = loadedMain.getReleases().get(2);
     assertEquals("Release3", release3.getLabel());
     assertEquals("Description Release3", release3.getReleaseDescription());
     assertEquals("Notes Release3", release3.getReleaseNotes());
     assertEquals(project1, release3.getProjectRelease());
     assertEquals(LocalDate.of(1765, 10, 27).toString(),
                  release3.getReleaseDate().toString());
+
+    if (!file.delete()) {
+      fail();
+    }
+  }
+
+  @Test
+  public void dependantProjectTest() {
+    createProjectsWithDependency();
+    saving = new NewSaving(savedMain);
+    File file = new File(System.getProperty("user.dir")
+                         + File.separator
+                         + "DependantProjectSave.xml");
+    saving.saveData(file);
+
+    loading = new NewLoading(loadedMain);
+    loading.loadFile(file);
+
+    team1 = loadedMain.getTeams().get(0);
+    team2 = loadedMain.getTeams().get(1);
+    team3 = loadedMain.getTeams().get(2);
+
+    project1 = loadedMain.getProjects().get(0);
+    assertEquals("Project1", project1.getLabel());
+    assertEquals("Name Project1", project1.getProjectName());
+    assertEquals("Description Project1", project1.getProjectDescription());
+    assertEquals(team1, project1.getAllocatedTeams().get(0).getAgileItem());
+    assertEquals(LocalDate.of(2010, Month.APRIL, 3), project1.getAllocatedTeams().get(0).getStartDate());
+    assertEquals(LocalDate.of(2010, Month.APRIL, 3), project1.getAllocatedTeams().get(0).getEndDate());
+
+    project2 = loadedMain.getProjects().get(1);
+    assertEquals("Project2", project2.getLabel());
+    assertEquals("Name Project2", project2.getProjectName());
+    assertEquals("Description Project2", project2.getProjectDescription());
+    assertEquals(team2, project2.getAllocatedTeams().get(0).getAgileItem());
+    assertEquals(LocalDate.of(2010, Month.APRIL, 3), project2.getAllocatedTeams().get(0).getStartDate());
+    assertEquals(LocalDate.of(2014, Month.DECEMBER, 30), project2.getAllocatedTeams().get(0).getEndDate());
+
+    project3 = loadedMain.getProjects().get(2);
+    assertEquals("Project3", project3.getLabel());
+    assertEquals("Name Project3", project3.getProjectName());
+    assertEquals("Description Project3", project3.getProjectDescription());
+    assertEquals(team3, project3.getAllocatedTeams().get(0).getAgileItem());
+    assertEquals(LocalDate.of(2012, Month.APRIL, 5), project3.getAllocatedTeams().get(0).getStartDate());
+    assertNull(project3.getAllocatedTeams().get(0).getEndDate());
 
     if (!file.delete()) {
       fail();
@@ -361,6 +438,46 @@ public class LoadingTest {
                  project2.getAllocatedTeams().get(1).getStartDate().toString());
     assertEquals(LocalDate.of(1861, 2, 19).toString(),
                  project2.getAllocatedTeams().get(1).getEndDate().toString());
+
+    if (!file.delete()) {
+      fail();
+    }
+  }
+
+  @Test
+  public void testingBlankHeader() {
+    Settings.organizationName = "";
+    saving = new NewSaving(savedMain);
+    File file = new File(System.getProperty("user.dir")
+                         + File.separator
+                         + "BlankHeader.xml");
+    saving.saveData(file);
+
+    loading = new NewLoading(loadedMain);
+    loading.loadFile(file);
+
+    assertEquals("", Settings.organizationName);
+
+    if (!file.delete()) {
+      fail();
+    }
+  }
+
+  @Test
+  public void testingFilledHeader() {
+    String expectedName = "test";
+    Settings.organizationName = expectedName;
+    saving = new NewSaving(savedMain);
+    File file = new File(System.getProperty("user.dir")
+                         + File.separator
+                         + "FilledHeader.xml");
+    saving.saveData(file);
+
+    Settings.organizationName = "";
+    loading = new NewLoading(loadedMain);
+    loading.loadFile(file);
+
+    assertEquals(expectedName, Settings.organizationName);
 
     if (!file.delete()) {
       fail();
