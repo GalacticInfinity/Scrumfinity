@@ -105,7 +105,8 @@ public class SkillsDialogController {
       }
       for (Skill aSkill : mainApp.getSkills()) {
         String aSkillLabel = aSkill.getLabel();
-        if (aSkillLabel.equals(inputSkillLabel) && !aSkillLabel.equals(lastSkillLabel)) {
+        if (aSkillLabel.equalsIgnoreCase(inputSkillLabel) &&
+            !aSkillLabel.equalsIgnoreCase(lastSkillLabel)) {
           throw new Exception("Skill label is not unique.");
         }
       }

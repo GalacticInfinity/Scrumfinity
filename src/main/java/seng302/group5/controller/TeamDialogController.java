@@ -326,7 +326,8 @@ public class TeamDialogController {
       }
       for (Team team : mainApp.getTeams()) {
         String teamLabel = team.getLabel();
-        if (team.getLabel().equals(inputTeamLabel) && !teamLabel.equals(lastTeamLabel)) {
+        if (team.getLabel().equalsIgnoreCase(inputTeamLabel) &&
+            !teamLabel.equalsIgnoreCase(lastTeamLabel)) {
           throw new Exception("Team label is not unique.");
         }
       }

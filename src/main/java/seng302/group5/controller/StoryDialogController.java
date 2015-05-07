@@ -76,6 +76,15 @@ public class StoryDialogController {
     }
 
     btnCreateStory.setDefaultButton(true);
+
+    // Handle TextField text changes.
+    storyLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
+      if (newValue.trim().length() > 20) {
+        storyLabelField.setStyle("-fx-text-inner-color: red;");
+      } else {
+        storyLabelField.setStyle("-fx-text-inner-color: black;");
+      }
+    });
   }
 
   /**
@@ -183,8 +192,6 @@ public class StoryDialogController {
 
     if (inputStoryLabel.isEmpty()) {
       throw new Exception("Story label is empty.");
-    } else if (inputStoryLabel.length() > 8) {
-      throw new Exception("Story label is more than 8 characters long");
     } else {
       String lastStoryLabel;
       if (lastStory == null) {
@@ -194,7 +201,8 @@ public class StoryDialogController {
       }
       for (Story storyInList : mainApp.getStories()) {
         String storyLabel = storyInList.getLabel();
-        if (storyLabel.equals(inputStoryLabel) && !storyLabel.equals(lastStoryLabel)) {
+        if (storyLabel.equalsIgnoreCase(inputStoryLabel) &&
+            !storyLabel.equalsIgnoreCase(lastStoryLabel)) {
           throw new Exception("Story label is not unique");
         }
       }

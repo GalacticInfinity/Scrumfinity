@@ -152,7 +152,8 @@ public class ProjectDialogController {
       }
       for (Project projectInList : mainApp.getProjects()) {
         String projectLabel = projectInList.getLabel();
-        if (projectLabel.equals(inputProjectLabel) && !projectLabel.equals(lastProjectLabel)) {
+        if (projectLabel.equalsIgnoreCase(inputProjectLabel) &&
+            !projectLabel.equalsIgnoreCase(lastProjectLabel)) {
           throw new Exception("Project label is not unique.");
         }
       }

@@ -201,7 +201,8 @@ public class PersonDialogController {
       }
       for (Person personInList : mainApp.getPeople()) {
         String personLabel = personInList.getLabel();
-        if (personLabel.equals(inputPersonLabel) && !personLabel.equals(lastPersonLabel)) {
+        if (personLabel.equalsIgnoreCase(inputPersonLabel) &&
+            !personLabel.equalsIgnoreCase(lastPersonLabel)) {
           throw new Exception("Person label is not unique");
         }
       }

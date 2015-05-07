@@ -248,7 +248,8 @@ public class ReleaseDialogController {
       }
       for (Release releaseInList : mainApp.getReleases()) {
         String releaseLabel = releaseInList.getLabel();
-        if (releaseLabel.equals(inputReleaseLabel) && !releaseLabel.equals(lastReleaseLabel)) {
+        if (releaseLabel.equalsIgnoreCase(inputReleaseLabel) &&
+            !releaseLabel.equalsIgnoreCase(lastReleaseLabel)) {
           throw new Exception("Release label is not unique");
         }
       }
