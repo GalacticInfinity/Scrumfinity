@@ -44,12 +44,13 @@ public class ReportWriter {
   Element orphanTeam;
   Element orphanPeople;
   Element allSkills;
+  Element unusedSkills;
   Element allStories;
   Element allReleases;
   String dateFormat = "dd/MM/yyyy";
 
   ObservableList<Team> orphanTeamsList = FXCollections.observableArrayList();
-
+  ObservableList<Skill> unassignedSkills = FXCollections.observableArrayList();
   /**
    * Creates a report based on data currently stored in the main application memory.
    * Uses XML format, no pretty print.
@@ -60,7 +61,7 @@ public class ReportWriter {
     try {
       DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
       DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-
+      unassignedSkills.setAll(mainApp.getSkills());
       report = docBuilder.newDocument();
       rootElement = report.createElement("Organization");
       String orgName = Settings.organizationName;
@@ -122,7 +123,13 @@ public class ReportWriter {
       allSkills = report.createElement("Skills");
       rootElement.appendChild(allSkills);
       for (Skill skill : mainApp.getSkills()) {
-        createSkillChild(skill);
+        createSkillChild(skill, allSkills);
+      }
+
+      unusedSkills = report.createElement("UnassignedSkills");
+      rootElement.appendChild(unusedSkills);
+      for (Skill skill : unassignedSkills) {
+        createSkillChild(skill, unusedSkills);
       }
 
       allStories = report.createElement("Stories");
@@ -258,7 +265,11 @@ public class ReportWriter {
 
       skillElement = report.createElement("Skills");
       memberElem.appendChild(skillElement);
+
       for (Skill skill : member.getSkillSet()) {
+        if (unassignedSkills.contains(skill)) {
+          unassignedSkills.remove(skill);
+        }
         Element skillElem = report.createElement("Skill");
         skillElement.appendChild(skillElem);
         skillElem.setAttribute("label", skill.getLabel());
@@ -339,6 +350,9 @@ public class ReportWriter {
     skillElement = report.createElement("Skills");
     orphanPersonElem.appendChild(skillElement);
     for (Skill skill : person.getSkillSet()) {
+      if (unassignedSkills.contains(skill)) {
+        unassignedSkills.remove(skill);
+      }
       Element skillElem = report.createElement("Skill");
       skillElement.appendChild(skillElem);
       skillElem.setAttribute("label", skill.getLabel());
@@ -354,7 +368,7 @@ public class ReportWriter {
    * displayed under a person or under the list of all skills tag.
    * @param skill The skill who's information will be displayed.
    */
-  public void createSkillChild(Skill skill) {
+  public void createSkillChild(Skill skill, Element allSkills) {
     Element skillElem = report.createElement("Skill");
     allSkills.appendChild(skillElem);
     skillElem.setAttribute("label", skill.getLabel());
@@ -362,6 +376,7 @@ public class ReportWriter {
     Element skillDescription = report.createElement("Description");
     skillDescription.appendChild(report.createTextNode(skill.getSkillDescription()));
     skillElem.appendChild(skillDescription);
+
   }
 
   /**
