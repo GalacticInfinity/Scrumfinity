@@ -386,7 +386,7 @@ public class MenuBarController {
     Optional<String> result = orgDialog.showAndWait();
 
     result.ifPresent(newField -> {
-      Settings.organizationName = result.get();
+      Settings.organizationName = result.get().trim();
       mainApp.setMainTitle("Scrumfinity - " + Settings.organizationName);
       mainApp.toggleName();
     });
