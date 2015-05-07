@@ -245,10 +245,6 @@ public class NewLoading {
             newSkill.setSkillDescription(skillData);
           }
         }
-        if (newSkill.getLabel().equals("Product Owner") ||
-            newSkill.getLabel().equals("Scrum Master")) {
-          main.getNonRemovable().add(newSkill);
-        }
         main.addSkill(newSkill);
       }
     }
@@ -442,6 +438,7 @@ public class NewLoading {
             for (Skill skill : main.getSkills()) {
               if (skill.getLabel().equals(roleData)) {
                 newRole.setRequiredSkill(skill);
+                main.getNonRemovable().add(skill); // Skill is non-removable if in use by role
               }
             }
           }

@@ -213,8 +213,7 @@ public class RevertHandler {
       team.getMembersRole().clear();
       for (Person person : personArray) {
         person.assignToTeam(team);
-        team.getTeamMembers().add(person);
-        team.getMembersRole().put(person, personRoleMap.get(person));
+        team.addTeamMember(person, personRoleMap.get(person));
       }
     }
   }
@@ -288,6 +287,7 @@ public class RevertHandler {
       if (mainRole.getRequiredSkill() != null) {
         Skill mainSkill = skillMap.get(mainRole.getRequiredSkill().getLabel());
         mainRole.setRequiredSkill(mainSkill);
+        mainApp.getNonRemovable().add(mainSkill); // Skill non-removable if in use by a role
       }
     }
   }
