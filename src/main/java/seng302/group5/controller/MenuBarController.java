@@ -286,11 +286,45 @@ public class MenuBarController {
     alert.getDialogPane().setPrefHeight(100);
     alert.setContentText(message);
 
+    ButtonType buttonTypeSaveAs = new ButtonType("Save as then revert");
+    ButtonType buttonTypeConfirm = new ButtonType("Revert", ButtonBar.ButtonData.OK_DONE);
+    ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+    alert.getButtonTypes().setAll(buttonTypeSaveAs, buttonTypeConfirm, buttonTypeCancel);
+
     Optional<ButtonType> result = alert.showAndWait();
-    if (result.get() == ButtonType.OK) {
+    if (result.get() == buttonTypeSaveAs) {
+      // ... user chose "Save as then revert"
+      FileChooser fileChooser = new FileChooser();
+      fileChooser.setTitle("Save Project");
+      if (Settings.defaultFilepath != null) {
+        fileChooser.setInitialDirectory(Settings.defaultFilepath);
+      }
+      try {
+        File file = fileChooser.showSaveDialog(mainApp.getPrimaryStage());
+
+        if (file != null) {
+          NewSaving save = new NewSaving(mainApp);
+          save.saveData(file);
+          mainApp.revert();
+        } else {
+          Alert alert2 = new Alert(Alert.AlertType.ERROR);
+          alert2.setTitle("No file selected");
+          alert2.setHeaderText(null);
+          alert2.setContentText("No file was selected for saving. Revert cancelled.");
+          alert2.showAndWait();
+        }
+      } catch (Exception e) {
+        Alert alert2 = new Alert(Alert.AlertType.ERROR);
+        alert2.setTitle("No file selected");
+        alert2.setHeaderText(null);
+        alert2.setContentText("No file was selected for saving. Revert cancelled.");
+        alert2.showAndWait();
+      }
+    } else if (result.get() == buttonTypeConfirm) {
+      // ... user chose "Revert"
       mainApp.revert();
     }
-
   }
 
   /**
@@ -374,11 +408,11 @@ public class MenuBarController {
     });
 
     orgDialog.getDialogPane().setContent(orgField);
-    Platform.runLater(() -> orgField.requestFocus());
+    Platform.runLater(orgField::requestFocus);
 
     orgDialog.setResultConverter(dialogButton -> {
       if (dialogButton == acceptButtonType) {
-        return new String(orgField.getText());
+        return orgField.getText();
       }
       return null;
     });
@@ -509,7 +543,7 @@ public class MenuBarController {
       Alert alert = new Alert(Alert.AlertType.ERROR);
       alert.setTitle("Cannot delete");
       alert.setHeaderText(null);
-      alert.setContentText(String.format("The item %s cannot be modified", selectedItem));
+      alert.setContentText(String.format("The item %s cannot be deleted", selectedItem));
       alert.showAndWait();
     } else {
       mainApp.delete(selectedItem);

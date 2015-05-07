@@ -45,6 +45,9 @@ public class LoadingTest {
   AgileHistory teamHistory1;
   AgileHistory teamHistory2;
   AgileHistory teamHistory3;
+  Story story1;
+  Story story2;
+  Story story3;
 
   @Before
   public void setUp() {
@@ -183,6 +186,24 @@ public class LoadingTest {
                                                       LocalDate.of(2012, Month.APRIL, 5),
                                                       null));
     savedMain.addProject(project3);
+  }
+
+  public void createStories() {
+    createVanillaPeople();
+    story1 = new Story("Story1", "Starter Story", "Huehuehuehue", person1);
+    savedMain.addStory(story1);
+
+    story2 = new Story();
+    story2.setLabel("Story2");
+    story2.setLongName("Moar Story");
+    story2.setCreator(person2);
+    savedMain.addStory(story2);
+
+    story3 = new Story();
+    story3.setLabel("Story3");
+    story3.setDescription("They story-ening is now");
+    story3.setCreator(person1);
+    savedMain.addStory(story3);
   }
 
   public void allocateTeams() {
@@ -478,6 +499,42 @@ public class LoadingTest {
     loading.loadFile(file);
 
     assertEquals(expectedName, Settings.organizationName);
+
+    if (!file.delete()) {
+      fail();
+    }
+  }
+
+  @Test
+  public void testingStories() {
+    createStories();
+    saving = new NewSaving(savedMain);
+    File file = new File(System.getProperty("user.dir")
+                         + File.separator
+                         + "StorySave.xml");
+    saving.saveData(file);
+
+    loading = new NewLoading(loadedMain);
+    loading.loadFile(file);
+
+    person1 = loadedMain.getPeople().get(0);
+    person2 = loadedMain.getPeople().get(1);
+
+    story1 = loadedMain.getStories().get(0);
+    assertEquals("Story1", story1.getLabel());
+    assertEquals("Starter Story", story1.getLongName());
+    assertEquals("Huehuehuehue", story1.getDescription());
+    assertSame(person1, story1.getCreator());
+
+    story2 = loadedMain.getStories().get(1);
+    assertEquals("Story2", story2.getLabel());
+    assertEquals("Moar Story", story2.getLongName());
+    assertSame(person2, story2.getCreator());
+
+    story3 = loadedMain.getStories().get(2);
+    assertEquals("Story3", story3.getLabel());
+    assertEquals("They story-ening is now", story3.getDescription());
+    assertSame(person1, story3.getCreator());
 
     if (!file.delete()) {
       fail();
