@@ -189,52 +189,95 @@ public class ProjectDialogController {
    */
   private void parseProjectDates(LocalDate startDate, LocalDate endDate, Team team)
       throws Exception {
-    // TODO: Handle null end dates on parsing. Null date should represent forever.
-    if (endDate != null && startDate.isAfter(endDate)) {
+    if (startDate == null) {
+      throw new Exception("Start date must be chosen.");
+    } else if (endDate != null && startDate.isAfter(endDate)) {
       throw new Exception("Start date must be before End Date.");
     } else if (team == null) {
       throw new Exception("Please select a team to assign.");
     } else {
+      if (endDate == null) {
+        endDate = LocalDate.MAX;
+      }
       for (Project project1 : mainApp.getProjects()) {
         for (AgileHistory team1 : project1.getAllocatedTeams()) {
           if (Objects.equals(team.toString(), team1.getAgileItem().toString()) &&
               !project.getLabel().equals(project1.getLabel())) {
-            if (team1.getStartDate().isEqual(startDate) || team1.getEndDate().isEqual(endDate)) {
-              throw new Exception("The selected team is already assigned during selected dates.");
-            }
-            if (startDate.isAfter(team1.getStartDate()) && startDate.isBefore(team1.getEndDate())) {
-              throw new Exception("The selected team is already assigned during selected dates.");
-            } else if (endDate.isAfter(team1.getStartDate()) && endDate
-                .isBefore(team1.getEndDate())) {
-              throw new Exception("The selected team is already assigned during selected dates.");
-            } else if (startDate.isBefore(team1.getStartDate()) && endDate
-                .isAfter(team1.getStartDate())) {
-              throw new Exception("The selected team is already assigned during selected dates.");
-            } else if (startDate.isEqual(team1.getEndDate())) {
-              throw new Exception("The selected team is already assigned during selected dates.");
-            } else if (endDate.isEqual(team1.getStartDate())) {
-              throw new Exception("The selected team is already assigned during selected dates.");
+            if (team1.getEndDate() == null) {
+              // team's end date has not been defined yet. assume it is for infinity
+              if (startDate.isAfter(team1.getStartDate())) {
+                throw new Exception(
+                    String.format("The chosen start date is after an existing start date where "
+                                  + "the end date is unknown for the project %s.", project1));
+              } else if (endDate.isAfter(team1.getStartDate())) {
+                if (endDate.equals(LocalDate.MAX)) {
+                  throw new Exception(
+                      String.format("Cannot have an uncertain end date when one already exists "
+                                    + "for the team for the project %s.", project1));
+                } else {
+                  throw new Exception(
+                      String.format("The chosen end date is after an existing start date where "
+                                    + "the end date is unknown for the project %s.", project1));
+                }
+              }
+            } else {
+              String errorMessage = String.format(
+                  "The selected team is already assigned during selected dates for the project %s.",
+                  project1);
+              if (team1.getStartDate().isEqual(startDate) || team1.getEndDate().isEqual(endDate)) {
+                throw new Exception(errorMessage);
+              }
+              if (startDate.isAfter(team1.getStartDate()) && startDate
+                  .isBefore(team1.getEndDate())) {
+                throw new Exception(errorMessage);
+              } else if (endDate.isAfter(team1.getStartDate()) && endDate
+                  .isBefore(team1.getEndDate())) {
+                throw new Exception(errorMessage);
+              } else if (startDate.isBefore(team1.getStartDate()) && endDate
+                  .isAfter(team1.getStartDate())) {
+                throw new Exception(errorMessage);
+              } else if (startDate.isEqual(team1.getEndDate())) {
+                throw new Exception(errorMessage);
+              } else if (endDate.isEqual(team1.getStartDate())) {
+                throw new Exception(errorMessage);
+              }
             }
           }
         }
       }
       for (AgileHistory team2 : allocatedTeams) {
         if (Objects.equals(team.toString(), team2.getAgileItem().toString())) {
-          if (team2.getStartDate().isEqual(startDate) || team2.getEndDate().isEqual(endDate)) {
-            throw new Exception("The selected team is already assigned during selected dates.");
-          }
-          if (startDate.isAfter(team2.getStartDate()) && startDate.isBefore(team2.getEndDate())) {
-            throw new Exception("The selected team is already assigned during selected dates.");
-          } else if (endDate.isAfter(team2.getStartDate()) && endDate
-              .isBefore(team2.getEndDate())) {
-            throw new Exception("The selected team is already assigned during selected dates.");
-          } else if (startDate.isBefore(team2.getStartDate()) && endDate
-              .isAfter(team2.getStartDate())) {
-            throw new Exception("The selected team is already assigned during selected dates.");
-          } else if (startDate.isEqual(team2.getEndDate())) {
-            throw new Exception("The selected team is already assigned during selected dates.");
-          } else if (endDate.isEqual(team2.getStartDate())) {
-            throw new Exception("The selected team is already assigned during selected dates.");
+          if (team2.getEndDate() == null) {
+            // team's end date has not been defined yet. assume it is for infinity
+            if (startDate.isAfter(team2.getStartDate())) {
+              throw new Exception("The chosen start date is after an existing start date where "
+                                  + "the end date is unknown.");
+            } else if (endDate.isAfter(team2.getStartDate())) {
+              if (endDate.equals(LocalDate.MAX)) {
+                throw new Exception("Cannot have an uncertain end date when one already exists "
+                                    + "for the team.");
+              } else {
+                throw new Exception("The chosen end date is after an existing start date where "
+                                    + "the end date is unknown.");
+              }
+            }
+          } else {
+            if (team2.getStartDate().isEqual(startDate) || team2.getEndDate().isEqual(endDate)) {
+              throw new Exception("The selected team is already assigned during selected dates.");
+            }
+            if (startDate.isAfter(team2.getStartDate()) && startDate.isBefore(team2.getEndDate())) {
+              throw new Exception("The selected team is already assigned during selected dates.");
+            } else if (endDate.isAfter(team2.getStartDate()) && endDate
+                .isBefore(team2.getEndDate())) {
+              throw new Exception("The selected team is already assigned during selected dates.");
+            } else if (startDate.isBefore(team2.getStartDate()) && endDate
+                .isAfter(team2.getStartDate())) {
+              throw new Exception("The selected team is already assigned during selected dates.");
+            } else if (startDate.isEqual(team2.getEndDate())) {
+              throw new Exception("The selected team is already assigned during selected dates.");
+            } else if (endDate.isEqual(team2.getStartDate())) {
+              throw new Exception("The selected team is already assigned during selected dates.");
+            }
           }
         }
       }
