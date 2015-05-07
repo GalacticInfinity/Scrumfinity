@@ -7,16 +7,16 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="388.0" prefWidth="477.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.ProjectDialogController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="406.0" prefWidth="477.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.ProjectDialogController">
    <children>
-      <HBox alignment="BOTTOM_LEFT" prefHeight="35.0" prefWidth="434.0" spacing="10.0">
+      <HBox alignment="BOTTOM_LEFT" prefHeight="32.0" prefWidth="434.0" spacing="10.0">
          <children>
             <Label prefHeight="25.0" prefWidth="98.0" text="Project Label:*">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
-            <TextField fx:id="projectLabelField" alignment="TOP_LEFT" promptText="Unique project label.">
+            <TextField fx:id="projectLabelField" alignment="TOP_LEFT" prefWidth="200.0" promptText="Unique project label.">
                <HBox.margin>
                   <Insets left="8.0" />
                </HBox.margin>
@@ -32,7 +32,7 @@
                   <Font size="15.0" />
                </font>
             </Label>
-            <TextField fx:id="projectNameField" alignment="TOP_LEFT" promptText="Name of project.">
+            <TextField fx:id="projectNameField" alignment="TOP_LEFT" prefWidth="200.0" promptText="Name of project.">
                <HBox.margin>
                   <Insets left="1.0" />
                </HBox.margin></TextField>
@@ -45,11 +45,14 @@
                   <Font size="15.0" />
                </font>
             </Label>
-            <TextArea fx:id="projectDescriptionField" prefHeight="94.0" prefWidth="310.0" promptText="Description of project." wrapText="true">
+            <TextArea fx:id="projectDescriptionField" prefHeight="94.0" prefWidth="300.0" promptText="Description of project." wrapText="true">
                <HBox.margin>
                   <Insets left="8.0" />
                </HBox.margin></TextArea>
          </children>
+         <VBox.margin>
+            <Insets top="1.0" />
+         </VBox.margin>
       </HBox>
       <Label prefHeight="21.0" prefWidth="117.0" text="Team Allocation:">
          <font>
@@ -78,7 +81,7 @@
                         <Insets bottom="5.0" />
                      </VBox.margin>
                   </DatePicker>
-                  <Button fx:id="btnAddTeam" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#btnAddTeam" prefWidth="60.0" text="--&gt;" textAlignment="CENTER">
+                  <Button fx:id="btnAddTeam" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#btnAddTeam" prefWidth="60.0" text="→" textAlignment="CENTER">
                      <VBox.margin>
                         <Insets bottom="10.0" left="30.0" />
                      </VBox.margin>
@@ -86,7 +89,7 @@
                         <Tooltip text="Allocate selected team to this project" />
                      </tooltip>
                   </Button>
-                  <Button fx:id="btnRemoveTeam" mnemonicParsing="false" onAction="#btnRemoveTeam" prefWidth="60.0" text="&lt;--">
+                  <Button fx:id="btnRemoveTeam" mnemonicParsing="false" onAction="#btnRemoveTeam" prefWidth="60.0" text="←">
                      <VBox.margin>
                         <Insets left="30.0" />
                      </VBox.margin>
@@ -106,9 +109,9 @@
       </HBox>
       <HBox alignment="BOTTOM_RIGHT" prefHeight="39.0" prefWidth="434.0" spacing="10.0">
          <children>
-            <Label prefHeight="25.0" prefWidth="307.0" text="* Fields cannot be empty.">
+            <Label prefHeight="25.0" prefWidth="314.0" text="* Fields cannot be empty.">
                <font>
-                  <Font size="15.0" />
+                  <Font name="System Italic" size="13.0" />
                </font>
             </Label>
             <Button fx:id="btnConfirm" mnemonicParsing="false" onAction="#btnConfirmClick" prefWidth="60.0" text="Save" />
