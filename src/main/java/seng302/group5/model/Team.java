@@ -10,7 +10,7 @@ import javafx.collections.ObservableList;
  *
  * Created by Zander on 24/03/2015.
  */
-public class Team implements AgileItem {
+public class Team implements AgileItem, Comparable<Team> {
 
   private String label;
   private String teamDescription;
@@ -176,5 +176,15 @@ public class Team implements AgileItem {
       result = this.label.equals(team.getLabel());
     }
     return result;
+  }
+
+  /**
+   * Compares the team labels.
+   * @param o the team you wish to compare to.
+   * @return return whether its greater or lesser.
+   */
+  @Override
+  public int compareTo(Team o) {
+    return this.label.toLowerCase().compareTo(o.label.toLowerCase());
   }
 }

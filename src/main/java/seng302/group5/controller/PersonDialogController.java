@@ -1,5 +1,7 @@
 package seng302.group5.controller;
 
+import java.util.Comparator;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -125,7 +127,6 @@ public class PersonDialogController {
   @FXML
   protected void btnCreatePersonClick(ActionEvent event) {
     StringBuilder errors = new StringBuilder();
-    errors.append("Invalid Fields:");
     int noErrors = 0;
 
     String personLabel = "";
@@ -137,7 +138,7 @@ public class PersonDialogController {
       personLabel = parsePersonLabel(personLabelField.getText());
     } catch (Exception e) {
       noErrors++;
-      errors.append(String.format("\n\t%s", e.getMessage()));
+      errors.append(String.format("%s\n", e.getMessage()));
     }
 
     // Display all errors if they exist
@@ -191,7 +192,7 @@ public class PersonDialogController {
     inputPersonLabel = inputPersonLabel.trim();
 
     if (inputPersonLabel.isEmpty()) {
-      throw new Exception("Person label is empty.");
+      throw new Exception("Person Label is empty.");
     } else {
       String lastPersonLabel;
       if (lastPerson == null) {
@@ -201,8 +202,9 @@ public class PersonDialogController {
       }
       for (Person personInList : mainApp.getPeople()) {
         String personLabel = personInList.getLabel();
-        if (personLabel.equals(inputPersonLabel) && !personLabel.equals(lastPersonLabel)) {
-          throw new Exception("Person label is not unique");
+        if (personLabel.equalsIgnoreCase(inputPersonLabel) &&
+            !personLabel.equalsIgnoreCase(lastPersonLabel)) {
+          throw new Exception("Person Label is not unique.");
         }
       }
     }
@@ -222,8 +224,8 @@ public class PersonDialogController {
         }
       }
 
-      this.skillsList.setItems(availableSkills);
-      this.personSkillList.setItems(selectedSkills);
+      this.skillsList.setItems(availableSkills.sorted(Comparator.<Skill>naturalOrder()));
+      this.personSkillList.setItems(selectedSkills.sorted(Comparator.<Skill>naturalOrder()));
     } catch (Exception e) {
       e.printStackTrace();
     }

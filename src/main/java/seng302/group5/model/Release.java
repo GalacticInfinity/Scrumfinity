@@ -6,7 +6,7 @@ import java.time.LocalDate;
  * Release class that sets the model for a release.
  * Created by Craig Barnard on 07/04/2015
  */
-public class Release implements AgileItem {
+public class Release implements AgileItem, Comparable<Release> {
 
   private String label;
   private String releaseDescription;
@@ -130,5 +130,15 @@ public class Release implements AgileItem {
       result = this.label.equals(release.getLabel());
     }
     return result;
+  }
+
+  /**
+   * Compare the release label to o's label
+   * @param o the release you wish to compare to.
+   * @return whether its greater or lesser than o.
+   */
+  @Override
+  public int compareTo(Release o) {
+    return this.label.toLowerCase().compareTo(o.label.toLowerCase());
   }
 }

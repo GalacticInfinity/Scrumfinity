@@ -1,6 +1,7 @@
 package seng302.group5.controller;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -114,27 +115,28 @@ public class ListMainPaneController {
     switch (listType) {
       case "Projects":
         isListShown = true;
-        listView.setItems(mainApp.getProjects());
+
+        listView.setItems(mainApp.getProjects().sorted(Comparator.<Project>naturalOrder()));
         break;
       case "People":
         isListShown = true;
-        listView.setItems(mainApp.getPeople());
+        listView.setItems(mainApp.getPeople().sorted(Comparator.<Person>naturalOrder()));
         break;
       case "Skills":
         isListShown = true;
-        listView.setItems(mainApp.getSkills());
+        listView.setItems(mainApp.getSkills().sorted(Comparator.<Skill>naturalOrder()));
         break;
       case "Teams":
         isListShown = true;
-        listView.setItems(mainApp.getTeams());
+        listView.setItems(mainApp.getTeams().sorted(Comparator.<Team>naturalOrder()));
         break;
       case "Releases":
         isListShown = true;
-        listView.setItems(mainApp.getReleases());
+        listView.setItems(mainApp.getReleases().sorted(Comparator.<Release>naturalOrder()));
         break;
       case "Stories":
         isListShown = true;
-        listView.setItems(mainApp.getStories());
+        listView.setItems(mainApp.getStories().sorted(Comparator.<Story>naturalOrder()));
         break;
     }
     // Set the list label

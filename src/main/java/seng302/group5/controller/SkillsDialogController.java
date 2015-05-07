@@ -95,7 +95,7 @@ public class SkillsDialogController {
     inputSkillLabel = inputSkillLabel.trim();
 
     if (inputSkillLabel.isEmpty()) {
-      throw new Exception("Skill label is empty");
+      throw new Exception("Skill Label is empty");
     } else {
       String lastSkillLabel;
       if (lastSkill == null) {
@@ -105,8 +105,9 @@ public class SkillsDialogController {
       }
       for (Skill aSkill : mainApp.getSkills()) {
         String aSkillLabel = aSkill.getLabel();
-        if (aSkillLabel.equals(inputSkillLabel) && !aSkillLabel.equals(lastSkillLabel)) {
-          throw new Exception("Skill label is not unique.");
+        if (aSkillLabel.equalsIgnoreCase(inputSkillLabel) &&
+            !aSkillLabel.equalsIgnoreCase(lastSkillLabel)) {
+          throw new Exception("Skill Label is not unique.");
         }
       }
     }
