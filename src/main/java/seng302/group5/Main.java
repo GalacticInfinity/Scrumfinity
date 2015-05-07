@@ -2,6 +2,7 @@ package seng302.group5;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Optional;
 
 import javafx.application.Application;
@@ -99,12 +100,15 @@ public class Main extends Application {
     nonRemovable.add(smSkill);
     nonRemovable.add(poSkill);
 
-    Role smRole = new Role("SM", "Scrum Master", smSkill, 1);
-    Role poRole = new Role("PO", "Product Owner", poSkill, 1);
     Role devRole = new Role("DEV", "Developer");
+    Role poRole = new Role("PO", "Product Owner", poSkill, 1);
+    Role smRole = new Role("SM", "Scrum Master", smSkill, 1);
+
+
+    addRole(devRole);
     addRole(poRole);
     addRole(smRole);
-    addRole(devRole);
+
 
     revertHandler.setLastSaved();
 
@@ -825,23 +829,23 @@ public class Main extends Application {
   }
 
   public ObservableList<Project> getProjects() {
-    return projects;
+    return projects.sorted(Comparator.<Project>naturalOrder());
   }
 
   public ObservableList<Team> getTeams() {
-    return teams;
+    return teams.sorted(Comparator.<Team>naturalOrder());
   }
 
   public ObservableList<Person> getPeople() {
-    return people;
+    return people.sorted(Comparator.<Person>naturalOrder());
   }
 
   public ObservableList<Skill> getSkills() {
-    return skills;
+    return skills.sorted(Comparator.<Skill>naturalOrder());
   }
 
   public ObservableList<Release> getReleases() {
-    return releases;
+    return releases.sorted(Comparator.<Release>naturalOrder());
   }
 
   public ObservableList<Role> getRoles() {
@@ -849,7 +853,7 @@ public class Main extends Application {
   }
 
   public ObservableList<Story> getStories() {
-    return stories;
+    return stories.sorted(Comparator.<Story>naturalOrder());
   }
 
   public ArrayList<AgileItem> getNonRemovable() {

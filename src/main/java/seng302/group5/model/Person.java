@@ -1,5 +1,7 @@
 package seng302.group5.model;
 
+import java.util.Comparator;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -8,7 +10,7 @@ import javafx.collections.ObservableList;
  *
  * Created by Zander on 17/03/2015.
  */
-public class Person implements AgileItem {
+public class Person implements AgileItem, Comparable<Person> {
 
   private String label;
   private String firstName;
@@ -174,4 +176,10 @@ public class Person implements AgileItem {
     }
     return result;
   }
+
+  @Override
+  public int compareTo(Person o) {
+    return this.label.toLowerCase().compareTo(o.label.toLowerCase());
+  }
+
 }

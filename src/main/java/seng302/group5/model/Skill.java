@@ -3,7 +3,7 @@ package seng302.group5.model;
 /**
  * @author Liang Ma
  */
-public class Skill implements AgileItem {
+public class Skill implements AgileItem, Comparable<Skill> {
 
   private String label;
   private String skillDescription;
@@ -117,5 +117,10 @@ public class Skill implements AgileItem {
       result = this.label.equals(skill.getLabel());
     }
     return result;
+  }
+
+  @Override
+  public int compareTo(Skill o) {
+    return this.label.toLowerCase().compareTo(o.label.toLowerCase());
   }
 }

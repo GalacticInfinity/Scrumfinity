@@ -5,7 +5,7 @@ package seng302.group5.model;
  *
  * Created by Zander on 5/05/2015.
  */
-public class Story implements AgileItem {
+public class Story implements AgileItem, Comparable<Story> {
 
   private String label;
   private String longName;
@@ -160,5 +160,10 @@ public class Story implements AgileItem {
     }
 
     return result;
+  }
+
+  @Override
+  public int compareTo(Story o) {
+    return this.label.toLowerCase().compareTo(o.label.toLowerCase());
   }
 }

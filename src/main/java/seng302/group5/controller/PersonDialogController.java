@@ -1,5 +1,7 @@
 package seng302.group5.controller;
 
+import java.util.Comparator;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -222,8 +224,8 @@ public class PersonDialogController {
         }
       }
 
-      this.skillsList.setItems(availableSkills);
-      this.personSkillList.setItems(selectedSkills);
+      this.skillsList.setItems(availableSkills.sorted(Comparator.<Skill>naturalOrder()));
+      this.personSkillList.setItems(selectedSkills.sorted(Comparator.<Skill>naturalOrder()));
     } catch (Exception e) {
       e.printStackTrace();
     }
