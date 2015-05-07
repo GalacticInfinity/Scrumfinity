@@ -6,9 +6,9 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="431.0" prefWidth="520.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.ReleaseDialogController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="354.0" prefWidth="436.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.ReleaseDialogController">
     <children>
-        <HBox alignment="BOTTOM_LEFT" prefHeight="44.0" prefWidth="515.0" spacing="10.0">
+        <HBox alignment="BOTTOM_LEFT" prefWidth="515.0" spacing="10.0">
             <children>
                 <Label prefHeight="25.0" prefWidth="115.0" text="Release Label:*">
                     <font>
@@ -26,6 +26,9 @@
                   <Tooltip text="Label should be 20 characters or less or application may not behave as expected." />
                </tooltip></TextField>
             </children>
+         <VBox.margin>
+            <Insets top="7.0" />
+         </VBox.margin>
         </HBox>
         <HBox prefHeight="100.0" prefWidth="434.0" spacing="10.0">
             <children>
@@ -34,7 +37,7 @@
                         <Font size="15.0" />
                     </font>
                 </Label>
-                <TextArea fx:id="releaseDescriptionField" maxHeight="75.0" prefHeight="75.0" prefWidth="292.0" promptText="Description of release.">
+                <TextArea fx:id="releaseDescriptionField" prefHeight="100.0" prefWidth="300.0" promptText="Description of release.">
                <HBox.margin>
                   <Insets top="2.0" />
                </HBox.margin></TextArea>
@@ -47,7 +50,7 @@
                   <Font size="15.0" />
                </font>
             </Label>
-            <TextArea fx:id="releaseNotesField" maxWidth="292.0" prefHeight="100.0" prefWidth="293.0" promptText="Release notes." />
+            <TextArea fx:id="releaseNotesField" prefHeight="100.0" prefWidth="300.0" promptText="Release notes." />
          </children>
          <VBox.margin>
             <Insets top="7.0" />
@@ -60,34 +63,18 @@
                         <Font size="15.0" />
                     </font>
                 </Label>
-                <ComboBox fx:id="projectComboBox" prefHeight="25.0" prefWidth="200.0" promptText="Available projects.">
+                <ComboBox fx:id="projectComboBox" prefWidth="200.0" promptText="Available projects.">
                     <HBox.margin>
                         <Insets />
                     </HBox.margin></ComboBox>
-                <Button fx:id="btnAddProject" mnemonicParsing="false" onAction="#btnAddProject" prefWidth="60.0" text="Add" />
             </children>
          <VBox.margin>
             <Insets top="7.0" />
          </VBox.margin>
         </HBox>
-        <HBox prefHeight="30.0" prefWidth="200.0">
-            <children>
-                <ListView fx:id="projectList" maxHeight="25.0" prefHeight="25.0" prefWidth="200.0">
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin></ListView>
-                <Button fx:id="btnRemoveProject" mnemonicParsing="false" onAction="#btnRemoveProject" prefWidth="60.0" text="Remove">
-               <HBox.margin>
-                  <Insets left="10.0" />
-               </HBox.margin></Button>
-            </children>
-            <VBox.margin>
-                <Insets left="125.0" top="7.0" />
-            </VBox.margin>
-        </HBox>
       <HBox maxHeight="25.0" prefHeight="25.0" prefWidth="515.0" spacing="10.0">
          <children>
-            <Label prefHeight="37.0" prefWidth="115.0" text="Release Date:*">
+            <Label prefHeight="25.0" prefWidth="115.0" text="Release Date:*">
                <font>
                   <Font size="15.0" />
                </font>
@@ -95,9 +82,9 @@
                   <Insets top="2.0" />
                </HBox.margin>
             </Label>
-            <DatePicker fx:id="releaseDateField" prefHeight="40.0" prefWidth="200.0">
+            <DatePicker fx:id="releaseDateField" prefWidth="200.0">
                <HBox.margin>
-                  <Insets top="5.0" />
+                  <Insets top="2.0" />
                </HBox.margin>
             </DatePicker>
          </children>
@@ -108,7 +95,7 @@
             <Insets top="-5.0" />
          </VBox.margin>
       </HBox>
-        <HBox alignment="BOTTOM_RIGHT" prefHeight="59.0" prefWidth="510.0" spacing="10.0">
+        <HBox alignment="BOTTOM_RIGHT" prefHeight="25.0" prefWidth="510.0" spacing="10.0">
             <opaqueInsets>
                 <Insets />
             </opaqueInsets>
@@ -116,12 +103,12 @@
                 <Insets bottom="5.0" right="5.0" />
             </padding>
             <VBox.margin>
-                <Insets right="5.0" top="10.0" />
+                <Insets right="5.0" top="15.0" />
             </VBox.margin>
          <children>
-            <Label prefHeight="25.0" prefWidth="348.0" text="* Fields cannot be empty.">
+            <Label prefHeight="25.0" prefWidth="276.0" text="* Fields cannot be empty.">
                <font>
-                  <Font size="15.0" />
+                  <Font name="System Italic" size="13.0" />
                </font>
             </Label>
                 <Button fx:id="btnConfirm" mnemonicParsing="false" onAction="#btnCreateRelease" prefWidth="60.0" text="Save" />

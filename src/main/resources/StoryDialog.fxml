@@ -6,16 +6,16 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="279.0" prefWidth="434.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.StoryDialogController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="278.0" prefWidth="430.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.StoryDialogController">
     <children>
-        <HBox alignment="BOTTOM_LEFT" prefHeight="35.0" prefWidth="434.0" spacing="10.0">
+        <HBox alignment="BOTTOM_LEFT" prefHeight="32.0" prefWidth="434.0" spacing="10.0">
             <children>
                 <Label prefHeight="25.0" prefWidth="125.0" text="Story Label:*">
                     <font>
                         <Font size="15.0" />
                     </font>
                 </Label>
-                <TextField fx:id="storyLabelField" alignment="TOP_LEFT" prefWidth="160.0" promptText="Unique label of story." />
+                <TextField fx:id="storyLabelField" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="200.0" promptText="Unique label of story." />
             </children>
         </HBox>
         <HBox alignment="CENTER_LEFT" prefHeight="38.0" prefWidth="369.0" spacing="10.0">
@@ -25,7 +25,7 @@
                         <Font size="15.0" />
                     </font>
                 </Label>
-                <TextField fx:id="storyLongNameField" alignment="TOP_LEFT" prefWidth="160.0" promptText="Long name of story." />
+                <TextField fx:id="storyLongNameField" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="200.0" promptText="Long name of story." />
             </children>
         </HBox>
         <HBox prefHeight="30.0" prefWidth="429.0" spacing="10.0">
@@ -35,7 +35,7 @@
                         <Font size="15.0" />
                     </font>
                 </Label>
-            <TextArea fx:id="storyDescriptionField" minHeight="130.0" prefHeight="140.0" prefWidth="250.0" promptText="Description of story." />
+            <TextArea fx:id="storyDescriptionField" minHeight="130.0" prefHeight="140.0" prefWidth="285.0" promptText="Description of story." />
             </children>
         </HBox>
         <HBox prefHeight="21.0" prefWidth="429.0">
@@ -54,14 +54,14 @@
                </HBox.margin></ComboBox>
             </children>
             <VBox.margin>
-                <Insets top="2.0" />
+                <Insets top="4.0" />
             </VBox.margin>
         </HBox>
         <HBox alignment="BOTTOM_RIGHT" prefHeight="39.0" prefWidth="434.0" spacing="10.0">
             <children>
-                <Label prefHeight="25.0" prefWidth="275.0" text="* Fields cannot be empty.">
+                <Label prefHeight="25.0" prefWidth="288.0" text="* Fields cannot be empty.">
                     <font>
-                        <Font size="15.0" />
+                        <Font name="System Italic" size="13.0" />
                     </font>
                     <padding>
                         <Insets left="10.0" />
