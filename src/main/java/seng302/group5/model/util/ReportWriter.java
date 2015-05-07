@@ -137,11 +137,14 @@ public class ReportWriter {
         createReleaseChild(release, allReleases);
       }
 
-
+      String filename = saveLocation.toString();
+      if (!filename.endsWith(".xml")) {
+        filename = filename + ".xml";
+      }
       TransformerFactory transformerFactory = TransformerFactory.newInstance();
       Transformer transformer = transformerFactory.newTransformer();
       DOMSource source = new DOMSource(report);
-      StreamResult result = new StreamResult(saveLocation);
+      StreamResult result = new StreamResult(filename);
 
       transformer.transform(source, result);
       System.out.println("Report Created");
