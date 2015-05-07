@@ -62,10 +62,8 @@ public class StoryDialogController {
       storyLabelField.setText(story.getLabel());
       storyLongNameField.setText(story.getLongName());
       storyDescriptionField.setText(story.getDescription());
-
-      initialiseLists();
-
       storyCreatorList.setValue(story.getCreator());
+      storyCreatorList.setDisable(true);
     }
     this.createOrEdit = createOrEdit;
 
