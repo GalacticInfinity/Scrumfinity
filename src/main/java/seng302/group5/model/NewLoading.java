@@ -300,14 +300,6 @@ public class NewLoading {
           if (teamLine.startsWith("\t\t<TeamPeople>")) {
             loadTeamMembers(newTeam);
           }
-          if (teamLine.startsWith("\t\t<teamProject>")) {
-            teamData = teamLine.replaceAll("(?i)(.*<teamProject.*?>)(.+?)(</teamProject>)", "$2");
-            for (Project project : main.getProjects()) {
-              if (teamData.equals(project.getLabel())) {
-                newTeam.setCurrentProject(project);
-              }
-            }
-          }
         }
         main.addTeam(newTeam);
       }

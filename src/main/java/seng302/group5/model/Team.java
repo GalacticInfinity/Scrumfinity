@@ -14,7 +14,6 @@ public class Team implements AgileItem {
 
   private String label;
   private String teamDescription;
-  private Project currentProject = null;
 
   private ObservableList<Person> teamMembers = FXCollections.observableArrayList();
   private HashMap<Person, Role> membersRole;
@@ -131,14 +130,6 @@ public class Team implements AgileItem {
   public void removeTeamMember(Person person) {
     this.teamMembers.remove(person);
     this.membersRole.remove(person);
-  }
-
-  public Project getCurrentProject() {
-    return this.currentProject;
-  }
-
-  public void setCurrentProject(Project project) {
-    this.currentProject = project;
   }
 
   /**
