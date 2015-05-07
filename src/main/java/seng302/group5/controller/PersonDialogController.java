@@ -28,7 +28,7 @@ public class PersonDialogController {
   @FXML private TextField personFirstNameField;
   @FXML private TextField personLastNameField;
   @FXML private Button btnCreatePerson;
-  @FXML private ComboBox<Skill> skillsList;
+  @FXML private ListView<Skill> skillsList;
   @FXML private ListView<Skill> personSkillList;
 
   private Main mainApp;
@@ -222,8 +222,6 @@ public class PersonDialogController {
         }
       }
 
-      this.skillsList.setVisibleRowCount(5);
-
       this.skillsList.setItems(availableSkills);
       this.personSkillList.setItems(selectedSkills);
     } catch (Exception e) {
@@ -245,7 +243,6 @@ public class PersonDialogController {
         this.availableSkills.remove(selectedSkill);
 
         this.skillsList.getSelectionModel().clearSelection();
-        this.skillsList.setValue(null);
       }
     } catch (Exception e) {
       e.printStackTrace();
