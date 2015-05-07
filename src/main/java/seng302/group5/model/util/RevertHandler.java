@@ -247,7 +247,6 @@ public class RevertHandler {
 
       }
       project.getAllocatedTeams().setAll(agileHistoryArray);
-      // TODO: TALK TO TEAM ABOUT currentProject in Team object.
     }
   }
 

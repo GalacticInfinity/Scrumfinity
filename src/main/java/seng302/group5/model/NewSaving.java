@@ -185,9 +185,6 @@ public class NewSaving {
         }
         saveFile.write("\t\t</TeamPeople>\n");
       }
-      if (team.getCurrentProject() != null) {
-        saveFile.write("\t\t<teamProject>" + team.getCurrentProject().getLabel() + "</teamProject>\n");
-      }
       saveFile.write("\t</Team>\n");
     }
     saveFile.write("</Teams>\n");
