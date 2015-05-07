@@ -29,7 +29,7 @@ import seng302.group5.model.util.Settings;
 
 /**
  * Created by Michael + Craig on 5/5/2015.
- * TODO Make a real javadoc
+ * A class that reads the data from the application and saves it in a human readable format.
  */
 public class ReportWriter {
 
@@ -151,6 +151,13 @@ public class ReportWriter {
     }
   }
 
+  /**
+   * Create the release child element that contains the releases information, formats it under
+   * relevant tags as a child of the releaseElement.
+   * @param release the release that information will be displayed for
+   * @param releasesElement the parent of the release, i.e. displayed as a child of project or of
+   *                        all releases.
+   */
   public void createReleaseChild(Release release, Element releasesElement) {
     Element releaseElem = report.createElement("Release");
     releasesElement.appendChild(releaseElem);
@@ -176,6 +183,13 @@ public class ReportWriter {
   }
 
 
+  /**
+   * Create a team child element that contains the teams information, formats it under the project
+   * that the team is assigned to.
+   * @param mainApp passed so that it can get a list of all teams collect the member info
+   *                for the correct team
+   * @param team the team who's information is to be displayed.
+   */
   public void createTeamChild(Main mainApp, AgileHistory team) {
 
     Element teamElem = report.createElement("Team");
@@ -211,6 +225,11 @@ public class ReportWriter {
     }
   }
 
+  /**
+   * Create a person element that contains the person information, formats it under the assigned
+   * team's tag
+   * @param listTeam The team which will be used to collect the list of members to get there info.
+   */
   public void createPersonChild(Team listTeam) {
     for (Person member : listTeam.getTeamMembers()) {
       Element memberElem = report.createElement("Member");
@@ -248,6 +267,11 @@ public class ReportWriter {
     }
   }
 
+  /**
+   * Create a orphan team element i.e. a team that is not assigned to a project. Will be displayed
+   * under the unnasigned teams tag.
+   * @param team The team which will be used to collect the list of members to get there info.
+   */
   public void createOrphanTeam(Team team) {
 
     Element orphanTeamElem = report.createElement("Team");
@@ -290,6 +314,11 @@ public class ReportWriter {
     }
   }
 
+  /**
+   * Create an orphan person element that contains the information for a person who is not assigned
+   * to any team. Will be displayed under the unassigned people tag.
+   * @param person The person who's information is to be displayed.
+   */
   public void createOrphanPeople(Person person) {
 
     Element orphanPersonElem = report.createElement("Person");
@@ -317,6 +346,11 @@ public class ReportWriter {
     }
   }
 
+  /**
+   * Create a skill element that displays the information for a skill, the skill element can be
+   * displayed under a person or under the list of all skills tag.
+   * @param skill The skill who's information will be displayed.
+   */
   public void createSkillChild(Skill skill) {
     Element skillElem = report.createElement("Skill");
     allSkills.appendChild(skillElem);
@@ -327,6 +361,10 @@ public class ReportWriter {
     skillElem.appendChild(skillDescription);
   }
 
+  /**
+   * Create a story element that displays the story's information underneath the stories tag.
+   * @param story the story who's information will be displayed.
+   */
   public void createStoryChild(Story story) {
     Element storyElem = report.createElement("Story");
     allStories.appendChild(storyElem);
