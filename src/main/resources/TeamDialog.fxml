@@ -76,17 +76,17 @@
                         <Font size="15.0" />
                     </font>
                 </Label>
-                <TextArea fx:id="teamDescriptionField" prefHeight="75.0" prefWidth="290.0" promptText="Description of team." wrapText="true">
+                <TextArea fx:id="teamDescriptionField" prefHeight="75.0" prefWidth="300.0" promptText="Description of team." wrapText="true">
                <HBox.margin>
                   <Insets top="5.0" />
                </HBox.margin></TextArea>
             </children>
         </HBox>
-        <HBox alignment="BOTTOM_RIGHT" prefHeight="39.0" prefWidth="434.0" spacing="10.0">
+        <HBox alignment="BOTTOM_RIGHT" prefHeight="25.0" prefWidth="434.0" spacing="10.0">
             <children>
-            <Label prefHeight="25.0" prefWidth="281.0" text="* Fields cannot be empty.">
+            <Label prefHeight="25.0" prefWidth="290.0" text="* Fields cannot be empty.">
                <font>
-                  <Font size="15.0" />
+                  <Font name="System Italic" size="13.0" />
                </font>
             </Label>
                 <Button fx:id="btnConfirm" mnemonicParsing="false" onAction="#btnConfirmClick" prefWidth="60.0" text="Save" />
@@ -99,7 +99,7 @@
                 <Insets bottom="5.0" right="5.0" />
             </padding>
             <VBox.margin>
-                <Insets right="5.0" />
+                <Insets right="5.0" top="15.0" />
             </VBox.margin>
         </HBox>
     </children>

@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="280.0" prefWidth="434.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.SkillsDialogController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="249.0" prefWidth="431.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.SkillsDialogController">
     <children>
         <HBox alignment="CENTER_LEFT" prefHeight="39.0" prefWidth="429.0" spacing="10.0">
             <children>
@@ -31,22 +31,11 @@
                 <TextArea fx:id="skillDescription" prefHeight="229.0" prefWidth="310.0" promptText="Short description of skill." />
             </children>
         </HBox>
-        <HBox alignment="BOTTOM_RIGHT" prefHeight="33.0" prefWidth="424.0" spacing="10.0">
-            <opaqueInsets>
-                <Insets />
-            </opaqueInsets>
-            <padding>
-                <Insets bottom="5.0" right="5.0" />
-            </padding>
-            <VBox.margin>
-                <Insets right="5.0" />
-            </VBox.margin>
-        </HBox>
-        <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="429.0" spacing="10.0">
+        <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="429.0" spacing="10.0">
             <children>
                 <Label prefHeight="25.0" prefWidth="275.0" text="* Fields cannot be empty.">
                     <font>
-                        <Font size="15.0" />
+                        <Font name="System Italic" size="13.0" />
                     </font>
                <padding>
                   <Insets left="10.0" />
@@ -55,6 +44,9 @@
                 <Button fx:id="skillCreation" mnemonicParsing="false" onAction="#SkillCreation" prefWidth="60.0" text="Save" />
                 <Button fx:id="cancelCreation" mnemonicParsing="false" onAction="#CancelCreation" prefWidth="60.0" text="Cancel" />
             </children>
+         <VBox.margin>
+            <Insets top="15.0" />
+         </VBox.margin>
         </HBox>
     </children>
     <padding>

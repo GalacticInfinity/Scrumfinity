@@ -1,18 +1,15 @@
 package seng302.group5.model.util;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.time.format.DateTimeFormatter;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -32,13 +29,14 @@ import seng302.group5.model.util.Settings;
 
 /**
  * Created by Michael + Craig on 5/5/2015.
- * TODO Make a real javadoc
+ * A class that reads the data from the application and saves it in a human readable format.
  */
 public class ReportWriter {
 
   private Document report;
   private Element rootElement;
   Element projElem;
+  Element projElement;
   Element releasesElement;
   Element teamElement;
   Element membersElement;
@@ -47,6 +45,8 @@ public class ReportWriter {
   Element orphanPeople;
   Element allSkills;
   Element allStories;
+  Element allReleases;
+  String dateFormat = "dd/MM/yyyy";
 
   ObservableList<Team> orphanTeamsList = FXCollections.observableArrayList();
 
@@ -62,15 +62,18 @@ public class ReportWriter {
       DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
       report = docBuilder.newDocument();
-      rootElement = report.createElement("Company");
+      rootElement = report.createElement("Organization");
       String orgName = Settings.organizationName;
       rootElement.setAttribute("Label", orgName);
       report.appendChild(rootElement);
 
+      projElement = report.createElement("Projects");
+      rootElement.appendChild(projElement);
       for (Project project : mainApp.getProjects()) {
         orphanTeamsList.setAll(mainApp.getTeams());
+
         projElem = report.createElement("Project");
-        rootElement.appendChild(projElem);
+        projElement.appendChild(projElem);
         projElem.setAttribute("label", project.getLabel());
 
         Element projName = report.createElement("Name");
@@ -88,7 +91,7 @@ public class ReportWriter {
 
         for (Release release : mainApp.getReleases()) {
           if (release.getProjectRelease().getLabel().equals(project.getLabel())) {
-            createReleaseChild(release);
+            createReleaseChild(release, releasesElement);
           }
         }
         teamElement = report.createElement("Teams");
@@ -116,33 +119,49 @@ public class ReportWriter {
         }
       }
 
-      allSkills = report.createElement("AllSkills");
+      allSkills = report.createElement("Skills");
       rootElement.appendChild(allSkills);
       for (Skill skill : mainApp.getSkills()) {
         createSkillChild(skill);
       }
 
-      allStories = report.createElement("AllStories");
+      allStories = report.createElement("Stories");
       rootElement.appendChild(allStories);
       for (Story story : mainApp.getStories()) {
         createStoryChild(story);
       }
 
+      allReleases = report.createElement("Releases");
+      rootElement.appendChild(allReleases);
+      for (Release release : mainApp.getReleases()) {
+        createReleaseChild(release, allReleases);
+      }
 
+      String filename = saveLocation.toString();
+      if (!filename.endsWith(".xml")) {
+        filename = filename + ".xml";
+      }
       TransformerFactory transformerFactory = TransformerFactory.newInstance();
       Transformer transformer = transformerFactory.newTransformer();
       DOMSource source = new DOMSource(report);
-      StreamResult result = new StreamResult(saveLocation);
+      StreamResult result = new StreamResult(filename);
 
       transformer.transform(source, result);
-      System.out.println("Mrews");
+      System.out.println("Report Created");
 
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
-  public void createReleaseChild(Release release) {
+  /**
+   * Create the release child element that contains the releases information, formats it under
+   * relevant tags as a child of the releaseElement.
+   * @param release the release that information will be displayed for
+   * @param releasesElement the parent of the release, i.e. displayed as a child of project or of
+   *                        all releases.
+   */
+  public void createReleaseChild(Release release, Element releasesElement) {
     Element releaseElem = report.createElement("Release");
     releasesElement.appendChild(releaseElem);
     releaseElem.setAttribute("label", release.getLabel());
@@ -155,36 +174,66 @@ public class ReportWriter {
     releaseNotes.appendChild(report.createTextNode(release.getReleaseNotes()));
     releaseElem.appendChild(releaseNotes);
 
+    String releaseDateString = release.getReleaseDate().format(
+        DateTimeFormatter.ofPattern(dateFormat));
     Element releaseDate = report.createElement("ReleaseDate");
-    releaseDate.appendChild(report.createTextNode(release.getReleaseDate().toString()));
+    releaseDate.appendChild(report.createTextNode(releaseDateString));
     releaseElem.appendChild(releaseDate);
+
+    Element projectElement = report.createElement("Project");
+    projectElement.appendChild(report.createTextNode(release.getProjectRelease().getLabel()));
+    releaseElem.appendChild(projectElement);
   }
 
 
+  /**
+   * Create a team child element that contains the teams information, formats it under the project
+   * that the team is assigned to.
+   * @param mainApp passed so that it can get a list of all teams collect the member info
+   *                for the correct team
+   * @param team the team who's information is to be displayed.
+   */
   public void createTeamChild(Main mainApp, AgileHistory team) {
 
     Element teamElem = report.createElement("Team");
     teamElement.appendChild(teamElem);
     teamElem.setAttribute("label", team.getAgileItem().getLabel());
 
+
+    String theString = team.getStartDate().format(
+        DateTimeFormatter.ofPattern(dateFormat));
     Element teamStartDate = report.createElement("StartDate");
-    teamStartDate.appendChild(report.createTextNode(team.getStartDate().toString()));
+    teamStartDate.appendChild(report.createTextNode(theString));
     teamElem.appendChild(teamStartDate);
 
+    String endDate;
+    if (team.getEndDate() != null) {
+      endDate = team.getEndDate().format(
+          DateTimeFormatter.ofPattern(dateFormat));
+    } else {
+      endDate = "No end Date";
+    }
+
     Element teamEndDate = report.createElement("EndDate");
-    teamEndDate.appendChild(report.createTextNode(team.getEndDate().toString()));
+    teamEndDate.appendChild(report.createTextNode(endDate));
     teamElem.appendChild(teamEndDate);
+
 
     membersElement = report.createElement("Members");
     teamElem.appendChild(membersElement);
     for (Team listTeam : mainApp.getTeams()) {
       if (team.getAgileItem().getLabel().equals(listTeam.getLabel())) {
-        createPersonChild(listTeam, teamElem);
+        createPersonChild(listTeam);
       }
     }
   }
 
-  public void createPersonChild(Team listTeam, Element teamElem) {
+  /**
+   * Create a person element that contains the person information, formats it under the assigned
+   * team's tag
+   * @param listTeam The team which will be used to collect the list of members to get there info.
+   */
+  public void createPersonChild(Team listTeam) {
     for (Person member : listTeam.getTeamMembers()) {
       Element memberElem = report.createElement("Member");
       membersElement.appendChild(memberElem);
@@ -221,6 +270,11 @@ public class ReportWriter {
     }
   }
 
+  /**
+   * Create a orphan team element i.e. a team that is not assigned to a project. Will be displayed
+   * under the unnasigned teams tag.
+   * @param team The team which will be used to collect the list of members to get there info.
+   */
   public void createOrphanTeam(Team team) {
 
     Element orphanTeamElem = report.createElement("Team");
@@ -263,6 +317,11 @@ public class ReportWriter {
     }
   }
 
+  /**
+   * Create an orphan person element that contains the information for a person who is not assigned
+   * to any team. Will be displayed under the unassigned people tag.
+   * @param person The person who's information is to be displayed.
+   */
   public void createOrphanPeople(Person person) {
 
     Element orphanPersonElem = report.createElement("Person");
@@ -290,6 +349,11 @@ public class ReportWriter {
     }
   }
 
+  /**
+   * Create a skill element that displays the information for a skill, the skill element can be
+   * displayed under a person or under the list of all skills tag.
+   * @param skill The skill who's information will be displayed.
+   */
   public void createSkillChild(Skill skill) {
     Element skillElem = report.createElement("Skill");
     allSkills.appendChild(skillElem);
@@ -300,6 +364,10 @@ public class ReportWriter {
     skillElem.appendChild(skillDescription);
   }
 
+  /**
+   * Create a story element that displays the story's information underneath the stories tag.
+   * @param story the story who's information will be displayed.
+   */
   public void createStoryChild(Story story) {
     Element storyElem = report.createElement("Story");
     allStories.appendChild(storyElem);
