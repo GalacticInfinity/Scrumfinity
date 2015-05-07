@@ -240,7 +240,6 @@ public class TeamDialogController {
   @FXML
   protected void btnConfirmClick(ActionEvent event) {
     StringBuilder errors = new StringBuilder();
-    errors.append("Invalid Fields:");
     int noErrors = 0;
 
     String teamLabel = "";
@@ -250,7 +249,7 @@ public class TeamDialogController {
       teamLabel = parseTeamLabel(teamLabelField.getText());
     } catch (Exception e) {
       noErrors++;
-      errors.append(String.format("\n\t%s", e.getMessage()));
+      errors.append(String.format("%s\n", e.getMessage()));
     }
 
     // Display all errors if they exist
@@ -316,7 +315,7 @@ public class TeamDialogController {
     inputTeamLabel = inputTeamLabel.trim();
 
     if (inputTeamLabel.isEmpty()) {
-      throw new Exception("Team label is empty.");
+      throw new Exception("Team Label is empty.");
     } else {
       String lastTeamLabel;
       if (lastTeam == null) {
@@ -328,7 +327,7 @@ public class TeamDialogController {
         String teamLabel = team.getLabel();
         if (team.getLabel().equalsIgnoreCase(inputTeamLabel) &&
             !teamLabel.equalsIgnoreCase(lastTeamLabel)) {
-          throw new Exception("Team label is not unique.");
+          throw new Exception("Team Label is not unique.");
         }
       }
       return inputTeamLabel;
