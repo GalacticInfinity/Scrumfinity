@@ -1,18 +1,15 @@
 package seng302.group5.model.util;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.time.format.DateTimeFormatter;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -39,6 +36,7 @@ public class ReportWriter {
   private Document report;
   private Element rootElement;
   Element projElem;
+  Element projElement;
   Element releasesElement;
   Element teamElement;
   Element membersElement;
@@ -47,6 +45,8 @@ public class ReportWriter {
   Element orphanPeople;
   Element allSkills;
   Element allStories;
+  Element allReleases;
+  String dateFormat = "dd/MM/yyyy";
 
   ObservableList<Team> orphanTeamsList = FXCollections.observableArrayList();
 
@@ -62,15 +62,18 @@ public class ReportWriter {
       DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
       report = docBuilder.newDocument();
-      rootElement = report.createElement("Company");
+      rootElement = report.createElement("Organization");
       String orgName = Settings.organizationName;
       rootElement.setAttribute("Label", orgName);
       report.appendChild(rootElement);
 
+      projElement = report.createElement("Projects");
+      rootElement.appendChild(projElement);
       for (Project project : mainApp.getProjects()) {
         orphanTeamsList.setAll(mainApp.getTeams());
+
         projElem = report.createElement("Project");
-        rootElement.appendChild(projElem);
+        projElement.appendChild(projElem);
         projElem.setAttribute("label", project.getLabel());
 
         Element projName = report.createElement("Name");
@@ -88,7 +91,7 @@ public class ReportWriter {
 
         for (Release release : mainApp.getReleases()) {
           if (release.getProjectRelease().getLabel().equals(project.getLabel())) {
-            createReleaseChild(release);
+            createReleaseChild(release, releasesElement);
           }
         }
         teamElement = report.createElement("Teams");
@@ -116,16 +119,22 @@ public class ReportWriter {
         }
       }
 
-      allSkills = report.createElement("AllSkills");
+      allSkills = report.createElement("Skills");
       rootElement.appendChild(allSkills);
       for (Skill skill : mainApp.getSkills()) {
         createSkillChild(skill);
       }
 
-      allStories = report.createElement("AllStories");
+      allStories = report.createElement("Stories");
       rootElement.appendChild(allStories);
       for (Story story : mainApp.getStories()) {
         createStoryChild(story);
+      }
+
+      allReleases = report.createElement("Releases");
+      rootElement.appendChild(allReleases);
+      for (Release release : mainApp.getReleases()) {
+        createReleaseChild(release, allReleases);
       }
 
 
@@ -135,14 +144,14 @@ public class ReportWriter {
       StreamResult result = new StreamResult(saveLocation);
 
       transformer.transform(source, result);
-      System.out.println("Mrews");
+      System.out.println("Report Created");
 
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
-  public void createReleaseChild(Release release) {
+  public void createReleaseChild(Release release, Element releasesElement) {
     Element releaseElem = report.createElement("Release");
     releasesElement.appendChild(releaseElem);
     releaseElem.setAttribute("label", release.getLabel());
@@ -155,9 +164,15 @@ public class ReportWriter {
     releaseNotes.appendChild(report.createTextNode(release.getReleaseNotes()));
     releaseElem.appendChild(releaseNotes);
 
+    String releaseDateString = release.getReleaseDate().format(
+        DateTimeFormatter.ofPattern(dateFormat));
     Element releaseDate = report.createElement("ReleaseDate");
-    releaseDate.appendChild(report.createTextNode(release.getReleaseDate().toString()));
+    releaseDate.appendChild(report.createTextNode(releaseDateString));
     releaseElem.appendChild(releaseDate);
+
+    Element projectElement = report.createElement("Project");
+    projectElement.appendChild(report.createTextNode(release.getProjectRelease().getLabel()));
+    releaseElem.appendChild(projectElement);
   }
 
 
@@ -167,24 +182,36 @@ public class ReportWriter {
     teamElement.appendChild(teamElem);
     teamElem.setAttribute("label", team.getAgileItem().getLabel());
 
+
+    String theString = team.getStartDate().format(
+        DateTimeFormatter.ofPattern(dateFormat));
     Element teamStartDate = report.createElement("StartDate");
-    teamStartDate.appendChild(report.createTextNode(team.getStartDate().toString()));
+    teamStartDate.appendChild(report.createTextNode(theString));
     teamElem.appendChild(teamStartDate);
 
+    String endDate;
+    if (team.getEndDate() != null) {
+      endDate = team.getEndDate().format(
+          DateTimeFormatter.ofPattern(dateFormat));
+    } else {
+      endDate = "No end Date";
+    }
+
     Element teamEndDate = report.createElement("EndDate");
-    teamEndDate.appendChild(report.createTextNode(team.getEndDate().toString()));
+    teamEndDate.appendChild(report.createTextNode(endDate));
     teamElem.appendChild(teamEndDate);
+
 
     membersElement = report.createElement("Members");
     teamElem.appendChild(membersElement);
     for (Team listTeam : mainApp.getTeams()) {
       if (team.getAgileItem().getLabel().equals(listTeam.getLabel())) {
-        createPersonChild(listTeam, teamElem);
+        createPersonChild(listTeam);
       }
     }
   }
 
-  public void createPersonChild(Team listTeam, Element teamElem) {
+  public void createPersonChild(Team listTeam) {
     for (Person member : listTeam.getTeamMembers()) {
       Element memberElem = report.createElement("Member");
       membersElement.appendChild(memberElem);
