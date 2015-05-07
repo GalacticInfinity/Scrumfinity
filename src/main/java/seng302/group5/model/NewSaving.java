@@ -222,6 +222,12 @@ public class NewSaving {
     saveFile.write("</Releases>\n");
   }
 
+  /**
+   * Appends the main app roles data to the save file
+   *
+   * @param saveFile Save file being written to
+   * @throws Exception Required field is missing/ error with writer
+   */
   private void saveRoles(Writer saveFile) throws Exception {
     saveFile.write("<Roles>\n");
     for (Role role : this.roles) {
@@ -239,6 +245,12 @@ public class NewSaving {
     saveFile.write("</Roles>\n");
   }
 
+  /**
+   *Appends the main stories data to the save file
+   *
+   * @param saveFile Save file being written to
+   * @throws Exception Required field is missing/ error with writer
+   */
   private void saveStories(Writer saveFile) throws Exception {
     saveFile.write("<Stories>\n");
     for (Story story : this.stories) {
