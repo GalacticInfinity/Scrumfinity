@@ -76,6 +76,15 @@ public class StoryDialogController {
     }
 
     btnCreateStory.setDefaultButton(true);
+
+    // Handle TextField text changes.
+    storyLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
+      if (newValue.trim().length() > 20) {
+        storyLabelField.setStyle("-fx-text-inner-color: red;");
+      } else {
+        storyLabelField.setStyle("-fx-text-inner-color: black;");
+      }
+    });
   }
 
   /**
@@ -109,7 +118,6 @@ public class StoryDialogController {
   @FXML
   protected void btnCreateStoryClick(ActionEvent event) {
     StringBuilder errors = new StringBuilder();
-    errors.append("Invalid Fields:");
     int noErrors = 0;
 
     String label = "";
@@ -121,14 +129,14 @@ public class StoryDialogController {
       label = parseStoryLabel(storyLabelField.getText());
     } catch (Exception e) {
       noErrors++;
-      errors.append(String.format("\n\t%s", e.getMessage()));
+      errors.append(String.format("%s\n", e.getMessage()));
     }
 
     try {
       creator = parseCreatorList(storyCreatorList.getValue());
     } catch (Exception e) {
       noErrors++;
-      errors.append(String.format("\n\t%s", e.getMessage()));
+      errors.append(String.format("%s\n", e.getMessage()));
     }
 
     // Display all errors if they exist
@@ -182,9 +190,7 @@ public class StoryDialogController {
     inputStoryLabel = inputStoryLabel.trim();
 
     if (inputStoryLabel.isEmpty()) {
-      throw new Exception("Story label is empty.");
-    } else if (inputStoryLabel.length() > 8) {
-      throw new Exception("Story label is more than 8 characters long");
+      throw new Exception("Story Label is empty.");
     } else {
       String lastStoryLabel;
       if (lastStory == null) {
@@ -194,8 +200,9 @@ public class StoryDialogController {
       }
       for (Story storyInList : mainApp.getStories()) {
         String storyLabel = storyInList.getLabel();
-        if (storyLabel.equals(inputStoryLabel) && !storyLabel.equals(lastStoryLabel)) {
-          throw new Exception("Story label is not unique");
+        if (storyLabel.equalsIgnoreCase(inputStoryLabel) &&
+            !storyLabel.equalsIgnoreCase(lastStoryLabel)) {
+          throw new Exception("Story Label is not unique.");
         }
       }
     }

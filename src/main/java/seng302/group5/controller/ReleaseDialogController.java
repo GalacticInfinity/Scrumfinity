@@ -52,7 +52,6 @@ public class ReleaseDialogController {
   @FXML
   protected void btnCreateRelease(ActionEvent event) {
     StringBuilder errors = new StringBuilder();
-    errors.append("Invalid Fields:");
     int noErrors = 0;
 
     String releaseId = releaseLabelField.getText().trim();
@@ -67,35 +66,35 @@ public class ReleaseDialogController {
       releaseId = parseReleaseLabel(releaseLabelField.getText());
     } catch (Exception e) {
       noErrors++;
-      errors.append(String.format("\n\t%s", e.getMessage()));
+      errors.append(String.format("%s\n", e.getMessage()));
     }
 
     try {
       releaseDescription = parseReleaseDescription(releaseDescription);
     } catch (Exception e) {
       noErrors++;
-      errors.append(String.format("\n\t%s", e.getMessage()));
+      errors.append(String.format("%s\n", e.getMessage()));
     }
 
     try {
       releaseDate = parseReleaseDate(releaseDate);
     } catch (Exception e) {
       noErrors++;
-      errors.append(String.format("\n\t%s", e.getMessage()));
+      errors.append(String.format("%s\n", e.getMessage()));
     }
 
     try {
       releaseProject = parseReleaseProject(selectedProject);
     } catch (Exception e) {
       noErrors++;
-      errors.append(String.format("\n\t%s", e.getMessage()));
+      errors.append(String.format("%s\n", e.getMessage()));
     }
 
     try {
       releaseNotes = parseReleaseNotes(releaseNotes);
     } catch (Exception e) {
       noErrors++;
-      errors.append(String.format("\n\t%s", e.getMessage()));
+      errors.append(String.format("%s\n", e.getMessage()));
     }
 
     // Display all errors if they exist
@@ -238,7 +237,7 @@ public class ReleaseDialogController {
     inputReleaseLabel = inputReleaseLabel.trim();
 
     if (inputReleaseLabel.isEmpty()) {
-      throw new Exception("Release label is empty.");
+      throw new Exception("Release Label is empty.");
     } else {
       String lastReleaseLabel;
       if (lastRelease == null) {
@@ -248,8 +247,9 @@ public class ReleaseDialogController {
       }
       for (Release releaseInList : mainApp.getReleases()) {
         String releaseLabel = releaseInList.getLabel();
-        if (releaseLabel.equals(inputReleaseLabel) && !releaseLabel.equals(lastReleaseLabel)) {
-          throw new Exception("Release label is not unique");
+        if (releaseLabel.equalsIgnoreCase(inputReleaseLabel) &&
+            !releaseLabel.equalsIgnoreCase(lastReleaseLabel)) {
+          throw new Exception("Release Label is not unique");
         }
       }
     }
@@ -303,7 +303,7 @@ public class ReleaseDialogController {
   private Project parseReleaseProject(Project inputReleaseProject) throws Exception {
 
     if (inputReleaseProject == null) {
-      throw new Exception("Assign a project to this release.");
+      throw new Exception("No project has been selected for this release.");
     }
     return inputReleaseProject;
   }

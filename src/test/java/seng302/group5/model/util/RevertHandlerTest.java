@@ -1,4 +1,4 @@
-package seng302.group5.model.undoredo;
+package seng302.group5.model.util;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +16,11 @@ import seng302.group5.model.Person;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
 import seng302.group5.model.Skill;
+import seng302.group5.model.Story;
 import seng302.group5.model.Team;
+import seng302.group5.model.undoredo.Action;
+import seng302.group5.model.undoredo.UndoRedoHandler;
+import seng302.group5.model.undoredo.UndoRedoObject;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -28,7 +32,7 @@ import static org.mockito.Mockito.mock;
  * Unit testing for revert function.
  * @author Alex Woo, Liang Ma
  */
-public class RevertTest {
+public class RevertHandlerTest {
 
   private String personLabel;
   private String firstName;
@@ -52,11 +56,17 @@ public class RevertTest {
   private String releaseNotes;
   private Project projectRelease;
 
+  private String storyLabel;
+  private String storyLongName;
+  private String storyDescription;
+  private Person storyCreator;
+
   private Person person;
   private Skill skill;
   private Team team;
   private Project project;
   private Release release;
+  private Story story;
 
   private UndoRedoHandler undoRedoHandler;
   private Main mainApp;
@@ -65,9 +75,11 @@ public class RevertTest {
   public void setUp() throws Exception {
 
     ListMainPaneController listMainPaneController = mock(ListMainPaneController.class);
+    Stage primaryStage = mock(Stage.class);
 
     mainApp = new Main();
     mainApp.setLMPC(listMainPaneController);
+    mainApp.setPrimaryStage(primaryStage);
 
     undoRedoHandler = mainApp.getUndoRedoHandler();
   }
@@ -194,20 +206,34 @@ public class RevertTest {
     undoRedoHandler.newAction(undoRedoObject);
   }
 
+  private void newStory() {
+    storyLabel = "testS";
+    storyLongName ="testStory!";
+    storyDescription ="This is a story and it is good";
+    storyCreator = null;
+
+    story = new Story(storyLabel, storyLongName, storyDescription, storyCreator);
+
+    mainApp.addStory(story);
+
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+    undoRedoObject.setAction(Action.STORY_CREATE);
+    undoRedoObject.setAgileItem(story);
+    undoRedoObject.addDatum(new Story(story));
+
+    undoRedoHandler.newAction(undoRedoObject);
+  }
+
 
 
   @Test
   public void testPersonRevert() throws Exception {
 
     assertTrue(mainApp.getPeople().isEmpty());
-    assertTrue(undoRedoHandler.getUndoStack().empty());
-    assertTrue(undoRedoHandler.getRedoStack().empty());
 
     newPerson();
 
     assertEquals(1, mainApp.getPeople().size());
-    assertEquals(1, undoRedoHandler.getUndoStack().size());
-    assertTrue(undoRedoHandler.getRedoStack().empty());
 
     mainApp.revert();
 
@@ -222,21 +248,148 @@ public class RevertTest {
   public void testProjectRevert() throws Exception {
 
     assertTrue(mainApp.getProjects().isEmpty());
-    assertTrue(undoRedoHandler.getUndoStack().empty());
-    assertTrue(undoRedoHandler.getRedoStack().empty());
 
     newProject();
 
     assertEquals(1, mainApp.getProjects().size());
-    assertEquals(1, undoRedoHandler.getUndoStack().size());
-    assertTrue(undoRedoHandler.getRedoStack().empty());
 
     mainApp.revert();
 
     assertTrue(mainApp.getProjects().isEmpty());
     assertTrue(undoRedoHandler.getUndoStack().empty());
     assertTrue(undoRedoHandler.getRedoStack().empty());
-    
+
+  }
+
+  @Test
+  public void testSkillRevert() throws Exception {
+
+    assertTrue(mainApp.getSkills().isEmpty());
+
+    newSkill();
+
+    assertEquals(1, mainApp.getSkills().size());
+
+    mainApp.revert();
+
+    assertTrue(mainApp.getSkills().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+  }
+
+  @Test
+  public void testTeamRevert() throws Exception {
+
+    assertTrue(mainApp.getTeams().isEmpty());
+
+    newTeam();
+
+    assertEquals(1, mainApp.getTeams().size());
+
+    mainApp.revert();
+
+    assertTrue(mainApp.getTeams().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+  }
+
+  @Test
+  public void testReleaseRevert() throws Exception {
+
+    assertTrue(mainApp.getReleases().isEmpty());
+
+    newRelease();
+
+    assertEquals(1, mainApp.getReleases().size());
+
+    mainApp.revert();
+
+    assertTrue(mainApp.getReleases().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+  }
+
+  @Test
+  public void testStoryRevert() throws Exception {
+
+    assertTrue(mainApp.getStories().isEmpty());
+
+    newStory();
+
+    assertEquals(1, mainApp.getStories().size());
+
+    mainApp.revert();
+
+    assertTrue(mainApp.getStories().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+  }
+
+  @Test
+  public void testEmptyRevert() throws Exception {
+    assertTrue(mainApp.getStories().isEmpty());
+    assertTrue(mainApp.getReleases().isEmpty());
+    assertTrue(mainApp.getTeams().isEmpty());
+    assertTrue(mainApp.getPeople().isEmpty());
+    assertTrue(mainApp.getSkills().isEmpty());
+    assertTrue(mainApp.getProjects().isEmpty());
+
+    mainApp.revert();
+
+    assertTrue(mainApp.getStories().isEmpty());
+    assertTrue(mainApp.getReleases().isEmpty());
+    assertTrue(mainApp.getTeams().isEmpty());
+    assertTrue(mainApp.getPeople().isEmpty());
+    assertTrue(mainApp.getSkills().isEmpty());
+    assertTrue(mainApp.getProjects().isEmpty());
+  }
+
+  @Test
+  public void testMultipleRevert() throws Exception {
+
+    assertTrue(mainApp.getStories().isEmpty());
+    assertTrue(mainApp.getReleases().isEmpty());
+    assertTrue(mainApp.getTeams().isEmpty());
+    assertTrue(mainApp.getPeople().isEmpty());
+    assertTrue(mainApp.getSkills().isEmpty());
+    assertTrue(mainApp.getProjects().isEmpty());
+
+    newStory();
+    newProject();
+    newSkill();
+    newPersonWithSkill();
+    newPerson();
+    newProject();
+    newRelease();
+    newTeam();
+    newTeam();
+    newTeamWithMember();
+    newSkill();
+    newSkill();
+    newStory();
+
+    assertEquals(2, mainApp.getStories().size());
+    assertEquals(1, mainApp.getReleases().size());
+    assertEquals(3, mainApp.getTeams().size());
+    assertEquals(2, mainApp.getPeople().size());
+    assertEquals(3, mainApp.getSkills().size());
+    assertEquals(2, mainApp.getProjects().size());
+
+    mainApp.revert();
+
+    assertTrue(mainApp.getStories().isEmpty());
+    assertTrue(mainApp.getReleases().isEmpty());
+    assertTrue(mainApp.getTeams().isEmpty());
+    assertTrue(mainApp.getPeople().isEmpty());
+    assertTrue(mainApp.getSkills().isEmpty());
+    assertTrue(mainApp.getProjects().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
   }
 
   @Test

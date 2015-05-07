@@ -442,6 +442,7 @@ public class Main extends Application {
    * Reverts the current state to the last saved state.
    */
   public void revert() {
+    resetAll();
     revertHandler.revert();
   }
 
@@ -499,12 +500,9 @@ public class Main extends Application {
 
     // Adjust the window title
     if (neverSaved || topObject == lastSavedObject) {
-//      primaryStage.setTitle("Scrumfinity");
       return true;
-    } else {
-//      primaryStage.setTitle("Scrumfinity *");
-      return false;
     }
+    return false;
   }
 
   public void toggleName () {
@@ -819,9 +817,9 @@ public class Main extends Application {
     this.LMPC = LMPC;
   }
 
-  public void setMBC(MenuBarController MBC) {
+  public void setPrimaryStage(Stage primaryStage) {
     // This is for tests
-    this.MBC = MBC;
+    this.primaryStage = primaryStage;
   }
 
   public MenuBarController getMBC() {

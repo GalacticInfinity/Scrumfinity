@@ -22,6 +22,7 @@ public class NewSaving {
   private List<Team> teams;
   private List<Release> releases;
   private List<Role> roles;
+  private List<Story> stories;
 
   public NewSaving(Main main) {
     projects = main.getProjects();
@@ -30,6 +31,8 @@ public class NewSaving {
     teams = main.getTeams();
     releases = main.getReleases();
     roles = main.getRoles();
+    stories = main.getStories();
+
   }
 
   /**
@@ -57,6 +60,9 @@ public class NewSaving {
       saveTeams(saveFile);
       saveReleases(saveFile);
       saveRoles(saveFile);
+      if (Settings.progVersion >= 0.2) {
+        saveStories(saveFile);
+      }
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -216,6 +222,12 @@ public class NewSaving {
     saveFile.write("</Releases>\n");
   }
 
+  /**
+   * Appends the main app roles data to the save file
+   *
+   * @param saveFile Save file being written to
+   * @throws Exception Required field is missing/ error with writer
+   */
   private void saveRoles(Writer saveFile) throws Exception {
     saveFile.write("<Roles>\n");
     for (Role role : this.roles) {
@@ -231,5 +243,28 @@ public class NewSaving {
       saveFile.write("\t</Role>\n");
     }
     saveFile.write("</Roles>\n");
+  }
+
+  /**
+   *Appends the main stories data to the save file
+   *
+   * @param saveFile Save file being written to
+   * @throws Exception Required field is missing/ error with writer
+   */
+  private void saveStories(Writer saveFile) throws Exception {
+    saveFile.write("<Stories>\n");
+    for (Story story : this.stories) {
+      saveFile.write("\t<Story>\n");
+      saveFile.write("\t\t<storyLabel>" + story.getLabel() + "</storyLabel>\n");
+      saveFile.write("\t\t<creator>" + story.getCreator().getLabel() + "</creator>\n");
+      if (story.getLongName() != null && !story.getLongName().equals("")) {
+        saveFile.write("\t\t<longName>" + story.getLongName() + "</longName>\n");
+      }
+      if (story.getDescription() != null && !story.getDescription().equals("")) {
+        saveFile.write("\t\t<description>" + story.getDescription() + "</description>\n");
+      }
+      saveFile.write("\t</Story>\n");
+    }
+    saveFile.write("</Stories>\n");
   }
 }

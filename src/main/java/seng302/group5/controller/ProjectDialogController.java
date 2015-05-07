@@ -142,7 +142,7 @@ public class ProjectDialogController {
     inputProjectLabel = inputProjectLabel.trim();
 
     if (inputProjectLabel.isEmpty()) {
-      throw new Exception("Project label is empty");
+      throw new Exception("Project Label is empty.");
     } else {
       String lastProjectLabel;
       if (lastProject == null) {
@@ -152,8 +152,9 @@ public class ProjectDialogController {
       }
       for (Project projectInList : mainApp.getProjects()) {
         String projectLabel = projectInList.getLabel();
-        if (projectLabel.equals(inputProjectLabel) && !projectLabel.equals(lastProjectLabel)) {
-          throw new Exception("Project label is not unique.");
+        if (projectLabel.equalsIgnoreCase(inputProjectLabel) &&
+            !projectLabel.equalsIgnoreCase(lastProjectLabel)) {
+          throw new Exception("Project Label is not unique.");
         }
       }
     }
@@ -171,7 +172,7 @@ public class ProjectDialogController {
     inputProjectName = inputProjectName.trim();
 
     if (inputProjectName.isEmpty()) {
-      throw new Exception("Project Name is empty");
+      throw new Exception("Project Name is empty.");
     } else {
       return inputProjectName;
     }
@@ -188,8 +189,9 @@ public class ProjectDialogController {
    */
   private void parseProjectDates(LocalDate startDate, LocalDate endDate, Team team)
       throws Exception {
+    // TODO: Handle null end dates on parsing. Null date should represent forever.
     if (endDate != null && startDate.isAfter(endDate)) {
-      throw new Exception("Start date must be before End Date");
+      throw new Exception("Start date must be before End Date.");
     } else if (team == null) {
       throw new Exception("Please select a team to assign.");
     } else {
