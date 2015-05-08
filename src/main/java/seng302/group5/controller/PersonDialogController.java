@@ -73,6 +73,7 @@ public class PersonDialogController {
       selectedSkills = person.getSkillSet();
       personSkillList.setItems(selectedSkills);
       initialiseLists();
+      btnCreatePerson.setDisable(true);
     }
     this.createOrEdit = createOrEdit;
 
@@ -88,12 +89,49 @@ public class PersonDialogController {
 
     // Handle TextField text changes.
     personLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if(createOrEdit == createOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
       if (newValue.trim().length() > 20) {
         personLabelField.setStyle("-fx-text-inner-color: red;");
       } else {
         personLabelField.setStyle("-fx-text-inner-color: black;");
       }
     });
+
+    personFirstNameField.textProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if(createOrEdit == createOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+
+    personLastNameField.textProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if(createOrEdit == createOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+
+    personSkillList.itemsProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if(createOrEdit == createOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+
+  }
+
+  private void checkButtonDisabled() {
+    if (personLabelField.getText().equals(person.getLabel()) &&
+        personFirstNameField.getText().equals(person.getFirstName()) &&
+        personLastNameField.getText().equals(person.getLastName()) &&
+        selectedSkills.equals(person.getSkillSet())) {
+      btnCreatePerson.setDisable(true);
+    } else {
+      btnCreatePerson.setDisable(false);
+    }
   }
 
   /**

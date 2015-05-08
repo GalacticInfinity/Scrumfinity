@@ -14,12 +14,14 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng302.group5.controller.ListMainPaneController;
+import seng302.group5.controller.LoginController;
 import seng302.group5.controller.MenuBarController;
 import seng302.group5.controller.ReleaseDialogController;
 import seng302.group5.controller.PersonDialogController;
@@ -49,6 +51,9 @@ public class Main extends Application {
 
   private Stage primaryStage;
   private BorderPane rootLayout;
+  private BorderPane loginLayout;
+  private Scene mainScene;
+  private Scene loginScene;
 
   private ListMainPaneController LMPC;
   private MenuBarController MBC;
@@ -84,6 +89,9 @@ public class Main extends Application {
    */
   @Override
   public void start(Stage primaryStage) {
+    // Show login screen
+    showLoginScreen(primaryStage);
+
     this.primaryStage = primaryStage;
     this.primaryStage.setTitle(mainTitle);
     this.primaryStage.setMinHeight(420);
@@ -139,6 +147,31 @@ public class Main extends Application {
   }
 
   /**
+   * Shows the initial welcome screen
+   */
+  public void showLoginScreen(Stage primaryStage) {
+    try {
+      this.primaryStage = primaryStage;
+      this.primaryStage.setTitle(mainTitle);
+      this.primaryStage.setMinHeight(420);
+      this.primaryStage.setMinWidth(640);
+
+      FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(LoginController.class.getResource("/LoginScreen.fxml"));
+      loginLayout = loader.load();
+
+      LoginController loginController = loader.getController();
+      loginController.setMainApp(this);
+      loginScene = new Scene(loginLayout);
+      primaryStage.setScene(loginScene);
+      primaryStage.show();
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
    * Initializes the root layout.
    */
   public void initRootLayout() {
@@ -147,9 +180,9 @@ public class Main extends Application {
       loader.setLocation(Main.class.getResource("/Main.fxml"));
       rootLayout = loader.load();
 
-      Scene scene = new Scene(rootLayout);
-      primaryStage.setScene(scene);
-      primaryStage.show();
+      mainScene = new Scene(rootLayout);
+/*      primaryStage.setScene(mainScene);
+      primaryStage.show();*/
 
       primaryStage.getIcons().add(new Image("Thumbnail.png")); //sets the icon
 
@@ -903,5 +936,9 @@ public class Main extends Application {
    */
   public void refreshList() {
     LMPC.refreshList();
+  }
+
+  public void setMainScene() {
+    this.primaryStage.setScene(mainScene);
   }
 }

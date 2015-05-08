@@ -36,8 +36,6 @@ public class StoryDialogController {
   private Story story;
   private Story lastStory;
 
-  private Boolean disableButton; //to check if the button should be disabled
-
   private ObservableList<Person> availablePeople = FXCollections.observableArrayList();
 
   /**
@@ -67,7 +65,6 @@ public class StoryDialogController {
       storyCreatorList.setValue(story.getCreator());
       storyCreatorList.setDisable(true);
       btnCreateStory.setDisable(true);
-      disableButton = true;
     }
     this.createOrEdit = createOrEdit;
 
