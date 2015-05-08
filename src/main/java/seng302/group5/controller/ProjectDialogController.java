@@ -16,6 +16,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
@@ -41,6 +42,7 @@ public class ProjectDialogController {
   @FXML private DatePicker teamStartDate;
   @FXML private DatePicker teamEndDate;
   @FXML private Button btnConfirm;
+  @FXML private HBox btnContainer;
 
   private Main mainApp;
   private Stage thisStage;
@@ -50,7 +52,6 @@ public class ProjectDialogController {
   private ObservableList<AgileHistory> allocatedTeams = FXCollections.observableArrayList();
   private ObservableList<Team> availableTeams = FXCollections.observableArrayList();
   private AgileHistory projectHistory = new AgileHistory();
-
 
   /**
    * Setup the project dialog controller
@@ -68,6 +69,14 @@ public class ProjectDialogController {
     this.thisStage = thisStage;
     teamStartDate.setValue(LocalDate.now());
 
+    String os = System.getProperty("os.name");
+
+    if (!os.startsWith("Windows")) {
+      Button confirmBtn = (Button) btnContainer.getChildren().get(1);
+      btnContainer.getChildren().remove(1);
+      btnContainer.getChildren().add(confirmBtn);
+    }
+
     if (createOrEdit == CreateOrEdit.CREATE) {
       thisStage.setTitle("Create New Project");
       btnConfirm.setText("Create");
@@ -76,16 +85,17 @@ public class ProjectDialogController {
       p.setLabel("");
       p.setProjectName("");
 
+
       initialiseLists(CreateOrEdit.CREATE, project);
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       thisStage.setTitle("Edit Project");
       btnConfirm.setText("Save");
       btnConfirm.setDisable(true);
+
       initialiseLists(CreateOrEdit.EDIT, project);
       projectLabelField.setText(project.getLabel());
       projectNameField.setText(project.getProjectName());
       projectDescriptionField.setText(project.getProjectDescription());
-
     }
     this.createOrEdit = createOrEdit;
 
@@ -98,11 +108,6 @@ public class ProjectDialogController {
       this.lastProject = null;
     }
 
-    projectDescriptionField.setOnKeyPressed(event -> {
-      if (event.getCode() == KeyCode.ENTER) {
-        btnConfirm.fire();
-      }
-    });
     btnConfirm.setDefaultButton(true);
 
     // Handle TextField text changes.
@@ -134,8 +139,6 @@ public class ProjectDialogController {
         checkButtonDisabled();
       }
     });
-
-
   }
 
   private void checkButtonDisabled() {
@@ -219,6 +222,7 @@ public class ProjectDialogController {
       return inputProjectName;
     }
   }
+  
   private Boolean parseLabelChange(Project project) {
     if (projectLabelField.equals(project.getLabel())) {
       return false;
@@ -234,7 +238,6 @@ public class ProjectDialogController {
       return true;
     }
   }
-
 
   /**
    * Parses the selected dates and checks that all inputs are valid, that the selected team is not
@@ -394,7 +397,6 @@ public class ProjectDialogController {
       alert.showAndWait();
       mainApp.refreshList();
     }
-
   }
 
   /**

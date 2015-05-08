@@ -16,6 +16,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
@@ -52,6 +53,7 @@ public class TeamDialogController {
   @FXML private ComboBox<Role> teamMemberRoleCombo;
   @FXML private TextArea teamDescriptionField;
   @FXML private Button btnConfirm;
+  @FXML private HBox btnContainer;
 
   /**
    * Setup the project dialog controller
@@ -65,9 +67,18 @@ public class TeamDialogController {
     this.mainApp = mainApp;
     this.thisStage = thisStage;
 
+    String os = System.getProperty("os.name");
+
+    if (!os.startsWith("Windows")) {
+      Button confirmBtn = (Button) btnContainer.getChildren().get(1);
+      btnContainer.getChildren().remove(1);
+      btnContainer.getChildren().add(confirmBtn);
+    }
+
     if (createOrEdit == CreateOrEdit.CREATE) {
       thisStage.setTitle("Create New Team");
       btnConfirm.setText("Create");
+
       initialiseLists(CreateOrEdit.CREATE, team);
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       thisStage.setTitle("Edit Team");
@@ -76,7 +87,6 @@ public class TeamDialogController {
       teamLabelField.setText(team.getLabel());
       initialiseLists(CreateOrEdit.EDIT, team);
       teamDescriptionField.setText(team.getTeamDescription());
-
     }
     this.createOrEdit = createOrEdit;
 
@@ -88,11 +98,6 @@ public class TeamDialogController {
       this.lastTeam = null;
     }
 
-    teamDescriptionField.setOnKeyPressed(event -> {
-      if (event.getCode() == KeyCode.ENTER) {
-        btnConfirm.fire();
-      }
-    });
     btnConfirm.setDefaultButton(true);
 
     // Handle TextField text changes.
