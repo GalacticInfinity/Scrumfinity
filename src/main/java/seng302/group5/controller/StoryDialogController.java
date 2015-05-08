@@ -36,6 +36,8 @@ public class StoryDialogController {
   private Story story;
   private Story lastStory;
 
+  private Boolean disableButton; //to check if the button should be disabled
+
   private ObservableList<Person> availablePeople = FXCollections.observableArrayList();
 
   /**
@@ -64,6 +66,8 @@ public class StoryDialogController {
       storyDescriptionField.setText(story.getDescription());
       storyCreatorList.setValue(story.getCreator());
       storyCreatorList.setDisable(true);
+      btnCreateStory.setDisable(true);
+      disableButton = true;
     }
     this.createOrEdit = createOrEdit;
 
@@ -77,14 +81,48 @@ public class StoryDialogController {
 
     btnCreateStory.setDefaultButton(true);
 
-    // Handle TextField text changes.
+
+
+
     storyLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if(createOrEdit == createOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+      // Handle TextField text changes.
       if (newValue.trim().length() > 20) {
         storyLabelField.setStyle("-fx-text-inner-color: red;");
       } else {
         storyLabelField.setStyle("-fx-text-inner-color: black;");
       }
     });
+
+    storyLongNameField.textProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if(createOrEdit == createOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+
+    storyDescriptionField.textProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if(createOrEdit == createOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+
+    });
+
+
+  }
+
+  private void checkButtonDisabled() {
+    if (storyDescriptionField.getText().equals(story.getDescription()) &&
+        storyLabelField.getText().equals(story.getLabel()) &&
+        storyLongNameField.getText().equals(story.getLongName())) {
+      btnCreateStory.setDisable(true);
+    } else {
+      btnCreateStory.setDisable(false);
+    }
   }
 
   /**
