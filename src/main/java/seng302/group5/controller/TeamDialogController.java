@@ -103,8 +103,37 @@ public class TeamDialogController {
         teamLabelField.setStyle("-fx-text-inner-color: black;");
       }
     });
+
+    teamLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if(createOrEdit == createOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+
+    teamDescriptionField.textProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if(createOrEdit == createOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+
+
+    System.out.println(teamMembersList.getItems());
+
+
   }
 
+  private void checkButtonDisabled() {
+    if (teamLabelField.getText().equals(team.getLabel()) &&
+       teamDescriptionField.equals(team.getTeamDescription()) &&
+        teamMembersList.getItems().equals(team.getTeamMembers())) {
+
+      btnConfirm.setDisable(true);
+    } else {
+      btnConfirm.setDisable(false);
+    }
+  }
   /**
    * Populates the people selection lists for assigning people to the team.
    *
