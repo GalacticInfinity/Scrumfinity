@@ -265,6 +265,7 @@ public class Main extends Application {
       projectDialogStage.setScene(projectDialogScene);
       projectDialogStage.show();
 
+
     } catch (IOException e) {
       e.printStackTrace();
     }

@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -23,6 +24,7 @@ import seng302.group5.model.Project;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoObject;
+import seng302.group5.model.util.Settings;
 
 /**
  * The controller for the project dialog when creating a new project or editing an existing one
@@ -69,10 +71,16 @@ public class ProjectDialogController {
     if (createOrEdit == CreateOrEdit.CREATE) {
       thisStage.setTitle("Create New Project");
       btnConfirm.setText("Create");
+      btnConfirm.setDisable(true);
+      Project p = new Project();
+      p.setLabel("");
+      p.setProjectName("");
+
       initialiseLists(CreateOrEdit.CREATE, project);
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       thisStage.setTitle("Edit Project");
       btnConfirm.setText("Save");
+      btnConfirm.setDisable(true);
       initialiseLists(CreateOrEdit.EDIT, project);
       projectLabelField.setText(project.getLabel());
       projectNameField.setText(project.getProjectName());
@@ -105,6 +113,40 @@ public class ProjectDialogController {
         projectLabelField.setStyle("-fx-text-inner-color: black;");
       }
     });
+
+    projectLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if(createOrEdit == createOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+
+    projectNameField.textProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if(createOrEdit == createOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+
+    projectDescriptionField.textProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if(createOrEdit == createOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+
+
+  }
+
+  private void checkButtonDisabled() {
+    if (projectDescriptionField.getText().equals(project.getProjectDescription()) &&
+        projectLabelField.getText().equals(project.getLabel()) &&
+        projectNameField.getText().equals(project.getProjectName())) {
+
+      btnConfirm.setDisable(true);
+    } else {
+      btnConfirm.setDisable(false);
+    }
   }
 
   /**
@@ -177,6 +219,22 @@ public class ProjectDialogController {
       return inputProjectName;
     }
   }
+  private Boolean parseLabelChange(Project project) {
+    if (projectLabelField.equals(project.getLabel())) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  private Boolean parseNameChange(Project project) {
+    if (projectNameField.equals(project.getProjectName())) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
 
   /**
    * Parses the selected dates and checks that all inputs are valid, that the selected team is not
@@ -326,6 +384,7 @@ public class ProjectDialogController {
         projectHistory.setAgileItem(selectedTeam);
         projectHistory.setStartDate(teamStartDate.getValue());
         projectHistory.setEndDate(teamEndDate.getValue());
+        btnConfirm.setDisable(false);
       }
     } catch (Exception e1) {
       Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -335,6 +394,7 @@ public class ProjectDialogController {
       alert.showAndWait();
       mainApp.refreshList();
     }
+
   }
 
   /**
@@ -359,6 +419,7 @@ public class ProjectDialogController {
     } catch (Exception e) {
       System.out.println("Nothing selected");
     }
+    btnConfirm.setDisable(false);
   }
 
   /**
