@@ -52,6 +52,7 @@ public class SkillsDialogController {
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       thisStage.setTitle("Edit Skill");
       skillCreation.setText("Save");
+      skillCreation.setDisable(true);
 
       skillLabel.setText(skill.getLabel());
       skillDescription.setText(skill.getSkillDescription());
@@ -76,12 +77,35 @@ public class SkillsDialogController {
 
     // Handle TextField text changes.
     skillLabel.textProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if(createOrEdit == createOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
       if (newValue.trim().length() > 20) {
         skillLabel.setStyle("-fx-text-inner-color: red;");
       } else {
         skillLabel.setStyle("-fx-text-inner-color: black;");
       }
     });
+
+    skillDescription.textProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if(createOrEdit == createOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+  }
+
+  /**
+   * checks if there are any changed fields and disables or enables the button accordingly
+   */
+  private void checkButtonDisabled() {
+    if (skillLabel.getText().equals(skill.getLabel()) &&
+        skillDescription.getText().equals(skill.getSkillDescription())) {
+      skillCreation.setDisable(true);
+    } else {
+      skillCreation.setDisable(false);
+    }
   }
 
   /**
