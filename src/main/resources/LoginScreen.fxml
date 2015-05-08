@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.LoginController">
+   <center>
+      <VBox alignment="BASELINE_CENTER" prefHeight="368.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Welcome to Scrumfinity" textAlignment="CENTER">
+               <font>
+                  <Font size="33.0" />
+               </font>
+            </Label>
+            <Label text="Enter an organization name">
+               <VBox.margin>
+                  <Insets top="80.0" />
+               </VBox.margin>
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+            <TextField fx:id="organizationName" maxHeight="30.0" maxWidth="300.0" minHeight="30.0" minWidth="300.0" />
+            <Button maxHeight="30.0" maxWidth="80.0" minHeight="30.0" minWidth="80.0" mnemonicParsing="false" onAction="#btnNewLogin" text="Get Started">
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </Button>
+            <Label text="...or load and existing file">
+               <VBox.margin>
+                  <Insets top="55.0" />
+               </VBox.margin>
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+            <Button maxHeight="40.0" maxWidth="120.0" minHeight="40.0" minWidth="120.0" mnemonicParsing="false" onAction="#btnLoginLoad" text="Load" textAlignment="CENTER" />
+         </children>
+      </VBox>
+   </center>
+</BorderPane>

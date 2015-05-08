@@ -353,10 +353,12 @@ public class MenuBarController {
         load.loadFile(file);
 
         mainApp.getLMPC().refreshList();
-        if (!Settings.organizationName.isEmpty()) {
+        if (!(Settings.organizationName == "")) {
           mainApp.setMainTitle("Scrumfinity - " + Settings.organizationName);
-          mainApp.toggleName();
+        } else {
+          mainApp.setMainTitle("Scrumfinity");
         }
+        mainApp.toggleName();
         showListMenuItem.setSelected(true);
         deselectList(Settings.currentListType);
         mainApp.setLastSaved(); //for revert
@@ -422,7 +424,11 @@ public class MenuBarController {
 
     result.ifPresent(newField -> {
       Settings.organizationName = result.get().trim();
-      mainApp.setMainTitle("Scrumfinity - " + Settings.organizationName);
+      if (Settings.organizationName != "") {
+        mainApp.setMainTitle("Scrumfinity - " + Settings.organizationName);
+      } else {
+        mainApp.setMainTitle("Scrumfinity");
+      }
       mainApp.toggleName();
     });
   }
