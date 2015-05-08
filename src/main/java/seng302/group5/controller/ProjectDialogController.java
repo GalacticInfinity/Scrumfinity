@@ -409,7 +409,7 @@ public class ProjectDialogController {
         this.allocatedTeams.remove(temp);
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      System.out.println("Nothing selected");
     }
     btnConfirm.setDisable(false);
   }
