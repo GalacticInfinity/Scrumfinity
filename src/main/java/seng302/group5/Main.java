@@ -14,6 +14,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -149,6 +150,8 @@ public class Main extends Application {
       Scene scene = new Scene(rootLayout);
       primaryStage.setScene(scene);
       primaryStage.show();
+
+      primaryStage.getIcons().add(new Image("Thumbnail.png")); //sets the icon
 
     } catch (IOException e) {
       e.printStackTrace();
