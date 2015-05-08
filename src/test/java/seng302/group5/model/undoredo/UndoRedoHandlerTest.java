@@ -67,11 +67,11 @@ public class UndoRedoHandlerTest {
   private Project newProjectRelease;
 
   private String storyLabel;
-  private String storyLongName;
+  private String storyName;
   private String storyDescription;
   private Person storyCreator;
   private String newStoryLabel;
-  private String newStoryLongName;
+  private String newStoryName;
   private String newStoryDescription;
 
   private Person person;
@@ -349,10 +349,10 @@ public class UndoRedoHandlerTest {
 
   private void newStory() {
     storyLabel = "Story";
-    storyLongName = "This is a story";
+    storyName = "This is a story";
     storyDescription = "Once upon a time...";
     storyCreator = new Person("Seamus", "Sandy", "Devil", null);
-    story = new Story(storyLabel, storyLongName, storyDescription, storyCreator);
+    story = new Story(storyLabel, storyName, storyDescription, storyCreator);
 
     mainApp.addStory(story);
 
@@ -379,11 +379,11 @@ public class UndoRedoHandlerTest {
     Story lastStory = new Story(story);
 
     newStoryLabel = "NewStory";
-    newStoryLongName = "New story name";
+    newStoryName = "New story name";
     newStoryDescription = "Once upon a time... Again!";
 
     story.setLabel(newStoryLabel);
-    story.setLongName(newStoryLongName);
+    story.setStoryName(newStoryName);
     story.setDescription(newStoryDescription);
 
     Story newStory = new Story(story);
@@ -1197,7 +1197,7 @@ public class UndoRedoHandlerTest {
 
     Story createdStory = mainApp.getStories().get(mainApp.getStories().size() - 1);
     assertEquals(storyLabel, createdStory.getLabel());
-    assertEquals(storyLongName, createdStory.getLongName());
+    assertEquals(storyName, createdStory.getStoryName());
     assertEquals(storyDescription, createdStory.getDescription());
     assertEquals(storyCreator, createdStory.getCreator());
 
@@ -1208,7 +1208,7 @@ public class UndoRedoHandlerTest {
 
     Story editedStory = mainApp.getStories().get(mainApp.getStories().size() - 1);
     assertEquals(newStoryLabel, editedStory.getLabel());
-    assertEquals(newStoryLongName, editedStory.getLongName());
+    assertEquals(newStoryName, editedStory.getStoryName());
     assertEquals(newStoryDescription, editedStory.getDescription());
     assertEquals(storyCreator, editedStory.getCreator());
 
@@ -1218,7 +1218,7 @@ public class UndoRedoHandlerTest {
 
     Story undoneStory = mainApp.getStories().get(mainApp.getStories().size() - 1);
     assertEquals(storyLabel, undoneStory.getLabel());
-    assertEquals(storyLongName, undoneStory.getLongName());
+    assertEquals(storyName, undoneStory.getStoryName());
     assertEquals(storyDescription, undoneStory.getDescription());
     assertEquals(storyCreator, undoneStory.getCreator());
   }
@@ -1238,7 +1238,7 @@ public class UndoRedoHandlerTest {
 
     Story createdStory = mainApp.getStories().get(mainApp.getStories().size() - 1);
     assertEquals(storyLabel, createdStory.getLabel());
-    assertEquals(storyLongName, createdStory.getLongName());
+    assertEquals(storyName, createdStory.getStoryName());
     assertEquals(storyDescription, createdStory.getDescription());
     assertEquals(storyCreator, createdStory.getCreator());
 
@@ -1250,7 +1250,7 @@ public class UndoRedoHandlerTest {
 
     Story editedStory = mainApp.getStories().get(mainApp.getStories().size() - 1);
     assertEquals(newStoryLabel, editedStory.getLabel());
-    assertEquals(newStoryLongName, editedStory.getLongName());
+    assertEquals(newStoryName, editedStory.getStoryName());
     assertEquals(newStoryDescription, editedStory.getDescription());
     assertEquals(storyCreator, editedStory.getCreator());
 
@@ -1261,7 +1261,7 @@ public class UndoRedoHandlerTest {
 
     Story undoneStory = mainApp.getStories().get(mainApp.getStories().size() - 1);
     assertEquals(storyLabel, undoneStory.getLabel());
-    assertEquals(storyLongName, undoneStory.getLongName());
+    assertEquals(storyName, undoneStory.getStoryName());
     assertEquals(storyDescription, undoneStory.getDescription());
     assertEquals(storyCreator, undoneStory.getCreator());
 
@@ -1272,7 +1272,7 @@ public class UndoRedoHandlerTest {
 
     Story redoneStory = mainApp.getStories().get(mainApp.getStories().size() - 1);
     assertEquals(newStoryLabel, redoneStory.getLabel());
-    assertEquals(newStoryLongName, redoneStory.getLongName());
+    assertEquals(newStoryName, redoneStory.getStoryName());
     assertEquals(newStoryDescription, redoneStory.getDescription());
     assertEquals(storyCreator, redoneStory.getCreator());
   }

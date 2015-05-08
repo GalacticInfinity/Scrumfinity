@@ -23,12 +23,12 @@
         </HBox>
         <HBox alignment="CENTER_LEFT" prefHeight="38.0" prefWidth="369.0" spacing="10.0">
             <children>
-                <Label prefHeight="25.0" prefWidth="125.0" text="Long Name:">
+                <Label prefHeight="25.0" prefWidth="125.0" text="Story Name:">
                     <font>
                         <Font size="15.0" />
                     </font>
                 </Label>
-                <TextField fx:id="storyLongNameField" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="200.0" promptText="Long name of story." />
+                <TextField fx:id="storyNameField" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="200.0" promptText="Name of story." />
             </children>
         </HBox>
         <HBox prefHeight="30.0" prefWidth="429.0" spacing="10.0">

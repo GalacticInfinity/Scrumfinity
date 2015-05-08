@@ -25,7 +25,7 @@ import seng302.group5.model.undoredo.UndoRedoObject;
 public class StoryDialogController {
 
   @FXML private TextField storyLabelField;
-  @FXML private TextField storyLongNameField;
+  @FXML private TextField storyNameField;
   @FXML private TextArea storyDescriptionField;
   @FXML private ComboBox<Person> storyCreatorList;
   @FXML private Button btnCreateStory;
@@ -60,7 +60,7 @@ public class StoryDialogController {
       btnCreateStory.setText("Save");
 
       storyLabelField.setText(story.getLabel());
-      storyLongNameField.setText(story.getLongName());
+      storyNameField.setText(story.getStoryName());
       storyDescriptionField.setText(story.getDescription());
       storyCreatorList.setValue(story.getCreator());
       storyCreatorList.setDisable(true);
@@ -94,7 +94,7 @@ public class StoryDialogController {
       }
     });
 
-    storyLongNameField.textProperty().addListener((observable, oldValue, newValue) -> {
+    storyNameField.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
       if(createOrEdit == createOrEdit.EDIT) {
         checkButtonDisabled();
@@ -115,7 +115,7 @@ public class StoryDialogController {
   private void checkButtonDisabled() {
     if (storyDescriptionField.getText().equals(story.getDescription()) &&
         storyLabelField.getText().equals(story.getLabel()) &&
-        storyLongNameField.getText().equals(story.getLongName())) {
+        storyNameField.getText().equals(story.getStoryName())) {
       btnCreateStory.setDisable(true);
     } else {
       btnCreateStory.setDisable(false);
@@ -156,7 +156,7 @@ public class StoryDialogController {
     int noErrors = 0;
 
     String label = "";
-    String storyLongName = storyLongNameField.getText().trim();
+    String storyName = storyNameField.getText().trim();
     String storyDescription = storyDescriptionField.getText().trim();
     Person creator = storyCreatorList.getValue();
 
@@ -187,11 +187,11 @@ public class StoryDialogController {
       alert.showAndWait();
     } else {
       if (createOrEdit == CreateOrEdit.CREATE) {
-        story = new Story(label, storyLongName, storyDescription, creator);
+        story = new Story(label, storyName, storyDescription, creator);
         mainApp.addStory(story);
       } else if (createOrEdit == CreateOrEdit.EDIT) {
         story.setLabel(label);
-        story.setLongName(storyLongName);
+        story.setStoryName(storyName);
         story.setDescription(storyDescription);
         story.setCreator(creator);
         mainApp.refreshList();

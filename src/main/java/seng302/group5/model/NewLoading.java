@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -535,7 +534,7 @@ public class NewLoading {
         while ((!(storyLine = loadedFile.readLine()).matches(".*</Story>"))) {
           if (storyLine.startsWith("\t\t<longName>")) {
             storyData = storyLine.replaceAll("(?i)(.*<longName.*?>)(.+?)(</longName>)", "$2");
-            newStory.setLongName(storyData);
+            newStory.setStoryName(storyData);
           }
           if (storyLine.startsWith("\t\t<description>")) {
             storyData = storyLine.replaceAll("(?i)(.*<description.*?>)(.+?)(</description>)", "$2");

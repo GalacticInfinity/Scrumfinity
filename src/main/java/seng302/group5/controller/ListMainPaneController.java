@@ -301,7 +301,7 @@ public class ListMainPaneController {
         displayTextArea.appendText("Story Information \nStory Label: ");
         displayTextArea.appendText(story.getLabel());
         displayTextArea.appendText("\nStory Long Name: ");
-        displayTextArea.appendText(story.getLongName());
+        displayTextArea.appendText(story.getStoryName());
         displayTextArea.appendText("\nStory Description: ");
         displayTextArea.appendText(story.getDescription());
         displayTextArea.appendText("\nCreator: ");

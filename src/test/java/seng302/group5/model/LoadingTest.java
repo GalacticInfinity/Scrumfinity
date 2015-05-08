@@ -195,7 +195,7 @@ public class LoadingTest {
 
     story2 = new Story();
     story2.setLabel("Story2");
-    story2.setLongName("Moar Story");
+    story2.setStoryName("Moar Story");
     story2.setCreator(person2);
     savedMain.addStory(story2);
 
@@ -522,13 +522,13 @@ public class LoadingTest {
 
     story1 = loadedMain.getStories().get(0);
     assertEquals("Story1", story1.getLabel());
-    assertEquals("Starter Story", story1.getLongName());
+    assertEquals("Starter Story", story1.getStoryName());
     assertEquals("Huehuehuehue", story1.getDescription());
     assertSame(person1, story1.getCreator());
 
     story2 = loadedMain.getStories().get(1);
     assertEquals("Story2", story2.getLabel());
-    assertEquals("Moar Story", story2.getLongName());
+    assertEquals("Moar Story", story2.getStoryName());
     assertSame(person2, story2.getCreator());
 
     story3 = loadedMain.getStories().get(2);
