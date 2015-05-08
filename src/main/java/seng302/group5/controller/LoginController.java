@@ -4,6 +4,7 @@ import java.io.File;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import seng302.group5.Main;
@@ -26,8 +27,14 @@ public class LoginController {
   @FXML
   protected void btnNewLogin(ActionEvent event) {
     String setName = organizationName.getText().trim();
-    if (setName != null && !setName.isEmpty()) {
-      mainApp.setMainTitle(setName);
+    if (setName != null) {
+      Settings.organizationName = setName;
+      if (!setName.isEmpty()) {
+        mainApp.setMainTitle("Scrumfinity - " + setName);
+      } else {
+        mainApp.setMainTitle("Scrumfinity");
+      }
+      mainApp.toggleName();
       mainApp.setMainScene();
     }
   }
@@ -59,6 +66,11 @@ public class LoginController {
       }
     } catch (Exception e) {
       e.printStackTrace();
+      Alert alert = new Alert(Alert.AlertType.INFORMATION);
+      alert.setTitle("LoadingError");
+      alert.setHeaderText(null);
+      alert.setContentText("There was a problem with loading, file is out of date/corrupt");
+      alert.showAndWait();
     }
   }
 
