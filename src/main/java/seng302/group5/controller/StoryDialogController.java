@@ -112,6 +112,9 @@ public class StoryDialogController {
 
   }
 
+  /**
+   * checks if there are any changed fields and disables or enables the button accordingly
+   */
   private void checkButtonDisabled() {
     if (storyDescriptionField.getText().equals(story.getDescription()) &&
         storyLabelField.getText().equals(story.getLabel()) &&
