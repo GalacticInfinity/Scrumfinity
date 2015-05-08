@@ -4,17 +4,17 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<SplitPane fx:id="splitPane" dividerPositions="0.30094043887147337" minHeight="370.0" minWidth="640.0" prefHeight="370.0" prefWidth="640.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.ListMainPaneController">
+<SplitPane fx:id="splitPane" dividerPositions="0.30094043887147337" minHeight="375.0" minWidth="600.0" prefHeight="375.0" prefWidth="600.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.ListMainPaneController">
    <items>
-      <AnchorPane fx:id="listViewPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="160.0" minWidth="100.0" prefHeight="160.0" prefWidth="100.0" SplitPane.resizableWithParent="false">
+      <AnchorPane fx:id="listViewPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="373.0" minWidth="150.0" prefHeight="373.0" prefWidth="150.0" SplitPane.resizableWithParent="false">
          <children>
-            <Label fx:id="listViewLabel" minHeight="20.0" AnchorPane.leftAnchor="20.0" />
-            <ListView fx:id="listView" layoutX="-6.0" layoutY="20.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="160.0" minWidth="100.0" prefHeight="160.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="20.0" />
+            <Label fx:id="listViewLabel" minHeight="20.0" prefHeight="20.0" AnchorPane.leftAnchor="20.0" />
+            <ListView fx:id="listView" layoutX="-6.0" layoutY="20.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="353.0" minWidth="150.0" prefHeight="353.0" prefWidth="150.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="20.0" />
          </children>
       </AnchorPane>
-      <AnchorPane minHeight="0.0" minWidth="440.0" prefHeight="160.0" prefWidth="100.0">
+      <AnchorPane minHeight="373.0" minWidth="450.0" prefHeight="373.0" prefWidth="450.0">
          <children>
-            <TextArea fx:id="displayTextArea" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="370.0" minWidth="540.0" prefHeight="370.0" prefWidth="540.0" promptText=" " text=" " AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <TextArea fx:id="displayTextArea" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="373.0" minWidth="450.0" prefHeight="373.0" prefWidth="450.0" promptText=" " text=" " AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children>
       </AnchorPane>
    </items>
