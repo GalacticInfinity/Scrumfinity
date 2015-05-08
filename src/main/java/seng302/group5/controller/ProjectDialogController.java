@@ -76,7 +76,6 @@ public class ProjectDialogController {
       p.setLabel("");
       p.setProjectName("");
 
-      parseFieldsChanged(p, createOrEdit);
       initialiseLists(CreateOrEdit.CREATE, project);
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       thisStage.setTitle("Edit Project");
@@ -86,7 +85,6 @@ public class ProjectDialogController {
       projectLabelField.setText(project.getLabel());
       projectNameField.setText(project.getProjectName());
       projectDescriptionField.setText(project.getProjectDescription());
-      parseFieldsChanged(project, createOrEdit);
 
     }
     this.createOrEdit = createOrEdit;
@@ -116,7 +114,39 @@ public class ProjectDialogController {
       }
     });
 
+    projectLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if(createOrEdit == createOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
 
+    projectNameField.textProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if(createOrEdit == createOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+
+    projectDescriptionField.textProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if(createOrEdit == createOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+
+
+  }
+
+  private void checkButtonDisabled() {
+    if (projectDescriptionField.getText().equals(project.getProjectDescription()) &&
+        projectLabelField.getText().equals(project.getLabel()) &&
+        projectNameField.getText().equals(project.getProjectName())) {
+
+      btnConfirm.setDisable(true);
+    } else {
+      btnConfirm.setDisable(false);
+    }
   }
 
   /**
@@ -191,43 +221,20 @@ public class ProjectDialogController {
   }
   private Boolean parseLabelChange(Project project) {
     if (projectLabelField.equals(project.getLabel())) {
-      return true;
-    } else {
       return false;
+    } else {
+      return true;
     }
   }
 
   private Boolean parseNameChange(Project project) {
     if (projectNameField.equals(project.getProjectName())) {
-      return true;
-    } else {
       return false;
+    } else {
+      return true;
     }
   }
 
-  public void parseFieldsChanged(Project project, CreateOrEdit createOrEdit) {
-    // Deactivates button if no changes.
-    Boolean label;
-    Boolean name;
-    Boolean description;
-    Boolean teams;
-    label = parseLabelChange(project);
-    name = parseNameChange(project);
-
-    if (label.equals(false) || name.equals(false)) {
-      btnConfirm.setDisable(false);
-    }
-
-
-    if (createOrEdit == CreateOrEdit.EDIT) {
-      projectDescriptionField.textProperty().addListener((observable, oldValue, newValue) -> {
-        btnConfirm.setDisable(newValue.equals(project.getProjectDescription()));
-      });
-
-    }
-
-
-  }
 
   /**
    * Parses the selected dates and checks that all inputs are valid, that the selected team is not
@@ -377,6 +384,7 @@ public class ProjectDialogController {
         projectHistory.setAgileItem(selectedTeam);
         projectHistory.setStartDate(teamStartDate.getValue());
         projectHistory.setEndDate(teamEndDate.getValue());
+        btnConfirm.setDisable(false);
       }
     } catch (Exception e1) {
       Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -386,7 +394,7 @@ public class ProjectDialogController {
       alert.showAndWait();
       mainApp.refreshList();
     }
-    btnConfirm.setDisable(false);
+
   }
 
   /**
