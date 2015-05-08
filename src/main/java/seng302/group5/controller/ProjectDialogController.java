@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -23,6 +24,7 @@ import seng302.group5.model.Project;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoObject;
+import seng302.group5.model.util.Settings;
 
 /**
  * The controller for the project dialog when creating a new project or editing an existing one
@@ -69,14 +71,22 @@ public class ProjectDialogController {
     if (createOrEdit == CreateOrEdit.CREATE) {
       thisStage.setTitle("Create New Project");
       btnConfirm.setText("Create");
+      btnConfirm.setDisable(true);
+      Project p = new Project();
+      p.setLabel("");
+      p.setProjectName("");
+
+      parseFieldsChanged(p, createOrEdit);
       initialiseLists(CreateOrEdit.CREATE, project);
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       thisStage.setTitle("Edit Project");
       btnConfirm.setText("Save");
+      btnConfirm.setDisable(true);
       initialiseLists(CreateOrEdit.EDIT, project);
       projectLabelField.setText(project.getLabel());
       projectNameField.setText(project.getProjectName());
       projectDescriptionField.setText(project.getProjectDescription());
+      parseFieldsChanged(project, createOrEdit);
 
     }
     this.createOrEdit = createOrEdit;
@@ -105,6 +115,8 @@ public class ProjectDialogController {
         projectLabelField.setStyle("-fx-text-inner-color: black;");
       }
     });
+
+
   }
 
   /**
@@ -176,6 +188,45 @@ public class ProjectDialogController {
     } else {
       return inputProjectName;
     }
+  }
+  private Boolean parseLabelChange(Project project) {
+    if (projectLabelField.equals(project.getLabel())) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  private Boolean parseNameChange(Project project) {
+    if (projectNameField.equals(project.getProjectName())) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public void parseFieldsChanged(Project project, CreateOrEdit createOrEdit) {
+    // Deactivates button if no changes.
+    Boolean label;
+    Boolean name;
+    Boolean description;
+    Boolean teams;
+    label = parseLabelChange(project);
+    name = parseNameChange(project);
+
+    if (label.equals(false) || name.equals(false)) {
+      btnConfirm.setDisable(false);
+    }
+
+
+    if (createOrEdit == CreateOrEdit.EDIT) {
+      projectDescriptionField.textProperty().addListener((observable, oldValue, newValue) -> {
+        btnConfirm.setDisable(newValue.equals(project.getProjectDescription()));
+      });
+
+    }
+
+
   }
 
   /**
@@ -335,6 +386,7 @@ public class ProjectDialogController {
       alert.showAndWait();
       mainApp.refreshList();
     }
+    btnConfirm.setDisable(false);
   }
 
   /**
@@ -359,6 +411,7 @@ public class ProjectDialogController {
     } catch (Exception e) {
       e.printStackTrace();
     }
+    btnConfirm.setDisable(false);
   }
 
   /**
