@@ -130,6 +130,9 @@ public class PersonDialogController {
     });
   }
 
+  /**
+   * checks if there are any changed fields and disables or enables the button accordingly
+   */
   private void checkButtonDisabled() {
     if (personLabelField.getText().equals(person.getLabel()) &&
         personFirstNameField.getText().equals(person.getFirstName()) &&
