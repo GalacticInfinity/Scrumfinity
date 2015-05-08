@@ -95,7 +95,7 @@
             <Insets top="-5.0" />
          </VBox.margin>
       </HBox>
-        <HBox alignment="BOTTOM_RIGHT" prefHeight="25.0" prefWidth="510.0" spacing="10.0">
+        <HBox fx:id="btnContainer" alignment="BOTTOM_RIGHT" prefHeight="25.0" prefWidth="510.0" spacing="10.0">
             <opaqueInsets>
                 <Insets />
             </opaqueInsets>

@@ -8,7 +8,7 @@ package seng302.group5.model;
 public class Story implements AgileItem, Comparable<Story> {
 
   private String label;
-  private String longName;
+  private String storyName;
   private String description;
   private Person creator;
 
@@ -17,7 +17,7 @@ public class Story implements AgileItem, Comparable<Story> {
    */
   public Story() {
     this.label = "";
-    this.longName = "";
+    this.storyName = "";
     this.description = "";
     this.creator = null;
   }
@@ -25,13 +25,13 @@ public class Story implements AgileItem, Comparable<Story> {
   /**
    * Constructor for all fields.
    * @param label Not-null ID/label.
-   * @param longName Long name for story.
+   * @param storyName Long name for story.
    * @param description Description of story.
    * @param creator Person assigned to creation of this story.
    */
-  public Story(String label, String longName, String description, Person creator) {
+  public Story(String label, String storyName, String description, Person creator) {
     this.label = label;
-    this.longName = longName;
+    this.storyName = storyName;
     this.description = description;
     this.creator = creator;
   }
@@ -43,7 +43,7 @@ public class Story implements AgileItem, Comparable<Story> {
    */
   public Story(Story clone) {
     this.label = clone.getLabel();
-    this.longName = clone.getLongName();
+    this.storyName = clone.getStoryName();
     this.description = clone.getDescription();
     this.creator = clone.getCreator();
   }
@@ -70,17 +70,17 @@ public class Story implements AgileItem, Comparable<Story> {
    *
    * @return Long name of story.
    */
-  public String getLongName() {
-    return this.longName;
+  public String getStoryName() {
+    return this.storyName;
   }
 
   /**
    * Sets long name of story.
    *
-   * @param longName New long name as String type.
+   * @param storyName New long name as String type.
    */
-  public void setLongName(String longName) {
-    this.longName = longName;
+  public void setStoryName(String storyName) {
+    this.storyName = storyName;
   }
 
   /**
@@ -129,7 +129,7 @@ public class Story implements AgileItem, Comparable<Story> {
     if (agileItem instanceof Story) {
       Story clone = (Story) agileItem;
       this.label = clone.getLabel();
-      this.longName = clone.getLongName();
+      this.storyName = clone.getStoryName();
       this.description = clone.getDescription();
       this.creator = clone.getCreator();
     }

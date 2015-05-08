@@ -24,7 +24,6 @@ import seng302.group5.model.Role;
 import seng302.group5.model.Skill;
 import seng302.group5.model.Story;
 import seng302.group5.model.Team;
-import seng302.group5.model.util.Settings;
 
 
 /**
@@ -389,7 +388,7 @@ public class ReportWriter {
     storyElem.setAttribute("label", story.getLabel());
 
     Element storyName = report.createElement("Name");
-    storyName.appendChild(report.createTextNode(story.getLongName()));
+    storyName.appendChild(report.createTextNode(story.getStoryName()));
     storyElem.appendChild(storyName);
 
     Element storyDescription = report.createElement("Description");

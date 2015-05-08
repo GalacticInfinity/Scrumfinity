@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
@@ -24,6 +25,7 @@ public class SkillsDialogController {
   @FXML private TextField skillLabel;
   @FXML private TextArea skillDescription;
   @FXML private Button skillCreation;
+  @FXML private HBox btnContainer;
 
   private Main mainApp;
   private Stage thisStage;
@@ -45,6 +47,14 @@ public class SkillsDialogController {
                               Skill skill) {
     this.mainApp = mainApp;
     this.thisStage = thisStage;
+
+    String os = System.getProperty("os.name");
+
+    if (!os.startsWith("Windows")) {
+      Button confirmBtn = (Button) btnContainer.getChildren().get(1);
+      btnContainer.getChildren().remove(1);
+      btnContainer.getChildren().add(confirmBtn);
+    }
 
     if (createOrEdit == CreateOrEdit.CREATE) {
       thisStage.setTitle("Create New Skill");
@@ -68,11 +78,6 @@ public class SkillsDialogController {
       this.lastSkill = null;
     }
 
-    skillDescription.setOnKeyPressed(event -> {
-      if (event.getCode() == KeyCode.ENTER) {
-        skillCreation.fire();
-      }
-    });
     skillCreation.setDefaultButton(true);
 
     // Handle TextField text changes.
@@ -119,7 +124,7 @@ public class SkillsDialogController {
     inputSkillLabel = inputSkillLabel.trim();
 
     if (inputSkillLabel.isEmpty()) {
-      throw new Exception("Skill Label is empty");
+      throw new Exception("Skill Label is empty.");
     } else {
       String lastSkillLabel;
       if (lastSkill == null) {

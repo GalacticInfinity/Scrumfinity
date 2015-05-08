@@ -257,8 +257,8 @@ public class NewSaving {
       saveFile.write("\t<Story>\n");
       saveFile.write("\t\t<storyLabel>" + story.getLabel() + "</storyLabel>\n");
       saveFile.write("\t\t<creator>" + story.getCreator().getLabel() + "</creator>\n");
-      if (story.getLongName() != null && !story.getLongName().equals("")) {
-        saveFile.write("\t\t<longName>" + story.getLongName() + "</longName>\n");
+      if (story.getStoryName() != null && !story.getStoryName().equals("")) {
+        saveFile.write("\t\t<longName>" + story.getStoryName() + "</longName>\n");
       }
       if (story.getDescription() != null && !story.getDescription().equals("")) {
         saveFile.write("\t\t<description>" + story.getDescription() + "</description>\n");

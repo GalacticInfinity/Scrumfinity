@@ -31,7 +31,7 @@
                 <TextArea fx:id="skillDescription" prefHeight="229.0" prefWidth="310.0" promptText="Short description of skill." />
             </children>
         </HBox>
-        <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="429.0" spacing="10.0">
+        <HBox fx:id="btnContainer" alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="429.0" spacing="10.0">
             <children>
                 <Label prefHeight="25.0" prefWidth="275.0" text="* Fields cannot be empty.">
                     <font>
