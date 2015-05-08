@@ -112,14 +112,14 @@ public class TeamDialogController {
 
     teamLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
-      if(createOrEdit == createOrEdit.EDIT) {
+      if(createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
       }
     });
 
     teamDescriptionField.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
-      if(createOrEdit == createOrEdit.EDIT) {
+      if(createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
       }
     });

@@ -75,6 +75,12 @@ public class AgileHistory implements Comparable<AgileHistory> {
     return theString;
   }
 
+  /**
+   * Compare AgileHistory objects by the agileItem label and startDate
+   *
+   * @param o AgileHistory object to compare to
+   * @return whether or not it is greater or lesser
+   */
   @Override
   public int compareTo(AgileHistory o) {
     int result = agileItem.getLabel().compareToIgnoreCase(o.getAgileItem().getLabel());

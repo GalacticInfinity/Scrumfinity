@@ -83,7 +83,7 @@ public class SkillsDialogController {
     // Handle TextField text changes.
     skillLabel.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
-      if(createOrEdit == createOrEdit.EDIT) {
+      if(createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
       }
       if (newValue.trim().length() > 20) {
@@ -95,7 +95,7 @@ public class SkillsDialogController {
 
     skillDescription.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
-      if(createOrEdit == createOrEdit.EDIT) {
+      if(createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
       }
     });

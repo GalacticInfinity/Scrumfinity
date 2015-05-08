@@ -90,7 +90,7 @@ public class StoryDialogController {
 
     storyLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
-      if(createOrEdit == createOrEdit.EDIT) {
+      if(createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
       }
       // Handle TextField text changes.
@@ -103,14 +103,14 @@ public class StoryDialogController {
 
     storyNameField.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
-      if(createOrEdit == createOrEdit.EDIT) {
+      if(createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
       }
     });
 
     storyDescriptionField.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
-      if(createOrEdit == createOrEdit.EDIT) {
+      if(createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
       }
 
