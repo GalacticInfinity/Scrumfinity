@@ -60,7 +60,7 @@
                 <Insets top="4.0" />
             </VBox.margin>
         </HBox>
-        <HBox alignment="BOTTOM_RIGHT" prefHeight="39.0" prefWidth="434.0" spacing="10.0">
+        <HBox fx:id="btnContainer" alignment="BOTTOM_RIGHT" prefHeight="39.0" prefWidth="434.0" spacing="10.0">
             <children>
                 <Label prefHeight="25.0" prefWidth="288.0" text="* Fields cannot be empty.">
                     <font>

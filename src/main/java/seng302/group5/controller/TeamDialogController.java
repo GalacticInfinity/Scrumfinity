@@ -16,6 +16,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
@@ -42,9 +43,10 @@ public class TeamDialogController {
 
   private ObservableList<Person> availableMembers = FXCollections.observableArrayList();
   private ObservableList<PersonRole> selectedMembers = FXCollections.observableArrayList();
+  private ObservableList<PersonRole> originalMembers = FXCollections.observableArrayList();
   private ArrayList<Person> membersToRemove = new ArrayList<>();
 
-  Role noRole;
+  private Role noRole;
 
   @FXML private TextField teamLabelField;
   @FXML private ListView<PersonRole> teamMembersList;
@@ -52,6 +54,7 @@ public class TeamDialogController {
   @FXML private ComboBox<Role> teamMemberRoleCombo;
   @FXML private TextArea teamDescriptionField;
   @FXML private Button btnConfirm;
+  @FXML private HBox btnContainer;
 
   /**
    * Setup the project dialog controller
@@ -65,18 +68,26 @@ public class TeamDialogController {
     this.mainApp = mainApp;
     this.thisStage = thisStage;
 
+    String os = System.getProperty("os.name");
+
+    if (!os.startsWith("Windows")) {
+      Button confirmBtn = (Button) btnContainer.getChildren().get(1);
+      btnContainer.getChildren().remove(1);
+      btnContainer.getChildren().add(confirmBtn);
+    }
+
     if (createOrEdit == CreateOrEdit.CREATE) {
       thisStage.setTitle("Create New Team");
       btnConfirm.setText("Create");
+
       initialiseLists(CreateOrEdit.CREATE, team);
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       thisStage.setTitle("Edit Team");
       btnConfirm.setText("Save");
-
+      btnConfirm.setDisable(true);
       teamLabelField.setText(team.getLabel());
       initialiseLists(CreateOrEdit.EDIT, team);
       teamDescriptionField.setText(team.getTeamDescription());
-
     }
     this.createOrEdit = createOrEdit;
 
@@ -88,11 +99,6 @@ public class TeamDialogController {
       this.lastTeam = null;
     }
 
-    teamDescriptionField.setOnKeyPressed(event -> {
-      if (event.getCode() == KeyCode.ENTER) {
-        btnConfirm.fire();
-      }
-    });
     btnConfirm.setDefaultButton(true);
 
     // Handle TextField text changes.
@@ -103,8 +109,31 @@ public class TeamDialogController {
         teamLabelField.setStyle("-fx-text-inner-color: black;");
       }
     });
+
+    teamLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if(createOrEdit == createOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+
+    teamDescriptionField.textProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if(createOrEdit == createOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
   }
 
+  private void checkButtonDisabled() {
+    if (teamLabelField.getText().equals(team.getLabel()) &&
+       teamDescriptionField.getText().equals(team.getTeamDescription()) &&
+      teamMembersList.getItems().toString().equals(originalMembers.toString())){
+      btnConfirm.setDisable(true);
+    } else {
+      btnConfirm.setDisable(false);
+    }
+  }
   /**
    * Populates the people selection lists for assigning people to the team.
    *
@@ -128,7 +157,9 @@ public class TeamDialogController {
         for (Person person : team.getTeamMembers()) {
           Role role = team.getMembersRole().get(person);
           selectedMembers.add(new PersonRole(person, role));
+          originalMembers.add(new PersonRole(person, role));
         }
+        originalMembers = originalMembers.sorted(Comparator.<PersonRole>naturalOrder());
       }
       this.availableMembersList.setItems(availableMembers.sorted(Comparator.<Person>naturalOrder()));
       this.teamMembersList.setItems(selectedMembers.sorted(Comparator.<PersonRole>naturalOrder()));
@@ -189,6 +220,7 @@ public class TeamDialogController {
                     Comparator.<PersonRole>naturalOrder()));
                 teamMembersList.getSelectionModel().clearSelection();
                 teamMembersList.getSelectionModel().select(selected);
+                checkButtonDisabled();
               }
             }
           });
@@ -217,6 +249,7 @@ public class TeamDialogController {
         this.availableMembersList.getSelectionModel().clearSelection();
 
         this.teamMembersList.getSelectionModel().select(personRole);
+        checkButtonDisabled();
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -238,6 +271,7 @@ public class TeamDialogController {
         this.availableMembers.add(selectedPerson);
         this.selectedMembers.remove(selectedPersonRole);
         this.membersToRemove.add(selectedPerson);
+        checkButtonDisabled();
       }
     } catch (Exception e) {
       e.printStackTrace();

@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
@@ -29,6 +30,7 @@ public class StoryDialogController {
   @FXML private TextArea storyDescriptionField;
   @FXML private ComboBox<Person> storyCreatorList;
   @FXML private Button btnCreateStory;
+  @FXML private HBox btnContainer;
 
   private Main mainApp;
   private Stage thisStage;
@@ -49,6 +51,14 @@ public class StoryDialogController {
   public void setupController(Main mainApp, Stage thisStage, CreateOrEdit createOrEdit, Story story) {
     this.mainApp = mainApp;
     this.thisStage = thisStage;
+
+    String os = System.getProperty("os.name");
+
+    if (!os.startsWith("Windows")) {
+      Button confirmBtn = (Button) btnContainer.getChildren().get(1);
+      btnContainer.getChildren().remove(1);
+      btnContainer.getChildren().add(confirmBtn);
+    }
 
     if (createOrEdit == CreateOrEdit.CREATE) {
       thisStage.setTitle("Create New Story");
@@ -78,9 +88,6 @@ public class StoryDialogController {
 
     btnCreateStory.setDefaultButton(true);
 
-
-
-
     storyLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
       if(createOrEdit == createOrEdit.EDIT) {
@@ -108,8 +115,6 @@ public class StoryDialogController {
       }
 
     });
-
-
   }
 
   /**

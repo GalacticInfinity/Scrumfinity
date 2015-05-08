@@ -1,16 +1,15 @@
 package seng302.group5.controller;
 
 import java.util.Comparator;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
@@ -30,8 +29,10 @@ public class PersonDialogController {
   @FXML private TextField personFirstNameField;
   @FXML private TextField personLastNameField;
   @FXML private Button btnCreatePerson;
+  @FXML private Button btnCancel;
   @FXML private ListView<Skill> skillsList;
   @FXML private ListView<Skill> personSkillList;
+  @FXML private HBox btnContainer;
 
   private Main mainApp;
   private Stage thisStage;
@@ -57,6 +58,14 @@ public class PersonDialogController {
                               Person person) {
     this.mainApp = mainApp;
     this.thisStage = thisStage;
+
+    String os = System.getProperty("os.name");
+
+    if (!os.startsWith("Windows")) {
+      Button confirmBtn = (Button) btnContainer.getChildren().get(1);
+      btnContainer.getChildren().remove(1);
+      btnContainer.getChildren().add(confirmBtn);
+    }
 
     if (createOrEdit == CreateOrEdit.CREATE) {
       thisStage.setTitle("Create New Person");
