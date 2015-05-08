@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
  * for allocation.
  * Created by Michael on 4/13/2015.
  */
-public class AgileHistory {
+public class AgileHistory implements Comparable<AgileHistory> {
 
   AgileItem agileItem;
   LocalDate startDate;
@@ -73,5 +73,19 @@ public class AgileHistory {
       theString += " - no end date";
     }
     return theString;
+  }
+
+  @Override
+  public int compareTo(AgileHistory o) {
+    int result = agileItem.getLabel().compareToIgnoreCase(o.getAgileItem().getLabel());
+    if (result == 0) {
+      if (startDate.isBefore(o.getStartDate())) {
+        return -1;
+      } else {
+        return 1;
+      }
+    } else {
+      return result;
+    }
   }
 }

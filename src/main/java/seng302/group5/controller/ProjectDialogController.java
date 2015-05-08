@@ -1,12 +1,12 @@
 package seng302.group5.controller;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -24,7 +24,6 @@ import seng302.group5.model.Project;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoObject;
-import seng302.group5.model.util.Settings;
 
 /**
  * The controller for the project dialog when creating a new project or editing an existing one
@@ -116,26 +115,24 @@ public class ProjectDialogController {
 
     projectLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
-      if(createOrEdit == createOrEdit.EDIT) {
+      if(createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
       }
     });
 
     projectNameField.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
-      if(createOrEdit == createOrEdit.EDIT) {
+      if(createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
       }
     });
 
     projectDescriptionField.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
-      if(createOrEdit == createOrEdit.EDIT) {
+      if(createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
       }
     });
-
-
   }
 
   private void checkButtonDisabled() {
@@ -167,7 +164,8 @@ public class ProjectDialogController {
       }
 
       this.availableTeamsList.setItems(availableTeams);
-      this.allocatedTeamsList.setItems(allocatedTeams);
+      this.allocatedTeamsList.setItems(
+          allocatedTeams.sorted(Comparator.<AgileHistory>naturalOrder()));
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -220,7 +218,7 @@ public class ProjectDialogController {
     }
   }
   private Boolean parseLabelChange(Project project) {
-    if (projectLabelField.equals(project.getLabel())) {
+    if (projectLabelField.getText().equals(project.getLabel())) {
       return false;
     } else {
       return true;
@@ -228,7 +226,7 @@ public class ProjectDialogController {
   }
 
   private Boolean parseNameChange(Project project) {
-    if (projectNameField.equals(project.getProjectName())) {
+    if (projectNameField.getText().equals(project.getProjectName())) {
       return false;
     } else {
       return true;
