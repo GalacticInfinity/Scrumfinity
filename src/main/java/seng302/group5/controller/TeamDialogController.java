@@ -1,7 +1,10 @@
 package seng302.group5.controller;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -41,9 +44,11 @@ public class TeamDialogController {
   private ObservableList<PersonRole> selectedMembers = FXCollections.observableArrayList();
   private ArrayList<Person> membersToRemove = new ArrayList<>();
 
+  Role noRole;
+
   @FXML private TextField teamLabelField;
   @FXML private ListView<PersonRole> teamMembersList;
-  @FXML private ComboBox<Person> teamMemberAddCombo;
+  @FXML private ListView<Person> availableMembersList;
   @FXML private ComboBox<Role> teamMemberRoleCombo;
   @FXML private TextArea teamDescriptionField;
   @FXML private Button btnConfirm;
@@ -125,12 +130,68 @@ public class TeamDialogController {
           selectedMembers.add(new PersonRole(person, role));
         }
       }
-
-      this.teamMemberAddCombo.setVisibleRowCount(5);
-      this.teamMemberAddCombo.setItems(availableMembers);
-      this.teamMembersList.setItems(selectedMembers);
-
-      this.teamMemberRoleCombo.setItems(mainApp.getRoles());
+      this.availableMembersList.setItems(availableMembers.sorted(Comparator.<Person>naturalOrder()));
+      this.teamMembersList.setItems(selectedMembers.sorted(Comparator.<PersonRole>naturalOrder()));
+      noRole = new Role("null", "No Role");
+      ObservableList<Role> tempRoles = FXCollections.observableArrayList(mainApp.getRoles());
+      tempRoles.add(0, noRole);
+      this.teamMemberRoleCombo.setItems(tempRoles);
+      this.teamMemberRoleCombo.getSelectionModel().selectedItemProperty().addListener(
+          new ChangeListener<Role>() {
+            @Override
+            public void changed(ObservableValue<? extends Role> observable, Role oldRole,
+                                Role selectedRole) {
+              // Handle clearSelection()
+              if (selectedRole == null) {
+                return;
+              }
+              PersonRole selected = teamMembersList.getSelectionModel().getSelectedItem();
+              if (selected == null) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("No team member selected");
+                alert.setHeaderText(null);
+                alert.setContentText("Please select a team member to change the role of.");
+                alert.showAndWait();
+              } else {
+                // Get the number of times the selected role is already used
+                int roleTally = 0;
+                for (PersonRole personRole : selectedMembers) {
+                  if (personRole.getRole() == selectedRole) {
+                    roleTally++;
+                  }
+                }
+                Person selectedPerson = selected.getPerson();
+                if (selectedRole.getRequiredSkill() != null &&
+                    !selectedPerson.getSkillSet().contains(selectedRole.getRequiredSkill())) {
+                  Alert alert = new Alert(Alert.AlertType.ERROR);
+                  alert.setTitle("Required skill not found");
+                  alert.setHeaderText(null);
+                  alert.setContentText(String.format("%s does not have the required skill of %s",
+                                                     selectedPerson,
+                                                     selectedRole.getRequiredSkill()));
+                  alert.showAndWait();
+                } else if (roleTally >= selectedRole.getMemberLimit()) {
+                  Alert alert = new Alert(Alert.AlertType.ERROR);
+                  alert.setTitle("Role taken");
+                  alert.setHeaderText(null);
+                  alert.setContentText(
+                      String.format("Max number of %s already assigned", selectedRole));
+                  alert.showAndWait();
+                } else {
+                  if (selectedRole == noRole) {
+                    selected.setRole(null);
+                  } else {
+                    selected.setRole(selectedRole);
+                  }
+                }
+                teamMembersList.setItems(null);
+                teamMembersList.setItems(selectedMembers.sorted(
+                    Comparator.<PersonRole>naturalOrder()));
+                teamMembersList.getSelectionModel().clearSelection();
+                teamMembersList.getSelectionModel().select(selected);
+              }
+            }
+          });
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -144,43 +205,18 @@ public class TeamDialogController {
   @FXML
   protected void btnAddMemberClick(ActionEvent event) {
     try {
-      Person selectedPerson = teamMemberAddCombo.getSelectionModel().getSelectedItem();
-      Role selectedRole = teamMemberRoleCombo.getSelectionModel().getSelectedItem();
-
-      // Get the number of times the selected role is already used
-      int roleTally = 0;
-      for (PersonRole personRole : selectedMembers) {
-        if (personRole.getRole() == selectedRole) {
-          roleTally++;
-        }
-      }
-
+      Person selectedPerson = availableMembersList.getSelectionModel().getSelectedItem();
       if (selectedPerson != null) {
-        if (selectedRole != null && selectedRole.getRequiredSkill() != null &&
-            !selectedPerson.getSkillSet().contains(selectedRole.getRequiredSkill())) {
-          Alert alert = new Alert(Alert.AlertType.ERROR);
-          alert.setTitle("Required skill not found");
-          alert.setHeaderText(null);
-          alert.setContentText(String.format("%s does not have the required skill of %s",
-                                             selectedPerson, selectedRole.getRequiredSkill()));
-          alert.showAndWait();
-        } else if (selectedRole != null && roleTally >= selectedRole.getMemberLimit()) {
-          Alert alert = new Alert(Alert.AlertType.ERROR);
-          alert.setTitle("Role taken");
-          alert.setHeaderText(null);
-          alert.setContentText(String.format("Max number of %s already assigned", selectedRole));
-          alert.showAndWait();
-        } else {
-          this.selectedMembers.add(new PersonRole(selectedPerson, selectedRole));
-          this.availableMembers.remove(selectedPerson);
-          this.membersToRemove.remove(selectedPerson);
-          this.teamMemberAddCombo.setItems(availableMembers);
+        PersonRole personRole = new PersonRole(selectedPerson, null);
+        this.selectedMembers.add(personRole);
+        this.availableMembers.remove(selectedPerson);
+        this.membersToRemove.remove(selectedPerson);
 
-          this.teamMemberRoleCombo.getSelectionModel().clearSelection();
-          this.teamMemberRoleCombo.setValue(null);
-          this.teamMemberAddCombo.getSelectionModel().clearSelection();
-          this.teamMemberAddCombo.setValue(null);
-        }
+        this.teamMemberRoleCombo.getSelectionModel().clearSelection();
+        this.teamMemberRoleCombo.setValue(null);
+        this.availableMembersList.getSelectionModel().clearSelection();
+
+        this.teamMembersList.getSelectionModel().select(personRole);
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -337,7 +373,7 @@ public class TeamDialogController {
   /**
    * Inner class for storing/displaying allocated team members with their respective roles
    */
-  private class PersonRole {
+  private class PersonRole implements Comparable<PersonRole> {
 
     private Person person;
     private Role role;
@@ -365,6 +401,15 @@ public class TeamDialogController {
       return role;
     }
 
+    /**
+     * Set the role object to this object
+     *
+     * @param role Role object
+     */
+    public void setRole(Role role) {
+      this.role = role;
+    }
+
     @Override
     public String toString() {
       if (role != null) {
@@ -374,5 +419,9 @@ public class TeamDialogController {
       }
     }
 
+    @Override
+    public int compareTo(PersonRole o) {
+      return person.getLabel().compareToIgnoreCase(o.getPerson().getLabel());
+    }
   }
 }
