@@ -42,9 +42,10 @@ public class TeamDialogController {
 
   private ObservableList<Person> availableMembers = FXCollections.observableArrayList();
   private ObservableList<PersonRole> selectedMembers = FXCollections.observableArrayList();
+  private ObservableList<PersonRole> originalMembers = FXCollections.observableArrayList();
   private ArrayList<Person> membersToRemove = new ArrayList<>();
 
-  Role noRole;
+  private Role noRole;
 
   @FXML private TextField teamLabelField;
   @FXML private ListView<PersonRole> teamMembersList;
@@ -72,7 +73,7 @@ public class TeamDialogController {
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       thisStage.setTitle("Edit Team");
       btnConfirm.setText("Save");
-
+      btnConfirm.setDisable(true);
       teamLabelField.setText(team.getLabel());
       initialiseLists(CreateOrEdit.EDIT, team);
       teamDescriptionField.setText(team.getTeamDescription());
@@ -117,18 +118,12 @@ public class TeamDialogController {
         checkButtonDisabled();
       }
     });
-
-
-    System.out.println(teamMembersList.getItems());
-
-
   }
 
   private void checkButtonDisabled() {
     if (teamLabelField.getText().equals(team.getLabel()) &&
-       teamDescriptionField.equals(team.getTeamDescription()) &&
-        teamMembersList.getItems().equals(team.getTeamMembers())) {
-
+       teamDescriptionField.getText().equals(team.getTeamDescription()) &&
+      teamMembersList.getItems().toString().equals(originalMembers.toString())){
       btnConfirm.setDisable(true);
     } else {
       btnConfirm.setDisable(false);
@@ -157,7 +152,9 @@ public class TeamDialogController {
         for (Person person : team.getTeamMembers()) {
           Role role = team.getMembersRole().get(person);
           selectedMembers.add(new PersonRole(person, role));
+          originalMembers.add(new PersonRole(person, role));
         }
+        originalMembers = originalMembers.sorted(Comparator.<PersonRole>naturalOrder());
       }
       this.availableMembersList.setItems(availableMembers.sorted(Comparator.<Person>naturalOrder()));
       this.teamMembersList.setItems(selectedMembers.sorted(Comparator.<PersonRole>naturalOrder()));
@@ -218,6 +215,7 @@ public class TeamDialogController {
                     Comparator.<PersonRole>naturalOrder()));
                 teamMembersList.getSelectionModel().clearSelection();
                 teamMembersList.getSelectionModel().select(selected);
+                checkButtonDisabled();
               }
             }
           });
@@ -246,6 +244,7 @@ public class TeamDialogController {
         this.availableMembersList.getSelectionModel().clearSelection();
 
         this.teamMembersList.getSelectionModel().select(personRole);
+        checkButtonDisabled();
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -267,6 +266,7 @@ public class TeamDialogController {
         this.availableMembers.add(selectedPerson);
         this.selectedMembers.remove(selectedPersonRole);
         this.membersToRemove.add(selectedPerson);
+        checkButtonDisabled();
       }
     } catch (Exception e) {
       e.printStackTrace();
