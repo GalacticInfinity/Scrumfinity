@@ -70,7 +70,7 @@ public class PersonDialogController {
       personLabelField.setText(person.getLabel());
       personFirstNameField.setText(person.getFirstName());
       personLastNameField.setText(person.getLastName());
-      selectedSkills = person.getSkillSet();
+      selectedSkills = FXCollections.observableArrayList(person.getSkillSet());
       personSkillList.setItems(selectedSkills);
       initialiseLists();
       btnCreatePerson.setDisable(true);
@@ -114,20 +114,27 @@ public class PersonDialogController {
       }
     });
 
-    personSkillList.itemsProperty().addListener((observable, oldValue, newValue) -> {
+    skillsList.getSelectionModel().selectedItemProperty().addListener(
+        (observable, oldValue, newValue) -> {
+          //For disabling the button
+          if (createOrEdit == createOrEdit.EDIT) {
+            checkButtonDisabled();
+          }
+        });
+
+    personSkillList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
       if(createOrEdit == createOrEdit.EDIT) {
         checkButtonDisabled();
       }
     });
-
   }
 
   private void checkButtonDisabled() {
     if (personLabelField.getText().equals(person.getLabel()) &&
         personFirstNameField.getText().equals(person.getFirstName()) &&
         personLastNameField.getText().equals(person.getLastName()) &&
-        selectedSkills.equals(person.getSkillSet())) {
+        personSkillList.getItems().equals(person.getSkillSet())) {
       btnCreatePerson.setDisable(true);
     } else {
       btnCreatePerson.setDisable(false);
@@ -170,7 +177,8 @@ public class PersonDialogController {
     String personLabel = "";
     String personFirstName = personFirstNameField.getText().trim();
     String personLastName = personLastNameField.getText().trim();
-    ObservableList<Skill> personSkillSet = personSkillList.getItems();
+    ObservableList<Skill> personSkillSet =
+        FXCollections.observableArrayList(personSkillList.getItems());
 
     try {
       personLabel = parsePersonLabel(personLabelField.getText());
