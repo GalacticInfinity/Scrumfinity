@@ -56,37 +56,37 @@ public class RevertHandler {
   public void revert() {
     mainApp.getProjects().clear();
     for (Project project : projectsLastSaved){
-      mainApp.getProjects().add(new Project(project));
+      mainApp.addProject(new Project(project));
     }
 
     mainApp.getTeams().clear();
     for (Team team : teamsLastSaved) {
-      mainApp.getTeams().add(new Team(team));
+      mainApp.addTeam(new Team(team));
     }
 
     mainApp.getPeople().clear();
     for (Person person : peopleLastSaved) {
-      mainApp.getPeople().add(new Person(person));
+      mainApp.addPerson(new Person(person));
     }
 
     mainApp.getSkills().clear();
     for (Skill skill : skillsLastSaved) {
-      mainApp.getSkills().add(new Skill(skill));
+      mainApp.addSkill(new Skill(skill));
     }
 
     mainApp.getReleases().clear();
     for (Release release: releasesLastSaved) {
-      mainApp.getReleases().add(new Release(release));
+      mainApp.addRelease(new Release(release));
     }
 
     mainApp.getRoles().clear();
     for (Role role : rolesLastSaved) {
-      mainApp.getRoles().add(new Role(role));
+      mainApp.addRole(new Role(role));
     }
 
     mainApp.getStories().clear();
     for (Story story : storiesLastSaved) {
-      mainApp.getStories().add(new Story(story));
+      mainApp.addStory(new Story(story));
     }
 
     // Ensure data in main refer to each other
