@@ -33,7 +33,7 @@ import seng302.group5.model.undoredo.UndoRedoObject;
  */
 public class TeamDialogController {
 
-  private Main mainApp;
+  private Main mainApp;  //Testing if Jenkins is working.
   private Stage thisStage;
 
   private Team team;
