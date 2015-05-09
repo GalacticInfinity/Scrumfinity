@@ -225,7 +225,7 @@ public class ListMainPaneController {
         }
         displayTextArea.appendText("\nSkills: ");
         StringBuilder listOfSkills = new StringBuilder();
-        for (Skill skill : person.getSkillSet()) {
+        for (Skill skill : person.getSkillSet().sorted(Comparator.<Skill>naturalOrder())) {
           listOfSkills.append(skill.getLabel());
           listOfSkills.append(", ");
         }
@@ -245,7 +245,8 @@ public class ListMainPaneController {
         displayTextArea.appendText("\nProject Description: \n");
         displayTextArea.appendText(project.getProjectDescription());
         displayTextArea.appendText("\nAssigned Teams: \n");
-        for (AgileHistory team : project.getAllocatedTeams()) {
+        for (AgileHistory team : project.getAllocatedTeams().sorted(
+            Comparator.<AgileHistory>naturalOrder())) {
           displayTextArea.appendText("" + team.toString() + "\n");
         }
         break;
@@ -266,7 +267,7 @@ public class ListMainPaneController {
         displayTextArea.appendText("\nTeam Description: ");
         displayTextArea.appendText(team.getTeamDescription());
         displayTextArea.appendText("\nTeam Members: \n");
-        for (Person member : team.getTeamMembers()) {
+        for (Person member : team.getTeamMembers().sorted(Comparator.<Person>naturalOrder())) {
           displayTextArea.appendText(member.getFirstName());
           displayTextArea.appendText(" - ");
           displayTextArea.appendText(member.getLabel());

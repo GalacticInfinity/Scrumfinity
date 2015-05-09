@@ -99,7 +99,7 @@ public class PersonDialogController {
     // Handle TextField text changes.
     personLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
-      if(createOrEdit == createOrEdit.EDIT) {
+      if(createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
       }
       if (newValue.trim().length() > 20) {
@@ -111,14 +111,14 @@ public class PersonDialogController {
 
     personFirstNameField.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
-      if(createOrEdit == createOrEdit.EDIT) {
+      if(createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
       }
     });
 
     personLastNameField.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
-      if(createOrEdit == createOrEdit.EDIT) {
+      if(createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
       }
     });
@@ -126,14 +126,14 @@ public class PersonDialogController {
     skillsList.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldValue, newValue) -> {
           //For disabling the button
-          if (createOrEdit == createOrEdit.EDIT) {
+          if (createOrEdit == CreateOrEdit.EDIT) {
             checkButtonDisabled();
           }
         });
 
     personSkillList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
-      if(createOrEdit == createOrEdit.EDIT) {
+      if(createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
       }
     });

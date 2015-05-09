@@ -24,7 +24,7 @@
                </font>
             </Label>
             <TextField fx:id="organizationName" maxHeight="30.0" maxWidth="300.0" minHeight="30.0" minWidth="300.0" />
-            <Button maxHeight="30.0" maxWidth="80.0" minHeight="30.0" minWidth="80.0" mnemonicParsing="false" onAction="#btnNewLogin" text="Get Started">
+            <Button maxHeight="30.0" maxWidth="80.0" minHeight="30.0" minWidth="80.0" mnemonicParsing="false" onAction="#btnNewLogin" text="Get Started" defaultButton="true">
                <VBox.margin>
                   <Insets top="5.0" />
                </VBox.margin>
