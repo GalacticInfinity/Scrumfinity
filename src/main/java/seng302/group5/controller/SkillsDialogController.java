@@ -78,6 +78,7 @@ public class SkillsDialogController {
     }
 
     skillCreation.setDefaultButton(true);
+    thisStage.setResizable(false);
 
     // Handle TextField text changes.
     skillLabel.textProperty().addListener((observable, oldValue, newValue) -> {

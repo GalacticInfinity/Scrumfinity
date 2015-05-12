@@ -99,6 +99,7 @@ public class TeamDialogController {
     }
 
     btnConfirm.setDefaultButton(true);
+    thisStage.setResizable(false);
 
     // Handle TextField text changes.
     teamLabelField.textProperty().addListener((observable, oldValue, newValue) -> {

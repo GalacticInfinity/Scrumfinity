@@ -94,6 +94,7 @@ public class PersonDialogController {
     }
 
     btnCreatePerson.setDefaultButton(true);
+    thisStage.setResizable(false);
 
     // Handle TextField text changes.
     personLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
