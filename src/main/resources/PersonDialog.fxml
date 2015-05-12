@@ -23,7 +23,7 @@
         </HBox>
         <HBox alignment="CENTER_LEFT" prefHeight="38.0" prefWidth="369.0" spacing="10.0">
             <children>
-                <Label prefHeight="25.0" prefWidth="125.0" text="Person First Name:">
+                <Label prefHeight="25.0" prefWidth="125.0" text="First Name:">
                     <font>
                         <Font size="15.0" />
                     </font>
@@ -33,7 +33,7 @@
         </HBox>
         <HBox prefHeight="30.0" prefWidth="429.0" spacing="10.0">
             <children>
-                <Label prefHeight="25.0" prefWidth="125.0" text="Person Last Name:">
+                <Label prefHeight="25.0" prefWidth="125.0" text="Last Name:">
                     <font>
                         <Font size="15.0" />
                     </font>
@@ -107,16 +107,16 @@
       </HBox>
         <HBox fx:id="btnContainer" alignment="BOTTOM_RIGHT" prefHeight="39.0" prefWidth="434.0" spacing="10.0">
             <children>
-            <Label prefHeight="25.0" prefWidth="245.0" text="* Fields cannot be empty.">
+            <Label prefHeight="25.0" prefWidth="260.0" text="* Fields cannot be empty.">
                <font>
                   <Font name="System Italic" size="13.0" />
                </font>
             </Label>
-                <Button fx:id="btnCreatePerson" mnemonicParsing="false" onAction="#btnCreatePersonClick" prefWidth="60.0" text="Save">
+                <Button fx:id="btnCreatePerson" mnemonicParsing="false" onAction="#btnCreatePersonClick" text="Save">
                <HBox.margin>
                   <Insets />
                </HBox.margin></Button>
-                <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#btnCancelClick" prefWidth="60.0" text="Cancel" />
+                <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#btnCancelClick" text="Cancel" />
             </children>
             <opaqueInsets>
                 <Insets />
