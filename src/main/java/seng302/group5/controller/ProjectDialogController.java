@@ -71,15 +71,13 @@ public class ProjectDialogController {
     String os = System.getProperty("os.name");
 
     if (!os.startsWith("Windows")) {
-      Button confirmBtn = (Button) btnContainer.getChildren().get(1);
-      btnContainer.getChildren().remove(1);
-      btnContainer.getChildren().add(confirmBtn);
+      btnContainer.getChildren().remove(btnConfirm);
+      btnContainer.getChildren().add(btnConfirm);
     }
 
     if (createOrEdit == CreateOrEdit.CREATE) {
       thisStage.setTitle("Create New Project");
       btnConfirm.setText("Create");
-      btnConfirm.setDisable(true);
       Project p = new Project();
       p.setLabel("");
       p.setProjectName("");
