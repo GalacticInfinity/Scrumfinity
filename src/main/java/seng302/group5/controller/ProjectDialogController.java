@@ -78,7 +78,6 @@ public class ProjectDialogController {
     if (createOrEdit == CreateOrEdit.CREATE) {
       thisStage.setTitle("Create New Project");
       btnConfirm.setText("Create");
-      btnConfirm.setDisable(true);
       Project p = new Project();
       p.setLabel("");
       p.setProjectName("");
