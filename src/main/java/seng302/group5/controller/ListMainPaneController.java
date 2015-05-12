@@ -14,6 +14,11 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import seng302.group5.Main;
 import seng302.group5.model.AgileHistory;
 import seng302.group5.model.AgileItem;
@@ -34,7 +39,7 @@ import seng302.group5.model.Skill;
 public class ListMainPaneController {
 
   @FXML private ListView listView;
-  @FXML private TextArea displayTextArea;
+  @FXML private TextFlow displayTextFlow;
   @FXML private SplitPane splitPane;
   @FXML private AnchorPane listViewPane;
   @FXML private Label listViewLabel;
@@ -103,7 +108,7 @@ public class ListMainPaneController {
     listView.setItems(null);
     checkListType();
     listView.getSelectionModel().clearSelection();
-    displayTextArea.clear();
+    displayTextFlow.getChildren().clear();
     selectedItem = null;
   }
 
@@ -205,109 +210,114 @@ public class ListMainPaneController {
    * @param next Next selected item
    */
   public void displayInfo(AgileItem next) {
-    displayTextArea.clear();
-
     switch (Settings.currentListType) {
       case "People":
         Person person = (Person) next;
 
-        displayTextArea.appendText("Person Information \nPerson Label: ");
-        displayTextArea.appendText(person.getLabel());
-        displayTextArea.appendText("\nFirst Name: ");
-        displayTextArea.appendText(person.getFirstName());
-        displayTextArea.appendText("\nLast Name: ");
-        displayTextArea.appendText(person.getLastName());
-        displayTextArea.appendText("\nTeam: ");
-        if (person.isInTeam()) {
-          displayTextArea.appendText(person.getTeamLabel());
-        } else {
-          displayTextArea.appendText("Not assigned.");
-        }
-        displayTextArea.appendText("\nSkills: ");
-        StringBuilder listOfSkills = new StringBuilder();
-        for (Skill skill : person.getSkillSet().sorted(Comparator.<Skill>naturalOrder())) {
-          listOfSkills.append(skill.getLabel());
-          listOfSkills.append(", ");
-        }
-        if (listOfSkills.length() == 0) {
-          displayTextArea.appendText("No known skills. Please add skills to this person.");
-        } else {
-          displayTextArea.appendText(listOfSkills.substring(0, listOfSkills.length() - 2));
-        }
-        break;
-      case "Projects":
-        Project project = (Project) next;
+        Text text2 = new Text("Person Information\n");
+        text2.setFill(Color.rgb(1, 0, 1));
+        text2.setFont(Font.font("Helvetica", FontPosture.ITALIC, 20));
+        displayTextFlow = new TextFlow(text2);
+        displayTextFlow.getChildren().add(text2);
 
-        displayTextArea.appendText("Project Information \nProject Label: ");
-        displayTextArea.appendText(project.getLabel());
-        displayTextArea.appendText("\nProject Name: ");
-        displayTextArea.appendText(project.getProjectName());
-        displayTextArea.appendText("\nProject Description: \n");
-        displayTextArea.appendText(project.getProjectDescription());
-        displayTextArea.appendText("\nAssigned Teams: \n");
-        for (AgileHistory team : project.getAllocatedTeams().sorted(
-            Comparator.<AgileHistory>naturalOrder())) {
-          displayTextArea.appendText("" + team.toString() + "\n");
-        }
-        break;
-      case "Skills":
-        Skill skill = (Skill) next;
 
-        displayTextArea.appendText("Skill Information \nSkill Label: ");
-        displayTextArea.appendText(skill.getLabel());
-        displayTextArea.appendText("\nSkill Description: ");
-        displayTextArea.appendText(skill.getSkillDescription());
-
-        break;
-      case "Teams":
-        Team team = (Team) next; //Casts next as Team object
-
-        displayTextArea.appendText("Team Information \nTeam Label: ");
-        displayTextArea.appendText(team.getLabel());
-        displayTextArea.appendText("\nTeam Description: ");
-        displayTextArea.appendText(team.getTeamDescription());
-        displayTextArea.appendText("\nTeam Members: \n");
-        for (Person member : team.getTeamMembers().sorted(Comparator.<Person>naturalOrder())) {
-          displayTextArea.appendText(member.getFirstName());
-          displayTextArea.appendText(" - ");
-          displayTextArea.appendText(member.getLabel());
-          displayTextArea.appendText(" Role: ");
-          Role role = team.getMembersRole().get(member);
-          if (role != null) {
-            displayTextArea.appendText(role.toString());
-          } else {
-            displayTextArea.appendText("Not assigned to a role yet.");
-          }
-          displayTextArea.appendText("\n");
-        }
-        break;
-      case "Releases":
-        Release release = (Release) next;
-
-        displayTextArea.appendText("Release Information \nRelease Label: ");
-        displayTextArea.appendText(release.getLabel());
-        displayTextArea.appendText("\nRelease Description: ");
-        displayTextArea.appendText(release.getReleaseDescription());
-        displayTextArea.appendText("\nRelease Date: ");
-        displayTextArea.appendText(release.getReleaseDate().format(
-            DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        displayTextArea.appendText("\nRelease Notes: ");
-        displayTextArea.appendText(release.getReleaseNotes());
-        displayTextArea.appendText("\nProject: ");
-        displayTextArea.appendText(release.getProjectRelease().toString());
-        break;
-      case "Stories":
-        Story story = (Story) next; //Casts next as Story object.
-
-        displayTextArea.appendText("Story Information \nStory Label: ");
-        displayTextArea.appendText(story.getLabel());
-        displayTextArea.appendText("\nStory Long Name: ");
-        displayTextArea.appendText(story.getStoryName());
-        displayTextArea.appendText("\nStory Description: ");
-        displayTextArea.appendText(story.getDescription());
-        displayTextArea.appendText("\nCreator: ");
-        displayTextArea.appendText(story.getCreator().toString());
-        break;
+//        displayTextArea.appendText("Person Information \nPerson Label: ");
+//        displayTextArea.appendText(person.getLabel());
+//        displayTextArea.appendText("\nFirst Name: ");
+//        displayTextArea.appendText(person.getFirstName());
+//        displayTextArea.appendText("\nLast Name: ");
+//        displayTextArea.appendText(person.getLastName());
+//        displayTextArea.appendText("\nTeam: ");
+//        if (person.isInTeam()) {
+//          displayTextArea.appendText(person.getTeamLabel());
+//        } else {
+//          displayTextArea.appendText("Not assigned.");
+//        }
+//        displayTextArea.appendText("\nSkills: ");
+//        StringBuilder listOfSkills = new StringBuilder();
+//        for (Skill skill : person.getSkillSet().sorted(Comparator.<Skill>naturalOrder())) {
+//          listOfSkills.append(skill.getLabel());
+//          listOfSkills.append(", ");
+//        }
+//        if (listOfSkills.length() == 0) {
+//          displayTextArea.appendText("No known skills. Please add skills to this person.");
+//        } else {
+//          displayTextArea.appendText(listOfSkills.substring(0, listOfSkills.length() - 2));
+//        }
+//        break;
+//      case "Projects":
+//        Project project = (Project) next;
+//
+//        displayTextArea.appendText("Project Information \nProject Label: ");
+//        displayTextArea.appendText(project.getLabel());
+//        displayTextArea.appendText("\nProject Name: ");
+//        displayTextArea.appendText(project.getProjectName());
+//        displayTextArea.appendText("\nProject Description: \n");
+//        displayTextArea.appendText(project.getProjectDescription());
+//        displayTextArea.appendText("\nAssigned Teams: \n");
+//        for (AgileHistory team : project.getAllocatedTeams().sorted(
+//            Comparator.<AgileHistory>naturalOrder())) {
+//          displayTextArea.appendText("" + team.toString() + "\n");
+//        }
+//        break;
+//      case "Skills":
+//        Skill skill = (Skill) next;
+//
+//        displayTextArea.appendText("Skill Information \nSkill Label: ");
+//        displayTextArea.appendText(skill.getLabel());
+//        displayTextArea.appendText("\nSkill Description: ");
+//        displayTextArea.appendText(skill.getSkillDescription());
+//
+//        break;
+//      case "Teams":
+//        Team team = (Team) next; //Casts next as Team object
+//
+//        displayTextArea.appendText("Team Information \nTeam Label: ");
+//        displayTextArea.appendText(team.getLabel());
+//        displayTextArea.appendText("\nTeam Description: ");
+//        displayTextArea.appendText(team.getTeamDescription());
+//        displayTextArea.appendText("\nTeam Members: \n");
+//        for (Person member : team.getTeamMembers().sorted(Comparator.<Person>naturalOrder())) {
+//          displayTextArea.appendText(member.getFirstName());
+//          displayTextArea.appendText(" - ");
+//          displayTextArea.appendText(member.getLabel());
+//          displayTextArea.appendText(" Role: ");
+//          Role role = team.getMembersRole().get(member);
+//          if (role != null) {
+//            displayTextArea.appendText(role.toString());
+//          } else {
+//            displayTextArea.appendText("Not assigned to a role yet.");
+//          }
+//          displayTextArea.appendText("\n");
+//        }
+//        break;
+//      case "Releases":
+//        Release release = (Release) next;
+//
+//        displayTextArea.appendText("Release Information \nRelease Label: ");
+//        displayTextArea.appendText(release.getLabel());
+//        displayTextArea.appendText("\nRelease Description: ");
+//        displayTextArea.appendText(release.getReleaseDescription());
+//        displayTextArea.appendText("\nRelease Date: ");
+//        displayTextArea.appendText(release.getReleaseDate().format(
+//            DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+//        displayTextArea.appendText("\nRelease Notes: ");
+//        displayTextArea.appendText(release.getReleaseNotes());
+//        displayTextArea.appendText("\nProject: ");
+//        displayTextArea.appendText(release.getProjectRelease().toString());
+//        break;
+//      case "Stories":
+//        Story story = (Story) next; //Casts next as Story object.
+//
+//        displayTextArea.appendText("Story Information \nStory Label: ");
+//        displayTextArea.appendText(story.getLabel());
+//        displayTextArea.appendText("\nStory Long Name: ");
+//        displayTextArea.appendText(story.getStoryName());
+//        displayTextArea.appendText("\nStory Description: ");
+//        displayTextArea.appendText(story.getDescription());
+//        displayTextArea.appendText("\nCreator: ");
+//        displayTextArea.appendText(story.getCreator().toString());
+//        break;
     }
   }
 
