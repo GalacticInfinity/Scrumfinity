@@ -23,7 +23,6 @@
                <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" onAction="#btnClickSave" text="Save" />
                <MenuItem mnemonicParsing="false" onAction="#btnClickSaveAs" text="Save As…" />
             <MenuItem mnemonicParsing="false" onAction="#btnClickReport" text="Report" />
-               <!--<MenuItem mnemonicParsing="false" text="Revert" />-->
                <MenuItem mnemonicParsing="false" onAction="#btnRevert" text="Revert" />
                <SeparatorMenuItem mnemonicParsing="false" />
                <MenuItem mnemonicParsing="false" onAction="#btnQuitClick" text="Quit" />

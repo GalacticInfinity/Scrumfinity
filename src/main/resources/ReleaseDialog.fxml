@@ -8,9 +8,9 @@
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="354.0" prefWidth="436.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.ReleaseDialogController">
     <children>
-        <HBox alignment="BOTTOM_LEFT" prefWidth="515.0" spacing="10.0">
+        <HBox alignment="BOTTOM_LEFT" prefWidth="520.0">
             <children>
-                <Label prefHeight="25.0" prefWidth="115.0" text="Release Label:*">
+                <Label prefHeight="25.0" prefWidth="125.0" text="Release Label:*">
                     <font>
                         <Font size="15.0" />
                     </font>
@@ -30,9 +30,9 @@
             <Insets top="7.0" />
          </VBox.margin>
         </HBox>
-        <HBox prefHeight="100.0" prefWidth="434.0" spacing="10.0">
+        <HBox prefHeight="100.0" prefWidth="434.0">
             <children>
-                <Label prefHeight="25.0" prefWidth="115.0" text="Description:*">
+                <Label prefHeight="25.0" prefWidth="125.0" text="Description:*">
                     <font>
                         <Font size="15.0" />
                     </font>
@@ -106,13 +106,13 @@
                 <Insets right="5.0" top="15.0" />
             </VBox.margin>
          <children>
-            <Label prefHeight="25.0" prefWidth="276.0" text="* Fields cannot be empty.">
+            <Label prefHeight="25.0" prefWidth="275.0" text="* Fields cannot be empty.">
                <font>
                   <Font name="System Italic" size="13.0" />
                </font>
             </Label>
-                <Button fx:id="btnConfirm" mnemonicParsing="false" onAction="#btnCreateRelease" prefWidth="60.0" text="Save" />
-                <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#btnCancelClick" prefWidth="60.0" text="Cancel" />
+                <Button fx:id="btnConfirm" mnemonicParsing="false" onAction="#btnCreateRelease" text="Save" />
+                <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#btnCancelClick" text="Cancel" />
          </children>
         </HBox>
     </children>

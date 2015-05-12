@@ -123,11 +123,20 @@ public class NewLoading {
         // Non mandatory fields.
         while ((!(projectLine = loadedFile.readLine()).equals("\t</Project>"))) {
           if (projectLine.startsWith("\t\t<projectDescription>")) {
-            projectData =
-                projectLine
-                    .replaceAll("(?i)(.*<projectDescription.*?>)(.+?)(</projectDescription>)",
-                                "$2");
-            newProject.setProjectDescription(projectData);
+            String descBuilder;
+            if (!projectLine.endsWith("</projectDescription>")) {
+              descBuilder = projectLine
+                                .replaceAll("(?i)(.*<projectDescription.*?>)(.+?)", "$2") + "\n";
+              while ((!(projectLine =loadedFile.readLine()).endsWith("</projectDescription>"))) {
+                descBuilder += projectLine + "\n";
+              }
+              descBuilder += projectLine.replaceAll("(.+?)(</projectDescription>)", "$1");
+            } else {
+              descBuilder =
+                  projectLine
+                      .replaceAll("(?i)(.*<projectDescription.*?>)(.+?)(</projectDescription>)", "$2");
+            }
+            newProject.setProjectDescription(descBuilder);
           }
           // Loads list of AgileHistory items
           if (projectLine.startsWith("\t\t<AllocatedTeams>")) {
@@ -248,10 +257,20 @@ public class NewLoading {
         // Non mandatory data
         while ((!(skillLine = loadedFile.readLine()).equals("\t</Skill>"))) {
           if (skillLine.startsWith("\t\t<skillDescription>")) {
-            skillData =
-                skillLine
-                    .replaceAll("(?i)(.*<skillDescription.*?>)(.+?)(</skillDescription>)", "$2");
-            newSkill.setSkillDescription(skillData);
+            String descBuilder;
+            if (!skillLine.endsWith("</skillDescription>")) {
+               descBuilder = skillLine
+                  .replaceAll("(?i)(.*<skillDescription.*?>)(.+?)", "$2") + "\n";
+              while ((!(skillLine =loadedFile.readLine()).endsWith("</skillDescription>"))) {
+                descBuilder += skillLine + "\n";
+              }
+              descBuilder += skillLine.replaceAll("(.+?)(</skillDescription>)", "$1");
+            } else {
+              descBuilder =
+                  skillLine
+                      .replaceAll("(?i)(.*<skillDescription.*?>)(.+?)(</skillDescription>)", "$2");
+            }
+            newSkill.setSkillDescription(descBuilder);
           }
         }
         main.addSkill(newSkill);
@@ -305,9 +324,20 @@ public class NewLoading {
         // Non mandatory fields
         while (!(teamLine = loadedFile.readLine()).equals("\t</Team>")) {
           if (teamLine.startsWith("\t\t<teamDescription>")) {
-            teamData =
-                teamLine.replaceAll("(?i)(.*<teamDescription.*?>)(.+?)(</teamDescription>)", "$2");
-            newTeam.setTeamDescription(teamData);
+            String descBuilder;
+            if (!teamLine.endsWith("</teamDescription>")) {
+              descBuilder = teamLine
+                                .replaceAll("(?i)(.*<teamDescription.*?>)(.+?)", "$2") + "\n";
+              while ((!(teamLine = loadedFile.readLine()).endsWith("</teamDescription>"))) {
+                descBuilder += teamLine + "\n";
+              }
+              descBuilder += teamLine.replaceAll("(.+?)(</teamDescription>)", "$1");
+            } else {
+              descBuilder =
+                  teamLine
+                      .replaceAll("(?i)(.*<teamDescription.*?>)(.+?)(</teamDescription>)", "$2");
+            }
+            newTeam.setTeamDescription(descBuilder);
           }
           // Going through teams
           if (teamLine.startsWith("\t\t<TeamPeople>")) {
@@ -392,12 +422,34 @@ public class NewLoading {
             releaseLine.replaceAll("(?i)(.*<releaseLabel.*?>)(.+?)(</releaseLabel>)", "$2");
         newRelease.setLabel(releaseData);
         releaseLine = loadedFile.readLine();
-        releaseData = releaseLine.replaceAll(
-            "(?i)(.*<releaseDescription.*?>)(.+?)(</releaseDescription>)", "$2");
-        newRelease.setReleaseDescription(releaseData);
+        String descBuilder;
+        if (!releaseLine.endsWith("</releaseDescription>")) {
+          descBuilder = releaseLine
+                            .replaceAll("(?i)(.*<releaseDescription.*?>)(.+?)", "$2") + "\n";
+          while ((!(releaseLine =loadedFile.readLine()).endsWith("</releaseDescription>"))) {
+            descBuilder += releaseLine + "\n";
+          }
+          descBuilder += releaseLine.replaceAll("(.+?)(</releaseDescription>)", "$1");
+        } else {
+          descBuilder =
+              releaseLine
+                  .replaceAll("(?i)(.*<releaseDescription.*?>)(.+?)(</releaseDescription>)", "$2");
+        }
+        newRelease.setReleaseDescription(descBuilder);
         releaseLine = loadedFile.readLine();
-        releaseData = releaseLine.replaceAll("(?i)(.*<releaseNotes>)(.+?)(</releaseNotes>)", "$2");
-        newRelease.setReleaseNotes(releaseData);
+        if (!releaseLine.endsWith("</releaseNotes>")) {
+          descBuilder = releaseLine
+                            .replaceAll("(?i)(.*<releaseNotes.*?>)(.+?)", "$2") + "\n";
+          while ((!(releaseLine =loadedFile.readLine()).endsWith("</releaseNotes>"))) {
+            descBuilder += releaseLine + "\n";
+          }
+          descBuilder += releaseLine.replaceAll("(.+?)(</releaseNotes>)", "$1");
+        } else {
+          descBuilder =
+              releaseLine
+                  .replaceAll("(?i)(.*<releaseNotes.*?>)(.+?)(</releaseNotes>)", "$2");
+        }
+        newRelease.setReleaseNotes(descBuilder);
         releaseLine = loadedFile.readLine();
         releaseData = releaseLine.replaceAll("(?i)(.*<releaseProject>)(.+?)(</releaseProject>)",
                                              "$2");
@@ -537,8 +589,20 @@ public class NewLoading {
             newStory.setStoryName(storyData);
           }
           if (storyLine.startsWith("\t\t<description>")) {
-            storyData = storyLine.replaceAll("(?i)(.*<description.*?>)(.+?)(</description>)", "$2");
-            newStory.setDescription(storyData);
+            String descBuilder;
+            if (!storyLine.endsWith("</description>")) {
+              descBuilder = storyLine
+                                .replaceAll("(?i)(.*<description.*?>)(.+?)", "$2") + "\n";
+              while ((!(storyLine =loadedFile.readLine()).endsWith("</description>"))) {
+                descBuilder += storyLine + "\n";
+              }
+              descBuilder += storyLine.replaceAll("(.+?)(</description>)", "$1");
+            } else {
+              descBuilder =
+                  storyLine
+                      .replaceAll("(?i)(.*<description.*?>)(.+?)(</description>)", "$2");
+            }
+            newStory.setDescription(descBuilder);
           }
         }
 

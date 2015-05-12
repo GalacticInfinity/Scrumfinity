@@ -95,8 +95,8 @@ public class Main extends Application {
 
     this.primaryStage = primaryStage;
     this.primaryStage.setTitle(mainTitle);
-    this.primaryStage.setMinHeight(420);
-    this.primaryStage.setMinWidth(640);
+    this.primaryStage.setMinHeight(400);
+    this.primaryStage.setMinWidth(600);
     // Constructs the application
     initRootLayout();
     showMenuBar();
@@ -154,8 +154,8 @@ public class Main extends Application {
     try {
       this.primaryStage = primaryStage;
       this.primaryStage.setTitle(mainTitle);
-      this.primaryStage.setMinHeight(420);
-      this.primaryStage.setMinWidth(640);
+      this.primaryStage.setMinHeight(400);
+      this.primaryStage.setMinWidth(600);
 
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(LoginController.class.getResource("/LoginScreen.fxml"));
