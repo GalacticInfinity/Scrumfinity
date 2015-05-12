@@ -28,7 +28,7 @@
                         <Font size="15.0" />
                     </font>
                 </Label>
-                <TextArea fx:id="skillDescription" prefHeight="229.0" prefWidth="310.0" promptText="Short description of skill." />
+                <TextArea fx:id="skillDescription" prefHeight="229.0" prefWidth="310.0" promptText="Short description of skill." wrapText="true" />
             </children>
         </HBox>
         <HBox fx:id="btnContainer" alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="429.0" spacing="10.0">

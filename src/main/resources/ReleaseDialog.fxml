@@ -37,7 +37,7 @@
                         <Font size="15.0" />
                     </font>
                 </Label>
-                <TextArea fx:id="releaseDescriptionField" prefHeight="100.0" prefWidth="300.0" promptText="Description of release.">
+                <TextArea fx:id="releaseDescriptionField" prefHeight="100.0" prefWidth="300.0" promptText="Description of release." wrapText="true">
                <HBox.margin>
                   <Insets top="2.0" />
                </HBox.margin></TextArea>
@@ -50,7 +50,7 @@
                   <Font size="15.0" />
                </font>
             </Label>
-            <TextArea fx:id="releaseNotesField" prefHeight="100.0" prefWidth="300.0" promptText="Release notes." />
+            <TextArea fx:id="releaseNotesField" prefHeight="100.0" prefWidth="300.0" promptText="Release notes." wrapText="true" />
          </children>
          <VBox.margin>
             <Insets top="7.0" />
