@@ -14,7 +14,7 @@
       </AnchorPane>
       <AnchorPane minHeight="373.0" minWidth="450.0" prefHeight="373.0" prefWidth="450.0">
          <children>
-            <TextArea fx:id="displayTextArea" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="373.0" minWidth="450.0" prefHeight="373.0" prefWidth="450.0" promptText=" " text=" " AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <TextArea fx:id="displayTextArea" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="373.0" minWidth="450.0" prefHeight="373.0" prefWidth="450.0" promptText=" " text=" " wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children>
       </AnchorPane>
    </items>

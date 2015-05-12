@@ -17,6 +17,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -280,7 +281,7 @@ public class Main extends Application {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/TeamDialog.fxml"));
-      VBox teamDialogLayout = loader.load();
+      Pane teamDialogLayout = loader.load();
 
       TeamDialogController controller = loader.getController();
 

@@ -1,7 +1,9 @@
 package seng302.group5.model;
 
 /**
- * Model of a Story.
+ * Story model. So that managers can keep track of the things people need to do, a way to record
+ * work items as user stories. For now, it just have the most basic detail but we’ll add more
+ * in subsequent stories.
  *
  * Created by Zander on 5/05/2015.
  */
@@ -49,8 +51,7 @@ public class Story implements AgileItem, Comparable<Story> {
   }
 
   /**
-   * Gets ID/label of story.
-   *
+   * Gets label of story.
    * @return Label of story.
    */
   public String getLabel() {
@@ -58,7 +59,7 @@ public class Story implements AgileItem, Comparable<Story> {
   }
 
   /**
-   * Sets ID/label of story.
+   * Sets label of story.
    * @param label New label as String type.
    */
   public void setLabel(String label) {
@@ -66,8 +67,7 @@ public class Story implements AgileItem, Comparable<Story> {
   }
 
   /**
-   * Get long name of story.
-   *
+   * Gets long name of story.
    * @return Long name of story.
    */
   public String getStoryName() {
@@ -76,7 +76,6 @@ public class Story implements AgileItem, Comparable<Story> {
 
   /**
    * Sets long name of story.
-   *
    * @param storyName New long name as String type.
    */
   public void setStoryName(String storyName) {
@@ -85,7 +84,6 @@ public class Story implements AgileItem, Comparable<Story> {
 
   /**
    * Gets description of story.
-   *
    * @return Description of story.
    */
   public String getDescription() {
@@ -94,7 +92,6 @@ public class Story implements AgileItem, Comparable<Story> {
 
   /**
    * Sets description of story.
-   *
    * @param description Description of story as String type.
    */
   public void setDescription(String description) {
@@ -103,7 +100,6 @@ public class Story implements AgileItem, Comparable<Story> {
 
   /**
    * Gets Person assigned as creator of story.
-   *
    * @return Person who created story.
    */
   public Person getCreator() {
@@ -112,7 +108,6 @@ public class Story implements AgileItem, Comparable<Story> {
 
   /**
    * Sets Person assigned as creator of story.
-   *
    * @param creator Person as Person type.
    */
   public void setCreator(Person creator) {
@@ -121,7 +116,6 @@ public class Story implements AgileItem, Comparable<Story> {
 
   /**
    * Copies the story input fields into current object.
-   *
    * @param agileItem Story that's fields are to be copied.
    */
   @Override
@@ -137,7 +131,6 @@ public class Story implements AgileItem, Comparable<Story> {
 
   /**
    * Overrides the toString method with story label.
-   *
    * @return Label of story.
    */
   @Override
@@ -147,9 +140,8 @@ public class Story implements AgileItem, Comparable<Story> {
 
   /**
    * Checks if two stories labels are equal.
-   *
    * @param obj Object to compare to.
-   * @return Whether story labels are equal.
+   * @return true if both story labels are equal.
    */
   @Override
   public boolean equals(Object obj) {
@@ -163,7 +155,7 @@ public class Story implements AgileItem, Comparable<Story> {
   }
 
   /**
-   * Compare this story label to story o label
+   * Compare this story label to story o's label
    * @param o story you wish to compare to
    * @return whether it is greater or lesser.
    */
