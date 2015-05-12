@@ -10,12 +10,12 @@
     <children>
         <HBox alignment="BOTTOM_LEFT" prefHeight="35.0" prefWidth="434.0" spacing="10.0">
             <children>
-                <Label prefHeight="25.0" prefWidth="125.0" text="Person Label:*">
+                <Label prefHeight="25.0" prefWidth="115.0" text="Person Label:*">
                     <font>
                         <Font size="15.0" />
                     </font>
                 </Label>
-                <TextField fx:id="personLabelField" alignment="TOP_LEFT" prefWidth="200.0" promptText="Unique person label.">
+                <TextField fx:id="personLabelField" alignment="TOP_LEFT" prefWidth="210.0" promptText="Unique person label.">
                <tooltip>
                   <Tooltip text="Label should be 20 characters or less or application may not behave as expected." />
                </tooltip></TextField>
@@ -23,22 +23,22 @@
         </HBox>
         <HBox alignment="CENTER_LEFT" prefHeight="38.0" prefWidth="369.0" spacing="10.0">
             <children>
-                <Label prefHeight="25.0" prefWidth="125.0" text="First Name:">
+                <Label prefHeight="25.0" prefWidth="115.0" text="First Name:">
                     <font>
                         <Font size="15.0" />
                     </font>
                 </Label>
-                <TextField fx:id="personFirstNameField" alignment="TOP_LEFT" prefWidth="200.0" promptText="First name of person." />
+                <TextField fx:id="personFirstNameField" alignment="TOP_LEFT" prefWidth="210.0" promptText="First name of person." />
             </children>
         </HBox>
         <HBox prefHeight="30.0" prefWidth="429.0" spacing="10.0">
             <children>
-                <Label prefHeight="25.0" prefWidth="125.0" text="Last Name:">
+                <Label prefHeight="25.0" prefWidth="115.0" text="Last Name:">
                     <font>
                         <Font size="15.0" />
                     </font>
                 </Label>
-                <TextField fx:id="personLastNameField" alignment="TOP_LEFT" prefWidth="200.0" promptText="Last name of person." />
+                <TextField fx:id="personLastNameField" alignment="TOP_LEFT" prefWidth="210.0" promptText="Last name of person." />
             </children>
         </HBox>
       <HBox prefHeight="21.0" prefWidth="429.0">
@@ -107,7 +107,7 @@
       </HBox>
         <HBox fx:id="btnContainer" alignment="BOTTOM_RIGHT" prefHeight="39.0" prefWidth="434.0" spacing="10.0">
             <children>
-            <Label prefHeight="25.0" prefWidth="260.0" text="* Fields cannot be empty.">
+            <Label prefHeight="25.0" prefWidth="250.0" text="* Fields cannot be empty.">
                <font>
                   <Font name="System Italic" size="13.0" />
                </font>
