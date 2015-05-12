@@ -23,6 +23,7 @@ import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.NewLoading;
 import seng302.group5.model.NewSaving;
+import seng302.group5.model.undoredo.UndoRedoHandler;
 import seng302.group5.model.util.ReportWriter;
 import seng302.group5.model.util.Settings;
 
@@ -83,6 +84,10 @@ public class MenuBarController {
     // Ticks the project menu item
     showProjectsMenuItem.setSelected(true);
     showListMenuItem.setSelected(true);
+
+    // Disable the undo/redo buttons on launch
+    undoMenuItem.setDisable(true);
+    redoMenuItem.setDisable(true);
   }
 
   /**
@@ -581,5 +586,26 @@ public class MenuBarController {
    */
   public void setMainApp(Main mainApp) {
     this.mainApp = mainApp;
+  }
+
+  /**
+   * Refresh the undo and redo menu items based on the state of the undo/redo handler
+   *
+   * @param undoRedoHandler the undo/redo handler to check
+   */
+  public void checkUndoRedoMenuItems(UndoRedoHandler undoRedoHandler) {
+    // undo menu item
+    if (undoRedoHandler.peekUndoStack() == null) {
+      undoMenuItem.setDisable(true);
+    } else {
+      undoMenuItem.setDisable(false);
+    }
+
+    // redo menu item
+    if (undoRedoHandler.peekRedoStack() == null) {
+      redoMenuItem.setDisable(true);
+    } else {
+      redoMenuItem.setDisable(false);
+    }
   }
 }
