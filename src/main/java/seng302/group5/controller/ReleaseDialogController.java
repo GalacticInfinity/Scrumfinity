@@ -208,6 +208,7 @@ public class ReleaseDialogController {
     }
 
     btnConfirm.setDefaultButton(true);
+    thisStage.setResizable(false);
 
     // Handle TextField text changes.
     releaseLabelField.textProperty().addListener((observable, oldValue, newValue) -> {

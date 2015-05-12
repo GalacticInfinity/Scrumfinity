@@ -86,6 +86,7 @@ public class StoryDialogController {
     }
 
     btnCreateStory.setDefaultButton(true);
+    thisStage.setResizable(false);
 
     storyLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button

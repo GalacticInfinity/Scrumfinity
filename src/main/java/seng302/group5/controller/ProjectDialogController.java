@@ -106,6 +106,7 @@ public class ProjectDialogController {
     }
 
     btnConfirm.setDefaultButton(true);
+    thisStage.setResizable(false);
 
     // Handle TextField text changes.
     projectLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -220,7 +221,8 @@ public class ProjectDialogController {
       return inputProjectName;
     }
   }
-  
+
+  //TODO: Remove unused functions
   private Boolean parseLabelChange(Project project) {
     if (projectLabelField.getText().equals(project.getLabel())) {
       return false;

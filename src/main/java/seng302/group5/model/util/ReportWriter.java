@@ -1,6 +1,7 @@
 package seng302.group5.model.util;
 
 import java.io.File;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -42,10 +43,9 @@ public class ReportWriter {
   Element skillElement;
   Element orphanTeam;
   Element orphanPeople;
-  Element allSkills;
   Element unusedSkills;
   Element allStories;
-  Element allReleases;
+  LocalDate date;
   String dateFormat = "dd/MM/yyyy";
 
   ObservableList<Team> orphanTeamsList = FXCollections.observableArrayList();
@@ -62,9 +62,15 @@ public class ReportWriter {
       DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
       unassignedSkills.setAll(mainApp.getSkills());
       report = docBuilder.newDocument();
-      rootElement = report.createElement("Organization");
+      date = LocalDate.now();
+      String datesString = date.format(
+          DateTimeFormatter.ofPattern(dateFormat));
+
+      //header = report.createTextNode(headerText);
+      rootElement = report.createElement("Header");
       String orgName = Settings.organizationName;
-      rootElement.setAttribute("Label", orgName);
+      rootElement.setAttribute("Label", "Report created on " + datesString + " for " +
+                                        orgName);
       report.appendChild(rootElement);
 
       projElement = report.createElement("Projects");
@@ -119,12 +125,6 @@ public class ReportWriter {
         }
       }
 
-      allSkills = report.createElement("Skills");
-      rootElement.appendChild(allSkills);
-      for (Skill skill : mainApp.getSkills()) {
-        createSkillChild(skill, allSkills);
-      }
-
       unusedSkills = report.createElement("UnassignedSkills");
       rootElement.appendChild(unusedSkills);
       for (Skill skill : unassignedSkills) {
@@ -135,12 +135,6 @@ public class ReportWriter {
       rootElement.appendChild(allStories);
       for (Story story : mainApp.getStories()) {
         createStoryChild(story);
-      }
-
-      allReleases = report.createElement("Releases");
-      rootElement.appendChild(allReleases);
-      for (Release release : mainApp.getReleases()) {
-        createReleaseChild(release, allReleases);
       }
 
       String filename = saveLocation.toString();
@@ -186,9 +180,6 @@ public class ReportWriter {
     releaseDate.appendChild(report.createTextNode(releaseDateString));
     releaseElem.appendChild(releaseDate);
 
-    Element projectElement = report.createElement("Project");
-    projectElement.appendChild(report.createTextNode(release.getProjectRelease().getLabel()));
-    releaseElem.appendChild(projectElement);
   }
 
 
