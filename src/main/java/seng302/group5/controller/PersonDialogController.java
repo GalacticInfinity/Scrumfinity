@@ -62,9 +62,8 @@ public class PersonDialogController {
     String os = System.getProperty("os.name");
 
     if (!os.startsWith("Windows")) {
-      Button confirmBtn = (Button) btnContainer.getChildren().get(1);
-      btnContainer.getChildren().remove(1);
-      btnContainer.getChildren().add(confirmBtn);
+      btnContainer.getChildren().remove(btnCreatePerson);
+      btnContainer.getChildren().add(btnCreatePerson);
     }
 
     if (createOrEdit == CreateOrEdit.CREATE) {
