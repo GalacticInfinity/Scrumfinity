@@ -104,12 +104,17 @@ public class ListMainPaneController {
   /**
    * Refreshes listView and text area text for when edits occur.
    */
-  public void refreshList() {
+  public void refreshList(AgileItem agileItem) { //todo bug: not refreshing the right list on creation
     listView.setItems(null);
     checkListType();
-    listView.getSelectionModel().clearSelection();
-    displayTextFlow.getChildren().clear();
-    selectedItem = null;
+    selectedItem = agileItem;
+    if (agileItem != null) {
+      listView.getSelectionModel().select(agileItem);
+      displayInfo(agileItem);
+    } else {
+      listView.getSelectionModel().clearSelection();
+      displayTextFlow.getChildren().clear();
+    }
   }
 
   /**
@@ -255,7 +260,7 @@ public class ListMainPaneController {
 
     Text text2 = new Text("Skill Label: ");
     text2.setFill(Color.BLACK);
-    text2.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
+    text2.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
     Text text3 = new Text(skill.getLabel());
     text3.setFill(Color.BLACK);
@@ -263,7 +268,7 @@ public class ListMainPaneController {
 
     Text text4 = new Text("\nSkill Description: \n");
     text4.setFill(Color.BLACK);
-    text4.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
+    text4.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
     Text text5 = new Text();
     if (skill.getSkillDescription().isEmpty()) {

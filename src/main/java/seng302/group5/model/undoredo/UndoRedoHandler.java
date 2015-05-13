@@ -260,7 +260,7 @@ public class UndoRedoHandler {
       projectToChange.copyValues(projectData);
       mainApp.addProject(projectToChange);
     }
-    mainApp.refreshList();
+    mainApp.refreshList(null);
   }
 
   /**
@@ -291,7 +291,7 @@ public class UndoRedoHandler {
 
     // Make the changes and refresh the list
     projectToChange.copyValues(projectData);
-    mainApp.refreshList();
+    mainApp.refreshList(null);
   }
 
   /**
@@ -334,7 +334,7 @@ public class UndoRedoHandler {
         mainApp.deleteRelease(theRelease);
       }
     }
-    mainApp.refreshList();
+    mainApp.refreshList(null);
   }
 
   /**
@@ -364,7 +364,7 @@ public class UndoRedoHandler {
       personToChange.copyValues(personData);
       mainApp.addPerson(personToChange);
     }
-    mainApp.refreshList();
+    mainApp.refreshList(null);
   }
 
   /**
@@ -394,7 +394,7 @@ public class UndoRedoHandler {
 
     // Make the changes and refresh the list
     personToChange.copyValues(personData);
-    mainApp.refreshList();
+    mainApp.refreshList(null);
   }
 
   /**
@@ -433,7 +433,7 @@ public class UndoRedoHandler {
       }
       mainApp.deletePerson(personToChange);
     }
-    mainApp.refreshList();
+    mainApp.refreshList(null);
   }
 
   /**
@@ -462,7 +462,7 @@ public class UndoRedoHandler {
       skillToChange.copyValues(skillData);
       mainApp.addSkill(skillToChange);
     }
-    mainApp.refreshList();
+    mainApp.refreshList(null);
   }
 
   /**
@@ -491,7 +491,7 @@ public class UndoRedoHandler {
     }
 
     skillToChange.copyValues(skillData);
-    mainApp.refreshList();
+    mainApp.refreshList(null);
   }
 
   /**
@@ -534,7 +534,7 @@ public class UndoRedoHandler {
       }
       mainApp.deleteSkill(skillToChange);
     }
-    mainApp.refreshList();
+    mainApp.refreshList(null);
   }
 
   /**
@@ -570,7 +570,7 @@ public class UndoRedoHandler {
         member.assignToTeam(teamToChange);
       }
     }
-    mainApp.refreshList();
+    mainApp.refreshList(null);
   }
 
   /**
@@ -611,7 +611,7 @@ public class UndoRedoHandler {
     }
     teamToChange.copyValues(teamData);
 
-    mainApp.refreshList();
+    mainApp.refreshList(null);
   }
 
   /**
@@ -648,7 +648,7 @@ public class UndoRedoHandler {
       }
       mainApp.deleteTeam(teamToChange);
     }
-    mainApp.refreshList();
+    mainApp.refreshList(null);
   }
 
   /**
@@ -678,7 +678,7 @@ public class UndoRedoHandler {
       releaseToChange.copyValues(releaseData);
       mainApp.addRelease(releaseToChange);
     }
-    mainApp.refreshList();
+    mainApp.refreshList(null);
   }
 
   /**
@@ -709,7 +709,7 @@ public class UndoRedoHandler {
     }
 
     releaseToChange.copyValues(releaseData);
-    mainApp.refreshList();
+    mainApp.refreshList(null);
   }
 
   /**
@@ -739,7 +739,7 @@ public class UndoRedoHandler {
     } else {
       mainApp.deleteRelease(releaseToChange);
     }
-    mainApp.refreshList();
+    mainApp.refreshList(null);
   }
 
   /**
@@ -768,7 +768,7 @@ public class UndoRedoHandler {
       storyToChange.copyValues(storyData);
       mainApp.addStory(storyToChange);
     }
-    mainApp.refreshList();
+    mainApp.refreshList(null);
   }
 
   /**
@@ -799,7 +799,7 @@ public class UndoRedoHandler {
     }
 
     storyToChange.copyValues(storyData);
-    mainApp.refreshList();
+    mainApp.refreshList(null);
   }
 
   /**
@@ -830,7 +830,7 @@ public class UndoRedoHandler {
       mainApp.deleteStory(storyToChange);
     }
 
-    mainApp.refreshList();
+    mainApp.refreshList(null);
   }
 
   public Stack<UndoRedoObject> getUndoStack() {

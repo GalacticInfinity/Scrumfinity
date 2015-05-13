@@ -25,6 +25,7 @@ import seng302.group5.model.Project;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoObject;
+import seng302.group5.model.util.Settings;
 
 /**
  * The controller for the project dialog when creating a new project or editing an existing one
@@ -402,7 +403,7 @@ public class ProjectDialogController {
       alert.setHeaderText(null);
       alert.setContentText(e1.getMessage());
       alert.showAndWait();
-      mainApp.refreshList();
+      mainApp.refreshList(null);
     }
   }
 
@@ -413,13 +414,12 @@ public class ProjectDialogController {
   protected void btnRemoveTeam() {
     try {
       AgileHistory selectedAgileHistory = allocatedTeamsList.getSelectionModel().getSelectedItem();
-      Team selectedTeam = (Team) selectedAgileHistory.getAgileItem();
 
-      if (selectedTeam != null) {
+      if (selectedAgileHistory != null) {
         AgileHistory temp = new AgileHistory();
-        for (AgileHistory t : allocatedTeams) {
-          if (Objects.equals(t.getAgileItem().toString(), selectedTeam.toString())) {
-            temp = t;
+        for (AgileHistory agileHistory : allocatedTeams) {
+          if (selectedAgileHistory.compareTo(agileHistory) == 0) {
+            temp = agileHistory;
             break;
           }
         }
@@ -477,6 +477,9 @@ public class ProjectDialogController {
           project.addTeam(team);
         }
         mainApp.addProject(project);
+        if (Settings.correctList(project)) {
+          mainApp.refreshList(project);
+        }
       } else {
         if (createOrEdit == CreateOrEdit.EDIT) {
           project.setLabel(projectLabel);
@@ -486,11 +489,9 @@ public class ProjectDialogController {
           for (AgileHistory team : this.allocatedTeams) {
             project.addTeam(team);
           }
-
-          mainApp.refreshList();
         }
+        mainApp.refreshList(project);
       }
-
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
       mainApp.newAction(undoRedoObject);
 

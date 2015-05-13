@@ -86,12 +86,11 @@ public class AgileHistory implements Comparable<AgileHistory> {
     int result = agileItem.getLabel().compareToIgnoreCase(o.getAgileItem().getLabel());
     if (result == 0) {
       if (startDate.isBefore(o.getStartDate())) {
-        return -1;
-      } else {
-        return 1;
+        result = -1;
+      } else if (startDate.isAfter(o.getStartDate())){
+        result = 1;
       }
-    } else {
-      return result;
     }
+    return result;
   }
 }
