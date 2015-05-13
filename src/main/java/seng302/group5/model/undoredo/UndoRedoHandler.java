@@ -48,6 +48,19 @@ public class UndoRedoHandler {
   }
 
   /**
+   * Peek at what is top of the redo stack
+   *
+   * @return The top element of the redo stack, or null if it's empty
+   */
+  public UndoRedoObject peekRedoStack() {
+    if (redoStack.isEmpty()) {
+      return null;
+    } else {
+      return redoStack.peek();
+    }
+  }
+
+  /**
    * Clear the undo and redo stacks
    */
   public void clearStacks() {

@@ -14,7 +14,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -42,7 +41,6 @@ import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoHandler;
 import seng302.group5.model.undoredo.UndoRedoObject;
-import seng302.group5.model.util.Settings;
 import seng302.group5.model.util.RevertHandler;
 
 /**
@@ -491,6 +489,7 @@ public class Main extends Application {
     try {
       undoRedoHandler.undo();
       toggleName();
+      checkUndoRedoMenuItems();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -503,6 +502,7 @@ public class Main extends Application {
     try {
       undoRedoHandler.redo();
       toggleName();
+      checkUndoRedoMenuItems();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -516,6 +516,7 @@ public class Main extends Application {
   public void newAction(UndoRedoObject undoRedoObject) {
     undoRedoHandler.newAction(undoRedoObject);
     toggleName();
+    checkUndoRedoMenuItems();
   }
 
   /**
@@ -524,6 +525,7 @@ public class Main extends Application {
   public void refreshLastSaved() {
     lastSavedObject = undoRedoHandler.peekUndoStack();
     toggleName();
+    checkUndoRedoMenuItems();
   }
 
   /**
@@ -864,6 +866,11 @@ public class Main extends Application {
     return MBC;
   }
 
+  public void setMBC(MenuBarController MBC) {
+    // This is for tests
+    this.MBC = MBC;
+  }
+
   public ObservableList<Project> getProjects() {
     return projects.sorted(Comparator.<Project>naturalOrder());
   }
@@ -938,6 +945,13 @@ public class Main extends Application {
    */
   public void refreshList() {
     LMPC.refreshList();
+  }
+
+  /**
+   * Refresh the undo and redo menu items based on the state of the undo/redo handler
+   */
+  public void checkUndoRedoMenuItems() {
+    MBC.checkUndoRedoMenuItems(undoRedoHandler);
   }
 
   public void setMainScene() {
