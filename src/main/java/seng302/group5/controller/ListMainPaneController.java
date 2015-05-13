@@ -217,17 +217,17 @@ public class ListMainPaneController {
    * @param next Next selected item
    */
   public void displayInfo(AgileItem next) {
+    displayTextFlow.getChildren().clear();
     switch (Settings.currentListType) {
       case "People":
-        Person person = (Person) next;
         displayTextFlow.getChildren().clear();
+        Person person = (Person) next;
         displayPeopleTextArea(person);
         break;
       case "Projects":
-        Project project = (Project) next;
         displayTextFlow.getChildren().clear();
+        Project project = (Project) next;
         displayProjectTextArea(project);
-
         break;
       case "Skills":
         displayTextFlow.getChildren().clear();
@@ -236,24 +236,18 @@ public class ListMainPaneController {
         break;
       case "Teams":
         displayTextFlow.getChildren().clear();
-
         Team team = (Team) next;
         displayTeamTextArea(team);
-
         break;
       case "Releases":
         displayTextFlow.getChildren().clear();
-
         Release release = (Release) next;
         displayReleaseTextArea(release);
-
         break;
       case "Stories":
         displayTextFlow.getChildren().clear();
-
         Story story = (Story) next;
         displayStoryTextArea(story);
-
         break;
     }
   }
