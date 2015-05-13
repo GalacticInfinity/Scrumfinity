@@ -413,13 +413,12 @@ public class ProjectDialogController {
   protected void btnRemoveTeam() {
     try {
       AgileHistory selectedAgileHistory = allocatedTeamsList.getSelectionModel().getSelectedItem();
-      Team selectedTeam = (Team) selectedAgileHistory.getAgileItem();
 
-      if (selectedTeam != null) {
+      if (selectedAgileHistory != null) {
         AgileHistory temp = new AgileHistory();
-        for (AgileHistory t : allocatedTeams) {
-          if (Objects.equals(t.getAgileItem().toString(), selectedTeam.toString())) {
-            temp = t;
+        for (AgileHistory agileHistory : allocatedTeams) {
+          if (selectedAgileHistory.compareTo(agileHistory) == 0) {
+            temp = agileHistory;
             break;
           }
         }
