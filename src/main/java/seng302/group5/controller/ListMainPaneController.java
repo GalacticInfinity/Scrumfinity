@@ -231,6 +231,10 @@ public class ListMainPaneController {
     }
   }
 
+  /**
+   * Method that takes the selected skill and displays its information in the main display pane.
+   * @param skill the skills who's information will be displayed.
+   */
   private void displaySkillTextArea(Skill skill) {
     Text text1 = new Text("Skill Information\n");
     text1.setFill(Color.BLACK);
@@ -244,17 +248,28 @@ public class ListMainPaneController {
     text3.setFill(Color.BLACK);
     text3.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
 
-    Text text4 = new Text("\nDescription Name: \n");
+    Text text4 = new Text("\nSkill Description: \n");
     text4.setFill(Color.BLACK);
     text4.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
 
-    Text text5 = new Text(skill.getSkillDescription());
-    text5.setFill(Color.BLACK);
-    text5.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    Text text5 = new Text();
+    if (skill.getSkillDescription().isEmpty()) {
+      text5 = new Text("N/A");
+      text5.setFill(Color.BLACK);
+      text5.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    } else {
+      text5 = new Text(skill.getSkillDescription());
+      text5.setFill(Color.BLACK);
+      text5.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    }
 
     displayTextFlow.getChildren().addAll(text1, text2, text3, text4, text5);
   }
 
+  /**
+   * method that takes the selected person and displays there information in the main pane.
+   * @param person the person who's information will be displayed.
+   */
   private void displayPeopleTextArea(Person person) {
     Text text1 = new Text("Person Information\n");
     text1.setFill(Color.BLACK);
@@ -310,9 +325,9 @@ public class ListMainPaneController {
     }
     Text text11 = new Text();
     if (listOfSkills.length() == 0) {
-      text11 = new Text("No skills, please assign known skills.");
+      text11 = new Text("No skills, please assign skills.");
       text11.setFill(Color.BLACK);
-      text11.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
+      text11.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
     } else {
       text11 = new Text(listOfSkills.substring(0, listOfSkills.length() - 2));
       text11.setFill(Color.BLACK);
@@ -322,17 +337,11 @@ public class ListMainPaneController {
                                          text7, text8, text9, text10, text11);
   }
 
+  /**
+   * Method that takes the selected project and displays its information in the main pane.
+   * @param project the project who's information will be displayed.
+   */
   private void displayProjectTextArea(Project project) {
-//        displayTextArea.appendText("\nProject Name: ");
-//        displayTextArea.appendText(project.getProjectName());
-//        displayTextArea.appendText("\nProject Description: \n");
-//        displayTextArea.appendText(project.getProjectDescription());
-//        displayTextArea.appendText("\nAssigned Teams: \n");
-//        for (AgileHistory team : project.getAllocatedTeams().sorted(
-//            Comparator.<AgileHistory>naturalOrder())) {
-//          displayTextArea.appendText("" + team.toString() + "\n");
-//        }
-//        break;
     Text text1 = new Text("Project Information\n");
     text1.setFill(Color.BLACK);
     text1.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 20));
@@ -353,13 +362,21 @@ public class ListMainPaneController {
     text5.setFill(Color.BLACK);
     text5.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
 
-    Text text6 = new Text("\nProject Description: ");
+    Text text6 = new Text("\nProject Description: \n");
     text6.setFill(Color.BLACK);
     text6.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
 
-    Text text7 = new Text(project.getProjectDescription());
-    text7.setFill(Color.BLACK);
-    text7.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    Text text7 = new Text();
+    if (project.getProjectDescription().isEmpty()) {
+      text7 = new Text("N/A");
+      text7.setFill(Color.BLACK);
+      text7.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    } else {
+      text7 = new Text(project.getProjectDescription());
+      text7.setFill(Color.BLACK);
+      text7.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    }
+
 
     Text text8 = new Text("\nAssigned Teams: \n");
     text8.setFill(Color.BLACK);
