@@ -257,7 +257,7 @@ public class ListMainPaneController {
 
     Text text2 = new Text("Skill Label: ");
     text2.setFill(Color.BLACK);
-    text2.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
+    text2.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
     Text text3 = new Text(skill.getLabel());
     text3.setFill(Color.BLACK);
@@ -265,7 +265,7 @@ public class ListMainPaneController {
 
     Text text4 = new Text("\nSkill Description: \n");
     text4.setFill(Color.BLACK);
-    text4.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
+    text4.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
     Text text5 = new Text();
     if (skill.getSkillDescription().isEmpty()) {
