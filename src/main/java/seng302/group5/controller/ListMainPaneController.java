@@ -1,6 +1,6 @@
 package seng302.group5.controller;
 
-import java.time.format.DateTimeFormatter;
+
 import java.util.Comparator;
 
 import javafx.beans.value.ChangeListener;
@@ -12,7 +12,6 @@ import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -121,7 +120,6 @@ public class ListMainPaneController {
     switch (listType) {
       case "Projects":
         isListShown = true;
-
         listView.setItems(mainApp.getProjects().sorted(Comparator.<Project>naturalOrder()));
         break;
       case "People":
