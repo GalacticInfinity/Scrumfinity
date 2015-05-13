@@ -105,18 +105,17 @@ public class ListMainPaneController {
   /**
    * Refreshes listView and text area text for when edits occur.
    */
-  public void refreshList(AgileItem agileItem) {
+  public void refreshList(AgileItem agileItem) { //todo bug: not refreshing the right list on creation
     listView.setItems(null);
     checkListType();
+    selectedItem = agileItem;
     if (agileItem != null) {
       listView.getSelectionModel().select(agileItem);
       displayInfo(agileItem);
     } else {
-      System.out.println("no but");
       listView.getSelectionModel().clearSelection();
       displayTextFlow.getChildren().clear();
     }
-    selectedItem = null;
   }
 
   /**

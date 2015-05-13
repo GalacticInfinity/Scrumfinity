@@ -486,10 +486,9 @@ public class ProjectDialogController {
           for (AgileHistory team : this.allocatedTeams) {
             project.addTeam(team);
           }
-          mainApp.refreshList(project);
         }
       }
-
+      mainApp.refreshList(project);
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
       mainApp.newAction(undoRedoObject);
 
