@@ -219,9 +219,9 @@ public class PersonDialogController {
         person.setFirstName(personFirstName);
         person.setLastName(personLastName);
         person.setSkillSet(personSkillSet);
-        mainApp.refreshList();
-      }
 
+      }
+      mainApp.refreshList(person);
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
       mainApp.newAction(undoRedoObject);
 

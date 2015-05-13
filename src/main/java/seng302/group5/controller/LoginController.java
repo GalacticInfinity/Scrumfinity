@@ -56,7 +56,7 @@ public class LoginController {
         NewLoading load = new NewLoading(mainApp);
         load.loadFile(file);
 
-        mainApp.getLMPC().refreshList();
+        mainApp.getLMPC().refreshList(null);
         if (!Settings.organizationName.isEmpty()) {
           mainApp.setMainTitle("Scrumfinity - " + Settings.organizationName);
           mainApp.toggleName();
