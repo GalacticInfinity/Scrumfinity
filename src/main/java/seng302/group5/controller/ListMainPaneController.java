@@ -17,6 +17,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import seng302.group5.Main;
@@ -213,43 +214,115 @@ public class ListMainPaneController {
     switch (Settings.currentListType) {
       case "People":
         Person person = (Person) next;
+        displayTextFlow.getChildren().clear();
+        displayPeopleTextArea(person);
+        break;
+      case "Projects":
+        Project project = (Project) next;
+        displayTextFlow.getChildren().clear();
+        displayProjectTextArea(project);
 
-        Text text2 = new Text("Person Information\n");
-        text2.setFill(Color.rgb(1, 0, 1));
-        text2.setFont(Font.font("Helvetica", FontPosture.ITALIC, 20));
-        displayTextFlow = new TextFlow(text2);
-        displayTextFlow.getChildren().add(text2);
+        break;
+      case "Skills":
+        displayTextFlow.getChildren().clear();
+        Skill skill = (Skill) next;
+        displaySkillTextArea(skill);
+        break;
+    }
+  }
+
+  private void displaySkillTextArea(Skill skill) {
+    Text text1 = new Text("Skill Information\n");
+    text1.setFill(Color.BLACK);
+    text1.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 20));
+
+    Text text2 = new Text("Skill Label: ");
+    text2.setFill(Color.BLACK);
+    text2.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text text3 = new Text(skill.getLabel());
+    text3.setFill(Color.BLACK);
+    text3.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text text4 = new Text("\nDescription Name: \n");
+    text4.setFill(Color.BLACK);
+    text4.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text text5 = new Text(skill.getSkillDescription());
+    text5.setFill(Color.BLACK);
+    text5.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    displayTextFlow.getChildren().addAll(text1, text2, text3, text4, text5);
+  }
+
+  private void displayPeopleTextArea(Person person) {
+    Text text1 = new Text("Person Information\n");
+    text1.setFill(Color.BLACK);
+    text1.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 20));
+
+    Text text2 = new Text("Person Label: ");
+    text2.setFill(Color.BLACK);
+    text2.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text text3 = new Text(person.getLabel());
+    text3.setFill(Color.BLACK);
+    text3.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text text4 = new Text("\nFirst Name: ");
+    text4.setFill(Color.BLACK);
+    text4.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text text5 = new Text(person.getFirstName());
+    text5.setFill(Color.BLACK);
+    text5.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text text6 = new Text("\nLast Name: ");
+    text6.setFill(Color.BLACK);
+    text6.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text text7 = new Text(person.getLastName());
+    text7.setFill(Color.BLACK);
+    text7.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text text8 = new Text("\nTeam: ");
+    text8.setFill(Color.BLACK);
+    text8.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text text9 = new Text();
+    if (person.isInTeam()) {
+      text9 = new Text(person.getTeam().toString());
+      text9.setFill(Color.BLACK);
+      text9.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    } else {
+      text9 = new Text("Not Assigned.");
+      text9.setFill(Color.BLACK);
+      text9.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    }
+    Text text10 = new Text("\nSkills: ");
+    text10.setFill(Color.BLACK);
+    text10.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
 
 
-//        displayTextArea.appendText("Person Information \nPerson Label: ");
-//        displayTextArea.appendText(person.getLabel());
-//        displayTextArea.appendText("\nFirst Name: ");
-//        displayTextArea.appendText(person.getFirstName());
-//        displayTextArea.appendText("\nLast Name: ");
-//        displayTextArea.appendText(person.getLastName());
-//        displayTextArea.appendText("\nTeam: ");
-//        if (person.isInTeam()) {
-//          displayTextArea.appendText(person.getTeamLabel());
-//        } else {
-//          displayTextArea.appendText("Not assigned.");
-//        }
-//        displayTextArea.appendText("\nSkills: ");
-//        StringBuilder listOfSkills = new StringBuilder();
-//        for (Skill skill : person.getSkillSet().sorted(Comparator.<Skill>naturalOrder())) {
-//          listOfSkills.append(skill.getLabel());
-//          listOfSkills.append(", ");
-//        }
-//        if (listOfSkills.length() == 0) {
-//          displayTextArea.appendText("No known skills. Please add skills to this person.");
-//        } else {
-//          displayTextArea.appendText(listOfSkills.substring(0, listOfSkills.length() - 2));
-//        }
-//        break;
-//      case "Projects":
-//        Project project = (Project) next;
-//
-//        displayTextArea.appendText("Project Information \nProject Label: ");
-//        displayTextArea.appendText(project.getLabel());
+    StringBuilder listOfSkills = new StringBuilder();
+    for (Skill skill : person.getSkillSet().sorted(Comparator.<Skill>naturalOrder())) {
+      listOfSkills.append(skill.getLabel());
+      listOfSkills.append(", ");
+    }
+    Text text11 = new Text();
+    if (listOfSkills.length() == 0) {
+      text11 = new Text("No skills, please assign known skills.");
+      text11.setFill(Color.BLACK);
+      text11.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
+    } else {
+      text11 = new Text(listOfSkills.substring(0, listOfSkills.length() - 2));
+      text11.setFill(Color.BLACK);
+      text11.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    }
+    displayTextFlow.getChildren().addAll(text1, text2, text3, text4, text5, text6,
+                                         text7, text8, text9, text10, text11);
+  }
+
+  private void displayProjectTextArea(Project project) {
 //        displayTextArea.appendText("\nProject Name: ");
 //        displayTextArea.appendText(project.getProjectName());
 //        displayTextArea.appendText("\nProject Description: \n");
@@ -260,66 +333,58 @@ public class ListMainPaneController {
 //          displayTextArea.appendText("" + team.toString() + "\n");
 //        }
 //        break;
-//      case "Skills":
-//        Skill skill = (Skill) next;
-//
-//        displayTextArea.appendText("Skill Information \nSkill Label: ");
-//        displayTextArea.appendText(skill.getLabel());
-//        displayTextArea.appendText("\nSkill Description: ");
-//        displayTextArea.appendText(skill.getSkillDescription());
-//
-//        break;
-//      case "Teams":
-//        Team team = (Team) next; //Casts next as Team object
-//
-//        displayTextArea.appendText("Team Information \nTeam Label: ");
-//        displayTextArea.appendText(team.getLabel());
-//        displayTextArea.appendText("\nTeam Description: ");
-//        displayTextArea.appendText(team.getTeamDescription());
-//        displayTextArea.appendText("\nTeam Members: \n");
-//        for (Person member : team.getTeamMembers().sorted(Comparator.<Person>naturalOrder())) {
-//          displayTextArea.appendText(member.getFirstName());
-//          displayTextArea.appendText(" - ");
-//          displayTextArea.appendText(member.getLabel());
-//          displayTextArea.appendText(" Role: ");
-//          Role role = team.getMembersRole().get(member);
-//          if (role != null) {
-//            displayTextArea.appendText(role.toString());
-//          } else {
-//            displayTextArea.appendText("Not assigned to a role yet.");
-//          }
-//          displayTextArea.appendText("\n");
-//        }
-//        break;
-//      case "Releases":
-//        Release release = (Release) next;
-//
-//        displayTextArea.appendText("Release Information \nRelease Label: ");
-//        displayTextArea.appendText(release.getLabel());
-//        displayTextArea.appendText("\nRelease Description: ");
-//        displayTextArea.appendText(release.getReleaseDescription());
-//        displayTextArea.appendText("\nRelease Date: ");
-//        displayTextArea.appendText(release.getReleaseDate().format(
-//            DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-//        displayTextArea.appendText("\nRelease Notes: ");
-//        displayTextArea.appendText(release.getReleaseNotes());
-//        displayTextArea.appendText("\nProject: ");
-//        displayTextArea.appendText(release.getProjectRelease().toString());
-//        break;
-//      case "Stories":
-//        Story story = (Story) next; //Casts next as Story object.
-//
-//        displayTextArea.appendText("Story Information \nStory Label: ");
-//        displayTextArea.appendText(story.getLabel());
-//        displayTextArea.appendText("\nStory Long Name: ");
-//        displayTextArea.appendText(story.getStoryName());
-//        displayTextArea.appendText("\nStory Description: ");
-//        displayTextArea.appendText(story.getDescription());
-//        displayTextArea.appendText("\nCreator: ");
-//        displayTextArea.appendText(story.getCreator().toString());
-//        break;
+    Text text1 = new Text("Project Information\n");
+    text1.setFill(Color.BLACK);
+    text1.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 20));
+
+    Text text2 = new Text("Project Label: ");
+    text2.setFill(Color.BLACK);
+    text2.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text text3 = new Text(project.getLabel());
+    text3.setFill(Color.BLACK);
+    text3.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text text4 = new Text("\nProject Name: ");
+    text4.setFill(Color.BLACK);
+    text4.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text text5 = new Text(project.getProjectName());
+    text5.setFill(Color.BLACK);
+    text5.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text text6 = new Text("\nProject Description: ");
+    text6.setFill(Color.BLACK);
+    text6.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text text7 = new Text(project.getProjectDescription());
+    text7.setFill(Color.BLACK);
+    text7.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text text8 = new Text("\nAssigned Teams: \n");
+    text8.setFill(Color.BLACK);
+    text8.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    StringBuilder listOfTeams = new StringBuilder();
+    for (AgileHistory team : project.getAllocatedTeams().sorted(
+        Comparator.<AgileHistory>naturalOrder())) {
+        listOfTeams.append("" + team.toString() + "\n");
     }
+    Text text9 = new Text();
+    if (listOfTeams.length() == 0) {
+      text9 = new Text("No Teams assigned, please assign Teams.");
+      text9.setFill(Color.BLACK);
+      text9.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
+    } else {
+      text9 = new Text(listOfTeams.substring(0, listOfTeams.length() - 2));
+      text9.setFill(Color.BLACK);
+      text9.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    }
+
+    displayTextFlow.getChildren().addAll(text1, text2, text3, text4, text5, text6,
+                                         text7, text8, text9);
   }
+
 
   /**
    * Sets the main app to the param
