@@ -29,7 +29,8 @@ public class Settings {
     if (!scrumHome.exists()) {
       scrumHome.mkdir();
     }
-
-    defaultFilepath = scrumHome;
+    if (scrumHome.exists()) {
+      defaultFilepath = scrumHome;
+    }
   }
 }

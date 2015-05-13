@@ -255,7 +255,9 @@ public class MenuBarController {
   protected void btnClickSaveAs(ActionEvent event) {
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Save Project");
-    if (Settings.defaultFilepath != null) {
+    if (Settings.currentFile != null) {
+      fileChooser.setInitialDirectory(Settings.currentFile.getParentFile());
+    } else if (Settings.defaultFilepath != null){
       fileChooser.setInitialDirectory(Settings.defaultFilepath);
     }
     try {

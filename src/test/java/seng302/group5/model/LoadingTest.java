@@ -14,7 +14,7 @@ import seng302.group5.Main;
 import seng302.group5.model.util.Settings;
 
 /**
- * Testing loading functionality
+ * Testing loading functionality, as these will fail if saving is done incorrectly, doubles as saving test.
  * Created by Michael on 4/23/2015.
  */
 public class LoadingTest {
@@ -465,6 +465,9 @@ public class LoadingTest {
     }
   }
 
+  /**
+   *Makes sure that if a header is blank for whatever reason, file still loads.
+   */
   @Test
   public void testingBlankHeader() {
     Settings.organizationName = "";
@@ -484,6 +487,9 @@ public class LoadingTest {
     }
   }
 
+  /**
+   * Makes sure that the organization name is loaded properly in the Settings fields
+   */
   @Test
   public void testingFilledHeader() {
     String expectedName = "test";
@@ -505,6 +511,10 @@ public class LoadingTest {
     }
   }
 
+  /**
+   * Tests the loading of stories, makes sure saved and loaded field strings are the same,
+   * and also checks that Person field concurrency is conserved.
+   */
   @Test
   public void testingStories() {
     createStories();
