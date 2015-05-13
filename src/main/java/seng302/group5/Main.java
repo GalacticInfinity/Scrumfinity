@@ -866,6 +866,11 @@ public class Main extends Application {
     return MBC;
   }
 
+  public void setMBC(MenuBarController MBC) {
+    // This is for tests
+    this.MBC = MBC;
+  }
+
   public ObservableList<Project> getProjects() {
     return projects.sorted(Comparator.<Project>naturalOrder());
   }

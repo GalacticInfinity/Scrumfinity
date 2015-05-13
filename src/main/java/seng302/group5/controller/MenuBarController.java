@@ -109,7 +109,6 @@ public class MenuBarController {
   @FXML
   protected void createProject(ActionEvent event) {
     mainApp.showProjectDialog(CreateOrEdit.CREATE);
-    // Deactivates button if no changes.
   }
 
   /**

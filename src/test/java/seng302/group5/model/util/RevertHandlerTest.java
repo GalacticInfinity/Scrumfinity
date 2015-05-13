@@ -75,10 +75,12 @@ public class RevertHandlerTest {
   public void setUp() throws Exception {
 
     ListMainPaneController listMainPaneController = mock(ListMainPaneController.class);
+    MenuBarController menuBarController = mock(MenuBarController.class);
     Stage primaryStage = mock(Stage.class);
 
     mainApp = new Main();
     mainApp.setLMPC(listMainPaneController);
+    mainApp.setMBC(menuBarController);
     mainApp.setPrimaryStage(primaryStage);
 
     undoRedoHandler = mainApp.getUndoRedoHandler();
