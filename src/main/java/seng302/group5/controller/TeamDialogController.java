@@ -341,7 +341,6 @@ public class TeamDialogController {
           personRole.getPerson().assignToTeam(team);
         }
         mainApp.addTeam(team);
-
       } else if (createOrEdit == CreateOrEdit.EDIT) {
 
         team.setLabel(teamLabel);
@@ -355,9 +354,8 @@ public class TeamDialogController {
         for (Person memberToRemove : membersToRemove) {
           memberToRemove.removeFromTeam();
         }
-        mainApp.refreshList();
       }
-
+      mainApp.refreshList(team);
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
       mainApp.newAction(undoRedoObject);
       thisStage.close();

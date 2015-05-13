@@ -202,9 +202,8 @@ public class StoryDialogController {
         story.setStoryName(storyName);
         story.setDescription(storyDescription);
         story.setCreator(creator);
-        mainApp.refreshList();
       }
-
+      mainApp.refreshList(story);
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
       mainApp.newAction(undoRedoObject);
 

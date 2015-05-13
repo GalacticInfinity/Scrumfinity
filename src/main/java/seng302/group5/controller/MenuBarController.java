@@ -352,7 +352,7 @@ public class MenuBarController {
         NewLoading load = new NewLoading(mainApp);
         load.loadFile(file);
 
-        mainApp.getLMPC().refreshList();
+        mainApp.getLMPC().refreshList(null);
         if (!(Settings.organizationName == "")) {
           mainApp.setMainTitle("Scrumfinity - " + Settings.organizationName);
         } else {
@@ -441,7 +441,7 @@ public class MenuBarController {
     Settings.currentListType = "Projects";
     deselectList("Projects");
     showProjectsMenuItem.setSelected(true);
-    mainApp.getLMPC().refreshList();
+    mainApp.getLMPC().refreshList(null);
   }
 
   /**
@@ -452,7 +452,7 @@ public class MenuBarController {
     Settings.currentListType = "People";
     deselectList("People");
     showPeopleMenuItem.setSelected(true);
-    mainApp.getLMPC().refreshList();
+    mainApp.getLMPC().refreshList(null);
   }
 
   /**
@@ -463,7 +463,7 @@ public class MenuBarController {
     Settings.currentListType = "Skills";
     deselectList("Skills");
     showSkillsMenuItem.setSelected(true);
-    mainApp.getLMPC().refreshList();
+    mainApp.getLMPC().refreshList(null);
   }
 
   /**
@@ -473,7 +473,7 @@ public class MenuBarController {
   protected void btnShowTeams() {
     Settings.currentListType = "Teams";
     deselectList("Teams");
-    mainApp.getLMPC().refreshList();
+    mainApp.getLMPC().refreshList(null);
   }
 
   /**
@@ -483,7 +483,7 @@ public class MenuBarController {
   protected void btnShowReleases() {
     Settings.currentListType = "Releases";
     deselectList("Releases");
-    mainApp.getLMPC().refreshList();
+    mainApp.getLMPC().refreshList(null);
   }
 
   /**
@@ -493,7 +493,7 @@ public class MenuBarController {
   protected void btnShowStories() {
     Settings.currentListType = "Stories";
     deselectList("Stories");
-    mainApp.getLMPC().refreshList();
+    mainApp.getLMPC().refreshList(null);
   }
 
   /**
@@ -554,7 +554,7 @@ public class MenuBarController {
       alert.showAndWait();
     } else {
       mainApp.delete(selectedItem);
-      mainApp.refreshList();
+      mainApp.refreshList(null);
     }
   }
 

@@ -99,11 +99,17 @@ public class ListMainPaneController {
   /**
    * Refreshes listView and text area text for when edits occur.
    */
-  public void refreshList() {
+  public void refreshList(AgileItem agileItem) {
     listView.setItems(null);
     checkListType();
-    listView.getSelectionModel().clearSelection();
-    displayTextArea.clear();
+    if (agileItem != null) {
+      listView.getSelectionModel().select(agileItem);
+      displayInfo(agileItem);
+    } else {
+      System.out.println("no but");
+      listView.getSelectionModel().clearSelection();
+      displayTextArea.clear();
+    }
     selectedItem = null;
   }
 

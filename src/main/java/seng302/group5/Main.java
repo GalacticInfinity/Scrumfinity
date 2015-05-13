@@ -936,8 +936,8 @@ public class Main extends Application {
   /**
    * Refreshes the listview
    */
-  public void refreshList() {
-    LMPC.refreshList();
+  public void refreshList(AgileItem agileItem) {
+    LMPC.refreshList(agileItem);
   }
 
   public void setMainScene() {
