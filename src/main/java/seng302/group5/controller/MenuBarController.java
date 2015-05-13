@@ -12,6 +12,7 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -23,6 +24,7 @@ import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.NewLoading;
 import seng302.group5.model.NewSaving;
+import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoHandler;
 import seng302.group5.model.util.ReportWriter;
 import seng302.group5.model.util.Settings;
@@ -36,6 +38,8 @@ import seng302.group5.model.undoredo.UndoRedoObject;
  * Edited by Craig on 17/03/2015. added save button functionality.
  */
 public class MenuBarController {
+
+  @FXML private Menu editMenu;
 
   @FXML private MenuItem openMenuItem;
   @FXML private MenuItem saveMenuItem;
@@ -383,8 +387,10 @@ public class MenuBarController {
     fileChooser.setTitle("Save Report");
     File file = fileChooser.showSaveDialog(mainApp.getPrimaryStage());
 
-    ReportWriter report = new ReportWriter();
-    report.writeReport(mainApp, file);
+    if (file != null) {
+      ReportWriter report = new ReportWriter();
+      report.writeReport(mainApp, file);
+    }
   }
 
   /**
@@ -598,15 +604,25 @@ public class MenuBarController {
     // undo menu item
     if (undoRedoHandler.peekUndoStack() == null) {
       undoMenuItem.setDisable(true);
+      undoMenuItem.setText("Undo");
     } else {
       undoMenuItem.setDisable(false);
+      undoMenuItem.setText(
+          "Undo " + Action.getActionString(undoRedoHandler.peekUndoStack().getAction()));
     }
 
     // redo menu item
     if (undoRedoHandler.peekRedoStack() == null) {
       redoMenuItem.setDisable(true);
+      redoMenuItem.setText("Redo");
     } else {
       redoMenuItem.setDisable(false);
+      redoMenuItem.setText(
+          "Redo " + Action.getActionString(undoRedoHandler.peekRedoStack().getAction()));
     }
+
+    // workaround to refresh edit menu size
+    editMenu.setVisible(false);
+    editMenu.setVisible(true);
   }
 }
