@@ -147,7 +147,7 @@ public class ReportWriter {
       StreamResult result = new StreamResult(filename);
 
       transformer.transform(source, result);
-      System.out.println("Report Created");
+//      System.out.println("Report Created");
 
     } catch (Exception e) {
       e.printStackTrace();

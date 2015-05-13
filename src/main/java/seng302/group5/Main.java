@@ -642,7 +642,7 @@ public class Main extends Application {
         break;
       default:
         itemToStore = null;
-        System.err.println("Unhandled case for generating undo/redo delete object");
+//        System.err.println("Unhandled case for generating undo/redo delete object");
     }
 
     undoRedoObject.setAgileItem(agileItem); // store original
@@ -823,7 +823,7 @@ public class Main extends Application {
         newAction(undoRedoObject);
         break;
       default:
-        System.err.println("Unhandled case for deleting agile item");
+//        System.err.println("Unhandled case for deleting agile item");
         break;
     }
   }

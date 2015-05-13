@@ -228,6 +228,27 @@ public class ListMainPaneController {
         Skill skill = (Skill) next;
         displaySkillTextArea(skill);
         break;
+      case "Teams":
+        displayTextFlow.getChildren().clear();
+
+        Team team = (Team) next;
+        displayTeamTextArea(team);
+
+        break;
+      case "Releases":
+        displayTextFlow.getChildren().clear();
+
+        Release release = (Release) next;
+        displayReleaseTextArea(release);
+
+        break;
+      case "Stories":
+        displayTextFlow.getChildren().clear();
+
+        Story story = (Story) next;
+        displayStoryTextArea(story);
+
+        break;
     }
   }
 
@@ -391,7 +412,7 @@ public class ListMainPaneController {
     if (listOfTeams.length() == 0) {
       text9 = new Text("No Teams assigned, please assign Teams.");
       text9.setFill(Color.BLACK);
-      text9.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
+      text9.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
     } else {
       text9 = new Text(listOfTeams.substring(0, listOfTeams.length() - 2));
       text9.setFill(Color.BLACK);
@@ -410,5 +431,181 @@ public class ListMainPaneController {
    */
   public void setMainApp(Main mainApp) {
     this.mainApp = mainApp;
+  }
+
+  /**
+   * Displays the information about a given team in the text pane.
+   *
+   * @param team The team to display in the text pane.
+   */
+  private void displayTeamTextArea(Team team) {
+    Text textHeader = new Text("Team Information");
+    textHeader.setFill(Color.rgb(1, 0, 1));
+    textHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 20));
+
+    Text textLabelHeader = new Text("\nTeam Label: ");
+    textLabelHeader.setFill(Color.rgb(1, 0, 1));
+    textLabelHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text textLabelBody = new Text(team.getLabel());
+    textLabelBody.setFill(Color.rgb(1, 0, 1));
+    textLabelBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text textDescriptionHeader = new Text("\nTeam Description:\n");
+    textDescriptionHeader.setFill(Color.rgb(1, 0, 1));
+    textDescriptionHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text textDescriptionBody;
+    if (team.getTeamDescription().length() != 0) {
+      textDescriptionBody = new Text(team.getTeamDescription());
+    } else {
+      textDescriptionBody = new Text("N/A");
+    }
+    textDescriptionBody.setFill(Color.rgb(1, 0, 1));
+    textDescriptionBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text textMembersHeader = new Text("\nTeam Members: ");
+    textMembersHeader.setFill(Color.rgb(1, 0, 1));
+    textMembersHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    displayTextFlow.getChildren().addAll(textHeader, textLabelHeader, textLabelBody,
+                                         textDescriptionHeader, textDescriptionBody,
+                                         textMembersHeader);
+
+    Text textMembersBody;
+    Text textMemberRole;
+    for (Person member : team.getTeamMembers().sorted(Comparator.<Person>naturalOrder())) {
+      textMembersBody = new Text("\n" + member.getFirstName() + " - " + member.getLabel() + " Role: ");
+      Role role = team.getMembersRole().get(member);
+        if (role != null) {
+          textMemberRole = new Text(role.toString());
+        } else {
+          textMemberRole = new Text("Not assigned to a role yet.");
+        }
+      textMembersBody.setFill(Color.rgb(1, 0, 1));
+      textMembersBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+      textMemberRole.setFill(Color.rgb(1, 0, 1));
+      textMemberRole.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+      displayTextFlow.getChildren().addAll(textMembersBody, textMemberRole);
+    }
+  }
+
+  /**
+   * Displays the information about a given release in the text pane.
+   *
+   * @param release The release to display information about.
+   */
+  private void displayReleaseTextArea(Release release) {
+    Text textHeader = new Text("Release Information");
+    textHeader.setFill(Color.rgb(1, 0, 1));
+    textHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 20));
+
+    Text textLabelHeader = new Text("\nRelease Label: ");
+    textLabelHeader.setFill(Color.rgb(1, 0, 1));
+    textLabelHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text textLabelBody = new Text(release.getLabel());
+    textLabelBody.setFill(Color.rgb(1, 0, 1));
+    textLabelBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text textDescriptionHeader = new Text("\nRelease Description:\n");
+    textDescriptionHeader.setFill(Color.rgb(1, 0, 1));
+    textDescriptionHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text textDescriptionBody;
+    if (release.getReleaseDescription().length() != 0) {
+      textDescriptionBody = new Text(release.getReleaseDescription());
+    } else {
+      textDescriptionBody = new Text("N/A");
+    }
+    textDescriptionBody.setFill(Color.rgb(1, 0, 1));
+    textDescriptionBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text textDateHeader = new Text("\nRelease Date: ");
+    textDateHeader.setFill(Color.rgb(1, 0, 1));
+    textDateHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text textDateBody = new Text(release.getReleaseDate().toString());
+    textDateBody.setFill(Color.rgb(1, 0, 1));
+    textDateBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text textNotesHeader = new Text("\nRelease Notes:\n");
+    textNotesHeader.setFill(Color.rgb(1, 0, 1));
+    textNotesHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text textNotesBody;
+    if (release.getReleaseDescription().length() != 0) {
+      textNotesBody = new Text(release.getReleaseNotes());
+    } else {
+      textNotesBody = new Text("N/A");
+    }
+    textNotesBody.setFill(Color.rgb(1, 0, 1));
+    textNotesBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text textProjectHeader = new Text("\nProject: ");
+    textProjectHeader.setFill(Color.rgb(1, 0, 1));
+    textProjectHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text textProjectBody = new Text(release.getProjectRelease().toString());
+    textProjectBody.setFill(Color.rgb(1, 0, 1));
+    textProjectBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    displayTextFlow.getChildren().addAll(textHeader, textLabelHeader, textLabelBody,
+                                         textDescriptionHeader, textDescriptionBody, textDateHeader,
+                                         textDateBody, textNotesHeader, textNotesBody,
+                                         textProjectHeader, textProjectBody);
+  }
+
+  /**
+   * Displays the information about a given story in the text pane.
+   *
+   * @param story The story to display information about.
+   */
+  private void displayStoryTextArea(Story story) {
+    Text textHeader = new Text("Story Information");
+    textHeader.setFill(Color.rgb(1, 0, 1));
+    textHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 20));
+
+    Text textLabelHeader = new Text("\nStory Label: ");
+    textLabelHeader.setFill(Color.rgb(1, 0, 1));
+    textLabelHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text textLabelBody = new Text(story.getLabel());
+    textLabelBody.setFill(Color.rgb(1, 0, 1));
+    textLabelBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text textNameHeader = new Text("\nStory Name: ");
+    textNameHeader.setFill(Color.rgb(1, 0, 1));
+    textNameHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text textNameBody = new Text(story.getStoryName());
+    textNameBody.setFill(Color.rgb(1, 0, 1));
+    textNameBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text textDescriptionHeader = new Text("\nStory Description:\n");
+    textDescriptionHeader.setFill(Color.rgb(1, 0, 1));
+    textDescriptionHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text textDescriptionBody;
+    if (story.getDescription().length() != 0) {
+      textDescriptionBody = new Text(story.getDescription());
+    } else {
+      textDescriptionBody = new Text("N/A");
+    }
+    textDescriptionBody.setFill(Color.rgb(1, 0, 1));
+    textDescriptionBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text textCreatorHeader = new Text("\nStory Creator: ");
+    textCreatorHeader.setFill(Color.rgb(1, 0, 1));
+    textCreatorHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text textCreatorBody = new Text(story.getCreator().toString());
+    textCreatorBody.setFill(Color.rgb(1, 0, 1));
+    textCreatorBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    displayTextFlow.getChildren().addAll(textHeader, textLabelHeader, textLabelBody,
+                                         textNameHeader, textNameBody, textDescriptionHeader,
+                                         textDescriptionBody, textCreatorHeader, textCreatorBody);
   }
 }

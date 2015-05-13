@@ -85,7 +85,7 @@ public class UndoRedoHandler {
    */
   public void undo() throws Exception {
     if (undoStack.isEmpty()) {
-      System.out.println("Nothing to undo");
+//      System.out.println("Nothing to undo");
       return;
     }
     // Rearrange stacks
@@ -103,7 +103,7 @@ public class UndoRedoHandler {
    */
   public void redo() throws Exception {
     if (redoStack.isEmpty()) {
-      System.out.println("Nothing to redo");
+//      System.out.println("Nothing to redo");
       return;
     }
     // Rearrange stacks

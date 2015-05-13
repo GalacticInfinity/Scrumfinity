@@ -218,7 +218,7 @@ public class MenuBarController {
         mainApp.refreshLastSaved();
         mainApp.setLastSaved(); //for revert
       } catch (Exception a) {
-        System.out.println("Current File does not exist");
+//        System.out.println("Current File does not exist");
       }
     } else {
       FileChooser fileChooser = new FileChooser();
@@ -239,7 +239,7 @@ public class MenuBarController {
           mainApp.setLastSaved(); //for revert
         }
       } catch (Exception e) {
-        System.out.println("No filename specified");
+//        System.out.println("No filename specified");
       }
     }
   }
@@ -273,7 +273,7 @@ public class MenuBarController {
         mainApp.setLastSaved(); //for revert
       }
     } catch (Exception e) {
-      System.out.println("No filename specified");
+//      System.out.println("No filename specified");
     }
   }
 
@@ -370,7 +370,7 @@ public class MenuBarController {
         mainApp.setLastSaved(); //for revert
       }
     } catch (Exception e) {
-      System.out.println("No file selected");
+//      System.out.println("No file selected");
     }
   }
 
