@@ -402,7 +402,7 @@ public class ProjectDialogController {
       alert.setHeaderText(null);
       alert.setContentText(e1.getMessage());
       alert.showAndWait();
-      mainApp.refreshList();
+      mainApp.refreshList(null);
     }
   }
 
@@ -485,11 +485,9 @@ public class ProjectDialogController {
           for (AgileHistory team : this.allocatedTeams) {
             project.addTeam(team);
           }
-
-          mainApp.refreshList();
         }
       }
-
+      mainApp.refreshList(project);
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
       mainApp.newAction(undoRedoObject);
 

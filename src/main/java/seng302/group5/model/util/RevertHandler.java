@@ -98,7 +98,7 @@ public class RevertHandler {
     syncStoriesWithPeople(mainApp.getStories(), mainApp.getPeople());
 
     mainApp.refreshLastSaved();
-    mainApp.refreshList();
+    mainApp.refreshList(null);
   }
 
   /**

@@ -191,9 +191,8 @@ public class SkillsDialogController {
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       skill.setLabel(labelOfSkill);
       skill.setSkillDescription(skillDescription.getText());
-      mainApp.refreshList();
     }
-
+    mainApp.refreshList(skill);
     UndoRedoObject undoRedoObject = generateUndoRedoObject();
     mainApp.newAction(undoRedoObject);
 

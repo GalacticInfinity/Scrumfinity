@@ -125,8 +125,8 @@ public class ReleaseDialogController {
 
         releaseDateField.setValue(release.getReleaseDate());
         projectComboBox.setValue(release.getProjectRelease());
-        mainApp.refreshList();
       }
+      mainApp.refreshList(release);
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
       mainApp.newAction(undoRedoObject);
 
