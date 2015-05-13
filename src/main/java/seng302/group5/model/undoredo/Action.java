@@ -1,5 +1,8 @@
 package seng302.group5.model.undoredo;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 /**
  * Defines actions to be stored into the undo/redo handler
  *
@@ -24,5 +27,63 @@ public enum Action {
   STORY_CREATE,   // Story creation - 1 AgileItem
   STORY_EDIT,     // Story edit - 2 AgileItem
   STORY_DELETE,   // Story delete - 1 AgileItem
-  UNDEFINED       // Undefined action - no AgileItems
+  UNDEFINED;      // Undefined action - no AgileItems
+
+  private static Map<Action, String> actionStringMap;
+  static {
+    actionStringMap = new EnumMap<>(Action.class);
+
+    String createStr = "Create ";
+    String editStr = "Edit ";
+    String deleteStr = "Delete ";
+
+    String projectStr = "Project";
+    String personStr = "Person";
+    String skillStr = "Skill";
+    String teamStr = "Team";
+    String releaseStr = "Release";
+    String storyStr = "Story";
+
+    String actionStr;
+    String typeStr;
+
+    for (Action action : Action.values()) {
+      // for action string
+      if (action.name().contains("CREATE")) {
+        actionStr = createStr;
+      } else if (action.name().contains("EDIT")) {
+        actionStr = editStr;
+      } else if (action.name().contains("DELETE")) {
+        actionStr = deleteStr;
+      } else {
+        actionStr = null;
+      }
+      // for type string
+      if (action.name().contains("PROJECT")) {
+        typeStr = projectStr;
+      } else if (action.name().contains("PERSON")) {
+        typeStr = personStr;
+      } else if (action.name().contains("SKILL")) {
+        typeStr = skillStr;
+      } else if (action.name().contains("TEAM")) {
+        typeStr = teamStr;
+      } else if (action.name().contains("RELEASE")) {
+        typeStr = releaseStr;
+      } else if (action.name().contains("STORY")) {
+        typeStr = storyStr;
+      } else {
+        typeStr = null;
+      }
+
+      if (actionStr == null || typeStr == null) {
+        actionStringMap.put(action, "Undefined");
+      } else {
+        actionStringMap.put(action, actionStr + typeStr);
+      }
+    }
+  }
+
+  public static String getActionString(Action action) {
+    return actionStringMap.get(action);
+  }
 }
