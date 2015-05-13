@@ -14,6 +14,7 @@ import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Skill;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoObject;
+import seng302.group5.model.util.Settings;
 
 /**
  * The controller for the Skill dialog when creating a new Skill or editing an existing one
@@ -188,11 +189,14 @@ public class SkillsDialogController {
     if (createOrEdit == CreateOrEdit.CREATE) {
       skill = new Skill(labelOfSkill, skillDescription.getText());
       mainApp.addSkill(skill);
+      if (Settings.correctList(skill)) {
+        mainApp.refreshList(skill);
+      }
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       skill.setLabel(labelOfSkill);
       skill.setSkillDescription(skillDescription.getText());
+      mainApp.refreshList(skill);
     }
-    mainApp.refreshList(skill);
     UndoRedoObject undoRedoObject = generateUndoRedoObject();
     mainApp.newAction(undoRedoObject);
 

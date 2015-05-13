@@ -17,6 +17,7 @@ import seng302.group5.model.Person;
 import seng302.group5.model.Story;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoObject;
+import seng302.group5.model.util.Settings;
 
 /**
  * Controller for Story creation and editing.
@@ -197,13 +198,16 @@ public class StoryDialogController {
       if (createOrEdit == CreateOrEdit.CREATE) {
         story = new Story(label, storyName, storyDescription, creator);
         mainApp.addStory(story);
+        if (Settings.correctList(story)) {
+          mainApp.refreshList(story);
+        }
       } else if (createOrEdit == CreateOrEdit.EDIT) {
         story.setLabel(label);
         story.setStoryName(storyName);
         story.setDescription(storyDescription);
         story.setCreator(creator);
+        mainApp.refreshList(story);
       }
-      mainApp.refreshList(story);
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
       mainApp.newAction(undoRedoObject);
 

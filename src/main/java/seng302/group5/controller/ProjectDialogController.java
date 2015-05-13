@@ -25,6 +25,7 @@ import seng302.group5.model.Project;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoObject;
+import seng302.group5.model.util.Settings;
 
 /**
  * The controller for the project dialog when creating a new project or editing an existing one
@@ -476,6 +477,9 @@ public class ProjectDialogController {
           project.addTeam(team);
         }
         mainApp.addProject(project);
+        if (Settings.correctList(project)) {
+          mainApp.refreshList(project);
+        }
       } else {
         if (createOrEdit == CreateOrEdit.EDIT) {
           project.setLabel(projectLabel);
@@ -486,8 +490,8 @@ public class ProjectDialogController {
             project.addTeam(team);
           }
         }
+        mainApp.refreshList(project);
       }
-      mainApp.refreshList(project);
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
       mainApp.newAction(undoRedoObject);
 

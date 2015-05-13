@@ -21,6 +21,7 @@ import seng302.group5.model.Release;
 import seng302.group5.model.Project;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoObject;
+import seng302.group5.model.util.Settings;
 
 /**
  * Created by Craig Barnard on 7/04/2015.
@@ -116,6 +117,9 @@ public class ReleaseDialogController {
       if (createOrEdit == CreateOrEdit.CREATE) {
         release = new Release(releaseId, releaseDescription, releaseNotes, releaseDate, releaseProject);
         mainApp.addRelease(release);
+        if (Settings.correctList(release)) {
+          mainApp.refreshList(release);
+        }
       } else if (createOrEdit == CreateOrEdit.EDIT) {
         release.setLabel(releaseId);
         release.setReleaseDescription(releaseDescription);
@@ -125,8 +129,8 @@ public class ReleaseDialogController {
 
         releaseDateField.setValue(release.getReleaseDate());
         projectComboBox.setValue(release.getProjectRelease());
+        mainApp.refreshList(release);
       }
-      mainApp.refreshList(release);
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
       mainApp.newAction(undoRedoObject);
 

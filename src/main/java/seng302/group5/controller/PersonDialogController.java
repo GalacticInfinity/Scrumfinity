@@ -17,6 +17,7 @@ import seng302.group5.model.Person;
 import seng302.group5.model.Skill;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoObject;
+import seng302.group5.model.util.Settings;
 
 /**
  * The controller for the person dialog when creating a new person or editing an existing one.
@@ -214,14 +215,16 @@ public class PersonDialogController {
       if (createOrEdit == CreateOrEdit.CREATE) {
         person = new Person(personLabel, personFirstName, personLastName, personSkillSet);
         mainApp.addPerson(person);
+        if (Settings.correctList(person)) {
+          mainApp.refreshList(person);
+        }
       } else if (createOrEdit == CreateOrEdit.EDIT) {
         person.setLabel(personLabel);
         person.setFirstName(personFirstName);
         person.setLastName(personLastName);
         person.setSkillSet(personSkillSet);
-
+        mainApp.refreshList(person);
       }
-      mainApp.refreshList(person);
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
       mainApp.newAction(undoRedoObject);
 

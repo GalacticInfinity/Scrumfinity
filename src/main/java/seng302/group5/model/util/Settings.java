@@ -2,6 +2,14 @@ package seng302.group5.model.util;
 
 import java.io.File;
 
+import seng302.group5.model.AgileItem;
+import seng302.group5.model.Person;
+import seng302.group5.model.Project;
+import seng302.group5.model.Release;
+import seng302.group5.model.Skill;
+import seng302.group5.model.Story;
+import seng302.group5.model.Team;
+
 /**
  * Default settings for program, contains static variables for checking states of elements in program.
  * Created by Michael on 3/19/2015.
@@ -32,5 +40,25 @@ public class Settings {
     if (scrumHome.exists()) {
       defaultFilepath = scrumHome;
     }
+  }
+
+
+  public static boolean correctList(AgileItem agileItem) {
+    String listType = Settings.currentListType;
+    switch (listType) {
+      case "Projects":
+        return agileItem instanceof Project;
+      case "People":
+        return agileItem instanceof Person;
+      case "Skills":
+        return agileItem instanceof Skill;
+      case "Teams":
+        return agileItem instanceof Team;
+      case "Releases":
+        return agileItem instanceof Release;
+      case "Stories":
+        return agileItem instanceof Story;
+    }
+    return false;
   }
 }

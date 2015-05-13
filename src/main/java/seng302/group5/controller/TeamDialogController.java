@@ -25,6 +25,7 @@ import seng302.group5.model.Role;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoObject;
+import seng302.group5.model.util.Settings;
 
 /**
  * Created by Zander on 24/03/2015.
@@ -340,6 +341,9 @@ public class TeamDialogController {
           personRole.getPerson().assignToTeam(team);
         }
         mainApp.addTeam(team);
+        if (Settings.correctList(team)) {
+          mainApp.refreshList(team);
+        }
       } else if (createOrEdit == CreateOrEdit.EDIT) {
 
         team.setLabel(teamLabel);
@@ -353,8 +357,8 @@ public class TeamDialogController {
         for (Person memberToRemove : membersToRemove) {
           memberToRemove.removeFromTeam();
         }
+        mainApp.refreshList(team);
       }
-      mainApp.refreshList(team);
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
       mainApp.newAction(undoRedoObject);
       thisStage.close();
