@@ -37,7 +37,7 @@ public class NewLoading {
     String filename = file.toString();
     if (!filename.endsWith(".xml")) {
       filename = filename + ".xml";
-      System.out.println(filename);
+//      System.out.println(filename);
     }
     try {
       loadedFile = new BufferedReader(new FileReader(filename));

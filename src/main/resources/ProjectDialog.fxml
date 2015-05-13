@@ -11,14 +11,14 @@
    <children>
       <HBox alignment="BOTTOM_LEFT" prefHeight="32.0" prefWidth="434.0" spacing="10.0">
          <children>
-            <Label prefHeight="25.0" prefWidth="98.0" text="Project Label:*">
+            <Label prefHeight="25.0" prefWidth="120.0" text="Project Label:*">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
             <TextField fx:id="projectLabelField" alignment="TOP_LEFT" prefWidth="200.0" promptText="Unique project label.">
                <HBox.margin>
-                  <Insets left="8.0" />
+                  <Insets />
                </HBox.margin>
                <tooltip>
                   <Tooltip text="Label should be 20 characters or less or application may not behave as expected." />
@@ -27,34 +27,34 @@
       </HBox>
       <HBox alignment="CENTER_LEFT" prefHeight="38.0" prefWidth="369.0" spacing="10.0">
          <children>
-            <Label prefHeight="25.0" prefWidth="105.0" text="Project Name:*">
+            <Label prefHeight="25.0" prefWidth="120.0" text="Project Name:*">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
             <TextField fx:id="projectNameField" alignment="TOP_LEFT" prefWidth="200.0" promptText="Name of project.">
                <HBox.margin>
-                  <Insets left="1.0" />
+                  <Insets />
                </HBox.margin></TextField>
          </children>
       </HBox>
       <HBox prefHeight="67.0" prefWidth="429.0" spacing="10.0">
          <children>
-            <Label prefHeight="25.0" prefWidth="98.0" text="Description:">
+            <Label prefHeight="25.0" prefWidth="120.0" text="Description:">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
             <TextArea fx:id="projectDescriptionField" prefHeight="94.0" prefWidth="300.0" promptText="Description of project." wrapText="true">
                <HBox.margin>
-                  <Insets left="8.0" />
+                  <Insets />
                </HBox.margin></TextArea>
          </children>
          <VBox.margin>
             <Insets top="1.0" />
          </VBox.margin>
       </HBox>
-      <Label prefHeight="21.0" prefWidth="117.0" text="Team Allocation:">
+      <Label prefHeight="21.0" prefWidth="130.0" text="Team Allocation:">
          <font>
             <Font size="15.0" />
          </font>
@@ -109,13 +109,13 @@
       </HBox>
       <HBox fx:id="btnContainer" alignment="BOTTOM_RIGHT" prefHeight="39.0" prefWidth="434.0" spacing="10.0">
          <children>
-            <Label prefHeight="25.0" prefWidth="314.0" text="* Fields cannot be empty.">
+            <Label prefHeight="25.0" prefWidth="317.0" text="* Fields cannot be empty.">
                <font>
                   <Font name="System Italic" size="13.0" />
                </font>
             </Label>
-            <Button fx:id="btnConfirm" mnemonicParsing="false" onAction="#btnConfirmClick" prefWidth="60.0" text="Save" />
-            <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#btnCancelClick" prefWidth="60.0" text="Cancel" />
+            <Button fx:id="btnConfirm" mnemonicParsing="false" onAction="#btnConfirmClick" text="Save" />
+            <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#btnCancelClick" text="Cancel" />
          </children>
          <opaqueInsets>
             <Insets />

@@ -23,6 +23,7 @@ import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.NewLoading;
 import seng302.group5.model.NewSaving;
+import seng302.group5.model.undoredo.UndoRedoHandler;
 import seng302.group5.model.util.ReportWriter;
 import seng302.group5.model.util.Settings;
 
@@ -83,6 +84,10 @@ public class MenuBarController {
     // Ticks the project menu item
     showProjectsMenuItem.setSelected(true);
     showListMenuItem.setSelected(true);
+
+    // Disable the undo/redo buttons on launch
+    undoMenuItem.setDisable(true);
+    redoMenuItem.setDisable(true);
   }
 
   /**
@@ -104,7 +109,6 @@ public class MenuBarController {
   @FXML
   protected void createProject(ActionEvent event) {
     mainApp.showProjectDialog(CreateOrEdit.CREATE);
-    // Deactivates button if no changes.
   }
 
   /**
@@ -214,7 +218,7 @@ public class MenuBarController {
         mainApp.refreshLastSaved();
         mainApp.setLastSaved(); //for revert
       } catch (Exception a) {
-        System.out.println("Current File does not exist");
+//        System.out.println("Current File does not exist");
       }
     } else {
       FileChooser fileChooser = new FileChooser();
@@ -235,7 +239,7 @@ public class MenuBarController {
           mainApp.setLastSaved(); //for revert
         }
       } catch (Exception e) {
-        System.out.println("No filename specified");
+//        System.out.println("No filename specified");
       }
     }
   }
@@ -251,7 +255,9 @@ public class MenuBarController {
   protected void btnClickSaveAs(ActionEvent event) {
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Save Project");
-    if (Settings.defaultFilepath != null) {
+    if (Settings.currentFile != null) {
+      fileChooser.setInitialDirectory(Settings.currentFile.getParentFile());
+    } else if (Settings.defaultFilepath != null){
       fileChooser.setInitialDirectory(Settings.defaultFilepath);
     }
     try {
@@ -267,7 +273,7 @@ public class MenuBarController {
         mainApp.setLastSaved(); //for revert
       }
     } catch (Exception e) {
-      System.out.println("No filename specified");
+//      System.out.println("No filename specified");
     }
   }
 
@@ -364,7 +370,7 @@ public class MenuBarController {
         mainApp.setLastSaved(); //for revert
       }
     } catch (Exception e) {
-      System.out.println("No file selected");
+//      System.out.println("No file selected");
     }
   }
 
@@ -581,5 +587,26 @@ public class MenuBarController {
    */
   public void setMainApp(Main mainApp) {
     this.mainApp = mainApp;
+  }
+
+  /**
+   * Refresh the undo and redo menu items based on the state of the undo/redo handler
+   *
+   * @param undoRedoHandler the undo/redo handler to check
+   */
+  public void checkUndoRedoMenuItems(UndoRedoHandler undoRedoHandler) {
+    // undo menu item
+    if (undoRedoHandler.peekUndoStack() == null) {
+      undoMenuItem.setDisable(true);
+    } else {
+      undoMenuItem.setDisable(false);
+    }
+
+    // redo menu item
+    if (undoRedoHandler.peekRedoStack() == null) {
+      redoMenuItem.setDisable(true);
+    } else {
+      redoMenuItem.setDisable(false);
+    }
   }
 }

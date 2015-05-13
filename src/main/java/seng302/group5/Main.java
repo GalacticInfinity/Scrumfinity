@@ -14,7 +14,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -42,7 +41,6 @@ import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoHandler;
 import seng302.group5.model.undoredo.UndoRedoObject;
-import seng302.group5.model.util.Settings;
 import seng302.group5.model.util.RevertHandler;
 
 /**
@@ -95,8 +93,8 @@ public class Main extends Application {
 
     this.primaryStage = primaryStage;
     this.primaryStage.setTitle(mainTitle);
-    this.primaryStage.setMinHeight(420);
-    this.primaryStage.setMinWidth(640);
+    this.primaryStage.setMinHeight(400);
+    this.primaryStage.setMinWidth(600);
     // Constructs the application
     initRootLayout();
     showMenuBar();
@@ -154,8 +152,8 @@ public class Main extends Application {
     try {
       this.primaryStage = primaryStage;
       this.primaryStage.setTitle(mainTitle);
-      this.primaryStage.setMinHeight(420);
-      this.primaryStage.setMinWidth(640);
+      this.primaryStage.setMinHeight(400);
+      this.primaryStage.setMinWidth(600);
 
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(LoginController.class.getResource("/LoginScreen.fxml"));
@@ -491,6 +489,7 @@ public class Main extends Application {
     try {
       undoRedoHandler.undo();
       toggleName();
+      checkUndoRedoMenuItems();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -503,6 +502,7 @@ public class Main extends Application {
     try {
       undoRedoHandler.redo();
       toggleName();
+      checkUndoRedoMenuItems();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -516,6 +516,7 @@ public class Main extends Application {
   public void newAction(UndoRedoObject undoRedoObject) {
     undoRedoHandler.newAction(undoRedoObject);
     toggleName();
+    checkUndoRedoMenuItems();
   }
 
   /**
@@ -524,6 +525,7 @@ public class Main extends Application {
   public void refreshLastSaved() {
     lastSavedObject = undoRedoHandler.peekUndoStack();
     toggleName();
+    checkUndoRedoMenuItems();
   }
 
   /**
@@ -640,7 +642,7 @@ public class Main extends Application {
         break;
       default:
         itemToStore = null;
-        System.err.println("Unhandled case for generating undo/redo delete object");
+//        System.err.println("Unhandled case for generating undo/redo delete object");
     }
 
     undoRedoObject.setAgileItem(agileItem); // store original
@@ -821,7 +823,7 @@ public class Main extends Application {
         newAction(undoRedoObject);
         break;
       default:
-        System.err.println("Unhandled case for deleting agile item");
+//        System.err.println("Unhandled case for deleting agile item");
         break;
     }
   }
@@ -862,6 +864,11 @@ public class Main extends Application {
 
   public MenuBarController getMBC() {
     return MBC;
+  }
+
+  public void setMBC(MenuBarController MBC) {
+    // This is for tests
+    this.MBC = MBC;
   }
 
   public ObservableList<Project> getProjects() {
@@ -938,6 +945,13 @@ public class Main extends Application {
    */
   public void refreshList(AgileItem agileItem) {
     LMPC.refreshList(agileItem);
+  }
+
+  /**
+   * Refresh the undo and redo menu items based on the state of the undo/redo handler
+   */
+  public void checkUndoRedoMenuItems() {
+    MBC.checkUndoRedoMenuItems(undoRedoHandler);
   }
 
   public void setMainScene() {

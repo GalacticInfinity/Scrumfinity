@@ -31,22 +31,22 @@
                 <TextArea fx:id="skillDescription" prefHeight="229.0" prefWidth="310.0" promptText="Short description of skill." wrapText="true" />
             </children>
         </HBox>
-        <HBox fx:id="btnContainer" alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="429.0" spacing="10.0">
+        <HBox fx:id="btnContainer" alignment="BOTTOM_RIGHT" prefHeight="25.0" prefWidth="429.0" spacing="10.0">
             <children>
                 <Label prefHeight="25.0" prefWidth="275.0" text="* Fields cannot be empty.">
                     <font>
                         <Font name="System Italic" size="13.0" />
                     </font>
-               <padding>
-                  <Insets left="10.0" />
-               </padding>
                 </Label>
-                <Button fx:id="skillCreation" mnemonicParsing="false" onAction="#SkillCreation" prefWidth="60.0" text="Save" />
-                <Button fx:id="cancelCreation" mnemonicParsing="false" onAction="#CancelCreation" prefWidth="60.0" text="Cancel" />
+                <Button fx:id="skillCreation" mnemonicParsing="false" onAction="#SkillCreation" text="Save" />
+                <Button fx:id="cancelCreation" mnemonicParsing="false" onAction="#CancelCreation" text="Cancel" />
             </children>
          <VBox.margin>
             <Insets top="15.0" />
          </VBox.margin>
+         <padding>
+            <Insets bottom="5.0" right="5.0" />
+         </padding>
         </HBox>
     </children>
     <padding>

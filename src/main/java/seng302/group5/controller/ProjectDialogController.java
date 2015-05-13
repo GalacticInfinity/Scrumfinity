@@ -262,8 +262,15 @@ public class ProjectDialogController {
       }
       for (Project project1 : mainApp.getProjects()) {
         for (AgileHistory team1 : project1.getAllocatedTeams()) {
+          String projectLabel;
+          if (project == null) {
+            projectLabel = "";
+          } else {
+            projectLabel = project.getLabel();
+          }
+
           if (Objects.equals(team.toString(), team1.getAgileItem().toString()) &&
-              !project.getLabel().equals(project1.getLabel())) {
+              !projectLabel.equals(project1.getLabel())) {
             if (team1.getEndDate() == null) {
               // team's end date has not been defined yet. assume it is for infinity
               if (startDate.isAfter(team1.getStartDate())) {
@@ -391,7 +398,7 @@ public class ProjectDialogController {
       }
     } catch (Exception e1) {
       Alert alert = new Alert(Alert.AlertType.ERROR);
-      alert.setTitle("Invalid Dates");
+      alert.setTitle("Invalid Fields");
       alert.setHeaderText(null);
       alert.setContentText(e1.getMessage());
       alert.showAndWait();
@@ -419,7 +426,7 @@ public class ProjectDialogController {
         this.allocatedTeams.remove(temp);
       }
     } catch (Exception e) {
-      System.out.println("Nothing selected");
+//      System.out.println("Nothing selected");
     }
     btnConfirm.setDisable(false);
   }

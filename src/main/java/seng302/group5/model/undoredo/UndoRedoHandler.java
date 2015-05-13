@@ -48,6 +48,19 @@ public class UndoRedoHandler {
   }
 
   /**
+   * Peek at what is top of the redo stack
+   *
+   * @return The top element of the redo stack, or null if it's empty
+   */
+  public UndoRedoObject peekRedoStack() {
+    if (redoStack.isEmpty()) {
+      return null;
+    } else {
+      return redoStack.peek();
+    }
+  }
+
+  /**
    * Clear the undo and redo stacks
    */
   public void clearStacks() {
@@ -72,7 +85,7 @@ public class UndoRedoHandler {
    */
   public void undo() throws Exception {
     if (undoStack.isEmpty()) {
-      System.out.println("Nothing to undo");
+//      System.out.println("Nothing to undo");
       return;
     }
     // Rearrange stacks
@@ -90,7 +103,7 @@ public class UndoRedoHandler {
    */
   public void redo() throws Exception {
     if (redoStack.isEmpty()) {
-      System.out.println("Nothing to redo");
+//      System.out.println("Nothing to redo");
       return;
     }
     // Rearrange stacks

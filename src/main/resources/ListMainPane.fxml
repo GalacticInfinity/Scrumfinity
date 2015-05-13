@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -14,7 +15,7 @@
       </AnchorPane>
       <AnchorPane minHeight="373.0" minWidth="450.0" prefHeight="373.0" prefWidth="450.0">
          <children>
-            <TextArea fx:id="displayTextArea" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="373.0" minWidth="450.0" prefHeight="373.0" prefWidth="450.0" promptText=" " text=" " wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <TextFlow fx:id="displayTextFlow" layoutX="6.0" lineSpacing="5.0" prefHeight="370.0" prefWidth="444.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children>
       </AnchorPane>
    </items>

@@ -45,7 +45,7 @@ public class NewSaving {
     String filename = file.toString();
     if (!filename.endsWith(".xml")) {
       filename = filename + ".xml";
-      System.out.println(filename);
+//      System.out.println(filename);
     }
 
     // Creates the writer and begins the writing process

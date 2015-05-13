@@ -78,13 +78,13 @@
         </HBox>
         <HBox fx:id="btnContainer" alignment="BOTTOM_RIGHT" prefHeight="25.0" prefWidth="434.0" spacing="10.0">
             <children>
-            <Label prefHeight="25.0" prefWidth="290.0" text="* Fields cannot be empty.">
+            <Label prefHeight="25.0" prefWidth="330.0" text="* Fields cannot be empty.">
                <font>
                   <Font name="System Italic" size="13.0" />
                </font>
             </Label>
-                <Button fx:id="btnConfirm" mnemonicParsing="false" onAction="#btnConfirmClick" prefWidth="60.0" text="Save" />
-                <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#btnCancelClick" prefWidth="60.0" text="Cancel" />
+                <Button fx:id="btnConfirm" mnemonicParsing="false" onAction="#btnConfirmClick" text="Save" />
+                <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#btnCancelClick" text="Cancel" />
             </children>
             <opaqueInsets>
                 <Insets />
