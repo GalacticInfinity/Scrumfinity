@@ -68,7 +68,12 @@ public class ReportWriter {
 
       //header = report.createTextNode(headerText);
       rootElement = report.createElement("Header");
-      String orgName = Settings.organizationName;
+      String orgName;
+      if (!Settings.organizationName.isEmpty()) {
+         orgName = Settings.organizationName;
+      } else {
+        orgName = "__undefined__";
+      }
       rootElement.setAttribute("Label", "Report created on " + datesString + " for " +
                                         orgName);
       report.appendChild(rootElement);
