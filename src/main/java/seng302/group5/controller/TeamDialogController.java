@@ -46,8 +46,8 @@ public class TeamDialogController {
 
   private Role noRole;
 
-  private boolean comboListenerFlag = false;  // if true, assign the selected role in combo box
-  private PersonRole lastSelectedPersonRole = new PersonRole(new Person(), new Role());
+  private boolean comboListenerFlag;
+  private PersonRole lastSelectedPersonRole;
 
   @FXML private TextField teamLabelField;
   @FXML private ListView<PersonRole> teamMembersList;
@@ -98,6 +98,9 @@ public class TeamDialogController {
       this.team = null;
       this.lastTeam = null;
     }
+
+    comboListenerFlag = false;  // if true, assign the selected role in combo box
+    lastSelectedPersonRole = new PersonRole(new Person(), new Role());
 
     btnConfirm.setDefaultButton(true);
     thisStage.setResizable(false);
@@ -171,18 +174,13 @@ public class TeamDialogController {
             if (!comboListenerFlag) {
               // Get out instantly after resetting flag
               comboListenerFlag = true;
-              System.out.println("flag is false");
               return;
             }
             // Handle clearSelection()
             if (selectedRole == null) {
-              System.out.println("role is null");
               return;
             }
             PersonRole selected = teamMembersList.getSelectionModel().getSelectedItem();
-//            PersonRole selected = selectedPersonRole;
-            System.out.println("combo");
-            System.out.println(selected);
             if (selected == null) {
               Alert alert = new Alert(Alert.AlertType.ERROR);
               alert.setTitle("No team member selected");
@@ -233,25 +231,23 @@ public class TeamDialogController {
           });
       teamMembersList.setOnMouseClicked(event -> {
         PersonRole personRole = teamMembersList.getSelectionModel().getSelectedItem();
-        if (personRole != null
-            && personRole.compareTo(lastSelectedPersonRole) != 0) {
+        if (personRole != null && personRole.compareTo(lastSelectedPersonRole) != 0) {
+          // Only refresh combo box value if person clicked on is different
           if (teamMemberRoleCombo.getValue() != null &&
-              teamMemberRoleCombo.getValue().equals(personRole.getRole())) {
+              (teamMemberRoleCombo.getValue().equals(personRole.getRole()) ||
+               (teamMemberRoleCombo.getValue().equals(noRole) && personRole.getRole() == null))) {
+            // noRole is equivalent to null in personRole.getRole()
+            // Combo box change listener will not be called. Refresh the flag.
             comboListenerFlag = true;
             return;
           }
           comboListenerFlag = false;
-//          selectedPersonRole = personRole;
           if (personRole.getRole() == null) {
             teamMemberRoleCombo.getSelectionModel().select(noRole);
           } else {
             teamMemberRoleCombo.getSelectionModel().select(personRole.getRole());
           }
           lastSelectedPersonRole = personRole;
-          System.out.println("list");
-          System.out.println(personRole);
-        } else {
-          System.out.println("EQUAL!!!! or null");
         }
       });
     } catch (Exception e) {
@@ -447,6 +443,20 @@ public class TeamDialogController {
     private Person person;
     private Role role;
 
+    /**
+     * Default constructor using person and role default constructors
+     */
+    public PersonRole() {
+      this.person = new Person();
+      this.role = new Role();
+    }
+
+    /**
+     * Constructor for PersonRole object
+     *
+     * @param person Person to store
+     * @param role Role to store
+     */
     public PersonRole(Person person, Role role) {
       this.person = person;
       this.role = role;
