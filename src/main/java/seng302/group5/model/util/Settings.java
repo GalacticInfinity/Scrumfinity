@@ -43,6 +43,13 @@ public class Settings {
   }
 
 
+  /**
+   * Used to check if the list being displayed contaisn the objects of same type as the
+   * one being created.
+   *
+   * @param agileItem agileItem being created
+   * @return Bool if displayed list being viewed contains object type.
+   */
   public static boolean correctList(AgileItem agileItem) {
     String listType = Settings.currentListType;
     switch (listType) {
