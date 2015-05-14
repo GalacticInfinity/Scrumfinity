@@ -14,7 +14,9 @@ import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Person;
+import seng302.group5.model.Role;
 import seng302.group5.model.Skill;
+import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoObject;
 import seng302.group5.model.util.Settings;
@@ -306,6 +308,10 @@ public class PersonDialogController {
         this.availableSkills.remove(selectedSkill);
 
         this.skillsList.getSelectionModel().clearSelection();
+
+        if (createOrEdit == CreateOrEdit.EDIT) {
+          checkButtonDisabled();
+        }
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -323,8 +329,30 @@ public class PersonDialogController {
       Skill selectedSkill = personSkillList.getSelectionModel().getSelectedItem();
 
       if (selectedSkill != null) {
+        // check person (if exists) is in a team with a non-null role
+        if (person != null && person.getTeam() != null &&
+            person.getTeam().getMembersRole().get(person) != null) {
+          Team team = person.getTeam();
+          Role role = team.getMembersRole().get(person);
+          Skill roleSkill = role.getRequiredSkill();
+          if (selectedSkill.equals(roleSkill)) {
+            // selected skill is required by the person's current role in their team
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Cannot remove skill");
+            alert.setHeaderText(null);
+            alert.setContentText(String.format(
+                "%s already has the role %s in the team %s with the required skill %s",
+                person, role, team, roleSkill));
+            alert.showAndWait();
+            return;
+          }
+        }
         this.availableSkills.add(selectedSkill);
         this.selectedSkills.remove(selectedSkill);
+
+        if (createOrEdit == CreateOrEdit.EDIT) {
+          checkButtonDisabled();
+        }
       }
     } catch (Exception e) {
       e.printStackTrace();

@@ -111,17 +111,14 @@ public class ProjectDialogController {
 
     // Handle TextField text changes.
     projectLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if(createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
       if (newValue.trim().length() > 20) {
         projectLabelField.setStyle("-fx-text-inner-color: red;");
       } else {
         projectLabelField.setStyle("-fx-text-inner-color: black;");
-      }
-    });
-
-    projectLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
-      //For disabling the button
-      if(createOrEdit == CreateOrEdit.EDIT) {
-        checkButtonDisabled();
       }
     });
 
@@ -220,23 +217,6 @@ public class ProjectDialogController {
       throw new Exception("Project Name is empty.");
     } else {
       return inputProjectName;
-    }
-  }
-
-  //TODO: Remove unused functions
-  private Boolean parseLabelChange(Project project) {
-    if (projectLabelField.getText().equals(project.getLabel())) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-  private Boolean parseNameChange(Project project) {
-    if (projectNameField.getText().equals(project.getProjectName())) {
-      return false;
-    } else {
-      return true;
     }
   }
 
