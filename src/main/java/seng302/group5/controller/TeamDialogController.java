@@ -47,6 +47,7 @@ public class TeamDialogController {
   private Role noRole;
 
   private boolean comboListenerFlag = false;  // if true, assign the selected role in combo box
+  private PersonRole lastSelectedPersonRole = new PersonRole(new Person(), new Role());
 
   @FXML private TextField teamLabelField;
   @FXML private ListView<PersonRole> teamMembersList;
@@ -170,13 +171,18 @@ public class TeamDialogController {
             if (!comboListenerFlag) {
               // Get out instantly after resetting flag
               comboListenerFlag = true;
+              System.out.println("flag is false");
               return;
             }
             // Handle clearSelection()
             if (selectedRole == null) {
+              System.out.println("role is null");
               return;
             }
             PersonRole selected = teamMembersList.getSelectionModel().getSelectedItem();
+//            PersonRole selected = selectedPersonRole;
+            System.out.println("combo");
+            System.out.println(selected);
             if (selected == null) {
               Alert alert = new Alert(Alert.AlertType.ERROR);
               alert.setTitle("No team member selected");
@@ -227,13 +233,25 @@ public class TeamDialogController {
           });
       teamMembersList.setOnMouseClicked(event -> {
         PersonRole personRole = teamMembersList.getSelectionModel().getSelectedItem();
-        if (personRole != null) {
+        if (personRole != null
+            && personRole.compareTo(lastSelectedPersonRole) != 0) {
+          if (teamMemberRoleCombo.getValue() != null &&
+              teamMemberRoleCombo.getValue().equals(personRole.getRole())) {
+            comboListenerFlag = true;
+            return;
+          }
           comboListenerFlag = false;
+//          selectedPersonRole = personRole;
           if (personRole.getRole() == null) {
             teamMemberRoleCombo.getSelectionModel().select(noRole);
           } else {
             teamMemberRoleCombo.getSelectionModel().select(personRole.getRole());
           }
+          lastSelectedPersonRole = personRole;
+          System.out.println("list");
+          System.out.println(personRole);
+        } else {
+          System.out.println("EQUAL!!!! or null");
         }
       });
     } catch (Exception e) {
