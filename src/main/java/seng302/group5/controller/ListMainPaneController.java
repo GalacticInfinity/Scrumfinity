@@ -403,7 +403,7 @@ public class ListMainPaneController {
     StringBuilder listOfTeams = new StringBuilder();
     for (AgileHistory team : project.getAllocatedTeams().sorted(
         Comparator.<AgileHistory>naturalOrder())) {
-        listOfTeams.append("" + team.toString() + "\n");
+        listOfTeams.append("" + team.toString() + " \n");
     }
     Text text9 = new Text();
     if (listOfTeams.length() == 0) {
@@ -472,7 +472,13 @@ public class ListMainPaneController {
     Text textMembersBody;
     Text textMemberRole;
     for (Person member : team.getTeamMembers().sorted(Comparator.<Person>naturalOrder())) {
-      textMembersBody = new Text("\n" + member.getFirstName() + " - " + member.getLabel() + " Role: ");
+      if (member.getFirstName().isEmpty() && member.getLastName().isEmpty()) {
+        textMembersBody = new Text("\n" + member.getLabel() + " - Role: ");
+      } else {
+        textMembersBody = new Text("\n" + member.getLabel() + " - " + member.getFirstName() + " " +
+                                   member.getLastName() + " - Role: ");
+
+      }
       Role role = team.getMembersRole().get(member);
         if (role != null) {
           textMemberRole = new Text(role.toString());
