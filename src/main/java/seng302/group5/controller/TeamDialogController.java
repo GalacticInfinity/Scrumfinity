@@ -3,8 +3,6 @@ package seng302.group5.controller;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -15,7 +13,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import seng302.group5.Main;
@@ -48,6 +45,8 @@ public class TeamDialogController {
   private ArrayList<Person> membersToRemove = new ArrayList<>();
 
   private Role noRole;
+
+  private boolean comboListenerFlag = false;  // if true, assign the selected role in combo box
 
   @FXML private TextField teamLabelField;
   @FXML private ListView<PersonRole> teamMembersList;
@@ -167,6 +166,12 @@ public class TeamDialogController {
       this.teamMemberRoleCombo.setItems(tempRoles);
       this.teamMemberRoleCombo.getSelectionModel().selectedItemProperty().addListener(
           (observable, oldRole, selectedRole) -> {
+            // Check if the listener should be assigning roles or not
+            if (!comboListenerFlag) {
+              // Get out instantly after resetting flag
+              comboListenerFlag = true;
+              return;
+            }
             // Handle clearSelection()
             if (selectedRole == null) {
               return;
@@ -220,6 +225,17 @@ public class TeamDialogController {
               }
             }
           });
+      teamMembersList.setOnMouseClicked(event -> {
+        PersonRole personRole = teamMembersList.getSelectionModel().getSelectedItem();
+        if (personRole != null) {
+          comboListenerFlag = false;
+          if (personRole.getRole() == null) {
+            teamMemberRoleCombo.getSelectionModel().select(noRole);
+          } else {
+            teamMemberRoleCombo.getSelectionModel().select(personRole.getRole());
+          }
+        }
+      });
     } catch (Exception e) {
       e.printStackTrace();
     }
