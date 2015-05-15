@@ -1,7 +1,10 @@
 package seng302.group5.controller;
 
+import java.awt.event.ActionListener;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -192,7 +195,7 @@ public class ReleaseDialogController {
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       thisStage.setTitle("Edit Release");
       btnConfirm.setText("Save");
-
+      btnConfirm.setDisable(true);
       releaseLabelField.setText(release.getLabel());
       releaseDescriptionField.setText(release.getReleaseDescription());
       releaseNotesField.setText(release.getReleaseNotes());
@@ -216,12 +219,63 @@ public class ReleaseDialogController {
 
     // Handle TextField text changes.
     releaseLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
+      if(createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
       if (newValue.trim().length() > 20) {
         releaseLabelField.setStyle("-fx-text-inner-color: red;");
       } else {
         releaseLabelField.setStyle("-fx-text-inner-color: black;");
       }
     });
+
+    releaseDescriptionField.textProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if(createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+
+    releaseNotesField.textProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+
+    projectComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+
+    releaseDateField.valueProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+
+
+
+
+  }
+
+
+  /**
+   * checks if there are any changed fields and disables or enables the button accordingly
+   */
+  private void checkButtonDisabled() {
+    if (releaseLabelField.getText().equals(release.getLabel()) &&
+        releaseDescriptionField.getText().equals(release.getReleaseDescription()) &&
+        releaseNotesField.getText().equals(release.getReleaseNotes()) &&
+        projectComboBox.getSelectionModel().getSelectedItem().equals(release.getProjectRelease())
+        && releaseDateField.getValue().toString().equals(release.getReleaseDate().toString())) {
+      btnConfirm.setDisable(true);
+    } else {
+      btnConfirm.setDisable(false);
+    }
   }
 
   /**
