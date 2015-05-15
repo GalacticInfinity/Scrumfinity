@@ -1,6 +1,8 @@
 package seng302.group5.controller;
 
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 
 import javafx.beans.value.ChangeListener;
@@ -529,7 +531,12 @@ public class ListMainPaneController {
     textDateHeader.setFill(Color.rgb(1, 0, 1));
     textDateHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
-    Text textDateBody = new Text(release.getReleaseDate().toString());
+    LocalDate date = release.getReleaseDate();
+    String dateString;
+    String format = "dd/MM/yyyy";
+    dateString = date.format(DateTimeFormatter.ofPattern(format));
+
+    Text textDateBody = new Text(dateString);
     textDateBody.setFill(Color.rgb(1, 0, 1));
     textDateBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
 
