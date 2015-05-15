@@ -36,7 +36,7 @@
         </HBox>
         <HBox alignment="CENTER_LEFT" prefHeight="232.0" prefWidth="487.0" spacing="10.0">
             <children>
-            <VBox prefHeight="232.0" prefWidth="201.0">
+            <VBox prefHeight="232.0" prefWidth="181.0">
                <children>
                   <Label prefHeight="25.0" prefWidth="173.0" text="Available Members:">
                      <font>
@@ -60,15 +60,15 @@
                   </Button>
                </children>
             </VBox>
-            <VBox prefHeight="232.0" prefWidth="195.0">
+            <VBox prefHeight="232.0" prefWidth="220.0">
                <children>
-                      <Label prefHeight="25.0" prefWidth="115.0" text="Team Members:">
+                      <Label prefHeight="25.0" text="Team Members:">
                           <font>
                               <Font size="15.0" />
                           </font>
                       </Label>
-                  <ListView fx:id="teamMembersList" maxHeight="225.0" prefHeight="184.0" prefWidth="195.0" />
-                  <ComboBox fx:id="teamMemberRoleCombo" prefHeight="25.0" prefWidth="200.0" promptText="Persons role." />
+                  <ListView fx:id="teamMembersList" maxHeight="225.0" prefHeight="184.0" prefWidth="220.0" />
+                  <ComboBox fx:id="teamMemberRoleCombo" prefHeight="25.0" prefWidth="220.0" promptText="Persons role." />
                </children>
             </VBox>
             </children>
