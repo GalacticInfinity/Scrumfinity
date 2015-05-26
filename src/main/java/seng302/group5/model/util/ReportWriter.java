@@ -18,6 +18,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seng302.group5.Main;
 import seng302.group5.model.AgileHistory;
+import seng302.group5.model.AgileItem;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
@@ -47,6 +48,14 @@ public class ReportWriter {
   Element allStories;
   LocalDate date;
   String dateFormat = "dd/MM/yyyy";
+
+  private Main mainApp;
+  ObservableList<Skill> skills = FXCollections.observableArrayList();
+  ObservableList<Team> teams = FXCollections.observableArrayList();
+  ObservableList<Story> stories = FXCollections.observableArrayList();
+  ObservableList<Project> projectItems = FXCollections.observableArrayList();
+  ObservableList<Person> peoples = FXCollections.observableArrayList();
+  ObservableList<Release> releases = FXCollections.observableArrayList();
 
   ObservableList<Team> orphanTeamsList = FXCollections.observableArrayList();
   ObservableList<Skill> unassignedSkills = FXCollections.observableArrayList();
@@ -396,4 +405,44 @@ public class ReportWriter {
     storyElem.appendChild(storyCreator);
   }
 
+  public void setLists() {
+    skills.setAll(mainApp.getSkills());
+    teams.setAll(mainApp.getTeams());
+    projectItems.setAll(mainApp.getProjects());
+    releases.setAll(mainApp.getReleases());
+    peoples.setAll(mainApp.getPeople());
+    stories.setAll(mainApp.getStories());
+  }
+
+  public void removeItem(ObservableList<AgileItem> list, AgileItem item) {
+    list.remove(item);
+  }
+
+  public void addItem(ObservableList<AgileItem> list, AgileItem item) {
+    list.add(item);
+  }
+
+  public ObservableList<Skill> getSkills() {
+    return skills;
+  }
+
+  public ObservableList<Team> getTeams() {
+    return teams;
+  }
+
+  public ObservableList<Story> getStories() {
+    return stories;
+  }
+
+  public ObservableList<Project> getProjectItems() {
+    return projectItems;
+  }
+
+  public ObservableList<Person> getPeoples() {
+    return peoples;
+  }
+
+  public ObservableList<Release> getReleases() {
+    return releases;
+  }
 }
