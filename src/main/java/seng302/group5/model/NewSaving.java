@@ -63,6 +63,7 @@ public class NewSaving {
       if (Settings.progVersion >= 0.2) {
         saveStories(saveFile);
       }
+      saveEnd(saveFile);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -82,6 +83,16 @@ public class NewSaving {
       orgName = "__undefined__";
     }
     saveFile.write("<scrumfinity version=\"0.2\" organization=\"" + orgName + "\">\n");
+  }
+
+  /**
+   * Function to simply write the </scrumfinity> tag. As everything else has it's own function
+   * to write to save file, this does too.
+   * @param saveFile Save file being written to
+   * @throws Exception Error with writer
+   */
+  private void saveEnd(Writer saveFile) throws Exception {
+    saveFile.write("</scrumfinity>");
   }
 
   /**
