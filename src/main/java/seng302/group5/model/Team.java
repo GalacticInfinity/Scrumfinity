@@ -52,7 +52,7 @@ public class Team implements AgileItem, Comparable<Team> {
 
 
   /**
-   * Constructor to create a clone of an existing person
+   * Constructor to create a clone of an existing team
    *
    * @param clone Person to clone
    */
