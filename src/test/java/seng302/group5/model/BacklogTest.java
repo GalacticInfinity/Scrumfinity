@@ -36,7 +36,7 @@ public class BacklogTest {
   public void testAddStory() throws Exception {
     assertTrue(backlog.getStories().isEmpty());
 
-    Story story = new Story("the story", "the very story", "description", productOwner);
+    Story story = new Story("the story", "the very story", "description", productOwner, null);
 
     backlog.addStory(story);
 
@@ -48,7 +48,7 @@ public class BacklogTest {
   public void testRemoveStory() throws Exception {
     assertTrue(backlog.getStories().isEmpty());
 
-    Story story = new Story("the story", "the very story", "description", productOwner);
+    Story story = new Story("the story", "the very story", "description", productOwner, null);
 
     backlog.addStory(story);
 
@@ -62,7 +62,7 @@ public class BacklogTest {
 
   @Test
   public void testCopyValues() throws Exception {
-    Story story = new Story("the story", "the very story", "description", productOwner);
+    Story story = new Story("the story", "the very story", "description", productOwner, null);
     backlog.addStory(story);
 
     assertEquals(label, backlog.getLabel());
@@ -90,7 +90,7 @@ public class BacklogTest {
 
   @Test
   public void testEquals() throws Exception {
-    Story story = new Story("the story", "the very story", "description", productOwner);
+    Story story = new Story("the story", "the very story", "description", productOwner, null);
     backlog.addStory(story);
 
     Backlog backlog2 = new Backlog(label, backlogName, backlogDescription, productOwner);
@@ -104,7 +104,7 @@ public class BacklogTest {
 
   @Test
   public void testHashCode() throws Exception {
-    Story story = new Story("the story", "the very story", "description", productOwner);
+    Story story = new Story("the story", "the very story", "description", productOwner, null);
     backlog.addStory(story);
 
     Backlog backlog2 = new Backlog(label, backlogName, backlogDescription, productOwner);
