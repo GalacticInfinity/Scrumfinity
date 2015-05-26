@@ -52,7 +52,7 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
   public Backlog(Backlog clone) {
     this.label = clone.getLabel();
     this.backlogName = clone.getBacklogName();
-    this.description = clone.getDescription();
+    this.description = clone.getBacklogDescription();
     this.productOwner = clone.getProductOwner();
     this.stories.clear();
     this.stories.addAll(clone.getStories());
@@ -76,11 +76,11 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
     this.backlogName = backlogName;
   }
 
-  public String getDescription() {
+  public String getBacklogDescription() {
     return description;
   }
 
-  public void setDescription(String description) {
+  public void setBacklogDescription(String description) {
     this.description = description;
   }
 
@@ -137,7 +137,7 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
       Backlog clone = (Backlog) agileItem;
       this.label = clone.getLabel();
       this.backlogName = clone.getBacklogName();
-      this.description = clone.getDescription();
+      this.description = clone.getBacklogDescription();
       this.productOwner = clone.getProductOwner();
       this.stories.clear();
       this.stories.addAll(clone.getStories());

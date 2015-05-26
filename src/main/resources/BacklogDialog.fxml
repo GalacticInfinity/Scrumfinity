@@ -6,7 +6,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="510.0" prefWidth="477.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.StoryDialogController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="510.0" prefWidth="477.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.BacklogDialogController">
     <children>
         <HBox alignment="BOTTOM_LEFT" prefHeight="32.0" prefWidth="434.0" spacing="10.0">
             <children>
@@ -74,12 +74,12 @@
             </VBox>
             <VBox alignment="CENTER" prefHeight="232.0" prefWidth="61.0">
                <children>
-                  <Button fx:id="btnAddStory" mnemonicParsing="false" onAction="#btnAddStoryClick" prefWidth="60.0" text="→">
+                  <Button fx:id="btnAddStory" mnemonicParsing="false"  prefWidth="60.0" text="→">
                      <VBox.margin>
                         <Insets bottom="20.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="btnRemoveStory" mnemonicParsing="false" onAction="#btnRemoveStoryClick" prefWidth="60.0" text="←">
+                  <Button fx:id="btnRemoveStory" mnemonicParsing="false"  prefWidth="60.0" text="←">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
@@ -106,8 +106,8 @@
                         <Font name="System Italic" size="13.0" />
                     </font>
                 </Label>
-                <Button fx:id="btnCreateBacklog" mnemonicParsing="false" onAction="#btnCreateBacklogClick" text="Save" />
-                <Button fx:id="btnCancel" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#btnCancelClick" text="Cancel" />
+                <Button fx:id="btnCreateBacklog" mnemonicParsing="false"  text="Save" />
+                <Button fx:id="btnCancel" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"  text="Cancel" />
             </children>
             <opaqueInsets>
                 <Insets />

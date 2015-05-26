@@ -9,6 +9,7 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -20,6 +21,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import seng302.group5.controller.BacklogDialogController;
 import seng302.group5.controller.ListMainPaneController;
 import seng302.group5.controller.LoginController;
 import seng302.group5.controller.MenuBarController;
@@ -31,6 +33,7 @@ import seng302.group5.controller.TeamDialogController;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.controller.SkillsDialogController;
 import seng302.group5.model.AgileItem;
+import seng302.group5.model.Backlog;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
 import seng302.group5.model.Role;
@@ -64,6 +67,7 @@ public class Main extends Application {
   private ObservableList<Release> releases = FXCollections.observableArrayList();
   private ObservableList<Role> roles = FXCollections.observableArrayList();
   private ObservableList<Story> stories = FXCollections.observableArrayList();
+  private ObservableList<Backlog> backlogs = FXCollections.observableArrayList();
 
 
   private ArrayList<AgileItem> nonRemovable = new ArrayList<>();
@@ -468,6 +472,45 @@ public class Main extends Application {
   }
 
   /**
+   * Sets up a dialog box for creating/editing a backlog.
+   *
+   * @param createOrEdit The CreateOrEdit object that determines whether you are creating or editing.
+   */
+  public void showBacklogDialog(CreateOrEdit createOrEdit) {
+    try {
+      FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(Main.class.getResource("/BacklogDialog.fxml"));
+      VBox backlogDialogLayout = loader.load();
+
+      BacklogDialogController controller = loader.getController();
+      Scene backlogDialogScene = new Scene(backlogDialogLayout);
+      Stage backlogDialogStage = new Stage();
+
+      Backlog backlog = null;
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        backlog = (Backlog) LMPC.getSelected();
+        if (backlog == null) {
+          Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setTitle("Error");
+          alert.setHeaderText(null);
+          alert.setContentText("No backlog selected");
+          alert.showAndWait();
+          return;
+        }
+      }
+      controller.setupController(this, backlogDialogStage, createOrEdit, backlog);
+
+      backlogDialogStage.initModality(Modality.APPLICATION_MODAL);
+      backlogDialogStage.initOwner(primaryStage);
+      backlogDialogStage.setScene(backlogDialogScene);
+      backlogDialogStage.show();
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
    * Sets the cloned lists for revert to be what it is now.
    */
   public void setLastSaved() {
@@ -599,12 +642,21 @@ public class Main extends Application {
   }
 
   /**
-   * Delete a story from the of stories.
+   * Delete a story from the list of stories.
    *
    * @param inputStory Story to be deleted.
    */
   public void deleteStory(Story inputStory) {
     stories.remove(inputStory);
+  }
+
+  /**
+   * Delete a backlog from the list of backlogs.
+   *
+   * @param inputBacklog Backlog to be deleted.
+   */
+  public void deleteBacklog(Backlog inputBacklog) {
+    backlogs.remove(inputBacklog);
   }
 
   /**
@@ -822,6 +874,10 @@ public class Main extends Application {
         undoRedoObject = generateDelUndoRedoObject(Action.STORY_DELETE, agileItem);
         newAction(undoRedoObject);
         break;
+      case "Backlogs": // TODO put in settings
+        Backlog backlog = (Backlog) agileItem;
+        deleteBacklog(backlog);
+        // TODO: UNDOREDO
       default:
 //        System.err.println("Unhandled case for deleting agile item");
         break;
@@ -841,6 +897,7 @@ public class Main extends Application {
     releases.clear();
     roles.clear();
     stories.clear();
+    backlogs.clear();
     nonRemovable.clear();
   }
 
@@ -899,6 +956,10 @@ public class Main extends Application {
     return stories.sorted(Comparator.<Story>naturalOrder());
   }
 
+  public ObservableList<Backlog> getBacklogs() {
+    return backlogs.sorted(Comparator.<Backlog>naturalOrder());
+  }
+
   public ArrayList<AgileItem> getNonRemovable() {
     return nonRemovable;
   }
@@ -929,6 +990,10 @@ public class Main extends Application {
 
   public void addStory(Story story) {
     stories.add(story);
+  }
+
+  public void addBacklog(Backlog backlog) {
+    backlogs.add(backlog);
   }
 
   public UndoRedoHandler getUndoRedoHandler() {
