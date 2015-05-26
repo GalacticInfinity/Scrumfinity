@@ -11,7 +11,7 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
 
   private String label;
   private String backlogName;
-  private String description;
+  private String backlogDescription;
   private Person productOwner;
   private List<Story> stories;
 //  private Estimate estimateType // TODO:
@@ -23,7 +23,7 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
   public Backlog() {
     this.label = "";
     this.backlogName = "";
-    this.description = "";
+    this.backlogDescription = "";
     this.productOwner = null;
     this.stories = new ArrayList<>();
   }
@@ -33,13 +33,13 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
    *
    * @param label Label of backlog
    * @param backlogName Full name of backlog
-   * @param description Description of backlog
+   * @param backlogDescription Description of backlog
    * @param productOwner Product owner of backlog
    */
-  public Backlog(String label, String backlogName, String description, Person productOwner) {
+  public Backlog(String label, String backlogName, String backlogDescription, Person productOwner) {
     this.label = label;
     this.backlogName = backlogName;
-    this.description = description;
+    this.backlogDescription = backlogDescription;
     this.productOwner = productOwner;
     this.stories = new ArrayList<>();
   }
@@ -52,7 +52,7 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
   public Backlog(Backlog clone) {
     this.label = clone.getLabel();
     this.backlogName = clone.getBacklogName();
-    this.description = clone.getDescription();
+    this.backlogDescription = clone.getBacklogDescription();
     this.productOwner = clone.getProductOwner();
     this.stories = new ArrayList<>();
     this.stories.addAll(clone.getStories());
@@ -76,12 +76,12 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
     this.backlogName = backlogName;
   }
 
-  public String getDescription() {
-    return description;
+  public String getBacklogDescription() {
+    return backlogDescription;
   }
 
-  public void setDescription(String description) {
-    this.description = description;
+  public void setBacklogDescription(String backlogDescription) {
+    this.backlogDescription = backlogDescription;
   }
 
   public Person getProductOwner() {
@@ -137,7 +137,7 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
       Backlog clone = (Backlog) agileItem;
       this.label = clone.getLabel();
       this.backlogName = clone.getBacklogName();
-      this.description = clone.getDescription();
+      this.backlogDescription = clone.getBacklogDescription();
       this.productOwner = clone.getProductOwner();
       this.stories.clear();
       this.stories.addAll(clone.getStories());
@@ -177,7 +177,7 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
     if (!backlogName.equals(backlog.backlogName)) {
       return false;
     }
-    if (!description.equals(backlog.description)) {
+    if (!backlogDescription.equals(backlog.backlogDescription)) {
       return false;
     }
     if (productOwner != null ? !productOwner.equals(backlog.productOwner)
@@ -197,7 +197,7 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
   public int hashCode() {
     int result = label.hashCode();
     result = 31 * result + backlogName.hashCode();
-    result = 31 * result + description.hashCode();
+    result = 31 * result + backlogDescription.hashCode();
     result = 31 * result + (productOwner != null ? productOwner.hashCode() : 0);
     result = 31 * result + stories.hashCode();
     return result;

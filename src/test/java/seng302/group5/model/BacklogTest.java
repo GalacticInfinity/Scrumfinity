@@ -16,20 +16,20 @@ public class BacklogTest {
   private Backlog backlog;
   private String label;
   private String backlogName;
-  private String description;
+  private String backlogDescription;
   private Person productOwner;
 
   @Before
   public void setUp() throws Exception {
     label = "SENG302 Backlog";
     backlogName = "SENG302 Sample Backlog 2014";
-    description = "Hello World! This is a description";
+    backlogDescription = "Hello World! This is a description";
 
     ObservableList<Skill> skills = FXCollections.observableArrayList();
     skills.add(new Skill("Product Owner", "This person can be a product owner"));
     productOwner = new Person("Jason", "Jason", "Smith", skills);
 
-    backlog = new Backlog(label, backlogName, description, productOwner);
+    backlog = new Backlog(label, backlogName, backlogDescription, productOwner);
   }
 
   @Test
@@ -67,7 +67,7 @@ public class BacklogTest {
 
     assertEquals(label, backlog.getLabel());
     assertEquals(backlogName, backlog.getBacklogName());
-    assertEquals(description, backlog.getDescription());
+    assertEquals(backlogDescription, backlog.getBacklogDescription());
     assertEquals(productOwner, backlog.getProductOwner());
     assertEquals(1, backlog.getStories().size());
     assertEquals(story, backlog.getStories().get(0));
@@ -77,7 +77,7 @@ public class BacklogTest {
 
     assertEquals(label, clone.getLabel());
     assertEquals(backlogName, clone.getBacklogName());
-    assertEquals(description, clone.getDescription());
+    assertEquals(backlogDescription, clone.getBacklogDescription());
     assertEquals(productOwner, clone.getProductOwner());
     assertEquals(1, clone.getStories().size());
     assertEquals(story, clone.getStories().get(0));
@@ -93,7 +93,7 @@ public class BacklogTest {
     Story story = new Story("the story", "the very story", "description", productOwner);
     backlog.addStory(story);
 
-    Backlog backlog2 = new Backlog(label, backlogName, description, productOwner);
+    Backlog backlog2 = new Backlog(label, backlogName, backlogDescription, productOwner);
     backlog2.addStory(story);
 
     Backlog backlog3 = new Backlog(backlog);  // Test clone
@@ -107,7 +107,7 @@ public class BacklogTest {
     Story story = new Story("the story", "the very story", "description", productOwner);
     backlog.addStory(story);
 
-    Backlog backlog2 = new Backlog(label, backlogName, description, productOwner);
+    Backlog backlog2 = new Backlog(label, backlogName, backlogDescription, productOwner);
     backlog2.addStory(story);
 
     Backlog backlog3 = new Backlog(backlog); // Test clone
