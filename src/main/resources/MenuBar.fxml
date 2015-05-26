@@ -15,6 +15,7 @@
                        <MenuItem mnemonicParsing="false" onAction="#createSkill" text="Skill" />
                        <MenuItem mnemonicParsing="false" onAction="#createRelease" text="Release" />
                   <MenuItem mnemonicParsing="false" onAction="#createStory" text="Story" />
+                  <MenuItem mnemonicParsing="false" onAction="#createBacklog" text="Backlog" />
                    </items>
                </Menu>
             <MenuItem mnemonicParsing="false" onAction="#btnClickOrganization" text="Org. Name" />

@@ -58,7 +58,7 @@ public class TeamDialogController {
   @FXML private HBox btnContainer;
 
   /**
-   * Setup the project dialog controller
+   * Setup the team dialog controller
    *
    * @param mainApp      The main application object
    * @param thisStage    The stage of the dialog
@@ -126,6 +126,9 @@ public class TeamDialogController {
     });
   }
 
+  /**
+   * Check if any of the fields has been changed. If nothing changed, then confirm button is disabled.
+   */
   private void checkButtonDisabled() {
     if (teamLabelField.getText().equals(team.getLabel()) &&
         teamDescriptionField.getText().equals(team.getTeamDescription()) &&
