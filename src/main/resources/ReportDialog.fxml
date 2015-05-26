@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="516.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox prefHeight="61.0" prefWidth="501.0">
+         <children>
+            <Label prefHeight="21.0" prefWidth="87.0" text="Report Level: ">
+               <HBox.margin>
+                  <Insets left="5.0" top="25.0" />
+               </HBox.margin>
+            </Label>
+            <ComboBox id="reportLevelCombo" prefHeight="25.0" prefWidth="180.0">
+               <HBox.margin>
+                  <Insets top="25.0" />
+               </HBox.margin>
+            </ComboBox>
+         </children>
+         <VBox.margin>
+            <Insets left="15.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox prefHeight="279.0" prefWidth="548.0">
+         <children>
+            <VBox prefHeight="318.0" prefWidth="200.0">
+               <children>
+                  <Label prefHeight="17.0" prefWidth="99.0" text="Available Items:">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </Label>
+                  <ListView id="availableItemsList" prefHeight="296.0" prefWidth="172.0">
+                     <VBox.margin>
+                        <Insets bottom="5.0" right="5.0" />
+                     </VBox.margin>
+                  </ListView>
+               </children>
+               <HBox.margin>
+                  <Insets left="5.0" top="10.0" />
+               </HBox.margin>
+               <opaqueInsets>
+                  <Insets left="5.0" />
+               </opaqueInsets>
+            </VBox>
+            <VBox prefHeight="279.0" prefWidth="71.0">
+               <children>
+                  <Button id="addBtn" mnemonicParsing="false" prefHeight="25.0" prefWidth="50.0" text="→">
+                     <VBox.margin>
+                        <Insets left="7.0" top="75.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Button id="removeBtn" mnemonicParsing="false" prefHeight="25.0" prefWidth="50.0" text="←">
+                     <VBox.margin>
+                        <Insets left="7.0" top="100.0" />
+                     </VBox.margin>
+                  </Button>
+               </children>
+            </VBox>
+            <VBox prefHeight="318.0" prefWidth="200.0">
+               <children>
+                  <Label prefHeight="17.0" prefWidth="99.0" text="Selected Items:">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </Label>
+                  <ListView id="selectedItemsList" prefHeight="296.0" prefWidth="226.0">
+                     <VBox.margin>
+                        <Insets bottom="5.0" right="5.0" />
+                     </VBox.margin>
+                  </ListView>
+               </children>
+               <HBox.margin>
+                  <Insets right="5.0" top="10.0" />
+               </HBox.margin>
+            </VBox>
+         </children>
+         <VBox.margin>
+            <Insets left="15.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox prefHeight="69.0" prefWidth="516.0">
+         <children>
+            <Button id="saveBtn" mnemonicParsing="false" prefHeight="25.0" prefWidth="76.0" text="Save">
+               <HBox.margin>
+                  <Insets left="325.0" top="25.0" />
+               </HBox.margin>
+            </Button>
+            <Button id="cancelBtn" mnemonicParsing="false" prefHeight="25.0" prefWidth="73.0" text="Cancel">
+               <HBox.margin>
+                  <Insets left="10.0" top="25.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+   </children>
+</VBox>
