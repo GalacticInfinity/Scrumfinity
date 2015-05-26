@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="510.0" prefWidth="477.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.StoryDialogController">
+    <children>
+        <HBox alignment="BOTTOM_LEFT" prefHeight="32.0" prefWidth="434.0" spacing="10.0">
+            <children>
+                <Label prefHeight="25.0" prefWidth="125.0" text="Backlog Label:*">
+                    <font>
+                        <Font size="15.0" />
+                    </font>
+                </Label>
+                <TextField fx:id="backlogLabelField" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="200.0" promptText="Unique label of backlog">
+               <tooltip>
+                  <Tooltip text="Label should be 20 characters or less or application may not behave as expected." />
+               </tooltip></TextField>
+            </children>
+        </HBox>
+        <HBox alignment="CENTER_LEFT" prefHeight="38.0" prefWidth="369.0" spacing="10.0">
+            <children>
+                <Label prefHeight="25.0" prefWidth="125.0" text="Backlog Name:">
+                    <font>
+                        <Font size="15.0" />
+                    </font>
+                </Label>
+                <TextField fx:id="backlogNameField" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="200.0" promptText="Name of backlog" />
+            </children>
+        </HBox>
+        <HBox prefHeight="30.0" prefWidth="429.0" spacing="10.0">
+            <children>
+                <Label prefHeight="25.0" prefWidth="125.0" text="Description:">
+                    <font>
+                        <Font size="15.0" />
+                    </font>
+                </Label>
+            <TextArea fx:id="backlogDescriptionField" minHeight="130.0" prefHeight="140.0" prefWidth="285.0" promptText="Description of backlog" wrapText="true" />
+            </children>
+        </HBox>
+        <HBox prefHeight="21.0" prefWidth="429.0">
+            <children>
+                <Label prefHeight="25.0" prefWidth="135.0" text="Product Owner:*">
+                    <font>
+                        <Font size="15.0" />
+                    </font>
+                    <HBox.margin>
+                        <Insets />
+                    </HBox.margin>
+                </Label>
+                <ComboBox fx:id="backlogCreatorCombo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" promptText="Available People">
+               <HBox.margin>
+                  <Insets top="2.0" />
+               </HBox.margin></ComboBox>
+            </children>
+            <VBox.margin>
+                <Insets top="4.0" />
+            </VBox.margin>
+        </HBox>
+      <HBox alignment="CENTER_LEFT" prefHeight="232.0" prefWidth="487.0" spacing="10.0">
+         <children>
+            <VBox prefHeight="232.0" prefWidth="165.0">
+               <children>
+                  <Label prefHeight="25.0" prefWidth="173.0" text="Available Stories:">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <ListView fx:id="availableStoriesList" prefHeight="208.0" prefWidth="201.0" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="232.0" prefWidth="61.0">
+               <children>
+                  <Button fx:id="btnAddStory" mnemonicParsing="false" onAction="#btnAddStoryClick" prefWidth="60.0" text="→">
+                     <VBox.margin>
+                        <Insets bottom="20.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Button fx:id="btnRemoveStory" mnemonicParsing="false" onAction="#btnRemoveStoryClick" prefWidth="60.0" text="←">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </Button>
+               </children>
+            </VBox>
+            <VBox prefHeight="232.0" prefWidth="215.0">
+               <children>
+                  <Label prefHeight="25.0" text="Stories in Backlog:">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <ListView fx:id="allocatedStoriesList" maxHeight="225.0" prefHeight="184.0" prefWidth="220.0" />
+                  <ComboBox fx:id="estimateCombo" prefHeight="25.0" prefWidth="220.0" promptText="Estimate" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+        <HBox fx:id="btnContainer" alignment="BOTTOM_RIGHT" prefHeight="39.0" prefWidth="434.0" spacing="10.0">
+            <children>
+                <Label prefHeight="25.0" prefWidth="327.0" text="* Fields cannot be empty.">
+                    <font>
+                        <Font name="System Italic" size="13.0" />
+                    </font>
+                </Label>
+                <Button fx:id="btnCreateBacklog" mnemonicParsing="false" onAction="#btnCreateBacklogClick" text="Save" />
+                <Button fx:id="btnCancel" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#btnCancelClick" text="Cancel" />
+            </children>
+            <opaqueInsets>
+                <Insets />
+            </opaqueInsets>
+            <VBox.margin>
+                <Insets bottom="5.0" right="5.0" top="5.0" />
+            </VBox.margin>
+         <padding>
+            <Insets bottom="5.0" right="5.0" />
+         </padding>
+        </HBox>
+    </children>
+    <padding>
+        <Insets left="5.0" />
+    </padding>
+</VBox>
