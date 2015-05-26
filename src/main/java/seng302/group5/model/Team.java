@@ -180,6 +180,7 @@ public class Team implements AgileItem, Comparable<Team> {
 
   /**
    * Compares the team labels.
+   *
    * @param o the team you wish to compare to.
    * @return return whether its greater or lesser.
    */
