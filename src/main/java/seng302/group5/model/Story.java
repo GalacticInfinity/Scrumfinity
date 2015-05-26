@@ -1,5 +1,11 @@
 package seng302.group5.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 /**
  * Story model. So that managers can keep track of the things people need to do, a way to record
  * work items as user stories. For now, it just have the most basic detail but we’ll add more
@@ -13,6 +19,7 @@ public class Story implements AgileItem, Comparable<Story> {
   private String storyName;
   private String description;
   private Person creator;
+  private List<String> acceptanceCriteria;
 
   /**
    * Empty constructor used for save/load.
@@ -22,6 +29,7 @@ public class Story implements AgileItem, Comparable<Story> {
     this.storyName = "";
     this.description = "";
     this.creator = null;
+    this.acceptanceCriteria = new ArrayList<String>();
   }
 
   /**
@@ -29,13 +37,15 @@ public class Story implements AgileItem, Comparable<Story> {
    * @param label Not-null ID/label.
    * @param storyName Long name for story.
    * @param description Description of story.
-   * @param creator Person assigned to creation of this story.
+   * @param creator Person assigned to creation of this story..
+   * @param acceptanceCriteria The criteria for the story to be considered done.
    */
-  public Story(String label, String storyName, String description, Person creator) {
+  public Story(String label, String storyName, String description, Person creator, List<String> acceptanceCriteria) {
     this.label = label;
     this.storyName = storyName;
     this.description = description;
     this.creator = creator;
+    this.acceptanceCriteria = acceptanceCriteria;
   }
 
   /**
@@ -48,6 +58,7 @@ public class Story implements AgileItem, Comparable<Story> {
     this.storyName = clone.getStoryName();
     this.description = clone.getDescription();
     this.creator = clone.getCreator();
+    this.acceptanceCriteria = clone.getAcceptanceCriteria();
   }
 
   /**
@@ -115,6 +126,26 @@ public class Story implements AgileItem, Comparable<Story> {
   }
 
   /**
+   * gets the acceptance criteria
+   * @return List which contains the ACS
+   */
+  public List<String> getAcceptanceCriteria() {
+    return acceptanceCriteria;
+  }
+
+  /**
+   * sets the Acceptance criteria
+   * @param acceptanceCriteria List which is the ACS
+   */
+  public void setAcceptanceCriteria(List<String> acceptanceCriteria) {
+    this.acceptanceCriteria = acceptanceCriteria;
+  }
+
+  public void appendAcceptanceCriteria(String ac) {
+    this.acceptanceCriteria.add(ac);
+  }
+
+  /**
    * Copies the story input fields into current object.
    * @param agileItem Story that's fields are to be copied.
    */
@@ -126,6 +157,7 @@ public class Story implements AgileItem, Comparable<Story> {
       this.storyName = clone.getStoryName();
       this.description = clone.getDescription();
       this.creator = clone.getCreator();
+      this.acceptanceCriteria = clone.getAcceptanceCriteria();
     }
   }
 

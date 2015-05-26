@@ -214,7 +214,7 @@ public class RevertHandlerTest {
     storyDescription ="This is a story and it is good";
     storyCreator = null;
 
-    story = new Story(storyLabel, storyLongName, storyDescription, storyCreator);
+    story = new Story(storyLabel, storyLongName, storyDescription, storyCreator, null); //TODO LOOL NUULLLLL
 
     mainApp.addStory(story);
 

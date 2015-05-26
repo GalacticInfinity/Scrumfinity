@@ -1,15 +1,22 @@
 package seng302.group5.controller;
 
+import java.io.IOException;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
@@ -30,6 +37,11 @@ public class StoryDialogController {
   @FXML private TextField storyNameField;
   @FXML private TextArea storyDescriptionField;
   @FXML private ComboBox<Person> storyCreatorList;
+  @FXML private ListView listAC;
+  @FXML private Button addAC;
+  @FXML private Button removeAC;
+  @FXML private Button upAC;
+  @FXML private Button downAC;
   @FXML private Button btnCreateStory;
   @FXML private HBox btnContainer;
 
@@ -40,6 +52,7 @@ public class StoryDialogController {
   private Story lastStory;
 
   private ObservableList<Person> availablePeople = FXCollections.observableArrayList();
+  private ObservableList<String> acceptanceCriteria = FXCollections.observableArrayList();
 
   /**
    * Setup the Story dialog controller.
@@ -196,7 +209,7 @@ public class StoryDialogController {
       alert.showAndWait();
     } else {
       if (createOrEdit == CreateOrEdit.CREATE) {
-        story = new Story(label, storyName, storyDescription, creator);
+        story = new Story(label, storyName, storyDescription, creator, acceptanceCriteria);
         mainApp.addStory(story);
         if (Settings.correctList(story)) {
           mainApp.refreshList(story);
@@ -206,6 +219,7 @@ public class StoryDialogController {
         story.setStoryName(storyName);
         story.setDescription(storyDescription);
         story.setCreator(creator);
+        story.setAcceptanceCriteria(acceptanceCriteria);
         mainApp.refreshList(story);
       }
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
@@ -224,6 +238,65 @@ public class StoryDialogController {
   protected void btnCancelClick(ActionEvent event) {
     thisStage.close();
   }
+
+  @FXML
+  private void btnAddAC(ActionEvent event) {
+    showACDialog();
+  }
+
+  public void showACDialog() {
+    try {
+      FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(Main.class.getResource("/ACDialog.fxml"));
+      VBox ACDialogLayout = loader.load();
+
+      ACDialogController controller = loader.getController();
+      Scene ACDialogScene = new Scene(ACDialogLayout);
+      Stage ACDialogStage = new Stage();
+
+//      if (createOrEdit == CreateOrEdit.EDIT) {
+//        project = (Project) LMPC.getSelected();
+//        if (project == null) {
+//          Alert alert = new Alert(Alert.AlertType.ERROR);
+//          alert.setTitle("Error");
+//          alert.setHeaderText(null);
+//          alert.setContentText("No project selected");//TODO EDITING
+//          alert.showAndWait();
+//          return;
+//        }
+//      }
+
+      controller.setupController(story, ACDialogStage, createOrEdit, null);
+
+      ACDialogStage.initModality(Modality.APPLICATION_MODAL);
+      ACDialogStage.initOwner(thisStage);
+      ACDialogStage.setScene(ACDialogScene);
+      ACDialogStage.show();
+
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+//    try {
+//      this.thisStage.setTitle("Hello");
+//      this.thisStage.setMinHeight(400);
+//      this.thisStage.setMinWidth(600);
+//
+//      FXMLLoader loader = new FXMLLoader();
+//      loader.setLocation(ACDialogController.class.getResource("/ACDialog.fxml"));
+//      VBox acLayout = loader.load();
+//
+//      ACDialogController ACDialogController = loader.getController();
+////      ACDialogController.setMainApp(mainApp);
+//      Scene acScene = new Scene(acLayout);
+//      thisStage.setScene(acScene);
+//      thisStage.show();
+//
+//    } catch (IOException e) {
+//      e.printStackTrace();
+//    }
+  }
+
 
   /**
    * Checks that the Story label entry box contains valid input.
@@ -281,6 +354,7 @@ public class StoryDialogController {
 
       this.storyCreatorList.setVisibleRowCount(5);
       this.storyCreatorList.setItems(availablePeople);
+      this.listAC.setItems(availablePeople);
     } catch (Exception e) {
       e.printStackTrace();
     }
