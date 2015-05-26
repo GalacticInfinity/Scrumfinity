@@ -54,7 +54,7 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
     this.backlogName = clone.getBacklogName();
     this.description = clone.getDescription();
     this.productOwner = clone.getProductOwner();
-    this.stories.clear();
+    this.stories = new ArrayList<>();
     this.stories.addAll(clone.getStories());
   }
 
