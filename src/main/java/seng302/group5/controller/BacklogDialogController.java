@@ -44,6 +44,7 @@ public class BacklogDialogController {
 
   private ObservableList<Story> availableStories;
   private ObservableList<Story> allocatedStories;
+  private ObservableList<Story> originalStories;
   private ObservableList<Person> productOwners;
 
   @FXML private TextField backlogLabelField;
@@ -51,7 +52,7 @@ public class BacklogDialogController {
   @FXML private TextArea backlogDescriptionField;
   @FXML private ComboBox<Person> backlogProductOwnerCombo;
   @FXML private HBox btnContainer;
-  @FXML private Button btnCreateBacklog;
+  @FXML private Button btnConfirm;
   @FXML private ListView<Story> allocatedStoriesList;
   @FXML private ListView<Story> availableStoriesList;
 
@@ -71,19 +72,19 @@ public class BacklogDialogController {
     String os = System.getProperty("os.name");
 
     if (!os.startsWith("Windows")) {
-      btnContainer.getChildren().remove(btnCreateBacklog);
-      btnContainer.getChildren().add(btnCreateBacklog);
+      btnContainer.getChildren().remove(btnConfirm);
+      btnContainer.getChildren().add(btnConfirm);
     }
 
     if (createOrEdit == CreateOrEdit.CREATE) {
       thisStage.setTitle("Create New Backlog");
-      btnCreateBacklog.setText("Create");
+      btnConfirm.setText("Create");
 
       initialiseLists(CreateOrEdit.CREATE, backlog);
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       thisStage.setTitle("Edit Team");
-      btnCreateBacklog.setText("Save");
-      btnCreateBacklog.setDisable(true);
+      btnConfirm.setText("Save");
+      btnConfirm.setDisable(true);
       initialiseLists(CreateOrEdit.EDIT, backlog);
       backlogLabelField.setText(backlog.getLabel());
       backlogNameField.setText(backlog.getBacklogName());
@@ -103,14 +104,14 @@ public class BacklogDialogController {
 //    comboListenerFlag = false;  // if true, assign the selected role in combo box
     //lastSelectedEstimate = new Estimate();
 
-    btnCreateBacklog.setDefaultButton(true);
+    btnConfirm.setDefaultButton(true);
     thisStage.setResizable(false);
 
     // Handle TextField text changes.
     backlogLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
       if (createOrEdit == CreateOrEdit.EDIT) {
-        //checkButtonDisabled();
+        checkButtonDisabled();
       }
       if (newValue.trim().length() > 20) {
         backlogLabelField.setStyle("-fx-text-inner-color: red;");
@@ -119,26 +120,42 @@ public class BacklogDialogController {
       }
     });
 
+    backlogNameField.textProperty().addListener((observable1, oldValue1, newValue1) -> {
+      //For disabling the button
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+
     backlogDescriptionField.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
       if (createOrEdit == CreateOrEdit.EDIT) {
-        //checkButtonDisabled();
+        checkButtonDisabled();
       }
     });
+
+    backlogProductOwnerCombo.getSelectionModel().selectedItemProperty().addListener(
+        (observable, oldValue, newValue) -> {
+          if (createOrEdit == CreateOrEdit.EDIT) {
+            checkButtonDisabled();
+          }
+        });
   }
 
   /**
    * Check if any of the fields has been changed. If nothing changed, then confirm button is disabled.
    */
-//  private void checkButtonDisabled() {  TODO
-//    if (backlogLabelField.getText().equals(backlog.getLabel()) &&
-//        backlogDescriptionField.getText().equals(backlog.getBacklogDescription()) &&
-//        allocatedStoriesList.getItems().toString().equals(originalMembers.toString())){
-//      btnConfirm.setDisable(true);
-//    } else {
-//      btnConfirm.setDisable(false);
-//    }
-//  }
+  private void checkButtonDisabled() {
+    if (backlogLabelField.getText().equals(backlog.getLabel()) &&
+        backlogNameField.getText().equals(backlog.getBacklogName()) &&
+        backlogDescriptionField.getText().equals(backlog.getBacklogDescription()) &&
+        backlogProductOwnerCombo.getValue().equals(backlog.getProductOwner()) &&
+        allocatedStories.toString().equals(originalStories.toString())){
+      btnConfirm.setDisable(true);
+    } else {
+      btnConfirm.setDisable(false);
+    }
+  }
 
   /**
    * Populates the people selection lists for assigning people to the team.
@@ -149,6 +166,7 @@ public class BacklogDialogController {
   private void initialiseLists(CreateOrEdit createOrEdit, Backlog backlog) {
     availableStories = FXCollections.observableArrayList();
     allocatedStories = FXCollections.observableArrayList();
+    originalStories = FXCollections.observableArrayList();
     productOwners = FXCollections.observableArrayList();
 
     try {
@@ -190,9 +208,10 @@ public class BacklogDialogController {
         for (Story story : backlog.getStories()) {
 //          Role role = team.getMembersRole().get(person);
           allocatedStories.add(story); // TODO: Maybe inner class to combine with estimates
+          originalStories.add(story);
 //          originalMembers.add(new PersonRole(person, role));
         }
-//        originalMembers = originalMembers.sorted(Comparator.<PersonRole>naturalOrder());
+        originalStories = originalStories.sorted(Comparator.<Story>naturalOrder());
       }
       this.availableStoriesList.setItems(availableStories.sorted(Comparator.<Story>naturalOrder()));
       this.allocatedStoriesList.setItems(allocatedStories.sorted(Comparator.<Story>naturalOrder()));
@@ -219,7 +238,7 @@ public class BacklogDialogController {
 
         this.allocatedStoriesList.getSelectionModel().select(selectedStory);
         if (createOrEdit == CreateOrEdit.EDIT) {
-//          checkButtonDisabled()
+          checkButtonDisabled();
         }
       }
     } catch (Exception e) {
@@ -241,7 +260,7 @@ public class BacklogDialogController {
         this.availableStories.add(selectedStory);
         this.allocatedStories.remove(selectedStory);
         if (createOrEdit == CreateOrEdit.EDIT) {
-//          checkButtonDisabled();
+          checkButtonDisabled();
         }
       }
     } catch (Exception e) {
@@ -306,7 +325,7 @@ public class BacklogDialogController {
         backlog.setBacklogName(backlogName);
         backlog.setBacklogDescription(backlogDescription);
         backlog.setProductOwner(productOwner);
-        for (Story oldStory : backlog.getStories()) {
+        for (Story oldStory : originalStories) {
           backlog.removeStory(oldStory);
         }
         for (Story newStory : allocatedStories) {
