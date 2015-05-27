@@ -141,10 +141,6 @@ public class Story implements AgileItem, Comparable<Story> {
     this.acceptanceCriteria = acceptanceCriteria;
   }
 
-  public void appendAcceptanceCriteria(String ac) {
-    this.acceptanceCriteria.add(ac);
-  }
-
   /**
    * Copies the story input fields into current object.
    * @param agileItem Story that's fields are to be copied.
