@@ -1,5 +1,6 @@
 package seng302.group5.controller;
 
+import java.awt.*;
 import java.io.IOException;
 
 import javafx.collections.FXCollections;
@@ -11,13 +12,17 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Person;
@@ -341,10 +346,59 @@ public class StoryDialogController {
       }
 
       this.storyCreatorList.setVisibleRowCount(5);
+
       this.storyCreatorList.setItems(availablePeople);
+
       this.listAC.setItems(acceptanceCriteria);
+      //Sets the cell being populated with custom settings defined in the ListViewCell class.
+      this.listAC.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+        @Override
+        public ListCell<String> call(ListView<String> listView) {
+          return new ListViewCell();
+        }
+      });
     } catch (Exception e) {
       e.printStackTrace();
+    }
+  }
+
+  /**
+   * Allows us to override the a ListViewCell - a single cell in a ListView.
+   */
+  public class ListViewCell extends TextFieldListCell<String> {
+
+    /**
+     * Sets the overriden parameters for the ListViewCell when the cell is updated.
+     * @param string The String being added to the cell.
+     * @param empty Whether or not string is empty as a boolean flag.
+     */
+    @Override
+    public void updateItem(String string, boolean empty) {
+      super.updateItem(string, empty);
+
+      if (empty || string == null) {
+        setText(null);
+        setGraphic(null);
+      } else {
+        //Checks if string is longer than pixel limit.
+        //If it is, trims it until it fits and adds '...'.
+        //Also removes new lines.
+        //Does not touch original String stored in list.
+        string = string.replace("\n", " ");
+        Text text = new Text(string);
+        double width = text.getLayoutBounds().getWidth();
+
+        if (width > 228) {
+          while (width > 228) {
+            string = string.substring(0, string.length() - 1);
+            text = new Text(string);
+            width = text.getLayoutBounds().getWidth();
+          }
+          setText(string + "...");
+        } else {
+          setText(string);
+        }
+      }
     }
   }
 }
