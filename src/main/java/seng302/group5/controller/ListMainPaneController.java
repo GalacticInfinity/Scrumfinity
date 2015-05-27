@@ -24,6 +24,7 @@ import javafx.scene.text.TextFlow;
 import seng302.group5.Main;
 import seng302.group5.model.AgileHistory;
 import seng302.group5.model.AgileItem;
+import seng302.group5.model.Backlog;
 import seng302.group5.model.Release;
 import seng302.group5.model.Role;
 import seng302.group5.model.Story;
@@ -149,6 +150,10 @@ public class ListMainPaneController {
         isListShown = true;
         listView.setItems(mainApp.getStories().sorted(Comparator.<Story>naturalOrder()));
         break;
+      case "Backlogs":
+        isListShown = true;
+        listView.setItems(mainApp.getBacklogs().sorted(Comparator.<Backlog>naturalOrder()));
+        break;
     }
     // Set the list label
     listViewLabel.setText(listType);
@@ -193,6 +198,11 @@ public class ListMainPaneController {
         return selectedItem;
       case "Stories":
         if (!isListShown || !listType.equals("Stories")) {
+          return null;
+        }
+        return selectedItem;
+      case "Backlogs":
+        if (!isListShown || !listType.equals("Backlogs")) {
           return null;
         }
         return selectedItem;
@@ -247,6 +257,11 @@ public class ListMainPaneController {
         displayTextFlow.getChildren().clear();
         Story story = (Story) next;
         displayStoryTextArea(story);
+        break;
+      case "Backlogs":
+        displayTextFlow.getChildren().clear();
+        Backlog backlog = (Backlog) next;
+        displayBacklogTextArea(backlog);
         break;
     }
   }
@@ -617,5 +632,74 @@ public class ListMainPaneController {
     displayTextFlow.getChildren().addAll(textHeader, textLabelHeader, textLabelBody,
                                          textNameHeader, textNameBody, textDescriptionHeader,
                                          textDescriptionBody, textCreatorHeader, textCreatorBody);
+  }
+
+  /**
+   * Displays the information about a given backlog in the text pane.
+   *
+   * @param backlog The backlog to display information about.
+   */
+  private void displayBacklogTextArea(Backlog backlog) {
+    Text textHeader = new Text("Backlog Information");
+    textHeader.setFill(Color.rgb(1, 0, 1));
+    textHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 20));
+
+    Text textLabelHeader = new Text("\nBacklog Label: ");
+    textLabelHeader.setFill(Color.rgb(1, 0, 1));
+    textLabelHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text textLabelBody = new Text(backlog.getLabel());
+    textLabelBody.setFill(Color.rgb(1, 0, 1));
+    textLabelBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text textNameHeader = new Text("\nBacklog Name: ");
+    textNameHeader.setFill(Color.rgb(1, 0, 1));
+    textNameHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text textNameBody = new Text(backlog.getBacklogName());
+    textNameBody.setFill(Color.rgb(1, 0, 1));
+    textNameBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text textDescriptionHeader = new Text("\nBacklog Description:\n");
+    textDescriptionHeader.setFill(Color.rgb(1, 0, 1));
+    textDescriptionHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text textDescriptionBody;
+    if (backlog.getBacklogDescription().length() != 0) {
+      textDescriptionBody = new Text(backlog.getBacklogDescription());
+    } else {
+      textDescriptionBody = new Text("N/A");
+    }
+    textDescriptionBody.setFill(Color.rgb(1, 0, 1));
+    textDescriptionBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text textPoHeader = new Text("\nBacklog Product Owner: ");
+    textPoHeader.setFill(Color.rgb(1, 0, 1));
+    textPoHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text textPoBody = new Text(backlog.getProductOwner().toString());
+    textPoBody.setFill(Color.rgb(1, 0, 1));
+    textPoBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text textStoriesHeader = new Text("\nStories:");
+    textStoriesHeader.setFill(Color.rgb(1, 0, 1));
+    textStoriesHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+
+    displayTextFlow.getChildren().addAll(textHeader, textLabelHeader, textLabelBody,
+                                         textNameHeader, textNameBody, textDescriptionHeader,
+                                         textDescriptionBody, textPoHeader, textPoBody,
+                                         textStoriesHeader);
+
+    Text textStoriesBody;
+    if (!backlog.getStories().isEmpty()) {
+      for (Story story : backlog.getStories()) {
+        textStoriesBody = new Text("\n• " + story);
+        displayTextFlow.getChildren().add(textStoriesBody);
+      }
+    } else {
+      textStoriesBody = new Text("\nN/A");
+      displayTextFlow.getChildren().add(textStoriesBody);
+    }
   }
 }

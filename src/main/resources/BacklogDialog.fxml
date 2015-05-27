@@ -51,7 +51,7 @@
                         <Insets />
                     </HBox.margin>
                 </Label>
-                <ComboBox fx:id="backlogCreatorCombo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" promptText="Available People">
+                <ComboBox fx:id="backlogProductOwnerCombo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" promptText="Available People">
                <HBox.margin>
                   <Insets top="2.0" />
                </HBox.margin></ComboBox>
@@ -74,12 +74,12 @@
             </VBox>
             <VBox alignment="CENTER" prefHeight="232.0" prefWidth="61.0">
                <children>
-                  <Button fx:id="btnAddStory" mnemonicParsing="false"  prefWidth="60.0" text="→">
+                  <Button fx:id="btnAddStory" mnemonicParsing="false" onAction="#btnAddStoryClick" prefWidth="60.0" text="→">
                      <VBox.margin>
                         <Insets bottom="20.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="btnRemoveStory" mnemonicParsing="false"  prefWidth="60.0" text="←">
+                  <Button fx:id="btnRemoveStory" mnemonicParsing="false" onAction="#btnRemoveStoryClick" prefWidth="60.0" text="←">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
@@ -106,8 +106,8 @@
                         <Font name="System Italic" size="13.0" />
                     </font>
                 </Label>
-                <Button fx:id="btnCreateBacklog" mnemonicParsing="false"  text="Save" />
-                <Button fx:id="btnCancel" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"  text="Cancel" />
+                <Button fx:id="btnCreateBacklog" mnemonicParsing="false" onAction="#btnConfirmClick" text="Save" />
+                <Button fx:id="btnCancel" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#btnCancelClick" text="Cancel" />
             </children>
             <opaqueInsets>
                 <Insets />

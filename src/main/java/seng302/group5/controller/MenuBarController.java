@@ -55,6 +55,7 @@ public class MenuBarController {
   @FXML private CheckMenuItem showSkillsMenuItem;
   @FXML private CheckMenuItem showReleasesMenuItem;
   @FXML private CheckMenuItem showStoriesMenuItem;
+  @FXML private CheckMenuItem showBacklogsMenuItem;
 
   private Main mainApp;
 
@@ -84,6 +85,8 @@ public class MenuBarController {
         new KeyCodeCombination(KeyCode.DIGIT5, KeyCombination.ALT_DOWN));
     showStoriesMenuItem.setAccelerator(
         new KeyCodeCombination(KeyCode.DIGIT6, KeyCombination.ALT_DOWN));
+    showBacklogsMenuItem.setAccelerator(
+        new KeyCodeCombination(KeyCode.DIGIT7, KeyCombination.ALT_DOWN));
 
     // Ticks the project menu item
     showProjectsMenuItem.setSelected(true);
@@ -515,6 +518,16 @@ public class MenuBarController {
   protected void btnShowStories() {
     Settings.currentListType = "Stories";
     deselectList("Stories");
+    mainApp.getLMPC().refreshList(null);
+  }
+
+  /**
+   * Populates left side with Backlogs.
+   */
+  @FXML
+  protected void btnShowBacklogs() {
+    Settings.currentListType = "Backlogs";
+    deselectList("Backlogs");
     mainApp.getLMPC().refreshList(null);
   }
 

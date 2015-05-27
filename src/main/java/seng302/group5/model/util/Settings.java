@@ -3,6 +3,7 @@ package seng302.group5.model.util;
 import java.io.File;
 
 import seng302.group5.model.AgileItem;
+import seng302.group5.model.Backlog;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
@@ -65,6 +66,8 @@ public class Settings {
         return agileItem instanceof Release;
       case "Stories":
         return agileItem instanceof Story;
+      case "Backlogs":
+        return agileItem instanceof Backlog;
     }
     return false;
   }
