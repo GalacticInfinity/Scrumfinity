@@ -78,17 +78,17 @@
             <VBox prefHeight="131.0" prefWidth="34.0">
                <children>
                   <Button fx:id="addAC" maxHeight="30.0" maxWidth="30.0" mnemonicParsing="false" onAction="#btnAddAC" prefHeight="30.0" prefWidth="30.0" text="+" />
-                  <Button fx:id="removeAC" maxHeight="30.0" maxWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="-">
+                  <Button fx:id="removeAC" maxHeight="30.0" maxWidth="30.0" mnemonicParsing="false" onAction="#btnRemoveAC" prefHeight="30.0" prefWidth="30.0" text="-">
                      <VBox.margin>
                         <Insets top="5.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="upAC" maxHeight="30.0" maxWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="↑">
+                  <Button fx:id="upAC" maxHeight="30.0" maxWidth="30.0" mnemonicParsing="false" onAction="#btnUpAC" prefHeight="30.0" prefWidth="30.0" text="↑">
                      <VBox.margin>
                         <Insets top="5.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="downAC" maxHeight="30.0" maxWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="↓">
+                  <Button fx:id="downAC" maxHeight="30.0" maxWidth="30.0" mnemonicParsing="false" onAction="#btnDownAC" prefHeight="30.0" prefWidth="30.0" text="↓">
                      <VBox.margin>
                         <Insets top="5.0" />
                      </VBox.margin>
