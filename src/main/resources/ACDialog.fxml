@@ -27,7 +27,7 @@
       </HBox>
       <HBox fx:id="btnContainer" prefHeight="100.0" prefWidth="200.0">
          <children>
-            <Button fx:id="btnConfirm" mnemonicParsing="false" text="Save">
+            <Button fx:id="btnConfirm" mnemonicParsing="false" onAction="#btnAddClick" text="Save">
                <HBox.margin>
                   <Insets left="268.0" />
                </HBox.margin>

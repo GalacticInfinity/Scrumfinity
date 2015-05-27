@@ -614,8 +614,25 @@ public class ListMainPaneController {
     textCreatorBody.setFill(Color.rgb(1, 0, 1));
     textCreatorBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
 
+    Text textACHeader = new Text("\nAcceptance Criteria:");
+    textACHeader.setFill(Color.rgb(1, 0, 1));
+    textACHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
     displayTextFlow.getChildren().addAll(textHeader, textLabelHeader, textLabelBody,
                                          textNameHeader, textNameBody, textDescriptionHeader,
-                                         textDescriptionBody, textCreatorHeader, textCreatorBody);
+                                         textDescriptionBody, textCreatorHeader, textCreatorBody, textACHeader);
+
+    Text textACBody;
+    if (story.getAcceptanceCriteria().size() != 0) {
+      for (String storyAC : story.getAcceptanceCriteria()) {
+        textACBody = new Text("\n• " + storyAC);
+        displayTextFlow.getChildren().addAll(textACBody);
+      }
+    } else {
+      textACBody = new Text("\nN/A");
+      displayTextFlow.getChildren().addAll(textACBody);
+    }
+
+
   }
 }

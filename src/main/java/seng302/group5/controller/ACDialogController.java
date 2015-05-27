@@ -20,7 +20,7 @@ public class ACDialogController {
   @FXML private TextArea textAC;
   @FXML private HBox btnContainer;
 
-  private Story story;
+  private StoryDialogController storyDC;
   private Stage thisStage;
   private CreateOrEdit createOrEdit;
   private String ac;
@@ -28,13 +28,13 @@ public class ACDialogController {
   /**
    * Setup the Acceptance Criteria dialog controller.
    *
-   * @param story The story that the AC is part of.
+   * @param storyDC The story dialog so that a AC can be added to it
    * @param thisStage The stage of the dialog.
    * @param createOrEdit Whether the dialog is for creating or editing a story.
    * @param ac The acceptance criteria to edit. Null if creation.
    */
-  public void setupController(Story story, Stage thisStage, CreateOrEdit createOrEdit, String ac) {
-    this.story = story;
+  public void setupController(StoryDialogController storyDC, Stage thisStage, CreateOrEdit createOrEdit, String ac) {
+    this.storyDC = storyDC;
     this.thisStage = thisStage;
     this.createOrEdit = createOrEdit;
     this.ac = ac;
@@ -57,6 +57,8 @@ public class ACDialogController {
       //btnConfirm.setDisable(true);
     }
     this.createOrEdit = createOrEdit;
+    btnConfirm.setDefaultButton(true);
+    thisStage.setResizable(false);
 
   }
 
@@ -66,7 +68,7 @@ public class ACDialogController {
    */
   @FXML
   protected void btnAddClick(ActionEvent event) {
-    this.story.appendAcceptanceCriteria(textAC.getText().trim());
+    this.storyDC.appendAcceptanceCriteria(textAC.getText().trim());
     thisStage.close();
   }
 

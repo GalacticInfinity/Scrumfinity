@@ -102,6 +102,7 @@ public class StoryDialogController {
     btnCreateStory.setDefaultButton(true);
     thisStage.setResizable(false);
 
+
     storyLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
       if(createOrEdit == CreateOrEdit.EDIT) {
@@ -266,7 +267,7 @@ public class StoryDialogController {
 //        }
 //      }
 
-      controller.setupController(story, ACDialogStage, createOrEdit, null);
+      controller.setupController(this, ACDialogStage, createOrEdit, null);
 
       ACDialogStage.initModality(Modality.APPLICATION_MODAL);
       ACDialogStage.initOwner(thisStage);
@@ -277,24 +278,6 @@ public class StoryDialogController {
     } catch (IOException e) {
       e.printStackTrace();
     }
-//    try {
-//      this.thisStage.setTitle("Hello");
-//      this.thisStage.setMinHeight(400);
-//      this.thisStage.setMinWidth(600);
-//
-//      FXMLLoader loader = new FXMLLoader();
-//      loader.setLocation(ACDialogController.class.getResource("/ACDialog.fxml"));
-//      VBox acLayout = loader.load();
-//
-//      ACDialogController ACDialogController = loader.getController();
-////      ACDialogController.setMainApp(mainApp);
-//      Scene acScene = new Scene(acLayout);
-//      thisStage.setScene(acScene);
-//      thisStage.show();
-//
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
   }
 
 
@@ -343,6 +326,11 @@ public class StoryDialogController {
     return inputPerson;
   }
 
+  public void appendAcceptanceCriteria(String ac) {
+    this.acceptanceCriteria.add(ac);
+    listAC.setItems(acceptanceCriteria);
+  }
+
   /**
    * Initalises the Creator assignment list.
    */
@@ -354,7 +342,7 @@ public class StoryDialogController {
 
       this.storyCreatorList.setVisibleRowCount(5);
       this.storyCreatorList.setItems(availablePeople);
-      this.listAC.setItems(availablePeople);
+      this.listAC.setItems(acceptanceCriteria);
     } catch (Exception e) {
       e.printStackTrace();
     }
