@@ -22,11 +22,14 @@ public enum Action {
   TEAM_EDIT,      // Team edit - 2 AgileItems
   TEAM_DELETE,    // Team deletion - 1 AgileItem
   RELEASE_CREATE, // Release creation - 1 AgileItem
-  RELEASE_EDIT,   // Release edit - 2 AgileItem
+  RELEASE_EDIT,   // Release edit - 2 AgileItems
   RELEASE_DELETE, // Release delete - 1 AgileItem
   STORY_CREATE,   // Story creation - 1 AgileItem
-  STORY_EDIT,     // Story edit - 2 AgileItem
+  STORY_EDIT,     // Story edit - 2 AgileItems
   STORY_DELETE,   // Story delete - 1 AgileItem
+  BACKLOG_CREATE, // Backlog creation - 1 AgileItem
+  BACKLOG_EDIT,   // Backlog edit - 2 AgileItems
+  BACKLOG_DELETE, // Backlog delete - 1 AgileItem
   UNDEFINED;      // Undefined action - no AgileItems
 
   private static Map<Action, String> actionStringMap;
@@ -43,6 +46,7 @@ public enum Action {
     String teamStr = "Team";
     String releaseStr = "Release";
     String storyStr = "Story";
+    String backlogStr = "Backlog";
 
     String actionStr;
     String typeStr;
@@ -71,6 +75,8 @@ public enum Action {
         typeStr = releaseStr;
       } else if (action.name().contains("STORY")) {
         typeStr = storyStr;
+      } else if (action.name().contains("BACKLOG")) {
+        typeStr = backlogStr;
       } else {
         typeStr = null;
       }

@@ -160,7 +160,7 @@ public class StoryDialogController {
       undoRedoObject.addDatum(lastStory);
     }
 
-    // Store a copy of person to edit in stack to avoid reference problems
+    // Store a copy of story to edit in stack to avoid reference problems
     undoRedoObject.setAgileItem(story);
     Story storyToStore = new Story(story);
     undoRedoObject.addDatum(storyToStore);

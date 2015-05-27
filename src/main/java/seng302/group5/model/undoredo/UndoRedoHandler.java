@@ -6,6 +6,7 @@ import java.util.Stack;
 
 import seng302.group5.Main;
 import seng302.group5.model.AgileItem;
+import seng302.group5.model.Backlog;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
@@ -223,6 +224,18 @@ public class UndoRedoHandler {
       case STORY_DELETE:
 //        System.out.println(String.format("I am %sing a story creation", undoOrRedoStr));   // temp
         handleStoryDelete(undoRedoObject, undoOrRedo);
+        break;
+
+      case BACKLOG_CREATE:
+        handleBacklogCreate(undoRedoObject, undoOrRedo);
+        break;
+
+      case BACKLOG_EDIT:
+        handleBacklogEdit(undoRedoObject, undoOrRedo);
+        break;
+
+      case BACKLOG_DELETE:
+        handleBacklogDelete(undoRedoObject, undoOrRedo);
         break;
 
       case UNDEFINED:
@@ -828,6 +841,97 @@ public class UndoRedoHandler {
       mainApp.addStory(storyToChange);
     } else {
       mainApp.deleteStory(storyToChange);
+    }
+
+    mainApp.refreshList(null);
+  }
+
+  /**
+   * Undo or redo a backlog creation
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handleBacklogCreate(UndoRedoObject undoRedoObject,
+                                   UndoOrRedo undoOrRedo) throws Exception {
+    // Get the data and ensure it has data for the team
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 1) {
+      throw new Exception("Can't undo/redo backlog creation - No variables");
+    }
+
+    // Get the team name which is currently in the list and the team to change
+    Backlog backlogToChange = (Backlog) undoRedoObject.getAgileItem();
+    Backlog backlogData = (Backlog) data.get(0);
+
+    // Make the changes and refresh the list
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+      mainApp.deleteBacklog(backlogToChange);
+    } else {
+      backlogToChange.copyValues(backlogData);
+      mainApp.addBacklog(backlogToChange);
+    }
+    mainApp.refreshList(null);
+  }
+
+  /**
+   * Undo or redo a backlog edit
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handleBacklogEdit(UndoRedoObject undoRedoObject,
+                                 UndoOrRedo undoOrRedo) throws Exception {
+
+    // Get the data and ensure it has data for the releases both before and after
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 2) {
+      throw new Exception("Can't undo/redo backlog edit - Less than 2 variables");
+    }
+
+    Backlog backlogToChange = (Backlog) undoRedoObject.getAgileItem();
+    Backlog backlogData;
+
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+//      currentStory = (Story) data.get(1);
+      backlogData = (Backlog) data.get(0);
+    } else {
+//      currentStory = (Story) data.get(0);
+      backlogData = (Backlog) data.get(1);
+    }
+
+    backlogToChange.copyValues(backlogData);
+    mainApp.refreshList(null);
+  }
+
+  /**
+   * Undo or redo a backlog deletion
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo     Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handleBacklogDelete(UndoRedoObject undoRedoObject,
+                                 UndoOrRedo undoOrRedo) throws Exception {
+
+    // Get the data and ensure it has data for the skill
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 1) {
+      throw new Exception("Can't undo/redo backlog deletion - No variables");
+    }
+
+    // Get the Release to undo/redo deletion of
+    Backlog backlogToChange = (Backlog) undoRedoObject.getAgileItem();
+    Backlog backlogData = (Backlog) data.get(0);
+
+    // Make the changes and refresh the list
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+      backlogToChange.copyValues(backlogData);
+      mainApp.addBacklog(backlogToChange);
+    } else {
+      mainApp.deleteBacklog(backlogToChange);
     }
 
     mainApp.refreshList(null);

@@ -23,6 +23,8 @@ import seng302.group5.model.Person;
 import seng302.group5.model.Role;
 import seng302.group5.model.Skill;
 import seng302.group5.model.Story;
+import seng302.group5.model.undoredo.Action;
+import seng302.group5.model.undoredo.UndoRedoObject;
 import seng302.group5.model.util.Settings;
 
 /**
@@ -268,7 +270,28 @@ public class BacklogDialogController {
     }
   }
 
-//  private UndoRedoObject generateUndoRedoObject() {} //TODO:
+  /**
+   * Generate an UndoRedoObject to place in the stack.
+   *
+   * @return The UndoRedoObject to store.
+   */
+  private UndoRedoObject generateUndoRedoObject() {
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+
+    if (createOrEdit == CreateOrEdit.CREATE) {
+      undoRedoObject.setAction(Action.BACKLOG_CREATE);
+    } else {
+      undoRedoObject.setAction(Action.BACKLOG_EDIT);
+      undoRedoObject.addDatum(lastBacklog);
+    }
+
+    // Store a copy of backlog to edit in stack to avoid reference problems
+    undoRedoObject.setAgileItem(backlog);
+    Backlog backlogToStore = new Backlog(backlog);
+    undoRedoObject.addDatum(backlogToStore);
+
+    return undoRedoObject;
+  }
 
 
   /**
@@ -333,8 +356,8 @@ public class BacklogDialogController {
         }
         mainApp.refreshList(backlog);
       }
-//      UndoRedoObject undoRedoObject = generateUndoRedoObject();
-//      mainApp.newAction(undoRedoObject);
+      UndoRedoObject undoRedoObject = generateUndoRedoObject();
+      mainApp.newAction(undoRedoObject);
       thisStage.close();
     }
   }

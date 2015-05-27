@@ -874,10 +874,12 @@ public class Main extends Application {
         undoRedoObject = generateDelUndoRedoObject(Action.STORY_DELETE, agileItem);
         newAction(undoRedoObject);
         break;
-      case "Backlogs": // TODO put in settings
+      case "Backlogs":
         Backlog backlog = (Backlog) agileItem;
         deleteBacklog(backlog);
-        // TODO: UNDOREDO
+        undoRedoObject = generateDelUndoRedoObject(Action.BACKLOG_DELETE, agileItem);
+        newAction(undoRedoObject);
+        break;
       default:
 //        System.err.println("Unhandled case for deleting agile item");
         break;
