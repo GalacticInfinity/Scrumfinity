@@ -153,6 +153,9 @@ public class MenuBarController {
       case "Stories":
         mainApp.showStoryDialog(CreateOrEdit.EDIT);
         break;
+      case "Backlogs":
+        mainApp.showBacklogDialog(CreateOrEdit.EDIT);
+        break;
     }
   }
 
@@ -549,6 +552,7 @@ public class MenuBarController {
     showSkillsMenuItem.setSelected(false);
     showReleasesMenuItem.setSelected(false);
     showStoriesMenuItem.setSelected(false);
+    showBacklogsMenuItem.setSelected(false);
     if (!selectedList.equals("")) {
       showListMenuItem.setSelected(true);
       switch (selectedList) {
@@ -569,6 +573,9 @@ public class MenuBarController {
           break;
         case "Stories":
           showStoriesMenuItem.setSelected(true);
+          break;
+        case "Backlogs":
+          showBacklogsMenuItem.setSelected(true);
           break;
       }
     }

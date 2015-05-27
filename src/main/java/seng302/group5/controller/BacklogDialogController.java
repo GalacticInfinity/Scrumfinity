@@ -84,9 +84,11 @@ public class BacklogDialogController {
       thisStage.setTitle("Edit Team");
       btnCreateBacklog.setText("Save");
       btnCreateBacklog.setDisable(true);
-      backlogLabelField.setText(backlog.getLabel());
       initialiseLists(CreateOrEdit.EDIT, backlog);
+      backlogLabelField.setText(backlog.getLabel());
+      backlogNameField.setText(backlog.getBacklogName());
       backlogDescriptionField.setText(backlog.getBacklogDescription());
+      backlogProductOwnerCombo.setValue(backlog.getProductOwner());
     }
     this.createOrEdit = createOrEdit;
 
