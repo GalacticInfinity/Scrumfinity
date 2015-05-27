@@ -383,14 +383,15 @@ public class MenuBarController {
    */
   @FXML
   protected void btnClickReport() {
-    FileChooser fileChooser = new FileChooser();
+    mainApp.showReportDialog(CreateOrEdit.CREATE);
+/*    FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Save Report");
     File file = fileChooser.showSaveDialog(mainApp.getPrimaryStage());
 
     if (file != null) {
       ReportWriter report = new ReportWriter();
       report.writeReport(mainApp, file);
-    }
+    }*/
   }
 
   /**

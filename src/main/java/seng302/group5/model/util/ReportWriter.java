@@ -49,7 +49,7 @@ public class ReportWriter {
   LocalDate date;
   String dateFormat = "dd/MM/yyyy";
 
-  private Main mainApp;
+
   ObservableList<Skill> skills = FXCollections.observableArrayList();
   ObservableList<Team> teams = FXCollections.observableArrayList();
   ObservableList<Story> stories = FXCollections.observableArrayList();
@@ -405,7 +405,7 @@ public class ReportWriter {
     storyElem.appendChild(storyCreator);
   }
 
-  public void setLists() {
+  public void setLists(Main mainApp) {
     skills.setAll(mainApp.getSkills());
     teams.setAll(mainApp.getTeams());
     projectItems.setAll(mainApp.getProjects());
