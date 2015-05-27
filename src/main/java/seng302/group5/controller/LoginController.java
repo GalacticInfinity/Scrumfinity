@@ -8,7 +8,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import seng302.group5.Main;
-import seng302.group5.model.NewLoading;
+import seng302.group5.model.util.NewLoading;
 import seng302.group5.model.util.Settings;
 
 /**

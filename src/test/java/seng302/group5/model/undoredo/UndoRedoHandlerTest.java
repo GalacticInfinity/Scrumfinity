@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -70,9 +71,11 @@ public class UndoRedoHandlerTest {
   private String storyName;
   private String storyDescription;
   private Person storyCreator;
+  private List<String> storyAC;
   private String newStoryLabel;
   private String newStoryName;
   private String newStoryDescription;
+  private List<String> newStoryAC;
 
   private Person person;
   private Skill skill;
@@ -352,7 +355,8 @@ public class UndoRedoHandlerTest {
     storyName = "This is a story";
     storyDescription = "Once upon a time...";
     storyCreator = new Person("Seamus", "Sandy", "Devil", null);
-    story = new Story(storyLabel, storyName, storyDescription, storyCreator);
+    storyAC = new ArrayList<String>();
+    story = new Story(storyLabel, storyName, storyDescription, storyCreator, storyAC);
 
     mainApp.addStory(story);
 

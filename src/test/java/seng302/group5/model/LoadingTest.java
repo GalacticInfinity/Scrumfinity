@@ -11,6 +11,8 @@ import java.time.Month;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seng302.group5.Main;
+import seng302.group5.model.util.NewLoading;
+import seng302.group5.model.util.NewSaving;
 import seng302.group5.model.util.Settings;
 
 /**
@@ -190,7 +192,7 @@ public class LoadingTest {
 
   public void createStories() {
     createVanillaPeople();
-    story1 = new Story("Story1", "Starter Story", "Huehuehuehue", person1);
+    story1 = new Story("Story1", "Starter Story", "Huehuehuehue", person1, null); //TODO lol its a null
     savedMain.addStory(story1);
 
     story2 = new Story();
