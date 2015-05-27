@@ -13,6 +13,7 @@ import javafx.collections.ObservableList;
 import seng302.group5.Main;
 import seng302.group5.controller.ListMainPaneController;
 import seng302.group5.model.AgileItem;
+import seng302.group5.model.Backlog;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
@@ -77,12 +78,24 @@ public class UndoRedoHandlerTest {
   private String newStoryDescription;
   private List<String> newStoryAC;
 
+  private String backlogLabel;
+  private String backlogName;
+  private String backlogDescription;
+  private List<Story> backlogStories;
+  private Person productOwner;
+  private String newBacklogLabel;
+  private String newBacklogName;
+  private String newBacklogDescription;
+  private Person newProductOwner;
+  private List<Story> newBacklogStories;
+
   private Person person;
   private Skill skill;
   private Team team;
   private Project project;
   private Release release;
   private Story story;
+  private Backlog backlog;
 
   private UndoRedoHandler undoRedoHandler;
   private Main mainApp;
@@ -503,6 +516,59 @@ public class UndoRedoHandlerTest {
     undoRedoObject.setAgileItem(release);
     undoRedoObject.addDatum(lastRelease);
     undoRedoObject.addDatum(newRelease);
+
+    undoRedoHandler.newAction(undoRedoObject);
+  }
+
+  private void newBacklog() {
+    backlogLabel = "Backlog";
+    backlogName = "This is a backlog";
+    backlogDescription = "Once upon a time...BAM!";
+    productOwner = person;
+    backlog = new Backlog(backlogLabel, backlogName, backlogDescription, productOwner);
+    backlog.addStory(story);
+    backlogStories = backlog.getStories();
+    mainApp.addBacklog(backlog);
+
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+    undoRedoObject.setAction(Action.BACKLOG_CREATE);
+    undoRedoObject.setAgileItem(backlog);
+    undoRedoObject.addDatum(new Backlog(backlog));
+
+    undoRedoHandler.newAction(undoRedoObject);
+  }
+
+  private void deleteNewestBacklog() {
+    mainApp.deleteBacklog(backlog);
+
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+    undoRedoObject.setAction(Action.BACKLOG_DELETE);
+    undoRedoObject.setAgileItem(backlog);
+    undoRedoObject.addDatum(new Backlog(backlog));
+
+    undoRedoHandler.newAction(undoRedoObject);
+  }
+
+  private void editNewestBacklog() {
+    Backlog lastBacklog = new Backlog(backlog);
+
+    newBacklogLabel = "New backlog";
+    newBacklogName = "New backlog name";
+    newBacklogDescription = "Once upon a time... BAM Again!";
+    newProductOwner = new Person("Jason", "Smith", "Devil", null);
+
+    backlog.setLabel(newBacklogLabel);
+    backlog.setBacklogName(newBacklogName);
+    backlog.setBacklogDescription(newBacklogDescription);
+    backlog.setProductOwner(newProductOwner);
+
+    Backlog newBacklog = new Backlog(backlog);
+
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+    undoRedoObject.setAction(Action.BACKLOG_EDIT);
+    undoRedoObject.setAgileItem(backlog);
+    undoRedoObject.addDatum(lastBacklog);
+    undoRedoObject.addDatum(newBacklog);
 
     undoRedoHandler.newAction(undoRedoObject);
   }
@@ -2193,6 +2259,226 @@ public class UndoRedoHandlerTest {
     assertEquals(newProjectRelease, newRelease.getProjectRelease());
   }
 
+  @Test
+  public void testBacklogCreateUndo() throws Exception {
+    assertTrue(mainApp.getBacklogs().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().isEmpty());
+
+    newPerson();
+    newStory();
+    newBacklog();
+
+    assertEquals(1, mainApp.getBacklogs().size());
+    assertEquals(3, undoRedoHandler.getUndoStack().size());
+
+    undoRedoHandler.undo();
+
+    assertTrue(mainApp.getBacklogs().isEmpty());
+    assertEquals(2, undoRedoHandler.getUndoStack().size());
+  }
+
+  @Test
+  public void testBacklogCreateRedo() throws Exception {
+    Backlog before;
+    Backlog after;
+
+    assertTrue(mainApp.getBacklogs().isEmpty());
+    assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+
+    newPerson();
+    newStory();
+    newBacklog();
+
+    assertEquals(1, mainApp.getBacklogs().size());
+    assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+    before = mainApp.getBacklogs().get(0);
+    assertNotNull(before);
+
+    undoRedoHandler.undo();
+
+    assertTrue(mainApp.getBacklogs().isEmpty());
+    assertEquals(1, undoRedoHandler.getRedoStack().size());
+
+    undoRedoHandler.redo();
+    assertEquals(1, mainApp.getBacklogs().size());
+    assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+    after = mainApp.getBacklogs().get(0);
+    assertNotNull(after);
+
+    assertSame(before, after);
+  }
+
+  @Test
+  public void testBacklogDeleteUndo() throws Exception {
+    Backlog before;
+    Backlog after;
+
+    //testing deleting and undoing an empty backlog
+    assertTrue(mainApp.getBacklogs().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().isEmpty());
+
+    newPerson();
+    newStory();
+    newBacklog();
+
+    assertEquals(1, mainApp.getBacklogs().size());
+    assertEquals(3, undoRedoHandler.getUndoStack().size());
+    before = mainApp.getBacklogs().get(0);
+    assertNotNull(before);
+
+    deleteNewestBacklog();
+
+    assertTrue(mainApp.getBacklogs().isEmpty());
+    assertEquals(4, undoRedoHandler.getUndoStack().size());
+
+    undoRedoHandler.undo();
+
+    assertEquals(1, mainApp.getBacklogs().size());
+    assertEquals(3, undoRedoHandler.getUndoStack().size());
+    after = mainApp.getBacklogs().get(0);
+    assertNotNull(after);
+
+    assertSame(before, after);
+  }
+
+  @Test
+  public void testBacklogDeleteRedo() throws Exception {
+    Backlog before;
+    Backlog after;
+
+    //testing deleting and redoing an empty backlog
+    assertTrue(mainApp.getBacklogs().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().isEmpty());
+    assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+
+    newPerson();
+    newStory();
+    newBacklog();
+
+    assertEquals(1, mainApp.getBacklogs().size());
+    assertEquals(3, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+    before = mainApp.getBacklogs().get(0);
+    assertNotNull(before);
+
+    deleteNewestBacklog();
+
+    assertTrue(mainApp.getBacklogs().isEmpty());
+    assertEquals(4, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+
+    undoRedoHandler.undo();
+
+    assertEquals(1, mainApp.getBacklogs().size());
+    assertEquals(3, undoRedoHandler.getUndoStack().size());
+    assertEquals(1, undoRedoHandler.getRedoStack().size());
+    after = mainApp.getBacklogs().get(0);
+    assertNotNull(after);
+
+    assertSame(before, after);
+
+    undoRedoHandler.redo();
+    assertTrue(mainApp.getBacklogs().isEmpty());
+    assertEquals(4, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+  }
+
+  @Test
+  public void testBacklogEditUndo() throws Exception {
+    //testing editing and redoing an empty backlog
+    assertTrue(mainApp.getBacklogs().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+
+    newPerson();
+    newStory();
+    newBacklog();
+
+    assertEquals(1, mainApp.getBacklogs().size());
+    assertEquals(3, undoRedoHandler.getUndoStack().size());
+
+    Backlog createdBacklog = mainApp.getBacklogs().get(mainApp.getBacklogs().size() - 1);
+    assertEquals(backlogLabel, createdBacklog.getLabel());
+    assertEquals(backlogName, createdBacklog.getBacklogName());
+    assertEquals(backlogDescription, createdBacklog.getBacklogDescription());
+    assertEquals(productOwner, createdBacklog.getProductOwner());
+
+    editNewestBacklog();
+
+    assertEquals(1, mainApp.getBacklogs().size());
+    assertEquals(4, undoRedoHandler.getUndoStack().size());
+
+    Backlog editedBacklog = mainApp.getBacklogs().get(mainApp.getBacklogs().size() - 1);
+    assertEquals(newBacklogLabel, editedBacklog.getLabel());
+    assertEquals(newBacklogName, editedBacklog.getBacklogName());
+    assertEquals(newBacklogDescription, editedBacklog.getBacklogDescription());
+    assertEquals(newProductOwner, editedBacklog.getProductOwner());
+
+    undoRedoHandler.undo();
+    assertEquals(1, mainApp.getBacklogs().size());
+    assertEquals(3, undoRedoHandler.getUndoStack().size());
+
+    Backlog undoneBacklog = mainApp.getBacklogs().get(mainApp.getBacklogs().size() - 1);
+    assertEquals(backlogLabel, undoneBacklog.getLabel());
+    assertEquals(backlogName, undoneBacklog.getBacklogName());
+    assertEquals(backlogDescription, undoneBacklog.getBacklogDescription());
+    assertEquals(productOwner, undoneBacklog.getProductOwner());
+  }
+
+  @Test
+  public void testBacklogEditRedo() throws Exception {
+    //testing editing and redoing an empty backlog
+    assertTrue(mainApp.getBacklogs().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    newPerson();
+    newStory();
+    newBacklog();
+
+    assertEquals(1, mainApp.getBacklogs().size());
+    assertEquals(3, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    Backlog createdBacklog = mainApp.getBacklogs().get(mainApp.getBacklogs().size() - 1);
+    assertEquals(backlogLabel, createdBacklog.getLabel());
+    assertEquals(backlogName, createdBacklog.getBacklogName());
+    assertEquals(backlogDescription, createdBacklog.getBacklogDescription());
+    assertEquals(productOwner, createdBacklog.getProductOwner());
+
+    editNewestBacklog();
+
+    assertEquals(1, mainApp.getBacklogs().size());
+    assertEquals(4, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    Backlog editedBacklog = mainApp.getBacklogs().get(mainApp.getBacklogs().size() - 1);
+    assertEquals(newBacklogLabel, editedBacklog.getLabel());
+    assertEquals(newBacklogName, editedBacklog.getBacklogName());
+    assertEquals(newBacklogDescription, editedBacklog.getBacklogDescription());
+    assertEquals(newProductOwner, editedBacklog.getProductOwner());
+
+    undoRedoHandler.undo();
+    assertEquals(1, mainApp.getBacklogs().size());
+    assertEquals(3, undoRedoHandler.getUndoStack().size());
+    assertEquals(1, undoRedoHandler.getRedoStack().size());
+
+    Backlog undoneBacklog = mainApp.getBacklogs().get(mainApp.getBacklogs().size() - 1);
+    assertEquals(backlogLabel, undoneBacklog.getLabel());
+    assertEquals(backlogName, undoneBacklog.getBacklogName());
+    assertEquals(backlogDescription, undoneBacklog.getBacklogDescription());
+    assertEquals(productOwner, undoneBacklog.getProductOwner());
+
+    undoRedoHandler.redo();
+    assertEquals(1, mainApp.getBacklogs().size());
+    assertEquals(4, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    Backlog redoneBacklog = mainApp.getBacklogs().get(mainApp.getBacklogs().size() - 1);
+    assertEquals(newBacklogLabel, redoneBacklog.getLabel());
+    assertEquals(newBacklogName, redoneBacklog.getBacklogName());
+    assertEquals(newBacklogDescription, redoneBacklog.getBacklogDescription());
+    assertEquals(newProductOwner, redoneBacklog.getProductOwner());
+  }
 
   @Test
   public void testSpecialDeleteSkillUndo() throws Exception {
