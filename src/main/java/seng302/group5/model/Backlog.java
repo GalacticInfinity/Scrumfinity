@@ -1,6 +1,7 @@
 package seng302.group5.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -118,12 +119,28 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
   }
 
   /**
+   * Add all stories in a collection to the backlog with the default estimate.
+   *
+   * @param storyCollection Collection of stories
+   */
+  public void addAllStories(Collection<Story> storyCollection) {
+    stories.addAll(storyCollection);
+  }
+
+  /**
    * Remove a story from the backlog.
    *
    * @param story Story to remove
    */
   public void removeStory(Story story) {
     stories.remove(story);
+  }
+
+  /**
+   * Remove all stories in the backlog.
+   */
+  public void removeAllStories() {
+    stories.clear();
   }
 
   /**
