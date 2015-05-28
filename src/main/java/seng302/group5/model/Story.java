@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 
 /**
@@ -19,7 +20,8 @@ public class Story implements AgileItem, Comparable<Story> {
   private String storyName;
   private String description;
   private Person creator;
-  private List<String> acceptanceCriteria;
+
+  private ObservableList<String> acceptanceCriteria = FXCollections.observableArrayList();
 
   /**
    * Empty constructor used for save/load.
@@ -29,7 +31,7 @@ public class Story implements AgileItem, Comparable<Story> {
     this.storyName = "";
     this.description = "";
     this.creator = null;
-    this.acceptanceCriteria = new ArrayList<String>();
+    this.acceptanceCriteria = null;
   }
 
   /**
@@ -40,7 +42,8 @@ public class Story implements AgileItem, Comparable<Story> {
    * @param creator Person assigned to creation of this story..
    * @param acceptanceCriteria The criteria for the story to be considered done.
    */
-  public Story(String label, String storyName, String description, Person creator, List<String> acceptanceCriteria) {
+  public Story(String label, String storyName, String description, Person creator,
+               ObservableList<String> acceptanceCriteria) {
     this.label = label;
     this.storyName = storyName;
     this.description = description;
@@ -129,7 +132,7 @@ public class Story implements AgileItem, Comparable<Story> {
    * gets the acceptance criteria
    * @return List which contains the ACS
    */
-  public List<String> getAcceptanceCriteria() {
+  public ObservableList<String> getAcceptanceCriteria() {
     return acceptanceCriteria;
   }
 
@@ -137,7 +140,7 @@ public class Story implements AgileItem, Comparable<Story> {
    * sets the Acceptance criteria
    * @param acceptanceCriteria List which is the ACS
    */
-  public void setAcceptanceCriteria(List<String> acceptanceCriteria) {
+  public void setAcceptanceCriteria(ObservableList<String> acceptanceCriteria) {
     this.acceptanceCriteria = acceptanceCriteria;
   }
 

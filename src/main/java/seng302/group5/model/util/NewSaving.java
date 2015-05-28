@@ -9,6 +9,7 @@ import java.util.List;
 
 import seng302.group5.Main;
 import seng302.group5.model.AgileHistory;
+import seng302.group5.model.Backlog;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
@@ -16,7 +17,6 @@ import seng302.group5.model.Role;
 import seng302.group5.model.Skill;
 import seng302.group5.model.Story;
 import seng302.group5.model.Team;
-import seng302.group5.model.util.Settings;
 
 /**
  * Class which creates an xml file to save. Manually formats the document
@@ -31,6 +31,7 @@ public class NewSaving {
   private List<Release> releases;
   private List<Role> roles;
   private List<Story> stories;
+  private List<Backlog> backlogs;
 
   public NewSaving(Main main) {
     projects = main.getProjects();
@@ -40,7 +41,7 @@ public class NewSaving {
     releases = main.getReleases();
     roles = main.getRoles();
     stories = main.getStories();
-
+    backlogs = main.getBacklogs();
   }
 
   /**
@@ -71,6 +72,9 @@ public class NewSaving {
       if (Settings.progVersion >= 0.2) {
         saveStories(saveFile);
       }
+      if (Settings.progVersion >= 0.3) {
+        saveBacklogs(saveFile);
+      }
       saveEnd(saveFile);
     } catch (Exception e) {
       e.printStackTrace();
@@ -90,7 +94,7 @@ public class NewSaving {
     } else {
       orgName = "__undefined__";
     }
-    saveFile.write("<scrumfinity version=\"0.2\" organization=\"" + orgName + "\">\n");
+    saveFile.write("<scrumfinity version=\"" + Settings.progVersion + "\" organization=\"" + orgName + "\">\n");
   }
 
   /**
@@ -265,7 +269,7 @@ public class NewSaving {
   }
 
   /**
-   *Appends the main stories data to the save file
+   * Appends the main stories data to the save file
    *
    * @param saveFile Save file being written to
    * @throws Exception Required field is missing/ error with writer
@@ -285,5 +289,39 @@ public class NewSaving {
       saveFile.write("\t</Story>\n");
     }
     saveFile.write("</Stories>\n");
+  }
+
+  /**
+   * Appends the main backlogs data to the save file
+   *
+   * @param saveFile Save file being written to
+   * @throws Exception Required field is missing or error with writer
+   */
+  private void saveBacklogs(Writer saveFile) throws Exception {
+    saveFile.write("<Backlogs>\n");
+    for (Backlog backlog : this.backlogs) {
+      saveFile.write("\t<Backlog>\n");
+      saveFile.write("\t\t<backlogLabel>" + backlog.getLabel() + "</backlogLabel>\n");
+      saveFile.write("\t\t<productOwner>" + backlog.getProductOwner().getLabel() + "</productOwner>\n");
+
+      if (backlog.getBacklogName() != null && !backlog.getBacklogName().equals("")) {
+        saveFile.write("\t\t<backlogName>" + backlog.getBacklogName() + "</backlogName>\n");
+      }
+      if (backlog.getBacklogDescription() != null && !backlog.getBacklogDescription().equals("")) {
+        saveFile.write("\t\t<backlogDescription>" + backlog.getBacklogDescription() + "</backlogDescription>\n");
+      }
+
+      if (!backlog.getStories().isEmpty()) {
+        saveFile.write("\t\t<BacklogStories>\n");
+        for (Story story : backlog.getStories()) {
+          saveFile.write("\t\t\t<backlogStory>" + story.getLabel() + "</backlogStory>\n");
+        }
+        saveFile.write("\t\t</BacklogStories>\n");
+      }
+
+      saveFile.write("\t</Backlog>\n");
+    }
+    saveFile.write("</Backlogs>\n");
+
   }
 }
