@@ -17,6 +17,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -28,6 +29,7 @@ import seng302.group5.controller.MenuBarController;
 import seng302.group5.controller.ReleaseDialogController;
 import seng302.group5.controller.PersonDialogController;
 import seng302.group5.controller.ProjectDialogController;
+import seng302.group5.controller.ReportDialogController;
 import seng302.group5.controller.StoryDialogController;
 import seng302.group5.controller.TeamDialogController;
 import seng302.group5.controller.enums.CreateOrEdit;
@@ -313,6 +315,41 @@ public class Main extends Application {
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  public void showReportDialog(CreateOrEdit createOrEdit) {
+    try {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(Main.class.getResource("/ReportDialog.fxml"));
+        VBox releaseDialogLayout = loader.load();
+
+        ReportDialogController controller = loader.getController();
+        Scene releaseDialogScene = new Scene(releaseDialogLayout);
+        Stage releaseDialogStage = new Stage();
+
+        Release release = null;
+        if (createOrEdit == CreateOrEdit.EDIT) {
+          release = (Release) LMPC.getSelected();    // TODO: Fix
+          if (release == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("No release selected");
+            alert.showAndWait();
+            return;
+          }
+        }
+        controller.setupController(this, releaseDialogStage);
+
+        releaseDialogStage.initModality(Modality.APPLICATION_MODAL);
+        releaseDialogStage.initOwner(primaryStage);
+        releaseDialogStage.setScene(releaseDialogScene);
+        releaseDialogStage.show();
+
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+
   }
 
   /**

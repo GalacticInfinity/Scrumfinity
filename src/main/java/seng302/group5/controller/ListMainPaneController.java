@@ -640,15 +640,13 @@ public class ListMainPaneController {
     Text textACBody;
     if (story.getAcceptanceCriteria().size() != 0) {
       for (String storyAC : story.getAcceptanceCriteria()) {
-        textACBody = new Text("\n• " + storyAC);
+        textACBody = new Text("\n•" + storyAC);
         displayTextFlow.getChildren().addAll(textACBody);
       }
     } else {
       textACBody = new Text("\nN/A");
       displayTextFlow.getChildren().addAll(textACBody);
     }
-
-
   }
 
   /**
