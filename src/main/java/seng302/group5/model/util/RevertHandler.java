@@ -9,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seng302.group5.Main;
 import seng302.group5.model.AgileHistory;
+import seng302.group5.model.Backlog;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
@@ -31,6 +32,7 @@ public class RevertHandler {
   private ObservableList<Release> releasesLastSaved;
   private ObservableList<Role> rolesLastSaved;
   private ObservableList<Story> storiesLastSaved;
+  private ObservableList<Backlog> backlogsLastSaved;
 
   /**
    * Constructor. Set the main app to communicate with and initialise lists
@@ -46,6 +48,7 @@ public class RevertHandler {
     this.releasesLastSaved = FXCollections.observableArrayList();
     this.rolesLastSaved = FXCollections.observableArrayList();
     this.storiesLastSaved = FXCollections.observableArrayList();
+    this.backlogsLastSaved = FXCollections.observableArrayList();
   }
 
 
@@ -89,6 +92,11 @@ public class RevertHandler {
       mainApp.addStory(new Story(story));
     }
 
+    mainApp.getBacklogs().clear();
+    for (Backlog backlog : backlogsLastSaved) {
+      mainApp.addBacklog(new Backlog(backlog));
+    }
+
     // Ensure data in main refer to each other
     syncPeopleWithSkills(mainApp.getPeople(), mainApp.getSkills());
     syncTeamsWithPeople(mainApp.getTeams(), mainApp.getPeople(), mainApp.getRoles());
@@ -96,6 +104,7 @@ public class RevertHandler {
     syncReleasesWithProjects(mainApp.getReleases(), mainApp.getProjects());
     syncRolesWithSkills(mainApp.getRoles(), mainApp.getSkills());
     syncStoriesWithPeople(mainApp.getStories(), mainApp.getPeople());
+    syncBacklogsWithStories(mainApp.getBacklogs(), mainApp.getStories());
 
     mainApp.refreshLastSaved();
     mainApp.refreshList(null);
@@ -142,6 +151,11 @@ public class RevertHandler {
       storiesLastSaved.add(new Story(story));
     }
 
+    backlogsLastSaved.clear();
+    for (Backlog backlog : mainApp.getBacklogs()) {
+      backlogsLastSaved.add(new Backlog(backlog));
+    }
+
     // Ensure data in the copies refer to each other
     syncPeopleWithSkills(peopleLastSaved, skillsLastSaved);
     syncTeamsWithPeople(teamsLastSaved, peopleLastSaved, rolesLastSaved);
@@ -149,6 +163,7 @@ public class RevertHandler {
     syncReleasesWithProjects(releasesLastSaved, projectsLastSaved);
     syncRolesWithSkills(rolesLastSaved, skillsLastSaved);
     syncStoriesWithPeople(storiesLastSaved, peopleLastSaved);
+    syncBacklogsWithStories(backlogsLastSaved, storiesLastSaved);
   }
 
   /**
@@ -298,7 +313,7 @@ public class RevertHandler {
    * @param stories Reference story objects to link to the person
    * @param people Reference person object to link to the story
    */
-  private void syncStoriesWithPeople (List<Story> stories, List<Person> people) {
+  private void syncStoriesWithPeople(List<Story> stories, List<Person> people) {
     Map<String, Person> personMap = new HashMap<>();
 
     for (Person mainPerson : people) {
@@ -310,6 +325,31 @@ public class RevertHandler {
         Person mainPerson = personMap.get(mainStory.getCreator().getLabel());
         mainStory.setCreator(mainPerson);
       }
+    }
+  }
+
+  /**
+   * Creates the proper reference to the Story objects related to the backlog
+   *
+   * @param backlogs Reference backlog objects to link the story
+   * @param stories Reference story object to link the backlog
+   */
+  private void syncBacklogsWithStories(List<Backlog> backlogs, List<Story> stories) {
+    Map<String, Story> storyMap = new HashMap<>();
+
+    for (Story mainStory : stories) {
+      storyMap.put(mainStory.getLabel(), mainStory);
+    }
+
+    // For every available backlog
+    for (Backlog backlog : backlogs) {
+      List<Story> storyList = new ArrayList<>();
+      // For every story in that backlog
+      for (Story backlogStory : backlog.getStories()) {
+        storyList.add(storyMap.get(backlogStory.getLabel()));
+      }
+      backlog.removeAllStories();
+      backlog.addAllStories(storyList);
     }
   }
 
