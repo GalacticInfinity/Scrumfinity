@@ -30,8 +30,8 @@ import seng302.group5.model.Team;
 
 
 /**
- * Created by Michael + Craig on 5/5/2015.
- * A class that reads the data from the application and saves it in a human readable format.
+ * Created by Michael + Craig on 5/5/2015. A class that reads the data from the application and
+ * saves it in a human readable format.
  */
 public class ReportWriter {
 
@@ -75,6 +75,7 @@ public class ReportWriter {
       DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
       DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
       unassignedSkills.setAll(mainApp.getSkills());
+      unassignedStories.setAll(mainApp.getStories());
       report = docBuilder.newDocument();
       date = LocalDate.now();
       String datesString = date.format(
@@ -150,17 +151,18 @@ public class ReportWriter {
         createSkillChild(skill, unusedSkills);
       }
 
-      allStories = report.createElement("Stories");
-      rootElement.appendChild(allStories);
-      for (Story story : unassignedStories) {
-        createStoryChild(story);
-      }
-
       allBacklogs = report.createElement("Backlogs");
       rootElement.appendChild(allBacklogs);
       for (Backlog backlog : mainApp.getBacklogs()) {
         createBacklogChild(backlog);
       }
+
+      allStories = report.createElement("OrphanStories");
+      rootElement.appendChild(allStories);
+      for (Story story : unassignedStories) {
+        createStoryChild(story);
+      }
+
 
       String filename = saveLocation.toString();
       if (!filename.endsWith(".xml")) {
@@ -419,10 +421,76 @@ public class ReportWriter {
     storyElem.appendChild(storyCreator);
   }
 
+  /**
+   * Creates a backlog element and displays the backlog information under backlogs tag.
+   * @param backlog all the backlogs saved in main
+   */
+  public void createBacklogChild(Backlog backlog) {
+    Element backlogElem = report.createElement("Backlog");
+    allBacklogs.appendChild(backlogElem);
+    backlogElem.setAttribute("label", backlog.getLabel());
+
+    Element backlogName = report.createElement("Name");
+    backlogName.appendChild(report.createTextNode(backlog.getBacklogName()));
+    backlogElem.appendChild(backlogName);
+
+    Element backlogDescription = report.createElement("Description");
+    backlogDescription.appendChild(report.createTextNode(backlog.getBacklogDescription()));
+    backlogElem.appendChild(backlogDescription);
+
+    createBacklogPerson(backlog.getProductOwner(), backlogElem, "ProductOwner");
+
+    Element backlogStories = report.createElement("Stories");
+    for (Story story : backlog.getStories()) {
+      if (unassignedStories.contains(story)) {
+        unassignedStories.remove(story);
+      }
+      createBacklogStory(story, backlogStories, "Story");
+    }
+    backlogElem.appendChild(backlogStories);
+  }
+
+  /**
+   * Gets all person fields and puts them into the backlogOwner element for creating backlogs
+   * @param person The porduct owner of the backlog
+   * @param backlogOwner The element "Product Owner" in the backlog
+   */
+  public void createBacklogPerson(Person person, Element backlogOwner, String typeOfPerson) {
+    Element productOwner = report.createElement(typeOfPerson);
+    productOwner.setAttribute("label", person.getLabel());
+    backlogOwner.appendChild(productOwner);
+
+    Element teamMemberName = report.createElement("FirstName");
+    teamMemberName.appendChild(report.createTextNode(person.getFirstName()));
+    backlogOwner.appendChild(teamMemberName);
+
+    Element teamMemberLastName = report.createElement("LastName");
+    teamMemberLastName.appendChild(report.createTextNode(person.getLastName()));
+    backlogOwner.appendChild(teamMemberLastName);
+
+    skillElement = report.createElement("Skills");
+    backlogOwner.appendChild(skillElement);
+    for (Skill skill : person.getSkillSet()) {
+      Element skillElem = report.createElement("Skill");
+      skillElement.appendChild(skillElem);
+      skillElem.setAttribute("label", skill.getLabel());
+
+      Element skillDescription = report.createElement("Description");
+      skillDescription.appendChild(report.createTextNode(skill.getSkillDescription()));
+      skillElem.appendChild(skillDescription);
+    }
+  }
+
+  /**
+   * Creates the story elements for the report. Shows the name, description and the creator.
+   * @param story Story to be written
+   * @param backlogStory Element for the story element to be attached to
+   * @param typeOfStory String name for story type (BacklogStory, UnassignedStory etc.
+   */
   public void createBacklogStory(Story story, Element backlogStory, String typeOfStory) {
     Element storyElem = report.createElement(typeOfStory);
-    backlogStory.appendChild(storyElem);
     storyElem.setAttribute("label", story.getLabel());
+    backlogStory.appendChild(storyElem);
 
     Element storyName = report.createElement("Name");
     storyName.appendChild(report.createTextNode(story.getStoryName()));
