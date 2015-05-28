@@ -68,7 +68,11 @@ public class ACDialogController {
    */
   @FXML
   protected void btnAddClick(ActionEvent event) {
-    this.storyDC.appendAcceptanceCriteria(textAC.getText().trim());
+    if (this.createOrEdit == createOrEdit.CREATE) {
+      this.storyDC.appendAcceptanceCriteria(textAC.getText().trim());
+    } else if (createOrEdit == CreateOrEdit.EDIT) {
+      this.storyDC.changeAcceptanceCriteria(ac, textAC.getText().trim());
+    }
     thisStage.close();
   }
 
@@ -81,7 +85,4 @@ public class ACDialogController {
   protected void btnCancelClick(ActionEvent event) {
     thisStage.close();
   }
-
-
-
 }

@@ -72,11 +72,11 @@ public class UndoRedoHandlerTest {
   private String storyName;
   private String storyDescription;
   private Person storyCreator;
-  private List<String> storyAC;
+  private ObservableList<String> storyAC;
   private String newStoryLabel;
   private String newStoryName;
   private String newStoryDescription;
-  private List<String> newStoryAC;
+  private ObservableList<String> newStoryAC;
 
   private String backlogLabel;
   private String backlogName;
@@ -368,7 +368,7 @@ public class UndoRedoHandlerTest {
     storyName = "This is a story";
     storyDescription = "Once upon a time...";
     storyCreator = new Person("Seamus", "Sandy", "Devil", null);
-    storyAC = new ArrayList<String>();
+    storyAC = FXCollections.observableArrayList();
     story = new Story(storyLabel, storyName, storyDescription, storyCreator, storyAC);
 
     mainApp.addStory(story);
