@@ -201,7 +201,12 @@ public class ReportDialogController {
 
     if (file != null) {
       ReportWriter report = new ReportWriter();
-      report.writeReport(mainApp, file);
+      if (reportLevelCombo.getSelectionModel().getSelectedItem().equals("All")) {
+        report.writeReport(mainApp, file);
+      }
+      else {
+
+      }
     }
   }
 
