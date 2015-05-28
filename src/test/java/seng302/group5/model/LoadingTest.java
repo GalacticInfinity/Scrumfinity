@@ -7,6 +7,8 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
+import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -195,19 +197,21 @@ public class LoadingTest {
 
   public void createStories() {
     createVanillaPeople();
-    story1 = new Story("Story1", "Starter Story", "Huehuehuehue", person1, null); //TODO lol its a null
+    story1 = new Story("Story1", "Starter Story", "Huehuehuehue", person1, null); //TODO not null it
     savedMain.addStory(story1);
 
     story2 = new Story();
     story2.setLabel("Story2");
     story2.setStoryName("Moar Story");
     story2.setCreator(person2);
+    story2.setAcceptanceCriteria(null);
     savedMain.addStory(story2);
 
     story3 = new Story();
     story3.setLabel("Story3");
     story3.setDescription("They story-ening is now");
     story3.setCreator(person1);
+    story3.setAcceptanceCriteria(null);
     savedMain.addStory(story3);
   }
 

@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.List;
 
 import javafx.collections.FXCollections;
@@ -25,6 +26,8 @@ import seng302.group5.model.undoredo.UndoRedoHandler;
 import seng302.group5.model.undoredo.UndoRedoObject;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
@@ -221,7 +224,7 @@ public class RevertHandlerTest {
     storyDescription ="This is a story and it is good";
     storyCreator = null;
 
-    story = new Story(storyLabel, storyLongName, storyDescription, storyCreator, null); //TODO LOOL NUULLLLL
+    story = new Story(storyLabel, storyLongName, storyDescription, storyCreator, null); //TODO not null it
 
     mainApp.addStory(story);
 

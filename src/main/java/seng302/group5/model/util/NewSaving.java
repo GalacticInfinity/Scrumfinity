@@ -286,6 +286,13 @@ public class NewSaving {
       if (story.getDescription() != null && !story.getDescription().equals("")) {
         saveFile.write("\t\t<description>" + story.getDescription() + "</description>\n");
       }
+      if (!story.getAcceptanceCriteria().isEmpty()) {
+        saveFile.write("\t\t<AcceptanceCriteria>\n");
+        for (String acceptanceC : story.getAcceptanceCriteria()) {
+          saveFile.write("\t\t\t<criteria>" + acceptanceC + "</criteria>\n");
+        }
+        saveFile.write("\t\t</AcceptanceCriteria>\n");
+      }
       saveFile.write("\t</Story>\n");
     }
     saveFile.write("</Stories>\n");
