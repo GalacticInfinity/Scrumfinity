@@ -21,7 +21,7 @@ public class Story implements AgileItem, Comparable<Story> {
   private String description;
   private Person creator;
 
-  private ObservableList<String> acceptanceCriteria = FXCollections.observableArrayList();
+  private ObservableList<String> acceptanceCriteria;
 
   /**
    * Empty constructor used for save/load.
@@ -31,7 +31,7 @@ public class Story implements AgileItem, Comparable<Story> {
     this.storyName = "";
     this.description = "";
     this.creator = null;
-    this.acceptanceCriteria = null;
+    this.acceptanceCriteria = FXCollections.observableArrayList();
   }
 
   /**
@@ -48,7 +48,11 @@ public class Story implements AgileItem, Comparable<Story> {
     this.storyName = storyName;
     this.description = description;
     this.creator = creator;
-    this.acceptanceCriteria = acceptanceCriteria;
+    if (acceptanceCriteria == null) {
+      this.acceptanceCriteria = FXCollections.observableArrayList();
+    } else {
+      this.acceptanceCriteria = acceptanceCriteria;
+    }
   }
 
   /**
@@ -61,7 +65,10 @@ public class Story implements AgileItem, Comparable<Story> {
     this.storyName = clone.getStoryName();
     this.description = clone.getDescription();
     this.creator = clone.getCreator();
-    this.acceptanceCriteria = clone.getAcceptanceCriteria();
+    this.acceptanceCriteria = FXCollections.observableArrayList();
+    if (clone.getAcceptanceCriteria() != null) {
+      this.acceptanceCriteria.addAll(clone.getAcceptanceCriteria());
+    }
   }
 
   /**
