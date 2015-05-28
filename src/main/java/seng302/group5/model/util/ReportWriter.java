@@ -90,38 +90,7 @@ public class ReportWriter {
       rootElement.appendChild(projElement);
       for (Project project : mainApp.getProjects()) {
         orphanTeamsList.setAll(mainApp.getTeams());
-
-        projElem = report.createElement("Project");
-        projElement.appendChild(projElem);
-        projElem.setAttribute("label", project.getLabel());
-
-        Element projName = report.createElement("Name");
-        projName.appendChild(report.createTextNode(project.getProjectName()));
-        projElem.appendChild(projName);
-
-        Element projDesc = report.createElement("Description");
-        if (project.getProjectDescription() != null && !project.getProjectDescription().isEmpty()) {
-          projDesc.appendChild(report.createTextNode(project.getProjectDescription()));
-        }
-        projElem.appendChild(projDesc);
-
-        releasesElement = report.createElement("Releases");
-        projElem.appendChild(releasesElement);
-
-        for (Release release : mainApp.getReleases()) {
-          if (release.getProjectRelease().getLabel().equals(project.getLabel())) {
-            createRelease(release, releasesElement);
-          }
-        }
-        teamElement = report.createElement("Teams");
-        projElem.appendChild(teamElement);
-        for (AgileHistory team : project.getAllocatedTeams()) {
-          if (orphanTeamsList.contains(team.getAgileItem())) {
-            orphanTeamsList.remove(team.getAgileItem());
-          }
-          createTeam(team, teamElement, "Team");
-        }
-
+        createProject(project, projElement, "Project");
       }
 
       orphanTeam = report.createElement("UnassignedTeams");
@@ -166,11 +135,45 @@ public class ReportWriter {
       StreamResult result = new StreamResult(filename);
 
       transformer.transform(source, result);
-//      System.out.println("Report Created");
 
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  private void createProject(Project project, Element projElem, String name) {
+    projElem = report.createElement(name);
+    projElement.appendChild(projElem);
+    projElem.setAttribute("label", project.getLabel());
+
+    Element projName = report.createElement("Name");
+    projName.appendChild(report.createTextNode(project.getProjectName()));
+    projElem.appendChild(projName);
+
+    Element projDesc = report.createElement("Description");
+    if (project.getProjectDescription() != null && !project.getProjectDescription().isEmpty()) {
+      projDesc.appendChild(report.createTextNode(project.getProjectDescription()));
+    }
+    projElem.appendChild(projDesc);
+
+    releasesElement = report.createElement("Releases");
+    projElem.appendChild(releasesElement);
+
+    for (Release release : mainApp.getReleases()) {
+      if (release.getProjectRelease().getLabel().equals(project.getLabel())) {
+        createRelease(release, releasesElement);
+      }
+    }
+    teamElement = report.createElement("Teams");
+    projElem.appendChild(teamElement);
+    for (AgileHistory team : project.getAllocatedTeams()) {
+      if (orphanTeamsList.contains(team.getAgileItem())) {
+        orphanTeamsList.remove(team.getAgileItem());
+      }
+      createTeam(team, teamElement, "Team");
+    }
+
+
   }
 
   /**
