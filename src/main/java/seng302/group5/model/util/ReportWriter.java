@@ -19,6 +19,7 @@ import javafx.collections.ObservableList;
 import seng302.group5.Main;
 import seng302.group5.model.AgileHistory;
 import seng302.group5.model.AgileItem;
+import seng302.group5.model.Backlog;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
@@ -29,8 +30,8 @@ import seng302.group5.model.Team;
 
 
 /**
- * Created by Michael + Craig on 5/5/2015.
- * A class that reads the data from the application and saves it in a human readable format.
+ * Created by Michael + Craig on 5/5/2015. A class that reads the data from the application and
+ * saves it in a human readable format.
  */
 public class ReportWriter {
 
@@ -46,6 +47,7 @@ public class ReportWriter {
   Element orphanPeople;
   Element unusedSkills;
   Element allStories;
+  Element allBacklogs;
   LocalDate date;
   String dateFormat = "dd/MM/yyyy";
 
@@ -56,9 +58,12 @@ public class ReportWriter {
   ObservableList<Project> projectItems = FXCollections.observableArrayList();
   ObservableList<Person> peoples = FXCollections.observableArrayList();
   ObservableList<Release> releases = FXCollections.observableArrayList();
+  ObservableList<Backlog> backlogs = FXCollections.observableArrayList();
 
   ObservableList<Team> orphanTeamsList = FXCollections.observableArrayList();
   ObservableList<Skill> unassignedSkills = FXCollections.observableArrayList();
+  ObservableList<Story> unassignedStories = FXCollections.observableArrayList();
+
   /**
    * Creates a report based on data currently stored in the main application memory.
    * Uses XML format, no pretty print.
@@ -70,6 +75,7 @@ public class ReportWriter {
       DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
       DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
       unassignedSkills.setAll(mainApp.getSkills());
+      unassignedStories.setAll(mainApp.getStories());
       report = docBuilder.newDocument();
       date = LocalDate.now();
       String datesString = date.format(
@@ -79,7 +85,7 @@ public class ReportWriter {
       rootElement = report.createElement("Header");
       String orgName;
       if (!Settings.organizationName.isEmpty()) {
-         orgName = Settings.organizationName;
+        orgName = Settings.organizationName;
       } else {
         orgName = "__undefined__";
       }
@@ -128,8 +134,8 @@ public class ReportWriter {
       orphanTeam = report.createElement("UnassignedTeams");
       rootElement.appendChild(orphanTeam);
       for (Team team : orphanTeamsList) {
-          createOrphanTeam(team);
-        }
+        createOrphanTeam(team);
+      }
 
       orphanPeople = report.createElement("UnassignedPeople");
       rootElement.appendChild(orphanPeople);
@@ -145,11 +151,18 @@ public class ReportWriter {
         createSkillChild(skill, unusedSkills);
       }
 
-      allStories = report.createElement("Stories");
+      allBacklogs = report.createElement("Backlogs");
+      rootElement.appendChild(allBacklogs);
+      for (Backlog backlog : mainApp.getBacklogs()) {
+        createBacklogChild(backlog);
+      }
+
+      allStories = report.createElement("OrphanStories");
       rootElement.appendChild(allStories);
-      for (Story story : mainApp.getStories()) {
+      for (Story story : unassignedStories) {
         createStoryChild(story);
       }
+
 
       String filename = saveLocation.toString();
       if (!filename.endsWith(".xml")) {
@@ -210,7 +223,6 @@ public class ReportWriter {
     teamElement.appendChild(teamElem);
     teamElem.setAttribute("label", team.getAgileItem().getLabel());
 
-
     String theString = team.getStartDate().format(
         DateTimeFormatter.ofPattern(dateFormat));
     Element teamStartDate = report.createElement("StartDate");
@@ -229,7 +241,6 @@ public class ReportWriter {
     teamEndDate.appendChild(report.createTextNode(endDate));
     teamElem.appendChild(teamEndDate);
 
-
     membersElement = report.createElement("Members");
     teamElem.appendChild(membersElement);
     for (Team listTeam : mainApp.getTeams()) {
@@ -242,6 +253,7 @@ public class ReportWriter {
   /**
    * Create a person element that contains the person information, formats it under the assigned
    * team's tag
+   *
    * @param listTeam The team which will be used to collect the list of members to get there info.
    */
   public void createPersonChild(Team listTeam) {
@@ -288,6 +300,7 @@ public class ReportWriter {
   /**
    * Create a orphan team element i.e. a team that is not assigned to a project. Will be displayed
    * under the unnasigned teams tag.
+   *
    * @param team The team which will be used to collect the list of members to get there info.
    */
   public void createOrphanTeam(Team team) {
@@ -335,6 +348,7 @@ public class ReportWriter {
   /**
    * Create an orphan person element that contains the information for a person who is not assigned
    * to any team. Will be displayed under the unassigned people tag.
+   *
    * @param person The person who's information is to be displayed.
    */
   public void createOrphanPeople(Person person) {
@@ -370,6 +384,7 @@ public class ReportWriter {
   /**
    * Create a skill element that displays the information for a skill, the skill element can be
    * displayed under a person or under the list of all skills tag.
+   *
    * @param skill The skill who's information will be displayed.
    */
   public void createSkillChild(Skill skill, Element allSkills) {
@@ -385,6 +400,7 @@ public class ReportWriter {
 
   /**
    * Create a story element that displays the story's information underneath the stories tag.
+   *
    * @param story the story who's information will be displayed.
    */
   public void createStoryChild(Story story) {
@@ -405,6 +421,90 @@ public class ReportWriter {
     storyElem.appendChild(storyCreator);
   }
 
+  /**
+   * Creates a backlog element and displays the backlog information under backlogs tag.
+   * @param backlog all the backlogs saved in main
+   */
+  public void createBacklogChild(Backlog backlog) {
+    Element backlogElem = report.createElement("Backlog");
+    allBacklogs.appendChild(backlogElem);
+    backlogElem.setAttribute("label", backlog.getLabel());
+
+    Element backlogName = report.createElement("Name");
+    backlogName.appendChild(report.createTextNode(backlog.getBacklogName()));
+    backlogElem.appendChild(backlogName);
+
+    Element backlogDescription = report.createElement("Description");
+    backlogDescription.appendChild(report.createTextNode(backlog.getBacklogDescription()));
+    backlogElem.appendChild(backlogDescription);
+
+    createBacklogPerson(backlog.getProductOwner(), backlogElem, "ProductOwner");
+
+    Element backlogStories = report.createElement("Stories");
+    for (Story story : backlog.getStories()) {
+      if (unassignedStories.contains(story)) {
+        unassignedStories.remove(story);
+      }
+      createBacklogStory(story, backlogStories, "Story");
+    }
+    backlogElem.appendChild(backlogStories);
+  }
+
+  /**
+   * Gets all person fields and puts them into the backlogOwner element for creating backlogs
+   * @param person The porduct owner of the backlog
+   * @param backlogOwner The element "Product Owner" in the backlog
+   */
+  public void createBacklogPerson(Person person, Element backlogOwner, String typeOfPerson) {
+    Element productOwner = report.createElement(typeOfPerson);
+    productOwner.setAttribute("label", person.getLabel());
+    backlogOwner.appendChild(productOwner);
+
+    Element teamMemberName = report.createElement("FirstName");
+    teamMemberName.appendChild(report.createTextNode(person.getFirstName()));
+    backlogOwner.appendChild(teamMemberName);
+
+    Element teamMemberLastName = report.createElement("LastName");
+    teamMemberLastName.appendChild(report.createTextNode(person.getLastName()));
+    backlogOwner.appendChild(teamMemberLastName);
+
+    skillElement = report.createElement("Skills");
+    backlogOwner.appendChild(skillElement);
+    for (Skill skill : person.getSkillSet()) {
+      Element skillElem = report.createElement("Skill");
+      skillElement.appendChild(skillElem);
+      skillElem.setAttribute("label", skill.getLabel());
+
+      Element skillDescription = report.createElement("Description");
+      skillDescription.appendChild(report.createTextNode(skill.getSkillDescription()));
+      skillElem.appendChild(skillDescription);
+    }
+  }
+
+  /**
+   * Creates the story elements for the report. Shows the name, description and the creator.
+   * @param story Story to be written
+   * @param backlogStory Element for the story element to be attached to
+   * @param typeOfStory String name for story type (BacklogStory, UnassignedStory etc.
+   */
+  public void createBacklogStory(Story story, Element backlogStory, String typeOfStory) {
+    Element storyElem = report.createElement(typeOfStory);
+    storyElem.setAttribute("label", story.getLabel());
+    backlogStory.appendChild(storyElem);
+
+    Element storyName = report.createElement("Name");
+    storyName.appendChild(report.createTextNode(story.getStoryName()));
+    storyElem.appendChild(storyName);
+
+    Element storyDescription = report.createElement("Description");
+    storyDescription.appendChild(report.createTextNode(story.getDescription()));
+    storyElem.appendChild(storyDescription);
+
+    Element storyCreator = report.createElement("Creator");
+    storyCreator.appendChild(report.createTextNode(story.getCreator().getLabel()));
+    storyElem.appendChild(storyCreator);
+  }
+  
   public void setLists(Main mainApp) {
     skills.setAll(mainApp.getSkills());
     teams.setAll(mainApp.getTeams());
@@ -412,6 +512,7 @@ public class ReportWriter {
     releases.setAll(mainApp.getReleases());
     peoples.setAll(mainApp.getPeople());
     stories.setAll(mainApp.getStories());
+    backlogs.setAll(mainApp.getBacklogs());
   }
 
   public void removeItem(ObservableList<AgileItem> list, AgileItem item) {
