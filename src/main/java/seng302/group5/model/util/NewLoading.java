@@ -12,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import seng302.group5.Main;
 import seng302.group5.model.AgileHistory;
+import seng302.group5.model.Backlog;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
@@ -19,7 +20,6 @@ import seng302.group5.model.Role;
 import seng302.group5.model.Skill;
 import seng302.group5.model.Story;
 import seng302.group5.model.Team;
-import seng302.group5.model.util.Settings;
 
 /**
  * Class for loading xml save files
@@ -60,6 +60,9 @@ public class NewLoading {
       syncRoles();
       if (saveVersion >= 0.2) {
         loadStories();
+      }
+      if (saveVersion >= 0.3) {
+        loadBacklogs();
       }
     } catch (Exception e) {
       Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -520,6 +523,86 @@ public class NewLoading {
           }
         }
         main.addRole(newRole);
+      }
+    }
+  }
+
+  /**
+   * Loads backlogs from xml files into main app and sync with stories.
+   *
+   * @throws Exception Problem with loading
+   */
+  private void loadBacklogs() throws Exception {
+    String backlogLine;
+    String backlogData;
+    Backlog newBacklog;
+    ObservableList<Story> stories;
+
+    // Until Backlog end tag
+    while ((!(backlogLine = loadedFile.readLine()).equals("</Backlogs>"))) {
+      // On new Backlog tag
+      if (backlogLine.matches(".*<Backlog>")) {
+        // Required initializers
+        newBacklog = new Backlog();
+        stories = FXCollections.observableArrayList();
+
+        // Mandatory data
+        backlogLine = loadedFile.readLine();
+        backlogData = backlogLine.replaceAll("(?i)(.*<backlogLabel.*?>)(.+?)(</backlogLabel>)",
+                                             "$2");
+        newBacklog.setLabel(backlogData);
+        backlogLine = loadedFile.readLine();
+        backlogData = backlogLine.replaceAll("(?i)(.*<productOwner.*?>)(.+?)(</productOwner>)", "$2");
+        // Syncs with current people objects
+        for (Person person : main.getPeople()) {
+          if (person.getLabel().equals(backlogData)) {
+            newBacklog.setProductOwner(person);
+            break;
+          }
+        }
+
+        // Optional data
+        while ((!(backlogLine = loadedFile.readLine()).equals("\t</Backlog>"))) {
+          if (backlogLine.startsWith("\t\t<backlogName>")) {
+            backlogData = backlogLine.replaceAll("(?i)(.*<backlogName.*?>)(.+?)(</backlogName>)", "$2");
+            newBacklog.setBacklogName(backlogData);
+          }
+          if (backlogLine.startsWith("\t\t<backlogDescription>")) {
+            String descBuilder;
+            if (!backlogLine.endsWith("</backlogDescription>")) {
+              descBuilder = backlogLine
+                                .replaceAll("(?i)(.*<backlogDescription.*?>)(.+?)", "$2") + "\n";
+              while ((!(backlogLine = loadedFile.readLine()).endsWith("</backlogDescription>"))) {
+                descBuilder += backlogLine + "\n";
+              }
+              descBuilder += backlogLine.replaceAll("(.+?)(</backlogDescription>)", "$1");
+            } else {
+              descBuilder =
+                  backlogLine
+                      .replaceAll("(?i)(.*<backlogDescription.*?>)(.+?)(</backlogDescription>)",
+                                  "$2");
+            }
+            newBacklog.setBacklogDescription(descBuilder);
+          }
+            if (backlogLine.startsWith("\t\t<BacklogStories>")) {
+            while ((!(backlogLine = loadedFile.readLine()).equals("\t\t</BacklogStories>"))) {
+              if (backlogLine.startsWith("\t\t\t<backlogStory>")) {
+                backlogData = backlogLine.replaceAll("(?i)(.*<backlogStory.*?>)(.+?)(</backlogStory>)", "$2");
+                // Sync with current story objects
+                for (Story story : main.getStories()) {
+                  if (story.getLabel().equals(backlogData)) {
+                    newBacklog.addStory(story);
+                    break;
+                  }
+                }
+              }
+            }
+            if (stories.size() != 0) {
+              newBacklog.addAllStories(stories);
+            }
+          }
+        }
+        main.addBacklog(newBacklog);
       }
     }
   }
