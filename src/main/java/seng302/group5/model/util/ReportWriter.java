@@ -3,6 +3,7 @@ package seng302.group5.model.util;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -18,6 +19,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seng302.group5.Main;
 import seng302.group5.model.AgileHistory;
+import seng302.group5.model.AgileItem;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
@@ -136,6 +138,84 @@ public class ReportWriter {
 
       transformer.transform(source, result);
 
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * Creates a custom report of reportItems at the level passed.
+   * @param mainApp
+   * @param saveLocation Place to save the report
+   * @param reportItems Items that the report contains
+   * @param level The level of report, e.g. Projects or Teams.
+   */
+  public void writeCustomReport(Main mainApp, File saveLocation, List<AgileItem> reportItems, String level) {
+    try {
+      this.mainApp = mainApp;
+      DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+      DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+      report = docBuilder.newDocument();
+      date = LocalDate.now();
+      String datesString = date.format(
+          DateTimeFormatter.ofPattern(dateFormat));
+
+      rootElement = report.createElement("Header");
+      String orgName;
+      if (!Settings.organizationName.isEmpty()) {
+        orgName = Settings.organizationName;
+      } else {
+        orgName = "__undefined__";
+      }
+      rootElement.setAttribute("Label", "Report created on " + datesString + " for " +
+                                        orgName);
+      report.appendChild(rootElement);
+
+      projElement = report.createElement(level);
+      rootElement.appendChild(projElement);
+      switch (level) {
+        case ("Projects"):
+          for (AgileItem agileProject : reportItems) {
+            createProject((Project) agileProject, projElement, "Project");
+          }
+          break;
+        case ("Teams"):
+          for (AgileItem agileTeam : reportItems) {
+            createOrphanTeam((Team) agileTeam, projElement, "Team");
+          }
+          break;
+        case ("People"):
+          for (AgileItem agilePerson : reportItems) {
+            createPerson((Person) agilePerson, projElement, "People");
+          }
+          break;
+        case ("Skills"):
+          for (AgileItem agileSkill : reportItems) {
+            createSkill((Skill) agileSkill, projElement);
+          }
+          break;
+        case ("Releases"):
+          for (AgileItem agileRelease : reportItems) {
+            createRelease((Release) agileRelease, projElement);
+          }
+          break;
+        case ("Stories"):
+          for (AgileItem agileStory : reportItems) {
+            createStory((Story) agileStory, projElement, "Story");
+          }
+          break;
+      }
+
+      String filename = saveLocation.toString();
+      if (!filename.endsWith(".xml")) {
+        filename = filename + ".xml";
+      }
+      TransformerFactory transformerFactory = TransformerFactory.newInstance();
+      Transformer transformer = transformerFactory.newTransformer();
+      DOMSource source = new DOMSource(report);
+      StreamResult result = new StreamResult(filename);
+
+      transformer.transform(source, result);
     } catch (Exception e) {
       e.printStackTrace();
     }

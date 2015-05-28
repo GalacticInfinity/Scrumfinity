@@ -92,7 +92,7 @@ public class ReportDialogController {
   }
 
   private void initialiseLists() {
-    this.reportLevels.addAll("All", "Projects", "Team", "Person", "Skill", "Release", "Story"); // Add backlogs when they are done.
+    this.reportLevels.addAll("All", "Projects", "Teams", "People", "Skills", "Releases", "Stories"); // Add backlogs when they are done.
     availableItemsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     selectedItemsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     availableItemsList.setItems(availableItems);
@@ -114,31 +114,31 @@ public class ReportDialogController {
         this.availableItemsList.setItems(availableItems);
         updateLists();
         break;
-      case ("Team"):
+      case ("Teams"):
         this.availableItems.clear();
         this.availableItems.setAll(mainApp.getTeams());
         this.availableItemsList.setItems(availableItems);
         updateLists();
         break;
-      case ("Person"):
+      case ("People"):
         this.availableItems.clear();
         this.availableItems.setAll(mainApp.getPeople());
         this.availableItemsList.setItems(availableItems);
         updateLists();
         break;
-      case ("Skill"):
+      case ("Skills"):
         this.availableItems.clear();
         this.availableItems.setAll(mainApp.getSkills());
         this.availableItemsList.setItems(availableItems);
         updateLists();
         break;
-      case ("Release"):
+      case ("Releases"):
         this.availableItems.clear();
         this.availableItems.setAll(mainApp.getReleases());
         this.availableItemsList.setItems(availableItems);
         updateLists();
         break;
-      case ("Story"):
+      case ("Stories"):
         this.availableItems.clear();
         this.availableItems.setAll(mainApp.getStories());
         this.availableItemsList.setItems(availableItems);
@@ -201,11 +201,12 @@ public class ReportDialogController {
 
     if (file != null) {
       ReportWriter report = new ReportWriter();
-      if (reportLevelCombo.getSelectionModel().getSelectedItem().equals("All")) {
+      String level = reportLevelCombo.getSelectionModel().getSelectedItem().toString();
+      if (level.equals("All")) {
         report.writeReport(mainApp, file);
       }
       else {
-
+        report.writeCustomReport(mainApp, file, selectedItems, level);
       }
     }
   }
