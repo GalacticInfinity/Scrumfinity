@@ -335,9 +335,7 @@ public class BacklogDialogController {
     } else {
       if (createOrEdit == CreateOrEdit.CREATE) {
         backlog = new Backlog(backlogLabel, backlogName, backlogDescription, productOwner);
-        for (Story story : allocatedStories) {
-          backlog.addStory(story);
-        }
+        backlog.addAllStories(allocatedStories);
         mainApp.addBacklog(backlog);
         if (Settings.correctList(backlog)) {
           mainApp.refreshList(backlog);
@@ -348,12 +346,8 @@ public class BacklogDialogController {
         backlog.setBacklogName(backlogName);
         backlog.setBacklogDescription(backlogDescription);
         backlog.setProductOwner(productOwner);
-        for (Story oldStory : originalStories) {
-          backlog.removeStory(oldStory);
-        }
-        for (Story newStory : allocatedStories) {
-          backlog.addStory(newStory);
-        }
+        backlog.removeAllStories();
+        backlog.addAllStories(allocatedStories);
         mainApp.refreshList(backlog);
       }
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
