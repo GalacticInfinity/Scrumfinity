@@ -50,6 +50,9 @@ public class LoadingTest {
   Story story1;
   Story story2;
   Story story3;
+  Backlog backlog1;
+  Backlog backlog2;
+  Backlog backlog3;
 
   @Before
   public void setUp() {
@@ -206,6 +209,21 @@ public class LoadingTest {
     story3.setDescription("They story-ening is now");
     story3.setCreator(person1);
     savedMain.addStory(story3);
+  }
+
+  public void createBacklogs() {
+    createStories();
+    backlog1 = new Backlog("Backlog1", "Starter Backlog", "Huehuehuehue", person1);
+    backlog1.addStory(story1);
+    savedMain.addBacklog(backlog1);
+
+    backlog2 = new Backlog("Backlog2", "Another Backlog", "Huehuehuehuehue", person2);
+    backlog2.addStory(story2);
+    savedMain.addBacklog(backlog2);
+
+    backlog3 = new Backlog("Backlog3", "Another another Backlog", "DescriptionBack", person3);
+    backlog3.addStory(story3);
+    savedMain.addBacklog(backlog3);
   }
 
   public void allocateTeams() {
@@ -547,6 +565,51 @@ public class LoadingTest {
     assertEquals("Story3", story3.getLabel());
     assertEquals("They story-ening is now", story3.getDescription());
     assertSame(person1, story3.getCreator());
+
+    if (!file.delete()) {
+      fail();
+    }
+  }
+
+  @Test
+  public void testBacklogs() {
+    createBacklogs();
+    saving = new NewSaving(savedMain);
+    File file = new File(System.getProperty("user.dir")
+                         + File.separator + "BacklogSave.xml");
+    saving.saveData(file);
+
+    loading = new NewLoading(loadedMain);
+    loading.loadFile(file);
+
+    person1 = loadedMain.getPeople().get(0);
+    person2 = loadedMain.getPeople().get(1);
+    person3 = loadedMain.getPeople().get(2);
+
+    story1 = loadedMain.getStories().get(0);
+    story2 = loadedMain.getStories().get(1);
+    story3 = loadedMain.getStories().get(2);
+
+    backlog1 = loadedMain.getBacklogs().get(0);
+    assertEquals("Backlog1", backlog1.getLabel());
+    assertEquals("Starter Backlog", backlog1.getBacklogName());
+    assertEquals("Huehuehuehue", backlog1.getBacklogDescription());
+    assertSame(person1, backlog1.getProductOwner());
+    assertSame(story1, backlog1.getStories().get(0));
+
+    backlog2 = loadedMain.getBacklogs().get(1);
+    assertEquals("Backlog2", backlog2.getLabel());
+    assertEquals("Another Backlog", backlog2.getBacklogName());
+    assertEquals("Huehuehuehuehue", backlog2.getBacklogDescription());
+    assertSame(person2, backlog2.getProductOwner());
+    assertSame(story2, backlog2.getStories().get(0));
+
+    backlog3 = loadedMain.getBacklogs().get(2);
+    assertEquals("Backlog3", backlog3.getLabel());
+    assertEquals("Another another Backlog", backlog3.getBacklogName());
+    assertEquals("DescriptionBack", backlog3.getBacklogDescription());
+    assertSame(person3, backlog3.getProductOwner());
+    assertSame(story3, backlog3.getStories().get(0));
 
     if (!file.delete()) {
       fail();
