@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,6 +13,7 @@ import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.ListMainPaneController;
 import seng302.group5.controller.MenuBarController;
+import seng302.group5.model.Backlog;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
@@ -23,8 +25,6 @@ import seng302.group5.model.undoredo.UndoRedoHandler;
 import seng302.group5.model.undoredo.UndoRedoObject;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
@@ -61,12 +61,19 @@ public class RevertHandlerTest {
   private String storyDescription;
   private Person storyCreator;
 
+  private String backlogLabel;
+  private String backlogName;
+  private String backlogDescription;
+  private Person productOwner;
+  private List<Story> backlogStories;
+
   private Person person;
   private Skill skill;
   private Team team;
   private Project project;
   private Release release;
   private Story story;
+  private Backlog backlog;
 
   private UndoRedoHandler undoRedoHandler;
   private Main mainApp;
@@ -227,6 +234,25 @@ public class RevertHandlerTest {
   }
 
 
+  private void newBacklog() {
+    backlogLabel = "Backlog";
+    backlogName = "This is a backlog";
+    backlogDescription = "Once upon a time...BAM!";
+    productOwner = person;
+    backlog = new Backlog(backlogLabel, backlogName, backlogDescription, productOwner);
+    backlog.addStory(story);
+    backlogStories = backlog.getStories();
+    mainApp.addBacklog(backlog);
+
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+    undoRedoObject.setAction(Action.BACKLOG_CREATE);
+    undoRedoObject.setAgileItem(backlog);
+    undoRedoObject.addDatum(new Backlog(backlog));
+
+    undoRedoHandler.newAction(undoRedoObject);
+  }
+
+
 
   @Test
   public void testPersonRevert() throws Exception {
@@ -332,6 +358,29 @@ public class RevertHandlerTest {
   }
 
   @Test
+  public void testBacklogRevert() throws Exception {
+
+    assertTrue(mainApp.getBacklogs().isEmpty());
+
+    newPerson();
+    newStory();
+    newBacklog();
+
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(1, mainApp.getStories().size());
+    assertEquals(1, mainApp.getBacklogs().size());
+
+    mainApp.revert();
+
+    assertTrue(mainApp.getPeople().isEmpty());
+    assertTrue(mainApp.getStories().isEmpty());
+    assertTrue(mainApp.getBacklogs().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+  }
+
+  @Test
   public void testEmptyRevert() throws Exception {
     assertTrue(mainApp.getStories().isEmpty());
     assertTrue(mainApp.getReleases().isEmpty());
@@ -339,6 +388,7 @@ public class RevertHandlerTest {
     assertTrue(mainApp.getPeople().isEmpty());
     assertTrue(mainApp.getSkills().isEmpty());
     assertTrue(mainApp.getProjects().isEmpty());
+    assertTrue(mainApp.getBacklogs().isEmpty());
 
     mainApp.revert();
 
@@ -348,6 +398,7 @@ public class RevertHandlerTest {
     assertTrue(mainApp.getPeople().isEmpty());
     assertTrue(mainApp.getSkills().isEmpty());
     assertTrue(mainApp.getProjects().isEmpty());
+    assertTrue(mainApp.getBacklogs().isEmpty());
   }
 
   @Test
@@ -359,6 +410,7 @@ public class RevertHandlerTest {
     assertTrue(mainApp.getPeople().isEmpty());
     assertTrue(mainApp.getSkills().isEmpty());
     assertTrue(mainApp.getProjects().isEmpty());
+    assertTrue(mainApp.getBacklogs().isEmpty());
 
     newStory();
     newProject();
@@ -373,6 +425,7 @@ public class RevertHandlerTest {
     newSkill();
     newSkill();
     newStory();
+    newBacklog();
 
     assertEquals(2, mainApp.getStories().size());
     assertEquals(1, mainApp.getReleases().size());
@@ -380,6 +433,7 @@ public class RevertHandlerTest {
     assertEquals(2, mainApp.getPeople().size());
     assertEquals(3, mainApp.getSkills().size());
     assertEquals(2, mainApp.getProjects().size());
+    assertEquals(1, mainApp.getBacklogs().size());
 
     mainApp.revert();
 
@@ -389,6 +443,7 @@ public class RevertHandlerTest {
     assertTrue(mainApp.getPeople().isEmpty());
     assertTrue(mainApp.getSkills().isEmpty());
     assertTrue(mainApp.getProjects().isEmpty());
+    assertTrue(mainApp.getBacklogs().isEmpty());
     assertTrue(undoRedoHandler.getUndoStack().empty());
     assertTrue(undoRedoHandler.getRedoStack().empty());
 
