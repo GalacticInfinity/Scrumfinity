@@ -8,7 +8,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MultipleSelectionModel;
@@ -66,7 +68,26 @@ public class ReportDialogController {
     initialiseLists();
 
     reportLevelCombo.valueProperty().addListener((observable, oldValue, newValue) -> {
-      setLevel();
+
+      if (!selectedItems.isEmpty()) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("You have items selected.");
+        alert.setHeaderText(null);
+        alert.setContentText("You have items in the Selected Items list, "
+                             + "changing Report Levels will clear this selection. "
+                             + "Are you sure you wish to proceed?");
+        alert.getButtonTypes().add(ButtonType.CANCEL);
+        alert.showAndWait();
+        if (!alert.getResult().equals(ButtonType.CANCEL)) {
+          selectedItems.clear(); //TODO make this actually work when you click cancel.
+          setLevel();
+        }
+      }
+      if (selectedItems.isEmpty()) {
+        setLevel();
+      }
+
+
     });
   }
 
@@ -180,9 +201,12 @@ public class ReportDialogController {
 
     if (file != null) {
       ReportWriter report = new ReportWriter();
-      report.writeReport(mainApp, file);
+      if (reportLevelCombo.getSelectionModel().getSelectedItem().equals("All")) {
+        report.writeReport(mainApp, file);
+      }
+      else {
 
-
+      }
     }
   }
 
