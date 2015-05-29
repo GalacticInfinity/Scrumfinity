@@ -56,6 +56,10 @@ public class LoadingTest {
   Backlog backlog2;
   Backlog backlog3;
 
+  //for testing acs:
+  ObservableList<String> acs;
+  ObservableList<String> acs2;
+
   @Before
   public void setUp() {
     savedMain = new Main();
@@ -195,9 +199,36 @@ public class LoadingTest {
     savedMain.addProject(project3);
   }
 
+  public void createStoriesWithACs() {
+    createVanillaPeople();
+    acs = FXCollections.observableArrayList();
+    acs.add("ac1\nrunboy runnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
+    acs.add("ac2 aiyaaaa why like that onnnneeeee???");
+    acs.add("ac3 WHY YOU WASTE DA MONEYYYYY?? \n\n B+?! AGAIN?! \n I no longer have a son");
+    story1 = new Story("Story1", "Starter Story", "Huehuehuehue", person1, acs);
+    savedMain.addStory(story1);
+
+    acs2 = FXCollections.observableArrayList();
+    acs2.add("Holy moley");
+    acs2.add("its a bird");
+    acs2.add("its a burrito");
+    story2 = new Story();
+    story2.setLabel("Story2");
+    story2.setStoryName("Moar Story");
+    story2.setCreator(person2);
+    story2.setAcceptanceCriteria(acs2);
+    savedMain.addStory(story2);
+
+    story3 = new Story();
+    story3.setLabel("Story3");
+    story3.setDescription("They story-ening is now");
+    story3.setCreator(person1);
+    savedMain.addStory(story3);
+  }
+
   public void createStories() {
     createVanillaPeople();
-    story1 = new Story("Story1", "Starter Story", "Huehuehuehue", person1); //TODO actually test the ac
+    story1 = new Story("Story1", "Starter Story", "Huehuehuehue", person1);
     savedMain.addStory(story1);
 
     story2 = new Story();
@@ -528,6 +559,53 @@ public class LoadingTest {
     loading.loadFile(file);
 
     assertEquals(expectedName, Settings.organizationName);
+
+    if (!file.delete()) {
+      fail();
+    }
+  }
+
+  /**
+   * Tests the loading of stories, makes sure saved and loaded field strings are the same,
+   * and also checks that Person field concurrency is conserved.
+   */
+  @Test
+  public void testingStoriesWithAcs() {
+    createStoriesWithACs();
+    //empty ac list:
+    ObservableList<String> emptyacs = FXCollections.observableArrayList();
+    saving = new NewSaving(savedMain);
+    File file = new File(System.getProperty("user.dir")
+                         + File.separator
+                         + "StorySave.xml");
+    saving.saveData(file);
+
+    loading = new NewLoading(loadedMain);
+    loading.loadFile(file);
+
+    person1 = loadedMain.getPeople().get(0);
+    person2 = loadedMain.getPeople().get(1);
+
+    story1 = loadedMain.getStories().get(0);
+    assertEquals("Story1", story1.getLabel());
+    assertEquals("Starter Story", story1.getStoryName());
+    assertEquals("Huehuehuehue", story1.getDescription());
+    assertSame(person1, story1.getCreator());
+    assertEquals(acs.get(0), story1.getAcceptanceCriteria().get(0));
+    assertEquals(acs.get(1), story1.getAcceptanceCriteria().get(1));
+    assertEquals(acs.get(2), story1.getAcceptanceCriteria().get(2));
+
+    story2 = loadedMain.getStories().get(1);
+    assertEquals("Story2", story2.getLabel());
+    assertEquals("Moar Story", story2.getStoryName());
+    assertSame(person2, story2.getCreator());
+    assertEquals(acs2, story2.getAcceptanceCriteria());
+
+    story3 = loadedMain.getStories().get(2);
+    assertEquals("Story3", story3.getLabel());
+    assertEquals("They story-ening is now", story3.getDescription());
+    assertSame(person1, story3.getCreator());
+    assertEquals(emptyacs, story3.getAcceptanceCriteria());
 
     if (!file.delete()) {
       fail();
