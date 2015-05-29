@@ -22,6 +22,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -116,7 +117,6 @@ public class StoryDialogController {
     btnCreateStory.setDefaultButton(true);
     thisStage.setResizable(false);
 
-
     storyLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
       if(createOrEdit == CreateOrEdit.EDIT) {
@@ -142,7 +142,6 @@ public class StoryDialogController {
       if(createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
       }
-
     });
 
     listAC.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -150,12 +149,11 @@ public class StoryDialogController {
       if(createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
       }
-
     });
   }
 
   /**
-   * checks if there are any changed fields and disables or enables the button accordingly
+   * Checks if there are any changed fields and disables or enables the button accordingly
    */
   private void checkButtonDisabled() {
     if (storyDescriptionField.getText().equals(story.getDescription()) &&
@@ -346,7 +344,6 @@ public class StoryDialogController {
           alert.showAndWait();
           return;
         }
-
       }
 
       controller.setupController(this, ACDialogStage, createOrEdit, ac);
@@ -361,7 +358,6 @@ public class StoryDialogController {
       e.printStackTrace();
     }
   }
-
 
   /**
    * Checks that the Story label entry box contains valid input.
@@ -411,10 +407,10 @@ public class StoryDialogController {
   /**
    * Adds an acceptance criteria to the list of acceptance criteria.
    *
-   * @param ac Acceptance criteria in String form.
+   * @param newAC Acceptance criteria in String form.
    */
-  public void appendAcceptanceCriteria(String ac) {
-    this.acceptanceCriteria.add(ac);
+  public void appendAcceptanceCriteria(String newAC) {
+    this.acceptanceCriteria.add(newAC);
     listAC.setItems(acceptanceCriteria);
     btnCreateStory.setDisable(false); //gotta ungrey it when a change is made
   }
@@ -428,6 +424,21 @@ public class StoryDialogController {
   }
 
   /**
+   * Checks if a given string already exists as part of the Story.
+   *
+   * @param newAC The acceptance criteria to check.
+   * @return The acceptance criteria if it's valid.
+   * @throws Exception The error if a duplicate exists.
+   */
+  public String checkForDuplicateAC(String newAC) throws Exception {
+    if(acceptanceCriteria.contains(newAC)) {
+      throw new Exception("This story already has this acceptance criteria.");
+    } else {
+      return newAC;
+    }
+  }
+
+  /**
    * Initalises the Creator assignment list.
    */
   private void initialiseLists() {
@@ -437,7 +448,6 @@ public class StoryDialogController {
       }
 
       this.storyCreatorList.setVisibleRowCount(5);
-
       this.storyCreatorList.setItems(availablePeople);
 
       this.listAC.setItems(acceptanceCriteria);
@@ -466,16 +476,15 @@ public class StoryDialogController {
   public class ListViewCell extends TextFieldListCell<String> {
 
     private Button editButton;
-    private double buttonWidth;
     private Label cellText;
     private GridPane pane;
     private String text;
+    private double labelWidth;
 
     public ListViewCell() {
       super();
 
       editButton = new Button("Edit");
-      buttonWidth = editButton.getLayoutBounds().getWidth();
       editButton.setOnAction(new EventHandler<ActionEvent>() {
         @Override
         public void handle(ActionEvent event) {
@@ -483,15 +492,19 @@ public class StoryDialogController {
           showACDialog(CreateOrEdit.EDIT);
         }
       });
+
+      labelWidth = listAC.getLayoutBounds().getWidth() - 65;
       cellText = new Label();
       pane = new GridPane();
-      pane.setHgap(10);
+      pane.getColumnConstraints().add(new ColumnConstraints(labelWidth));
+      pane.setHgap(5);
       pane.add(cellText, 0, 0);
       pane.add(editButton, 1, 0);
     }
 
     /**
      * Sets the overriden parameters for the ListViewCell when the cell is updated.
+     *
      * @param string The String being added to the cell.
      * @param empty Whether or not string is empty as a boolean flag.
      */
@@ -512,8 +525,8 @@ public class StoryDialogController {
         Text text = new Text(string);
         double width = text.getLayoutBounds().getWidth();
 
-        if (width > 240 - buttonWidth - 20) {
-          while (width > 240 - buttonWidth - 20) {
+        if (width > labelWidth) {
+          while (width > labelWidth) {
             string = string.substring(0, string.length() - 1);
             text = new Text(string);
             width = text.getLayoutBounds().getWidth();
