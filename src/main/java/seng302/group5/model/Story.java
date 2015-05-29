@@ -35,6 +35,21 @@ public class Story implements AgileItem, Comparable<Story> {
   }
 
   /**
+   * Constructor for all fields except ACs.
+   * @param label Not-null ID/label.
+   * @param storyName Long name for story.
+   * @param description Description of story.
+   * @param creator Person assigned to creation of this story..
+   */
+  public Story(String label, String storyName, String description, Person creator) {
+    this.label = label;
+    this.storyName = storyName;
+    this.description = description;
+    this.creator = creator;
+    this.acceptanceCriteria = FXCollections.observableArrayList();
+  }
+
+  /**
    * Constructor for all fields.
    * @param label Not-null ID/label.
    * @param storyName Long name for story.
@@ -43,7 +58,7 @@ public class Story implements AgileItem, Comparable<Story> {
    * @param acceptanceCriteria The criteria for the story to be considered done.
    */
   public Story(String label, String storyName, String description, Person creator,
-               ObservableList<String> acceptanceCriteria) {
+                 ObservableList<String> acceptanceCriteria) {
     this.label = label;
     this.storyName = storyName;
     this.description = description;

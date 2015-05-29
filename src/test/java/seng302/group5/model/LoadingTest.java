@@ -197,21 +197,19 @@ public class LoadingTest {
 
   public void createStories() {
     createVanillaPeople();
-    story1 = new Story("Story1", "Starter Story", "Huehuehuehue", person1, null); //TODO not null it
+    story1 = new Story("Story1", "Starter Story", "Huehuehuehue", person1); //TODO actually test the ac
     savedMain.addStory(story1);
 
     story2 = new Story();
     story2.setLabel("Story2");
     story2.setStoryName("Moar Story");
     story2.setCreator(person2);
-    story2.setAcceptanceCriteria(null);
     savedMain.addStory(story2);
 
     story3 = new Story();
     story3.setLabel("Story3");
     story3.setDescription("They story-ening is now");
     story3.setCreator(person1);
-    story3.setAcceptanceCriteria(null);
     savedMain.addStory(story3);
   }
 
@@ -426,7 +424,8 @@ public class LoadingTest {
     assertEquals("Name Project1", project1.getProjectName());
     assertEquals("Description Project1", project1.getProjectDescription());
     assertEquals(team1, project1.getAllocatedTeams().get(0).getAgileItem());
-    assertEquals(LocalDate.of(2010, Month.APRIL, 3), project1.getAllocatedTeams().get(0).getStartDate());
+    assertEquals(LocalDate.of(2010, Month.APRIL, 3), project1.getAllocatedTeams().get(
+        0).getStartDate());
     assertEquals(LocalDate.of(2010, Month.APRIL, 3), project1.getAllocatedTeams().get(0).getEndDate());
 
     project2 = loadedMain.getProjects().get(1);
