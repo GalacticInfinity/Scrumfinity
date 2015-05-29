@@ -163,7 +163,8 @@ public class Story implements AgileItem, Comparable<Story> {
       this.storyName = clone.getStoryName();
       this.description = clone.getDescription();
       this.creator = clone.getCreator();
-      this.acceptanceCriteria = clone.getAcceptanceCriteria();
+      this.acceptanceCriteria.clear();
+      this.acceptanceCriteria.addAll(clone.getAcceptanceCriteria());
     }
   }
 
