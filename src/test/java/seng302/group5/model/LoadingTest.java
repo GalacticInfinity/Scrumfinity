@@ -7,6 +7,8 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
+import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -195,7 +197,7 @@ public class LoadingTest {
 
   public void createStories() {
     createVanillaPeople();
-    story1 = new Story("Story1", "Starter Story", "Huehuehuehue", person1, null); //TODO lol its a null
+    story1 = new Story("Story1", "Starter Story", "Huehuehuehue", person1); //TODO actually test the ac
     savedMain.addStory(story1);
 
     story2 = new Story();
@@ -422,7 +424,8 @@ public class LoadingTest {
     assertEquals("Name Project1", project1.getProjectName());
     assertEquals("Description Project1", project1.getProjectDescription());
     assertEquals(team1, project1.getAllocatedTeams().get(0).getAgileItem());
-    assertEquals(LocalDate.of(2010, Month.APRIL, 3), project1.getAllocatedTeams().get(0).getStartDate());
+    assertEquals(LocalDate.of(2010, Month.APRIL, 3), project1.getAllocatedTeams().get(
+        0).getStartDate());
     assertEquals(LocalDate.of(2010, Month.APRIL, 3), project1.getAllocatedTeams().get(0).getEndDate());
 
     project2 = loadedMain.getProjects().get(1);

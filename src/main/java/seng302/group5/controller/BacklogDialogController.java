@@ -63,7 +63,7 @@ public class BacklogDialogController {
    *
    * @param mainApp      The main application object
    * @param thisStage    The stage of the dialog
-   * @param createOrEdit If dialog is for creating or editing a Team
+   * @param createOrEdit If dialog is for creating or editing a Backlog
    * @param backlog      The backlog object if editing, null otherwise
    */
   public void setupController(Main mainApp, Stage thisStage, CreateOrEdit createOrEdit,
@@ -84,7 +84,7 @@ public class BacklogDialogController {
 
       initialiseLists(CreateOrEdit.CREATE, backlog);
     } else if (createOrEdit == CreateOrEdit.EDIT) {
-      thisStage.setTitle("Edit Team");
+      thisStage.setTitle("Edit Backlog");
       btnConfirm.setText("Save");
       btnConfirm.setDisable(true);
       initialiseLists(CreateOrEdit.EDIT, backlog);
@@ -160,10 +160,10 @@ public class BacklogDialogController {
   }
 
   /**
-   * Populates the people selection lists for assigning people to the team.
+   * Populates the people selection lists for assigning people to the backlog.
    *
    * @param createOrEdit the enum object to decide if it is creating or editing
-   * @param backlog      the Team that is being created or edited
+   * @param backlog      the Backlog that is being created or edited
    */
   private void initialiseLists(CreateOrEdit createOrEdit, Backlog backlog) {
     availableStories = FXCollections.observableArrayList();
@@ -216,7 +216,7 @@ public class BacklogDialogController {
         originalStories = originalStories.sorted(Comparator.<Story>naturalOrder());
       }
       this.availableStoriesList.setItems(availableStories.sorted(Comparator.<Story>naturalOrder()));
-      this.allocatedStoriesList.setItems(allocatedStories.sorted(Comparator.<Story>naturalOrder()));
+      this.allocatedStoriesList.setItems(allocatedStories);
 
     } catch (Exception e) {
       e.printStackTrace();

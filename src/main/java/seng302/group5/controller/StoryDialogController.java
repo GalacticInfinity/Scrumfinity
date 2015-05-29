@@ -2,15 +2,12 @@ package seng302.group5.controller;
 
 import java.io.IOException;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -20,8 +17,10 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -31,6 +30,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
+import seng302.group5.model.Backlog;
 import seng302.group5.model.Person;
 import seng302.group5.model.Story;
 import seng302.group5.model.undoredo.Action;
@@ -48,7 +48,9 @@ public class StoryDialogController {
   @FXML private TextField storyNameField;
   @FXML private TextArea storyDescriptionField;
   @FXML private ComboBox<Person> storyCreatorList;
-  @FXML private ListView listAC;
+  @FXML private ListView<String> listAC;
+  @FXML private Label backlogContainer; // Dirty container but works
+  @FXML private ComboBox<Backlog> backlogCombo;
   @FXML private Button addAC;
   @FXML private Button removeAC;
   @FXML private Button upAC;
@@ -61,9 +63,11 @@ public class StoryDialogController {
   private CreateOrEdit createOrEdit;
   private Story story;
   private Story lastStory;
+  private Backlog lastBacklog;
 
   private ObservableList<Person> availablePeople = FXCollections.observableArrayList();
   private ObservableList<String> acceptanceCriteria = FXCollections.observableArrayList();
+  private ObservableList<Backlog> backlogs = FXCollections.observableArrayList();
 
   /**
    * Setup the Story dialog controller.
@@ -108,14 +112,28 @@ public class StoryDialogController {
     if (story != null) {
       this.story = story;
       this.lastStory = new Story(story);
+      this.lastBacklog = null;    // Stays null if not found
+
+      for (Backlog backlog : mainApp.getBacklogs()) {
+        if (backlog.getStories().contains(story)) {
+          this.lastBacklog = backlog;
+          this.backlogCombo.setValue(backlog);
+          Tooltip tooltip = new Tooltip(
+              "Backlog already assigned. Please edit in backlog dialogs " +
+              "to avoid problems with priority and estimates.");
+          this.backlogContainer.setTooltip(tooltip);
+          this.backlogCombo.setDisable(true);
+          break;
+        }
+      }
     } else {
       this.story = null;
       this.lastStory = null;
+      this.lastBacklog = null;
     }
 
     btnCreateStory.setDefaultButton(true);
     thisStage.setResizable(false);
-
 
     storyLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
@@ -142,7 +160,6 @@ public class StoryDialogController {
       if(createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
       }
-
     });
 
     listAC.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -150,18 +167,27 @@ public class StoryDialogController {
       if(createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
       }
-
     });
+
+    backlogCombo.getSelectionModel().selectedItemProperty().addListener(
+        (observable, oldValue, newValue) -> {
+          //For disabling the button
+          if(createOrEdit == CreateOrEdit.EDIT) {
+            checkButtonDisabled();
+          }
+        }
+    );
   }
 
   /**
-   * checks if there are any changed fields and disables or enables the button accordingly
+   * Checks if there are any changed fields and disables or enables the button accordingly
    */
   private void checkButtonDisabled() {
     if (storyDescriptionField.getText().equals(story.getDescription()) &&
         storyLabelField.getText().equals(story.getLabel()) &&
         storyNameField.getText().equals(story.getStoryName()) &&
-        listAC.getItems().equals(story.getAcceptanceCriteria())) {
+        listAC.getItems().equals(story.getAcceptanceCriteria()) &&
+        backlogCombo.getValue().equals(lastBacklog)) {
       btnCreateStory.setDisable(true);
     } else {
       btnCreateStory.setDisable(false);
@@ -205,6 +231,7 @@ public class StoryDialogController {
     String storyName = storyNameField.getText().trim();
     String storyDescription = storyDescriptionField.getText().trim();
     Person creator = storyCreatorList.getValue();
+    Backlog backlog = backlogCombo.getValue();
 
     try {
       label = parseStoryLabel(storyLabelField.getText());
@@ -235,6 +262,12 @@ public class StoryDialogController {
       if (createOrEdit == CreateOrEdit.CREATE) {
         story = new Story(label, storyName, storyDescription, creator, acceptanceCriteria);
         mainApp.addStory(story);
+        if (backlog != null) {
+          backlog.addStory(story);
+        }
+        if (Settings.correctList(backlog)) {
+          mainApp.refreshList(backlog);
+        }
         if (Settings.correctList(story)) {
           mainApp.refreshList(story);
         }
@@ -244,6 +277,9 @@ public class StoryDialogController {
         story.setDescription(storyDescription);
         story.setCreator(creator);
         story.setAcceptanceCriteria(acceptanceCriteria);
+        if (lastBacklog == null) {
+          backlog.addStory(story);
+        }
         mainApp.refreshList(story);
       }
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
@@ -346,7 +382,6 @@ public class StoryDialogController {
           alert.showAndWait();
           return;
         }
-
       }
 
       controller.setupController(this, ACDialogStage, createOrEdit, ac);
@@ -361,7 +396,6 @@ public class StoryDialogController {
       e.printStackTrace();
     }
   }
-
 
   /**
    * Checks that the Story label entry box contains valid input.
@@ -411,10 +445,10 @@ public class StoryDialogController {
   /**
    * Adds an acceptance criteria to the list of acceptance criteria.
    *
-   * @param ac Acceptance criteria in String form.
+   * @param newAC Acceptance criteria in String form.
    */
-  public void appendAcceptanceCriteria(String ac) {
-    this.acceptanceCriteria.add(ac);
+  public void appendAcceptanceCriteria(String newAC) {
+    this.acceptanceCriteria.add(newAC);
     listAC.setItems(acceptanceCriteria);
     btnCreateStory.setDisable(false); //gotta ungrey it when a change is made
   }
@@ -428,6 +462,21 @@ public class StoryDialogController {
   }
 
   /**
+   * Checks if a given string already exists as part of the Story.
+   *
+   * @param newAC The acceptance criteria to check.
+   * @return The acceptance criteria if it's valid.
+   * @throws Exception The error if a duplicate exists.
+   */
+  public String checkForDuplicateAC(String newAC) throws Exception {
+    if(acceptanceCriteria.contains(newAC)) {
+      throw new Exception("This story already has this acceptance criteria.");
+    } else {
+      return newAC;
+    }
+  }
+
+  /**
    * Initalises the Creator assignment list.
    */
   private void initialiseLists() {
@@ -435,12 +484,15 @@ public class StoryDialogController {
       for (Person person : mainApp.getPeople()) {
         availablePeople.add(person);
       }
+      this.backlogs.addAll(mainApp.getBacklogs());
 
       this.storyCreatorList.setVisibleRowCount(5);
-
       this.storyCreatorList.setItems(availablePeople);
 
       this.listAC.setItems(acceptanceCriteria);
+
+      this.backlogCombo.setItems(backlogs);
+
       setupListView();
     } catch (Exception e) {
       e.printStackTrace();
@@ -466,16 +518,15 @@ public class StoryDialogController {
   public class ListViewCell extends TextFieldListCell<String> {
 
     private Button editButton;
-    private double buttonWidth;
     private Label cellText;
     private GridPane pane;
     private String text;
+    private double labelWidth;
 
     public ListViewCell() {
       super();
 
       editButton = new Button("Edit");
-      buttonWidth = editButton.getLayoutBounds().getWidth();
       editButton.setOnAction(new EventHandler<ActionEvent>() {
         @Override
         public void handle(ActionEvent event) {
@@ -483,15 +534,19 @@ public class StoryDialogController {
           showACDialog(CreateOrEdit.EDIT);
         }
       });
+
+      labelWidth = listAC.getLayoutBounds().getWidth() - 65;
       cellText = new Label();
       pane = new GridPane();
-      pane.setHgap(10);
+      pane.getColumnConstraints().add(new ColumnConstraints(labelWidth));
+      pane.setHgap(5);
       pane.add(cellText, 0, 0);
       pane.add(editButton, 1, 0);
     }
 
     /**
      * Sets the overriden parameters for the ListViewCell when the cell is updated.
+     *
      * @param string The String being added to the cell.
      * @param empty Whether or not string is empty as a boolean flag.
      */
@@ -512,8 +567,8 @@ public class StoryDialogController {
         Text text = new Text(string);
         double width = text.getLayoutBounds().getWidth();
 
-        if (width > 240 - buttonWidth - 20) {
-          while (width > 240 - buttonWidth - 20) {
+        if (width > labelWidth) {
+          while (width > labelWidth) {
             string = string.substring(0, string.length() - 1);
             text = new Text(string);
             width = text.getLayoutBounds().getWidth();
