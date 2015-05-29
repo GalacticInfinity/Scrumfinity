@@ -90,8 +90,9 @@ public class ReportWriter {
 
       projElement = report.createElement("Projects");
       rootElement.appendChild(projElement);
+      orphanTeamsList.setAll(mainApp.getTeams());
       for (Project project : mainApp.getProjects()) {
-        orphanTeamsList.setAll(mainApp.getTeams());
+
         createProject(project, projElement, "Project");
       }
 
