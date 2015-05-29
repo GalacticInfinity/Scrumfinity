@@ -277,7 +277,7 @@ public class StoryDialogController {
         story.setDescription(storyDescription);
         story.setCreator(creator);
         story.setAcceptanceCriteria(acceptanceCriteria);
-        if (lastBacklog == null) {
+        if (lastBacklog == null && backlog != null) {
           backlog.addStory(story);
         }
         mainApp.refreshList(story);
