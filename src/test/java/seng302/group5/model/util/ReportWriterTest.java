@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Locale;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -59,7 +60,7 @@ public class ReportWriterTest {
 
   @Before
   public void setUp() {
-    mainApp = new Main();
+    this.mainApp = new Main();
   }
 
   public void createVanillaProjects() {
@@ -107,7 +108,6 @@ public class ReportWriterTest {
     skill3.setSkillDescription("Skill description 3");
     mainApp.addSkill(skill3);
 
-    createVanillaPeople();
     skillSet1 = FXCollections.observableArrayList();
     skillSet1.add(skill2);
     person1.setSkillSet(skillSet1);
@@ -120,7 +120,6 @@ public class ReportWriterTest {
   }
 
   public void createTeamWithDependency() {
-    createVanillaPeople();
     team1 = new Team();
     team1.setLabel("Team1");
     team1.setTeamDescription("Description Team1");
@@ -141,7 +140,6 @@ public class ReportWriterTest {
   }
 
   public void createReleaseWithDependency() {
-    createVanillaProjects();
     release1 = new Release();
     release1.setLabel("Release1");
     release1.setReleaseDescription("Description Release1");
@@ -166,8 +164,6 @@ public class ReportWriterTest {
   }
 
   public void createProjectsWithDependency() {
-    createVanillaPeople();
-    createTeamWithDependency();
     project1 = new Project();
     project1.setLabel("Project1");
     project1.setProjectName("Name Project1");
@@ -196,7 +192,6 @@ public class ReportWriterTest {
   }
 
   public void createStories() {
-    createVanillaPeople();
     story1 = new Story("Story1", "Starter Story", "Huehuehuehue", person1, null); //TODO lol its a null
     mainApp.addStory(story1);
 
@@ -214,7 +209,6 @@ public class ReportWriterTest {
   }
 
   public void createBacklogs() {
-    createStories();
     backlog1 = new Backlog("Backlog1", "Starter Backlog", "Huehuehuehue", person1);
     backlog1.addStory(story1);
     mainApp.addBacklog(backlog1);
@@ -229,8 +223,6 @@ public class ReportWriterTest {
   }
 
   public void allocateTeams() {
-    createVanillaProjects();
-    createTeamWithDependency();
     teamHistory1 = new AgileHistory(team1, LocalDate.of(2000, 3, 4), LocalDate.of(2000, 3, 5));
     project1.addTeam(teamHistory1);
     teamHistory2 = new AgileHistory(team3, LocalDate.of(1860, 5, 12), LocalDate.of(1861, 2, 17));
@@ -241,13 +233,19 @@ public class ReportWriterTest {
 
   @Test
   public void testAllReport() {
-    report = new ReportWriter();
-    createProjectsWithDependency();
-    createReleaseWithDependency();
+    createVanillaPeople();
     createStories();
-
-    File file = new File("C:\\Users\\bunir_000\\Scrumfinity\\jsd.xml");
+    createReleaseWithDependency();
+    createTeamWithDependency();
+    createProjectsWithDependency();
+    createSkillsWithDependency();
+    report = new ReportWriter();
+    File file = new File(System.getProperty("user.dir")
+                                     + File.separator
+                                     + "ReportTestAll.xml");
     report.writeReport(mainApp, file);
+
+
 
   }
 

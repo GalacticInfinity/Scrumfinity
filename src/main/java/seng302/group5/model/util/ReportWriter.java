@@ -445,6 +445,9 @@ public class ReportWriter {
     skillElement = report.createElement("Skills");
     personOwner.appendChild(skillElement);
     for (Skill skill : person.getSkillSet()) {
+      if (unassignedSkills.contains(skill)) {
+        unassignedSkills.remove(skill);
+      }
       Element skillElem = report.createElement("Skill");
       skillElement.appendChild(skillElem);
       skillElem.setAttribute("label", skill.getLabel());
