@@ -204,11 +204,14 @@ public class ReportDialogController {
       String level = reportLevelCombo.getSelectionModel().getSelectedItem().toString();
       if (level.equals("All")) {
         report.writeReport(mainApp, file);
+        thisStage.close();
       }
       else {
         report.writeCustomReport(mainApp, file, selectedItems, level);
+        thisStage.close();
       }
     }
+
   }
 
 
