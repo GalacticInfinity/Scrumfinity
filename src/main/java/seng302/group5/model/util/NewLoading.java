@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -653,7 +654,7 @@ public class NewLoading {
     String storyLine;
     String storyData;
 
-    // Untill Releases end tag
+    // Until Releases end tag
     while (!(storyLine = loadedFile.readLine()).startsWith("</Stories>")) {
       // For each new release
       if (storyLine.matches(".*<Story>")) {
@@ -694,6 +695,28 @@ public class NewLoading {
                       .replaceAll("(?i)(.*<description.*?>)(.+?)(</description>)", "$2");
             }
             newStory.setDescription(descBuilder);
+          }
+          if (storyLine.startsWith("\t\t<AcceptanceCriteria>")) {
+            ObservableList<String> newACs = FXCollections.observableArrayList();
+            while ((!(storyLine = loadedFile.readLine()).equals("\t\t</AcceptanceCriteria>"))) {
+              if (storyLine.startsWith("\t\t\t<criteria>")) {
+                String acceptanceBuilder;
+                if (!storyLine.endsWith("</criteria>")) {
+                  acceptanceBuilder = storyLine
+                                          .replaceAll("(?i)(.*<criteria.*?>)(.+?)", "$2") + "\n";
+                  while ((!(storyLine = loadedFile.readLine()).endsWith("</criteria>"))) {
+                    acceptanceBuilder += storyLine + "\n";
+                  }
+                  acceptanceBuilder += storyLine.replaceAll("(.+?)(</criteria>)", "$1");
+                } else {
+                  acceptanceBuilder =
+                      storyLine
+                          .replaceAll("(?i)(.*<criteria.*?>)(.+?)(</criteria>)", "$2");
+                }
+                newACs.add(acceptanceBuilder);
+              }
+            }
+            newStory.setAcceptanceCriteria(newACs);
           }
         }
 

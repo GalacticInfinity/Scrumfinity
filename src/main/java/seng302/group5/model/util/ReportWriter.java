@@ -477,6 +477,14 @@ public class ReportWriter {
     Element storyCreator = report.createElement("Creator");
     storyCreator.appendChild(report.createTextNode(story.getCreator().getLabel()));
     storyElem.appendChild(storyCreator);
+
+    Element acElements = report.createElement("AcceptanceCriteria");
+    storyElem.appendChild(acElements);
+    for (String ac : story.getAcceptanceCriteria()) {
+      Element acElem = report.createElement("criteria");
+      acElem.appendChild(report.createTextNode(ac));
+      acElements.appendChild(acElem);
+    }
   }
 }
 
