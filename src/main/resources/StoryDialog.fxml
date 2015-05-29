@@ -15,7 +15,7 @@
                         <Font size="15.0" />
                     </font>
                 </Label>
-                <TextField fx:id="storyLabelField" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="200.0" promptText="Unique label of story.">
+                <TextField fx:id="storyLabelField" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="200.0" promptText="Unique label of story">
                <tooltip>
                   <Tooltip text="Label should be 20 characters or less or application may not behave as expected." />
                </tooltip></TextField>
@@ -28,7 +28,7 @@
                         <Font size="15.0" />
                     </font>
                 </Label>
-                <TextField fx:id="storyNameField" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="200.0" promptText="Name of story." />
+                <TextField fx:id="storyNameField" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="200.0" promptText="Name of story" />
             </children>
         </HBox>
         <HBox prefHeight="30.0" prefWidth="429.0" spacing="10.0">
@@ -38,7 +38,7 @@
                         <Font size="15.0" />
                     </font>
                 </Label>
-            <TextArea fx:id="storyDescriptionField" minHeight="130.0" prefHeight="140.0" prefWidth="285.0" promptText="Description of story." wrapText="true" />
+            <TextArea fx:id="storyDescriptionField" minHeight="130.0" prefHeight="140.0" prefWidth="285.0" promptText="Description of story" wrapText="true" />
             </children>
         </HBox>
         <HBox prefHeight="21.0" prefWidth="429.0">
@@ -51,7 +51,7 @@
                         <Insets />
                     </HBox.margin>
                 </Label>
-                <ComboBox fx:id="storyCreatorList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" promptText="Available people.">
+                <ComboBox fx:id="storyCreatorList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" promptText="Available people">
                <HBox.margin>
                   <Insets top="2.0" />
                </HBox.margin></ComboBox>
@@ -99,6 +99,23 @@
          <VBox.margin>
             <Insets top="6.0" />
          </VBox.margin>
+      </HBox>
+      <HBox prefHeight="21.0" prefWidth="429.0">
+         <children>
+            <Label prefHeight="25.0" prefWidth="135.0" text="Backlog:">
+               <font>
+                  <Font size="15.0" />
+               </font>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </Label>
+            <Label fx:id="backlogContainer">
+               <graphic>
+                  <ComboBox fx:id="backlogCombo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" promptText="Available backlogs" />
+               </graphic>
+            </Label>
+         </children>
       </HBox>
         <HBox fx:id="btnContainer" alignment="BOTTOM_RIGHT" prefHeight="39.0" prefWidth="434.0" spacing="10.0">
             <children>
