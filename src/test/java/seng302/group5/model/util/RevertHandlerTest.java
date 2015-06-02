@@ -63,6 +63,7 @@ public class RevertHandlerTest {
   private String storyLongName;
   private String storyDescription;
   private Person storyCreator;
+  private ObservableList<String> storyACs;
 
   private String backlogLabel;
   private String backlogName;
@@ -224,7 +225,27 @@ public class RevertHandlerTest {
     storyDescription ="This is a story and it is good";
     storyCreator = null;
 
-    story = new Story(storyLabel, storyLongName, storyDescription, storyCreator, null); //TODO not null it
+    story = new Story(storyLabel, storyLongName, storyDescription, storyCreator, null); //null is fine
+
+    mainApp.addStory(story);
+
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+    undoRedoObject.setAction(Action.STORY_CREATE);
+    undoRedoObject.setAgileItem(story);
+    undoRedoObject.addDatum(new Story(story));
+
+    undoRedoHandler.newAction(undoRedoObject);
+  }
+
+  private void newStoryWithAC() {
+    storyLabel = "testS";
+    storyLongName ="testStory!";
+    storyDescription ="This is a story and it is good";
+    storyCreator = null;
+    storyACs = FXCollections.observableArrayList();
+    storyACs.add("FRREEEDOOOMMMMM!!!!!");
+
+    story = new Story(storyLabel, storyLongName, storyDescription, storyCreator, storyACs);
 
     mainApp.addStory(story);
 
@@ -351,6 +372,79 @@ public class RevertHandlerTest {
     newStory();
 
     assertEquals(1, mainApp.getStories().size());
+
+    mainApp.revert();
+
+    assertTrue(mainApp.getStories().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+  }
+
+  @Test
+  public void testStoryWithACRevert() throws Exception {
+
+    assertTrue(mainApp.getStories().isEmpty());
+
+    newStoryWithAC();
+
+    assertEquals(1, mainApp.getStories().size());
+
+    mainApp.revert();
+
+    assertTrue(mainApp.getStories().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+  }
+
+  @Test
+  public void testStoryWith2ACRevert() throws Exception {
+
+    assertTrue(mainApp.getStories().isEmpty());
+
+    newStoryWithAC();
+    newStoryWithAC();
+
+    assertEquals(2, mainApp.getStories().size());
+
+    mainApp.revert();
+
+    assertTrue(mainApp.getStories().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+  }
+
+  @Test
+  public void testStoryWithACAndNotRevert() throws Exception {
+
+    assertTrue(mainApp.getStories().isEmpty());
+
+    newStoryWithAC();
+    newStory();
+
+    assertEquals(2, mainApp.getStories().size());
+
+    mainApp.revert();
+
+    assertTrue(mainApp.getStories().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+  }
+
+  @Test
+  public void testStoryWith2ACAndRandomObjectsRevert() throws Exception {
+
+    assertTrue(mainApp.getStories().isEmpty());
+
+    newPerson();
+    newStoryWithAC();
+    newStoryWithAC();
+    newTeam();
+
+    assertEquals(2, mainApp.getStories().size());
 
     mainApp.revert();
 
