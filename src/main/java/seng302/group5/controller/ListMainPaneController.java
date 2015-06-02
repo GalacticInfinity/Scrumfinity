@@ -3,14 +3,18 @@ package seng302.group5.controller;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SplitPane;
@@ -700,21 +704,70 @@ public class ListMainPaneController {
     textStoriesHeader.setFill(Color.rgb(1, 0, 1));
     textStoriesHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
+    String prioritisedOrder = "Prioritised Order";
+    String alphabeticalOrder = "Alphabetical Order";
+
+    Hyperlink sortToggle = new Hyperlink(prioritisedOrder);
 
     displayTextFlow.getChildren().addAll(textHeader, textLabelHeader, textLabelBody,
                                          textNameHeader, textNameBody, textDescriptionHeader,
                                          textDescriptionBody, textPoHeader, textPoBody,
-                                         textStoriesHeader);
+                                         textStoriesHeader, sortToggle);
+
+    List<Text> storiesText = new ArrayList<>();
 
     Text textStoriesBody;
     if (!backlog.getStories().isEmpty()) {
       for (Story story : backlog.getStories()) {
         textStoriesBody = new Text("\n• " + story);
+        storiesText.add(textStoriesBody);
         displayTextFlow.getChildren().add(textStoriesBody);
       }
     } else {
       textStoriesBody = new Text("\nN/A");
+      storiesText.add(textStoriesBody);
       displayTextFlow.getChildren().add(textStoriesBody);
     }
+
+    sortToggle.setOnAction(event -> {
+      displayTextFlow.getChildren().removeAll(storiesText);
+      storiesText.clear();
+      if (sortToggle.getText().equals(prioritisedOrder)) {
+        // Change to alphabetical order
+        Text tempTextStoriesBody;
+        if (!backlog.getStories().isEmpty()) {
+          SortedList<Story> sortedStories = new SortedList<>(
+              FXCollections.observableArrayList(backlog.getStories()),
+              Comparator.<Story>naturalOrder());
+          for (Story story : sortedStories) {
+            tempTextStoriesBody = new Text("\n• " + story);
+            storiesText.add(tempTextStoriesBody);
+            displayTextFlow.getChildren().add(tempTextStoriesBody);
+          }
+        } else {
+          tempTextStoriesBody = new Text("\nN/A");
+          storiesText.add(tempTextStoriesBody);
+          displayTextFlow.getChildren().add(tempTextStoriesBody);
+        }
+        // Change the mode
+        sortToggle.setText(alphabeticalOrder);
+      } else {
+        // Change to prioritised order
+        Text tempTextStoriesBody;
+        if (!backlog.getStories().isEmpty()) {
+          for (Story story : backlog.getStories()) {
+            tempTextStoriesBody = new Text("\n• " + story);
+            storiesText.add(tempTextStoriesBody);
+            displayTextFlow.getChildren().add(tempTextStoriesBody);
+          }
+        } else {
+          tempTextStoriesBody = new Text("\nN/A");
+          storiesText.add(tempTextStoriesBody);
+          displayTextFlow.getChildren().add(tempTextStoriesBody);
+        }
+        // Change the mode
+        sortToggle.setText(prioritisedOrder);
+      }
+    });
   }
 }

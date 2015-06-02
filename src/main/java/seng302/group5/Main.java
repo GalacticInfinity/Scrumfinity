@@ -2,7 +2,9 @@ package seng302.group5;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 
 import javafx.application.Application;
@@ -36,6 +38,7 @@ import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.controller.SkillsDialogController;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Backlog;
+import seng302.group5.model.Estimate;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
 import seng302.group5.model.Role;
@@ -70,7 +73,7 @@ public class Main extends Application {
   private ObservableList<Role> roles = FXCollections.observableArrayList();
   private ObservableList<Story> stories = FXCollections.observableArrayList();
   private ObservableList<Backlog> backlogs = FXCollections.observableArrayList();
-
+  private ObservableList<Estimate> estimates = FXCollections.observableArrayList();
 
   private ArrayList<AgileItem> nonRemovable = new ArrayList<>();
 
@@ -123,6 +126,8 @@ public class Main extends Application {
     addRole(poRole);
     addRole(smRole);
 
+    createDefaultEstimates();
+
 
     revertHandler.setLastSaved();
 
@@ -130,6 +135,20 @@ public class Main extends Application {
       event.consume();
       exitScrumfinity();
     });
+  }
+
+  /**
+   * Creates default estimate lists in main app. For now just creates fibonacci scale
+   * and our custom dino scale.
+   */
+  private void createDefaultEstimates() {
+    List<String> fiboEsts = Arrays.asList("not set", "1", "2", "3", "5", "8", "13", "epic");
+    Estimate fibonacci = new Estimate("Fibonacci", fiboEsts);
+    List<String> dinoEsts = Arrays.asList("not set", "dino egg", "dino baby", "dino toddler",
+                                       "kiddy dino", "dino teen", "dino", "elder dino");
+    Estimate dinos = new Estimate("dinos", dinoEsts);
+
+    estimates.addAll(fibonacci, dinos);
   }
 
   /**
@@ -999,6 +1018,11 @@ public class Main extends Application {
     return backlogs.sorted(Comparator.<Backlog>naturalOrder());
   }
 
+
+  public ObservableList<Estimate> getEstimates() {
+    return estimates.sorted(Comparator.<Estimate>naturalOrder());
+  }
+
   public ArrayList<AgileItem> getNonRemovable() {
     return nonRemovable;
   }
@@ -1033,6 +1057,10 @@ public class Main extends Application {
 
   public void addBacklog(Backlog backlog) {
     backlogs.add(backlog);
+  }
+
+  public void addEstimate(Estimate estimate) {
+    estimates.add(estimate);
   }
 
   public UndoRedoHandler getUndoRedoHandler() {
