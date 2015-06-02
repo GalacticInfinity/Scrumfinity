@@ -31,8 +31,18 @@ public class StoryTest {
     this.storyDescription = "Once upon a time...";
     this.storyCreator = new Person("John", "John", "Doe", null);
     this.storyAC = FXCollections.observableArrayList();
+    storyAC.add("ac1");
+    storyAC.add("ac2");
 
     this.story = new Story(storyLabel, storyLongName, storyDescription, storyCreator, storyAC);
+  }
+
+  @Test
+  public void testACsExist() throws Exception {
+    String firstAC = story.getAcceptanceCriteria().get(0);
+    String secondAC = story.getAcceptanceCriteria().get(1);
+    assertEquals("ac1", firstAC);
+    assertEquals("ac2", secondAC);
   }
 
   @Test
