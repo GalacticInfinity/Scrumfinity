@@ -4,6 +4,9 @@ import sun.security.x509.AVA;
 
 import java.io.File;
 
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -40,13 +43,14 @@ public class ReportDialogController {
 
   private Main mainApp;
   private Stage thisStage;
-  private CreateOrEdit createOrEdit;
   private ObservableList<AgileItem> selectedItems = FXCollections.observableArrayList();
   private ObservableList<AgileItem> availableItems = FXCollections.observableArrayList();
   private ObservableList<String> reportLevels = FXCollections.observableArrayList();
-  private ReportWriter report;
   private ObservableList<AgileItem> chosenAvailableItems = FXCollections.observableArrayList();
   private ObservableList<AgileItem> chosenSelectedItems = FXCollections.observableArrayList();
+  private ObservableList<AgileItem> tempItems = FXCollections.observableArrayList();
+
+  private int canceled = 0;
 
   /**
    * Setup the report DialogController
@@ -54,7 +58,7 @@ public class ReportDialogController {
    * @param thisStage    The stage of the dialog
    */
   public void setupController(Main mainApp, Stage thisStage) {
-    this.report = new ReportWriter();
+    ReportWriter report = new ReportWriter();
     this.mainApp = mainApp;
     this.thisStage = thisStage;
     reportLevelCombo.setItems(reportLevels);
@@ -68,31 +72,36 @@ public class ReportDialogController {
     initialiseLists();
 
     reportLevelCombo.valueProperty().addListener((observable, oldValue, newValue) -> {
-
-      if (!selectedItems.isEmpty()) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("You have items selected.");
-        alert.setHeaderText(null);
-        alert.setContentText("You have items in the Selected Items list, "
-                             + "changing Report Levels will clear this selection. "
-                             + "Are you sure you wish to proceed?");
-        alert.getButtonTypes().add(ButtonType.CANCEL);
-        alert.showAndWait();
-        if (!alert.getResult().equals(ButtonType.CANCEL)) {
-          selectedItems.clear(); //TODO make this actually work when you click cancel.
+      try {
+        if (!selectedItems.isEmpty()) {
+          Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setTitle("You have items selected.");
+          alert.setHeaderText(null);
+          alert.setContentText("You have items in the Selected Items list, "
+                               + "changing Report Levels will clear this selection. "
+                               + "Are you sure you wish to proceed?");
+          alert.getButtonTypes().add(ButtonType.CANCEL);
+          alert.showAndWait();
+          if (!alert.getResult().equals(ButtonType.CANCEL)) {
+            selectedItems.clear(); //TODO make this actually work when you click cancel.
+            setLevel();
+          } else {
+            tempItems.setAll(selectedItems);
+            selectedItems.clear();
+            reportLevelCombo.setValue(oldValue);
+            selectedItems.setAll(tempItems);
+          }
+        } else {
           setLevel();
         }
+      } catch (Exception e) {
+        //e.printStackTrace();
       }
-      if (selectedItems.isEmpty()) {
-        setLevel();
-      }
-
-
     });
   }
 
   private void initialiseLists() {
-    this.reportLevels.addAll("All", "Projects", "Teams", "People", "Skills", "Releases", "Stories"); // Add backlogs when they are done.
+    this.reportLevels.addAll("All", "Projects", "Teams", "People", "Skills", "Releases", "Stories", "Backlogs"); // Add backlogs when they are done.
     availableItemsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     selectedItemsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     availableItemsList.setItems(availableItems);
@@ -141,6 +150,12 @@ public class ReportDialogController {
       case ("Stories"):
         this.availableItems.clear();
         this.availableItems.setAll(mainApp.getStories());
+        this.availableItemsList.setItems(availableItems);
+        updateLists();
+        break;
+      case ("Backlogs"):
+        this.availableItems.clear();
+        this.availableItems.setAll(mainApp.getBacklogs());
         this.availableItemsList.setItems(availableItems);
         updateLists();
         break;

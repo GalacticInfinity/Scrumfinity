@@ -6,7 +6,6 @@ import org.junit.Test;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.Locale;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -61,22 +60,6 @@ public class ReportWriterTest {
   @Before
   public void setUp() {
     this.mainApp = new Main();
-  }
-
-  public void createVanillaProjects() {
-    project1 = new Project();
-    project1.setLabel("Project1");
-    project1.setProjectName("No Project Description");
-    mainApp.addProject(project1);
-    project2 = new Project();
-    project2.setLabel("Project2");
-    project2.setProjectName("Has Description");
-    project2.setProjectDescription("Proj Descroption");
-    mainApp.addProject(project2);
-    project3 = new Project();
-    project3.setLabel("Project3");
-    project3.setProjectName("Back to no description");
-    mainApp.addProject(project3);
   }
 
   public void createVanillaPeople() {
@@ -222,15 +205,6 @@ public class ReportWriterTest {
     mainApp.addBacklog(backlog3);
   }
 
-  public void allocateTeams() {
-    teamHistory1 = new AgileHistory(team1, LocalDate.of(2000, 3, 4), LocalDate.of(2000, 3, 5));
-    project1.addTeam(teamHistory1);
-    teamHistory2 = new AgileHistory(team3, LocalDate.of(1860, 5, 12), LocalDate.of(1861, 2, 17));
-    teamHistory3 = new AgileHistory(team3, LocalDate.of(1861, 2, 18), LocalDate.of(1861, 2, 19));
-    project2.addTeam(teamHistory2);
-    project2.addTeam(teamHistory3);
-  }
-
   @Test
   public void testAllReport() {
     createVanillaPeople();
@@ -245,9 +219,6 @@ public class ReportWriterTest {
                                      + File.separator
                                      + "ReportTestAll.xml");
     report.writeReport(mainApp, file);
-
-
-
   }
 
 }
