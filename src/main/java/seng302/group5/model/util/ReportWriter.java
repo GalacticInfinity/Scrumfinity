@@ -205,6 +205,11 @@ public class ReportWriter {
             createStory((Story) agileStory, projElement, "Story");
           }
           break;
+        case ("Backlogs"):
+          for (AgileItem agileBacklog : reportItems) {
+            createBacklog((Backlog) agileBacklog, projElement, "Backlog");
+          }
+          break;
       }
 
       String filename = saveLocation.toString();
