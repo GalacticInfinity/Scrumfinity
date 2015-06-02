@@ -51,7 +51,7 @@
                         <Insets />
                     </HBox.margin>
                 </Label>
-                <ComboBox fx:id="backlogProductOwnerCombo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" promptText="Available People">
+                <ComboBox fx:id="backlogProductOwnerCombo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" promptText="Available Product Owners">
                <HBox.margin>
                   <Insets top="2.0" />
                </HBox.margin></ComboBox>

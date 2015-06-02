@@ -234,11 +234,12 @@ public class ReportWriterTest {
   @Test
   public void testAllReport() {
     createVanillaPeople();
+    createSkillsWithDependency();
     createStories();
-    createReleaseWithDependency();
     createTeamWithDependency();
     createProjectsWithDependency();
-    createSkillsWithDependency();
+    createReleaseWithDependency();
+
     report = new ReportWriter();
     File file = new File(System.getProperty("user.dir")
                                      + File.separator
