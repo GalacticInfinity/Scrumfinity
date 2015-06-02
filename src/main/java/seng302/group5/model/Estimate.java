@@ -6,7 +6,7 @@ import java.util.List;
  * Estimate class, will not be displayed in list, only available in backlogs.
  * Created by Michael on 6/2/2015.
  */
-public class Estimate {
+public class Estimate implements Comparable<Estimate> {
 
   private String label;
   private List<String> estimateNames;
@@ -50,5 +50,27 @@ public class Estimate {
 
   public void setEstimateNames(List<String> estimateNames) {
     this.estimateNames = estimateNames;
+  }
+
+  /**
+   * Overrides to toString method with the label of estimate.
+   *
+   * @return Unique label of team.
+   */
+  @Override
+  public String toString() {
+    return label;
+  }
+
+
+  /**
+   * Compares the story labels.
+   *
+   * @param o the story you wish to compare to.
+   * @return return whether its greater or lesser.
+   */
+  @Override
+  public int compareTo(Estimate o) {
+    return this.label.toLowerCase().compareTo(o.label.toLowerCase());
   }
 }
