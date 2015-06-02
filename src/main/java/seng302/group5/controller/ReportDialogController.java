@@ -1,12 +1,6 @@
 package seng302.group5.controller;
 
-import sun.security.x509.AVA;
-
 import java.io.File;
-
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,13 +10,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
-import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import seng302.group5.Main;
-import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.util.ReportWriter;
 
@@ -50,15 +42,12 @@ public class ReportDialogController {
   private ObservableList<AgileItem> chosenSelectedItems = FXCollections.observableArrayList();
   private ObservableList<AgileItem> tempItems = FXCollections.observableArrayList();
 
-  private int canceled = 0;
-
   /**
    * Setup the report DialogController
    *
    * @param thisStage    The stage of the dialog
    */
   public void setupController(Main mainApp, Stage thisStage) {
-    ReportWriter report = new ReportWriter();
     this.mainApp = mainApp;
     this.thisStage = thisStage;
     reportLevelCombo.setItems(reportLevels);
@@ -90,6 +79,7 @@ public class ReportDialogController {
             selectedItems.clear();
             reportLevelCombo.setValue(oldValue);
             selectedItems.setAll(tempItems);
+            availableItems.removeAll(selectedItems);
           }
         } else {
           setLevel();
