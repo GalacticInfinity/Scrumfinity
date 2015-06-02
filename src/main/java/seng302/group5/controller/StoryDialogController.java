@@ -187,7 +187,7 @@ public class StoryDialogController {
         storyLabelField.getText().equals(story.getLabel()) &&
         storyNameField.getText().equals(story.getStoryName()) &&
         listAC.getItems().equals(story.getAcceptanceCriteria()) &&
-        backlogCombo.getValue().equals(lastBacklog)) {
+        (backlogCombo.getValue() == null || backlogCombo.getValue().equals(lastBacklog))) {
       btnCreateStory.setDisable(true);
     } else {
       btnCreateStory.setDisable(false);

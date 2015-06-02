@@ -175,7 +175,7 @@ public class ReportWriterTest {
   }
 
   public void createStories() {
-    story1 = new Story("Story1", "Starter Story", "Huehuehuehue", person1, null); //TODO lol its a null
+    story1 = new Story("Story1", "Starter Story", "Huehuehuehue", person1, null); //null is fine
     mainApp.addStory(story1);
 
     story2 = new Story();
@@ -188,6 +188,40 @@ public class ReportWriterTest {
     story3.setLabel("Story3");
     story3.setDescription("They story-ening is now");
     story3.setCreator(person1);
+    mainApp.addStory(story3);
+  }
+
+  public void createStoriesWithACs() {
+    ObservableList<String> acs1 = FXCollections.observableArrayList();
+    acs1.add("Hola!");
+    acs1.add("Daisukii dawaaa!!");
+    acs1.add("yue liang dai biao wor der xhing");
+
+    ObservableList<String> acs2 = FXCollections.observableArrayList();
+    acs2.add("Konnichiwa!");
+    acs2.add("Buutobasuyo!!");
+    acs2.add("The dog was brown");
+
+    ObservableList<String> acs3 = FXCollections.observableArrayList();
+    acs3.add("Do the backflip move");
+    acs3.add("Yeeaaaa eat that chicken");
+    acs3.add("Pokemon is better than digimon");
+
+    story1 = new Story("Story1", "Starter Story", "Huehuehuehue", person1, acs1);
+    mainApp.addStory(story1);
+
+    story2 = new Story();
+    story2.setLabel("Story2");
+    story2.setStoryName("Moar Story");
+    story2.setCreator(person2);
+    story2.setAcceptanceCriteria(acs2);
+    mainApp.addStory(story2);
+
+    story3 = new Story();
+    story3.setLabel("Story3");
+    story3.setDescription("They story-ening is now");
+    story3.setCreator(person1);
+    story3.setAcceptanceCriteria(acs3);
     mainApp.addStory(story3);
   }
 
@@ -210,6 +244,7 @@ public class ReportWriterTest {
     createVanillaPeople();
     createSkillsWithDependency();
     createStories();
+    createStoriesWithACs();
     createTeamWithDependency();
     createProjectsWithDependency();
     createReleaseWithDependency();
