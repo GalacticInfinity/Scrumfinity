@@ -26,16 +26,6 @@ public class Estimate implements Comparable<Estimate> {
     this.estimateNames = estimateNames;
   }
 
-  /**
-   * Replaces one of the previous estimate names with a new one.
-   * @param changeName New name of estimate
-   * @param index Position of estimate
-   */
-  public void changeEstimate(String changeName, int index) {
-    estimateNames.remove(index);
-    estimateNames.add(index, changeName);
-  }
-
   public String getLabel() {
     return label;
   }
@@ -61,7 +51,6 @@ public class Estimate implements Comparable<Estimate> {
   public String toString() {
     return label;
   }
-
 
   /**
    * Compares the story labels.
