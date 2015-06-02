@@ -75,7 +75,6 @@ public class Main extends Application {
   private ObservableList<Backlog> backlogs = FXCollections.observableArrayList();
   private ObservableList<Estimate> estimates = FXCollections.observableArrayList();
 
-
   private ArrayList<AgileItem> nonRemovable = new ArrayList<>();
 
   private UndoRedoHandler undoRedoHandler = new UndoRedoHandler(this);
@@ -1019,6 +1018,11 @@ public class Main extends Application {
     return backlogs.sorted(Comparator.<Backlog>naturalOrder());
   }
 
+
+  public ObservableList<Estimate> getEstimates() {
+    return estimates.sorted(Comparator.<Estimate>naturalOrder());
+  }
+
   public ArrayList<AgileItem> getNonRemovable() {
     return nonRemovable;
   }
@@ -1053,6 +1057,10 @@ public class Main extends Application {
 
   public void addBacklog(Backlog backlog) {
     backlogs.add(backlog);
+  }
+
+  public void addEstimate(Estimate estimate) {
+    estimates.add(estimate);
   }
 
   public UndoRedoHandler getUndoRedoHandler() {

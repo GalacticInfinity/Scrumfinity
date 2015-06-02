@@ -21,6 +21,7 @@ import seng302.group5.Main;
 import seng302.group5.model.AgileHistory;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Backlog;
+import seng302.group5.model.Estimate;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
@@ -494,6 +495,10 @@ public class ReportWriter {
       acElem.appendChild(report.createTextNode(ac));
       acElements.appendChild(acElem);
     }
+  }
+
+  private void createEstimate(Estimate estimate, Element estimateElement, String typeOfEstimate) {
+
   }
 }
 
