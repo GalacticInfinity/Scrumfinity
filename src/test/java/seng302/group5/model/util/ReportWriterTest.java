@@ -245,6 +245,7 @@ public class ReportWriterTest {
     createSkillsWithDependency();
     createStories();
     createStoriesWithACs();
+    createBacklogs();
     createTeamWithDependency();
     createProjectsWithDependency();
     createReleaseWithDependency();
