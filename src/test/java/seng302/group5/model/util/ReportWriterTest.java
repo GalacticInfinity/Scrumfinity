@@ -2,6 +2,7 @@ package seng302.group5.model.util;
 
 import org.junit.Before;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.time.LocalDate;
@@ -241,10 +242,12 @@ public class ReportWriterTest {
 
   @Test
   public void testAllReport() {
+
     createVanillaPeople();
     createSkillsWithDependency();
     createStories();
     createStoriesWithACs();
+    createBacklogs();
     createTeamWithDependency();
     createProjectsWithDependency();
     createReleaseWithDependency();
@@ -253,7 +256,14 @@ public class ReportWriterTest {
     File file = new File(System.getProperty("user.dir")
                                      + File.separator
                                      + "ReportTestAll.xml");
+    if (file.exists()) {
+      file.delete();
+    }
+    assertFalse(file.exists());
     report.writeReport(mainApp, file);
+    assertTrue(file.exists());
   }
+
+
 
 }
