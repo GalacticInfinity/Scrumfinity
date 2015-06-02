@@ -421,7 +421,7 @@ public class BacklogDialogController {
   private void btnDecreasePriorityClick(ActionEvent event) {
     int storyIndex = allocatedStoriesList.getSelectionModel().getSelectedIndex();
     int after = storyIndex + 1;
-    if (storyIndex < allocatedStories.size() - 1) {
+    if (storyIndex >= 0 && storyIndex < allocatedStories.size() - 1) {
       Collections.swap(allocatedStories, after, storyIndex);
       allocatedStoriesList.getSelectionModel().select(after);
       checkButtonDisabled();
