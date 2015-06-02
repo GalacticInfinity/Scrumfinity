@@ -408,7 +408,9 @@ public class BacklogDialogController {
     if (storyIndex > 0) {
       Collections.swap(allocatedStories, before, storyIndex);
       allocatedStoriesList.getSelectionModel().select(before);
-      checkButtonDisabled();
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
     }
   }
 
@@ -424,7 +426,9 @@ public class BacklogDialogController {
     if (storyIndex >= 0 && storyIndex < allocatedStories.size() - 1) {
       Collections.swap(allocatedStories, after, storyIndex);
       allocatedStoriesList.getSelectionModel().select(after);
-      checkButtonDisabled();
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
     }
   }
 }

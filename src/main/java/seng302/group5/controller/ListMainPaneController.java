@@ -731,6 +731,7 @@ public class ListMainPaneController {
 
     sortToggle.setOnAction(event -> {
       displayTextFlow.getChildren().removeAll(storiesText);
+      storiesText.clear();
       if (sortToggle.getText().equals(prioritisedOrder)) {
         // Change to alphabetical order
         Text tempTextStoriesBody;
