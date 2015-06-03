@@ -1,10 +1,12 @@
 package seng302.group5.controller;
 
 import java.io.File;
+import java.util.Comparator;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -18,6 +20,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.model.AgileItem;
+import seng302.group5.model.Project;
 import seng302.group5.model.util.ReportWriter;
 
 /**
@@ -107,7 +110,7 @@ public class ReportDialogController {
                              "Stories", "Backlogs"); // Add backlogs when they are done.
     availableItemsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     selectedItemsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-    availableItemsList.setItems(availableItems);
+    availableItemsList.setItems(availableItems.sorted());
     this.reportLevelCombo.setValue("All");
     selectedItemsList.setItems(selectedItems);
 
@@ -124,6 +127,7 @@ public class ReportDialogController {
         this.availableItems.clear();
         this.availableItems.setAll(mainApp.getProjects());
         this.availableItemsList.setItems(availableItems);
+
         updateLists();
         break;
       case ("Teams"):
@@ -166,6 +170,7 @@ public class ReportDialogController {
   }
 
   private void updateLists(){
+
     if (reportLevelCombo.getSelectionModel().getSelectedItem().equals("All")) {
       selectedItemsList.setDisable(true);
       availableItemsList.setDisable(true);
@@ -199,6 +204,7 @@ public class ReportDialogController {
       chosenSelectedItems.setAll(selectedItemsList.getSelectionModel().getSelectedItems());
       if (chosenSelectedItems != null) {
         selectedItems.removeAll(selectedItemsList.getSelectionModel().getSelectedItems());
+        availableItems.addAll(chosenSelectedItems);
         updateLists();
       }
     } catch (Exception e) {
