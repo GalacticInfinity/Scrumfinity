@@ -12,8 +12,15 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.w3c.dom.Attr;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.TypeInfo;
+import org.w3c.dom.UserDataHandler;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -50,6 +57,7 @@ public class ReportWriter {
   Element unusedSkills;
   Element allStories;
   Element allBacklogs;
+  Element allEstimations;
   LocalDate date;
   String dateFormat = "dd/MM/yyyy";
 
@@ -129,6 +137,12 @@ public class ReportWriter {
         createStory(story, allStories, "OrphanStories");
       }
 
+      allEstimations = report.createElement("Estimations");
+      rootElement.appendChild(allEstimations);
+      for (Estimate estimate : mainApp.getEstimates()) {
+        createEstimate(estimate, allEstimations, "EstimateScale");
+      }
+
       String filename = saveLocation.toString();
       if (!filename.endsWith(".xml")) {
         filename = filename + ".xml";
@@ -147,7 +161,7 @@ public class ReportWriter {
 
   /**
    * Creates a custom report of reportItems at the level passed.
-   * @param mainApp
+   * @param mainApp The main application with all data
    * @param saveLocation Place to save the report
    * @param reportItems Items that the report contains
    * @param level The level of report, e.g. Projects or Teams.
@@ -497,8 +511,24 @@ public class ReportWriter {
     }
   }
 
+  /**
+   * Creates the estimate elements for the report. Shows the list of estimates..
+   *
+   * @param estimate The estimate object to be reported
+   * @param estimateElement The element to attach estimate report to
+   * @param typeOfEstimate Name of the estimate report tag
+   */
   private void createEstimate(Estimate estimate, Element estimateElement, String typeOfEstimate) {
+    Element estimateElem = report.createElement(typeOfEstimate);
+    estimateElem.setAttribute("label", estimate.getLabel());
+    estimateElement.appendChild(estimateElem);
 
+    List<String> estimateKeys = estimate.getEstimateNames();
+    for (int i = 0; i < estimateKeys.size(); i++) {
+      Element estimateSize = report.createElement("Scale-" + String.valueOf(i));
+      estimateSize.appendChild(report.createTextNode(estimateKeys.get(i)));
+      estimateElem.appendChild(estimateSize);
+    }
   }
 }
 
