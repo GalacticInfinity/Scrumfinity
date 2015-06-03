@@ -4,9 +4,6 @@ import sun.security.x509.AVA;
 
 import java.io.File;
 
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,13 +13,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
-import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import seng302.group5.Main;
-import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.util.ReportWriter;
 
@@ -32,9 +27,9 @@ import seng302.group5.model.util.ReportWriter;
  */
 public class ReportDialogController {
 
-  @FXML private ComboBox reportLevelCombo;
-  @FXML private ListView availableItemsList;
-  @FXML private ListView selectedItemsList;
+  @FXML private ComboBox<String> reportLevelCombo;
+  @FXML private ListView<AgileItem> availableItemsList;
+  @FXML private ListView<AgileItem> selectedItemsList;
   @FXML private Button addBtn;
   @FXML private Button removeBtn;
   @FXML private Button saveBtn;
@@ -50,6 +45,7 @@ public class ReportDialogController {
   private ObservableList<AgileItem> chosenSelectedItems = FXCollections.observableArrayList();
   private ObservableList<AgileItem> tempItems = FXCollections.observableArrayList();
 
+  private boolean comboListenerFlag;
   private int canceled = 0;
 
   /**
@@ -58,7 +54,6 @@ public class ReportDialogController {
    * @param thisStage    The stage of the dialog
    */
   public void setupController(Main mainApp, Stage thisStage) {
-    ReportWriter report = new ReportWriter();
     this.mainApp = mainApp;
     this.thisStage = thisStage;
     reportLevelCombo.setItems(reportLevels);
@@ -90,6 +85,7 @@ public class ReportDialogController {
             selectedItems.clear();
             reportLevelCombo.setValue(oldValue);
             selectedItems.setAll(tempItems);
+            availableItems.removeAll(selectedItems);
           }
         } else {
           setLevel();
@@ -101,7 +97,8 @@ public class ReportDialogController {
   }
 
   private void initialiseLists() {
-    this.reportLevels.addAll("All", "Projects", "Teams", "People", "Skills", "Releases", "Stories", "Backlogs"); // Add backlogs when they are done.
+    this.reportLevels.addAll("All", "Projects", "Teams", "People", "Skills", "Releases",
+                             "Stories", "Backlogs"); // Add backlogs when they are done.
     availableItemsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     selectedItemsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     availableItemsList.setItems(availableItems);
@@ -111,7 +108,7 @@ public class ReportDialogController {
   }
 
   private void setLevel() {
-    String level = reportLevelCombo.getSelectionModel().getSelectedItem().toString();
+    String level = reportLevelCombo.getSelectionModel().getSelectedItem();
     switch(level) {
       case ("All"):
         availableItemsList.setItems(null);
@@ -163,7 +160,7 @@ public class ReportDialogController {
   }
 
   private void updateLists(){
-    if (reportLevelCombo.getSelectionModel().getSelectedItem().toString().equals("All")) {
+    if (reportLevelCombo.getSelectionModel().getSelectedItem().equals("All")) {
       selectedItemsList.setDisable(true);
       availableItemsList.setDisable(true);
     } else {
@@ -181,7 +178,7 @@ public class ReportDialogController {
   public void addBtnClick(ActionEvent actionEvent) throws  Exception{
     try {
     chosenAvailableItems.setAll(availableItemsList.getSelectionModel().getSelectedItems());
-      if (!chosenAvailableItems.equals(null)) {
+      if (chosenAvailableItems != null) {
         selectedItems.addAll(availableItemsList.getSelectionModel().getSelectedItems());
         updateLists();
       }
@@ -194,14 +191,12 @@ public class ReportDialogController {
   public void removeBtnClick(ActionEvent actionEvent) throws Exception {
     try {
       chosenSelectedItems.setAll(selectedItemsList.getSelectionModel().getSelectedItems());
-      if (!chosenSelectedItems.equals(null)) {
+      if (chosenSelectedItems != null) {
         selectedItems.removeAll(selectedItemsList.getSelectionModel().getSelectedItems());
-        Object temp = reportLevelCombo.getSelectionModel().getSelectedItem();
-        reportLevelCombo.setValue("All");
-        reportLevelCombo.setValue(temp);
         updateLists();
       }
     } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 
@@ -216,7 +211,7 @@ public class ReportDialogController {
 
     if (file != null) {
       ReportWriter report = new ReportWriter();
-      String level = reportLevelCombo.getSelectionModel().getSelectedItem().toString();
+      String level = reportLevelCombo.getSelectionModel().getSelectedItem();
       if (level.equals("All")) {
         report.writeReport(mainApp, file);
         thisStage.close();
