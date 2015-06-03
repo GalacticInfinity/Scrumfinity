@@ -1,5 +1,7 @@
 package seng302.group5.controller;
 
+import sun.security.x509.AVA;
+
 import java.io.File;
 
 import javafx.application.Platform;
@@ -105,7 +107,8 @@ public class ReportDialogController {
   }
 
   private void initialiseLists() {
-    this.reportLevels.addAll("All", "Projects", "Teams", "People", "Skills", "Releases", "Stories", "Backlogs"); // Add backlogs when they are done.
+    this.reportLevels.addAll("All", "Projects", "Teams", "People", "Skills", "Releases",
+                             "Stories", "Backlogs"); // Add backlogs when they are done.
     availableItemsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     selectedItemsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     availableItemsList.setItems(availableItems);
@@ -200,9 +203,6 @@ public class ReportDialogController {
       chosenSelectedItems.setAll(selectedItemsList.getSelectionModel().getSelectedItems());
       if (chosenSelectedItems != null) {
         selectedItems.removeAll(selectedItemsList.getSelectionModel().getSelectedItems());
-        String temp = reportLevelCombo.getSelectionModel().getSelectedItem();
-        reportLevelCombo.setValue("All");
-        reportLevelCombo.setValue(temp);
         updateLists();
       }
     } catch (Exception e) {
