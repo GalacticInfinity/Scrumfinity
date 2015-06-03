@@ -1,9 +1,8 @@
 package seng302.group5.controller;
 
-import sun.security.x509.AVA;
-
 import java.io.File;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -46,7 +45,6 @@ public class ReportDialogController {
   private ObservableList<AgileItem> tempItems = FXCollections.observableArrayList();
 
   private boolean comboListenerFlag;
-  private int canceled = 0;
 
   /**
    * Setup the report DialogController
@@ -66,8 +64,16 @@ public class ReportDialogController {
     }
     initialiseLists();
 
+    comboListenerFlag = false;
+
     reportLevelCombo.valueProperty().addListener((observable, oldValue, newValue) -> {
       try {
+        // Check if the listener should be changing report level or not
+        if (comboListenerFlag) {
+          // Get out instantly after resetting flag to false
+          comboListenerFlag = false;
+          return;
+        }
         if (!selectedItems.isEmpty()) {
           Alert alert = new Alert(Alert.AlertType.ERROR);
           alert.setTitle("You have items selected.");
@@ -77,15 +83,15 @@ public class ReportDialogController {
                                + "Are you sure you wish to proceed?");
           alert.getButtonTypes().add(ButtonType.CANCEL);
           alert.showAndWait();
-          if (!alert.getResult().equals(ButtonType.CANCEL)) {
-            selectedItems.clear(); //TODO make this actually work when you click cancel.
+          if (alert.getResult().equals(ButtonType.OK)) {
+            selectedItems.clear();
             setLevel();
           } else {
-            tempItems.setAll(selectedItems);
-            selectedItems.clear();
-            reportLevelCombo.setValue(oldValue);
-            selectedItems.setAll(tempItems);
-            availableItems.removeAll(selectedItems);
+            comboListenerFlag = true;
+            Platform.runLater(() -> {
+              // to avoid firing the listener from within itself
+              reportLevelCombo.setValue(oldValue);
+            });
           }
         } else {
           setLevel();
@@ -101,7 +107,7 @@ public class ReportDialogController {
                              "Stories", "Backlogs"); // Add backlogs when they are done.
     availableItemsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     selectedItemsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-    availableItemsList.setItems(availableItems);
+    availableItemsList.setItems(availableItems.sorted());
     this.reportLevelCombo.setValue("All");
     selectedItemsList.setItems(selectedItems);
 
@@ -118,6 +124,7 @@ public class ReportDialogController {
         this.availableItems.clear();
         this.availableItems.setAll(mainApp.getProjects());
         this.availableItemsList.setItems(availableItems);
+
         updateLists();
         break;
       case ("Teams"):
@@ -160,6 +167,7 @@ public class ReportDialogController {
   }
 
   private void updateLists(){
+
     if (reportLevelCombo.getSelectionModel().getSelectedItem().equals("All")) {
       selectedItemsList.setDisable(true);
       availableItemsList.setDisable(true);
@@ -193,6 +201,7 @@ public class ReportDialogController {
       chosenSelectedItems.setAll(selectedItemsList.getSelectionModel().getSelectedItems());
       if (chosenSelectedItems != null) {
         selectedItems.removeAll(selectedItemsList.getSelectionModel().getSelectedItems());
+        availableItems.addAll(chosenSelectedItems);
         updateLists();
       }
     } catch (Exception e) {
