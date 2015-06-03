@@ -1,12 +1,10 @@
 package seng302.group5.controller;
 
 import java.io.File;
-import java.util.Comparator;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -20,7 +18,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.model.AgileItem;
-import seng302.group5.model.Project;
 import seng302.group5.model.util.ReportWriter;
 
 /**
