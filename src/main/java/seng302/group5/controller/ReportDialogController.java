@@ -1,12 +1,8 @@
 package seng302.group5.controller;
 
-import sun.security.x509.AVA;
-
 import java.io.File;
 
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -72,7 +68,7 @@ public class ReportDialogController {
 
     reportLevelCombo.valueProperty().addListener((observable, oldValue, newValue) -> {
       try {
-        // Check if the listener should be assigning roles or not
+        // Check if the listener should be changing report level or not
         if (comboListenerFlag) {
           // Get out instantly after resetting flag to false
           comboListenerFlag = false;
