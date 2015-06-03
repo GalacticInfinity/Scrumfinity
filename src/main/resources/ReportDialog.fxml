@@ -83,7 +83,7 @@
             <Insets left="15.0" />
          </VBox.margin>
       </HBox>
-      <HBox prefHeight="69.0" prefWidth="516.0">
+      <HBox fx:id="btnContainer" prefHeight="69.0" prefWidth="516.0">
          <children>
             <Button fx:id="saveBtn" mnemonicParsing="false" prefHeight="25.0" prefWidth="76.0" onAction="#saveBtnClick" text="Save">
                <HBox.margin>
