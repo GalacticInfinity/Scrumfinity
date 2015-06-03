@@ -4,6 +4,9 @@ import sun.security.x509.AVA;
 
 import java.io.File;
 
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -46,7 +49,6 @@ public class ReportDialogController {
   private ObservableList<AgileItem> tempItems = FXCollections.observableArrayList();
 
   private boolean comboListenerFlag;
-  private int canceled = 0;
 
   /**
    * Setup the report DialogController
@@ -66,8 +68,16 @@ public class ReportDialogController {
     }
     initialiseLists();
 
+    comboListenerFlag = false;
+
     reportLevelCombo.valueProperty().addListener((observable, oldValue, newValue) -> {
       try {
+        // Check if the listener should be assigning roles or not
+        if (comboListenerFlag) {
+          // Get out instantly after resetting flag to false
+          comboListenerFlag = false;
+          return;
+        }
         if (!selectedItems.isEmpty()) {
           Alert alert = new Alert(Alert.AlertType.ERROR);
           alert.setTitle("You have items selected.");
@@ -77,15 +87,15 @@ public class ReportDialogController {
                                + "Are you sure you wish to proceed?");
           alert.getButtonTypes().add(ButtonType.CANCEL);
           alert.showAndWait();
-          if (!alert.getResult().equals(ButtonType.CANCEL)) {
-            selectedItems.clear(); //TODO make this actually work when you click cancel.
+          if (alert.getResult().equals(ButtonType.OK)) {
+            selectedItems.clear();
             setLevel();
           } else {
-            tempItems.setAll(selectedItems);
-            selectedItems.clear();
-            reportLevelCombo.setValue(oldValue);
-            selectedItems.setAll(tempItems);
-            availableItems.removeAll(selectedItems);
+            comboListenerFlag = true;
+            Platform.runLater(() -> {
+              // to avoid firing the listener from within itself
+              reportLevelCombo.setValue(oldValue);
+            });
           }
         } else {
           setLevel();
