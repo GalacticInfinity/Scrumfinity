@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Backlog;
+import seng302.group5.model.Estimate;
 import seng302.group5.model.Person;
 import seng302.group5.model.Role;
 import seng302.group5.model.Skill;
@@ -49,6 +50,7 @@ public class BacklogDialogController {
   private ObservableList<Story> allocatedStories;
   private ObservableList<Story> originalStories;
   private ObservableList<Person> productOwners;
+  private ObservableList<Estimate> estimates;
 
   @FXML private TextField backlogLabelField;
   @FXML private TextField backlogNameField;
@@ -58,6 +60,7 @@ public class BacklogDialogController {
   @FXML private Button btnConfirm;
   @FXML private ListView<Story> allocatedStoriesList;
   @FXML private ListView<Story> availableStoriesList;
+  @FXML private ComboBox<Estimate> backlogEstimateCombo;
 
   /**
    * Setup the backlog dialog controller
@@ -93,6 +96,7 @@ public class BacklogDialogController {
       backlogNameField.setText(backlog.getBacklogName());
       backlogDescriptionField.setText(backlog.getBacklogDescription());
       backlogProductOwnerCombo.setValue(backlog.getProductOwner());
+      backlogEstimateCombo.setValue(backlog.getBacklogEstimateScale());
     }
     this.createOrEdit = createOrEdit;
 
@@ -143,6 +147,13 @@ public class BacklogDialogController {
             checkButtonDisabled();
           }
         });
+
+    backlogEstimateCombo.getSelectionModel().selectedItemProperty().addListener(
+        (observable, oldValue, newValue) -> {
+          if (createOrEdit == CreateOrEdit.EDIT) {
+            checkButtonDisabled();
+          }
+        });
   }
 
   /**
@@ -153,7 +164,8 @@ public class BacklogDialogController {
         backlogNameField.getText().equals(backlog.getBacklogName()) &&
         backlogDescriptionField.getText().equals(backlog.getBacklogDescription()) &&
         backlogProductOwnerCombo.getValue().equals(backlog.getProductOwner()) &&
-        allocatedStories.toString().equals(originalStories.toString())){
+        allocatedStories.toString().equals(originalStories.toString()) &&
+        backlogEstimateCombo.getValue().equals(backlog.getBacklogEstimateScale())){
       btnConfirm.setDisable(true);
     } else {
       btnConfirm.setDisable(false);
@@ -171,6 +183,7 @@ public class BacklogDialogController {
     allocatedStories = FXCollections.observableArrayList();
     originalStories = FXCollections.observableArrayList();
     productOwners = FXCollections.observableArrayList();
+    estimates = FXCollections.observableArrayList();
 
     try {
       Set<Story> storiesInUse = new HashSet<>();
@@ -195,6 +208,13 @@ public class BacklogDialogController {
 
       this.backlogProductOwnerCombo.setVisibleRowCount(5);
       this.backlogProductOwnerCombo.setItems(productOwners);
+
+      for (Estimate estimate : mainApp.getEstimates()) {
+        estimates.add(estimate);
+      }
+
+      this.backlogEstimateCombo.setVisibleRowCount(5);
+      this.backlogEstimateCombo.setItems(estimates);
 
       if (createOrEdit == CreateOrEdit.CREATE) {
         for (Story story : mainApp.getStories()) {
@@ -261,6 +281,7 @@ public class BacklogDialogController {
       if (selectedStory != null) {
         this.availableStories.add(selectedStory);
         this.allocatedStories.remove(selectedStory);
+        this.availableStoriesList.getSelectionModel().select(selectedStory);
         if (createOrEdit == CreateOrEdit.EDIT) {
           checkButtonDisabled();
         }
@@ -309,6 +330,7 @@ public class BacklogDialogController {
     String backlogName = backlogNameField.getText().trim();
     String backlogDescription = backlogDescriptionField.getText().trim();
     Person productOwner = backlogProductOwnerCombo.getValue();
+    Estimate estimate = backlogEstimateCombo.getValue();
 
     try {
       backlogLabel = parseBacklogLabel(backlogLabelField.getText());
@@ -319,6 +341,10 @@ public class BacklogDialogController {
     if (productOwner == null) {
       noErrors++;
       errors.append("No product owner has been selected for backlog.\n");
+    }
+    if (estimate == null) {
+      noErrors++;
+      errors.append("No estimation scale has been selected for backlog.\n");
     }
 
     // Display all errors if they exist
@@ -334,7 +360,7 @@ public class BacklogDialogController {
       alert.showAndWait();
     } else {
       if (createOrEdit == CreateOrEdit.CREATE) {
-        backlog = new Backlog(backlogLabel, backlogName, backlogDescription, productOwner);
+        backlog = new Backlog(backlogLabel, backlogName, backlogDescription, productOwner, estimate);
         backlog.addAllStories(allocatedStories);
         mainApp.addBacklog(backlog);
         if (Settings.correctList(backlog)) {
@@ -346,6 +372,7 @@ public class BacklogDialogController {
         backlog.setBacklogName(backlogName);
         backlog.setBacklogDescription(backlogDescription);
         backlog.setProductOwner(productOwner);
+        backlog.setBacklogEstimateScale(estimate);
         backlog.removeAllStories();
         backlog.addAllStories(allocatedStories);
         mainApp.refreshList(backlog);

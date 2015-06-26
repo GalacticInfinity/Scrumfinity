@@ -94,7 +94,7 @@
                      </font>
                   </Label>
                   <ListView fx:id="allocatedStoriesList" maxHeight="225.0" prefHeight="184.0" prefWidth="220.0" />
-                  <ComboBox fx:id="estimateCombo" prefHeight="25.0" prefWidth="220.0" promptText="Estimate" />
+                  <ComboBox fx:id="backlogEstimateCombo" prefHeight="25.0" prefWidth="220.0" promptText="Estimate" />
                </children>
             </VBox>
             <VBox alignment="CENTER" prefHeight="232.0" prefWidth="50.0">

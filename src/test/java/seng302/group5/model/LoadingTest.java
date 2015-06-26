@@ -246,15 +246,15 @@ public class LoadingTest {
 
   public void createBacklogs() {
     createStories();
-    backlog1 = new Backlog("Backlog1", "Starter Backlog", "Huehuehuehue", person1);
+    backlog1 = new Backlog("Backlog1", "Starter Backlog", "Huehuehuehue", person1, null); //TODO ADDED NULL SO IT COMPILED WITH BACKLOGS HAVING ESTIMATE SCALES
     backlog1.addStory(story1);
     savedMain.addBacklog(backlog1);
 
-    backlog2 = new Backlog("Backlog2", "Another Backlog", "Huehuehuehuehue", person2);
+    backlog2 = new Backlog("Backlog2", "Another Backlog", "Huehuehuehuehue", person2, null); //TODO ADDED NULL SO IT COMPILED WITH BACKLOGS HAVING ESTIMATE SCALES
     backlog2.addStory(story2);
     savedMain.addBacklog(backlog2);
 
-    backlog3 = new Backlog("Backlog3", "Another another Backlog", "DescriptionBack", person3);
+    backlog3 = new Backlog("Backlog3", "Another another Backlog", "DescriptionBack", person3, null); //TODO ADDED NULL SO IT COMPILED WITH BACKLOGS HAVING ESTIMATE SCALES
     backlog3.addStory(story3);
     savedMain.addBacklog(backlog3);
   }

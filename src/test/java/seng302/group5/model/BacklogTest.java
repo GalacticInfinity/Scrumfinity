@@ -29,7 +29,7 @@ public class BacklogTest {
     skills.add(new Skill("Product Owner", "This person can be a product owner"));
     productOwner = new Person("Jason", "Jason", "Smith", skills);
 
-    backlog = new Backlog(label, backlogName, backlogDescription, productOwner);
+    backlog = new Backlog(label, backlogName, backlogDescription, productOwner, null);//TODO ADDED NULL SO IT COMPILED WITH BACKLOGS HAVING ESTIMATE SCALES
   }
 
   @Test
@@ -93,7 +93,7 @@ public class BacklogTest {
     Story story = new Story("the story", "the very story", "description", productOwner, null);
     backlog.addStory(story);
 
-    Backlog backlog2 = new Backlog(label, backlogName, backlogDescription, productOwner);
+    Backlog backlog2 = new Backlog(label, backlogName, backlogDescription, productOwner, null);//TODO ADDED NULL SO IT COMPILED WITH BACKLOGS HAVING ESTIMATE SCALES
     backlog2.addStory(story);
 
     Backlog backlog3 = new Backlog(backlog);  // Test clone
@@ -107,7 +107,7 @@ public class BacklogTest {
     Story story = new Story("the story", "the very story", "description", productOwner, null);
     backlog.addStory(story);
 
-    Backlog backlog2 = new Backlog(label, backlogName, backlogDescription, productOwner);
+    Backlog backlog2 = new Backlog(label, backlogName, backlogDescription, productOwner, null);//TODO ADDED NULL SO IT COMPILED WITH BACKLOGS HAVING ESTIMATE SCALES
     backlog2.addStory(story);
 
     Backlog backlog3 = new Backlog(backlog); // Test clone
@@ -118,9 +118,9 @@ public class BacklogTest {
 
   @Test
   public void testCompareTo() throws Exception {
-    Backlog before = new Backlog("aaa", "", "", null);
-    Backlog after = new Backlog("zzz", "", "", null);
-    Backlog same = new Backlog(label, "", "", null);
+    Backlog before = new Backlog("aaa", "", "", null, null);//TODO ADDED NULL SO IT COMPILED WITH BACKLOGS HAVING ESTIMATE SCALES
+    Backlog after = new Backlog("zzz", "", "", null, null);//TODO ADDED NULL SO IT COMPILED WITH BACKLOGS HAVING ESTIMATE SCALES
+    Backlog same = new Backlog(label, "", "", null, null);//TODO ADDED NULL SO IT COMPILED WITH BACKLOGS HAVING ESTIMATE SCALES
     Backlog clone = new Backlog(backlog);
 
     assertTrue(before.compareTo(backlog) < 0);

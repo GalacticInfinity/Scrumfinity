@@ -700,6 +700,20 @@ public class ListMainPaneController {
     textPoBody.setFill(Color.rgb(1, 0, 1));
     textPoBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
 
+    Text textEsHeader = new Text("\nBacklog Estimation Scale: ");
+    textEsHeader.setFill(Color.rgb(1, 0, 1));
+    textEsHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+
+    Text textEsBody;
+    if (backlog.getBacklogEstimateScale() == null) { //TODO This is a work around for loading an old file with a backlog that has not got an estimation scale. Do as you please.
+      textEsBody = new Text("Null");
+    }else {
+      textEsBody = new Text(backlog.getBacklogEstimateScale().toString());
+    }
+    textEsBody.setFill(Color.rgb(1, 0, 1));
+    textEsBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
     Text textStoriesHeader = new Text("\nStories:");
     textStoriesHeader.setFill(Color.rgb(1, 0, 1));
     textStoriesHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
@@ -712,6 +726,7 @@ public class ListMainPaneController {
     displayTextFlow.getChildren().addAll(textHeader, textLabelHeader, textLabelBody,
                                          textNameHeader, textNameBody, textDescriptionHeader,
                                          textDescriptionBody, textPoHeader, textPoBody,
+                                         textEsHeader, textEsBody,
                                          textStoriesHeader, sortToggle);
 
     List<Text> storiesText = new ArrayList<>();

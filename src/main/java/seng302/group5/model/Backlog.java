@@ -16,6 +16,7 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
   private String backlogName;
   private String backlogDescription;
   private Person productOwner;
+  private Estimate backlogEstimateScale;
   private List<Story> stories;
   private Map<Story, Integer> sizes;// TODO Is it estimate or String?
 
@@ -27,6 +28,7 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
     this.backlogName = "";
     this.backlogDescription = "";
     this.productOwner = null;
+    this.backlogEstimateScale = null;
     this.stories = new ArrayList<>();
     this.sizes = new HashMap<>();
   }
@@ -39,11 +41,12 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
    * @param backlogDescription Description of backlog
    * @param productOwner Product owner of backlog
    */
-  public Backlog(String label, String backlogName, String backlogDescription, Person productOwner) {
+  public Backlog(String label, String backlogName, String backlogDescription, Person productOwner, Estimate estimate) {
     this.label = label;
     this.backlogName = backlogName;
     this.backlogDescription = backlogDescription;
     this.productOwner = productOwner;
+    this.backlogEstimateScale = estimate;
     this.stories = new ArrayList<>();
     this.sizes = new HashMap<>();
   }
@@ -58,6 +61,7 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
     this.backlogName = clone.getBacklogName();
     this.backlogDescription = clone.getBacklogDescription();
     this.productOwner = clone.getProductOwner();
+    this.backlogEstimateScale = clone.getBacklogEstimateScale();
     this.stories = new ArrayList<>();
     this.stories.addAll(clone.getStories());
     this.sizes = new HashMap<>();
@@ -90,6 +94,14 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
 
   public void setBacklogDescription(String backlogDescription) {
     this.backlogDescription = backlogDescription;
+  }
+
+  public Estimate getBacklogEstimateScale() {
+    return backlogEstimateScale;
+  }
+
+  public void setBacklogEstimateScale(Estimate backlogEstimateScale) {
+    this.backlogEstimateScale = backlogEstimateScale;
   }
 
   public Person getProductOwner() {

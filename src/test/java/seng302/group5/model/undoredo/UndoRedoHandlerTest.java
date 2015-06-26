@@ -573,7 +573,7 @@ public class UndoRedoHandlerTest {
     backlogName = "This is a backlog";
     backlogDescription = "Once upon a time...BAM!";
     productOwner = person;
-    backlog = new Backlog(backlogLabel, backlogName, backlogDescription, productOwner);
+    backlog = new Backlog(backlogLabel, backlogName, backlogDescription, productOwner, null);//TODO ADDED NULL SO IT COMPILED WITH BACKLOGS HAVING ESTIMATE SCALES
     backlog.addStory(story);
     backlogStories = backlog.getStories();
     mainApp.addBacklog(backlog);
