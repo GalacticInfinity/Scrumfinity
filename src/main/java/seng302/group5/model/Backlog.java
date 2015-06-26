@@ -17,6 +17,7 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
   private String backlogDescription;
   private Person productOwner;
   private List<Story> stories;
+  private Estimate estimate;
   private Map<Story, Integer> sizes;// TODO Is it estimate or String?
 
   /**
@@ -171,6 +172,22 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
   public void removeStory(Story story) {
     stories.remove(story);
     sizes.remove(story);
+  }
+
+  /**
+   * Sets estimate scale for the backlog.
+   * @param estimate Estimate scale
+   */
+  public void setEstimate(Estimate estimate) {
+    this.estimate = estimate;
+  }
+
+  /**
+   * Returns estimate scale for this backstory
+   * @return estimate scale
+   */
+  public Estimate getEstimate() {
+    return this.estimate;
   }
 
   /**
