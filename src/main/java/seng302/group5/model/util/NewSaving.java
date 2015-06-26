@@ -331,6 +331,10 @@ public class NewSaving {
         saveFile.write("\t\t</BacklogStories>\n");
       }
 
+      if (backlog.getEstimate() != null) {
+        saveFile.write("\t\t<backlogEstimate>" + backlog.getEstimate() + "</backlogEstimate>\n");
+      }
+
       saveFile.write("\t</Backlog>\n");
     }
     saveFile.write("</Backlogs>\n");

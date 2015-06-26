@@ -14,6 +14,7 @@ import javafx.scene.control.Alert;
 import seng302.group5.Main;
 import seng302.group5.model.AgileHistory;
 import seng302.group5.model.Backlog;
+import seng302.group5.model.Estimate;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
@@ -596,6 +597,16 @@ public class NewLoading {
                     break;
                   }
                 }
+              }
+            }
+          }
+
+          if (backlogLine.startsWith("\t\t<backlogEstimate>")) {
+            backlogData = backlogLine.replaceAll("(?i)(.*<backlogEstimate.*?>)(.+?)(</backlogEstimate>)", "$2");
+            for (Estimate estimate : main.getEstimates()) {
+              if (backlogData.equals(estimate.getLabel())) {
+                newBacklog.setEstimate(estimate);
+                break;
               }
             }
           }
