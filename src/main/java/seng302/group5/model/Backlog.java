@@ -41,6 +41,7 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
    * @param backlogName Full name of backlog
    * @param backlogDescription Description of backlog
    * @param productOwner Product owner of backlog
+   * @param estimate The estimation scale to be used.
    */
   public Backlog(String label, String backlogName, String backlogDescription, Person productOwner, Estimate estimate) {
     this.label = label;
