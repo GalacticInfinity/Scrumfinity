@@ -706,10 +706,10 @@ public class ListMainPaneController {
 
 
     Text textEsBody;
-    if (backlog.getBacklogEstimateScale() == null) { //TODO This is a work around for loading an old file with a backlog that has not got an estimation scale. Do as you please.
+    if (backlog.getEstimate() == null) { //TODO This is a work around for loading an old file with a backlog that has not got an estimation scale. Do as you please.
       textEsBody = new Text("Null");
     }else {
-      textEsBody = new Text(backlog.getBacklogEstimateScale().toString());
+      textEsBody = new Text(backlog.getEstimate().toString());
     }
     textEsBody.setFill(Color.rgb(1, 0, 1));
     textEsBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));

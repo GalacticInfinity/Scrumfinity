@@ -16,7 +16,6 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
   private String backlogName;
   private String backlogDescription;
   private Person productOwner;
-  private Estimate backlogEstimateScale;
   private List<Story> stories;
   private Estimate estimate;
   private Map<Story, Integer> sizes;// TODO Is it estimate or String?
@@ -29,7 +28,7 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
     this.backlogName = "";
     this.backlogDescription = "";
     this.productOwner = null;
-    this.backlogEstimateScale = null;
+    this.estimate = null;
     this.stories = new ArrayList<>();
     this.sizes = new HashMap<>();
   }
@@ -48,7 +47,7 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
     this.backlogName = backlogName;
     this.backlogDescription = backlogDescription;
     this.productOwner = productOwner;
-    this.backlogEstimateScale = estimate;
+    this.estimate = estimate;
     this.stories = new ArrayList<>();
     this.sizes = new HashMap<>();
   }
@@ -63,7 +62,7 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
     this.backlogName = clone.getBacklogName();
     this.backlogDescription = clone.getBacklogDescription();
     this.productOwner = clone.getProductOwner();
-    this.backlogEstimateScale = clone.getBacklogEstimateScale();
+    this.estimate = clone.getEstimate();
     this.stories = new ArrayList<>();
     this.stories.addAll(clone.getStories());
     this.sizes = new HashMap<>();
@@ -98,20 +97,28 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
     this.backlogDescription = backlogDescription;
   }
 
-  public Estimate getBacklogEstimateScale() {
-    return backlogEstimateScale;
-  }
-
-  public void setBacklogEstimateScale(Estimate backlogEstimateScale) {
-    this.backlogEstimateScale = backlogEstimateScale;
-  }
-
   public Person getProductOwner() {
     return productOwner;
   }
 
   public void setProductOwner(Person productOwner) {
     this.productOwner = productOwner;
+  }
+
+  /**
+   * Sets estimate scale for the backlog.
+   * @param estimate Estimate scale
+   */
+  public void setEstimate(Estimate estimate) {
+    this.estimate = estimate;
+  }
+
+  /**
+   * Returns estimate scale for this backstory
+   * @return estimate scale
+   */
+  public Estimate getEstimate() {
+    return this.estimate;
   }
 
   public List<Story> getStories() {
@@ -185,22 +192,6 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
   public void removeStory(Story story) {
     stories.remove(story);
     sizes.remove(story);
-  }
-
-  /**
-   * Sets estimate scale for the backlog.
-   * @param estimate Estimate scale
-   */
-  public void setEstimate(Estimate estimate) {
-    this.estimate = estimate;
-  }
-
-  /**
-   * Returns estimate scale for this backstory
-   * @return estimate scale
-   */
-  public Estimate getEstimate() {
-    return this.estimate;
   }
 
   /**

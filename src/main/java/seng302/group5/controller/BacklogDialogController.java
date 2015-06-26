@@ -96,7 +96,7 @@ public class BacklogDialogController {
       backlogNameField.setText(backlog.getBacklogName());
       backlogDescriptionField.setText(backlog.getBacklogDescription());
       backlogProductOwnerCombo.setValue(backlog.getProductOwner());
-      backlogEstimateCombo.setValue(backlog.getBacklogEstimateScale());
+      backlogEstimateCombo.setValue(backlog.getEstimate());
     }
     this.createOrEdit = createOrEdit;
 
@@ -165,7 +165,7 @@ public class BacklogDialogController {
         backlogDescriptionField.getText().equals(backlog.getBacklogDescription()) &&
         backlogProductOwnerCombo.getValue().equals(backlog.getProductOwner()) &&
         allocatedStories.toString().equals(originalStories.toString()) &&
-        backlogEstimateCombo.getValue().equals(backlog.getBacklogEstimateScale())){
+        backlogEstimateCombo.getValue().equals(backlog.getEstimate())){
       btnConfirm.setDisable(true);
     } else {
       btnConfirm.setDisable(false);
@@ -372,7 +372,7 @@ public class BacklogDialogController {
         backlog.setBacklogName(backlogName);
         backlog.setBacklogDescription(backlogDescription);
         backlog.setProductOwner(productOwner);
-        backlog.setBacklogEstimateScale(estimate);
+        backlog.setEstimate(estimate);
         backlog.removeAllStories();
         backlog.addAllStories(allocatedStories);
         mainApp.refreshList(backlog);
