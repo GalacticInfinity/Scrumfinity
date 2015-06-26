@@ -64,6 +64,7 @@ public class NewLoading {
       }
       if (saveVersion >= 0.3) {
         loadBacklogs();
+        //loadEstimates();
       }
     } catch (Exception e) {
       Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -723,5 +724,14 @@ public class NewLoading {
         main.addStory(newStory);
       }
     }
+  }
+
+  /**
+   * Loads estimates from xml into app. Not actually required with static stories.
+   *
+   * @throws Exception Something went wrong with reader
+   */
+  private void loadEstimates() throws Exception {
+
   }
 }

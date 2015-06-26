@@ -105,6 +105,32 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
   }
 
   /**
+   * Add all stories in a collection to the backlog with the default estimate.
+   * Clears previous sizes map, and sets all stories' value in hashmap to 0.
+   *
+   * @param storyCollection Collection of stories
+   */
+  public void addAllStories(Collection<Story> storyCollection) {
+    stories.addAll(storyCollection);
+    sizes.clear();
+    for (Story story : storyCollection) {
+      sizes.put(story, 0);
+    }
+  }
+
+  /**
+   * Add a story to the backlog with the default estimate.
+   *
+   * @param story Story to add
+   */
+  public void addStory(Story story) {
+    stories.add(story);
+    if (!sizes.containsKey(story)) {
+      sizes.put(story, 0);
+    }
+  }
+
+  /**
    * Add a story to the backlog and assign an estimate size. Should only be used when
    * adding a new story. Use updateStory to change the size keys.
    *
@@ -130,29 +156,11 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
   }
 
   /**
-   * Add a story to the backlog with the default estimate.
-   *
-   * @param story Story to add
+   * Remove all stories in the backlog.
    */
-  public void addStory(Story story) {
-    stories.add(story);
-    if (!sizes.containsKey(story)) {
-      sizes.put(story, 0);
-    }
-  }
-
-  /**
-   * Add all stories in a collection to the backlog with the default estimate.
-   * Clears previous sizes map, and sets all stories' value in hashmap to 0.
-   *
-   * @param storyCollection Collection of stories
-   */
-  public void addAllStories(Collection<Story> storyCollection) {
-    stories.addAll(storyCollection);
+  public void removeAllStories() {
+    stories.clear();
     sizes.clear();
-    for (Story story : storyCollection) {
-      sizes.put(story, 0);
-    }
   }
 
   /**
@@ -166,19 +174,11 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
   }
 
   /**
-   * Remove all stories in the backlog.
-   */
-  public void removeAllStories() {
-    stories.clear();
-    sizes.clear();
-  }
-
-  /**
    * Gets the sizes map
    * @return Map of story->size
    */
   public Map<Story, Integer> getSizes() {
-    return this.sizes;
+    return Collections.unmodifiableMap(sizes);
   }
 
   /**
