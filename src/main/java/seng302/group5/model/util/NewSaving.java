@@ -326,6 +326,7 @@ public class NewSaving {
         saveFile.write("\t\t<BacklogStories>\n");
         for (Story story : backlog.getStories()) {
           saveFile.write("\t\t\t<backlogStory>" + story.getLabel() + "</backlogStory>\n");
+          saveFile.write("\t\t\t<storySize>" + backlog.getSizes().get(story) + "</storySize>\n");
         }
         saveFile.write("\t\t</BacklogStories>\n");
       }

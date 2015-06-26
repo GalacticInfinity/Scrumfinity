@@ -537,8 +537,8 @@ public class NewLoading {
   private void loadBacklogs() throws Exception {
     String backlogLine;
     String backlogData;
+    String storySize;
     Backlog newBacklog;
-    ObservableList<Story> stories;
 
     // Until Backlog end tag
     while ((!(backlogLine = loadedFile.readLine()).equals("</Backlogs>"))) {
@@ -546,7 +546,6 @@ public class NewLoading {
       if (backlogLine.matches(".*<Backlog>")) {
         // Required initializers
         newBacklog = new Backlog();
-        stories = FXCollections.observableArrayList();
 
         // Mandatory data
         backlogLine = loadedFile.readLine();
@@ -590,17 +589,14 @@ public class NewLoading {
             while ((!(backlogLine = loadedFile.readLine()).equals("\t\t</BacklogStories>"))) {
               if (backlogLine.startsWith("\t\t\t<backlogStory>")) {
                 backlogData = backlogLine.replaceAll("(?i)(.*<backlogStory.*?>)(.+?)(</backlogStory>)", "$2");
-                // Sync with current story objects
+                storySize = loadedFile.readLine().replaceAll("(?i)(.*<storySize.*?>)(.+?)(</storySize>)", "$2");
                 for (Story story : main.getStories()) {
                   if (story.getLabel().equals(backlogData)) {
-                    newBacklog.addStory(story);
+                    newBacklog.addStory(story, Integer.parseInt(storySize));
                     break;
                   }
                 }
               }
-            }
-            if (stories.size() != 0) {
-              newBacklog.addAllStories(stories);
             }
           }
         }
