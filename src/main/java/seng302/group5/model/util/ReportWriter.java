@@ -529,7 +529,11 @@ public class ReportWriter {
           Map sizes = backlogs.getSizes();
           size = sizes.get(story).toString();
           estimateNames = backlogs.getEstimate().getEstimateNames();
-          size = estimateNames.get(Integer.parseInt(size));
+          if (!size.equals("0")) {
+            size = size + " - " + estimateNames.get(Integer.parseInt(size));
+          } else {
+            size = estimateNames.get(Integer.parseInt(size));
+          }
           break;
         }
       }
