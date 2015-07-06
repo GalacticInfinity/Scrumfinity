@@ -49,8 +49,8 @@ public class BacklogDialogController {
   //private Estimate lastSelectedEstimate
 
   private ObservableList<Story> availableStories;
-  private ObservableList<Story> allocatedStories;
-  private ObservableList<Story> originalStories;
+  private ObservableList<StoryEstimate> allocatedStories;
+  private ObservableList<StoryEstimate> originalStories;
   private ObservableList<Person> productOwners;
   private ObservableList<Estimate> estimates;
 
@@ -60,8 +60,8 @@ public class BacklogDialogController {
   @FXML private ComboBox<Person> backlogProductOwnerCombo;
   @FXML private HBox btnContainer;
   @FXML private Button btnConfirm;
-  @FXML private ListView<Story> allocatedStoriesList;
   @FXML private ListView<Story> availableStoriesList;
+  @FXML private ListView<StoryEstimate> allocatedStoriesList;
   @FXML private ComboBox<Estimate> backlogScaleCombo;
   @FXML private ComboBox<String> storyEstimateCombo;
 
@@ -89,12 +89,14 @@ public class BacklogDialogController {
       thisStage.setTitle("Create New Backlog");
       btnConfirm.setText("Create");
 
+      estimateScale = null;
       initialiseLists(CreateOrEdit.CREATE, backlog);
       storyEstimateCombo.setDisable(true);
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       thisStage.setTitle("Edit Backlog");
       btnConfirm.setText("Save");
       btnConfirm.setDisable(true);
+      estimateScale = backlog.getEstimate();
       initialiseLists(CreateOrEdit.EDIT, backlog);
       backlogLabelField.setText(backlog.getLabel());
       backlogNameField.setText(backlog.getBacklogName());
@@ -111,11 +113,9 @@ public class BacklogDialogController {
     if (backlog != null) {
       this.backlog = backlog;
       this.lastBacklog = new Backlog(backlog);
-      this.estimateScale = backlog.getEstimate();
     } else {
       this.backlog = null;
       this.lastBacklog = null;
-      this.estimateScale = null;
     }
 
 //    comboListenerFlag = false;  // if true, assign the selected role in combo box
@@ -245,10 +245,9 @@ public class BacklogDialogController {
           }
         }
         for (Story story : backlog.getStories()) {
-//          Role role = team.getMembersRole().get(person);
-          allocatedStories.add(story); // TODO: Maybe inner class to combine with estimates
-          originalStories.add(story);
-//          originalMembers.add(new PersonRole(person, role));
+          int estimateIndex = backlog.getSizes().get(story);
+          allocatedStories.add(new StoryEstimate(story, estimateIndex));
+          originalStories.add(new StoryEstimate(story, estimateIndex));
         }
       }
       this.availableStoriesList.setItems(availableStories.sorted(Comparator.<Story>naturalOrder()));
@@ -269,12 +268,14 @@ public class BacklogDialogController {
     try {
       Story selectedStory = availableStoriesList.getSelectionModel().getSelectedItem();
       if (selectedStory != null) {
-        this.allocatedStories.add(selectedStory);
+        StoryEstimate storyEstimate = new StoryEstimate(selectedStory, 0);
+        this.allocatedStories.add(storyEstimate);
         this.availableStories.remove(selectedStory);
 
-        // TODO: estimates
+        this.storyEstimateCombo.getSelectionModel().clearSelection();
+        this.storyEstimateCombo.getSelectionModel().select(0);
 
-        this.allocatedStoriesList.getSelectionModel().select(selectedStory);
+        this.allocatedStoriesList.getSelectionModel().select(storyEstimate);
         if (createOrEdit == CreateOrEdit.EDIT) {
           checkButtonDisabled();
         }
@@ -292,11 +293,12 @@ public class BacklogDialogController {
   @FXML
   protected void btnRemoveStoryClick(ActionEvent event) {
     try {
-      Story selectedStory = allocatedStoriesList.getSelectionModel().getSelectedItem();
+      StoryEstimate storyEstimate = allocatedStoriesList.getSelectionModel().getSelectedItem();
 
-      if (selectedStory != null) {
+      if (storyEstimate != null) {
+        Story selectedStory = storyEstimate.getStory();
         this.availableStories.add(selectedStory);
-        this.allocatedStories.remove(selectedStory);
+        this.allocatedStories.remove(storyEstimate);
         this.availableStoriesList.getSelectionModel().select(selectedStory);
         if (createOrEdit == CreateOrEdit.EDIT) {
           checkButtonDisabled();
@@ -377,7 +379,9 @@ public class BacklogDialogController {
     } else {
       if (createOrEdit == CreateOrEdit.CREATE) {
         backlog = new Backlog(backlogLabel, backlogName, backlogDescription, productOwner, estimate);
-        backlog.addAllStories(allocatedStories);
+        for (StoryEstimate storyEstimate : allocatedStories) {
+          backlog.addStory(storyEstimate.getStory(), storyEstimate.getEstimateIndex());
+        }
         mainApp.addBacklog(backlog);
         if (Settings.correctList(backlog)) {
           mainApp.refreshList(backlog);
@@ -390,7 +394,9 @@ public class BacklogDialogController {
         backlog.setProductOwner(productOwner);
         backlog.setEstimate(estimate);
         backlog.removeAllStories();
-        backlog.addAllStories(allocatedStories);
+        for (StoryEstimate storyEstimate : allocatedStories) {
+          backlog.addStory(storyEstimate.getStory(), storyEstimate.getEstimateIndex());
+        }
         mainApp.refreshList(backlog);
       }
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
@@ -535,7 +541,7 @@ public class BacklogDialogController {
 
     @Override
     public String toString() {
-      return story.toString() + " - Estimate: " + estimate;
+      return story.toString() + "  -  " + estimate;
     }
   }
 }
