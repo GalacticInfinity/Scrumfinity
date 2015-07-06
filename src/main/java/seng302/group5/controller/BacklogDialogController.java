@@ -43,6 +43,8 @@ public class BacklogDialogController {
   private Backlog backlog;
   private Backlog lastBacklog;
 
+  private Estimate estimateScale;
+
   private boolean comboListenerFlag;
   //private Estimate lastSelectedEstimate
 
@@ -60,7 +62,8 @@ public class BacklogDialogController {
   @FXML private Button btnConfirm;
   @FXML private ListView<Story> allocatedStoriesList;
   @FXML private ListView<Story> availableStoriesList;
-  @FXML private ComboBox<Estimate> backlogEstimateCombo;
+  @FXML private ComboBox<Estimate> backlogScaleCombo;
+  @FXML private ComboBox<String> storyEstimateCombo;
 
   /**
    * Setup the backlog dialog controller
@@ -87,6 +90,7 @@ public class BacklogDialogController {
       btnConfirm.setText("Create");
 
       initialiseLists(CreateOrEdit.CREATE, backlog);
+      storyEstimateCombo.setDisable(true);
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       thisStage.setTitle("Edit Backlog");
       btnConfirm.setText("Save");
@@ -96,16 +100,22 @@ public class BacklogDialogController {
       backlogNameField.setText(backlog.getBacklogName());
       backlogDescriptionField.setText(backlog.getBacklogDescription());
       backlogProductOwnerCombo.setValue(backlog.getProductOwner());
-      backlogEstimateCombo.setValue(backlog.getEstimate());
+      backlogScaleCombo.setValue(backlog.getEstimate());
+
+      ObservableList<String> estimateNames = FXCollections.observableArrayList();
+      estimateNames.setAll(backlog.getEstimate().getEstimateNames());
+      storyEstimateCombo.setItems(estimateNames);
     }
     this.createOrEdit = createOrEdit;
 
     if (backlog != null) {
       this.backlog = backlog;
       this.lastBacklog = new Backlog(backlog);
+      this.estimateScale = backlog.getEstimate();
     } else {
       this.backlog = null;
       this.lastBacklog = null;
+      this.estimateScale = null;
     }
 
 //    comboListenerFlag = false;  // if true, assign the selected role in combo box
@@ -148,11 +158,17 @@ public class BacklogDialogController {
           }
         });
 
-    backlogEstimateCombo.getSelectionModel().selectedItemProperty().addListener(
+    backlogScaleCombo.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldValue, newValue) -> {
           if (createOrEdit == CreateOrEdit.EDIT) {
             checkButtonDisabled();
           }
+          storyEstimateCombo.setDisable(false);
+
+          estimateScale = newValue;
+          ObservableList<String> estimateNames = FXCollections.observableArrayList();
+          estimateNames.setAll(estimateScale.getEstimateNames());
+          storyEstimateCombo.setItems(estimateNames);
         });
   }
 
@@ -165,7 +181,7 @@ public class BacklogDialogController {
         backlogDescriptionField.getText().equals(backlog.getBacklogDescription()) &&
         backlogProductOwnerCombo.getValue().equals(backlog.getProductOwner()) &&
         allocatedStories.toString().equals(originalStories.toString()) &&
-        backlogEstimateCombo.getValue().equals(backlog.getEstimate())){
+        backlogScaleCombo.getValue().equals(backlog.getEstimate())){
       btnConfirm.setDisable(true);
     } else {
       btnConfirm.setDisable(false);
@@ -213,8 +229,8 @@ public class BacklogDialogController {
         estimates.add(estimate);
       }
 
-      this.backlogEstimateCombo.setVisibleRowCount(5);
-      this.backlogEstimateCombo.setItems(estimates);
+      this.backlogScaleCombo.setVisibleRowCount(5);
+      this.backlogScaleCombo.setItems(estimates);
 
       if (createOrEdit == CreateOrEdit.CREATE) {
         for (Story story : mainApp.getStories()) {
@@ -330,7 +346,7 @@ public class BacklogDialogController {
     String backlogName = backlogNameField.getText().trim();
     String backlogDescription = backlogDescriptionField.getText().trim();
     Person productOwner = backlogProductOwnerCombo.getValue();
-    Estimate estimate = backlogEstimateCombo.getValue();
+    Estimate estimate = backlogScaleCombo.getValue();
 
     try {
       backlogLabel = parseBacklogLabel(backlogLabelField.getText());
@@ -456,6 +472,70 @@ public class BacklogDialogController {
       if (createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
       }
+    }
+  }
+
+  /**
+   * Inner class for storing/displaying allocated stories with their respective estimates
+   */
+  private class StoryEstimate {
+
+    private Story story;
+    private int estimateIndex;
+    private String estimate;
+
+    /**
+     * Default constructor using story and estimate default constructors
+     */
+    public StoryEstimate() {
+      this.story = new Story();
+      this.estimateIndex = 0;
+      this.estimate = "";
+    }
+
+    /**
+     * Constructor for StoryEstimate object
+     *
+     * @param story Story to store
+     * @param estimateIndex Index of estimate to store
+     */
+    public StoryEstimate(Story story, int estimateIndex) {
+      this.story = story;
+      this.estimateIndex = estimateIndex;
+      this.estimate = estimateScale.getEstimateNames().get(estimateIndex);
+    }
+
+    /**
+     * gets the story object from this object
+     *
+     * @return Story story
+     */
+    public Story getStory() {
+      return story;
+    }
+
+    /**
+     * gets the estimate index from this object
+     *
+     * @return int index
+     */
+    public int getEstimateIndex() {
+      return estimateIndex;
+    }
+
+    /**
+     * Set the estimate to this object
+     *
+     * @param estimateIndex index of estimate
+     */
+    public void setEstimate(int estimateIndex) {
+      this.estimateIndex = estimateIndex;
+      this.estimate = estimateScale.getEstimateNames().get(estimateIndex);
+    }
+
+    @Override
+    public String toString() {
+      return story.toString() + " - Estimate: " + estimate;
     }
   }
 }
