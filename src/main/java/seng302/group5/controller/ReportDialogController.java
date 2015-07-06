@@ -1,6 +1,7 @@
 package seng302.group5.controller;
 
 import java.io.File;
+import java.util.Collection;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -104,7 +105,7 @@ public class ReportDialogController {
 
   private void initialiseLists() {
     this.reportLevels.addAll("All", "Projects", "Teams", "People", "Skills", "Releases",
-                             "Stories", "Backlogs"); // Add backlogs when they are done.
+                             "Stories", "Backlogs", "Estimates"); // Add backlogs when they are done.
     availableItemsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     selectedItemsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     availableItemsList.setItems(availableItems.sorted());
@@ -160,6 +161,12 @@ public class ReportDialogController {
       case ("Backlogs"):
         this.availableItems.clear();
         this.availableItems.setAll(mainApp.getBacklogs());
+        this.availableItemsList.setItems(availableItems);
+        updateLists();
+        break;
+      case ("Estimates"):
+        this.availableItems.clear();
+        this.availableItems.setAll(mainApp.getEstimates());
         this.availableItemsList.setItems(availableItems);
         updateLists();
         break;
