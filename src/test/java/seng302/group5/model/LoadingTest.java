@@ -8,6 +8,7 @@ import java.io.File;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javafx.collections.FXCollections;
@@ -55,6 +56,8 @@ public class LoadingTest {
   Backlog backlog1;
   Backlog backlog2;
   Backlog backlog3;
+  Estimate estimate1;
+  Estimate estimate2;
 
   //for testing acs:
   ObservableList<String> acs;
@@ -457,7 +460,8 @@ public class LoadingTest {
     assertEquals(team1, project1.getAllocatedTeams().get(0).getAgileItem());
     assertEquals(LocalDate.of(2010, Month.APRIL, 3), project1.getAllocatedTeams().get(
         0).getStartDate());
-    assertEquals(LocalDate.of(2010, Month.APRIL, 3), project1.getAllocatedTeams().get(0).getEndDate());
+    assertEquals(LocalDate.of(2010, Month.APRIL, 3),
+                 project1.getAllocatedTeams().get(0).getEndDate());
 
     project2 = loadedMain.getProjects().get(1);
     assertEquals("Project2", project2.getLabel());
@@ -695,5 +699,53 @@ public class LoadingTest {
     if (!file.delete()) {
       fail();
     }
+  }
+
+  public void createEstimates() {
+    createVanillaPeople();
+    createStories();
+    List<String> fiboEsts = Arrays.asList("not set", "1", "2", "3", "5", "8", "13", "epic");
+    estimate1 = new Estimate("Fibonacci", fiboEsts);
+    List<String> dinoEsts = Arrays.asList("not set", "dino egg", "dino baby", "dino toddler",
+                                          "kiddy dino", "dino teen", "dino", "elder dino");
+    estimate2 = new Estimate("dinos", dinoEsts);
+
+    backlog1 = new Backlog("Backlog1", "Starter Backlog", "Huehuehuehue", person1, null); //TODO ADDED NULL SO IT COMPILED WITH BACKLOGS HAVING ESTIMATE SCALES
+    backlog1.setEstimate(estimate1);
+    backlog1.addStory(story1, 0);
+    savedMain.addBacklog(backlog1);
+
+    backlog2 = new Backlog("Backlog2", "Another Backlog", "Huehuehuehuehue", person2, null); //TODO ADDED NULL SO IT COMPILED WITH BACKLOGS HAVING ESTIMATE SCALES
+    backlog2.setEstimate(estimate2);
+    backlog2.addStory(story2, 4);
+    savedMain.addBacklog(backlog2);
+
+    backlog3 = new Backlog("Backlog3", "Another another Backlog", "DescriptionBack", person3, null); //TODO ADDED NULL SO IT COMPILED WITH BACKLOGS HAVING ESTIMATE SCALES
+    backlog3.setEstimate(estimate1);
+    backlog3.addStory(story3, 6);
+    savedMain.addBacklog(backlog3);
+  }
+
+  @Test
+  public void testStoryAllocation() {
+    createEstimates();
+    saving = new NewSaving(savedMain);
+    File file = new File(System.getProperty("user.dir")
+                         + File.separator + "BacklogSave.xml");
+    saving.saveData(file);
+
+    loading = new NewLoading(loadedMain);
+    loading.loadFile(file);
+
+    List<Backlog> loadedBacklogs = loadedMain.getBacklogs();
+    // Making sure the saved values are the intended integers.
+    assertEquals(backlog1.getSizes().get(story1).intValue(), 0);
+    assertEquals(backlog2.getSizes().get(story2).intValue(), 4);
+    assertEquals(backlog3.getSizes().get(story3).intValue(), 6);
+
+    // Make sure the loaded integers are the correct ones.
+    assertEquals(loadedBacklogs.get(0).getSizes().get(story1).intValue(), 0);
+    assertEquals(loadedBacklogs.get(1).getSizes().get(story2).intValue(), 4);
+    assertEquals(loadedBacklogs.get(2).getSizes().get(story3).intValue(), 6);
   }
 }
