@@ -266,6 +266,14 @@ public class BacklogDialogController {
   @FXML
   protected void btnAddStoryClick(ActionEvent event) {
     try {
+      if (estimateScale == null) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("No estimation scale selected");
+        alert.setHeaderText(null);
+        alert.setContentText("No estimation scale has been selected for backlog.");
+        alert.showAndWait();
+        return;
+      }
       Story selectedStory = availableStoriesList.getSelectionModel().getSelectedItem();
       if (selectedStory != null) {
         StoryEstimate storyEstimate = new StoryEstimate(selectedStory, 0);
