@@ -146,7 +146,7 @@ public class Main extends Application {
     Estimate fibonacci = new Estimate("Fibonacci", fiboEsts);
     List<String> dinoEsts = Arrays.asList("not set", "dino egg", "dino baby", "dino toddler",
                                        "kiddy dino", "dino teen", "dino", "elder dino");
-    Estimate dinos = new Estimate("dinos", dinoEsts);
+    Estimate dinos = new Estimate("Dinos", dinoEsts);
 
     estimates.addAll(fibonacci, dinos);
   }
