@@ -142,11 +142,11 @@ public class Main extends Application {
    * and our custom dino scale.
    */
   private void createDefaultEstimates() {
-    List<String> fiboEsts = Arrays.asList("not set", "1", "2", "3", "5", "8", "13", "epic");
+    List<String> fiboEsts = Arrays.asList("Not Set", "1", "2", "3", "5", "8", "13", "Epic");
     Estimate fibonacci = new Estimate("Fibonacci", fiboEsts);
-    List<String> dinoEsts = Arrays.asList("not set", "dino egg", "dino baby", "dino toddler",
-                                       "kiddy dino", "dino teen", "dino", "elder dino");
-    Estimate dinos = new Estimate("dinos", dinoEsts);
+    List<String> dinoEsts = Arrays.asList("Not Set", "Dino Egg", "Dino Baby", "Dino Toddler",
+                                       "Dino Kid", "Dino Teen", "Dino Saur", "Elder Dino");
+    Estimate dinos = new Estimate("Dinos", dinoEsts);
 
     estimates.addAll(fibonacci, dinos);
   }

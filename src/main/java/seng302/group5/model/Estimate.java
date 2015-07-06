@@ -6,7 +6,7 @@ import java.util.List;
  * Estimate class, will not be displayed in list, only available in backlogs.
  * Created by Michael on 6/2/2015.
  */
-public class Estimate implements Comparable<Estimate> {
+public class Estimate implements AgileItem, Comparable<Estimate> {
 
   private String label;
   private List<String> estimateNames;
@@ -32,6 +32,11 @@ public class Estimate implements Comparable<Estimate> {
 
   public void setLabel(String label) {
     this.label = label;
+  }
+
+  @Override
+  public void copyValues(AgileItem agileItem) {
+    //not required.
   }
 
   public List<String> getEstimateNames() {
