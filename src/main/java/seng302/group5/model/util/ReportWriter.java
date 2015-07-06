@@ -523,7 +523,7 @@ public class ReportWriter {
           Map sizes = backlogs.getSizes();
           size = sizes.get(story).toString();
           estimateNames = backlogs.getEstimate().getEstimateNames();
-          if (!size.equals("0")) {
+          if (!size.equals("0") || !backlogs.getEstimate().equals("Fibonacci")) {
             size = size + " - " + estimateNames.get(Integer.parseInt(size));
           } else {
             size = estimateNames.get(Integer.parseInt(size));
