@@ -4,6 +4,7 @@ import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -438,6 +439,10 @@ public class ReportWriter {
 
     createPerson(backlog.getProductOwner(), backlogElem, "ProductOwner");
 
+    Element backlogEstimate = report.createElement("Estimate");
+    backlogEstimate.appendChild(report.createTextNode(backlog.getEstimate().toString()));
+    backlogElem.appendChild(backlogEstimate);
+
     Element backlogStories = report.createElement("Stories");
     for (Story story : backlog.getStories()) {
       if (unassignedStories.contains(story)) {
@@ -514,6 +519,23 @@ public class ReportWriter {
       acElem.appendChild(report.createTextNode(ac));
       acElements.appendChild(acElem);
     }
+
+    Element estElement = report.createElement("Estimate-Value");
+    String size = "0";
+    List<String> estimateNames;
+    for (Backlog backlogs : mainApp.getBacklogs()) {
+      for (Story backStory : backlogs.getStories()) {
+        if (story.equals(backStory)) {
+          Map sizes = backlogs.getSizes();
+          size = sizes.get(story).toString();
+          estimateNames = backlogs.getEstimate().getEstimateNames();
+          size = estimateNames.get(Integer.parseInt(size));
+          break;
+        }
+      }
+    }
+    estElement.appendChild(report.createTextNode(size));
+    storyElem.appendChild(estElement);
   }
 
   /**
