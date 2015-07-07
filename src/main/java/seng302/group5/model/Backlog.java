@@ -65,6 +65,7 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
     this.estimate = clone.getEstimate();
     this.stories = new ArrayList<>();
     this.stories.addAll(clone.getStories());
+    this.estimate = clone.getEstimate();
     this.sizes = new HashMap<>();
     if (!clone.getStories().isEmpty()) {
       sizes.putAll(clone.getSizes());
@@ -217,6 +218,7 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
       this.productOwner = clone.getProductOwner();
       this.stories.clear();
       this.stories.addAll(clone.getStories());
+      this.estimate = clone.getEstimate();
       this.sizes.clear();
       if (!clone.getSizes().isEmpty()) {
         this.sizes.putAll(clone.getSizes());
