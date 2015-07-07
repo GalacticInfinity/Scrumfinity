@@ -434,7 +434,11 @@ public class ReportWriter {
     createPerson(backlog.getProductOwner(), backlogElem, "ProductOwner");
 
     Element backlogEstimate = report.createElement("Estimate");
-    backlogEstimate.appendChild(report.createTextNode(backlog.getEstimate().toString()));
+    if (backlog.getEstimate() == null) {
+      backlogEstimate.appendChild(report.createTextNode("Not assigned"));
+    } else {
+      backlogEstimate.appendChild(report.createTextNode(backlog.getEstimate().toString()));
+    }
     backlogElem.appendChild(backlogEstimate);
 
     Element backlogStories = report.createElement("Stories");
