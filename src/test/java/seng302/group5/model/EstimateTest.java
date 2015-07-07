@@ -1,7 +1,5 @@
 package seng302.group5.model;
 
-import com.sun.org.apache.xml.internal.security.keys.KeyInfo;
-
 import org.junit.Test;
 
 import java.util.ArrayList;
