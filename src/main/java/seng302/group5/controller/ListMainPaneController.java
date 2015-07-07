@@ -85,10 +85,10 @@ public class ListMainPaneController {
         }
     );
     listView.setOnMouseClicked(mouseEvent -> {
-      if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
-        if (mouseEvent.getClickCount() == 2) {
-          mainApp.getMBC().editItem(null);
-        }
+      if (mouseEvent.getButton().equals(MouseButton.PRIMARY) &&
+          mouseEvent.getClickCount() == 2 &&
+          listView.getSelectionModel().getSelectedItem() != null) {
+        mainApp.getMBC().editItem(null);
       }
     });
   }

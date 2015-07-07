@@ -586,11 +586,13 @@ public class NewLoading {
             }
             newBacklog.setBacklogDescription(descBuilder);
           }
+          // Loads in backlog stories
             if (backlogLine.startsWith("\t\t<BacklogStories>")) {
             while ((!(backlogLine = loadedFile.readLine()).equals("\t\t</BacklogStories>"))) {
               if (backlogLine.startsWith("\t\t\t<backlogStory>")) {
                 backlogData = backlogLine.replaceAll("(?i)(.*<backlogStory.*?>)(.+?)(</backlogStory>)", "$2");
                 storySize = loadedFile.readLine().replaceAll("(?i)(.*<storySize.*?>)(.+?)(</storySize>)", "$2");
+                // Sync stories and backlog
                 for (Story story : main.getStories()) {
                   if (story.getLabel().equals(backlogData)) {
                     newBacklog.addStory(story, Integer.parseInt(storySize));
