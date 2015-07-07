@@ -26,6 +26,11 @@ public class Estimate implements AgileItem, Comparable<Estimate> {
     this.estimateNames = estimateNames;
   }
 
+  public Estimate(Estimate clone) {
+    this.label = clone.label;
+    this.estimateNames = clone.estimateNames;
+  }
+
   public String getLabel() {
     return label;
   }

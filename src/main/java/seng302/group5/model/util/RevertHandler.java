@@ -10,6 +10,7 @@ import javafx.collections.ObservableList;
 import seng302.group5.Main;
 import seng302.group5.model.AgileHistory;
 import seng302.group5.model.Backlog;
+import seng302.group5.model.Estimate;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
@@ -33,6 +34,7 @@ public class RevertHandler {
   private ObservableList<Role> rolesLastSaved;
   private ObservableList<Story> storiesLastSaved;
   private ObservableList<Backlog> backlogsLastSaved;
+  private ObservableList<Estimate> estimatesLastSaved;
 
   /**
    * Constructor. Set the main app to communicate with and initialise lists
@@ -49,6 +51,7 @@ public class RevertHandler {
     this.rolesLastSaved = FXCollections.observableArrayList();
     this.storiesLastSaved = FXCollections.observableArrayList();
     this.backlogsLastSaved = FXCollections.observableArrayList();
+    this.estimatesLastSaved = FXCollections.observableArrayList();
   }
 
 
@@ -97,6 +100,11 @@ public class RevertHandler {
       mainApp.addBacklog(new Backlog(backlog));
     }
 
+    mainApp.getEstimates().clear();
+    for (Estimate estimate : estimatesLastSaved) {
+      mainApp.addEstimate(new Estimate(estimate));
+    }
+
     // Ensure data in main refer to each other
     syncPeopleWithSkills(mainApp.getPeople(), mainApp.getSkills());
     syncTeamsWithPeople(mainApp.getTeams(), mainApp.getPeople(), mainApp.getRoles());
@@ -105,6 +113,7 @@ public class RevertHandler {
     syncRolesWithSkills(mainApp.getRoles(), mainApp.getSkills());
     syncStoriesWithPeople(mainApp.getStories(), mainApp.getPeople());
     syncBacklogsWithStories(mainApp.getBacklogs(), mainApp.getStories());
+    syncBacklogsWithEstimates(mainApp.getBacklogs(), mainApp.getEstimates());
 
     mainApp.refreshLastSaved();
     mainApp.refreshList(null);
@@ -156,6 +165,11 @@ public class RevertHandler {
       backlogsLastSaved.add(new Backlog(backlog));
     }
 
+    estimatesLastSaved.clear();
+    for (Estimate estimate : mainApp.getEstimates()) {
+      estimatesLastSaved.add(new Estimate(estimate));
+    }
+
     // Ensure data in the copies refer to each other
     syncPeopleWithSkills(peopleLastSaved, skillsLastSaved);
     syncTeamsWithPeople(teamsLastSaved, peopleLastSaved, rolesLastSaved);
@@ -164,6 +178,7 @@ public class RevertHandler {
     syncRolesWithSkills(rolesLastSaved, skillsLastSaved);
     syncStoriesWithPeople(storiesLastSaved, peopleLastSaved);
     syncBacklogsWithStories(backlogsLastSaved, storiesLastSaved);
+    syncBacklogsWithEstimates(backlogsLastSaved, estimatesLastSaved);
   }
 
   /**
@@ -350,6 +365,26 @@ public class RevertHandler {
       }
       backlog.removeAllStories();
       backlog.addAllStories(storyList);
+    }
+  }
+
+  /**
+   * Creates the proper reference to the Estimate objects in the Backlog
+   *
+   * @param backlogs Reference backlog objects
+   * @param estimates Reference estimate objects
+   */
+  private void syncBacklogsWithEstimates(List<Backlog> backlogs, List<Estimate> estimates) {
+    Map<String, Estimate> estimateMap = new HashMap<>();
+
+    for (Estimate mainEstimate : estimates) {
+      estimateMap.put(mainEstimate.getLabel(), mainEstimate);
+    }
+
+    String estimateLabel;
+    for (Backlog backlog : backlogs) {
+      estimateLabel = backlog.getEstimate().getLabel();
+      backlog.setEstimate(estimateMap.get(estimateLabel));
     }
   }
 
