@@ -253,6 +253,42 @@ public class BacklogDialogController {
       this.availableStoriesList.setItems(availableStories.sorted(Comparator.<Story>naturalOrder()));
       this.allocatedStoriesList.setItems(allocatedStories);
 
+      storyEstimateCombo.getSelectionModel().selectedItemProperty().addListener(
+          (observable, oldEstimate, selectedEstimate) -> {
+            //Handle clear selection
+            if (selectedEstimate == null) {
+              return;
+            }
+            StoryEstimate selected = allocatedStoriesList.getSelectionModel().getSelectedItem();
+            if (selected == null) {
+              Alert alert = new Alert(Alert.AlertType.ERROR);
+              alert.setTitle("No story selected");
+              alert.setHeaderText(null);
+              alert.setContentText("Please select a story to give an estimate to.");
+              alert.showAndWait();
+            } else {
+              selected.setEstimate(storyEstimateCombo.getSelectionModel().getSelectedIndex());
+              allocatedStoriesList.setItems(null);
+              allocatedStoriesList.setItems(allocatedStories);
+              allocatedStoriesList.getSelectionModel().select(selected);
+              if (createOrEdit == CreateOrEdit.EDIT) {
+                checkButtonDisabled();
+              }
+            }
+          }
+      );
+
+      allocatedStoriesList.getSelectionModel().selectedItemProperty().addListener(
+          (observable, oldStory, selectedStory) -> {
+            if (selectedStory == null) {
+              return;
+            } else {
+              int estimateIndex = selectedStory.getEstimateIndex();
+              storyEstimateCombo.getSelectionModel().select(estimateIndex);
+            }
+          }
+      );
+
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -272,10 +308,9 @@ public class BacklogDialogController {
         this.allocatedStories.add(storyEstimate);
         this.availableStories.remove(selectedStory);
 
-        this.storyEstimateCombo.getSelectionModel().clearSelection();
+        this.allocatedStoriesList.getSelectionModel().select(storyEstimate);
         this.storyEstimateCombo.getSelectionModel().select(0);
 
-        this.allocatedStoriesList.getSelectionModel().select(storyEstimate);
         if (createOrEdit == CreateOrEdit.EDIT) {
           checkButtonDisabled();
         }
@@ -489,15 +524,6 @@ public class BacklogDialogController {
     private Story story;
     private int estimateIndex;
     private String estimate;
-
-    /**
-     * Default constructor using story and estimate default constructors
-     */
-    public StoryEstimate() {
-      this.story = new Story();
-      this.estimateIndex = 0;
-      this.estimate = "";
-    }
 
     /**
      * Constructor for StoryEstimate object
