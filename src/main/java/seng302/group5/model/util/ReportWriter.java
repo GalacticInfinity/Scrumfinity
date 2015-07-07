@@ -13,15 +13,9 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.w3c.dom.Attr;
-import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.TypeInfo;
-import org.w3c.dom.UserDataHandler;
+
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -47,7 +41,7 @@ public class ReportWriter {
 
   private Document report;
   private Element rootElement;
-  Element projElem;
+  //Element projElem;
   Element projElement;
   Element releasesElement;
   Element teamElement;
@@ -103,7 +97,7 @@ public class ReportWriter {
       orphanTeamsList.setAll(mainApp.getTeams());
       for (Project project : mainApp.getProjects()) {
 
-        createProject(project, projElement, "Project");
+        createProject(project, "Project");
       }
 
       orphanTeam = report.createElement("UnassignedTeams");
@@ -193,7 +187,7 @@ public class ReportWriter {
       switch (level) {
         case ("Projects"):
           for (AgileItem agileProject : reportItems) {
-            createProject((Project) agileProject, projElement, "Project");
+            createProject((Project) agileProject, "Project");
           }
           break;
         case ("Teams"):
@@ -248,8 +242,8 @@ public class ReportWriter {
     }
   }
 
-  private void createProject(Project project, Element projElem, String name) {
-    projElem = report.createElement(name);
+  private void createProject(Project project, String name) {
+    Element projElem = report.createElement(name);
     projElement.appendChild(projElem);
     projElem.setAttribute("label", project.getLabel());
 
@@ -529,7 +523,7 @@ public class ReportWriter {
           Map sizes = backlogs.getSizes();
           size = sizes.get(story).toString();
           estimateNames = backlogs.getEstimate().getEstimateNames();
-          if (!size.equals("0")) {
+          if (!size.equals("0") || !backlogs.getEstimate().equals("Fibonacci")) {
             size = size + " - " + estimateNames.get(Integer.parseInt(size));
           } else {
             size = estimateNames.get(Integer.parseInt(size));
