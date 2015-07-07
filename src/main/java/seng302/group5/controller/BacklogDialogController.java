@@ -5,12 +5,14 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
@@ -46,7 +48,6 @@ public class BacklogDialogController {
   private Estimate estimateScale;
 
   private boolean comboListenerFlag;
-  //private Estimate lastSelectedEstimate
 
   private ObservableList<Story> availableStories;
   private ObservableList<StoryEstimate> allocatedStories;
@@ -158,17 +159,50 @@ public class BacklogDialogController {
           }
         });
 
+    comboListenerFlag = false;
+
     backlogScaleCombo.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldValue, newValue) -> {
-          if (createOrEdit == CreateOrEdit.EDIT) {
-            checkButtonDisabled();
+          //Check if the listener should be changing the estimate scale or not
+          if (comboListenerFlag) {
+            comboListenerFlag = false;
+            return;
           }
-          storyEstimateCombo.setDisable(false);
+          Alert alert = null;
+          if (!allocatedStories.isEmpty()) {
+            alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirm changing estimate scale");
+            alert.setHeaderText(null);
+            alert.setContentText("Changing scales may result in unexpected "
+                                 + "side effects to existing story estimates. "
+                                 + "Are you sure you want to continue?");
+            alert.showAndWait();
+          }
+          if (alert == null || alert.getResult().equals(ButtonType.OK)) {
+            storyEstimateCombo.setDisable(false);
 
-          estimateScale = newValue;
-          ObservableList<String> estimateNames = FXCollections.observableArrayList();
-          estimateNames.setAll(estimateScale.getEstimateNames());
-          storyEstimateCombo.setItems(estimateNames);
+            estimateScale = newValue;
+            ObservableList<String> estimateNames = FXCollections.observableArrayList();
+            estimateNames.setAll(estimateScale.getEstimateNames());
+            storyEstimateCombo.setItems(estimateNames);
+
+            for (StoryEstimate story : allocatedStories) {
+              story.refreshEstimate();
+            }
+
+            allocatedStoriesList.setItems(null);
+            allocatedStoriesList.setItems(allocatedStories);
+
+            if (createOrEdit == CreateOrEdit.EDIT) {
+              checkButtonDisabled();
+            }
+          } else {
+            //To avoid firing the listener from within itself.
+            comboListenerFlag = true;
+            Platform.runLater(() -> {
+              backlogScaleCombo.setValue(oldValue);
+            });
+          }
         });
   }
 
@@ -562,6 +596,17 @@ public class BacklogDialogController {
      */
     public void setEstimate(int estimateIndex) {
       this.estimateIndex = estimateIndex;
+      this.estimate = estimateScale.getEstimateNames().get(estimateIndex);
+    }
+
+    /**
+     * Refreshes the story estimate string.
+     */
+    public void refreshEstimate() {
+      //Truncates the estimate index to match the maximum value of the new estimate scale.
+      if (estimateIndex > estimateScale.getEstimateNames().size() - 1) {
+        estimateIndex = estimateScale.getEstimateNames().size() - 1;
+      }
       this.estimate = estimateScale.getEstimateNames().get(estimateIndex);
     }
 
