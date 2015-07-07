@@ -304,6 +304,7 @@ public class BacklogDialogController {
               selected.setEstimate(storyEstimateCombo.getSelectionModel().getSelectedIndex());
               allocatedStoriesList.setItems(null);
               allocatedStoriesList.setItems(allocatedStories);
+              allocatedStoriesList.getSelectionModel().clearSelection();
               allocatedStoriesList.getSelectionModel().select(selected);
               if (createOrEdit == CreateOrEdit.EDIT) {
                 checkButtonDisabled();
