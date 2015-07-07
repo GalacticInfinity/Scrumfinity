@@ -956,6 +956,7 @@ public class Main extends Application {
     roles.clear();
     stories.clear();
     backlogs.clear();
+    estimates.clear();
     nonRemovable.clear();
   }
 
