@@ -289,6 +289,10 @@ public class BacklogDialogController {
 
       storyEstimateCombo.getSelectionModel().selectedItemProperty().addListener(
           (observable, oldEstimate, selectedEstimate) -> {
+            if (comboListenerFlag) {
+              comboListenerFlag = false;
+              return;
+            }
             //Handle clear selection
             if (selectedEstimate == null) {
               return;
@@ -300,6 +304,19 @@ public class BacklogDialogController {
               alert.setHeaderText(null);
               alert.setContentText("Please select a story to give an estimate to.");
               alert.showAndWait();
+            } else if (selected.getStory().getAcceptanceCriteria().isEmpty() &&
+                storyEstimateCombo.getSelectionModel().getSelectedIndex() != 0) {
+              Alert alert = new Alert(Alert.AlertType.ERROR);
+              alert.setTitle("No acceptance criteria");
+              alert.setHeaderText(null);
+              alert.setContentText("The selected story has no acceptance criteria. "
+                                   + "No estimate can be set.");
+              alert.showAndWait();
+              comboListenerFlag = true;
+              Platform.runLater(() -> {
+                // reselect old value and avoid firing listener from within itself
+                storyEstimateCombo.getSelectionModel().select(0);
+              });
             } else {
               selected.setEstimate(storyEstimateCombo.getSelectionModel().getSelectedIndex());
               allocatedStoriesList.setItems(null);
