@@ -61,4 +61,28 @@ public class EstimateTest {
       assertEquals(fibonacci.getEstimateNames().get(entry.getValue()),
                    backlog1.getEstimate().getEstimateNames().get(entry.getValue()));
   }
+
+  @Test
+  public void testChangeEstimates() throws Exception {
+    Person steve = new Person();
+    Backlog backlog1 = new Backlog("Backlog", "Backlog1", "The backlog", steve, fibonacci);
+    Story story = new Story("story1", "Story1", "First story", steve);
+    Story story2 = new Story("story2", "Story2", "Second story", steve);
+    Story story3 = new Story("story3", "Story3", "Third story", steve);
+    backlog1.addStory(story, 0);
+    backlog1.addStory(story2, 7);
+    backlog1.addStory(story3, 4);
+
+    for (Map.Entry<Story, Integer> entry : backlog1.getSizes().entrySet())
+      assertEquals(fibonacci.getEstimateNames().get(entry.getValue()),
+                   backlog1.getEstimate().getEstimateNames().get(entry.getValue()));
+
+    backlog1.updateStory(story, 1);
+    backlog1.updateStory(story2, 3);
+    backlog1.updateStory(story3, 7);
+
+    for (Map.Entry<Story, Integer> entry : backlog1.getSizes().entrySet())
+      assertEquals(fibonacci.getEstimateNames().get(entry.getValue()),
+                   backlog1.getEstimate().getEstimateNames().get(entry.getValue()));
+  }
 }
