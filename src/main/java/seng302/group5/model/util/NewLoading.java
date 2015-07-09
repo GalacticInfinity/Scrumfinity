@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -64,8 +65,11 @@ public class NewLoading {
         loadStories();
       }
       if (saveVersion >= 0.3) {
+        main.createDefaultEstimates();
         loadBacklogs();
         //loadEstimates();
+      } else {
+        main.createDefaultEstimates();
       }
     } catch (Exception e) {
       Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -741,6 +745,5 @@ public class NewLoading {
    * @throws Exception Something went wrong with reader
    */
   private void loadEstimates() throws Exception {
-
   }
 }
