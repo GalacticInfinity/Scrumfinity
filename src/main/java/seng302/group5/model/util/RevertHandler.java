@@ -60,47 +60,38 @@ public class RevertHandler {
    * It undoes until it is in the previously saved state. IT then clears the undo and redo stacks
    */
   public void revert() {
-    mainApp.getProjects().clear();
     for (Project project : projectsLastSaved){
       mainApp.addProject(new Project(project));
     }
 
-    mainApp.getTeams().clear();
     for (Team team : teamsLastSaved) {
       mainApp.addTeam(new Team(team));
     }
 
-    mainApp.getPeople().clear();
     for (Person person : peopleLastSaved) {
       mainApp.addPerson(new Person(person));
     }
 
-    mainApp.getSkills().clear();
     for (Skill skill : skillsLastSaved) {
       mainApp.addSkill(new Skill(skill));
     }
 
-    mainApp.getReleases().clear();
     for (Release release: releasesLastSaved) {
       mainApp.addRelease(new Release(release));
     }
 
-    mainApp.getRoles().clear();
     for (Role role : rolesLastSaved) {
       mainApp.addRole(new Role(role));
     }
 
-    mainApp.getStories().clear();
     for (Story story : storiesLastSaved) {
       mainApp.addStory(new Story(story));
     }
 
-    mainApp.getBacklogs().clear();
     for (Backlog backlog : backlogsLastSaved) {
       mainApp.addBacklog(new Backlog(backlog));
     }
 
-    mainApp.getEstimates().clear();
     for (Estimate estimate : estimatesLastSaved) {
       mainApp.addEstimate(new Estimate(estimate));
     }

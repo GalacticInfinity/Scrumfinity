@@ -29,7 +29,7 @@
                   <Insets top="5.0" />
                </VBox.margin>
             </Button>
-            <Label text="...or load and existing file">
+            <Label text="...or load an existing file">
                <VBox.margin>
                   <Insets top="55.0" />
                </VBox.margin>
