@@ -1,6 +1,7 @@
 package seng302.group5.controller;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -323,13 +324,15 @@ public class StoryDialogController {
     }
     else {
       Alert alert = new Alert(Alert.AlertType.ERROR);
-      alert.setHeaderText("Acceptance Criteria Required!");
+      alert.setTitle("Acceptance Criteria Required!");
+      alert.setHeaderText(null);
       alert.setContentText("This story is currently assigned an estimate in "
                            + "a backlog, which requires at least one Acceptance Criteria"
-                           + "to be assigned. Please ensure there is at least one "
+                           + " to be assigned. Please ensure there is at least one "
                            + "Acceptance Criteria!");
       alert.setResizable(true);
       alert.getDialogPane().setPrefSize(400, 150);
+      alert.showAndWait();
     }
   }
 
@@ -341,13 +344,18 @@ public class StoryDialogController {
    */
   private Boolean checkStoryEstimated(Story story) {
     for (Backlog backlog : mainApp.getBacklogs()) {
-      if (backlog.getStories().contains(story)) {
-        if (story.getAcceptanceCriteria().size() <= 1) {
-          return false;
-        } else return true;
+      for (Map.Entry<Story, Integer> entry : backlog.getSizes().entrySet()) {
+        System.out.println(entry.getKey() + " " + entry.getValue());
+        if (entry.getKey() == story && entry.getValue() != 0) {
+          if (listAC.getItems().size() == 1) {
+            return false;
+          } else
+            return true;
+        }
       }
     }
     return true;
+
   }
 
   /**
