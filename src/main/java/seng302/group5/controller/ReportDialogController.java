@@ -77,6 +77,8 @@ public class ReportDialogController {
         }
         if (!selectedItems.isEmpty()) {
           Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setResizable(true);
+          alert.getDialogPane().setPrefSize(400, 150);
           alert.setTitle("You have items selected.");
           alert.setHeaderText(null);
           alert.setContentText("You have items in the Selected Items list, "
