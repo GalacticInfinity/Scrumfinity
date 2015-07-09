@@ -65,9 +65,8 @@ public class NewLoading {
         loadStories();
       }
       if (saveVersion >= 0.3) {
-        main.createDefaultEstimates();
+        loadEstimates();
         loadBacklogs();
-        //loadEstimates();
       } else {
         main.createDefaultEstimates();
       }
@@ -740,10 +739,46 @@ public class NewLoading {
   }
 
   /**
-   * Loads estimates from xml into app. Not actually required with static stories.
+   * Loads estimates from xml into app. Loads the label and the estimate scale.
+   * format of:
+   * <Estimates>
+   *   <Estimate>
+   *     <estimateLabel>Label of estimate</estimateLabel>
+   *     <EstimateNames>
+   *       <size-0>Not Set</size-0>
+   *       <size-1>Start of actual scale</size-1>
+   *       etc.....
+   *     </EstimateNames>
+   *   </Estimate>
+   * </Estimates>
    *
    * @throws Exception Something went wrong with reader
    */
   private void loadEstimates() throws Exception {
+    Estimate newEstimate;
+    String estimateLine;
+    String estimateData;
+    List<String> estimateNames;
+
+    while (!(estimateLine = loadedFile.readLine()).startsWith("</Estimates>")) {
+      if (estimateLine.matches(".*<Estimate>")) {
+        newEstimate = new Estimate();
+
+        // Mandatory fields
+        estimateLine = loadedFile.readLine();
+        estimateData =
+            estimateLine.replaceAll("(?i)(.*<estimateLabel.*?>)(.+?)(</estimateLabel>)", "$2");
+        newEstimate.setLabel(estimateData);
+        estimateNames = new ArrayList<>();
+        loadedFile.readLine();
+        while (!(estimateLine = loadedFile.readLine()).endsWith("</EstimateNames>")) {
+          estimateData =
+              estimateLine.replaceAll("(?i)(.*<size-\\d*.*?>)(.+?)(</size-\\d*.*?>)", "$2");
+          estimateNames.add(estimateData);
+        }
+        newEstimate.setEstimateNames(estimateNames);
+        main.addEstimate(newEstimate);
+      }
+    }
   }
 }

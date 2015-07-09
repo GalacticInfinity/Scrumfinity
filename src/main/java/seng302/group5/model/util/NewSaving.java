@@ -32,8 +32,8 @@ public class NewSaving {
   private List<Release> releases;
   private List<Role> roles;
   private List<Story> stories;
-  private List<Backlog> backlogs;
   private List<Estimate> estimates;
+  private List<Backlog> backlogs;
 
   public NewSaving(Main main) {
     projects = main.getProjects();
@@ -43,8 +43,8 @@ public class NewSaving {
     releases = main.getReleases();
     roles = main.getRoles();
     stories = main.getStories();
-    backlogs = main.getBacklogs();
     estimates = main.getEstimates();
+    backlogs = main.getBacklogs();
   }
 
   /**
@@ -76,8 +76,8 @@ public class NewSaving {
         saveStories(saveFile);
       }
       if (Settings.progVersion >= 0.3) {
-        saveBacklogs(saveFile);
         saveEstimates(saveFile);
+        saveBacklogs(saveFile);
       }
       saveEnd(saveFile);
     } catch (Exception e) {
