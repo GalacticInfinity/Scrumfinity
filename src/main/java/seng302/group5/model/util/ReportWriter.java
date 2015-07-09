@@ -415,6 +415,8 @@ public class ReportWriter {
 
   /**
    * Creates a backlog element and displays the backlog information under backlogs tag.
+   * This includes the label, name, description, produc owner (Person), Estimate used, and
+   * stories contained (Story)
    *
    * @param backlog all the backlogs saved in main
    */
@@ -541,7 +543,7 @@ public class ReportWriter {
   }
 
   /**
-   * Creates the estimate elements for the report. Shows the list of estimates..
+   * Creates an estimate element. Reports the label and scales.
    *
    * @param estimate The estimate object to be reported
    * @param estimateElement The element to attach estimate report to
