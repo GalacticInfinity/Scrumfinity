@@ -6,6 +6,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -18,6 +20,7 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SplitPane;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -83,6 +86,13 @@ public class ListMainPaneController {
           }
         }
     );
+    listView.setOnMouseClicked(mouseEvent -> {
+      if (mouseEvent.getButton().equals(MouseButton.PRIMARY) &&
+          mouseEvent.getClickCount() == 2 &&
+          listView.getSelectionModel().getSelectedItem() != null) {
+        mainApp.getMBC().editItem(null);
+      }
+    });
   }
 
   /**
@@ -700,6 +710,20 @@ public class ListMainPaneController {
     textPoBody.setFill(Color.rgb(1, 0, 1));
     textPoBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
 
+    Text textEsHeader = new Text("\nBacklog Estimation Scale: ");
+    textEsHeader.setFill(Color.rgb(1, 0, 1));
+    textEsHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+
+    Text textEsBody;
+    if (backlog.getEstimate() == null) { //TODO This is a work around for loading an old file with a backlog that has not got an estimation scale. Do as you please.
+      textEsBody = new Text("Null");
+    }else {
+      textEsBody = new Text(backlog.getEstimate().toString());
+    }
+    textEsBody.setFill(Color.rgb(1, 0, 1));
+    textEsBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
     Text textStoriesHeader = new Text("\nStories:");
     textStoriesHeader.setFill(Color.rgb(1, 0, 1));
     textStoriesHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
@@ -712,14 +736,18 @@ public class ListMainPaneController {
     displayTextFlow.getChildren().addAll(textHeader, textLabelHeader, textLabelBody,
                                          textNameHeader, textNameBody, textDescriptionHeader,
                                          textDescriptionBody, textPoHeader, textPoBody,
+                                         textEsHeader, textEsBody,
                                          textStoriesHeader, sortToggle);
 
     List<Text> storiesText = new ArrayList<>();
 
     Text textStoriesBody;
     if (!backlog.getStories().isEmpty()) {
-      for (Story story : backlog.getStories()) {
-        textStoriesBody = new Text("\n• " + story);
+
+      for (Map.Entry<Story, Integer> entry : backlog.getSizes().entrySet()) {
+
+        textStoriesBody = new Text("\n• " + entry.getKey().toString() + " - " +
+                                   backlog.getEstimate().getEstimateNames().get(entry.getValue()));
         storiesText.add(textStoriesBody);
         displayTextFlow.getChildren().add(textStoriesBody);
       }
@@ -739,8 +767,10 @@ public class ListMainPaneController {
           SortedList<Story> sortedStories = new SortedList<>(
               FXCollections.observableArrayList(backlog.getStories()),
               Comparator.<Story>naturalOrder());
-          for (Story story : sortedStories) {
-            tempTextStoriesBody = new Text("\n• " + story);
+          Map<Story, Integer> sorted = new TreeMap<Story, Integer>(backlog.getSizes());
+          for (Map.Entry<Story, Integer> entry : sorted.entrySet()) {
+            tempTextStoriesBody = new Text("\n• " + entry.getKey() + " - " +
+            backlog.getEstimate().getEstimateNames().get(entry.getValue()));
             storiesText.add(tempTextStoriesBody);
             displayTextFlow.getChildren().add(tempTextStoriesBody);
           }
@@ -755,8 +785,9 @@ public class ListMainPaneController {
         // Change to prioritised order
         Text tempTextStoriesBody;
         if (!backlog.getStories().isEmpty()) {
-          for (Story story : backlog.getStories()) {
-            tempTextStoriesBody = new Text("\n• " + story);
+          for (Map.Entry<Story, Integer> entry : backlog.getSizes().entrySet()) {
+            tempTextStoriesBody = new Text("\n• " + entry.getKey() + " - " +
+            backlog.getEstimate().getEstimateNames().get(entry.getValue()));
             storiesText.add(tempTextStoriesBody);
             displayTextFlow.getChildren().add(tempTextStoriesBody);
           }

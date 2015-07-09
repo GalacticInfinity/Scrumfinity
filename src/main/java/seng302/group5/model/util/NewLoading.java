@@ -14,6 +14,7 @@ import javafx.scene.control.Alert;
 import seng302.group5.Main;
 import seng302.group5.model.AgileHistory;
 import seng302.group5.model.Backlog;
+import seng302.group5.model.Estimate;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
@@ -64,6 +65,7 @@ public class NewLoading {
       }
       if (saveVersion >= 0.3) {
         loadBacklogs();
+        //loadEstimates();
       }
     } catch (Exception e) {
       Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -536,8 +538,8 @@ public class NewLoading {
   private void loadBacklogs() throws Exception {
     String backlogLine;
     String backlogData;
+    String storySize;
     Backlog newBacklog;
-    ObservableList<Story> stories;
 
     // Until Backlog end tag
     while ((!(backlogLine = loadedFile.readLine()).equals("</Backlogs>"))) {
@@ -545,7 +547,6 @@ public class NewLoading {
       if (backlogLine.matches(".*<Backlog>")) {
         // Required initializers
         newBacklog = new Backlog();
-        stories = FXCollections.observableArrayList();
 
         // Mandatory data
         backlogLine = loadedFile.readLine();
@@ -585,21 +586,30 @@ public class NewLoading {
             }
             newBacklog.setBacklogDescription(descBuilder);
           }
+          // Loads in backlog stories
             if (backlogLine.startsWith("\t\t<BacklogStories>")) {
             while ((!(backlogLine = loadedFile.readLine()).equals("\t\t</BacklogStories>"))) {
               if (backlogLine.startsWith("\t\t\t<backlogStory>")) {
                 backlogData = backlogLine.replaceAll("(?i)(.*<backlogStory.*?>)(.+?)(</backlogStory>)", "$2");
-                // Sync with current story objects
+                storySize = loadedFile.readLine().replaceAll("(?i)(.*<storySize.*?>)(.+?)(</storySize>)", "$2");
+                // Sync stories and backlog
                 for (Story story : main.getStories()) {
                   if (story.getLabel().equals(backlogData)) {
-                    newBacklog.addStory(story);
+                    newBacklog.addStory(story, Integer.parseInt(storySize));
                     break;
                   }
                 }
               }
             }
-            if (stories.size() != 0) {
-              newBacklog.addAllStories(stories);
+          }
+
+          if (backlogLine.startsWith("\t\t<backlogEstimate>")) {
+            backlogData = backlogLine.replaceAll("(?i)(.*<backlogEstimate.*?>)(.+?)(</backlogEstimate>)", "$2");
+            for (Estimate estimate : main.getEstimates()) {
+              if (backlogData.equals(estimate.getLabel())) {
+                newBacklog.setEstimate(estimate);
+                break;
+              }
             }
           }
         }
@@ -723,5 +733,14 @@ public class NewLoading {
         main.addStory(newStory);
       }
     }
+  }
+
+  /**
+   * Loads estimates from xml into app. Not actually required with static stories.
+   *
+   * @throws Exception Something went wrong with reader
+   */
+  private void loadEstimates() throws Exception {
+
   }
 }

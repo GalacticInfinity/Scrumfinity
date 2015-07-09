@@ -3,7 +3,9 @@ package seng302.group5.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Model's a backlog containing stories
@@ -15,8 +17,8 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
   private String backlogDescription;
   private Person productOwner;
   private List<Story> stories;
-//  private Estimate estimateType // TODO:
-//  private Map<Story, Estimate> // TODO Is it estimate or String?
+  private Estimate estimate;
+  private Map<Story, Integer> sizes;// TODO Is it estimate or String?
 
   /**
    * Default constructor.
@@ -26,7 +28,9 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
     this.backlogName = "";
     this.backlogDescription = "";
     this.productOwner = null;
+    this.estimate = null;
     this.stories = new ArrayList<>();
+    this.sizes = new HashMap<>();
   }
 
   /**
@@ -36,13 +40,16 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
    * @param backlogName Full name of backlog
    * @param backlogDescription Description of backlog
    * @param productOwner Product owner of backlog
+   * @param estimate The estimation scale to be used.
    */
-  public Backlog(String label, String backlogName, String backlogDescription, Person productOwner) {
+  public Backlog(String label, String backlogName, String backlogDescription, Person productOwner, Estimate estimate) {
     this.label = label;
     this.backlogName = backlogName;
     this.backlogDescription = backlogDescription;
     this.productOwner = productOwner;
+    this.estimate = estimate;
     this.stories = new ArrayList<>();
+    this.sizes = new HashMap<>();
   }
 
   /**
@@ -55,8 +62,14 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
     this.backlogName = clone.getBacklogName();
     this.backlogDescription = clone.getBacklogDescription();
     this.productOwner = clone.getProductOwner();
+    this.estimate = clone.getEstimate();
     this.stories = new ArrayList<>();
     this.stories.addAll(clone.getStories());
+    this.estimate = clone.getEstimate();
+    this.sizes = new HashMap<>();
+    if (!clone.getStories().isEmpty()) {
+      sizes.putAll(clone.getSizes());
+    }
   }
 
   @Override
@@ -93,21 +106,39 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
     this.productOwner = productOwner;
   }
 
+  /**
+   * Sets estimate scale for the backlog.
+   * @param estimate Estimate scale
+   */
+  public void setEstimate(Estimate estimate) {
+    this.estimate = estimate;
+  }
+
+  /**
+   * Returns estimate scale for this backstory
+   * @return estimate scale
+   */
+  public Estimate getEstimate() {
+    return this.estimate;
+  }
+
   public List<Story> getStories() {
     return Collections.unmodifiableList(stories);
   }
 
-//  TODO: make it work. will it be Estimate or String?
-//  /**
-//   * Add a story to the backlog and assign an estimate
-//   *
-//   * @param story Story to add
-//   * @param estimate Estimate to assign
-//   */
-//  public void addStory(Story story, Estimate estimate) {
-//    this.teamMembers.add(person);
-//    this.membersRole.put(person, role);
-//  }
+  /**
+   * Add all stories in a collection to the backlog with the default estimate.
+   * Clears previous sizes map, and sets all stories' value in hashmap to 0.
+   *
+   * @param storyCollection Collection of stories
+   */
+  public void addAllStories(Collection<Story> storyCollection) {
+    stories.addAll(storyCollection);
+    sizes.clear();
+    for (Story story : storyCollection) {
+      sizes.put(story, 0);
+    }
+  }
 
   /**
    * Add a story to the backlog with the default estimate.
@@ -116,15 +147,42 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
    */
   public void addStory(Story story) {
     stories.add(story);
+    if (!sizes.containsKey(story)) {
+      sizes.put(story, 0);
+    }
   }
 
   /**
-   * Add all stories in a collection to the backlog with the default estimate.
+   * Add a story to the backlog and assign an estimate size. Should only be used when
+   * adding a new story. Use updateStory to change the size keys.
    *
-   * @param storyCollection Collection of stories
+   * @param story Story to add
+   * @param size Size of sctory in scale (ints)
    */
-  public void addAllStories(Collection<Story> storyCollection) {
-    stories.addAll(storyCollection);
+  public void addStory(Story story, int size) {
+    this.stories.add(story);
+    this.sizes.put(story, size);
+  }
+
+  /**
+   * Updates the size the story is mapped to on the Map. Use this if story exists but you need
+   * to update the size
+   * @param story The story to be updates
+   * @param size The new value of the story in the Map
+   */
+  public void updateStory(Story story, int size) {
+    Object o = this.sizes.put(story, size);
+    if (o == null) {
+      System.out.println("Something *$*%ed up, story did not exist in map");
+    }
+  }
+
+  /**
+   * Remove all stories in the backlog.
+   */
+  public void removeAllStories() {
+    stories.clear();
+    sizes.clear();
   }
 
   /**
@@ -134,13 +192,15 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
    */
   public void removeStory(Story story) {
     stories.remove(story);
+    sizes.remove(story);
   }
 
   /**
-   * Remove all stories in the backlog.
+   * Gets the sizes map
+   * @return Map of story->size
    */
-  public void removeAllStories() {
-    stories.clear();
+  public Map<Story, Integer> getSizes() {
+    return Collections.unmodifiableMap(sizes);
   }
 
   /**
@@ -158,6 +218,11 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
       this.productOwner = clone.getProductOwner();
       this.stories.clear();
       this.stories.addAll(clone.getStories());
+      this.estimate = clone.getEstimate();
+      this.sizes.clear();
+      if (!clone.getSizes().isEmpty()) {
+        this.sizes.putAll(clone.getSizes());
+      }
     }
   }
 
@@ -201,8 +266,9 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
                              : backlog.productOwner != null) {
       return false;
     }
-    return stories.equals(backlog.stories);
+    if (!stories.equals(backlog.stories)) return false;
 
+    return sizes.equals(backlog.sizes);
   }
 
   /**
@@ -217,6 +283,7 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
     result = 31 * result + backlogDescription.hashCode();
     result = 31 * result + (productOwner != null ? productOwner.hashCode() : 0);
     result = 31 * result + stories.hashCode();
+    result = 31 * result + sizes.hashCode();
     return result;
   }
 

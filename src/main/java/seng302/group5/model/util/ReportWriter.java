@@ -4,6 +4,7 @@ import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -12,15 +13,9 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.w3c.dom.Attr;
-import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.TypeInfo;
-import org.w3c.dom.UserDataHandler;
+
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -46,7 +41,7 @@ public class ReportWriter {
 
   private Document report;
   private Element rootElement;
-  Element projElem;
+  //Element projElem;
   Element projElement;
   Element releasesElement;
   Element teamElement;
@@ -102,7 +97,7 @@ public class ReportWriter {
       orphanTeamsList.setAll(mainApp.getTeams());
       for (Project project : mainApp.getProjects()) {
 
-        createProject(project, projElement, "Project");
+        createProject(project, "Project");
       }
 
       orphanTeam = report.createElement("UnassignedTeams");
@@ -192,7 +187,7 @@ public class ReportWriter {
       switch (level) {
         case ("Projects"):
           for (AgileItem agileProject : reportItems) {
-            createProject((Project) agileProject, projElement, "Project");
+            createProject((Project) agileProject, "Project");
           }
           break;
         case ("Teams"):
@@ -225,6 +220,11 @@ public class ReportWriter {
             createBacklog((Backlog) agileBacklog, projElement, "Backlog");
           }
           break;
+        case ("Estimates"):
+          for (AgileItem agileEstimate : reportItems) {
+            createEstimate((Estimate) agileEstimate, projElement, "Estimate");
+          }
+          break;
       }
 
       String filename = saveLocation.toString();
@@ -242,8 +242,8 @@ public class ReportWriter {
     }
   }
 
-  private void createProject(Project project, Element projElem, String name) {
-    projElem = report.createElement(name);
+  private void createProject(Project project, String name) {
+    Element projElem = report.createElement(name);
     projElement.appendChild(projElem);
     projElem.setAttribute("label", project.getLabel());
 
@@ -433,6 +433,14 @@ public class ReportWriter {
 
     createPerson(backlog.getProductOwner(), backlogElem, "ProductOwner");
 
+    Element backlogEstimate = report.createElement("Estimate");
+    if (backlog.getEstimate() == null) {
+      backlogEstimate.appendChild(report.createTextNode("Not assigned"));
+    } else {
+      backlogEstimate.appendChild(report.createTextNode(backlog.getEstimate().toString()));
+    }
+    backlogElem.appendChild(backlogEstimate);
+
     Element backlogStories = report.createElement("Stories");
     for (Story story : backlog.getStories()) {
       if (unassignedStories.contains(story)) {
@@ -509,6 +517,27 @@ public class ReportWriter {
       acElem.appendChild(report.createTextNode(ac));
       acElements.appendChild(acElem);
     }
+
+    Element estElement = report.createElement("Estimate-Value");
+    String size = "0";
+    List<String> estimateNames;
+    for (Backlog backlogs : mainApp.getBacklogs()) {
+      for (Story backStory : backlogs.getStories()) {
+        if (story.equals(backStory)) {
+          Map sizes = backlogs.getSizes();
+          size = sizes.get(story).toString();
+          estimateNames = backlogs.getEstimate().getEstimateNames();
+          if (!size.equals("0") || !backlogs.getEstimate().equals("Fibonacci")) {
+            size = size + " - " + estimateNames.get(Integer.parseInt(size));
+          } else {
+            size = estimateNames.get(Integer.parseInt(size));
+          }
+          break;
+        }
+      }
+    }
+    estElement.appendChild(report.createTextNode(size));
+    storyElem.appendChild(estElement);
   }
 
   /**

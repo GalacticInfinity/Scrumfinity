@@ -1,16 +1,11 @@
 package seng302.group5.controller;
 
-import sun.security.x509.AVA;
-
 import java.io.File;
-import java.util.Comparator;
+import java.util.Collection;
 
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -24,7 +19,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.model.AgileItem;
-import seng302.group5.model.Project;
 import seng302.group5.model.util.ReportWriter;
 
 /**
@@ -75,7 +69,7 @@ public class ReportDialogController {
 
     reportLevelCombo.valueProperty().addListener((observable, oldValue, newValue) -> {
       try {
-        // Check if the listener should be assigning roles or not
+        // Check if the listener should be changing report level or not
         if (comboListenerFlag) {
           // Get out instantly after resetting flag to false
           comboListenerFlag = false;
@@ -111,7 +105,7 @@ public class ReportDialogController {
 
   private void initialiseLists() {
     this.reportLevels.addAll("All", "Projects", "Teams", "People", "Skills", "Releases",
-                             "Stories", "Backlogs"); // Add backlogs when they are done.
+                             "Stories", "Backlogs", "Estimates"); // Add backlogs when they are done.
     availableItemsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     selectedItemsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     availableItemsList.setItems(availableItems.sorted());
@@ -167,6 +161,12 @@ public class ReportDialogController {
       case ("Backlogs"):
         this.availableItems.clear();
         this.availableItems.setAll(mainApp.getBacklogs());
+        this.availableItemsList.setItems(availableItems);
+        updateLists();
+        break;
+      case ("Estimates"):
+        this.availableItems.clear();
+        this.availableItems.setAll(mainApp.getEstimates());
         this.availableItemsList.setItems(availableItems);
         updateLists();
         break;

@@ -3,9 +3,11 @@ package seng302.group5.model.undoredo;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javafx.collections.FXCollections;
@@ -14,6 +16,7 @@ import seng302.group5.Main;
 import seng302.group5.controller.ListMainPaneController;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Backlog;
+import seng302.group5.model.Estimate;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
@@ -83,11 +86,18 @@ public class UndoRedoHandlerTest {
   private String backlogDescription;
   private List<Story> backlogStories;
   private Person productOwner;
+  private Estimate backlogEstimate;
   private String newBacklogLabel;
   private String newBacklogName;
   private String newBacklogDescription;
   private Person newProductOwner;
   private List<Story> newBacklogStories;
+  private Estimate newBacklogEstimate;
+
+  private List<String> estimateList;
+  private String estimateLabel;
+  private List<String> newEstimateList;
+  private String newEstimateLabel;
 
   private Person person;
   private Skill skill;
@@ -96,6 +106,7 @@ public class UndoRedoHandlerTest {
   private Release release;
   private Story story;
   private Backlog backlog;
+  private Estimate estimate;
 
   private UndoRedoHandler undoRedoHandler;
   private Main mainApp;
@@ -573,8 +584,10 @@ public class UndoRedoHandlerTest {
     backlogName = "This is a backlog";
     backlogDescription = "Once upon a time...BAM!";
     productOwner = person;
-    backlog = new Backlog(backlogLabel, backlogName, backlogDescription, productOwner);
+    backlog = new Backlog(backlogLabel, backlogName, backlogDescription, productOwner, null);//TODO ADDED NULL SO IT COMPILED WITH BACKLOGS HAVING ESTIMATE SCALES
     backlog.addStory(story);
+    backlog.setEstimate(estimate);
+    backlogEstimate = estimate;
     backlogStories = backlog.getStories();
     mainApp.addBacklog(backlog);
 
@@ -584,6 +597,12 @@ public class UndoRedoHandlerTest {
     undoRedoObject.addDatum(new Backlog(backlog));
 
     undoRedoHandler.newAction(undoRedoObject);
+  }
+
+  private void newEstimate() {
+    estimateLabel = "Estimate";
+    estimateList = Arrays.asList("Size 0", "Size 1", "Size 2", "Size 3");
+    estimate = new Estimate(estimateLabel, estimateList);
   }
 
   private void deleteNewestBacklog() {
@@ -604,11 +623,13 @@ public class UndoRedoHandlerTest {
     newBacklogName = "New backlog name";
     newBacklogDescription = "Once upon a time... BAM Again!";
     newProductOwner = new Person("Jason", "Smith", "Devil", null);
+    newBacklogEstimate = new Estimate("newEstimate", Arrays.asList("Est1", "Est2", "Est3"));
 
     backlog.setLabel(newBacklogLabel);
     backlog.setBacklogName(newBacklogName);
     backlog.setBacklogDescription(newBacklogDescription);
     backlog.setProductOwner(newProductOwner);
+    backlog.setEstimate(newBacklogEstimate);
 
     Backlog newBacklog = new Backlog(backlog);
 
@@ -2530,6 +2551,7 @@ public class UndoRedoHandlerTest {
 
     newPerson();
     newStory();
+    newEstimate();
     newBacklog();
 
     assertEquals(1, mainApp.getBacklogs().size());
@@ -2551,6 +2573,7 @@ public class UndoRedoHandlerTest {
 
     newPerson();
     newStory();
+    newEstimate();
     newBacklog();
 
     assertEquals(1, mainApp.getBacklogs().size());
@@ -2583,6 +2606,7 @@ public class UndoRedoHandlerTest {
 
     newPerson();
     newStory();
+    newEstimate();
     newBacklog();
 
     assertEquals(1, mainApp.getBacklogs().size());
@@ -2617,6 +2641,7 @@ public class UndoRedoHandlerTest {
 
     newPerson();
     newStory();
+    newEstimate();
     newBacklog();
 
     assertEquals(1, mainApp.getBacklogs().size());
@@ -2655,6 +2680,7 @@ public class UndoRedoHandlerTest {
 
     newPerson();
     newStory();
+    newEstimate();
     newBacklog();
 
     assertEquals(1, mainApp.getBacklogs().size());
@@ -2665,6 +2691,7 @@ public class UndoRedoHandlerTest {
     assertEquals(backlogName, createdBacklog.getBacklogName());
     assertEquals(backlogDescription, createdBacklog.getBacklogDescription());
     assertEquals(productOwner, createdBacklog.getProductOwner());
+    assertEquals(backlogEstimate, createdBacklog.getEstimate());
 
     editNewestBacklog();
 
@@ -2676,6 +2703,7 @@ public class UndoRedoHandlerTest {
     assertEquals(newBacklogName, editedBacklog.getBacklogName());
     assertEquals(newBacklogDescription, editedBacklog.getBacklogDescription());
     assertEquals(newProductOwner, editedBacklog.getProductOwner());
+    assertEquals(newBacklogEstimate, editedBacklog.getEstimate());
 
     undoRedoHandler.undo();
     assertEquals(1, mainApp.getBacklogs().size());
@@ -2686,6 +2714,7 @@ public class UndoRedoHandlerTest {
     assertEquals(backlogName, undoneBacklog.getBacklogName());
     assertEquals(backlogDescription, undoneBacklog.getBacklogDescription());
     assertEquals(productOwner, undoneBacklog.getProductOwner());
+    assertEquals(backlogEstimate, undoneBacklog.getEstimate());
   }
 
   @Test
@@ -2697,6 +2726,7 @@ public class UndoRedoHandlerTest {
 
     newPerson();
     newStory();
+    newEstimate();
     newBacklog();
 
     assertEquals(1, mainApp.getBacklogs().size());
@@ -2708,6 +2738,7 @@ public class UndoRedoHandlerTest {
     assertEquals(backlogName, createdBacklog.getBacklogName());
     assertEquals(backlogDescription, createdBacklog.getBacklogDescription());
     assertEquals(productOwner, createdBacklog.getProductOwner());
+    assertEquals(backlogEstimate, createdBacklog.getEstimate());
 
     editNewestBacklog();
 
@@ -2720,6 +2751,7 @@ public class UndoRedoHandlerTest {
     assertEquals(newBacklogName, editedBacklog.getBacklogName());
     assertEquals(newBacklogDescription, editedBacklog.getBacklogDescription());
     assertEquals(newProductOwner, editedBacklog.getProductOwner());
+    assertEquals(newBacklogEstimate, editedBacklog.getEstimate());
 
     undoRedoHandler.undo();
     assertEquals(1, mainApp.getBacklogs().size());
@@ -2731,6 +2763,7 @@ public class UndoRedoHandlerTest {
     assertEquals(backlogName, undoneBacklog.getBacklogName());
     assertEquals(backlogDescription, undoneBacklog.getBacklogDescription());
     assertEquals(productOwner, undoneBacklog.getProductOwner());
+    assertEquals(backlogEstimate, undoneBacklog.getEstimate());
 
     undoRedoHandler.redo();
     assertEquals(1, mainApp.getBacklogs().size());
@@ -2742,6 +2775,7 @@ public class UndoRedoHandlerTest {
     assertEquals(newBacklogName, redoneBacklog.getBacklogName());
     assertEquals(newBacklogDescription, redoneBacklog.getBacklogDescription());
     assertEquals(newProductOwner, redoneBacklog.getProductOwner());
+    assertEquals(newBacklogEstimate, redoneBacklog.getEstimate());
   }
 
   @Test

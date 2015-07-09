@@ -10,6 +10,7 @@ import java.util.List;
 import seng302.group5.Main;
 import seng302.group5.model.AgileHistory;
 import seng302.group5.model.Backlog;
+import seng302.group5.model.Estimate;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
@@ -32,6 +33,7 @@ public class NewSaving {
   private List<Role> roles;
   private List<Story> stories;
   private List<Backlog> backlogs;
+  private List<Estimate> estimates;
 
   public NewSaving(Main main) {
     projects = main.getProjects();
@@ -42,6 +44,7 @@ public class NewSaving {
     roles = main.getRoles();
     stories = main.getStories();
     backlogs = main.getBacklogs();
+    estimates = main.getEstimates();
   }
 
   /**
@@ -74,6 +77,7 @@ public class NewSaving {
       }
       if (Settings.progVersion >= 0.3) {
         saveBacklogs(saveFile);
+        saveEstimates(saveFile);
       }
       saveEnd(saveFile);
     } catch (Exception e) {
@@ -322,13 +326,35 @@ public class NewSaving {
         saveFile.write("\t\t<BacklogStories>\n");
         for (Story story : backlog.getStories()) {
           saveFile.write("\t\t\t<backlogStory>" + story.getLabel() + "</backlogStory>\n");
+          saveFile.write("\t\t\t<storySize>" + backlog.getSizes().get(story) + "</storySize>\n");
         }
         saveFile.write("\t\t</BacklogStories>\n");
+      }
+
+      if (backlog.getEstimate() != null) {
+        saveFile.write("\t\t<backlogEstimate>" + backlog.getEstimate() + "</backlogEstimate>\n");
       }
 
       saveFile.write("\t</Backlog>\n");
     }
     saveFile.write("</Backlogs>\n");
 
+  }
+
+  private void saveEstimates(Writer saveFile) throws Exception {
+    saveFile.write("<Estimates>\n");
+    for (Estimate estimate : this.estimates) {
+      saveFile.write("\t<Estimate>\n");
+      saveFile.write("\t\t<estimateLabel>" + estimate.getLabel() + "</estimateLabel>\n");
+      saveFile.write("\t\t<EstimateNames>\n");
+      List<String> estimateNames = estimate.getEstimateNames();
+      for (int i = 0; i < estimateNames.size(); i++) {
+        saveFile.write("\t\t\t<size-" + String.valueOf(i) + ">" + estimateNames.get(i) +
+                       "</size-" + String.valueOf(i) + ">\n");
+      }
+      saveFile.write("\t\t</EstimateNames>\n");
+      saveFile.write("\t</Estimate>\n");
+    }
+    saveFile.write("</Estimates>\n");
   }
 }

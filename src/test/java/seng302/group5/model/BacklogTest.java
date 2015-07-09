@@ -3,6 +3,9 @@ package seng302.group5.model;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -18,6 +21,8 @@ public class BacklogTest {
   private String backlogName;
   private String backlogDescription;
   private Person productOwner;
+  public List<String> fiboEsts = Arrays.asList("Not Set", "1", "2", "3", "5", "8", "13", "Epic");
+  public Estimate fibonacci = new Estimate("Fibonacci", fiboEsts);
 
   @Before
   public void setUp() throws Exception {
@@ -29,7 +34,7 @@ public class BacklogTest {
     skills.add(new Skill("Product Owner", "This person can be a product owner"));
     productOwner = new Person("Jason", "Jason", "Smith", skills);
 
-    backlog = new Backlog(label, backlogName, backlogDescription, productOwner);
+    backlog = new Backlog(label, backlogName, backlogDescription, productOwner, fibonacci);
   }
 
   @Test
@@ -84,6 +89,17 @@ public class BacklogTest {
   }
 
   @Test
+  public void testSetEstimate() throws Exception {
+    List<String> fiboEsts = Arrays.asList("Not Set", "1", "2", "3", "5", "8", "13", "Epic");
+    Estimate fibonacci = new Estimate("Fibonacci", fiboEsts);
+    backlog = new Backlog();
+    backlog.setEstimate(fibonacci);
+    assertEquals(backlog.getEstimate(), fibonacci);
+
+
+  }
+
+  @Test
   public void testToString() throws Exception {
     assertEquals(label, backlog.getLabel());
   }
@@ -93,7 +109,7 @@ public class BacklogTest {
     Story story = new Story("the story", "the very story", "description", productOwner, null);
     backlog.addStory(story);
 
-    Backlog backlog2 = new Backlog(label, backlogName, backlogDescription, productOwner);
+    Backlog backlog2 = new Backlog(label, backlogName, backlogDescription, productOwner, fibonacci);
     backlog2.addStory(story);
 
     Backlog backlog3 = new Backlog(backlog);  // Test clone
@@ -107,7 +123,7 @@ public class BacklogTest {
     Story story = new Story("the story", "the very story", "description", productOwner, null);
     backlog.addStory(story);
 
-    Backlog backlog2 = new Backlog(label, backlogName, backlogDescription, productOwner);
+    Backlog backlog2 = new Backlog(label, backlogName, backlogDescription, productOwner, fibonacci);
     backlog2.addStory(story);
 
     Backlog backlog3 = new Backlog(backlog); // Test clone
@@ -118,9 +134,10 @@ public class BacklogTest {
 
   @Test
   public void testCompareTo() throws Exception {
-    Backlog before = new Backlog("aaa", "", "", null);
-    Backlog after = new Backlog("zzz", "", "", null);
-    Backlog same = new Backlog(label, "", "", null);
+    Person person = new Person();
+    Backlog before = new Backlog("aaa", "", "", person, fibonacci);
+    Backlog after = new Backlog("zzz", "", "", person, fibonacci);
+    Backlog same = new Backlog(label, "", "", person, fibonacci);
     Backlog clone = new Backlog(backlog);
 
     assertTrue(before.compareTo(backlog) < 0);
