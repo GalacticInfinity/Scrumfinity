@@ -267,6 +267,8 @@ public class ReportWriterTest {
     assertFalse(file.exists());
     report.writeReport(mainApp, file);
     assertTrue(file.exists());
+
+    file.delete();
   }
 
 
