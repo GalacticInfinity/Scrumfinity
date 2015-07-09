@@ -3,7 +3,9 @@ package seng302.group5.model;
 import java.util.List;
 
 /**
- * Estimate class, will not be displayed in list, only available in backlogs.
+ * The estimate class. Has two fields, a String label, and a List of strings which are the
+ * names of the estimates. The order of the Strings in the list dictates their relative size, index
+ * 1 being the smallest, and 0 signifying not yet estimated.
  * Created by Michael on 6/2/2015.
  */
 public class Estimate implements AgileItem, Comparable<Estimate> {
@@ -26,6 +28,10 @@ public class Estimate implements AgileItem, Comparable<Estimate> {
     this.estimateNames = estimateNames;
   }
 
+  /**
+   * Cloning function used to undo/redo. Copies parameter st
+   * @param clone The Estimate object who's fields are to be cloned
+   */
   public Estimate(Estimate clone) {
     this.label = clone.label;
     this.estimateNames = clone.estimateNames;

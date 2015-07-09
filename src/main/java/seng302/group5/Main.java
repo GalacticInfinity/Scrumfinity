@@ -141,7 +141,7 @@ public class Main extends Application {
    * Creates default estimate lists in main app. For now just creates fibonacci scale
    * and our custom dino scale.
    */
-  private void createDefaultEstimates() {
+  public void createDefaultEstimates() {
     List<String> fiboEsts = Arrays.asList("Not Set", "1", "2", "3", "5", "8", "13", "Epic");
     Estimate fibonacci = new Estimate("Fibonacci", fiboEsts);
     List<String> dinoEsts = Arrays.asList("Not Set", "Dino Egg", "Dino Baby", "Dino Toddler",
