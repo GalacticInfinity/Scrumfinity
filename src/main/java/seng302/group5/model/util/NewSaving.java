@@ -101,7 +101,7 @@ public class NewSaving {
   }
 
   /**
-   * Function to simply write the </scrumfinity> tag. As everything else has it's own function
+   * Function to simply write the /scrumfinity tag. As everything else has it's own function
    * to write to save file, this does too.
    * @param saveFile Save file being written to
    * @throws Exception Error with writer
@@ -340,6 +340,11 @@ public class NewSaving {
 
   }
 
+  /**
+   * Appends the estimates data to the save file
+   * @param saveFile file being writtent to
+   * @throws Exception Cant write to file for whatever reason (a filed is null possibly)
+   */
   private void saveEstimates(Writer saveFile) throws Exception {
     saveFile.write("<Estimates>\n");
     for (Estimate estimate : this.estimates) {

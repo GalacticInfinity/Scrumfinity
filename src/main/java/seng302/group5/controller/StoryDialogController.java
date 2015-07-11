@@ -396,6 +396,8 @@ public class StoryDialogController {
 
   /**
    * Opens the ACDialog dialog in order to create a new acceptance criteria.
+   *
+   * @param createOrEdit Whether its being created or editted
    */
   public void showACDialog(CreateOrEdit createOrEdit) {
     try {

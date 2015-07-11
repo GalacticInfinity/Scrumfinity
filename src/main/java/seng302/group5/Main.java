@@ -171,7 +171,9 @@ public class Main extends Application {
   }
 
   /**
-   * Shows the initial welcome screen
+   * Shows the initial welcome screen.
+   *
+   * @param primaryStage The main stage of the program
    */
   public void showLoginScreen(Stage primaryStage) {
     try {
@@ -336,6 +338,11 @@ public class Main extends Application {
     }
   }
 
+  /**
+   * Sets up the dialog box for Reporting, and displays it with focus and lock.
+   *
+   * @param createOrEdit the createOrEdit object that decides if you are creating or editing
+   */
   public void showReportDialog(CreateOrEdit createOrEdit) {
     try {
         FXMLLoader loader = new FXMLLoader();
@@ -1076,7 +1083,8 @@ public class Main extends Application {
   }
 
   /**
-   * Refreshes the listview
+   * Refreshes the list view
+   * @param agileItem agile item of list to refresh.
    */
   public void refreshList(AgileItem agileItem) {
     LMPC.refreshList(agileItem);
