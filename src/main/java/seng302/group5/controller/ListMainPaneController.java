@@ -120,6 +120,8 @@ public class ListMainPaneController {
 
   /**
    * Refreshes listView and text area text for when edits occur.
+   *
+   * @param agileItem agile item being editted/created.
    */
   public void refreshList(AgileItem agileItem) { //todo bug: not refreshing the right list on creation
     listView.setItems(null);
@@ -767,7 +769,7 @@ public class ListMainPaneController {
           SortedList<Story> sortedStories = new SortedList<>(
               FXCollections.observableArrayList(backlog.getStories()),
               Comparator.<Story>naturalOrder());
-          Map<Story, Integer> sorted = new TreeMap<Story, Integer>(backlog.getSizes());
+          Map<Story, Integer> sorted = new TreeMap<>(backlog.getSizes());
           for (Map.Entry<Story, Integer> entry : sorted.entrySet()) {
             tempTextStoriesBody = new Text("\n• " + entry.getKey() + " - " +
             backlog.getEstimate().getEstimateNames().get(entry.getValue()));
