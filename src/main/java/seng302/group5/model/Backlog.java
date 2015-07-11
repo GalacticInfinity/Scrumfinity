@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  * Class modelling a Backlog. Backlogs will contain same basic descriptive information as found
- * in other agile item classes, and a way to store a map of story -> size estimates. This
+ * in other agile item classes, and a way to store a map of story to size estimates. This
  * information is stored here as story size is backlog dependant, and cannot be estimated untill
  * it is inside a backlog.
  */
@@ -202,7 +202,7 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
 
   /**
    * Gets an unmodifiable sizes map.
-   * @return Map of story->size
+   * @return Map of story to size
    */
   public Map<Story, Integer> getSizes() {
     return Collections.unmodifiableMap(sizes);
