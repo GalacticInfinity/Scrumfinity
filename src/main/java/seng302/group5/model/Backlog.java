@@ -8,7 +8,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Model's a backlog containing stories
+ * Class modelling a Backlog. Backlogs will contain same basic descriptive information as found
+ * in other agile item classes, and a way to store a map of story -> size estimates. This
+ * information is stored here as story size is backlog dependant, and cannot be estimated untill
+ * it is inside a backlog.
  */
 public class Backlog implements AgileItem, Comparable<Backlog> {
 
@@ -18,10 +21,11 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
   private Person productOwner;
   private List<Story> stories;
   private Estimate estimate;
-  private Map<Story, Integer> sizes;// TODO Is it estimate or String?
+  private Map<Story, Integer> sizes;
 
   /**
-   * Default constructor.
+   * Default constructor. Initializes stories list and sizes map, and sets the label,
+   * backlogName, and backlogDescription to empty strings.
    */
   public Backlog() {
     this.label = "";
@@ -34,7 +38,7 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
   }
 
   /**
-   * Constructor for backlogs.
+   * Constructor for backlogs. Initializes stories list and sizes map.
    *
    * @param label Label of backlog
    * @param backlogName Full name of backlog
@@ -71,6 +75,7 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
       sizes.putAll(clone.getSizes());
     }
   }
+
 
   @Override
   public String getLabel() {
@@ -178,7 +183,7 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
   }
 
   /**
-   * Remove all stories in the backlog.
+   * Remove all stories in the backlog. Clears stories list and sizes map.
    */
   public void removeAllStories() {
     stories.clear();
@@ -186,7 +191,7 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
   }
 
   /**
-   * Remove a story from the backlog.
+   * Remove a story from the backlog. Removes from both the stories list and sizes map.
    *
    * @param story Story to remove
    */
@@ -196,7 +201,7 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
   }
 
   /**
-   * Gets the sizes map
+   * Gets an unmodifiable sizes map.
    * @return Map of story->size
    */
   public Map<Story, Integer> getSizes() {
@@ -272,7 +277,7 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
   }
 
   /**
-   * Return the hashcode for the backlog.
+   * Return the hashcode for the backlog. Hashcode made using all fields.
    *
    * @return The hashcode
    */

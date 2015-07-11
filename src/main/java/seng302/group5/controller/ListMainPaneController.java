@@ -120,6 +120,8 @@ public class ListMainPaneController {
 
   /**
    * Refreshes listView and text area text for when edits occur.
+   *
+   * @param agileItem agile item being editted/created.
    */
   public void refreshList(AgileItem agileItem) { //todo bug: not refreshing the right list on creation
     listView.setItems(null);
@@ -744,10 +746,10 @@ public class ListMainPaneController {
     Text textStoriesBody;
     if (!backlog.getStories().isEmpty()) {
 
-      for (Map.Entry<Story, Integer> entry : backlog.getSizes().entrySet()) {
-
-        textStoriesBody = new Text("\n• " + entry.getKey().toString() + " - " +
-                                   backlog.getEstimate().getEstimateNames().get(entry.getValue()));
+      for (Story story : backlog.getStories()) {
+        int index = backlog.getSizes().get(story);
+        textStoriesBody = new Text("\n• " + story + " - " +
+                                   backlog.getEstimate().getEstimateNames().get(index));
         storiesText.add(textStoriesBody);
         displayTextFlow.getChildren().add(textStoriesBody);
       }
@@ -767,7 +769,7 @@ public class ListMainPaneController {
           SortedList<Story> sortedStories = new SortedList<>(
               FXCollections.observableArrayList(backlog.getStories()),
               Comparator.<Story>naturalOrder());
-          Map<Story, Integer> sorted = new TreeMap<Story, Integer>(backlog.getSizes());
+          Map<Story, Integer> sorted = new TreeMap<>(backlog.getSizes());
           for (Map.Entry<Story, Integer> entry : sorted.entrySet()) {
             tempTextStoriesBody = new Text("\n• " + entry.getKey() + " - " +
             backlog.getEstimate().getEstimateNames().get(entry.getValue()));
@@ -785,9 +787,10 @@ public class ListMainPaneController {
         // Change to prioritised order
         Text tempTextStoriesBody;
         if (!backlog.getStories().isEmpty()) {
-          for (Map.Entry<Story, Integer> entry : backlog.getSizes().entrySet()) {
-            tempTextStoriesBody = new Text("\n• " + entry.getKey() + " - " +
-            backlog.getEstimate().getEstimateNames().get(entry.getValue()));
+          for (Story story : backlog.getStories()) {
+            int index = backlog.getSizes().get(story);
+            tempTextStoriesBody = new Text("\n• " + story + " - " +
+                                           backlog.getEstimate().getEstimateNames().get(index));
             storiesText.add(tempTextStoriesBody);
             displayTextFlow.getChildren().add(tempTextStoriesBody);
           }

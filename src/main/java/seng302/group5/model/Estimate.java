@@ -19,7 +19,8 @@ public class Estimate implements AgileItem, Comparable<Estimate> {
   public Estimate() {}
 
   /**
-   * Constructor for Estimate with a label and list of estimate names.
+   * Constructor for Estimate with a label and list of estimate names. The first index in
+   * the list should always signify not set.
    * @param label String name of estimate scale
    * @param estimateNames String list of items in the sacle
    */
@@ -45,9 +46,19 @@ public class Estimate implements AgileItem, Comparable<Estimate> {
     this.label = label;
   }
 
+  /**
+   * Copies the inputted AgileItem's field into the current Estimate object,
+   * if AgileItem is an instance of Estimate.
+   *
+   * @param agileItem The AgileItem object to copy values from
+   */
   @Override
   public void copyValues(AgileItem agileItem) {
-    //not required.
+    if (agileItem instanceof Estimate) {
+      Estimate clone = (Estimate) agileItem;
+      this.label = clone.getLabel();
+      this.estimateNames = clone.getEstimateNames();
+    }
   }
 
   public List<String> getEstimateNames() {
@@ -59,9 +70,9 @@ public class Estimate implements AgileItem, Comparable<Estimate> {
   }
 
   /**
-   * Overrides to toString method with the label of estimate.
+   * Overrides to toString method with a return of the label of estimate.
    *
-   * @return Unique label of team.
+   * @return Unique label of Estimate.
    */
   @Override
   public String toString() {
@@ -69,7 +80,7 @@ public class Estimate implements AgileItem, Comparable<Estimate> {
   }
 
   /**
-   * Compares the story labels.
+   * Compares the story labels (lowercase) for alphabetical sorting in lists.
    *
    * @param o the story you wish to compare to.
    * @return return whether its greater or lesser.

@@ -182,7 +182,6 @@ public class ReportDialogController {
   }
 
   private void updateLists(){
-
     if (reportLevelCombo.getSelectionModel().getSelectedItem().equals("All")) {
       selectedItemsList.setDisable(true);
       availableItemsList.setDisable(true);
@@ -268,8 +267,6 @@ public class ReportDialogController {
     }
 
   }
-
-
 }
 
 

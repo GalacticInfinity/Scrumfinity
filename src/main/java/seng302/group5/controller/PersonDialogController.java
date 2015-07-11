@@ -338,7 +338,7 @@ public class PersonDialogController {
           if (selectedSkill.equals(roleSkill)) {
             // selected skill is required by the person's current role in their team
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Cannot remove skill");
+            alert.setTitle("Cannot Remove Skill");
             alert.setHeaderText(null);
             alert.setContentText(String.format(
                 "%s already has the role %s in the team %s with the required skill %s",

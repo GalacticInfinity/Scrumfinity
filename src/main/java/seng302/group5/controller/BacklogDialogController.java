@@ -171,7 +171,7 @@ public class BacklogDialogController {
           Alert alert = null;
           if (!allocatedStories.isEmpty()) {
             alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirm changing estimate scale");
+            alert.setTitle("Confirm Changing Estimate Scale");
             alert.setHeaderText(null);
             alert.setContentText("Changing scales may result in unexpected "
                                  + "side effects to existing story estimates. "
@@ -300,14 +300,14 @@ public class BacklogDialogController {
             StoryEstimate selected = allocatedStoriesList.getSelectionModel().getSelectedItem();
             if (selected == null) {
               Alert alert = new Alert(Alert.AlertType.ERROR);
-              alert.setTitle("No story selected");
+              alert.setTitle("No Story Selected");
               alert.setHeaderText(null);
               alert.setContentText("Please select a story to give an estimate to.");
               alert.showAndWait();
             } else if (selected.getStory().getAcceptanceCriteria().isEmpty() &&
                 storyEstimateCombo.getSelectionModel().getSelectedIndex() != 0) {
               Alert alert = new Alert(Alert.AlertType.ERROR);
-              alert.setTitle("No acceptance criteria");
+              alert.setTitle("No Acceptance Criteria");
               alert.setHeaderText(null);
               alert.setContentText("The selected story has no acceptance criteria. "
                                    + "No estimate can be set.");
@@ -356,7 +356,7 @@ public class BacklogDialogController {
     try {
       if (estimateScale == null) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("No estimation scale selected");
+        alert.setTitle("No Estimation Scale Selected");
         alert.setHeaderText(null);
         alert.setContentText("No estimation scale has been selected for backlog.");
         alert.showAndWait();
