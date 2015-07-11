@@ -3,7 +3,9 @@ package seng302.group5.model;
 import java.util.List;
 
 /**
- * Estimate class, will not be displayed in list, only available in backlogs.
+ * The estimate class. Has two fields, a String label, and a List of strings which are the
+ * names of the estimates. The order of the Strings in the list dictates their relative size, index
+ * 1 being the smallest, and 0 signifying not yet estimated.
  * Created by Michael on 6/2/2015.
  */
 public class Estimate implements AgileItem, Comparable<Estimate> {
@@ -17,7 +19,8 @@ public class Estimate implements AgileItem, Comparable<Estimate> {
   public Estimate() {}
 
   /**
-   * Constructor for Estimate with a label and list of estimate names.
+   * Constructor for Estimate with a label and list of estimate names. The first index in
+   * the list should always signify not set.
    * @param label String name of estimate scale
    * @param estimateNames String list of items in the sacle
    */
@@ -26,6 +29,10 @@ public class Estimate implements AgileItem, Comparable<Estimate> {
     this.estimateNames = estimateNames;
   }
 
+  /**
+   * Cloning function used to undo/redo. Copies parameter st
+   * @param clone The Estimate object who's fields are to be cloned
+   */
   public Estimate(Estimate clone) {
     this.label = clone.label;
     this.estimateNames = clone.estimateNames;
@@ -39,9 +46,19 @@ public class Estimate implements AgileItem, Comparable<Estimate> {
     this.label = label;
   }
 
+  /**
+   * Copies the inputted AgileItem's field into the current Estimate object,
+   * if AgileItem is an instance of Estimate.
+   *
+   * @param agileItem The AgileItem object to copy values from
+   */
   @Override
   public void copyValues(AgileItem agileItem) {
-    //not required.
+    if (agileItem instanceof Estimate) {
+      Estimate clone = (Estimate) agileItem;
+      this.label = clone.getLabel();
+      this.estimateNames = clone.getEstimateNames();
+    }
   }
 
   public List<String> getEstimateNames() {
@@ -53,9 +70,9 @@ public class Estimate implements AgileItem, Comparable<Estimate> {
   }
 
   /**
-   * Overrides to toString method with the label of estimate.
+   * Overrides to toString method with a return of the label of estimate.
    *
-   * @return Unique label of team.
+   * @return Unique label of Estimate.
    */
   @Override
   public String toString() {
@@ -63,7 +80,7 @@ public class Estimate implements AgileItem, Comparable<Estimate> {
   }
 
   /**
-   * Compares the story labels.
+   * Compares the story labels (lowercase) for alphabetical sorting in lists.
    *
    * @param o the story you wish to compare to.
    * @return return whether its greater or lesser.
