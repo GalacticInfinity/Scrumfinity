@@ -749,5 +749,9 @@ public class LoadingTest {
     assertEquals(loadedBacklogs.get(0).getSizes().get(story1).intValue(), 0);
     assertEquals(loadedBacklogs.get(1).getSizes().get(story2).intValue(), 4);
     assertEquals(loadedBacklogs.get(2).getSizes().get(story3).intValue(), 6);
+
+    if (!file.delete()) {
+      fail();
+    }
   }
 }
