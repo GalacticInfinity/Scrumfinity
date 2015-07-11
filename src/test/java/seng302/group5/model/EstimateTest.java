@@ -17,11 +17,13 @@ import static org.junit.Assert.*;
 public class EstimateTest {
 
   public Estimate estimate;
-  public String label;
   public List<String> estimateNames;
   public List<String> fiboEsts = Arrays.asList("Not Set", "1", "2", "3", "5", "8", "13", "Epic");
   public Estimate fibonacci = new Estimate("Fibonacci", fiboEsts);
 
+  /**
+   * Quick test to make sure the toString works properly in displaying the label. May be unnceessary...
+   */
   @Test
   public void testToString() {
     estimateNames = new ArrayList<>();
@@ -32,6 +34,11 @@ public class EstimateTest {
     assertEquals("Fibbo", estimate.toString());
   }
 
+  /**
+   * Tests the compareTo methods for list sorting. Just creates a few Estimates with labels.
+   *
+   * @throws Exception
+   */
   @Test
   public void testCompareTo() throws Exception {
     Estimate before = new Estimate("aaa",new ArrayList<>());
@@ -44,6 +51,12 @@ public class EstimateTest {
     assertTrue(middle.compareTo(same) == 0);
   }
 
+  /**
+   * Tests add function. Makes sure that the add functions properly sets the map.
+   *
+   * Blue skies test.
+   * @throws Exception
+   */
   @Test
   public void testEstimates() throws Exception {
     Person steve = new Person();
@@ -60,6 +73,13 @@ public class EstimateTest {
                    backlog1.getEstimate().getEstimateNames().get(entry.getValue()));
   }
 
+  /**
+   * Test to make sure that the update method works as expected, takes existing stories in
+   * the map and updates them.
+   *
+   * Blue skies test.
+   * @throws Exception
+   */
   @Test
   public void testChangeEstimates() throws Exception {
     Person steve = new Person();
