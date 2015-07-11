@@ -121,7 +121,7 @@ public class ListMainPaneController {
   /**
    * Refreshes listView and text area text for when edits occur.
    */
-  public void refreshList(AgileItem agileItem) { //todo bug: not refreshing the right list on creation
+  public void refreshList(AgileItem agileItem) {
     listView.setItems(null);
     checkListType();
     selectedItem = agileItem;
@@ -716,7 +716,7 @@ public class ListMainPaneController {
 
 
     Text textEsBody;
-    if (backlog.getEstimate() == null) { //TODO This is a work around for loading an old file with a backlog that has not got an estimation scale. Do as you please.
+    if (backlog.getEstimate() == null) {
       textEsBody = new Text("Null");
     }else {
       textEsBody = new Text(backlog.getEstimate().toString());

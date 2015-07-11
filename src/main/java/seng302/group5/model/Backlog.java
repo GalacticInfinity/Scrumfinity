@@ -172,14 +172,12 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
   /**
    * Updates the size the story is mapped to on the Map. Use this if story exists but you need
    * to update the size
+   *
    * @param story The story to be updates
    * @param size The new value of the story in the Map
    */
   public void updateStory(Story story, int size) {
-    Object o = this.sizes.put(story, size);
-    if (o == null) {
-      System.out.println("Something *$*%ed up, story did not exist in map");
-    }
+    this.sizes.put(story, size);
   }
 
   /**

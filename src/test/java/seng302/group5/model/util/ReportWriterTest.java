@@ -232,15 +232,15 @@ public class ReportWriterTest {
   public void createBacklogs() {
     List<String> fiboEsts = Arrays.asList("Not Set", "1", "2", "3", "5", "8", "13", "Epic");
     Estimate fibonacci = new Estimate("Fibonacci", fiboEsts);
-    backlog1 = new Backlog("Backlog1", "Starter Backlog", "Huehuehuehue", person1, fibonacci);//TODO ADDED NULL SO IT COMPILED WITH BACKLOGS HAVING ESTIMATE SCALES
+    backlog1 = new Backlog("Backlog1", "Starter Backlog", "Huehuehuehue", person1, fibonacci);
     backlog1.addStory(story1);
     mainApp.addBacklog(backlog1);
 
-    backlog2 = new Backlog("Backlog2", "Another Backlog", "Huehuehuehuehue", person2, fibonacci);//TODO ADDED NULL SO IT COMPILED WITH BACKLOGS HAVING ESTIMATE SCALES
+    backlog2 = new Backlog("Backlog2", "Another Backlog", "Huehuehuehuehue", person2, fibonacci);
     backlog2.addStory(story2);
     mainApp.addBacklog(backlog2);
 
-    backlog3 = new Backlog("Backlog3", "Another another Backlog", "DescriptionBack", person3, fibonacci);//TODO ADDED NULL SO IT COMPILED WITH BACKLOGS HAVING ESTIMATE SCALES
+    backlog3 = new Backlog("Backlog3", "Another another Backlog", "DescriptionBack", person3, fibonacci);
     backlog3.addStory(story3);
     mainApp.addBacklog(backlog3);
   }
