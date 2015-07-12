@@ -48,7 +48,6 @@ public class NewLoading {
     String filename = file.toString();
     if (!filename.endsWith(".xml")) {
       filename = filename + ".xml";
-//      System.out.println(filename);
     }
     try {
       loadedFile = new BufferedReader(new FileReader(filename));
@@ -661,6 +660,7 @@ public class NewLoading {
 
   /**
    * Loads stories from xml into main app
+   * @throws Exception things went wrong in loading. Badly formatted
    */
   private void loadStories() throws Exception {
     Story newStory;
@@ -741,16 +741,16 @@ public class NewLoading {
   /**
    * Loads estimates from xml into app. Loads the label and the estimate scale.
    * format of:
-   * <Estimates>
-   *   <Estimate>
-   *     <estimateLabel>Label of estimate</estimateLabel>
-   *     <EstimateNames>
-   *       <size-0>Not Set</size-0>
-   *       <size-1>Start of actual scale</size-1>
+   * Estimates
+   *   Estimate
+   *     estimateLabel Label of estimate /estimateLabel
+   *     EstimateNames
+   *       size-0 Not Set /size-0
+   *       size-1 Start of actual scale /size-1
    *       etc.....
-   *     </EstimateNames>
-   *   </Estimate>
-   * </Estimates>
+   *     /EstimateNames
+   *   /Estimate
+   * /Estimates
    *
    * @throws Exception Something went wrong with reader
    */

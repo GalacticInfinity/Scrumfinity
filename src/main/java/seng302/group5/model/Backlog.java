@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  * Class modelling a Backlog. Backlogs will contain same basic descriptive information as found
- * in other agile item classes, and a way to store a map of story -> size estimates. This
+ * in other agile item classes, and a way to store a map of story to size estimates. This
  * information is stored here as story size is backlog dependant, and cannot be estimated untill
  * it is inside a backlog.
  */
@@ -172,14 +172,12 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
   /**
    * Updates the size the story is mapped to on the Map. Use this if story exists but you need
    * to update the size
+   *
    * @param story The story to be updates
    * @param size The new value of the story in the Map
    */
   public void updateStory(Story story, int size) {
-    Object o = this.sizes.put(story, size);
-    if (o == null) {
-      System.out.println("Something *$*%ed up, story did not exist in map");
-    }
+    this.sizes.put(story, size);
   }
 
   /**
@@ -202,7 +200,7 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
 
   /**
    * Gets an unmodifiable sizes map.
-   * @return Map of story->size
+   * @return Map of story to size
    */
   public Map<Story, Integer> getSizes() {
     return Collections.unmodifiableMap(sizes);

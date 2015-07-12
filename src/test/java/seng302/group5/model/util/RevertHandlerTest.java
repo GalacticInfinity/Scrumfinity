@@ -271,7 +271,7 @@ public class RevertHandlerTest {
     backlogName = "This is a backlog";
     backlogDescription = "Once upon a time...BAM!";
     productOwner = person;
-    backlog = new Backlog(backlogLabel, backlogName, backlogDescription, productOwner, null); //TODO ADDED NULL SO IT COMPILED WITH BACKLOGS HAVING ESTIMATE SCALES
+    backlog = new Backlog(backlogLabel, backlogName, backlogDescription, productOwner, null);
     backlog.addStory(story);
     backlog.setEstimate(estimate);
     backlogEstimate = estimate;

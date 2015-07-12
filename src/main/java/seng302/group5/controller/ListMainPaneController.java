@@ -120,8 +120,10 @@ public class ListMainPaneController {
 
   /**
    * Refreshes listView and text area text for when edits occur.
+   *
+   * @param agileItem agile item being editted/created.
    */
-  public void refreshList(AgileItem agileItem) { //todo bug: not refreshing the right list on creation
+  public void refreshList(AgileItem agileItem) {
     listView.setItems(null);
     checkListType();
     selectedItem = agileItem;
@@ -716,7 +718,7 @@ public class ListMainPaneController {
 
 
     Text textEsBody;
-    if (backlog.getEstimate() == null) { //TODO This is a work around for loading an old file with a backlog that has not got an estimation scale. Do as you please.
+    if (backlog.getEstimate() == null) {
       textEsBody = new Text("Null");
     }else {
       textEsBody = new Text(backlog.getEstimate().toString());
@@ -767,7 +769,7 @@ public class ListMainPaneController {
           SortedList<Story> sortedStories = new SortedList<>(
               FXCollections.observableArrayList(backlog.getStories()),
               Comparator.<Story>naturalOrder());
-          Map<Story, Integer> sorted = new TreeMap<Story, Integer>(backlog.getSizes());
+          Map<Story, Integer> sorted = new TreeMap<>(backlog.getSizes());
           for (Map.Entry<Story, Integer> entry : sorted.entrySet()) {
             tempTextStoriesBody = new Text("\n• " + entry.getKey() + " - " +
             backlog.getEstimate().getEstimateNames().get(entry.getValue()));
