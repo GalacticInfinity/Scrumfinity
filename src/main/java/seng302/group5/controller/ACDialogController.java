@@ -48,10 +48,10 @@ public class ACDialogController {
     }
 
     if (createOrEdit == CreateOrEdit.CREATE) {
-      thisStage.setTitle("Create New Acceptance Criteria");
+      thisStage.setTitle("Create New Acceptance Criterion");
       btnConfirm.setText("Create");
     } else if (createOrEdit == CreateOrEdit.EDIT) {
-      thisStage.setTitle("Edit Acceptance Criteria");
+      thisStage.setTitle("Edit Acceptance Criterion");
       btnConfirm.setText("Save");
 
       textAC.setText(ac);

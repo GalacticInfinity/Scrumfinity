@@ -10,7 +10,7 @@
    <children>
       <HBox prefHeight="323.0" prefWidth="388.0">
          <children>
-            <Label fx:id="labelAC" prefHeight="41.0" prefWidth="149.0" text="Acceptance &#10;      Criteria:">
+            <Label fx:id="labelAC" prefHeight="41.0" prefWidth="149.0" text="Acceptance &#10;    Criterion:">
                <font>
                   <Font size="15.0" />
                </font>
