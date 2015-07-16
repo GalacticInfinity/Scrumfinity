@@ -201,7 +201,7 @@ public class ReportDialogController {
    * A button that adds the selected available items to the selected report items for the
    * specified level.
    *
-   * @param actionEvent
+   * @param actionEvent Mouseclicking
    * @throws Exception prints a stack trace if an error occurs.
    */
   public void addBtnClick(ActionEvent actionEvent) throws  Exception{
@@ -239,7 +239,7 @@ public class ReportDialogController {
 
   /**
    * Cancels the dialog, exiting without writing a report or saving the selections.\
-   * @param actionEvent
+   * @param actionEvent event
    */
   public void cancelBtnClick(ActionEvent actionEvent) {
     thisStage.close();
