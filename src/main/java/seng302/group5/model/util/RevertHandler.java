@@ -379,4 +379,24 @@ public class RevertHandler {
     }
   }
 
+  /**
+   * Creates the proper reference to the Backlog objects in the Projects
+   *
+   * @param projects Reference project objects
+   * @param backlogs Reference backlog objects
+   */
+  private void syncProjectsWithBacklogs(List<Project> projects, List<Backlog> backlogs) { //TODO use this function above to allow the revert after it is tested when the dependant tasks are completed
+    Map<String, Backlog> backlogMap = new HashMap<>();
+
+    for (Backlog mainBacklog : backlogs) {
+      backlogMap.put(mainBacklog.getLabel(), mainBacklog);
+    }
+
+    String backlogLabel;
+    for (Project project : projects) {
+      backlogLabel = project.getBacklog().getLabel();
+      project.setBacklog(backlogMap.get(backlogLabel));
+    }
+  }
+
 }
