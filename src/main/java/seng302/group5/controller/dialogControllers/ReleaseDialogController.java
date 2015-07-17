@@ -1,4 +1,4 @@
-package seng302.group5.controller;
+package seng302.group5.controller.dialogControllers;
 
 import java.awt.event.ActionListener;
 import java.time.LocalDate;

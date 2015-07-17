@@ -1,4 +1,4 @@
-package seng302.group5.controller;
+package seng302.group5.controller.dialogControllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -7,9 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
-import seng302.group5.model.Story;
 
 /**
  * Created by @author Alex Woo
@@ -48,10 +46,10 @@ public class ACDialogController {
     }
 
     if (createOrEdit == CreateOrEdit.CREATE) {
-      thisStage.setTitle("Create New Acceptance Criteria");
+      thisStage.setTitle("Create New Acceptance Criterion");
       btnConfirm.setText("Create");
     } else if (createOrEdit == CreateOrEdit.EDIT) {
-      thisStage.setTitle("Edit Acceptance Criteria");
+      thisStage.setTitle("Edit Acceptance Criterion");
       btnConfirm.setText("Save");
 
       textAC.setText(ac);
