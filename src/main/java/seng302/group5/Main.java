@@ -171,7 +171,9 @@ public class Main extends Application {
   }
 
   /**
-   * Shows the initial welcome screen
+   * Shows the initial welcome screen.
+   *
+   * @param primaryStage The main stage of the program
    */
   public void showLoginScreen(Stage primaryStage) {
     try {
@@ -336,6 +338,11 @@ public class Main extends Application {
     }
   }
 
+  /**
+   * Sets up the dialog box for Reporting, and displays it with focus and lock.
+   *
+   * @param createOrEdit the createOrEdit object that decides if you are creating or editing
+   */
   public void showReportDialog(CreateOrEdit createOrEdit) {
     try {
         FXMLLoader loader = new FXMLLoader();
@@ -348,7 +355,7 @@ public class Main extends Application {
 
         Release release = null;
         if (createOrEdit == CreateOrEdit.EDIT) {
-          release = (Release) LMPC.getSelected();    // TODO: Fix
+          release = (Release) LMPC.getSelected();
           if (release == null) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
@@ -388,7 +395,7 @@ public class Main extends Application {
 
       Release release = null;
       if (createOrEdit == CreateOrEdit.EDIT) {
-        release = (Release) LMPC.getSelected();    // TODO: Fix
+        release = (Release) LMPC.getSelected();
         if (release == null) {
           Alert alert = new Alert(Alert.AlertType.ERROR);
           alert.setTitle("Error");
@@ -427,7 +434,7 @@ public class Main extends Application {
 
       Person person = null;
       if (createOrEdit == CreateOrEdit.EDIT) {
-        person = (Person) LMPC.getSelected();    // TODO: Fix
+        person = (Person) LMPC.getSelected();
         if (person == null) {
           Alert alert = new Alert(Alert.AlertType.ERROR);
           alert.setTitle("Error");
@@ -466,7 +473,7 @@ public class Main extends Application {
 
       Skill skill = null;
       if (createOrEdit == CreateOrEdit.EDIT) {
-        skill = (Skill) LMPC.getSelected();    // TODO: Fix
+        skill = (Skill) LMPC.getSelected();
         if (skill == null) {
           Alert alert = new Alert(Alert.AlertType.ERROR);
           alert.setTitle("Error");
@@ -505,7 +512,7 @@ public class Main extends Application {
 
       Story story = null;
       if (createOrEdit == CreateOrEdit.EDIT) {
-        story = (Story) LMPC.getSelected();    // TODO: Fix
+        story = (Story) LMPC.getSelected();
         if (story == null) {
           Alert alert = new Alert(Alert.AlertType.ERROR);
           alert.setTitle("Error");
@@ -748,9 +755,11 @@ public class Main extends Application {
       case STORY_DELETE:
         itemToStore = new Story((Story) agileItem);
         break;
+      case BACKLOG_DELETE:
+        itemToStore = new Backlog((Backlog) agileItem);
+        break;
       default:
-        itemToStore = null;
-//        System.err.println("Unhandled case for generating undo/redo delete object");
+        itemToStore = null; // should never happen
     }
 
     undoRedoObject.setAgileItem(agileItem); // store original
@@ -1074,7 +1083,8 @@ public class Main extends Application {
   }
 
   /**
-   * Refreshes the listview
+   * Refreshes the list view
+   * @param agileItem agile item of list to refresh.
    */
   public void refreshList(AgileItem agileItem) {
     LMPC.refreshList(agileItem);

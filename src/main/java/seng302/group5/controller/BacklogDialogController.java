@@ -119,9 +119,6 @@ public class BacklogDialogController {
       this.lastBacklog = null;
     }
 
-//    comboListenerFlag = false;  // if true, assign the selected role in combo box
-    //lastSelectedEstimate = new Estimate();
-
     btnConfirm.setDefaultButton(true);
     thisStage.setResizable(false);
 

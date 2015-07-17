@@ -109,7 +109,7 @@ public class Role implements Comparable<Role> {
   /**
    * Compares the labels of this role and the role o
    * @param o the role you wish to compare with.
-   * @return
+   * @return comparable int
    */
   @Override
   public int compareTo(Role o) {

@@ -17,6 +17,7 @@ public interface AgileItem {
 
   /**
    * Set the label.
+   * @param label label of agile item
    */
   void setLabel(String label);
 

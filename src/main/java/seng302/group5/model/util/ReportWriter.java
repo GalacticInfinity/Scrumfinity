@@ -242,6 +242,12 @@ public class ReportWriter {
     }
   }
 
+  /**
+   * Create a Project element that contains the project's information.
+   *
+   * @param project Project to be reported
+   * @param name What to name the element
+   */
   private void createProject(Project project, String name) {
     Element projElem = report.createElement(name);
     projElement.appendChild(projElem);
@@ -308,10 +314,11 @@ public class ReportWriter {
 
 
   /**
-   * Create a team child element that contains the teams information, formats it under the project
-   * that the team is assigned to.
+   * Create a team child element that contains the teams information
    *
-   * @param team    the team who's information is to be displayed.
+   * @param team the team who's information is to be displayed.
+   * @param teamElement element for team info to be attached to
+   * @param name what to name the team element.
    */
   private void createTeam(AgileHistory team, Element teamElement, String name) {
 
@@ -353,6 +360,8 @@ public class ReportWriter {
    * under the unnasigned teams tag.
    *
    * @param team The team which will be used to collect the list of members to get there info.
+   * @param orphanTeam element to be attached to
+   * @param name what the team element needs to be named
    */
   private void createOrphanTeam(Team team, Element orphanTeam, String name) {
 
@@ -401,6 +410,7 @@ public class ReportWriter {
    * displayed under a person or under the list of all skills tag.
    *
    * @param skill The skill who's information will be displayed.
+   * @param allSkills The element to which the data will be attached to
    */
   private void createSkill(Skill skill, Element allSkills) {
     Element skillElem = report.createElement("Skill");
@@ -419,6 +429,8 @@ public class ReportWriter {
    * stories contained (Story)
    *
    * @param backlog all the backlogs saved in main
+   * @param allBacklogs element to which backlog info is attached to
+   * @param name name of the created element
    */
   private void createBacklog(Backlog backlog, Element allBacklogs, String name) {
     Element backlogElem = report.createElement(name);
@@ -458,6 +470,7 @@ public class ReportWriter {
    *
    * @param person       The porduct owner of the backlog
    * @param backlogOwner The element "Product Owner" in the backlog
+   * @param typeOfPerson name of the created person element
    */
   private void createPerson(Person person, Element backlogOwner, String typeOfPerson) {
     Element personOwner = report.createElement(typeOfPerson);

@@ -52,6 +52,7 @@ public class ReportDialogController {
    * Sets up the Controller, populating the drop down list with all the available categories.
    * Also sets up the selection model of the available items and selected items lists to multiple
    * selection to allow multiple items to be added to the report at once.
+   * @param mainApp the god object of the application
    * @param thisStage    The stage of the dialog
    */
   public void setupController(Main mainApp, Stage thisStage) {
@@ -201,10 +202,10 @@ public class ReportDialogController {
    * A button that adds the selected available items to the selected report items for the
    * specified level.
    *
-   * @param actionEvent Mouseclicking
+   * @param actionEvent Mouse click event
    * @throws Exception prints a stack trace if an error occurs.
    */
-  public void addBtnClick(ActionEvent actionEvent) throws  Exception{
+  public void addBtnClick(ActionEvent actionEvent) throws  Exception {
     try {
     chosenAvailableItems.setAll(availableItemsList.getSelectionModel().getSelectedItems());
       if (chosenAvailableItems != null) {
@@ -218,10 +219,10 @@ public class ReportDialogController {
     }
 
   /**
-   * removes the selected items from the selected report items list and re adds them to the
+   * Removes the selected items from the selected report items list and re adds them to the
    * available items list.
    *
-   * @param actionEvent
+   * @param actionEvent actionEvent
    * @throws Exception prints a stack trace if an error occurs.
    */
   public void removeBtnClick(ActionEvent actionEvent) throws Exception {
@@ -239,7 +240,7 @@ public class ReportDialogController {
 
   /**
    * Cancels the dialog, exiting without writing a report or saving the selections.\
-   * @param actionEvent event
+   * @param actionEvent Mouse click event
    */
   public void cancelBtnClick(ActionEvent actionEvent) {
     thisStage.close();
@@ -247,6 +248,7 @@ public class ReportDialogController {
 
   /**
    * Save a report which details the selected items underneath the selected level.
+   * @param actionEvent Mouse click event
    */
   public void saveBtnClick(ActionEvent actionEvent) {
     FileChooser fileChooser = new FileChooser();
@@ -265,7 +267,6 @@ public class ReportDialogController {
         thisStage.close();
       }
     }
-
   }
 }
 
