@@ -8,7 +8,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import seng302.group5.Main;
-import seng302.group5.model.util.NewLoading;
+import seng302.group5.model.util.Loading;
 import seng302.group5.model.util.Settings;
 
 /**
@@ -53,7 +53,7 @@ public class LoginController {
       if (file != null) {
         Settings.currentFile = file;
         mainApp.resetAll();
-        NewLoading load = new NewLoading(mainApp);
+        Loading load = new Loading(mainApp);
         load.loadFile(file);
 
         mainApp.getLMPC().refreshList(null);

@@ -28,13 +28,13 @@ import seng302.group5.model.Team;
  * Class for loading xml save files
  * Created by Michael on 4/21/2015.
  */
-public class NewLoading {
+public class Loading {
 
   private Main main;
   private BufferedReader loadedFile;
   private double saveVersion = 0;
 
-  public NewLoading(Main main) {
+  public Loading(Main main) {
     this.main = main;
   }
 

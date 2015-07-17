@@ -22,11 +22,10 @@ import javafx.stage.FileChooser;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.AgileItem;
-import seng302.group5.model.util.NewLoading;
-import seng302.group5.model.util.NewSaving;
+import seng302.group5.model.util.Loading;
+import seng302.group5.model.util.Saving;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoHandler;
-import seng302.group5.model.util.ReportWriter;
 import seng302.group5.model.util.Settings;
 
 /**
@@ -269,7 +268,7 @@ public class MenuBarController {
   protected void btnClickSave(ActionEvent event) {
     if (Settings.currentFile != null) {
       try {
-        NewSaving save = new NewSaving(mainApp);
+        Saving save = new Saving(mainApp);
         save.saveData(Settings.currentFile);
         mainApp.refreshLastSaved();
         mainApp.setLastSaved(); //for revert
@@ -287,7 +286,7 @@ public class MenuBarController {
 
         if (file != null) {
           Settings.currentFile = file;
-          NewSaving save = new NewSaving(mainApp);
+          Saving save = new Saving(mainApp);
           save.saveData(file);
 
           // Refresh the last saved action
@@ -323,7 +322,7 @@ public class MenuBarController {
 
       if (file != null) {
         Settings.currentFile = file;
-        NewSaving save = new NewSaving(mainApp);
+        Saving save = new Saving(mainApp);
         save.saveData(file);
 
         // Refresh the last saved action
@@ -369,7 +368,7 @@ public class MenuBarController {
         File file = fileChooser.showSaveDialog(mainApp.getPrimaryStage());
 
         if (file != null) {
-          NewSaving save = new NewSaving(mainApp);
+          Saving save = new Saving(mainApp);
           save.saveData(file);
           mainApp.revert();
         } else {
@@ -417,7 +416,7 @@ public class MenuBarController {
       if (file != null) {
         Settings.currentFile = file;
         mainApp.resetAll();
-        NewLoading load = new NewLoading(mainApp);
+        Loading load = new Loading(mainApp);
         load.loadFile(file);
 
         mainApp.getLMPC().refreshList(null);
