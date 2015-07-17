@@ -5,7 +5,6 @@ import org.junit.Test;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,8 +12,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 import seng302.group5.Main;
-import seng302.group5.controller.ListMainPaneController;
-import seng302.group5.controller.MenuBarController;
+import seng302.group5.controller.mainAppControllers.ListMainPaneController;
+import seng302.group5.controller.mainAppControllers.MenuBarController;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Estimate;
 import seng302.group5.model.Person;

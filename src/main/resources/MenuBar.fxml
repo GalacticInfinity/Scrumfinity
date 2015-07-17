@@ -3,7 +3,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 
-<MenuBar maxHeight="25.0" minHeight="25.0" prefHeight="25.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.MenuBarController">
+<MenuBar maxHeight="25.0" minHeight="25.0" prefHeight="25.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.mainAppControllers.MenuBarController">
    <menus>
        <Menu mnemonicParsing="false" text="File">
            <items>
@@ -18,7 +18,8 @@
                   <MenuItem mnemonicParsing="false" onAction="#createBacklog" text="Backlog" />
                    </items>
                </Menu>
-            <MenuItem mnemonicParsing="false" onAction="#btnClickOrganization" text="Org. Name" />
+               <MenuItem fx:id="directAddMenuItem" mnemonicParsing="false" onAction="#btnClickDirectAdd" text="Direct Add" />
+               <MenuItem mnemonicParsing="false" onAction="#btnClickOrganization" text="Org. Name" />
                <MenuItem fx:id="openMenuItem" mnemonicParsing="false" onAction="#btnClickOpen" text="Open…" />
                <SeparatorMenuItem mnemonicParsing="false" />
                <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" onAction="#btnClickSave" text="Save" />
