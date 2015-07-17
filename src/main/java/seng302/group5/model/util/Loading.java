@@ -28,13 +28,13 @@ import seng302.group5.model.Team;
  * Class for loading xml save files
  * Created by Michael on 4/21/2015.
  */
-public class NewLoading {
+public class Loading {
 
   private Main main;
   private BufferedReader loadedFile;
   private double saveVersion = 0;
 
-  public NewLoading(Main main) {
+  public Loading(Main main) {
     this.main = main;
   }
 
@@ -120,6 +120,7 @@ public class NewLoading {
     Team tempTeam;
     LocalDate startDate;
     LocalDate endDate;
+    Backlog tempBacklog;
 
     // Until Project end tag
     while ((!(projectLine = loadedFile.readLine()).equals("</Projects>"))) {
@@ -187,6 +188,13 @@ public class NewLoading {
                 newProject.addTeam(teamHistoryItem);
               }
             }
+          }
+          // As of version 0.4, load a backlog
+          if (projectLine.startsWith("\t\t<projectBacklog>")) {
+            projectData = projectLine.replaceAll("(?i)(.*<projectBacklog.*?>)(.+?)(</projectBacklog>)", "$2");
+            tempBacklog = new Backlog();
+            tempBacklog.setLabel(projectData);
+            newProject.setBacklog(tempBacklog);
           }
         }
         // Add the loaded project into main
@@ -780,5 +788,12 @@ public class NewLoading {
         main.addEstimate(newEstimate);
       }
     }
+  }
+
+  /**
+   * A function to sync the temp backlog and real backlogs
+   */
+  private void syncProjAndBacklog() {
+
   }
 }
