@@ -772,6 +772,8 @@ public class Main extends Application {
    * Generic delete function which deletes an item from the appropriate list and then adds the
    * action to the undo/redo stack
    *
+   * The objects that have a cascading delete in the are teams and backlogs.
+   *
    * @param agileItem Item to delete
    */
   public void delete(AgileItem agileItem) {
@@ -794,7 +796,7 @@ public class Main extends Application {
           alert.setTitle("Releases still exist for this project");
           alert.setHeaderText(null);
           int messageLength = 1;
-          String message = String.format("Do you want to delete project '%s' and its releases:\n",
+          String message = String.format("Do you want to delete project '%s' and its releases:\n\n",
                                          project.getProjectName());
           for (Release releases : projectsReleases) {
             messageLength++;
@@ -861,7 +863,7 @@ public class Main extends Application {
           alert.setTitle("People have this skill!");
           alert.setHeaderText(null);
           int messageLength = 1;
-          String message = String.format("Do you want to delete skill '%s' and remove it from:\n",
+          String message = String.format("Do you want to delete skill '%s' and remove it from:\n\n",
                                          skill.getLabel());
           for (Person skillUser : skillUsers) {
             messageLength++;
@@ -904,7 +906,7 @@ public class Main extends Application {
           alert.setHeaderText(null);
 
           int messageLength = 1;
-          String message = String.format("Are you sure you want to delete team '%s' and people:\n",
+          String message = String.format("Are you sure you want to delete team '%s' and people:\n\n",
                                          team.getLabel());
           for (Person teamMember : team.getTeamMembers()) {
             messageLength++;
@@ -941,9 +943,38 @@ public class Main extends Application {
         break;
       case "Backlogs":
         Backlog backlog = (Backlog) agileItem;
-        deleteBacklog(backlog);
-        undoRedoObject = generateDelUndoRedoObject(Action.BACKLOG_DELETE, agileItem);
-        newAction(undoRedoObject);
+        if (backlog.getStories().isEmpty()) {
+          deleteBacklog(backlog);
+          undoRedoObject = generateDelUndoRedoObject(Action.BACKLOG_DELETE, agileItem);
+          newAction(undoRedoObject);
+        } else {
+          Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+          alert.setTitle("Backlog contains stories");
+          alert.setHeaderText(null);
+
+          int messageLength = 1;
+          String message = String.format("Are you sure you want to delete backlog '%s' and "
+                                         + "its associated stories:\n\n",
+                                         backlog.getLabel());
+          for (Story blStory : backlog.getStories()) {
+            messageLength++;
+            message += String.format("%s - %s\n",
+                                     blStory.getLabel(),
+                                     blStory.getStoryName());
+          }
+          alert.getDialogPane().setPrefHeight(60 + 30 * messageLength);
+          alert.setContentText(message);
+
+          Optional<ButtonType> result = alert.showAndWait();
+          if (result.get() == ButtonType.OK) {
+            for (Story blstory : backlog.getStories()) {
+              deleteStory(blstory);
+            }
+            deleteBacklog(backlog);
+            undoRedoObject = generateDelUndoRedoObject(Action.BACKLOG_DELETE, agileItem);
+            newAction(undoRedoObject);
+          }
+        }
         break;
       default:
 //        System.err.println("Unhandled case for deleting agile item");
