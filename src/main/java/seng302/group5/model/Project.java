@@ -132,18 +132,57 @@ public class Project implements AgileItem, Comparable<Project>  {
   /**
    * Check if two project's ids are equal
    *
-   * @param obj Object to compare to.
+   * @param o Object to compare to.
    * @return Whether project's ids are equal
    */
   @Override
-  public boolean equals(Object obj) {
-    boolean result = false;
-    if (obj instanceof Project) {
-      Project project = (Project) obj;
-      result = this.label.equals(project.getLabel());
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Project project = (Project) o;
+
+    if (!allocatedTeams.equals(project.allocatedTeams)) {
+      return false;
+    }
+    if (backlog != null ? !backlog.equals(project.backlog) : project.backlog != null) {
+      return false;
+    }
+    if (!label.equals(project.label)) {
+      return false;
+    }
+    if (!projectDescription.equals(project.projectDescription)) {
+      return false;
+    }
+    if (!projectName.equals(project.projectName)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = label.hashCode();
+    result = 31 * result + projectName.hashCode();
+    result = 31 * result + projectDescription.hashCode();
+    result = 31 * result + (backlog != null ? backlog.hashCode() : 0);
+    result = 31 * result + allocatedTeams.hashCode();
     return result;
   }
+  //  @Override
+//  public boolean equals(Object obj) {
+//    boolean result = false;
+//    if (obj instanceof Project) {
+//      Project project = (Project) obj;
+//      result = this.label.equals(project.getLabel());
+//    }
+//    return result;
+//  }
 
   /**
    * Compare the project label to o's project label
