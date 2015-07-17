@@ -42,7 +42,7 @@ public class ACDialogController {
 
     if (!os.startsWith("Windows")) {
       btnContainer.getChildren().remove(btnConfirm);
-      btnContainer.getChildren().add(btnCancel);
+      btnContainer.getChildren().add(btnConfirm);
     }
 
     if (createOrEdit == CreateOrEdit.CREATE) {
