@@ -138,6 +138,9 @@ public class Saving {
         }
         saveFile.write("\t\t</AllocatedTeams>\n");
       }
+      if (Settings.progVersion >= 0.4) {
+        saveFile.write("\t\t<projectBacklog>" + project.getBacklog().getLabel() + "</projectBacklog>\n");
+      }
       saveFile.write("\t</Project>\n");
     }
     saveFile.write("</Projects>\n");

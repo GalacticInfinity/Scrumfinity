@@ -120,6 +120,7 @@ public class Loading {
     Team tempTeam;
     LocalDate startDate;
     LocalDate endDate;
+    Backlog tempBacklog;
 
     // Until Project end tag
     while ((!(projectLine = loadedFile.readLine()).equals("</Projects>"))) {
@@ -187,6 +188,13 @@ public class Loading {
                 newProject.addTeam(teamHistoryItem);
               }
             }
+          }
+          // As of version 0.4, load a backlog
+          if (projectLine.startsWith("\t\t<projectBacklog>")) {
+            projectData = projectLine.replaceAll("(?i)(.*<projectBacklog.*?>)(.+?)(</projectBacklog>)", "$2");
+            tempBacklog = new Backlog();
+            tempBacklog.setLabel(projectData);
+            newProject.setBacklog(tempBacklog);
           }
         }
         // Add the loaded project into main
