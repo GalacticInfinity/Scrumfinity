@@ -11,7 +11,6 @@ public class Project implements AgileItem, Comparable<Project>  {
   private String label;
   private String projectName;
   private String projectDescription;
-  private Backlog backlog;
   private ObservableList<AgileHistory> allocatedTeams = FXCollections.observableArrayList();
   private Backlog backlog;
 
@@ -102,14 +101,6 @@ public class Project implements AgileItem, Comparable<Project>  {
    */
   public void removeTeam(AgileHistory team) {
     this.allocatedTeams.remove(team);
-  }
-
-  public Backlog getBacklog() {
-    return backlog;
-  }
-
-  public void setBacklog(Backlog backlog) {
-    this.backlog = backlog;
   }
 
   /**
