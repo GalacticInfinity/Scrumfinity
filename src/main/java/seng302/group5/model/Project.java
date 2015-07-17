@@ -1,7 +1,5 @@
 package seng302.group5.model;
 
-import java.util.Comparator;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -13,6 +11,7 @@ public class Project implements AgileItem, Comparable<Project>  {
   private String label;
   private String projectName;
   private String projectDescription;
+  private Backlog backlog;
   private ObservableList<AgileHistory> allocatedTeams = FXCollections.observableArrayList();
 
 
@@ -29,7 +28,7 @@ public class Project implements AgileItem, Comparable<Project>  {
    * Constructor.
    *
    * @param label              Name of Person, Unique, Non-Null, can't be greater then 8 characters.
-   * @param projectName        Description of person
+   * @param projectName        Description of person.
    * @param projectDescription Date of birth of person?
    */
   public Project(String label, String projectName, String projectDescription) {
@@ -49,6 +48,7 @@ public class Project implements AgileItem, Comparable<Project>  {
     this.projectDescription = clone.getProjectDescription();
     this.allocatedTeams.clear();
     this.allocatedTeams.addAll(clone.getAllocatedTeams());
+    this.backlog = clone.getBacklog();
   }
 
   @Override
@@ -76,6 +76,10 @@ public class Project implements AgileItem, Comparable<Project>  {
   public void setProjectDescription(String projectDescription) {
     this.projectDescription = projectDescription;
   }
+
+  public Backlog getBacklog() { return backlog; }
+
+  public void setBacklog(Backlog backlog) { this.backlog = backlog; }
 
   public ObservableList<AgileHistory> getAllocatedTeams() {
     return this.allocatedTeams;
@@ -113,6 +117,7 @@ public class Project implements AgileItem, Comparable<Project>  {
       this.projectDescription = clone.getProjectDescription();
       this.allocatedTeams.clear();
       this.allocatedTeams.addAll(clone.getAllocatedTeams());
+      this.backlog = clone.getBacklog();
     }
   }
 
