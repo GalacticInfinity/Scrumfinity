@@ -13,8 +13,8 @@ import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seng302.group5.Main;
-import seng302.group5.model.util.NewLoading;
-import seng302.group5.model.util.NewSaving;
+import seng302.group5.model.util.Loading;
+import seng302.group5.model.util.Saving;
 import seng302.group5.model.util.Settings;
 
 /**
@@ -22,8 +22,8 @@ import seng302.group5.model.util.Settings;
  * Created by Michael on 4/23/2015.
  */
 public class LoadingTest {
-  NewSaving saving;
-  NewLoading loading;
+  Saving saving;
+  Loading loading;
   Main savedMain;
   Main loadedMain;
   Project project1;
@@ -67,6 +67,19 @@ public class LoadingTest {
     savedMain = new Main();
     loadedMain = new Main();
 
+  }
+
+  /**
+   * Since everything uses this though might as well put it in a function.
+   */
+  private void saveAndLoad() {
+    saving = new Saving(savedMain);
+    File file = new File(System.getProperty("user.dir")
+                         + File.separator + "BacklogSave.xml");
+    saving.saveData(file);
+
+    loading = new Loading(loadedMain);
+    loading.loadFile(file);
   }
 
   public void createVanillaProjects() {
@@ -275,13 +288,13 @@ public class LoadingTest {
   @Test
   public void vanillaProjectLoadTest() {
     createVanillaProjects();
-    saving = new NewSaving(savedMain);
+    saving = new Saving(savedMain);
     File file = new File(System.getProperty("user.dir")
                          + File.separator
                          + "VanillaProjectSave.xml");
     saving.saveData(file);
 
-    loading = new NewLoading(loadedMain);
+    loading = new Loading(loadedMain);
     loading.loadFile(file);
 
     assertEquals(loadedMain.getProjects().get(0).getLabel(), "Project1");
@@ -300,13 +313,13 @@ public class LoadingTest {
   @Test
   public void vanillaPeopleTest() {
     createVanillaPeople();
-    saving = new NewSaving(savedMain);
+    saving = new Saving(savedMain);
     File file = new File(System.getProperty("user.dir")
                          + File.separator
                          + "VanillaPersonSave.xml");
     saving.saveData(file);
 
-    loading = new NewLoading(loadedMain);
+    loading = new Loading(loadedMain);
     loading.loadFile(file);
 
     assertEquals(loadedMain.getPeople().get(0).getLabel(), "Person1");
@@ -325,13 +338,13 @@ public class LoadingTest {
   @Test
   public void dependantSkillTest() {
     createSkillsWithDependency();
-    saving = new NewSaving(savedMain);
+    saving = new Saving(savedMain);
     File file = new File(System.getProperty("user.dir")
                          + File.separator
                          + "DependantSkillSave.xml");
     saving.saveData(file);
 
-    loading = new NewLoading(loadedMain);
+    loading = new Loading(loadedMain);
     loading.loadFile(file);
 
     // Check skills loaded properly
@@ -363,13 +376,13 @@ public class LoadingTest {
   @Test
   public void dependantTeamTest() {
     createTeamWithDependency();
-    saving = new NewSaving(savedMain);
+    saving = new Saving(savedMain);
     File file = new File(System.getProperty("user.dir")
                          + File.separator
                          + "DependantTeamSave.xml");
     saving.saveData(file);
 
-    loading = new NewLoading(loadedMain);
+    loading = new Loading(loadedMain);
     loading.loadFile(file);
 
     person1 = loadedMain.getPeople().get(0);
@@ -396,13 +409,13 @@ public class LoadingTest {
   @Test
   public void dependantReleaseTest() {
     createReleaseWithDependency();
-    saving = new NewSaving(savedMain);
+    saving = new Saving(savedMain);
     File file = new File(System.getProperty("user.dir")
                          + File.separator
                          + "DependantReleaseSave.xml");
     saving.saveData(file);
 
-    loading = new NewLoading(loadedMain);
+    loading = new Loading(loadedMain);
     loading.loadFile(file);
 
     project1 = loadedMain.getProjects().get(0);
@@ -439,13 +452,13 @@ public class LoadingTest {
   @Test
   public void dependantProjectTest() {
     createProjectsWithDependency();
-    saving = new NewSaving(savedMain);
+    saving = new Saving(savedMain);
     File file = new File(System.getProperty("user.dir")
                          + File.separator
                          + "DependantProjectSave.xml");
     saving.saveData(file);
 
-    loading = new NewLoading(loadedMain);
+    loading = new Loading(loadedMain);
     loading.loadFile(file);
 
     team1 = loadedMain.getTeams().get(0);
@@ -486,13 +499,13 @@ public class LoadingTest {
   @Test
   public void testTeamAllocation() {
     allocateTeams();
-    saving = new NewSaving(savedMain);
+    saving = new Saving(savedMain);
     File file = new File(System.getProperty("user.dir")
                          + File.separator
                          + "DependantReleaseSave.xml");
     saving.saveData(file);
 
-    loading = new NewLoading(loadedMain);
+    loading = new Loading(loadedMain);
     loading.loadFile(file);
 
     team1 = loadedMain.getTeams().get(0);
@@ -528,13 +541,13 @@ public class LoadingTest {
   @Test
   public void testingBlankHeader() {
     Settings.organizationName = "";
-    saving = new NewSaving(savedMain);
+    saving = new Saving(savedMain);
     File file = new File(System.getProperty("user.dir")
                          + File.separator
                          + "BlankHeader.xml");
     saving.saveData(file);
 
-    loading = new NewLoading(loadedMain);
+    loading = new Loading(loadedMain);
     loading.loadFile(file);
 
     assertEquals("", Settings.organizationName);
@@ -551,14 +564,14 @@ public class LoadingTest {
   public void testingFilledHeader() {
     String expectedName = "test";
     Settings.organizationName = expectedName;
-    saving = new NewSaving(savedMain);
+    saving = new Saving(savedMain);
     File file = new File(System.getProperty("user.dir")
                          + File.separator
                          + "FilledHeader.xml");
     saving.saveData(file);
 
     Settings.organizationName = "";
-    loading = new NewLoading(loadedMain);
+    loading = new Loading(loadedMain);
     loading.loadFile(file);
 
     assertEquals(expectedName, Settings.organizationName);
@@ -577,13 +590,13 @@ public class LoadingTest {
     createStoriesWithACs();
     //empty ac list:
     ObservableList<String> emptyacs = FXCollections.observableArrayList();
-    saving = new NewSaving(savedMain);
+    saving = new Saving(savedMain);
     File file = new File(System.getProperty("user.dir")
                          + File.separator
                          + "StorySave.xml");
     saving.saveData(file);
 
-    loading = new NewLoading(loadedMain);
+    loading = new Loading(loadedMain);
     loading.loadFile(file);
 
     person1 = loadedMain.getPeople().get(0);
@@ -622,13 +635,13 @@ public class LoadingTest {
   @Test
   public void testingStories() {
     createStories();
-    saving = new NewSaving(savedMain);
+    saving = new Saving(savedMain);
     File file = new File(System.getProperty("user.dir")
                          + File.separator
                          + "StorySave.xml");
     saving.saveData(file);
 
-    loading = new NewLoading(loadedMain);
+    loading = new Loading(loadedMain);
     loading.loadFile(file);
 
     person1 = loadedMain.getPeople().get(0);
@@ -658,12 +671,12 @@ public class LoadingTest {
   @Test
   public void testBacklogs() {
     createBacklogs();
-    saving = new NewSaving(savedMain);
+    saving = new Saving(savedMain);
     File file = new File(System.getProperty("user.dir")
                          + File.separator + "BacklogSave.xml");
     saving.saveData(file);
 
-    loading = new NewLoading(loadedMain);
+    loading = new Loading(loadedMain);
     loading.loadFile(file);
 
     person1 = loadedMain.getPeople().get(0);
@@ -728,12 +741,12 @@ public class LoadingTest {
   @Test
   public void testStoryAllocation() {
     createEstimates();
-    saving = new NewSaving(savedMain);
+    saving = new Saving(savedMain);
     File file = new File(System.getProperty("user.dir")
                          + File.separator + "BacklogSave.xml");
     saving.saveData(file);
 
-    loading = new NewLoading(loadedMain);
+    loading = new Loading(loadedMain);
     loading.loadFile(file);
 
     List<Backlog> loadedBacklogs = loadedMain.getBacklogs();
@@ -753,5 +766,36 @@ public class LoadingTest {
     if (!file.delete()) {
       fail();
     }
+  }
+
+  /**
+   * Since we're only going to test backlog allocation, dont bother with anything else.
+   */
+  private void createProjectsWithBacklogs() {
+    createVanillaProjects();
+    createBacklogs();
+    project1.setBacklog(backlog1);
+    project2.setBacklog(backlog3);
+    project3.setBacklog(backlog2);
+  }
+
+  /**
+   * Testing proper Backlog is stored after loading inside Project
+   */
+  @Test
+  public void testBacklogInProjectLoadingVersion() {
+    createProjectsWithBacklogs();
+    saveAndLoad();
+
+    List<Project> projects = loadedMain.getProjects();
+    List<Backlog> backlogs = loadedMain.getBacklogs();
+    // Testing syncing
+    assertSame(projects.get(0).getBacklog(), backlogs.get(0));
+    assertSame(projects.get(1).getBacklog(), backlogs.get(2));
+    assertSame(projects.get(2).getBacklog(), backlogs.get(1));
+
+    assertEquals(backlog1.getLabel(), backlogs.get(0).getLabel());
+    assertEquals(backlog2.getLabel(), backlogs.get(1).getLabel());
+    assertEquals(backlog3.getLabel(), backlogs.get(2).getLabel());
   }
 }

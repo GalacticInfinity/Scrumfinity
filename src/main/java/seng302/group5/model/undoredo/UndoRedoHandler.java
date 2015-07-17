@@ -908,6 +908,7 @@ public class UndoRedoHandler {
 
   /**
    * Undo or redo a backlog deletion
+   * This includes re-adding/removing stories that were deleted during a cascading delete
    *
    * @param undoRedoObject Object containing the action data
    * @param undoOrRedo     Whether undoing or redoing the action
@@ -929,8 +930,14 @@ public class UndoRedoHandler {
     // Make the changes and refresh the list
     if (undoOrRedo == UndoOrRedo.UNDO) {
       backlogToChange.copyValues(backlogData);
+      for (Story blStory: backlogToChange.getStories()) {
+        mainApp.addStory(blStory);
+      }
       mainApp.addBacklog(backlogToChange);
     } else {
+      for (Story blStory : backlogToChange.getStories()) {
+        mainApp.deleteStory(blStory);
+      }
       mainApp.deleteBacklog(backlogToChange);
     }
 

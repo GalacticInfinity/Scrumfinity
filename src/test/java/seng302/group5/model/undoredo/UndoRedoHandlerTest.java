@@ -3,7 +3,6 @@ package seng302.group5.model.undoredo;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seng302.group5.Main;
-import seng302.group5.controller.ListMainPaneController;
+import seng302.group5.controller.mainAppControllers.ListMainPaneController;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Estimate;

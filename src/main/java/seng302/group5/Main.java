@@ -11,7 +11,6 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -19,23 +18,22 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import seng302.group5.controller.BacklogDialogController;
-import seng302.group5.controller.ListMainPaneController;
-import seng302.group5.controller.LoginController;
-import seng302.group5.controller.MenuBarController;
-import seng302.group5.controller.ReleaseDialogController;
-import seng302.group5.controller.PersonDialogController;
-import seng302.group5.controller.ProjectDialogController;
-import seng302.group5.controller.ReportDialogController;
-import seng302.group5.controller.StoryDialogController;
-import seng302.group5.controller.TeamDialogController;
+import seng302.group5.controller.dialogControllers.BacklogDialogController;
+import seng302.group5.controller.mainAppControllers.ListMainPaneController;
+import seng302.group5.controller.mainAppControllers.LoginController;
+import seng302.group5.controller.mainAppControllers.MenuBarController;
+import seng302.group5.controller.dialogControllers.ReleaseDialogController;
+import seng302.group5.controller.dialogControllers.PersonDialogController;
+import seng302.group5.controller.dialogControllers.ProjectDialogController;
+import seng302.group5.controller.mainAppControllers.ReportDialogController;
+import seng302.group5.controller.dialogControllers.StoryDialogController;
+import seng302.group5.controller.dialogControllers.TeamDialogController;
 import seng302.group5.controller.enums.CreateOrEdit;
-import seng302.group5.controller.SkillsDialogController;
+import seng302.group5.controller.dialogControllers.SkillsDialogController;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Estimate;
@@ -772,6 +770,8 @@ public class Main extends Application {
    * Generic delete function which deletes an item from the appropriate list and then adds the
    * action to the undo/redo stack
    *
+   * The objects that have a cascading delete in the are teams and backlogs.
+   *
    * @param agileItem Item to delete
    */
   public void delete(AgileItem agileItem) {
@@ -794,7 +794,7 @@ public class Main extends Application {
           alert.setTitle("Releases still exist for this project");
           alert.setHeaderText(null);
           int messageLength = 1;
-          String message = String.format("Do you want to delete project '%s' and its releases:\n",
+          String message = String.format("Do you want to delete project '%s' and its releases:\n\n",
                                          project.getProjectName());
           for (Release releases : projectsReleases) {
             messageLength++;
@@ -861,7 +861,7 @@ public class Main extends Application {
           alert.setTitle("People have this skill!");
           alert.setHeaderText(null);
           int messageLength = 1;
-          String message = String.format("Do you want to delete skill '%s' and remove it from:\n",
+          String message = String.format("Do you want to delete skill '%s' and remove it from:\n\n",
                                          skill.getLabel());
           for (Person skillUser : skillUsers) {
             messageLength++;
@@ -904,7 +904,7 @@ public class Main extends Application {
           alert.setHeaderText(null);
 
           int messageLength = 1;
-          String message = String.format("Are you sure you want to delete team '%s' and people:\n",
+          String message = String.format("Are you sure you want to delete team '%s' and people:\n\n",
                                          team.getLabel());
           for (Person teamMember : team.getTeamMembers()) {
             messageLength++;
@@ -941,9 +941,38 @@ public class Main extends Application {
         break;
       case "Backlogs":
         Backlog backlog = (Backlog) agileItem;
-        deleteBacklog(backlog);
-        undoRedoObject = generateDelUndoRedoObject(Action.BACKLOG_DELETE, agileItem);
-        newAction(undoRedoObject);
+        if (backlog.getStories().isEmpty()) {
+          deleteBacklog(backlog);
+          undoRedoObject = generateDelUndoRedoObject(Action.BACKLOG_DELETE, agileItem);
+          newAction(undoRedoObject);
+        } else {
+          Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+          alert.setTitle("Backlog contains stories");
+          alert.setHeaderText(null);
+
+          int messageLength = 1;
+          String message = String.format("Are you sure you want to delete backlog '%s' and "
+                                         + "its associated stories:\n\n",
+                                         backlog.getLabel());
+          for (Story blStory : backlog.getStories()) {
+            messageLength++;
+            message += String.format("%s - %s\n",
+                                     blStory.getLabel(),
+                                     blStory.getStoryName());
+          }
+          alert.getDialogPane().setPrefHeight(60 + 30 * messageLength);
+          alert.setContentText(message);
+
+          Optional<ButtonType> result = alert.showAndWait();
+          if (result.get() == ButtonType.OK) {
+            for (Story blstory : backlog.getStories()) {
+              deleteStory(blstory);
+            }
+            deleteBacklog(backlog);
+            undoRedoObject = generateDelUndoRedoObject(Action.BACKLOG_DELETE, agileItem);
+            newAction(undoRedoObject);
+          }
+        }
         break;
       default:
 //        System.err.println("Unhandled case for deleting agile item");
