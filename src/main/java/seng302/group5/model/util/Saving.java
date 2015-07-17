@@ -23,7 +23,7 @@ import seng302.group5.model.Team;
  * Class which creates an xml file to save. Manually formats the document
  * Created by Michael on 4/21/2015.
  */
-public class NewSaving {
+public class Saving {
 
   private List<Project> projects;
   private List<Person> people;
@@ -35,7 +35,7 @@ public class NewSaving {
   private List<Estimate> estimates;
   private List<Backlog> backlogs;
 
-  public NewSaving(Main main) {
+  public Saving(Main main) {
     projects = main.getProjects();
     people = main.getPeople();
     skills = main.getSkills();
