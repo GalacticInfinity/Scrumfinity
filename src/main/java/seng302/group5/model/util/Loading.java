@@ -627,6 +627,7 @@ public class Loading {
         main.addBacklog(newBacklog);
       }
     }
+    syncProjectsAndBacklogs();
   }
 
   /**

@@ -69,6 +69,19 @@ public class LoadingTest {
 
   }
 
+  /**
+   * Since everything uses this though might as well put it in a function.
+   */
+  private void saveAndLoad() {
+    saving = new Saving(savedMain);
+    File file = new File(System.getProperty("user.dir")
+                         + File.separator + "BacklogSave.xml");
+    saving.saveData(file);
+
+    loading = new Loading(loadedMain);
+    loading.loadFile(file);
+  }
+
   public void createVanillaProjects() {
     project1 = new Project();
     project1.setLabel("Project1");
@@ -753,5 +766,36 @@ public class LoadingTest {
     if (!file.delete()) {
       fail();
     }
+  }
+
+  /**
+   * Since we're only going to test backlog allocation, dont bother with anything else.
+   */
+  private void createProjectsWithBacklogs() {
+    createVanillaProjects();
+    createBacklogs();
+    project1.setBacklog(backlog1);
+    project2.setBacklog(backlog3);
+    project3.setBacklog(backlog2);
+  }
+
+  /**
+   * Testing proper Backlog is stored after loading inside Project
+   */
+  @Test
+  public void testBacklogInProjectLoadingVersion() {
+    createProjectsWithBacklogs();
+    saveAndLoad();
+
+    List<Project> projects = loadedMain.getProjects();
+    List<Backlog> backlogs = loadedMain.getBacklogs();
+    // Testing syncing
+    assertSame(projects.get(0).getBacklog(), backlogs.get(0));
+    assertSame(projects.get(1).getBacklog(), backlogs.get(2));
+    assertSame(projects.get(2).getBacklog(), backlogs.get(1));
+
+    assertEquals(backlog1.getLabel(), backlogs.get(0).getLabel());
+    assertEquals(backlog2.getLabel(), backlogs.get(1).getLabel());
+    assertEquals(backlog3.getLabel(), backlogs.get(2).getLabel());
   }
 }
