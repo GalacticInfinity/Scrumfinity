@@ -1,4 +1,4 @@
-package seng302.group5.controller;
+package seng302.group5.controller.dialogControllers;
 
 import java.io.IOException;
 import java.util.Map;
@@ -20,7 +20,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.TextFieldListCell;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;

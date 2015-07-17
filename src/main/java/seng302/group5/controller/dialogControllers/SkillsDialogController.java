@@ -1,4 +1,4 @@
-package seng302.group5.controller;
+package seng302.group5.controller.dialogControllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
