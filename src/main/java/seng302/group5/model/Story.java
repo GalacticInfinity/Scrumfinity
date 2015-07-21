@@ -20,7 +20,7 @@ public class Story implements AgileItem, Comparable<Story> {
   private String storyName;
   private String description;
   private Person creator;
-
+  private List<Story> dependencies;
   private ObservableList<String> acceptanceCriteria;
 
   /**
@@ -32,10 +32,11 @@ public class Story implements AgileItem, Comparable<Story> {
     this.description = "";
     this.creator = null;
     this.acceptanceCriteria = FXCollections.observableArrayList();
+    this.dependencies = new ArrayList<>();
   }
 
   /**
-   * Constructor for all fields except ACs.
+   * Constructor for label, storyName, description, creator
    * @param label Not-null ID/label.
    * @param storyName Long name for story.
    * @param description Description of story.
@@ -50,7 +51,7 @@ public class Story implements AgileItem, Comparable<Story> {
   }
 
   /**
-   * Constructor for all fields.
+   * Constructor for label, storyName, description, creator, acceptanceCriteria.
    * @param label Not-null ID/label.
    * @param storyName Long name for story.
    * @param description Description of story.
@@ -71,6 +72,29 @@ public class Story implements AgileItem, Comparable<Story> {
   }
 
   /**
+   * Consructor for all fields.
+   * @param label
+   * @param storyName
+   * @param description
+   * @param creator
+   * @param acceptanceCriteria
+   * @param dependencies
+   */
+  public Story(String label, String storyName, String description, Person creator,
+               ObservableList<String> acceptanceCriteria, List<Story> dependencies) {
+    this.label = label;
+    this.storyName = storyName;
+    this.description = description;
+    this.creator = creator;
+    if (acceptanceCriteria == null) {
+      this.acceptanceCriteria = FXCollections.observableArrayList();
+    } else {
+      this.acceptanceCriteria = acceptanceCriteria;
+    }
+    this.dependencies = dependencies;
+  }
+
+  /**
    * Constructor to create a clone of existing story.
    *
    * @param clone Story to clone.
@@ -83,6 +107,9 @@ public class Story implements AgileItem, Comparable<Story> {
     this.acceptanceCriteria = FXCollections.observableArrayList();
     if (clone.getAcceptanceCriteria() != null) {
       this.acceptanceCriteria.addAll(clone.getAcceptanceCriteria());
+    }
+    if (clone.getDependencies() != null) {
+      this.dependencies.addAll(clone.getDependencies());
     }
   }
 
@@ -167,6 +194,22 @@ public class Story implements AgileItem, Comparable<Story> {
   }
 
   /**
+   * Sets the dependencies
+   * @param dependencies List of stories
+   */
+  public void setDependencies(List<Story> dependencies) {
+    this.dependencies = dependencies;
+  }
+
+  /**
+   * Gets the dependencies
+   * @return A list of stories that this story depends on
+   */
+  public List<Story> getDependencies() {
+    return this.dependencies;
+  }
+
+  /**
    * Copies the story input fields into current object.
    * @param agileItem Story that's fields are to be copied.
    */
@@ -180,6 +223,8 @@ public class Story implements AgileItem, Comparable<Story> {
       this.creator = clone.getCreator();
       this.acceptanceCriteria.clear();
       this.acceptanceCriteria.addAll(clone.getAcceptanceCriteria());
+      this.dependencies.clear();
+      this.dependencies.addAll(clone.getDependencies());
     }
   }
 
