@@ -525,7 +525,7 @@ public class ReportWriter {
     storyDescription.appendChild(report.createTextNode(story.getDescription()));
     storyElem.appendChild(storyDescription);
 
-    Element storyState = report.createElement("Story State");
+    Element storyState = report.createElement("StoryState");
     if (story.getStoryState()) {
       storyState.appendChild(report.createTextNode("This story is ready."));
     } else {
