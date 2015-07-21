@@ -21,6 +21,8 @@ public class Story implements AgileItem, Comparable<Story> {
   private String description;
   private Person creator;
 
+  private boolean isReady = false;
+
   private ObservableList<String> acceptanceCriteria;
 
   /**
@@ -84,6 +86,7 @@ public class Story implements AgileItem, Comparable<Story> {
     if (clone.getAcceptanceCriteria() != null) {
       this.acceptanceCriteria.addAll(clone.getAcceptanceCriteria());
     }
+    this.isReady = clone.getIsReady();
   }
 
   /**
@@ -148,6 +151,22 @@ public class Story implements AgileItem, Comparable<Story> {
    */
   public void setCreator(Person creator) {
     this.creator = creator;
+  }
+
+  /**
+   * Returns whether or not the story is marked as ready.
+   * @return Story is ready or not as a boolean.
+   */
+  public boolean getIsReady() {
+    return this.isReady;
+  }
+
+  /**
+   * Sets the readiness state of the story.
+   * @param isReady Whether story is ready or not as a boolean.
+   */
+  public void setIsReady(boolean isReady) {
+    this.isReady = isReady;
   }
 
   /**

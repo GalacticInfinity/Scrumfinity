@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -51,6 +52,7 @@ public class StoryDialogController {
   @FXML private ListView<String> listAC;
   @FXML private Label backlogContainer; // Dirty container but works
   @FXML private ComboBox<Backlog> backlogCombo;
+  @FXML private CheckBox readyCheckbox;
   @FXML private Button addAC;
   @FXML private Button removeAC;
   @FXML private Button upAC;
@@ -94,6 +96,7 @@ public class StoryDialogController {
       btnCreateStory.setText("Create");
 
       initialiseLists();
+      readyCheckbox.setDisable(true);
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       thisStage.setTitle("Edit Story");
       btnCreateStory.setText("Save");
@@ -103,6 +106,7 @@ public class StoryDialogController {
       storyDescriptionField.setText(story.getDescription());
       storyCreatorList.setValue(story.getCreator());
       acceptanceCriteria.setAll(story.getAcceptanceCriteria());
+      readyCheckbox.setSelected(story.getIsReady());
 
       initialiseLists();
       storyCreatorList.setDisable(true);
@@ -140,6 +144,14 @@ public class StoryDialogController {
     btnCreateStory.setDefaultButton(true);
     thisStage.setResizable(false);
 
+    if (!checkReadinessCriteria()) {
+      readyCheckbox.setSelected(false);
+      readyCheckbox.setDisable(true);
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        story.setIsReady(false);
+      }
+    }
+
     storyLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
       if(createOrEdit == CreateOrEdit.EDIT) {
@@ -171,6 +183,9 @@ public class StoryDialogController {
       //For disabling the button
       if(createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
+        if (checkReadinessCriteria()) {
+          readyCheckbox.setDisable(false);
+        }
       }
     });
 
@@ -182,6 +197,7 @@ public class StoryDialogController {
           }
         }
     );
+
   }
 
   /**
@@ -192,6 +208,7 @@ public class StoryDialogController {
         storyLabelField.getText().equals(story.getLabel()) &&
         storyNameField.getText().equals(story.getStoryName()) &&
         listAC.getItems().equals(story.getAcceptanceCriteria()) &&
+        readyCheckbox.isSelected() == story.getIsReady() &&
         (backlogCombo.getValue() == null || backlogCombo.getValue().equals(lastBacklog))) {
       btnCreateStory.setDisable(true);
     } else {
@@ -282,6 +299,7 @@ public class StoryDialogController {
         story.setDescription(storyDescription);
         story.setCreator(creator);
         story.setAcceptanceCriteria(acceptanceCriteria);
+        story.setIsReady(readyCheckbox.isSelected());
         if (lastBacklog == null && backlog != null) {
           backlog.addStory(story);
         }
@@ -552,6 +570,36 @@ public class StoryDialogController {
         return new ListViewCell();
       }
     });
+  }
+
+  /**
+   * Handles the behaviour of the readiness checkbox on click.
+   */
+  @FXML
+  private void readinessCheckboxClick() {
+    checkButtonDisabled();
+    if (!checkReadinessCriteria()) {
+      readyCheckbox.setSelected(false);
+    }
+  }
+
+  /**
+   * Checks if the story meets the criteria to be marked as ready:
+   * Has acceptance criteria.
+   * Is in a backlog.
+   * Has a size estimate.
+   *
+   * @return Whether the story meets readiness criteria as boolean.
+   */
+  private boolean checkReadinessCriteria() {
+    for (Backlog backlog : mainApp.getBacklogs()) {   //Search each backlog
+      if (backlog.getStories().contains(story)) {     //If backlog contains story
+        if (backlog.getSizes().get(story) > 0) {      //If story is estimated (and therefore has AC)
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   /**
