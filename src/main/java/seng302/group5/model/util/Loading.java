@@ -649,7 +649,7 @@ public class Loading {
   }
 
   /**
-   * Syncs the hashmap of Person,Role in teams with roles from main app
+   * Syncs the map of Person,Role in teams with roles from main app
    */
   private void syncRoles() {
     Role tempRole;
