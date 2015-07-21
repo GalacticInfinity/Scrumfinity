@@ -6,9 +6,9 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox prefHeight="288.0" prefWidth="388.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.ACDialogController">
+<VBox prefHeight="307.0" prefWidth="388.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.ACDialogController">
    <children>
-      <HBox prefHeight="323.0" prefWidth="388.0">
+      <HBox prefHeight="273.0" prefWidth="388.0">
          <children>
             <Label fx:id="labelAC" prefHeight="41.0" prefWidth="149.0" text="Acceptance &#10;    Criterion:">
                <font>
@@ -25,19 +25,22 @@
             </TextArea>
          </children>
       </HBox>
-      <HBox fx:id="btnContainer" prefHeight="100.0" prefWidth="200.0">
+      <HBox fx:id="btnContainer" prefHeight="26.0" prefWidth="213.0">
          <children>
-            <Button fx:id="btnConfirm" mnemonicParsing="false" onAction="#btnAddClick" text="Save">
+            <Button fx:id="btnConfirm" mnemonicParsing="false" onAction="#btnAddClick" prefHeight="26.0" prefWidth="62.0" text="Save">
                <HBox.margin>
-                  <Insets left="268.0" />
+                  <Insets left="5.0" right="5.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#btnCancelClick" text="Cancel">
+            <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#btnCancelClick" prefHeight="26.0" prefWidth="62.0" text="Cancel">
                <HBox.margin>
                   <Insets left="10.0" />
                </HBox.margin>
             </Button>
          </children>
+         <VBox.margin>
+            <Insets left="235.0" />
+         </VBox.margin>
       </HBox>
    </children>
 </VBox>

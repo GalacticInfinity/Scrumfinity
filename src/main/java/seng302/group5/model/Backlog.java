@@ -139,7 +139,6 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
    */
   public void addAllStories(Collection<Story> storyCollection) {
     stories.addAll(storyCollection);
-    sizes.clear();
     for (Story story : storyCollection) {
       sizes.put(story, 0);
     }

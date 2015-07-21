@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -626,6 +627,7 @@ public class Loading {
         main.addBacklog(newBacklog);
       }
     }
+    syncProjectsAndBacklogs();
   }
 
   /**
@@ -793,7 +795,19 @@ public class Loading {
   /**
    * A function to sync the temp backlog and real backlogs
    */
-  private void syncProjAndBacklog() {
+  private void syncProjectsAndBacklogs() {
+    Backlog tempBacklog;
 
+    Map<String, Backlog> backlogMap = new HashMap<>();
+    for (Backlog backlog : main.getBacklogs()) {
+      backlogMap.put(backlog.getLabel(), backlog);
+    }
+
+    for (Project project : main.getProjects()) {
+      tempBacklog = project.getBacklog();
+      if (tempBacklog != null) {
+        project.setBacklog(backlogMap.get(tempBacklog.getLabel()));
+      }
+    }
   }
 }

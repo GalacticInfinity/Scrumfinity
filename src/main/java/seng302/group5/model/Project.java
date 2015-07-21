@@ -1,7 +1,5 @@
 package seng302.group5.model;
 
-import java.util.Comparator;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -30,7 +28,7 @@ public class Project implements AgileItem, Comparable<Project>  {
    * Constructor.
    *
    * @param label              Name of Person, Unique, Non-Null, can't be greater then 8 characters.
-   * @param projectName        Description of person
+   * @param projectName        Description of person.
    * @param projectDescription Date of birth of person?
    */
   public Project(String label, String projectName, String projectDescription) {
@@ -50,6 +48,7 @@ public class Project implements AgileItem, Comparable<Project>  {
     this.projectDescription = clone.getProjectDescription();
     this.allocatedTeams.clear();
     this.allocatedTeams.addAll(clone.getAllocatedTeams());
+    this.backlog = clone.getBacklog();
   }
 
   @Override
@@ -78,6 +77,10 @@ public class Project implements AgileItem, Comparable<Project>  {
     this.projectDescription = projectDescription;
   }
 
+  public Backlog getBacklog() { return backlog; }
+
+  public void setBacklog(Backlog backlog) { this.backlog = backlog; }
+
   public ObservableList<AgileHistory> getAllocatedTeams() {
     return this.allocatedTeams;
   }
@@ -100,14 +103,6 @@ public class Project implements AgileItem, Comparable<Project>  {
     this.allocatedTeams.remove(team);
   }
 
-  public Backlog getBacklog() {
-    return backlog;
-  }
-
-  public void setBacklog(Backlog backlog) {
-    this.backlog = backlog;
-  }
-
   /**
    * Copies the Project input person's fields into current object.
    *
@@ -122,6 +117,7 @@ public class Project implements AgileItem, Comparable<Project>  {
       this.projectDescription = clone.getProjectDescription();
       this.allocatedTeams.clear();
       this.allocatedTeams.addAll(clone.getAllocatedTeams());
+      this.backlog = clone.getBacklog();
     }
   }
 
@@ -136,16 +132,46 @@ public class Project implements AgileItem, Comparable<Project>  {
   /**
    * Check if two project's ids are equal
    *
-   * @param obj Object to compare to.
+   * @param o Object to compare to.
    * @return Whether project's ids are equal
    */
   @Override
-  public boolean equals(Object obj) {
-    boolean result = false;
-    if (obj instanceof Project) {
-      Project project = (Project) obj;
-      result = this.label.equals(project.getLabel());
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Project project = (Project) o;
+
+    if (!allocatedTeams.equals(project.allocatedTeams)) {
+      return false;
+    }
+    if (backlog != null ? !backlog.equals(project.backlog) : project.backlog != null) {
+      return false;
+    }
+    if (!label.equals(project.label)) {
+      return false;
+    }
+    if (!projectDescription.equals(project.projectDescription)) {
+      return false;
+    }
+    if (!projectName.equals(project.projectName)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = label.hashCode();
+    result = 31 * result + projectName.hashCode();
+    result = 31 * result + projectDescription.hashCode();
+    result = 31 * result + (backlog != null ? backlog.hashCode() : 0);
+    result = 31 * result + allocatedTeams.hashCode();
     return result;
   }
 
