@@ -1,5 +1,7 @@
 package seng302.group5.controller.dialogControllers;
 
+import java.awt.*;
+import java.awt.Rectangle;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -14,11 +16,15 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.*;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Backlog;
@@ -233,6 +239,14 @@ public class BacklogDialogController {
     productOwners = FXCollections.observableArrayList();
     estimates = FXCollections.observableArrayList();
 
+
+    allocatedStoriesList.setCellFactory(
+        (new Callback<ListView<StoryEstimate>, ListCell<StoryEstimate>>() {
+          @Override
+          public ListCell<StoryEstimate> call(ListView<StoryEstimate> param) {
+            return new StoryFormatCell();
+          }
+        }));
     try {
       Set<Story> storiesInUse = new HashSet<>();
       for (Backlog mainBacklog : mainApp.getBacklogs()) {
@@ -574,6 +588,33 @@ public class BacklogDialogController {
     }
   }
 
+  class StoryFormatCell extends ListCell<StoryEstimate> {
+
+    public StoryFormatCell() {    }
+
+    @Override protected void updateItem(StoryEstimate item, boolean empty) {
+      // calling super here is very important - don't skip this!
+      super.updateItem(item, empty);
+
+      // change the text fill based on whether it is positive (green)
+      // or negative (red). If the cell is selected, the text will
+      // always be white (so that it can be read against the blue
+      // background), and if the value is zero, we'll make it black.
+      if (item != null) {
+        javafx.scene.shape.Circle rect = new javafx.scene.shape.Circle(5);
+        if (item.getStory().getIsReady() == true) {
+          setText(item.toString());
+          rect.setFill(Color.GREEN);
+          setGraphic(rect);
+        }
+         else {
+          setText(item.toString());
+          rect.setFill(Color.RED);
+          setGraphic(rect);
+        }
+      }}
+  }
+
   /**
    * Inner class for storing/displaying allocated stories with their respective estimates
    */
@@ -640,3 +681,4 @@ public class BacklogDialogController {
     }
   }
 }
+
