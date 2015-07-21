@@ -51,7 +51,7 @@ public class Sprint implements AgileItem, Comparable<Sprint> {
    * It takes in all the needed variables to fill in the models variables.
    *
    *
-   * @param sprintGoal String, not-null. This also works as the label.
+   * @param sprintGoal String, not-null, unique in the main set. This also works as the label.
    * @param sprintDescription String
    * @param sprintFullName - String
    * @param sprintTeam - Team
