@@ -174,15 +174,6 @@ public class Project implements AgileItem, Comparable<Project>  {
     result = 31 * result + allocatedTeams.hashCode();
     return result;
   }
-  //  @Override
-//  public boolean equals(Object obj) {
-//    boolean result = false;
-//    if (obj instanceof Project) {
-//      Project project = (Project) obj;
-//      result = this.label.equals(project.getLabel());
-//    }
-//    return result;
-//  }
 
   /**
    * Compare the project label to o's project label
