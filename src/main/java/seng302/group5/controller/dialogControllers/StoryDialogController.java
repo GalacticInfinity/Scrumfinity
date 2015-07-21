@@ -306,6 +306,11 @@ public class StoryDialogController {
         mainApp.refreshList(story);
       }
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
+      if (backlog != null && createOrEdit == CreateOrEdit.CREATE) {
+        undoRedoObject.addDatum(backlog);
+      } else {
+        undoRedoObject.addDatum(null);
+      }
       mainApp.newAction(undoRedoObject);
 
       thisStage.close();
