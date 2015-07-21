@@ -350,12 +350,18 @@ public class RevertHandler {
     // For every available backlog
     for (Backlog backlog : backlogs) {
       List<Story> storyList = new ArrayList<>();
+      Map<Story, Integer> storyEstimateMap = new HashMap<>();
       // For every story in that backlog
       for (Story backlogStory : backlog.getStories()) {
-        storyList.add(storyMap.get(backlogStory.getLabel()));
+        Story story = storyMap.get(backlogStory.getLabel());
+        storyList.add(story);   // important to keep same order to maintain priority
+        // get values from old map in backlog
+        storyEstimateMap.put(story, backlog.getSizes().get(backlogStory));
       }
       backlog.removeAllStories();
-      backlog.addAllStories(storyList);
+      for (Story story : storyList) {
+        backlog.addStory(story, storyEstimateMap.get(story));
+      }
     }
   }
 
