@@ -5,9 +5,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -783,7 +783,7 @@ public class ListMainPaneController {
           SortedList<Story> sortedStories = new SortedList<>(
               FXCollections.observableArrayList(backlog.getStories()),
               Comparator.<Story>naturalOrder());
-          Map<Story, Integer> sorted = new TreeMap<>(backlog.getSizes());
+          Map<Story, Integer> sorted = new IdentityHashMap<>(backlog.getSizes());
           for (Map.Entry<Story, Integer> entry : sorted.entrySet()) {
             tempTextStoriesBody = new Text("\n• " + entry.getKey() + " - " +
             backlog.getEstimate().getEstimateNames().get(entry.getValue()));

@@ -3,9 +3,9 @@ package seng302.group5.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.IdentityHashMap;
 
 /**
  * Class modelling a Backlog. Backlogs will contain same basic descriptive information as found
@@ -34,7 +34,7 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
     this.productOwner = null;
     this.estimate = null;
     this.stories = new ArrayList<>();
-    this.sizes = new HashMap<>();
+    this.sizes = new IdentityHashMap<>();
   }
 
   /**
@@ -53,7 +53,7 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
     this.productOwner = productOwner;
     this.estimate = estimate;
     this.stories = new ArrayList<>();
-    this.sizes = new HashMap<>();
+    this.sizes = new IdentityHashMap<>();
   }
 
   /**
@@ -70,7 +70,7 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
     this.stories = new ArrayList<>();
     this.stories.addAll(clone.getStories());
     this.estimate = clone.getEstimate();
-    this.sizes = new HashMap<>();
+    this.sizes = new IdentityHashMap<>();
     if (!clone.getStories().isEmpty()) {
       sizes.putAll(clone.getSizes());
     }
