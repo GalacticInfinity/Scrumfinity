@@ -106,11 +106,22 @@ public class StoryDialogController {
       storyDescriptionField.setText(story.getDescription());
       storyCreatorList.setValue(story.getCreator());
       acceptanceCriteria.setAll(story.getAcceptanceCriteria());
-      readyCheckbox.setSelected(story.getIsReady());
 
       initialiseLists();
       storyCreatorList.setDisable(true);
       btnCreateStory.setDisable(true);
+
+      if (checkReadinessCriteria(story)) {
+        System.out.println("Story meets criteria.");
+        readyCheckbox.setDisable(false);
+        System.out.println("Checkbox set to enabled");
+        readyCheckbox.setSelected(story.getIsReady());
+        System.out.println("Is story marked as ready? " + story.getIsReady());
+        System.out.println("Checkbox now ticked or not ticked");
+      } else {
+        System.out.println("Story does not meet criteria");
+        readyCheckbox.setDisable(true);
+      }
     }
     this.createOrEdit = createOrEdit;
 
@@ -144,14 +155,6 @@ public class StoryDialogController {
     btnCreateStory.setDefaultButton(true);
     thisStage.setResizable(false);
 
-    if (!checkReadinessCriteria()) {
-      readyCheckbox.setSelected(false);
-      readyCheckbox.setDisable(true);
-      if (createOrEdit == CreateOrEdit.EDIT) {
-        story.setIsReady(false);
-      }
-    }
-
     storyLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
       if(createOrEdit == CreateOrEdit.EDIT) {
@@ -183,9 +186,6 @@ public class StoryDialogController {
       //For disabling the button
       if(createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
-        if (checkReadinessCriteria()) {
-          readyCheckbox.setDisable(false);
-        }
       }
     });
 
@@ -578,9 +578,6 @@ public class StoryDialogController {
   @FXML
   private void readinessCheckboxClick() {
     checkButtonDisabled();
-    if (!checkReadinessCriteria()) {
-      readyCheckbox.setSelected(false);
-    }
   }
 
   /**
@@ -591,7 +588,7 @@ public class StoryDialogController {
    *
    * @return Whether the story meets readiness criteria as boolean.
    */
-  private boolean checkReadinessCriteria() {
+  private boolean checkReadinessCriteria(Story story) {
     for (Backlog backlog : mainApp.getBacklogs()) {   //Search each backlog
       if (backlog.getStories().contains(story)) {     //If backlog contains story
         if (backlog.getSizes().get(story) > 0) {      //If story is estimated (and therefore has AC)
