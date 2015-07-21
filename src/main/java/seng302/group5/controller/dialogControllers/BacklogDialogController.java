@@ -488,14 +488,14 @@ public class BacklogDialogController {
         backlog.setEstimate(estimate);
         backlog.removeAllStories();
         for (Story story : availableStories) {
-          if (story.getIsReady()) {
-            story.setIsReady(false);
+          if (story.getStoryState()) {
+            story.setStoryState(false);
           }
         }
         for (StoryEstimate storyEstimate : allocatedStories) {
           if (!(storyEstimate.getEstimateIndex() > 0)) {
-            if (storyEstimate.getStory().getIsReady()) {
-              storyEstimate.getStory().setIsReady(false);
+            if (storyEstimate.getStory().getStoryState()) {
+              storyEstimate.getStory().setStoryState(false);
             }
           }
           backlog.addStory(storyEstimate.getStory(), storyEstimate.getEstimateIndex());
