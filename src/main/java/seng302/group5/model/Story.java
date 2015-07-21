@@ -11,6 +11,8 @@ import javafx.collections.ObservableList;
  * Story model. So that managers can keep track of the things people need to do, a way to record
  * work items as user stories. For now, it just have the most basic detail but we’ll add more
  * in subsequent stories.
+ * Contains the information about a single story, which includes the label, name,
+ * a description, who the creator is, dependencies, and acceptance criteria.
  *
  * Created by Zander on 5/05/2015.
  */
@@ -49,6 +51,7 @@ public class Story implements AgileItem, Comparable<Story> {
     this.description = description;
     this.creator = creator;
     this.acceptanceCriteria = FXCollections.observableArrayList();
+    this.dependencies = new ArrayList<>();
   }
 
   /**
@@ -70,6 +73,7 @@ public class Story implements AgileItem, Comparable<Story> {
     } else {
       this.acceptanceCriteria = acceptanceCriteria;
     }
+    this.dependencies = new ArrayList<>();
   }
 
   /**
@@ -92,7 +96,11 @@ public class Story implements AgileItem, Comparable<Story> {
     } else {
       this.acceptanceCriteria = acceptanceCriteria;
     }
-    this.dependencies = dependencies;
+    if (dependencies == null) {
+      this.dependencies = new ArrayList<>();
+    } else {
+      this.dependencies = dependencies;
+    }
   }
 
   /**
@@ -109,6 +117,7 @@ public class Story implements AgileItem, Comparable<Story> {
     if (clone.getAcceptanceCriteria() != null) {
       this.acceptanceCriteria.addAll(clone.getAcceptanceCriteria());
     }
+    this.dependencies = new ArrayList<>();
     if (clone.getDependencies() != null) {
       this.dependencies.addAll(clone.getDependencies());
     }
