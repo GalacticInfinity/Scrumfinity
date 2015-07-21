@@ -106,11 +106,17 @@ public class StoryDialogController {
       storyDescriptionField.setText(story.getDescription());
       storyCreatorList.setValue(story.getCreator());
       acceptanceCriteria.setAll(story.getAcceptanceCriteria());
-      readyCheckbox.setSelected(story.getIsReady());
 
       initialiseLists();
       storyCreatorList.setDisable(true);
       btnCreateStory.setDisable(true);
+
+      if (checkReadinessCriteria(story)) {
+        readyCheckbox.setDisable(false);
+        readyCheckbox.setSelected(story.getStoryState());
+      } else {
+        readyCheckbox.setDisable(true);
+      }
     }
     this.createOrEdit = createOrEdit;
 
@@ -144,14 +150,6 @@ public class StoryDialogController {
     btnCreateStory.setDefaultButton(true);
     thisStage.setResizable(false);
 
-    if (!checkReadinessCriteria()) {
-      readyCheckbox.setSelected(false);
-      readyCheckbox.setDisable(true);
-      if (createOrEdit == CreateOrEdit.EDIT) {
-        story.setIsReady(false);
-      }
-    }
-
     storyLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
       if(createOrEdit == CreateOrEdit.EDIT) {
@@ -183,9 +181,6 @@ public class StoryDialogController {
       //For disabling the button
       if(createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
-        if (checkReadinessCriteria()) {
-          readyCheckbox.setDisable(false);
-        }
       }
     });
 
@@ -208,7 +203,7 @@ public class StoryDialogController {
         storyLabelField.getText().equals(story.getLabel()) &&
         storyNameField.getText().equals(story.getStoryName()) &&
         listAC.getItems().equals(story.getAcceptanceCriteria()) &&
-        readyCheckbox.isSelected() == story.getIsReady() &&
+        readyCheckbox.isSelected() == story.getStoryState() &&
         (backlogCombo.getValue() == null || backlogCombo.getValue().equals(lastBacklog))) {
       btnCreateStory.setDisable(true);
     } else {
@@ -299,7 +294,7 @@ public class StoryDialogController {
         story.setDescription(storyDescription);
         story.setCreator(creator);
         story.setAcceptanceCriteria(acceptanceCriteria);
-        story.setIsReady(readyCheckbox.isSelected());
+        story.setStoryState(readyCheckbox.isSelected());
         if (lastBacklog == null && backlog != null) {
           backlog.addStory(story);
         }
@@ -583,9 +578,6 @@ public class StoryDialogController {
   @FXML
   private void readinessCheckboxClick() {
     checkButtonDisabled();
-    if (!checkReadinessCriteria()) {
-      readyCheckbox.setSelected(false);
-    }
   }
 
   /**
@@ -596,7 +588,7 @@ public class StoryDialogController {
    *
    * @return Whether the story meets readiness criteria as boolean.
    */
-  private boolean checkReadinessCriteria() {
+  private boolean checkReadinessCriteria(Story story) {
     for (Backlog backlog : mainApp.getBacklogs()) {   //Search each backlog
       if (backlog.getStories().contains(story)) {     //If backlog contains story
         if (backlog.getSizes().get(story) > 0) {      //If story is estimated (and therefore has AC)

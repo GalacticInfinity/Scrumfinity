@@ -77,9 +77,13 @@ public class Project implements AgileItem, Comparable<Project>  {
     this.projectDescription = projectDescription;
   }
 
-  public Backlog getBacklog() { return backlog; }
+  public Backlog getBacklog() {
+    return backlog;
+  }
 
-  public void setBacklog(Backlog backlog) { this.backlog = backlog; }
+  public void setBacklog(Backlog backlog) {
+    this.backlog = backlog;
+  }
 
   public ObservableList<AgileHistory> getAllocatedTeams() {
     return this.allocatedTeams;
