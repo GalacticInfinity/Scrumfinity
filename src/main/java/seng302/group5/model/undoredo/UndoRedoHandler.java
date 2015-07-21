@@ -2,6 +2,7 @@ package seng302.group5.model.undoredo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 import seng302.group5.Main;
@@ -776,6 +777,7 @@ public class UndoRedoHandler {
 
     // Make the changes and refresh the list
     if (undoOrRedo == UndoOrRedo.UNDO) {
+
       mainApp.deleteStory(storyToChange);
     } else {
       storyToChange.copyValues(storyData);
@@ -834,12 +836,22 @@ public class UndoRedoHandler {
     // Get the Release to undo/redo deletion of
     Story storyToChange = (Story) undoRedoObject.getAgileItem();
     Story storyData = (Story) data.get(0);
+    Backlog storyBacklog = (Backlog) data.get(1);
+    Backlog estimateBacklog = (Backlog) data.get(2);
 
     // Make the changes and refresh the list
     if (undoOrRedo == UndoOrRedo.UNDO) {
       storyToChange.copyValues(storyData);
+      if (storyBacklog != null) {
+        int index = estimateBacklog.getStories().indexOf(storyToChange);
+        int estimate = estimateBacklog.getSizes().get(storyToChange);
+        storyBacklog.addStory(index, storyToChange, estimate);
+      }
       mainApp.addStory(storyToChange);
     } else {
+      if (storyBacklog != null) {
+        storyBacklog.removeStory(storyToChange);
+      }
       mainApp.deleteStory(storyToChange);
     }
 
