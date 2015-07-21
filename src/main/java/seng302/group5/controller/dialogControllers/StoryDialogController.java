@@ -294,7 +294,7 @@ public class StoryDialogController {
         story.setDescription(storyDescription);
         story.setCreator(creator);
         story.setAcceptanceCriteria(acceptanceCriteria);
-        story.setIsReady(readyCheckbox.isSelected());
+        story.setStoryState(readyCheckbox.isSelected());
         if (lastBacklog == null && backlog != null) {
           backlog.addStory(story);
         }
