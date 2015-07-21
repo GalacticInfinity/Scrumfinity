@@ -105,6 +105,7 @@ public class RevertHandler {
     syncStoriesWithPeople(mainApp.getStories(), mainApp.getPeople());
     syncBacklogsWithStories(mainApp.getBacklogs(), mainApp.getStories());
     syncBacklogsWithEstimates(mainApp.getBacklogs(), mainApp.getEstimates());
+    syncProjectsWithBacklogs(mainApp.getProjects(), mainApp.getBacklogs());
 
     mainApp.refreshLastSaved();
     mainApp.refreshList(null);
@@ -170,6 +171,7 @@ public class RevertHandler {
     syncStoriesWithPeople(storiesLastSaved, peopleLastSaved);
     syncBacklogsWithStories(backlogsLastSaved, storiesLastSaved);
     syncBacklogsWithEstimates(backlogsLastSaved, estimatesLastSaved);
+    syncProjectsWithBacklogs(projectsLastSaved, backlogsLastSaved);
   }
 
   /**
@@ -391,7 +393,7 @@ public class RevertHandler {
    * @param projects Reference project objects
    * @param backlogs Reference backlog objects
    */
-  private void syncProjectsWithBacklogs(List<Project> projects, List<Backlog> backlogs) { //TODO use this function above to allow the revert after it is tested when the dependant tasks are completed
+  private void syncProjectsWithBacklogs(List<Project> projects, List<Backlog> backlogs) {
     Map<String, Backlog> backlogMap = new HashMap<>();
 
     for (Backlog mainBacklog : backlogs) {
@@ -400,8 +402,10 @@ public class RevertHandler {
 
     String backlogLabel;
     for (Project project : projects) {
+      if (project.getBacklog() != null) {
       backlogLabel = project.getBacklog().getLabel();
       project.setBacklog(backlogMap.get(backlogLabel));
+      }
     }
   }
 
