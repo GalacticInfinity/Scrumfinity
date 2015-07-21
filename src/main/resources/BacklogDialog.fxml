@@ -6,7 +6,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="510.0" prefWidth="488.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.BacklogDialogController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="510.0" prefWidth="539.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.BacklogDialogController">
     <children>
         <HBox alignment="BOTTOM_LEFT" prefHeight="32.0" prefWidth="434.0" spacing="10.0">
             <children>
@@ -108,16 +108,25 @@
             </VBox>
             <VBox prefHeight="232.0" prefWidth="215.0">
                <children>
-                  <Label prefHeight="25.0" text="Stories in Backlog:">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Label>
-                  <ListView fx:id="allocatedStoriesList" maxHeight="225.0" prefHeight="184.0" prefWidth="220.0" />
-                  <ComboBox fx:id="storyEstimateCombo" prefHeight="25.0" prefWidth="220.0" promptText="Estimate" />
+                  <HBox prefHeight="7.0" prefWidth="215.0">
+                     <children>
+                        <Label prefHeight="25.0" prefWidth="130.0" text="Stories in Backlog:">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="87.0" text="Show State">
+                           <HBox.margin>
+                              <Insets left="15.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <ListView fx:id="allocatedStoriesList" maxHeight="225.0" prefHeight="174.0" prefWidth="215.0" />
+                  <ComboBox fx:id="storyEstimateCombo" prefHeight="25.0" prefWidth="209.0" promptText="Estimate" />
                </children>
             </VBox>
-            <VBox alignment="CENTER" prefHeight="232.0" prefWidth="50.0">
+            <VBox alignment="CENTER" prefHeight="222.0" prefWidth="64.0">
                <children>
                   <Button fx:id="btnIncreasePriority" mnemonicParsing="false" onAction="#btnIncreasePriorityClick" prefWidth="30.0" text="↑">
                      <VBox.margin>
