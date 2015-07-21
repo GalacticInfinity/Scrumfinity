@@ -189,6 +189,7 @@ public class BacklogDialogController {
 
             allocatedStoriesList.setItems(null);
             allocatedStoriesList.setItems(allocatedStories);
+            allocatedStoriesList.getSelectionModel().clearSelection();
 
             if (createOrEdit == CreateOrEdit.EDIT) {
               checkButtonDisabled();

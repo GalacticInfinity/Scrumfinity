@@ -105,6 +105,7 @@ public class RevertHandler {
     syncStoriesWithPeople(mainApp.getStories(), mainApp.getPeople());
     syncBacklogsWithStories(mainApp.getBacklogs(), mainApp.getStories());
     syncBacklogsWithEstimates(mainApp.getBacklogs(), mainApp.getEstimates());
+    syncProjectsWithBacklogs(mainApp.getProjects(), mainApp.getBacklogs());
 
     mainApp.refreshLastSaved();
     mainApp.refreshList(null);
@@ -170,6 +171,7 @@ public class RevertHandler {
     syncStoriesWithPeople(storiesLastSaved, peopleLastSaved);
     syncBacklogsWithStories(backlogsLastSaved, storiesLastSaved);
     syncBacklogsWithEstimates(backlogsLastSaved, estimatesLastSaved);
+    syncProjectsWithBacklogs(projectsLastSaved, backlogsLastSaved);
   }
 
   /**
@@ -350,12 +352,18 @@ public class RevertHandler {
     // For every available backlog
     for (Backlog backlog : backlogs) {
       List<Story> storyList = new ArrayList<>();
+      Map<Story, Integer> storyEstimateMap = new HashMap<>();
       // For every story in that backlog
       for (Story backlogStory : backlog.getStories()) {
-        storyList.add(storyMap.get(backlogStory.getLabel()));
+        Story story = storyMap.get(backlogStory.getLabel());
+        storyList.add(story);   // important to keep same order to maintain priority
+        // get values from old map in backlog
+        storyEstimateMap.put(story, backlog.getSizes().get(backlogStory));
       }
       backlog.removeAllStories();
-      backlog.addAllStories(storyList);
+      for (Story story : storyList) {
+        backlog.addStory(story, storyEstimateMap.get(story));
+      }
     }
   }
 
@@ -385,7 +393,7 @@ public class RevertHandler {
    * @param projects Reference project objects
    * @param backlogs Reference backlog objects
    */
-  private void syncProjectsWithBacklogs(List<Project> projects, List<Backlog> backlogs) { //TODO use this function above to allow the revert after it is tested when the dependant tasks are completed
+  private void syncProjectsWithBacklogs(List<Project> projects, List<Backlog> backlogs) {
     Map<String, Backlog> backlogMap = new HashMap<>();
 
     for (Backlog mainBacklog : backlogs) {
@@ -394,8 +402,10 @@ public class RevertHandler {
 
     String backlogLabel;
     for (Project project : projects) {
+      if (project.getBacklog() != null) {
       backlogLabel = project.getBacklog().getLabel();
       project.setBacklog(backlogMap.get(backlogLabel));
+      }
     }
   }
 

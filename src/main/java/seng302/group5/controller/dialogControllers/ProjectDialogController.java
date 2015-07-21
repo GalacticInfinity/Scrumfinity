@@ -11,6 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
@@ -21,6 +22,7 @@ import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.AgileHistory;
+import seng302.group5.model.Backlog;
 import seng302.group5.model.Project;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
@@ -43,6 +45,7 @@ public class ProjectDialogController {
   @FXML private DatePicker teamEndDate;
   @FXML private Button btnConfirm;
   @FXML private HBox btnContainer;
+  @FXML private ComboBox<Backlog> backlogComboBox;
 
   private Main mainApp;
   private Stage thisStage;
@@ -52,6 +55,7 @@ public class ProjectDialogController {
   private ObservableList<AgileHistory> allocatedTeams = FXCollections.observableArrayList();
   private ObservableList<Team> availableTeams = FXCollections.observableArrayList();
   private AgileHistory projectHistory = new AgileHistory();
+  private ObservableList<Backlog> availableBacklogs;
 
   /**
    * Setup the project dialog controller
@@ -94,6 +98,7 @@ public class ProjectDialogController {
       projectLabelField.setText(project.getLabel());
       projectNameField.setText(project.getProjectName());
       projectDescriptionField.setText(project.getProjectDescription());
+      backlogComboBox.setValue(project.getBacklog());
     }
     this.createOrEdit = createOrEdit;
 
@@ -135,11 +140,19 @@ public class ProjectDialogController {
         checkButtonDisabled();
       }
     });
+
+    backlogComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
   }
 
   private void checkButtonDisabled() {
     if (projectDescriptionField.getText().equals(project.getProjectDescription()) &&
         projectLabelField.getText().equals(project.getLabel()) &&
+        backlogComboBox.getSelectionModel().getSelectedItem().equals(project.getBacklog()) &&
         projectNameField.getText().equals(project.getProjectName())) {
 
       btnConfirm.setDisable(true);
@@ -156,6 +169,7 @@ public class ProjectDialogController {
    * @param project      The project that is being created or edited.
    */
   private void initialiseLists(CreateOrEdit createOrEdit, Project project) {
+    availableBacklogs = FXCollections.observableArrayList();
     try {
       if (createOrEdit == CreateOrEdit.CREATE) {
         availableTeams.addAll(mainApp.getTeams());
@@ -165,6 +179,9 @@ public class ProjectDialogController {
         availableTeams.addAll(mainApp.getTeams().stream().collect(Collectors.toList()));
       }
 
+      availableBacklogs.addAll(mainApp.getBacklogs());
+      this.backlogComboBox.setVisibleRowCount(5);
+      this.backlogComboBox.setItems(availableBacklogs);
       this.availableTeamsList.setItems(availableTeams);
       this.allocatedTeamsList.setItems(
           allocatedTeams.sorted(Comparator.<AgileHistory>naturalOrder()));
@@ -423,6 +440,7 @@ public class ProjectDialogController {
     String projectLabel = "";
     String projectName = "";
     String projectDescription = projectDescriptionField.getText().trim();
+    Backlog selectedBacklog = backlogComboBox.getValue();
 
     try {
       projectLabel = parseProjectLabel(projectLabelField.getText());
@@ -465,6 +483,7 @@ public class ProjectDialogController {
           project.setLabel(projectLabel);
           project.setProjectName(projectName);
           project.setProjectDescription(projectDescription);
+          backlogComboBox.setValue(project.getBacklog());
           project.getAllocatedTeams().clear();
           for (AgileHistory team : this.allocatedTeams) {
             project.addTeam(team);
