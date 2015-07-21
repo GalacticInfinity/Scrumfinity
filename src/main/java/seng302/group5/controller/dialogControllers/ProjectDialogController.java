@@ -471,6 +471,7 @@ public class ProjectDialogController {
 
       if (createOrEdit == CreateOrEdit.CREATE) {
         project = new Project(projectLabel, projectName, projectDescription);
+        project.setBacklog(selectedBacklog);
         for (AgileHistory team : this.allocatedTeams) {
           project.addTeam(team);
         }
@@ -483,7 +484,7 @@ public class ProjectDialogController {
           project.setLabel(projectLabel);
           project.setProjectName(projectName);
           project.setProjectDescription(projectDescription);
-          backlogComboBox.setValue(project.getBacklog());
+          project.setBacklog(selectedBacklog);
           project.getAllocatedTeams().clear();
           for (AgileHistory team : this.allocatedTeams) {
             project.addTeam(team);
