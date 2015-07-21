@@ -20,6 +20,7 @@ public class Story implements AgileItem, Comparable<Story> {
   private String storyName;
   private String description;
   private Person creator;
+  private Backlog backlog;
 
   private ObservableList<String> acceptanceCriteria;
 
@@ -166,7 +167,7 @@ public class Story implements AgileItem, Comparable<Story> {
     this.acceptanceCriteria = acceptanceCriteria;
   }
 
-  /**
+    /**
    * Copies the story input fields into current object.
    * @param agileItem Story that's fields are to be copied.
    */
