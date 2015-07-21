@@ -1,6 +1,7 @@
 package seng302.group5.model;
 
-import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,7 +17,7 @@ public class Team implements AgileItem, Comparable<Team> {
   private String teamDescription;
 
   private ObservableList<Person> teamMembers = FXCollections.observableArrayList();
-  private HashMap<Person, Role> membersRole;
+  private Map<Person, Role> membersRole;
 
   /**
    * Default constructor.
@@ -24,13 +25,13 @@ public class Team implements AgileItem, Comparable<Team> {
   public Team() {
     this.label = "";
     this.teamDescription = "";
-    this.membersRole = new HashMap<>();
+    this.membersRole = new TreeMap<>();
   }
 
   public Team(String label, String teamDescription) {
     this.label = label;
     this.teamDescription = teamDescription;
-    this.membersRole = new HashMap<>();
+    this.membersRole = new TreeMap<>();
   }
 
   /**
@@ -44,7 +45,7 @@ public class Team implements AgileItem, Comparable<Team> {
     this.label = label;
     this.teamMembers = teamMembers;
     this.teamDescription = teamDescription;
-    this.membersRole = new HashMap<>();
+    this.membersRole = new TreeMap<>();
     for (Person member : this.teamMembers) {
       this.membersRole.put(member, null);
     }
@@ -61,17 +62,17 @@ public class Team implements AgileItem, Comparable<Team> {
     this.teamDescription = clone.getTeamDescription();
     this.teamMembers.clear();
     this.teamMembers.addAll(clone.getTeamMembers());
-    this.membersRole = new HashMap<>();
+    this.membersRole = new TreeMap<>();
     for (Person member : this.teamMembers) {
       this.membersRole.put(member, clone.getMembersRole().get(member));
     }
   }
 
-  public HashMap<Person, Role> getMembersRole() {
+  public Map<Person, Role> getMembersRole() {
     return membersRole;
   }
 
-  public void setMembersRole(HashMap<Person, Role> membersRole) {
+  public void setMembersRole(Map<Person, Role> membersRole) {
     this.membersRole = membersRole;
   }
 
