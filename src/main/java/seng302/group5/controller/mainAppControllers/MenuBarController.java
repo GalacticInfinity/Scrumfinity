@@ -600,7 +600,7 @@ public class MenuBarController {
       Scene dependantsDialogScene = new Scene(dependantsLayout);
       Stage dependantsDialogStage = new Stage();
 
-      //controller.setupController(this, dependantsDialogStage, createOrEdit, team);
+      controller.setupController(mainApp, dependantsDialogStage, null);
 
       dependantsDialogStage.initModality(Modality.APPLICATION_MODAL);
       dependantsDialogStage.initOwner(mainApp.getPrimaryStage());
