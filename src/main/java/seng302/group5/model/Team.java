@@ -1,7 +1,7 @@
 package seng302.group5.model;
 
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.IdentityHashMap;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,13 +25,13 @@ public class Team implements AgileItem, Comparable<Team> {
   public Team() {
     this.label = "";
     this.teamDescription = "";
-    this.membersRole = new TreeMap<>();
+    this.membersRole = new IdentityHashMap<>();
   }
 
   public Team(String label, String teamDescription) {
     this.label = label;
     this.teamDescription = teamDescription;
-    this.membersRole = new TreeMap<>();
+    this.membersRole = new IdentityHashMap<>();
   }
 
   /**
@@ -45,7 +45,7 @@ public class Team implements AgileItem, Comparable<Team> {
     this.label = label;
     this.teamMembers = teamMembers;
     this.teamDescription = teamDescription;
-    this.membersRole = new TreeMap<>();
+    this.membersRole = new IdentityHashMap<>();
     for (Person member : this.teamMembers) {
       this.membersRole.put(member, null);
     }
@@ -62,7 +62,7 @@ public class Team implements AgileItem, Comparable<Team> {
     this.teamDescription = clone.getTeamDescription();
     this.teamMembers.clear();
     this.teamMembers.addAll(clone.getTeamMembers());
-    this.membersRole = new TreeMap<>();
+    this.membersRole = new IdentityHashMap<>();
     for (Person member : this.teamMembers) {
       this.membersRole.put(member, clone.getMembersRole().get(member));
     }
