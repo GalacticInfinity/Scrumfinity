@@ -230,7 +230,7 @@ public class RevertHandlerTest {
     storyLabel = "testS";
     storyLongName ="testStory!";
     storyDescription ="This is a story and it is good";
-    storyCreator = null;
+    storyCreator = person;
 
     story = new Story(storyLabel, storyLongName, storyDescription, storyCreator, null); //null is fine
 

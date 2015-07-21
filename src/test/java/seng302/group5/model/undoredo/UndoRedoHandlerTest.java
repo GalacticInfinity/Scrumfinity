@@ -420,6 +420,23 @@ public class UndoRedoHandlerTest {
     undoRedoObject.setAgileItem(story);
     undoRedoObject.addDatum(new Story(story));
 
+    Backlog estimateBacklog = new Backlog();
+    Backlog storyBacklog = null;
+    for (Backlog backlog : mainApp.getBacklogs()) {
+      if (backlog.getStories().contains(story)) {
+        estimateBacklog.copyValues(backlog);
+        storyBacklog = backlog;
+        break;
+      }
+    }
+    // Normally there is some dialog confirmation here
+    if (storyBacklog != null) {
+      storyBacklog.removeStory(story);
+    }
+
+    undoRedoObject.addDatum(storyBacklog);
+    undoRedoObject.addDatum(estimateBacklog);
+
     undoRedoHandler.newAction(undoRedoObject);
   }
 

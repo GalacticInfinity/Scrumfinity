@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javafx.application.Application;
@@ -810,6 +811,8 @@ public class Main extends Application {
               deleteRelease(release);
             }
             deleteProject(project);
+          } else {
+            return;
           }
         } else {
           deleteProject(project);
@@ -838,6 +841,8 @@ public class Main extends Application {
             //if yes then remove
             person.getTeam().getTeamMembers().remove(person);
             deletePerson(person);
+          } else {
+            return;
           }
         } else {
           deletePerson(person);
@@ -881,6 +886,8 @@ public class Main extends Application {
             }
             //after all people have this skill removed delete the skill object
             deleteSkill(skill);
+          } else {
+            return;
           }
         } else {
           deleteSkill(skill);
@@ -935,8 +942,37 @@ public class Main extends Application {
         break;
       case "Stories":
         Story story = (Story) agileItem;
+        Backlog estimateBacklog = new Backlog();
+        Backlog storyBacklog = null;
+        for (Backlog backlog : backlogs) {
+          if (backlog.getStories().contains(story)) {
+            estimateBacklog.copyValues(backlog);
+            storyBacklog = backlog;
+            break;
+          }
+        }
+        if (storyBacklog != null) {
+          Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+          alert.setTitle("Story is in a Backlog");
+          alert.setHeaderText(null);
+          String message = String.format("Do you want to delete '%s' and remove it from '%s'",
+                                         story.getLabel(), storyBacklog.getLabel());
+
+          alert.setContentText(message);
+          //checks response
+          Optional<ButtonType> result = alert.showAndWait();
+          if (result.get() == ButtonType.OK) {
+            //if yes then remove story from the backlog
+            storyBacklog.removeStory(story);
+          } else {
+            return;
+          }
+        }
+
         deleteStory(story);
         undoRedoObject = generateDelUndoRedoObject(Action.STORY_DELETE, agileItem);
+        undoRedoObject.addDatum(storyBacklog);
+        undoRedoObject.addDatum(estimateBacklog);
         newAction(undoRedoObject);
         break;
       case "Backlogs":

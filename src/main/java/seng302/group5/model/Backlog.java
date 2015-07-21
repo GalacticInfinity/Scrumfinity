@@ -169,6 +169,19 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
   }
 
   /**
+   * Adds a story with estimate to a specific index (priority) to the backlog.
+   * Preconditions: The index is within the length of the list of stories.
+   * Postconditions: It wont break.
+   * @param priority The index that the story should be placed into.
+   * @param story The story to be added
+   * @param size  The estimate of the story being added.
+   */
+  public void addStory(int priority, Story story, int size) {
+    this.stories.add(priority, story);
+    this.sizes.put(story, size);
+  }
+
+  /**
    * Updates the size the story is mapped to on the Map. Use this if story exists but you need
    * to update the size
    *

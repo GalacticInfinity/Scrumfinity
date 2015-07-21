@@ -26,7 +26,7 @@ public enum Action {
   RELEASE_DELETE, // Release delete - 1 AgileItem
   STORY_CREATE,   // Story creation - 1 AgileItem
   STORY_EDIT,     // Story edit - 2 AgileItems
-  STORY_DELETE,   // Story delete - 1 AgileItem
+  STORY_DELETE,   // Story delete - 1 AgileItem plus associated backlog.
   BACKLOG_CREATE, // Backlog creation - 1 AgileItem
   BACKLOG_EDIT,   // Backlog edit - 2 AgileItems
   BACKLOG_DELETE, // Backlog delete - 1 AgileItem

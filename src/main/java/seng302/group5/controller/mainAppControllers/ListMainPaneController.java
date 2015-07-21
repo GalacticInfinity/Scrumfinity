@@ -450,8 +450,21 @@ public class ListMainPaneController {
       text9.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
     }
 
+    Text text10 = new Text("\nBacklog: ");
+    text10.setFill(Color.BLACK);
+    text10.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
+    Text text11;
+    if (project.getBacklog()==null) {
+      text11 = new Text("N/A");
+      text11.setFill(Color.BLACK);
+      text11.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    } else {
+      text11 = new Text(project.getBacklog().getLabel());
+      text11.setFill(Color.BLACK);
+      text11.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    }
     displayTextFlow.getChildren().addAll(text1, text2, text3, text4, text5, text6,
-                                         text7, text8, text9);
+                                         text7, text8, text9, text10,text11);
   }
 
 

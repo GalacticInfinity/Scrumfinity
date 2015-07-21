@@ -11,6 +11,8 @@ import javafx.collections.ObservableList;
  * Story model. So that managers can keep track of the things people need to do, a way to record
  * work items as user stories. For now, it just have the most basic detail but we’ll add more
  * in subsequent stories.
+ * Contains the information about a single story, which includes the label, name,
+ * a description, who the creator is, dependencies, and acceptance criteria.
  *
  * Created by Zander on 5/05/2015.
  */
@@ -20,9 +22,8 @@ public class Story implements AgileItem, Comparable<Story> {
   private String storyName;
   private String description;
   private Person creator;
-
+  private List<Story> dependencies;
   private boolean isReady = false;
-
   private ObservableList<String> acceptanceCriteria;
 
   /**
@@ -35,10 +36,11 @@ public class Story implements AgileItem, Comparable<Story> {
     this.creator = null;
     this.acceptanceCriteria = FXCollections.observableArrayList();
     this.isReady = false;
+    this.dependencies = new ArrayList<>();
   }
 
   /**
-   * Constructor for all fields except ACs.
+   * Constructor for label, storyName, description, creator
    * @param label Not-null ID/label.
    * @param storyName Long name for story.
    * @param description Description of story.
@@ -51,10 +53,11 @@ public class Story implements AgileItem, Comparable<Story> {
     this.creator = creator;
     this.acceptanceCriteria = FXCollections.observableArrayList();
     this.isReady = false;
+    this.dependencies = new ArrayList<>();
   }
 
   /**
-   * Constructor for all fields.
+   * Constructor for label, storyName, description, creator, acceptanceCriteria.
    * @param label Not-null ID/label.
    * @param storyName Long name for story.
    * @param description Description of story.
@@ -73,6 +76,34 @@ public class Story implements AgileItem, Comparable<Story> {
       this.acceptanceCriteria = acceptanceCriteria;
     }
     this.isReady = false;
+    this.dependencies = new ArrayList<>();
+  }
+
+  /**
+   * Consructor for all fields.
+   * @param label
+   * @param storyName
+   * @param description
+   * @param creator
+   * @param acceptanceCriteria
+   * @param dependencies
+   */
+  public Story(String label, String storyName, String description, Person creator,
+               ObservableList<String> acceptanceCriteria, List<Story> dependencies) {
+    this.label = label;
+    this.storyName = storyName;
+    this.description = description;
+    this.creator = creator;
+    if (acceptanceCriteria == null) {
+      this.acceptanceCriteria = FXCollections.observableArrayList();
+    } else {
+      this.acceptanceCriteria = acceptanceCriteria;
+    }
+    if (dependencies == null) {
+      this.dependencies = new ArrayList<>();
+    } else {
+      this.dependencies = dependencies;
+    }
   }
 
   /**
@@ -88,6 +119,10 @@ public class Story implements AgileItem, Comparable<Story> {
     this.acceptanceCriteria = FXCollections.observableArrayList();
     if (clone.getAcceptanceCriteria() != null) {
       this.acceptanceCriteria.addAll(clone.getAcceptanceCriteria());
+    }
+    this.dependencies = new ArrayList<>();
+    if (clone.getDependencies() != null) {
+      this.dependencies.addAll(clone.getDependencies());
     }
     this.isReady = clone.getIsReady();
   }
@@ -189,6 +224,22 @@ public class Story implements AgileItem, Comparable<Story> {
   }
 
   /**
+   * Sets the dependencies
+   * @param dependencies List of stories
+   */
+  public void setDependencies(List<Story> dependencies) {
+    this.dependencies = dependencies;
+  }
+
+  /**
+   * Gets the dependencies
+   * @return A list of stories that this story depends on
+   */
+  public List<Story> getDependencies() {
+    return this.dependencies;
+  }
+
+  /**
    * Copies the story input fields into current object.
    * @param agileItem Story that's fields are to be copied.
    */
@@ -203,6 +254,8 @@ public class Story implements AgileItem, Comparable<Story> {
       this.isReady = clone.getIsReady();
       this.acceptanceCriteria.clear();
       this.acceptanceCriteria.addAll(clone.getAcceptanceCriteria());
+      this.dependencies.clear();
+      this.dependencies.addAll(clone.getDependencies());
     }
   }
 
@@ -216,18 +269,55 @@ public class Story implements AgileItem, Comparable<Story> {
   }
 
   /**
-   * Checks if two stories labels are equal.
-   * @param obj Object to compare to.
-   * @return true if both story labels are equal.
+   * Override equals method
+   * @param o Object being compared to
+   * @return whether objects are equal or not
    */
   @Override
-  public boolean equals(Object obj) {
-    boolean result = false;
-    if (obj instanceof Story) {
-      Story story = (Story) obj;
-      result = this.label.equals(story.getLabel());
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
     }
 
+    Story story = (Story) o;
+
+    if (isReady != story.isReady) {
+      return false;
+    }
+    if (!label.equals(story.label)) {
+      return false;
+    }
+    if (!storyName.equals(story.storyName)) {
+      return false;
+    }
+    if (!description.equals(story.description)) {
+      return false;
+    }
+    if (!creator.equals(story.creator)) {
+      return false;
+    }
+    if (!dependencies.equals(story.dependencies)) {
+      return false;
+    }
+    return acceptanceCriteria.equals(story.acceptanceCriteria);
+
+  }
+
+  /**
+   * Hashcode override, generated by intelliJ
+   */
+  @Override
+  public int hashCode() {
+    int result = label.hashCode();
+    result = 31 * result + storyName.hashCode();
+    result = 31 * result + description.hashCode();
+    result = 31 * result + creator.hashCode();
+    result = 31 * result + dependencies.hashCode();
+    result = 31 * result + (isReady ? 1 : 0);
+    result = 31 * result + acceptanceCriteria.hashCode();
     return result;
   }
 
