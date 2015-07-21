@@ -96,7 +96,11 @@ public class Story implements AgileItem, Comparable<Story> {
     } else {
       this.acceptanceCriteria = acceptanceCriteria;
     }
-    this.dependencies = dependencies;
+    if (dependencies == null) {
+      this.dependencies = new ArrayList<>();
+    } else {
+      this.dependencies = dependencies;
+    }
   }
 
   /**
@@ -113,6 +117,7 @@ public class Story implements AgileItem, Comparable<Story> {
     if (clone.getAcceptanceCriteria() != null) {
       this.acceptanceCriteria.addAll(clone.getAcceptanceCriteria());
     }
+    this.dependencies = new ArrayList<>();
     if (clone.getDependencies() != null) {
       this.dependencies.addAll(clone.getDependencies());
     }
