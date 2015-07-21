@@ -271,6 +271,9 @@ public class Story implements AgileItem, Comparable<Story> {
 
     Story story = (Story) o;
 
+    if (isReady != story.isReady) {
+      return false;
+    }
     if (!label.equals(story.label)) {
       return false;
     }
@@ -300,6 +303,7 @@ public class Story implements AgileItem, Comparable<Story> {
     result = 31 * result + description.hashCode();
     result = 31 * result + creator.hashCode();
     result = 31 * result + dependencies.hashCode();
+    result = 31 * result + (isReady ? 1 : 0);
     result = 31 * result + acceptanceCriteria.hashCode();
     return result;
   }
