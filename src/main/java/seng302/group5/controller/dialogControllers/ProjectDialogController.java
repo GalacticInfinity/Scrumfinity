@@ -471,7 +471,8 @@ public class ProjectDialogController {
 
       if (createOrEdit == CreateOrEdit.CREATE) {
         project = new Project(projectLabel, projectName, projectDescription);
-        project.setBacklog(selectedBacklog);
+        project.setBacklog(selectedBacklog);  //bug fix: backlog null pointer exception
+        //backlogComboBox.setValue(project.getBacklog());
         for (AgileHistory team : this.allocatedTeams) {
           project.addTeam(team);
         }
@@ -484,7 +485,8 @@ public class ProjectDialogController {
           project.setLabel(projectLabel);
           project.setProjectName(projectName);
           project.setProjectDescription(projectDescription);
-          project.setBacklog(selectedBacklog);
+          project.setBacklog(selectedBacklog);  //bug fix: backlog null pointer exception
+          //backlogComboBox.setValue(project.getBacklog());
           project.getAllocatedTeams().clear();
           for (AgileHistory team : this.allocatedTeams) {
             project.addTeam(team);
