@@ -124,7 +124,7 @@ public class Story implements AgileItem, Comparable<Story> {
     if (clone.getDependencies() != null) {
       this.dependencies.addAll(clone.getDependencies());
     }
-    this.isReady = clone.getIsReady();
+    this.isReady = clone.getStoryState();
   }
 
   /**
@@ -195,7 +195,7 @@ public class Story implements AgileItem, Comparable<Story> {
    * Returns whether or not the story is marked as ready.
    * @return Story is ready or not as a boolean.
    */
-  public boolean getIsReady() {
+  public boolean getStoryState() {
     return this.isReady;
   }
 
@@ -203,7 +203,7 @@ public class Story implements AgileItem, Comparable<Story> {
    * Sets the readiness state of the story.
    * @param isReady Whether story is ready or not as a boolean.
    */
-  public void setIsReady(boolean isReady) {
+  public void setStoryState(boolean isReady) {
     this.isReady = isReady;
   }
 
@@ -251,7 +251,7 @@ public class Story implements AgileItem, Comparable<Story> {
       this.storyName = clone.getStoryName();
       this.description = clone.getDescription();
       this.creator = clone.getCreator();
-      this.isReady = clone.getIsReady();
+      this.isReady = clone.getStoryState();
       this.acceptanceCriteria.clear();
       this.acceptanceCriteria.addAll(clone.getAcceptanceCriteria());
       this.dependencies.clear();

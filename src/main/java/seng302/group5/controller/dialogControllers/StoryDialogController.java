@@ -112,14 +112,9 @@ public class StoryDialogController {
       btnCreateStory.setDisable(true);
 
       if (checkReadinessCriteria(story)) {
-        System.out.println("Story meets criteria.");
         readyCheckbox.setDisable(false);
-        System.out.println("Checkbox set to enabled");
-        readyCheckbox.setSelected(story.getIsReady());
-        System.out.println("Is story marked as ready? " + story.getIsReady());
-        System.out.println("Checkbox now ticked or not ticked");
+        readyCheckbox.setSelected(story.getStoryState());
       } else {
-        System.out.println("Story does not meet criteria");
         readyCheckbox.setDisable(true);
       }
     }
@@ -208,7 +203,7 @@ public class StoryDialogController {
         storyLabelField.getText().equals(story.getLabel()) &&
         storyNameField.getText().equals(story.getStoryName()) &&
         listAC.getItems().equals(story.getAcceptanceCriteria()) &&
-        readyCheckbox.isSelected() == story.getIsReady() &&
+        readyCheckbox.isSelected() == story.getStoryState() &&
         (backlogCombo.getValue() == null || backlogCombo.getValue().equals(lastBacklog))) {
       btnCreateStory.setDisable(true);
     } else {
