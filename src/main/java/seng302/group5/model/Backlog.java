@@ -133,7 +133,7 @@ public class Backlog implements AgileItem, Comparable<Backlog> {
 
   /**
    * Add all stories in a collection to the backlog with the default estimate.
-   * Clears previous sizes map, and sets all stories' value in hashmap to 0.
+   * Clears previous sizes map, and sets all stories' value in map to 0.
    *
    * @param storyCollection Collection of stories
    */
