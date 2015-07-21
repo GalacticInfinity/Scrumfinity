@@ -51,6 +51,7 @@ public class Story implements AgileItem, Comparable<Story> {
     this.description = description;
     this.creator = creator;
     this.acceptanceCriteria = FXCollections.observableArrayList();
+    this.dependencies = new ArrayList<>();
   }
 
   /**
@@ -72,6 +73,7 @@ public class Story implements AgileItem, Comparable<Story> {
     } else {
       this.acceptanceCriteria = acceptanceCriteria;
     }
+    this.dependencies = new ArrayList<>();
   }
 
   /**
