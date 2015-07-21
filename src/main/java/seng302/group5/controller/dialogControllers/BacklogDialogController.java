@@ -239,7 +239,6 @@ public class BacklogDialogController {
     productOwners = FXCollections.observableArrayList();
     estimates = FXCollections.observableArrayList();
 
-
     allocatedStoriesList.setCellFactory(
         (new Callback<ListView<StoryEstimate>, ListCell<StoryEstimate>>() {
           @Override
@@ -298,6 +297,8 @@ public class BacklogDialogController {
       }
       this.availableStoriesList.setItems(availableStories.sorted(Comparator.<Story>naturalOrder()));
       this.allocatedStoriesList.setItems(allocatedStories);
+
+
 
       storyEstimateCombo.getSelectionModel().selectedItemProperty().addListener(
           (observable, oldEstimate, selectedEstimate) -> {
@@ -382,6 +383,13 @@ public class BacklogDialogController {
 
         this.allocatedStoriesList.getSelectionModel().select(storyEstimate);
         this.storyEstimateCombo.getSelectionModel().select(0);
+        allocatedStoriesList.setCellFactory(
+            (new Callback<ListView<StoryEstimate>, ListCell<StoryEstimate>>() {
+              @Override
+              public ListCell<StoryEstimate> call(ListView<StoryEstimate> param) {
+                return new StoryFormatCell();
+              }
+            }));
 
         if (createOrEdit == CreateOrEdit.EDIT) {
           checkButtonDisabled();
@@ -410,6 +418,13 @@ public class BacklogDialogController {
         if (createOrEdit == CreateOrEdit.EDIT) {
           checkButtonDisabled();
         }
+        allocatedStoriesList.setCellFactory(
+            (new Callback<ListView<StoryEstimate>, ListCell<StoryEstimate>>() {
+              @Override
+              public ListCell<StoryEstimate> call(ListView<StoryEstimate> param) {
+                return new StoryFormatCell();
+              }
+            }));
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -610,18 +625,27 @@ public class BacklogDialogController {
       // or negative (red). If the cell is selected, the text will
       // always be white (so that it can be read against the blue
       // background), and if the value is zero, we'll make it black.
+      boolean dependent = false;
+      //TODO Come back and add dependencies when they are ready.
       if (item != null) {
         javafx.scene.shape.Circle rect = new javafx.scene.shape.Circle(5);
-        if (item.getStory().getIsReady() == true) {
+        if (item.getStory().getStoryState() == true && item.getEstimateIndex() != 0) {
           setText(item.toString());
           rect.setFill(Color.GREEN);
           setGraphic(rect);
-        }
-         else {
+        }else if (item.getStory().getAcceptanceCriteria().size() > 0 && item.getEstimateIndex() == 0) {
+          setText(item.toString());
+          rect.setFill(Color.ORANGE);
+          setGraphic(rect);
+        } else if (dependent == true) {
           setText(item.toString());
           rect.setFill(Color.RED);
           setGraphic(rect);
         }
+        else {
+          setText(item.toString());
+        }
+
       }}
   }
 
