@@ -263,6 +263,10 @@ public class ReportWriter {
     }
     projElem.appendChild(projDesc);
 
+    Element projBacklog = report.createElement("Backlog");
+    projBacklog.appendChild(report.createTextNode(project.getBacklog().getLabel()));
+    projElem.appendChild(projBacklog);
+
     releasesElement = report.createElement("Releases");
     projElem.appendChild(releasesElement);
 
@@ -520,6 +524,14 @@ public class ReportWriter {
     Element storyDescription = report.createElement("Description");
     storyDescription.appendChild(report.createTextNode(story.getDescription()));
     storyElem.appendChild(storyDescription);
+
+    Element storyState = report.createElement("StoryState");
+    if (story.getStoryState()) {
+      storyState.appendChild(report.createTextNode("This story is ready."));
+    } else {
+      storyState.appendChild(report.createTextNode("This story is not ready."));
+    }
+    storyElem.appendChild(storyState);
 
     Element storyCreator = report.createElement("Creator");
     storyCreator.appendChild(report.createTextNode(story.getCreator().getLabel()));
