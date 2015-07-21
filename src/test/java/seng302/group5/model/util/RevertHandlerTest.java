@@ -27,6 +27,7 @@ import seng302.group5.model.undoredo.UndoRedoHandler;
 import seng302.group5.model.undoredo.UndoRedoObject;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
@@ -517,6 +518,62 @@ public class RevertHandlerTest {
     assertTrue(undoRedoHandler.getUndoStack().empty());
     assertTrue(undoRedoHandler.getRedoStack().empty());
   }
+
+  @Test
+  public void testProjectWithBacklogRevert() throws Exception {
+
+    newProject();
+    newBacklog();
+
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(1, mainApp.getBacklogs().size());
+
+    project.setBacklog(backlog);
+
+    assertNotEquals(null, project.getBacklog());
+    assertEquals(backlog, project.getBacklog());
+
+    mainApp.revert();
+
+    assertTrue(mainApp.getProjects().isEmpty());
+    assertTrue(mainApp.getBacklogs().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+  }
+
+  @Test
+  public void testProjectAddedBacklogRevert() throws Exception {
+
+    newEstimate();
+    newPerson();
+    newStory();
+    newBacklog();
+    newProject();
+
+    mainApp.setLastSaved(); // as if we just loaded
+
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(1, mainApp.getBacklogs().size());
+    assertEquals(null, project.getBacklog());
+    assertNotEquals(backlog, project.getBacklog());
+
+    project.setBacklog(backlog);
+
+    assertNotEquals(null, project.getBacklog());
+    assertEquals(backlog, project.getBacklog());
+
+    mainApp.revert();
+
+    project = mainApp.getProjects().get(0);  //Makes the project the proper project
+    assertEquals(null, project.getBacklog());
+    assertNotEquals(backlog, project.getBacklog());
+
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(1, mainApp.getBacklogs().size());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+  }
+
 
   @Test
   public void testEmptyRevert() throws Exception {
