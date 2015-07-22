@@ -2,6 +2,7 @@ package seng302.group5.controller.dialogControllers;
 
 import java.awt.*;
 import java.awt.Rectangle;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -60,6 +61,7 @@ public class BacklogDialogController {
   private ObservableList<StoryEstimate> originalStories;
   private ObservableList<Person> productOwners;
   private ObservableList<Estimate> estimates;
+  private ArrayList<Story> undoRedoStoryList = new ArrayList<>();
 
   @FXML private TextField backlogLabelField;
   @FXML private TextField backlogNameField;
@@ -579,12 +581,14 @@ public class BacklogDialogController {
         backlog.removeAllStories();
         for (Story story : availableStories) {
           if (story.getStoryState()) {
+            undoRedoStoryList.add(story);
             story.setStoryState(false);
           }
         }
         for (StoryEstimate storyEstimate : allocatedStories) {
           if (!(storyEstimate.getEstimateIndex() > 0)) {
             if (storyEstimate.getStory().getStoryState()) {
+              undoRedoStoryList.add(storyEstimate.getStory());
               storyEstimate.getStory().setStoryState(false);
             }
           }
@@ -593,6 +597,9 @@ public class BacklogDialogController {
         mainApp.refreshList(backlog);
       }
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
+      for (Story story : undoRedoStoryList) {
+        undoRedoObject.addDatum(story);
+      }
       mainApp.newAction(undoRedoObject);
       thisStage.close();
     }

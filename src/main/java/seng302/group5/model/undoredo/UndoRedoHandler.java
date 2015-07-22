@@ -916,12 +916,23 @@ public class UndoRedoHandler {
     Backlog backlogToChange = (Backlog) undoRedoObject.getAgileItem();
     Backlog backlogData;
 
+    // Get stories whose readiness got removed
+    List<AgileItem> readyStories = data.subList(2, data.size());
+
     if (undoOrRedo == UndoOrRedo.UNDO) {
 //      currentStory = (Story) data.get(1);
       backlogData = (Backlog) data.get(0);
+      for (AgileItem agileItem : readyStories) {
+        Story readyStory = (Story) agileItem;
+        readyStory.setStoryState(true);
+      }
     } else {
 //      currentStory = (Story) data.get(0);
       backlogData = (Backlog) data.get(1);
+      for (AgileItem agileItem : readyStories) {
+        Story readyStory = (Story) agileItem;
+        readyStory.setStoryState(false);
+      }
     }
 
     backlogToChange.copyValues(backlogData);
