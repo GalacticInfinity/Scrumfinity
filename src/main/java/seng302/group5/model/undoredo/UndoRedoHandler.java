@@ -774,7 +774,11 @@ public class UndoRedoHandler {
     // Get the team name which is currently in the list and the team to change
     Story storyToChange = (Story) undoRedoObject.getAgileItem();
     Story storyData = (Story) data.get(0);
-    Backlog storyBacklog = (Backlog) data.get(1);
+    Backlog storyBacklog = null;
+    if (data.size() > 1) {
+      storyBacklog = new Backlog();
+      storyBacklog = (Backlog) data.get(1);
+    }
 
     // Make the changes and refresh the list
     if (undoOrRedo == UndoOrRedo.UNDO) {
