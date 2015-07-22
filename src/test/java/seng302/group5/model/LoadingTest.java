@@ -259,6 +259,36 @@ public class LoadingTest {
     savedMain.addStory(story3);
   }
 
+  public void createStoriesMarkedAsReady() {
+    createVanillaPeople();
+
+    acs = FXCollections.observableArrayList();
+    acs.add("ac1\nrunboy runnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
+    acs.add("ac2 aiyaaaa why like that onnnneeeee???");
+    acs.add("ac3 WHY YOU WASTE DA MONEYYYYY?? \n\n B+?! AGAIN?! \n I no longer have a son");
+
+    story1 = new Story("Story1", "Starter Story", "Huehuehuehue", person1);
+    story1.setAcceptanceCriteria(acs);
+    story1.setStoryState(true);
+    savedMain.addStory(story1);
+
+    story2 = new Story();
+    story2.setLabel("Story2");
+    story2.setStoryName("Moar Story");
+    story2.setCreator(person2);
+    story2.setAcceptanceCriteria(acs);
+    story2.setStoryState(true);
+    savedMain.addStory(story2);
+
+    story3 = new Story();
+    story3.setLabel("Story3");
+    story3.setDescription("The story is not ending now");
+    story3.setCreator(person1);
+    story3.setAcceptanceCriteria(acs);
+    story3.setStoryState(true);
+    savedMain.addStory(story3);
+  }
+
   public void createBacklogs() {
     createStories();
     backlog1 = new Backlog("Backlog1", "Starter Backlog", "Huehuehuehue", person1, null);
@@ -610,18 +640,21 @@ public class LoadingTest {
     assertEquals(acs.get(0), story1.getAcceptanceCriteria().get(0));
     assertEquals(acs.get(1), story1.getAcceptanceCriteria().get(1));
     assertEquals(acs.get(2), story1.getAcceptanceCriteria().get(2));
+    assertFalse(story1.getStoryState());
 
     story2 = loadedMain.getStories().get(1);
     assertEquals("Story2", story2.getLabel());
     assertEquals("Moar Story", story2.getStoryName());
     assertSame(person2, story2.getCreator());
     assertEquals(acs2, story2.getAcceptanceCriteria());
+    assertFalse(story2.getStoryState());
 
     story3 = loadedMain.getStories().get(2);
     assertEquals("Story3", story3.getLabel());
     assertEquals("They story-ening is now", story3.getDescription());
     assertSame(person1, story3.getCreator());
     assertEquals(emptyacs, story3.getAcceptanceCriteria());
+    assertFalse(story3.getStoryState());
 
     if (!file.delete()) {
       fail();
@@ -652,16 +685,61 @@ public class LoadingTest {
     assertEquals("Starter Story", story1.getStoryName());
     assertEquals("Huehuehuehue", story1.getDescription());
     assertSame(person1, story1.getCreator());
+    assertFalse(story1.getStoryState());
 
     story2 = loadedMain.getStories().get(1);
     assertEquals("Story2", story2.getLabel());
     assertEquals("Moar Story", story2.getStoryName());
     assertSame(person2, story2.getCreator());
+    assertFalse(story2.getStoryState());
 
     story3 = loadedMain.getStories().get(2);
     assertEquals("Story3", story3.getLabel());
     assertEquals("They story-ening is now", story3.getDescription());
     assertSame(person1, story3.getCreator());
+    assertFalse(story3.getStoryState());
+
+    if (!file.delete()) {
+      fail();
+    }
+  }
+
+  @Test
+  public void testingStoriesMarkedAsReady() {
+    createStoriesMarkedAsReady();
+
+    saving = new Saving(savedMain);
+    File file = new File(System.getProperty("user.dir")
+                         + File.separator
+                         + "StorySave.xml");
+    saving.saveData(file);
+
+    loading = new Loading(loadedMain);
+    loading.loadFile(file);
+    person1 = loadedMain.getPeople().get(0);
+    person2 = loadedMain.getPeople().get(1);
+
+    story1 = loadedMain.getStories().get(0);
+    assertEquals("Story1", story1.getLabel());
+    assertEquals("Starter Story", story1.getStoryName());
+    assertEquals("Huehuehuehue", story1.getDescription());
+    assertSame(person1, story1.getCreator());
+    assertEquals(acs.get(0), story1.getAcceptanceCriteria().get(0));
+    assertEquals(acs.get(1), story1.getAcceptanceCriteria().get(1));
+    assertEquals(acs.get(2), story1.getAcceptanceCriteria().get(2));
+    assertTrue(story1.getStoryState());
+
+    story2 = loadedMain.getStories().get(1);
+    assertEquals("Story2", story2.getLabel());
+    assertEquals("Moar Story", story2.getStoryName());
+    assertSame(person2, story2.getCreator());
+    assertTrue(story2.getStoryState());
+
+    story3 = loadedMain.getStories().get(2);
+    assertEquals("Story3", story3.getLabel());
+    assertEquals("The story is not ending now", story3.getDescription());
+    assertSame(person1, story3.getCreator());
+    assertTrue(story3.getStoryState());
 
     if (!file.delete()) {
       fail();

@@ -664,8 +664,8 @@ public class ListMainPaneController {
     textReadinessHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
     Text textReadinessBody = new Text();
-    textCreatorBody.setFill(Color.rgb(1, 0, 1));
-    textCreatorBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    textReadinessBody.setFill(Color.rgb(1, 0, 1));
+    textReadinessBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
     if (story.getStoryState()) {
       textReadinessBody.setText("Ready");
     } else {
