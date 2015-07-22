@@ -264,7 +264,9 @@ public class ReportWriter {
     projElem.appendChild(projDesc);
 
     Element projBacklog = report.createElement("Backlog");
-    projBacklog.appendChild(report.createTextNode(project.getBacklog().getLabel()));
+    if (project.getBacklog() != null) {
+      projBacklog.appendChild(report.createTextNode(project.getBacklog().getLabel()));
+    }
     projElem.appendChild(projBacklog);
 
     releasesElement = report.createElement("Releases");
