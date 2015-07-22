@@ -115,11 +115,11 @@
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="87.0" text="Show State">
+                        <ToggleButton fx:id="toggleStateButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="78.0" text="Show State" onAction="#btnToggleState">
                            <HBox.margin>
-                              <Insets left="15.0" />
+                              <Insets left="10.0" />
                            </HBox.margin>
-                        </Button>
+                        </ToggleButton>
                      </children>
                   </HBox>
                   <ListView fx:id="allocatedStoriesList" maxHeight="225.0" prefHeight="174.0" prefWidth="215.0" />

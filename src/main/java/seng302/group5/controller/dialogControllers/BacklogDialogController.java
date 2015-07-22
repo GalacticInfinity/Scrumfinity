@@ -71,6 +71,9 @@ public class BacklogDialogController {
   @FXML private ListView<StoryEstimate> allocatedStoriesList;
   @FXML private ComboBox<Estimate> backlogScaleCombo;
   @FXML private ComboBox<String> storyEstimateCombo;
+  @FXML private Button btnToggleState;
+
+  private boolean showState = false;
 
   /**
    * Setup the backlog dialog controller
@@ -239,13 +242,23 @@ public class BacklogDialogController {
     productOwners = FXCollections.observableArrayList();
     estimates = FXCollections.observableArrayList();
 
-    allocatedStoriesList.setCellFactory(
-        (new Callback<ListView<StoryEstimate>, ListCell<StoryEstimate>>() {
-          @Override
-          public ListCell<StoryEstimate> call(ListView<StoryEstimate> param) {
-            return new StoryFormatCell();
-          }
-        }));
+    if (showState) {
+      allocatedStoriesList.setCellFactory(
+          (new Callback<ListView<StoryEstimate>, ListCell<StoryEstimate>>() {
+            @Override
+            public ListCell<StoryEstimate> call(ListView<StoryEstimate> param) {
+              return new StoryFormatCell();
+            }
+          }));
+    } else {
+      allocatedStoriesList.setCellFactory(
+          (new Callback<ListView<StoryEstimate>, ListCell<StoryEstimate>>() {
+            @Override
+            public ListCell<StoryEstimate> call(ListView<StoryEstimate> param) {
+              return new StoryFormatCellFalse();
+            }
+          }));
+    }
     try {
       Set<Story> storiesInUse = new HashSet<>();
       for (Backlog mainBacklog : mainApp.getBacklogs()) {
@@ -383,14 +396,23 @@ public class BacklogDialogController {
 
         this.allocatedStoriesList.getSelectionModel().select(storyEstimate);
         this.storyEstimateCombo.getSelectionModel().select(0);
-        allocatedStoriesList.setCellFactory(
-            (new Callback<ListView<StoryEstimate>, ListCell<StoryEstimate>>() {
-              @Override
-              public ListCell<StoryEstimate> call(ListView<StoryEstimate> param) {
-                return new StoryFormatCell();
-              }
-            }));
-
+        if (showState) {
+          allocatedStoriesList.setCellFactory(
+              (new Callback<ListView<StoryEstimate>, ListCell<StoryEstimate>>() {
+                @Override
+                public ListCell<StoryEstimate> call(ListView<StoryEstimate> param) {
+                  return new StoryFormatCell();
+                }
+              }));
+        } else {
+          allocatedStoriesList.setCellFactory(
+              (new Callback<ListView<StoryEstimate>, ListCell<StoryEstimate>>() {
+                @Override
+                public ListCell<StoryEstimate> call(ListView<StoryEstimate> param) {
+                  return new StoryFormatCellFalse();
+                }
+              }));
+        }
         if (createOrEdit == CreateOrEdit.EDIT) {
           checkButtonDisabled();
         }
@@ -400,6 +422,35 @@ public class BacklogDialogController {
     }
   }
 
+  /**
+   * Handles when the show story state highlight is being toggled to show or hide.
+   *
+   *@param event the action of clicking the button.
+   */
+  @FXML
+  private void btnToggleState(ActionEvent event) {
+    if (showState) {
+      showState = false;
+    } else showState = true;
+
+    if (showState) {
+      allocatedStoriesList.setCellFactory(
+          (new Callback<ListView<StoryEstimate>, ListCell<StoryEstimate>>() {
+            @Override
+            public ListCell<StoryEstimate> call(ListView<StoryEstimate> param) {
+              return new StoryFormatCell();
+            }
+          }));
+    } else {
+      allocatedStoriesList.setCellFactory(
+          (new Callback<ListView<StoryEstimate>, ListCell<StoryEstimate>>() {
+            @Override
+            public ListCell<StoryEstimate> call(ListView<StoryEstimate> param) {
+              return new StoryFormatCellFalse();
+            }
+          }));
+    }
+  }
   /**
    * Handles when the remove button is clicked for removing a story from a backlog.
    *
@@ -418,13 +469,23 @@ public class BacklogDialogController {
         if (createOrEdit == CreateOrEdit.EDIT) {
           checkButtonDisabled();
         }
-        allocatedStoriesList.setCellFactory(
-            (new Callback<ListView<StoryEstimate>, ListCell<StoryEstimate>>() {
-              @Override
-              public ListCell<StoryEstimate> call(ListView<StoryEstimate> param) {
-                return new StoryFormatCell();
-              }
-            }));
+        if (showState) {
+          allocatedStoriesList.setCellFactory(
+              (new Callback<ListView<StoryEstimate>, ListCell<StoryEstimate>>() {
+                @Override
+                public ListCell<StoryEstimate> call(ListView<StoryEstimate> param) {
+                  return new StoryFormatCell();
+                }
+              }));
+        } else {
+          allocatedStoriesList.setCellFactory(
+              (new Callback<ListView<StoryEstimate>, ListCell<StoryEstimate>>() {
+                @Override
+                public ListCell<StoryEstimate> call(ListView<StoryEstimate> param) {
+                  return new StoryFormatCellFalse();
+                }
+              }));
+        }
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -615,6 +676,13 @@ public class BacklogDialogController {
 
   class StoryFormatCell extends ListCell<StoryEstimate> {
 
+    /**
+     * Cell format class that handles the coloring of cells within the allocated stories list
+     * within the backlog controller.
+     *
+     * Created by Craig Alan Barnard 22/07/2015
+     */
+
     public StoryFormatCell() {    }
 
     @Override protected void updateItem(StoryEstimate item, boolean empty) {
@@ -631,11 +699,11 @@ public class BacklogDialogController {
         javafx.scene.shape.Circle rect = new javafx.scene.shape.Circle(5);
         if (item.getStory().getStoryState() == true && item.getEstimateIndex() != 0) {
           setText(item.toString());
-          rect.setFill(Color.GREEN);
+          rect.setFill(Color.rgb(0, 191, 0));
           setGraphic(rect);
         }else if (item.getStory().getAcceptanceCriteria().size() > 0 && item.getEstimateIndex() == 0) {
           setText(item.toString());
-          rect.setFill(Color.ORANGE);
+          rect.setFill(Color.rgb(255, 135, 0));
           setGraphic(rect);
         } else if (dependent == true) {
           setText(item.toString());
@@ -648,7 +716,24 @@ public class BacklogDialogController {
 
       }}
   }
+  class StoryFormatCellFalse extends ListCell<StoryEstimate> {
 
+    /**
+     * Cell format class that handles the displaying of plain text cells within the allocated
+     * stories list within the backlog controller.
+     *
+     * Created by Craig Alan Barnard + Ma Liang 23/07/2015
+     */
+
+    public StoryFormatCellFalse() {    }
+
+    @Override protected void updateItem(StoryEstimate item, boolean empty) {
+      // calling super here is very important - don't skip this!
+      super.updateItem(item, empty);
+      if (item != null) {
+        setText(item.toString());
+      }}
+  }
   /**
    * Inner class for storing/displaying allocated stories with their respective estimates
    */
