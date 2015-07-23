@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.text.*?>
 <?import java.lang.*?>
@@ -11,22 +12,17 @@
       <AnchorPane fx:id="listViewPane" maxHeight="1.7976931348623157E308" maxWidth="200.0" minHeight="373.0" minWidth="150.0" prefHeight="373.0" prefWidth="150.0" SplitPane.resizableWithParent="false">
          <children>
             <Label fx:id="listViewLabel" maxWidth="200.0" minHeight="20.0" prefHeight="20.0" AnchorPane.leftAnchor="16.0" AnchorPane.topAnchor="4.0" />
-            <Button maxHeight="22.0" maxWidth="22.0" minHeight="22.0" minWidth="22.0" mnemonicParsing="false" onAction="#btnClickDirectAdd" prefHeight="22.0" prefWidth="22.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="4.0">
-               <graphic>
-                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="ToolbarQuickAdd.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Button>
             <ListView fx:id="listView" layoutX="-6.0" layoutY="20.0" maxHeight="1.7976931348623157E308" maxWidth="200.0" minHeight="353.0" minWidth="150.0" prefHeight="353.0" prefWidth="150.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0" />
          </children>
       </AnchorPane>
-      <AnchorPane minHeight="373.0" minWidth="444.0" prefHeight="373.0" prefWidth="444.0">
-         <children>
-            <TextFlow fx:id="displayTextFlow" layoutX="6.0" lineSpacing="5.0" minHeight="373.0" minWidth="440.0" prefHeight="373.0" prefWidth="440.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-         </children>
-      </AnchorPane>
+      <ScrollPane prefHeight="200.0" prefWidth="200.0">
+         <content>
+            <TextFlow fx:id="displayTextFlow" lineSpacing="5.0" minHeight="360.0" minWidth="401.0" prefWidth="401.0">
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </TextFlow>
+         </content>
+      </ScrollPane>
    </items>
 </SplitPane>
