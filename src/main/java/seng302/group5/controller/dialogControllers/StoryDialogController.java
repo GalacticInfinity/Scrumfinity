@@ -126,6 +126,10 @@ public class StoryDialogController {
       this.lastStory = new Story(story);
       this.lastBacklog = null;    // Stays null if not found
 
+      Backlog back = new Backlog();
+      if (Settings.correctList(back)) {
+        backlogCombo.setDisable(true);
+      }
       for (Backlog backlog : mainApp.getBacklogs()) {
         if (backlog.getStories().contains(story)) {
           this.lastBacklog = backlog;
