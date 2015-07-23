@@ -369,9 +369,9 @@ public class StoryDialogController {
       alert.setTitle("Acceptance Criteria Required!");
       alert.setHeaderText(null);
       alert.setContentText("This story is currently assigned an estimate in "
-                           + "a backlog, which requires at least one Acceptance Criteria"
+                           + "a backlog, which requires at least one Acceptance Criterion"
                            + " to be assigned. Please ensure there is at least one "
-                           + "Acceptance Criteria!");
+                           + "Acceptance Criterion!");
       alert.setResizable(true);
       alert.getDialogPane().setPrefSize(400, 150);
       alert.showAndWait();
@@ -459,7 +459,7 @@ public class StoryDialogController {
           Alert alert = new Alert(Alert.AlertType.ERROR);
           alert.setTitle("Error");
           alert.setHeaderText(null);
-          alert.setContentText("No acceptance criteria selected.");
+          alert.setContentText("No acceptance criterion selected.");
           alert.showAndWait();
           return;
         }
@@ -551,7 +551,7 @@ public class StoryDialogController {
    */
   public String checkForDuplicateAC(String newAC) throws Exception {
     if(acceptanceCriteria.contains(newAC)) {
-      throw new Exception("This story already has this acceptance criteria.");
+      throw new Exception("This story already has this acceptance criterion.");
     } else {
       return newAC;
     }
