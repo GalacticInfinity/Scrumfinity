@@ -56,6 +56,7 @@ public class ProjectDialogController {
   private ObservableList<Team> availableTeams = FXCollections.observableArrayList();
   private AgileHistory projectHistory = new AgileHistory();
   private ObservableList<Backlog> availableBacklogs;
+  private Backlog noBacklog;    // Signal for unassigning a backlog
 
   /**
    * Setup the project dialog controller
@@ -182,7 +183,7 @@ public class ProjectDialogController {
       availableBacklogs.addAll(mainApp.getBacklogs());
 
       for (Project pro : mainApp.getProjects()) {
-        if (pro.getBacklog()!=null) {
+        if (pro.getBacklog() != null) {
           availableBacklogs.remove(pro.getBacklog());
         }
       }
@@ -192,6 +193,11 @@ public class ProjectDialogController {
       this.availableTeamsList.setItems(availableTeams);
       this.allocatedTeamsList.setItems(
           allocatedTeams.sorted(Comparator.<AgileHistory>naturalOrder()));
+
+      noBacklog = new Backlog();
+      noBacklog.setLabel("No Backlog");
+      availableBacklogs.add(0, noBacklog);
+
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -448,6 +454,9 @@ public class ProjectDialogController {
     String projectName = "";
     String projectDescription = projectDescriptionField.getText().trim();
     Backlog selectedBacklog = backlogComboBox.getValue();
+    if (selectedBacklog == noBacklog) {   // Unassign a backlog
+      selectedBacklog = null;
+    }
 
     try {
       projectLabel = parseProjectLabel(projectLabelField.getText());

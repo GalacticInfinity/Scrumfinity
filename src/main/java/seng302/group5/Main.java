@@ -560,7 +560,7 @@ public class Main extends Application {
       storyDialogStage.initModality(Modality.APPLICATION_MODAL);
       storyDialogStage.initOwner(owner);
       storyDialogStage.setScene(storyDialogScene);
-      storyDialogStage.show();
+      storyDialogStage.showAndWait();
 
     } catch (IOException e) {
       e.printStackTrace();

@@ -21,6 +21,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.TextFieldListCell;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -125,6 +126,10 @@ public class StoryDialogController {
       this.lastStory = new Story(story);
       this.lastBacklog = null;    // Stays null if not found
 
+      Backlog back = new Backlog();
+      if (Settings.correctList(back)) {
+        backlogCombo.setDisable(true);
+      }
       for (Backlog backlog : mainApp.getBacklogs()) {
         if (backlog.getStories().contains(story)) {
           this.lastBacklog = backlog;
@@ -192,6 +197,19 @@ public class StoryDialogController {
           }
         }
     );
+
+    listAC.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+      @Override
+      public void handle(MouseEvent click) {
+        if (click.getClickCount() == 2) {
+          //Use ListView's getSelected Item
+          listAC.getSelectionModel().getSelectedItem();
+          //use this to open the AC dialog
+          showACDialog(CreateOrEdit.EDIT);
+        }
+      }
+    });
 
   }
 
@@ -351,9 +369,9 @@ public class StoryDialogController {
       alert.setTitle("Acceptance Criteria Required!");
       alert.setHeaderText(null);
       alert.setContentText("This story is currently assigned an estimate in "
-                           + "a backlog, which requires at least one Acceptance Criteria"
+                           + "a backlog, which requires at least one Acceptance Criterion"
                            + " to be assigned. Please ensure there is at least one "
-                           + "Acceptance Criteria!");
+                           + "Acceptance Criterion!");
       alert.setResizable(true);
       alert.getDialogPane().setPrefSize(400, 150);
       alert.showAndWait();
@@ -441,7 +459,7 @@ public class StoryDialogController {
           Alert alert = new Alert(Alert.AlertType.ERROR);
           alert.setTitle("Error");
           alert.setHeaderText(null);
-          alert.setContentText("No acceptance criteria selected.");
+          alert.setContentText("No acceptance criterion selected.");
           alert.showAndWait();
           return;
         }
@@ -533,7 +551,7 @@ public class StoryDialogController {
    */
   public String checkForDuplicateAC(String newAC) throws Exception {
     if(acceptanceCriteria.contains(newAC)) {
-      throw new Exception("This story already has this acceptance criteria.");
+      throw new Exception("This story already has this acceptance criterion.");
     } else {
       return newAC;
     }
@@ -631,7 +649,7 @@ public class StoryDialogController {
       pane.getColumnConstraints().add(new ColumnConstraints(labelWidth));
       pane.setHgap(5);
       pane.add(cellText, 0, 0);
-      pane.add(editButton, 1, 0);
+      //pane.add(editButton, 1, 0);
     }
 
     /**
