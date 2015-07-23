@@ -1,5 +1,8 @@
 package seng302.group5.controller.dialogControllers;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -27,6 +30,8 @@ public class DependantsDialogController {
 
   private ObservableList<Story> availableStories;
   private ObservableList<Story> dependantStories;
+
+  private Set<Story> visitedStories;
 
   @FXML private Label lblSelectedStory;
   @FXML private ListView<Story> availableStoriesList;
@@ -106,6 +111,52 @@ public class DependantsDialogController {
     if (dependantStories.isEmpty()) {
       btnRemoveStory.setDisable(true);
     }
+  }
+
+  /**
+   * DO NOT USE THIS FUNCTION - use checkIsCyclic instead.
+   * This function takes in a story and uses a recursive
+   * depth first search with pruning to determine if there
+   * exists a cyclic dependancy with the inputted story
+   *
+   * @param root - This is the root of the graph. where the search will start.
+   * @return - true or false. true for yes it is cyclic and false for no its not.
+   */
+  private boolean dependancyCheck(Story root) {
+
+    if (root == null) {
+      return true;
+    }
+
+    visitedStories.add(root);
+
+    for (Story childNode : root.getDependencies()) {
+      if (visitedStories.contains(childNode)) {
+        return true;
+      } else {
+        dependancyCheck(childNode);
+      }
+    }
+    visitedStories.remove(root);
+    return false;
+  }
+
+  /**
+   * USE THIS BABY!
+   * This function is needed to reset the visitedStories set so it is empty before we start
+   * and get the boolean isCyclic to reset too.
+   * basically I reset the globals.
+   * Then i call the actual function for checking for cyclic dependancies.
+   * I then return if it is cyclic or not
+   * @param story - the story to be passed through to check for cyclic dependancy
+   * @return - true or false indicating if it is(True) or is not (false)
+   */
+  private boolean checkIsCyclic(Story story) {
+    visitedStories = new HashSet<Story>();
+//    boolean result = dependancyCheck(story);
+//    visitedStories.clear();
+//    return result;
+    return dependancyCheck(story);
   }
 
   /**
