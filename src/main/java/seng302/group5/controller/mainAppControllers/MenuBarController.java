@@ -234,7 +234,7 @@ public class MenuBarController {
         mainApp.showBacklogDialog(CreateOrEdit.CREATE);
         break;
       case "Sprints":
-        mainApp.showBacklogDialog(CreateOrEdit.CREATE);
+        mainApp.showSprintDialog(CreateOrEdit.CREATE);
         break;
     }
   }
@@ -444,7 +444,7 @@ public class MenuBarController {
         load.loadFile(file);
 
         mainApp.getLMPC().refreshList(null);
-        if (!(Settings.organizationName == "")) {
+        if (!(Settings.organizationName.equals(""))) {
           mainApp.setMainTitle("Scrumfinity - " + Settings.organizationName);
         } else {
           mainApp.setMainTitle("Scrumfinity");
@@ -518,7 +518,7 @@ public class MenuBarController {
 
     result.ifPresent(newField -> {
       Settings.organizationName = result.get().trim();
-      if (Settings.organizationName != "") {
+      if (!Settings.organizationName.equals("")) {
         mainApp.setMainTitle("Scrumfinity - " + Settings.organizationName);
       } else {
         mainApp.setMainTitle("Scrumfinity");
