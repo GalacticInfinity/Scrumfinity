@@ -21,6 +21,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.TextFieldListCell;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -192,6 +193,19 @@ public class StoryDialogController {
           }
         }
     );
+
+    listAC.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+      @Override
+      public void handle(MouseEvent click) {
+        if (click.getClickCount() == 2) {
+          //Use ListView's getSelected Item
+          listAC.getSelectionModel().getSelectedItem();
+          //use this to open the AC dialog
+          showACDialog(CreateOrEdit.EDIT);
+        }
+      }
+    });
 
   }
 
@@ -631,7 +645,7 @@ public class StoryDialogController {
       pane.getColumnConstraints().add(new ColumnConstraints(labelWidth));
       pane.setHgap(5);
       pane.add(cellText, 0, 0);
-      pane.add(editButton, 1, 0);
+      //pane.add(editButton, 1, 0);
     }
 
     /**
