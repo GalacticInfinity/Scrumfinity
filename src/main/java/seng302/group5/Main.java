@@ -1071,9 +1071,14 @@ public class Main extends Application {
                                          backlog.getLabel());
           for (Story blStory : backlog.getStories()) {
             messageLength++;
-            message += String.format("%s - %s\n",
-                                     blStory.getLabel(),
-                                     blStory.getStoryName());
+            if (blStory.getStoryName().equals("")) {
+              message += String.format("%s - [No name]\n",
+                                       blStory.getLabel());
+            } else {
+              message += String.format("%s - %s\n",
+                                       blStory.getLabel(),
+                                       blStory.getStoryName());
+            }
           }
           alert.getDialogPane().setPrefHeight(60 + 30 * messageLength);
           alert.setContentText(message);
