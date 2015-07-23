@@ -533,6 +533,38 @@ public class Main extends Application {
     }
   }
 
+  public void showStoryDialogWithinBacklog(CreateOrEdit createOrEdit, Story story, Stage owner) {
+    try {
+      FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(Main.class.getResource("/StoryDialog.fxml"));
+      VBox StoryDialogLayout = loader.load();
+
+      StoryDialogController controller = loader.getController();
+      Scene storyDialogScene = new Scene(StoryDialogLayout);
+      Stage storyDialogStage = new Stage();
+
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        if (story == null) {
+          Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setTitle("Error");
+          alert.setHeaderText(null);
+          alert.setContentText("No story selected");
+          alert.showAndWait();
+          return;
+        }
+      }
+      controller.setupController(this, storyDialogStage, createOrEdit, story);
+
+      storyDialogStage.initModality(Modality.APPLICATION_MODAL);
+      storyDialogStage.initOwner(owner);
+      storyDialogStage.setScene(storyDialogScene);
+      storyDialogStage.show();
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
   /**
    * Sets up a dialog box for creating/editing a backlog.
    *

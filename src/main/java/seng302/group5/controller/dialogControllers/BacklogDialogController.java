@@ -11,6 +11,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -20,6 +21,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
@@ -211,6 +213,20 @@ public class BacklogDialogController {
             });
           }
         });
+    allocatedStoriesList.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+      @Override
+      public void handle(MouseEvent click) {
+          StoryEstimate currentItemSelected;
+        if (click.getClickCount() == 2) {
+          //Use ListView's getSelected Item
+          currentItemSelected = allocatedStoriesList.getSelectionModel()
+              .getSelectedItem();
+          mainApp.showStoryDialogWithinBacklog(CreateOrEdit.EDIT, currentItemSelected.getStory(), thisStage);
+          //use this to do whatever you want to. Open Link etc.
+        }
+      }
+    });
   }
 
   /**
@@ -431,7 +447,8 @@ public class BacklogDialogController {
   private void btnToggleState(ActionEvent event) {
     if (showState) {
       showState = false;
-    } else showState = true;
+    } else
+      showState = true;
 
     if (showState) {
       allocatedStoriesList.setCellFactory(
