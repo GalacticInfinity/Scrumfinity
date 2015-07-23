@@ -24,6 +24,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng302.group5.controller.dialogControllers.BacklogDialogController;
+import seng302.group5.controller.dialogControllers.SprintDialogController;
 import seng302.group5.controller.mainAppControllers.ListMainPaneController;
 import seng302.group5.controller.mainAppControllers.LoginController;
 import seng302.group5.controller.mainAppControllers.MenuBarController;
@@ -578,7 +579,30 @@ public class Main extends Application {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/SprintDialog.fxml"));
-      VBox backlogDialogLayout = loader.load();
+      VBox sprintDialogLayout = loader.load();
+
+      SprintDialogController controller = loader.getController();
+      Scene sprintDialogScene = new Scene(sprintDialogLayout);
+      Stage sprintDialogStage = new Stage();
+
+      Sprint sprint = null;
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        sprint = (Sprint) LMPC.getSelected();
+        if (sprint == null) {
+          Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setTitle("Error");
+          alert.setHeaderText(null);
+          alert.setContentText("No sprint selected");
+          alert.showAndWait();
+          return;
+        }
+      }
+      controller.setupController(this, sprintDialogStage, createOrEdit, sprint);
+
+      sprintDialogStage.initModality(Modality.APPLICATION_MODAL);
+      sprintDialogStage.initOwner(primaryStage);
+      sprintDialogStage.setScene(sprintDialogScene);
+      sprintDialogStage.show();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -1054,6 +1078,7 @@ public class Main extends Application {
     stories.clear();
     backlogs.clear();
     estimates.clear();
+    sprints.clear();
     nonRemovable.clear();
   }
 
@@ -1121,6 +1146,10 @@ public class Main extends Application {
     return estimates.sorted(Comparator.<Estimate>naturalOrder());
   }
 
+  public ObservableList<Sprint> getSprints() {
+    return sprints.sorted(Comparator.<Sprint>naturalOrder());
+  }
+
   public ArrayList<AgileItem> getNonRemovable() {
     return nonRemovable;
   }
@@ -1159,6 +1188,10 @@ public class Main extends Application {
 
   public void addEstimate(Estimate estimate) {
     estimates.add(estimate);
+  }
+
+  public void addSprint(Sprint sprint) {
+    sprints.add(sprint);
   }
 
   public UndoRedoHandler getUndoRedoHandler() {
