@@ -21,6 +21,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.TextFieldListCell;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -31,7 +32,6 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
-import seng302.group5.controller.mainAppControllers.ListMainPaneController;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Person;
 import seng302.group5.model.Story;
@@ -198,6 +198,19 @@ public class StoryDialogController {
         }
     );
 
+    listAC.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+      @Override
+      public void handle(MouseEvent click) {
+        if (click.getClickCount() == 2) {
+          //Use ListView's getSelected Item
+          listAC.getSelectionModel().getSelectedItem();
+          //use this to open the AC dialog
+          showACDialog(CreateOrEdit.EDIT);
+        }
+      }
+    });
+
   }
 
   /**
@@ -304,10 +317,9 @@ public class StoryDialogController {
           backlog.addStory(story);
         }
 
-        if (thisStage.getOwner() == mainApp.getPrimaryStage()) {
-          System.out.println("Refreshing story");
+        if (Settings.correctList(story)) {
           mainApp.refreshList(story);
-        } else System.out.println("No refresh"); //TODO REMOVE the PRINTLN's
+        }
       }
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
       if (backlog != null && createOrEdit == CreateOrEdit.CREATE) {
@@ -637,7 +649,7 @@ public class StoryDialogController {
       pane.getColumnConstraints().add(new ColumnConstraints(labelWidth));
       pane.setHgap(5);
       pane.add(cellText, 0, 0);
-      pane.add(editButton, 1, 0);
+      //pane.add(editButton, 1, 0);
     }
 
     /**

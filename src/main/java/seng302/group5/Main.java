@@ -24,6 +24,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng302.group5.controller.dialogControllers.BacklogDialogController;
+import seng302.group5.controller.dialogControllers.SprintDialogController;
 import seng302.group5.controller.mainAppControllers.ListMainPaneController;
 import seng302.group5.controller.mainAppControllers.LoginController;
 import seng302.group5.controller.mainAppControllers.MenuBarController;
@@ -43,6 +44,7 @@ import seng302.group5.model.Release;
 import seng302.group5.model.Role;
 import seng302.group5.model.Skill;
 import seng302.group5.model.Person;
+import seng302.group5.model.Sprint;
 import seng302.group5.model.Story;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
@@ -73,6 +75,7 @@ public class Main extends Application {
   private ObservableList<Story> stories = FXCollections.observableArrayList();
   private ObservableList<Backlog> backlogs = FXCollections.observableArrayList();
   private ObservableList<Estimate> estimates = FXCollections.observableArrayList();
+  private ObservableList<Sprint> sprints = FXCollections.observableArrayList();
 
   private ArrayList<AgileItem> nonRemovable = new ArrayList<>();
 
@@ -120,13 +123,11 @@ public class Main extends Application {
     Role poRole = new Role("PO", "Product Owner", poSkill, 1);
     Role smRole = new Role("SM", "Scrum Master", smSkill, 1);
 
-
     addRole(devRole);
     addRole(poRole);
     addRole(smRole);
 
     createDefaultEstimates();
-
 
     revertHandler.setLastSaved();
 
@@ -137,14 +138,14 @@ public class Main extends Application {
   }
 
   /**
-   * Creates default estimate lists in main app. For now just creates fibonacci scale
-   * and our custom dino scale.
+   * Creates default estimate lists in main app. For now just creates fibonacci scale and our custom
+   * dino scale.
    */
   public void createDefaultEstimates() {
     List<String> fiboEsts = Arrays.asList("Not Set", "1", "2", "3", "5", "8", "13", "Epic");
     Estimate fibonacci = new Estimate("Fibonacci", fiboEsts);
     List<String> dinoEsts = Arrays.asList("Not Set", "Dino Egg", "Dino Baby", "Dino Toddler",
-                                       "Dino Kid", "Dino Teen", "Dino Saur", "Elder Dino");
+                                          "Dino Kid", "Dino Teen", "Dino Saur", "Elder Dino");
     Estimate dinos = new Estimate("Dinos", dinoEsts);
 
     estimates.addAll(fibonacci, dinos);
@@ -344,36 +345,36 @@ public class Main extends Application {
    */
   public void showReportDialog(CreateOrEdit createOrEdit) {
     try {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(Main.class.getResource("/ReportDialog.fxml"));
-        VBox releaseDialogLayout = loader.load();
+      FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(Main.class.getResource("/ReportDialog.fxml"));
+      VBox releaseDialogLayout = loader.load();
 
-        ReportDialogController controller = loader.getController();
-        Scene releaseDialogScene = new Scene(releaseDialogLayout);
-        Stage releaseDialogStage = new Stage();
+      ReportDialogController controller = loader.getController();
+      Scene releaseDialogScene = new Scene(releaseDialogLayout);
+      Stage releaseDialogStage = new Stage();
 
-        Release release = null;
-        if (createOrEdit == CreateOrEdit.EDIT) {
-          release = (Release) LMPC.getSelected();
-          if (release == null) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText(null);
-            alert.setContentText("No release selected");
-            alert.showAndWait();
-            return;
-          }
+      Release release = null;
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        release = (Release) LMPC.getSelected();
+        if (release == null) {
+          Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setTitle("Error");
+          alert.setHeaderText(null);
+          alert.setContentText("No release selected");
+          alert.showAndWait();
+          return;
         }
-        controller.setupController(this, releaseDialogStage);
-
-        releaseDialogStage.initModality(Modality.APPLICATION_MODAL);
-        releaseDialogStage.initOwner(primaryStage);
-        releaseDialogStage.setScene(releaseDialogScene);
-        releaseDialogStage.show();
-
-      } catch (IOException e) {
-        e.printStackTrace();
       }
+      controller.setupController(this, releaseDialogStage);
+
+      releaseDialogStage.initModality(Modality.APPLICATION_MODAL);
+      releaseDialogStage.initOwner(primaryStage);
+      releaseDialogStage.setScene(releaseDialogScene);
+      releaseDialogStage.show();
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
   }
 
@@ -497,7 +498,8 @@ public class Main extends Application {
   /**
    * Sets up a dialog box for creating/editing a Story.
    *
-   * @param createOrEdit The CreateOrEdit object that determines whether you are creating or editing.
+   * @param createOrEdit The CreateOrEdit object that determines whether you are creating or
+   *                     editing.
    */
   public void showStoryDialog(CreateOrEdit createOrEdit) {
     try {
@@ -568,7 +570,8 @@ public class Main extends Application {
   /**
    * Sets up a dialog box for creating/editing a backlog.
    *
-   * @param createOrEdit The CreateOrEdit object that determines whether you are creating or editing.
+   * @param createOrEdit The CreateOrEdit object that determines whether you are creating or
+   *                     editing.
    */
   public void showBacklogDialog(CreateOrEdit createOrEdit) {
     try {
@@ -600,6 +603,39 @@ public class Main extends Application {
       backlogDialogStage.show();
 
     } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void showSprintDialog(CreateOrEdit createOrEdit) {
+    try {
+      FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(Main.class.getResource("/SprintDialog.fxml"));
+      VBox sprintDialogLayout = loader.load();
+
+      SprintDialogController controller = loader.getController();
+      Scene sprintDialogScene = new Scene(sprintDialogLayout);
+      Stage sprintDialogStage = new Stage();
+
+      Sprint sprint = null;
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        sprint = (Sprint) LMPC.getSelected();
+        if (sprint == null) {
+          Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setTitle("Error");
+          alert.setHeaderText(null);
+          alert.setContentText("No sprint selected");
+          alert.showAndWait();
+          return;
+        }
+      }
+      controller.setupController(this, sprintDialogStage, createOrEdit, sprint);
+
+      sprintDialogStage.initModality(Modality.APPLICATION_MODAL);
+      sprintDialogStage.initOwner(primaryStage);
+      sprintDialogStage.setScene(sprintDialogScene);
+      sprintDialogStage.show();
+    } catch (Exception e) {
       e.printStackTrace();
     }
   }
@@ -682,7 +718,7 @@ public class Main extends Application {
     return false;
   }
 
-  public void toggleName () {
+  public void toggleName() {
     if (checkSaved()) {
       primaryStage.setTitle(mainTitle);
     } else {
@@ -751,6 +787,15 @@ public class Main extends Application {
    */
   public void deleteBacklog(Backlog inputBacklog) {
     backlogs.remove(inputBacklog);
+  }
+
+  /**
+   * Delete a backlog from the list of backlogs.
+   *
+   * @param inputSprint Backlog to be deleted.
+   */
+  public void deleteSprint(Sprint inputSprint) {
+    sprints.remove(inputSprint);
   }
 
   /**
@@ -943,8 +988,10 @@ public class Main extends Application {
           alert.setHeaderText(null);
 
           int messageLength = 1;
-          String message = String.format("Are you sure you want to delete team '%s' and people:\n\n",
-                                         team.getLabel());
+          String
+              message =
+              String.format("Are you sure you want to delete team '%s' and people:\n\n",
+                            team.getLabel());
           for (Person teamMember : team.getTeamMembers()) {
             messageLength++;
             message += String.format("%s - %s %s\n",
@@ -1063,6 +1110,7 @@ public class Main extends Application {
     stories.clear();
     backlogs.clear();
     estimates.clear();
+    sprints.clear();
     nonRemovable.clear();
   }
 
@@ -1130,6 +1178,10 @@ public class Main extends Application {
     return estimates.sorted(Comparator.<Estimate>naturalOrder());
   }
 
+  public ObservableList<Sprint> getSprints() {
+    return sprints.sorted(Comparator.<Sprint>naturalOrder());
+  }
+
   public ArrayList<AgileItem> getNonRemovable() {
     return nonRemovable;
   }
@@ -1170,6 +1222,10 @@ public class Main extends Application {
     estimates.add(estimate);
   }
 
+  public void addSprint(Sprint sprint) {
+    sprints.add(sprint);
+  }
+
   public UndoRedoHandler getUndoRedoHandler() {
     // This is for tests
     return undoRedoHandler;
@@ -1181,6 +1237,7 @@ public class Main extends Application {
 
   /**
    * Refreshes the list view
+   *
    * @param agileItem agile item of list to refresh.
    */
   public void refreshList(AgileItem agileItem) {

@@ -35,6 +35,7 @@ import seng302.group5.model.AgileItem;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Release;
 import seng302.group5.model.Role;
+import seng302.group5.model.Sprint;
 import seng302.group5.model.Story;
 import seng302.group5.model.util.Settings;
 import seng302.group5.model.Person;
@@ -171,6 +172,10 @@ public class ListMainPaneController {
         isListShown = true;
         listView.setItems(mainApp.getBacklogs().sorted(Comparator.<Backlog>naturalOrder()));
         break;
+      case "Sprints":
+        isListShown = true;
+        listView.setItems(mainApp.getSprints().sorted(Comparator.<Sprint>naturalOrder()));
+        break;
     }
     // Set the list label
     listViewLabel.setText(listType);
@@ -220,6 +225,11 @@ public class ListMainPaneController {
         return selectedItem;
       case "Backlogs":
         if (!isListShown || !listType.equals("Backlogs")) {
+          return null;
+        }
+        return selectedItem;
+      case "Sprints":
+        if (!isListShown || !listType.equals("Sprints")) {
           return null;
         }
         return selectedItem;
@@ -279,6 +289,11 @@ public class ListMainPaneController {
         displayTextFlow.getChildren().clear();
         Backlog backlog = (Backlog) next;
         displayBacklogTextArea(backlog);
+        break;
+      case "Sprints":
+        displayTextFlow.getChildren().clear();
+        Sprint sprint = (Sprint) next;
+        displaySprintTextArea(sprint);
         break;
     }
   }
@@ -831,6 +846,16 @@ public class ListMainPaneController {
         sortToggle.setText(prioritisedOrder);
       }
     });
+  }
+
+  /**
+   * Displays the information about a given sprint in the text pane.
+   *
+   * @param sprint The sprint to display information about.
+   */
+  private void displaySprintTextArea(Sprint sprint) {
+    Text textHeader = new Text("Backlog Information");
+    //TODO Do it
   }
 
   /**

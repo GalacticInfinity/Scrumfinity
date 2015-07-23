@@ -16,6 +16,7 @@
                        <MenuItem mnemonicParsing="false" onAction="#createRelease" text="Release" />
                   <MenuItem mnemonicParsing="false" onAction="#createStory" text="Story" />
                   <MenuItem mnemonicParsing="false" onAction="#createBacklog" text="Backlog" />
+                  <MenuItem mnemonicParsing="false" onAction="#createSprint" text="Sprint" />
                    </items>
                </Menu>
                <MenuItem fx:id="directAddMenuItem" mnemonicParsing="false" onAction="#btnClickDirectAdd" text="Direct Add" />
@@ -52,6 +53,7 @@
             <CheckMenuItem fx:id="showReleasesMenuItem" mnemonicParsing="false" onAction="#btnShowReleases" text="Show Releases" />
             <CheckMenuItem fx:id="showStoriesMenuItem" mnemonicParsing="false" onAction="#btnShowStories" text="Show Stories" />
             <CheckMenuItem fx:id="showBacklogsMenuItem" mnemonicParsing="false" onAction="#btnShowBacklogs" text="Show Backlogs" />
+            <CheckMenuItem fx:id="showSprintsMenuItem" mnemonicParsing="false" onAction="#btnShowSprints" text="Show Sprints" />
          </items>
       </Menu>
       <!--<Menu mnemonicParsing="false" text="Help">-->
