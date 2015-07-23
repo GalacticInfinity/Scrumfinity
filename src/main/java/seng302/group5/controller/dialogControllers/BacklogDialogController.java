@@ -224,8 +224,9 @@ public class BacklogDialogController {
           //Use ListView's getSelected Item
           currentItemSelected = allocatedStoriesList.getSelectionModel()
               .getSelectedItem();
+          //use this to open the story dialog
           mainApp.showStoryDialogWithinBacklog(CreateOrEdit.EDIT, currentItemSelected.getStory(), thisStage);
-          //use this to do whatever you want to. Open Link etc.
+
         }
       }
     });

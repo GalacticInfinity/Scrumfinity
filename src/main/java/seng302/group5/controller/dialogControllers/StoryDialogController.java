@@ -31,7 +31,6 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
-import seng302.group5.controller.mainAppControllers.ListMainPaneController;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Person;
 import seng302.group5.model.Story;
@@ -300,10 +299,9 @@ public class StoryDialogController {
           backlog.addStory(story);
         }
 
-        if (thisStage.getOwner() == mainApp.getPrimaryStage()) {
-          System.out.println("Refreshing story");
+        if (Settings.correctList(story)) {
           mainApp.refreshList(story);
-        } else System.out.println("No refresh"); //TODO REMOVE the PRINTLN's
+        }
       }
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
       if (backlog != null && createOrEdit == CreateOrEdit.CREATE) {
