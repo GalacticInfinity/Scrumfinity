@@ -2,6 +2,7 @@ package seng302.group5.controller.dialogControllers;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -122,23 +123,25 @@ public class DependantsDialogController {
    * @param root - This is the root of the graph. where the search will start.
    * @return - true or false. true for yes it is cyclic and false for no its not.
    */
-  private boolean dependancyCheck(Story root) {
+  private boolean dependencyCheck(Story root) {
 
-    if (root == null) {
+    if (visitedStories.contains(root)) {
       return true;
     }
 
     visitedStories.add(root);
 
+    boolean result = false;
+
     for (Story childNode : root.getDependencies()) {
-      if (visitedStories.contains(childNode)) {
-        return true;
-      } else {
-        dependancyCheck(childNode);
+      result = dependencyCheck(childNode);
+      if (result) {
+        break;
       }
     }
     visitedStories.remove(root);
-    return false;
+
+    return result;
   }
 
   /**
@@ -151,12 +154,9 @@ public class DependantsDialogController {
    * @param story - the story to be passed through to check for cyclic dependancy
    * @return - true or false indicating if it is(True) or is not (false)
    */
-  private boolean checkIsCyclic(Story story) {
-    visitedStories = new HashSet<Story>();
-//    boolean result = dependancyCheck(story);
-//    visitedStories.clear();
-//    return result;
-    return dependancyCheck(story);
+  public boolean checkIsCyclic(Story story) {
+    visitedStories = new TreeSet<>();
+    return dependencyCheck(story);
   }
 
   /**
