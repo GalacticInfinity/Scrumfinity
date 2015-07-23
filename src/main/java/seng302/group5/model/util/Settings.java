@@ -1,6 +1,7 @@
 package seng302.group5.model.util;
 
 import java.io.File;
+import java.nio.channels.spi.SelectorProvider;
 
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Backlog;
@@ -8,6 +9,7 @@ import seng302.group5.model.Person;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
 import seng302.group5.model.Skill;
+import seng302.group5.model.Sprint;
 import seng302.group5.model.Story;
 import seng302.group5.model.Team;
 
@@ -68,6 +70,8 @@ public class Settings {
         return agileItem instanceof Story;
       case "Backlogs":
         return agileItem instanceof Backlog;
+      case "Sprints":
+        return agileItem instanceof Sprint;
     }
     return false;
   }
