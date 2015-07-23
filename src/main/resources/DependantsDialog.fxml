@@ -6,56 +6,82 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<HBox alignment="CENTER_LEFT" prefHeight="300.0" prefWidth="400.0" spacing="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.DependantsDialogController">
+<VBox alignment="CENTER_LEFT" prefHeight="320.0" prefWidth="400.0" spacing="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.DependantsDialogController">
    <children>
-      <VBox prefHeight="222.0" prefWidth="160.0">
+      <HBox>
          <children>
-            <Label prefHeight="25.0" prefWidth="173.0" text="All Stories:">
+            <Label text="Selected Story:">
                <font>
                   <Font size="15.0" />
                </font>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
+               <HBox.margin>
+                  <Insets left="10.0" top="10.0" />
+               </HBox.margin>
             </Label>
-            <ListView fx:id="availableStoriesList" maxWidth="150.0" minWidth="150.0">
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin></ListView>
-         </children>
-         <HBox.margin>
-            <Insets bottom="10.0" left="10.0" />
-         </HBox.margin>
-      </VBox>
-      <VBox alignment="CENTER" prefHeight="232.0" prefWidth="60.0">
-         <children>
-            <Button fx:id="btnAddStory" mnemonicParsing="false" onAction="#btnAddStoryClick" prefWidth="60.0" text="→">
-               <VBox.margin>
-                  <Insets bottom="20.0" />
-               </VBox.margin>
-            </Button>
-            <Button fx:id="btnRemoveStory" mnemonicParsing="false" onAction="#btnRemoveStoryClick" prefWidth="60.0" text="←">
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-            </Button>
-         </children>
-      </VBox>
-      <VBox prefHeight="232.0" prefWidth="160.0">
-         <children>
-            <Label prefHeight="25.0" text="Dependant Stories">
+            <Label fx:id="lblSelectedStory">
                <font>
                   <Font size="15.0" />
                </font>
+               <HBox.margin>
+                  <Insets left="10.0" top="10.0" />
+               </HBox.margin>
             </Label>
-            <ListView fx:id="dependantStoriesList">
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin></ListView>
          </children>
-         <HBox.margin>
-            <Insets bottom="10.0" right="10.0" />
-         </HBox.margin>
-      </VBox>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" prefHeight="300.0" prefWidth="400.0" spacing="10.0">
+         <children>
+            <VBox prefHeight="222.0" prefWidth="160.0">
+               <children>
+                  <Label prefHeight="25.0" prefWidth="173.0" text="Free Stories:">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </Label>
+                  <ListView fx:id="availableStoriesList" maxWidth="150.0" minWidth="150.0">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </ListView>
+               </children>
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" />
+               </HBox.margin>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="232.0" prefWidth="60.0">
+               <children>
+                  <Button fx:id="btnAddStory" mnemonicParsing="false" onAction="#btnAddStoryClick" prefWidth="60.0" text="→">
+                     <VBox.margin>
+                        <Insets bottom="20.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Button fx:id="btnRemoveStory" mnemonicParsing="false" onAction="#btnRemoveStoryClick" prefWidth="60.0" text="←">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </Button>
+               </children>
+            </VBox>
+            <VBox prefHeight="232.0" prefWidth="160.0">
+               <children>
+                  <Label prefHeight="25.0" text="Dependant Stories:">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <ListView fx:id="dependantStoriesList">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </ListView>
+               </children>
+               <HBox.margin>
+                  <Insets bottom="10.0" right="10.0" />
+               </HBox.margin>
+            </VBox>
+         </children>
+      </HBox>
    </children>
-</HBox>
+</VBox>

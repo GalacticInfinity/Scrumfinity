@@ -1,6 +1,8 @@
 package seng302.group5.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javafx.collections.FXCollections;
@@ -224,19 +226,45 @@ public class Story implements AgileItem, Comparable<Story> {
   }
 
   /**
-   * Sets the dependencies
-   * @param dependencies List of stories
-   */
-  public void setDependencies(List<Story> dependencies) {
-    this.dependencies = dependencies;
-  }
-
-  /**
    * Gets the dependencies
    * @return A list of stories that this story depends on
    */
   public List<Story> getDependencies() {
-    return this.dependencies;
+    return Collections.unmodifiableList(this.dependencies);
+  }
+
+  /**
+   * Add a story which depends on this story to the model.
+   *
+   * @param story A story which depends on this story to be added.
+   */
+  public void addDependency(Story story) {
+    this.dependencies.add(story);
+  }
+
+  /**
+   * Add a collection of stories which depend on this story to the model.
+   *
+   * @param stories A collection of stories which depends on this story to be added.
+   */
+  public void addAllDependencies(Collection<Story> stories) {
+    this.dependencies.addAll(stories);
+  }
+
+  /**
+   * Remove a story which depends on this story from the model.
+   *
+   * @param story A story which depends on this story to be removed.
+   */
+  public void removeDependency(Story story) {
+    this.dependencies.remove(story);
+  }
+
+  /**
+   * Remove all stories which depend on this story from the model.
+   */
+  public void removeAllDependencies() {
+    this.dependencies.clear();
   }
 
   /**
