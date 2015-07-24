@@ -562,12 +562,32 @@ public class BacklogDialogController {
           }
         }
         for (StoryEstimate storyEstimate : allocatedStories) {
+          if (storyEstimate.getStory().getAcceptanceCriteria().size() < 1 &&
+              storyEstimate.getEstimateIndex() != 0) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("No AC's in Story");
+            alert.setHeaderText(null);
+            alert.setResizable(true);
+            alert.getDialogPane().setPrefSize(480, 150);
+            alert.setContentText("The story  " + storyEstimate.getStory().getLabel() +
+                                 " has been estimated"
+                                 + " but you removed the stories AC's, Press Okay to set the "
+                                 + "Estimate to Null or Cancel to Add Acceptance Criteria.");
+
+            alert.showAndWait();
+            if (alert.getResult() == ButtonType.OK){
+              storyEstimate.setEstimate(0);
+            }
+            else return;
+          }
           if (!(storyEstimate.getEstimateIndex() > 0)) {
             if (storyEstimate.getStory().getStoryState()) {
               undoRedoStoryList.add(storyEstimate.getStory());
               storyEstimate.getStory().setStoryState(false);
             }
           }
+
+
           backlog.addStory(storyEstimate.getStory(), storyEstimate.getEstimateIndex());
         }
         mainApp.refreshList(backlog);
