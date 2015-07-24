@@ -52,7 +52,7 @@
         </HBox>
         <HBox prefHeight="21.0" prefWidth="429.0">
             <children>
-                <Label prefHeight="25.0" prefWidth="135.0" text="Backlog:">
+                <Label prefHeight="25.0" prefWidth="135.0" text="Backlog:*">
                     <font>
                         <Font size="15.0" />
                     </font>
@@ -71,7 +71,7 @@
         </HBox>
       <HBox prefHeight="21.0" prefWidth="429.0">
          <children>
-            <Label prefHeight="21.0" prefWidth="164.0" text="Project:">
+            <Label prefHeight="21.0" prefWidth="164.0" text="Project:*">
                <font>
                   <Font size="15.0" />
                </font>
@@ -79,7 +79,7 @@
                   <Insets left="2.0" />
                </HBox.margin>
             </Label>
-            <Label fx:id="sprintProjectField" prefHeight="21.0" prefWidth="335.0" text="No Project Found">
+            <Label fx:id="sprintProjectLabel" prefHeight="21.0" prefWidth="335.0" text="No Project Found">
                <font>
                   <Font size="15.0" />
                </font>
@@ -94,7 +94,7 @@
       </HBox>
       <HBox prefHeight="28.0" prefWidth="463.0">
          <children>
-            <Label prefHeight="25.0" prefWidth="135.0" text="Team:">
+            <Label prefHeight="25.0" prefWidth="135.0" text="Team:*">
                <font>
                   <Font size="15.0" />
                </font>
@@ -110,7 +110,7 @@
       </HBox>
       <HBox prefHeight="28.0" prefWidth="483.0">
          <children>
-            <Label prefHeight="25.0" prefWidth="135.0" text="Release:">
+            <Label prefHeight="25.0" prefWidth="135.0" text="Release:*">
                <HBox.margin>
                   <Insets left="2.0" />
                </HBox.margin>
@@ -129,7 +129,7 @@
             <Insets top="4.0" />
          </VBox.margin>
          <children>
-            <Label prefHeight="25.0" prefWidth="72.0" text="Start Date:">
+            <Label prefHeight="25.0" text="Start Date:*">
                <font>
                   <Font size="15.0" />
                </font>
@@ -138,12 +138,12 @@
                </HBox.margin>
             </Label>
             <DatePicker fx:id="sprintStartDate" prefHeight="25.0" prefWidth="140.0" />
-            <Label prefHeight="25.0" prefWidth="72.0" text="End Date:">
+            <Label prefHeight="25.0" prefWidth="72.0" text="End Date:*">
                <font>
                   <Font size="15.0" />
                </font>
                <HBox.margin>
-                  <Insets left="15.0" />
+                  <Insets left="12.0" />
                </HBox.margin>
             </Label>
             <DatePicker fx:id="sprintEndDate" prefHeight="25.0" prefWidth="140.0" />
