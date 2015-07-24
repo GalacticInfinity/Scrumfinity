@@ -130,7 +130,7 @@ public class SprintDialogController {
     teams = FXCollections.observableArrayList();
     releases = FXCollections.observableArrayList();
 
-    // set up map from backlog to map
+    // set up map from backlog to project
     projectMap = new IdentityHashMap<>();
     for (Project project : mainApp.getProjects()) {
       Backlog projectBacklog = project.getBacklog();
