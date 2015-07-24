@@ -90,7 +90,7 @@ public class ListMainPaneController {
     );
     listView.setOnMouseClicked(mouseEvent -> {
       if (mouseEvent.getButton().equals(MouseButton.PRIMARY) &&
-          mouseEvent.getClickCount() == 2 &&
+          mouseEvent.getClickCount() % 2 == 0 &&
           listView.getSelectionModel().getSelectedItem() != null) {
         mainApp.getMBC().editItem(null);
       }
