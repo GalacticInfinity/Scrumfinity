@@ -1034,7 +1034,7 @@ public class Main extends Application {
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
           alert.setTitle("Story is in a Backlog");
           alert.setHeaderText(null);
-          String message = String.format("Do you want to delete '%s' and remove it from '%s'",
+          String message = String.format("Do you want to delete '%s' and remove it from '%s'?",
                                          story.getLabel(), storyBacklog.getLabel());
 
           alert.setContentText(message);
