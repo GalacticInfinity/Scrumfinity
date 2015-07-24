@@ -697,7 +697,12 @@ public class BacklogDialogController {
       // always be white (so that it can be read against the blue
       // background), and if the value is zero, we'll make it black.
       boolean dependent = false;
-      //TODO Come back and add dependencies when they are ready.
+      //TODO Come back and add dependencies when they are ready
+      for (Story dependence : item.getStory().getDependencies()) {
+        if (backlog.getSizes().get(dependence) > backlog.getSizes().get(item.getStory())) {
+          dependent = true;
+        }
+      }
       if (item != null) {
         javafx.scene.shape.Circle rect = new javafx.scene.shape.Circle(5);
         if (item.getStory().getStoryState() == true && item.getEstimateIndex() != 0) {
