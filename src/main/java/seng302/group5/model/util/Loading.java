@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -748,11 +749,24 @@ public class Loading {
             }
             newStory.setAcceptanceCriteria(newACs);
           }
+          if (saveVersion >= 0.4) {
+            if (storyLine.startsWith("\t\t<Dependencies>")) {
+              while ((!(storyLine = loadedFile.readLine()).equals("\t\t</Dependencies>"))) {
+                if (storyLine.startsWith("\t\t\t<dependent>")) {
+                  storyData =
+                      storyLine.replaceAll("(?i)(.*<dependent.*?>)(.+?)(</dependent>)", "$2");
+                  Story tempS = new Story();
+                  tempS.setLabel(storyData);
+                  newStory.addDependency(tempS);
+                }
+              }
+            }
+          }
         }
-
         main.addStory(newStory);
       }
     }
+    syncStoriesDependencies();
   }
 
   /**
@@ -815,6 +829,32 @@ public class Loading {
       if (tempBacklog != null) {
         project.setBacklog(backlogMap.get(tempBacklog.getLabel()));
       }
+    }
+  }
+
+
+  /**
+   * A function to sync the loaded story and its dependencies in the program
+   */
+  private void syncStoriesDependencies() {
+    Map<String, Story> storyMap = new IdentityHashMap<>();
+    for (Story story : main.getStories()) {
+      storyMap.put(story.getLabel(), story);
+    }
+
+    List<Story> tempList = new ArrayList<>();
+    for (Story story : main.getStories()) {
+      tempList.clear();
+      for (Story depStory : story.getDependencies()) {
+        if (depStory != null) {
+          System.out.println(depStory.getLabel());
+          System.out.println(storyMap.keySet());
+          System.out.println(storyMap.containsKey("asd"));
+          tempList.add(storyMap.get(depStory.getLabel()));
+        }
+      }
+      story.removeAllDependencies();
+      story.addAllDependencies(tempList);
     }
   }
 }

@@ -302,6 +302,15 @@ public class Saving {
         }
         saveFile.write("\t\t</AcceptanceCriteria>\n");
       }
+
+      if (!story.getDependencies().isEmpty()) {
+        saveFile.write("\t\t<Dependencies>\n");
+        for (Story dependent : story.getDependencies()) {
+          saveFile.write("\t\t\t<dependent>" + dependent.getLabel() + "</dependent>\n");
+        }
+        saveFile.write("\t\t</Dependencies>\n");
+      }
+
       saveFile.write("\t</Story>\n");
     }
     saveFile.write("</Stories>\n");
