@@ -43,7 +43,7 @@ public class LoginController {
   protected void btnLoginLoad(ActionEvent event) {
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Open Project");
-    FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("CSV files (*.xml)", "*.xml");
+    FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
     fileChooser.getExtensionFilters().add(filter);
     if (Settings.defaultFilepath != null) {
       fileChooser.setInitialDirectory(Settings.defaultFilepath);
