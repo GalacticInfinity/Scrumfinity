@@ -224,14 +224,36 @@ public class BacklogDialogController {
           //Use ListView's getSelected Item
           currentItemSelected = allocatedStoriesList.getSelectionModel()
               .getSelectedItem();
-          //use this to open the story dialog
-          mainApp.showStoryDialogWithinBacklog(CreateOrEdit.EDIT, currentItemSelected.getStory(), thisStage);
 
+          showStatus();
+          mainApp.showStoryDialogWithinBacklog(CreateOrEdit.EDIT, currentItemSelected.getStory(),
+                                               thisStage);
+          showStatus();
+          //use this to do whatever you want to. Open Link etc.
         }
       }
     });
   }
 
+  private void showStatus(){
+    if (showState) {
+      allocatedStoriesList.setCellFactory(
+          (new Callback<ListView<StoryEstimate>, ListCell<StoryEstimate>>() {
+            @Override
+            public ListCell<StoryEstimate> call(ListView<StoryEstimate> param) {
+              return new StoryFormatCell();
+            }
+          }));
+    } else {
+      allocatedStoriesList.setCellFactory(
+          (new Callback<ListView<StoryEstimate>, ListCell<StoryEstimate>>() {
+            @Override
+            public ListCell<StoryEstimate> call(ListView<StoryEstimate> param) {
+              return new StoryFormatCellFalse();
+            }
+          }));
+    }
+  }
   /**
    * Check if any of the fields has been changed. If nothing changed, then confirm button is disabled.
    */
@@ -261,23 +283,7 @@ public class BacklogDialogController {
     productOwners = FXCollections.observableArrayList();
     estimates = FXCollections.observableArrayList();
 
-    if (showState) {
-      allocatedStoriesList.setCellFactory(
-          (new Callback<ListView<StoryEstimate>, ListCell<StoryEstimate>>() {
-            @Override
-            public ListCell<StoryEstimate> call(ListView<StoryEstimate> param) {
-              return new StoryFormatCell();
-            }
-          }));
-    } else {
-      allocatedStoriesList.setCellFactory(
-          (new Callback<ListView<StoryEstimate>, ListCell<StoryEstimate>>() {
-            @Override
-            public ListCell<StoryEstimate> call(ListView<StoryEstimate> param) {
-              return new StoryFormatCellFalse();
-            }
-          }));
-    }
+    showStatus();
     try {
       Set<Story> storiesInUse = new HashSet<>();
       for (Backlog mainBacklog : mainApp.getBacklogs()) {
@@ -415,23 +421,7 @@ public class BacklogDialogController {
 
         this.allocatedStoriesList.getSelectionModel().select(storyEstimate);
         this.storyEstimateCombo.getSelectionModel().select(0);
-        if (showState) {
-          allocatedStoriesList.setCellFactory(
-              (new Callback<ListView<StoryEstimate>, ListCell<StoryEstimate>>() {
-                @Override
-                public ListCell<StoryEstimate> call(ListView<StoryEstimate> param) {
-                  return new StoryFormatCell();
-                }
-              }));
-        } else {
-          allocatedStoriesList.setCellFactory(
-              (new Callback<ListView<StoryEstimate>, ListCell<StoryEstimate>>() {
-                @Override
-                public ListCell<StoryEstimate> call(ListView<StoryEstimate> param) {
-                  return new StoryFormatCellFalse();
-                }
-              }));
-        }
+       showStatus();
         if (createOrEdit == CreateOrEdit.EDIT) {
           checkButtonDisabled();
         }
@@ -453,23 +443,7 @@ public class BacklogDialogController {
     } else
       showState = true;
 
-    if (showState) {
-      allocatedStoriesList.setCellFactory(
-          (new Callback<ListView<StoryEstimate>, ListCell<StoryEstimate>>() {
-            @Override
-            public ListCell<StoryEstimate> call(ListView<StoryEstimate> param) {
-              return new StoryFormatCell();
-            }
-          }));
-    } else {
-      allocatedStoriesList.setCellFactory(
-          (new Callback<ListView<StoryEstimate>, ListCell<StoryEstimate>>() {
-            @Override
-            public ListCell<StoryEstimate> call(ListView<StoryEstimate> param) {
-              return new StoryFormatCellFalse();
-            }
-          }));
-    }
+    showStatus();
   }
   /**
    * Handles when the remove button is clicked for removing a story from a backlog.
@@ -489,23 +463,7 @@ public class BacklogDialogController {
         if (createOrEdit == CreateOrEdit.EDIT) {
           checkButtonDisabled();
         }
-        if (showState) {
-          allocatedStoriesList.setCellFactory(
-              (new Callback<ListView<StoryEstimate>, ListCell<StoryEstimate>>() {
-                @Override
-                public ListCell<StoryEstimate> call(ListView<StoryEstimate> param) {
-                  return new StoryFormatCell();
-                }
-              }));
-        } else {
-          allocatedStoriesList.setCellFactory(
-              (new Callback<ListView<StoryEstimate>, ListCell<StoryEstimate>>() {
-                @Override
-                public ListCell<StoryEstimate> call(ListView<StoryEstimate> param) {
-                  return new StoryFormatCellFalse();
-                }
-              }));
-        }
+        showStatus();
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -604,12 +562,32 @@ public class BacklogDialogController {
           }
         }
         for (StoryEstimate storyEstimate : allocatedStories) {
+          if (storyEstimate.getStory().getAcceptanceCriteria().size() < 1 &&
+              storyEstimate.getEstimateIndex() != 0) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("No AC's in Story");
+            alert.setHeaderText(null);
+            alert.setResizable(true);
+            alert.getDialogPane().setPrefSize(480, 150);
+            alert.setContentText("The story  " + storyEstimate.getStory().getLabel() +
+                                 " has been estimated"
+                                 + " but you removed the stories AC's, Press Okay to set the "
+                                 + "Estimate to Null or Cancel to Add Acceptance Criteria.");
+
+            alert.showAndWait();
+            if (alert.getResult() == ButtonType.OK){
+              storyEstimate.setEstimate(0);
+            }
+            else return;
+          }
           if (!(storyEstimate.getEstimateIndex() > 0)) {
             if (storyEstimate.getStory().getStoryState()) {
               undoRedoStoryList.add(storyEstimate.getStory());
               storyEstimate.getStory().setStoryState(false);
             }
           }
+
+
           backlog.addStory(storyEstimate.getStory(), storyEstimate.getEstimateIndex());
         }
         mainApp.refreshList(backlog);

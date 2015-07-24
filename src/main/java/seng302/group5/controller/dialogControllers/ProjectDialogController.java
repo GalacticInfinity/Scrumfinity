@@ -183,7 +183,7 @@ public class ProjectDialogController {
       availableBacklogs.addAll(mainApp.getBacklogs());
 
       for (Project pro : mainApp.getProjects()) {
-        if (pro.getBacklog()!=null) {
+        if (pro.getBacklog() != null) {
           availableBacklogs.remove(pro.getBacklog());
         }
       }
