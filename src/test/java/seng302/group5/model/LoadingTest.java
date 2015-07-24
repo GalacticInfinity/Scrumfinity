@@ -259,6 +259,13 @@ public class LoadingTest {
     savedMain.addStory(story3);
   }
 
+  /**
+   *   --3
+   *  / /
+   * | 2
+   * |/
+   * 1
+   */
   public void createStoriesWithDependencies() {
     createVanillaPeople();
     story1 = new Story("Story1", "Starter Story", "Huehuehuehue", person1);
@@ -275,8 +282,8 @@ public class LoadingTest {
     story3.setLabel("Story3");
     story3.setDescription("They story-ening is now");
     story3.setCreator(person1);
-    story2.addDependency(story1);
-    story2.addDependency(story2);
+    story3.addDependency(story1);
+    story3.addDependency(story2);
     savedMain.addStory(story3);
   }
 
@@ -901,8 +908,6 @@ public class LoadingTest {
   @Test
   public void testingStoriesWithDependencies() {
     createStoriesWithDependencies();
-    //empty ac list:
-    ObservableList<String> emptyacs = FXCollections.observableArrayList();
     saving = new Saving(savedMain);
     File file = new File(System.getProperty("user.dir")
                          + File.separator
@@ -926,18 +931,16 @@ public class LoadingTest {
     assertEquals("Story2", story2.getLabel());
     assertEquals("Moar Story", story2.getStoryName());
     assertSame(person2, story2.getCreator());
-    assertEquals(acs2, story2.getAcceptanceCriteria());
     assertTrue(!story2.getDependencies().isEmpty());
-    assertEquals(story2.getDependencies().get(0), story1);
+    assertSame(story2.getDependencies().get(0), story1);
 
     story3 = loadedMain.getStories().get(2);
     assertEquals("Story3", story3.getLabel());
     assertEquals("They story-ening is now", story3.getDescription());
     assertSame(person1, story3.getCreator());
-    assertEquals(emptyacs, story3.getAcceptanceCriteria());
     assertTrue(!story3.getDependencies().isEmpty());
-    assertEquals(story3.getDependencies().get(0), story1);
-    assertEquals(story3.getDependencies().get(0), story2);
+    assertSame(story3.getDependencies().get(0), story1);
+    assertSame(story3.getDependencies().get(1), story2);
 
     if (!file.delete()) {
       fail();

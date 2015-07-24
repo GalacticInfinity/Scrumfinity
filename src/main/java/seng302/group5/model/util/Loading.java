@@ -837,24 +837,23 @@ public class Loading {
    * A function to sync the loaded story and its dependencies in the program
    */
   private void syncStoriesDependencies() {
-    Map<String, Story> storyMap = new IdentityHashMap<>();
+
+    Story tempStory;
+    Map<String, Story> storyMap = new HashMap<>();
+    List<Story> dependents = new ArrayList<>();
+
     for (Story story : main.getStories()) {
       storyMap.put(story.getLabel(), story);
     }
 
-    List<Story> tempList = new ArrayList<>();
     for (Story story : main.getStories()) {
-      tempList.clear();
-      for (Story depStory : story.getDependencies()) {
-        if (depStory != null) {
-          System.out.println(depStory.getLabel());
-          System.out.println(storyMap.keySet());
-          System.out.println(storyMap.containsKey("asd"));
-          tempList.add(storyMap.get(depStory.getLabel()));
-        }
+      dependents.clear();
+      for (Story dependent : story.getDependencies()) {
+        tempStory = storyMap.get(dependent.getLabel());
+        dependents.add(tempStory);
       }
       story.removeAllDependencies();
-      story.addAllDependencies(tempList);
+      story.addAllDependencies(dependents);
     }
   }
 }
