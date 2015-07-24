@@ -146,7 +146,10 @@ public class SprintDialogController {
     sprintBacklogCombo.setVisibleRowCount(5);
     sprintTeamCombo.setVisibleRowCount(5);
     sprintReleaseCombo.setVisibleRowCount(5);
+
     sprintBacklogCombo.setItems(backlogs);
+    sprintTeamCombo.setItems(teams);
+    sprintReleaseCombo.setItems(releases);
 
     availableStoriesList.setItems(availableStories);
     allocatedStoriesList.setItems(allocatedStoriesPrioritised);
@@ -163,16 +166,18 @@ public class SprintDialogController {
 
             // get project's current teams
             teams.setAll(project.getCurrentlyAllocatedTeams());
-            sprintTeamCombo.setItems(teams);
 
             // get project's releases
+            releases.clear();
             for (Release release : mainApp.getReleases()) {
               if (release.getProjectRelease().equals(project)) {
                 releases.add(release);
               }
             }
-            sprintReleaseCombo.setItems(releases);
 
+            // reset interface
+            sprintTeamCombo.getSelectionModel().select(null);
+            sprintReleaseCombo.getSelectionModel().select(null);
             allocatedStories.clear();
             refreshLists();
           } else {
@@ -197,7 +202,7 @@ public class SprintDialogController {
    * @param event Action event
    */
   @FXML
-  void btnAddStoryClick(ActionEvent event) {
+  protected void btnAddStoryClick(ActionEvent event) {
     Story selectedStory = availableStoriesList.getSelectionModel().getSelectedItem();
     if (selectedStory != null) {
       allocatedStories.add(selectedStory);
@@ -213,7 +218,7 @@ public class SprintDialogController {
    * @param event Action event
    */
   @FXML
-  void btnRemoveStoryClick(ActionEvent event) {
+  protected void btnRemoveStoryClick(ActionEvent event) {
     Story selectedStory = allocatedStoriesList.getSelectionModel().getSelectedItem();
     if (selectedStory != null) {
       allocatedStories.remove(selectedStory);
@@ -228,30 +233,33 @@ public class SprintDialogController {
    */
   private void refreshLists() {
     Backlog selectedBacklog = sprintBacklogCombo.getSelectionModel().getSelectedItem();
-    availableStories.setAll(selectedBacklog.getStories());  // add in priority order
-    availableStories.removeAll(allocatedStories);
 
+    availableStories.clear();
     allocatedStoriesPrioritised.clear();
+
     for (Story story : selectedBacklog.getStories()) {
+      // add story to either available or allocated stories in priority order
       if (allocatedStories.contains(story)) {
         allocatedStoriesPrioritised.add(story);
+      } else {
+        availableStories.add(story);
       }
     }
   }
 
   // todo jdoc
   @FXML
-  void btnConfirmClick(ActionEvent event) {
+  protected void btnConfirmClick(ActionEvent event) {
 
   }
 
   /**
-   * Closes the window.
+   * Discards all changes made from within the dialog and exits the dialog.
    *
    * @param event Action event
    */
   @FXML
-  void btnCancelClick(ActionEvent event) {
+  protected void btnCancelClick(ActionEvent event) {
     thisStage.close();
   }
 }
