@@ -1,6 +1,10 @@
 package seng302.group5.controller.dialogControllers;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -10,7 +14,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
@@ -29,17 +32,23 @@ public class DependantsDialogController {
   private Main mainApp;
   private Stage thisStage;
   private Story story;
+  private Map<String, Story> syncMap;
+  private List<Story> clones;
 
+  private ObservableList<Story> allStories;
   private ObservableList<Story> availableStories;
   private ObservableList<Story> dependantStories;
 
   private Set<Story> visitedStories;
 
-  @FXML private Label lblSelectedStory;
+  @FXML private ListView<Story> allStoriesList;
   @FXML private ListView<Story> availableStoriesList;
   @FXML private ListView<Story> dependantStoriesList;
   @FXML private Button btnAddStory;
   @FXML private Button btnRemoveStory;
+  @FXML private Button btnConfirm;
+  @FXML private Button btnCancel;
+
 
   /**
    * Setup the dependency dialog controller for stories. Sets up model collections using data
@@ -53,60 +62,77 @@ public class DependantsDialogController {
     this.mainApp = mainApp;
     this.thisStage = thisStage;
     this.story = story;
+    clones = new ArrayList<>();
+    syncMap = new IdentityHashMap<>();
+    for (Story origStory : mainApp.getStories()) {
+      Story clonedStory = new Story(origStory);
+      clones.add(clonedStory);
+      syncMap.put(clonedStory.getLabel(), origStory);
+    }
 
     // Populate up in here
+    allStories = FXCollections.observableArrayList();
     availableStories = FXCollections.observableArrayList();
     dependantStories = FXCollections.observableArrayList();
-    refreshLists();
 
     // Set the views
+    allStories.setAll(clones);
+    allStoriesList.setItems(allStories);
     availableStoriesList.setItems(availableStories);
     dependantStoriesList.setItems(dependantStories);
 
+    allStoriesList.getSelectionModel().select(0);
+
     initialiseLists();
+    refreshLists();
   }
 
   /**
-   * Set up listeners to enable double click selecting of stories to make them active,
-   * enable/disable buttons as required and refreshes the lists.
+   * Sets up listeners to enable click selection on all stories and double click
+   * to (un)assign between available stories and dependent stories respectively
    */
   private void initialiseLists() {
+    allStoriesList.setOnMouseClicked(mouseEvent -> {
+      if (mouseEvent.getButton().equals(MouseButton.PRIMARY) &&
+          allStoriesList.getSelectionModel().getSelectedItem() != null) {
+        story = allStoriesList.getSelectionModel().getSelectedItem();
+        refreshLists();
+    }});
     availableStoriesList.setOnMouseClicked(mouseEvent -> {
       if (mouseEvent.getButton().equals(MouseButton.PRIMARY) &&
-          mouseEvent.getClickCount() == 2 &&
+          mouseEvent.getClickCount()%2 == 0 &&
           availableStoriesList.getSelectionModel().getSelectedItem() != null) {
-        story = availableStoriesList.getSelectionModel().getSelectedItem();
+        btnAddStoryClick(new ActionEvent());
         refreshLists();
       }
     });
     dependantStoriesList.setOnMouseClicked(mouseEvent -> {
       if (mouseEvent.getButton().equals(MouseButton.PRIMARY) &&
-          mouseEvent.getClickCount() == 2 &&
+          mouseEvent.getClickCount()%2 == 0 &&
           dependantStoriesList.getSelectionModel().getSelectedItem() != null) {
-        story = dependantStoriesList.getSelectionModel().getSelectedItem();
+        btnRemoveStoryClick(new ActionEvent());
         refreshLists();
       }
     });
   }
 
   /**
-   * Fills the model collections with stories from the two lists and manages what they contain
-   * based on what story is selected. Enables/disables buttons as required and sets the currently
-   * selected story GUI label.
+   * Fills the model collections with stories from the available stories and dependent stories
+   * and manages what they contain based on what story is selected. Enables/disables buttons as
+   * required.
    */
+
   private void refreshLists() {
-    availableStories.setAll(mainApp.getStories());
+    availableStories.setAll(clones);
     if (story == null) {
-      btnAddStory.setDisable(true);
-      btnRemoveStory.setDisable(true);
+      story = allStoriesList.getSelectionModel().getSelectedItem();
     } else {
       btnAddStory.setDisable(false);
       btnRemoveStory.setDisable(false);
+    }
       dependantStories.setAll(story.getDependencies());
       availableStories.remove(story);
       availableStories.removeAll(dependantStories);
-      lblSelectedStory.setText(story.toString());
-    }
     if (availableStories.isEmpty()) {
       btnAddStory.setDisable(true);
     }
@@ -150,10 +176,10 @@ public class DependantsDialogController {
    * This function is needed to reset the visitedStories set so it is empty before we start
    * and get the boolean isCyclic to reset too.
    * basically I reset the globals.
-   * Then i call the actual function for checking for cyclic dependancies.
+   * Then i call the actual function for checking for cyclic dependencies.
    * I then return if it is cyclic or not
    *
-   * @param story - the story to be passed through to check for cyclic dependancy
+   * @param story - the story to be passed through to check for cyclic dependency
    * @return - true or false indicating if it is(True) or is not (false)
    */
   public boolean checkIsCyclic(Story story) {
@@ -202,5 +228,33 @@ public class DependantsDialogController {
 
     story.removeDependency(selectedStory);
     refreshLists();
+  }
+
+  /**
+   * Saves the edited state of the dependencies in the dialog to the mainApp
+   *
+   * @param event Action event
+   */
+  @FXML
+  protected void setBtnConfirm(ActionEvent event) {
+    for (Story clone : clones) {
+      Story mainStory = syncMap.get(clone.getLabel());
+      mainStory.removeAllDependencies();
+      for (Story cloneDep : clone.getDependencies()) {
+        Story mainDep = syncMap.get(cloneDep.getLabel());
+        mainStory.addDependency(mainDep);
+      }
+    }
+    thisStage.close();
+  }
+
+  /**
+   * Discards all changes made from within the dialog and exits the dialog.
+   *
+   * @param event Action event
+   */
+  @FXML
+  protected void setBtnCancel(ActionEvent event) {
+    thisStage.close();
   }
 }
