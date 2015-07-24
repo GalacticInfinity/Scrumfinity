@@ -1,5 +1,8 @@
 package seng302.group5.controller.dialogControllers;
 
+import java.util.IdentityHashMap;
+import java.util.Map;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -15,7 +18,9 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
+import seng302.group5.model.AgileHistory;
 import seng302.group5.model.Backlog;
+import seng302.group5.model.Project;
 import seng302.group5.model.Release;
 import seng302.group5.model.Sprint;
 import seng302.group5.model.Story;
@@ -53,13 +58,15 @@ public class SprintDialogController {
 
   private Sprint sprint;
   private Sprint lastSprint;
+  private Project project;
 
   private ObservableList<Story> availableStories;
   private ObservableList<Story> allocatedStories;
   private ObservableList<Backlog> backlogs;
-  // todo map from backlog to project?
   private ObservableList<Team> teams;
   private ObservableList<Release> releases;
+
+  private Map<Backlog, Project> projectMap;
 
   //todo jdoc
   public void setupController(Main mainApp, Stage thisStage, CreateOrEdit createOrEdit,
@@ -77,8 +84,11 @@ public class SprintDialogController {
     if (createOrEdit == CreateOrEdit.CREATE) {
       thisStage.setTitle("Create New Sprint");
       btnConfirm.setText("Create");
-
       initialiseLists(CreateOrEdit.CREATE, sprint);
+
+      sprintTeamCombo.setDisable(true);
+      sprintReleaseCombo.setDisable(true);
+
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       thisStage.setTitle("Edit Sprint");
       btnConfirm.setText("Save");
@@ -103,9 +113,14 @@ public class SprintDialogController {
       this.sprint = null;
       this.lastSprint = null;
     }
+
+    btnConfirm.setDefaultButton(true);
+    thisStage.setResizable(false);
+
     // todo change listeners
   }
 
+  //todo jdoc
   private void initialiseLists(CreateOrEdit createOrEdit, Sprint sprint) {
     availableStories = FXCollections.observableArrayList();
     allocatedStories = FXCollections.observableArrayList();
@@ -114,16 +129,52 @@ public class SprintDialogController {
     teams = FXCollections.observableArrayList();
     releases = FXCollections.observableArrayList();
 
+    // set up map from backlog to map
+    projectMap = new IdentityHashMap<>();
+    for (Project project : mainApp.getProjects()) {
+      Backlog projectBacklog = project.getBacklog();
+      if (projectBacklog != null) {
+        projectMap.put(projectBacklog, project);
+      }
+    }
+
     backlogs.setAll(mainApp.getBacklogs());
-    teams.setAll(mainApp.getTeams());
-    releases.setAll(mainApp.getReleases());
 
     sprintBacklogCombo.setVisibleRowCount(5);
-    sprintBacklogCombo.setItems(backlogs);
     sprintTeamCombo.setVisibleRowCount(5);
-    sprintTeamCombo.setItems(teams);
     sprintReleaseCombo.setVisibleRowCount(5);
-    sprintReleaseCombo.setItems(releases);
+    sprintBacklogCombo.setItems(backlogs);
+
+    sprintBacklogCombo.getSelectionModel().selectedItemProperty().addListener(
+        (observable, oldBacklog, newBacklog) -> {
+          // if the backlog is assigned to a project
+          if (projectMap.containsKey(newBacklog)) {
+            project = projectMap.get(newBacklog);
+            sprintProjectLabel.setText(project.toString());
+
+            sprintTeamCombo.setDisable(false);
+            sprintReleaseCombo.setDisable(false);
+
+            // get project's current teams
+            teams.setAll(project.getCurrentlyAllocatedTeams());
+            sprintTeamCombo.setItems(teams);
+
+            // get project's releases
+            for (Release release : mainApp.getReleases()) {
+              if (release.getProjectRelease().equals(project)) {
+                releases.add(release);
+              }
+            }
+            sprintReleaseCombo.setItems(releases);
+          } else {
+            // todo dialog for confirming change
+            project = null;
+            sprintTeamCombo.setValue(null);
+            sprintReleaseCombo.setValue(null);
+            sprintTeamCombo.setDisable(true);
+            sprintReleaseCombo.setDisable(true);
+          }
+        });
   }
 
   // todo jdoc
