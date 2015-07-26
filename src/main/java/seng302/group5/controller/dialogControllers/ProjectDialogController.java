@@ -151,9 +151,15 @@ public class ProjectDialogController {
   }
 
   private void checkButtonDisabled() {
+    Backlog selectedBacklog = backlogComboBox.getSelectionModel().getSelectedItem();
+    Backlog projectBacklog = project.getBacklog();
+    boolean isSameBacklog =
+        (selectedBacklog != null && (selectedBacklog.equals(projectBacklog))) ||
+        ((selectedBacklog == null || selectedBacklog.equals(noBacklog)) && projectBacklog == null);
+
     if (projectDescriptionField.getText().equals(project.getProjectDescription()) &&
         projectLabelField.getText().equals(project.getLabel()) &&
-        backlogComboBox.getSelectionModel().getSelectedItem().equals(project.getBacklog()) &&
+        isSameBacklog &&
         projectNameField.getText().equals(project.getProjectName())) {
 
       btnConfirm.setDisable(true);
