@@ -161,6 +161,8 @@ public class DependantsDialogController {
     boolean result = false;
 
     for (Story childNode : root.getDependencies()) {
+      // Get the original story, not clone.
+      childNode = syncMap.get(root.getLabel());
       result = dependencyCheck(childNode);
       if (result) {
         break;
@@ -199,7 +201,6 @@ public class DependantsDialogController {
     if (selectedStory == null) {
       return;
     }
-    System.out.println(selectedStory.getDependencies().contains(story));
     story.addDependency(selectedStory);
     if (checkIsCyclic(selectedStory)) {
       story.removeDependency(selectedStory);

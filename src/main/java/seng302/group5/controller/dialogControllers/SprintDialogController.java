@@ -202,7 +202,7 @@ public class SprintDialogController {
    * @param event Action event
    */
   @FXML
-  protected void btnAddStoryClick(ActionEvent event) {
+  protected void btnAddSprintClick(ActionEvent event) {
     Story selectedStory = availableStoriesList.getSelectionModel().getSelectedItem();
     if (selectedStory != null) {
       allocatedStories.add(selectedStory);
@@ -218,7 +218,7 @@ public class SprintDialogController {
    * @param event Action event
    */
   @FXML
-  protected void btnRemoveStoryClick(ActionEvent event) {
+  protected void btnRemoveSprintClick(ActionEvent event) {
     Story selectedStory = allocatedStoriesList.getSelectionModel().getSelectedItem();
     if (selectedStory != null) {
       allocatedStories.remove(selectedStory);
