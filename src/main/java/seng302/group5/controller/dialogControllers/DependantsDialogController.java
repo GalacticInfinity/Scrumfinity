@@ -199,6 +199,7 @@ public class DependantsDialogController {
     if (selectedStory == null) {
       return;
     }
+    System.out.println(selectedStory.getDependencies().contains(story));
     story.addDependency(selectedStory);
     if (checkIsCyclic(selectedStory)) {
       story.removeDependency(selectedStory);
