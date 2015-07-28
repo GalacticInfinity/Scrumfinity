@@ -302,6 +302,10 @@ public class MenuBarController {
     } else {
       FileChooser fileChooser = new FileChooser();
       fileChooser.setTitle("Save Project");
+      FileChooser.ExtensionFilter
+          filter =
+          new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
+      fileChooser.getExtensionFilters().add(filter);
       if (Settings.defaultFilepath != null) {
         fileChooser.setInitialDirectory(Settings.defaultFilepath);
       }
@@ -336,6 +340,10 @@ public class MenuBarController {
   protected void btnClickSaveAs(ActionEvent event) {
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Save Project");
+    FileChooser.ExtensionFilter
+        filter =
+        new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
+    fileChooser.getExtensionFilters().add(filter);
     if (Settings.currentFile != null) {
       fileChooser.setInitialDirectory(Settings.currentFile.getParentFile());
     } else if (Settings.defaultFilepath != null){
