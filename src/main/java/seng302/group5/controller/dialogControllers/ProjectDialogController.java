@@ -16,7 +16,9 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import seng302.group5.Main;
@@ -207,6 +209,15 @@ public class ProjectDialogController {
     } catch (Exception e) {
       e.printStackTrace();
     }
+    setupListView();
+  }
+
+  /**
+   * Sets the custom behaviour for the team ListView.
+   */
+  private void setupListView() {
+    //Sets the cell being populated with custom settings defined in the ListViewCell class.
+    this.availableTeamsList.setCellFactory(listView -> new AllTeamsListViewCell());
   }
 
   /**
@@ -514,7 +525,9 @@ public class ProjectDialogController {
             project.addTeam(team);
           }
         }
-        mainApp.refreshList(project);
+        if (Settings.correctList(project)) {
+          mainApp.refreshList(project);
+        }
       }
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
       mainApp.newAction(undoRedoObject);
@@ -531,4 +544,23 @@ public class ProjectDialogController {
     thisStage.close();
   }
 
+  /**
+   * Allows us to override a ListViewCell - a single cell in a ListView.
+   */
+  private class AllTeamsListViewCell extends TextFieldListCell<Team> {
+
+    public AllTeamsListViewCell() {
+      super();
+
+      // double click for editing
+      this.setOnMouseClicked(click -> {
+        if (click.getClickCount() == 2 &&
+            click.getButton() == MouseButton.PRIMARY &&
+            !isEmpty()) {
+          Team selectedTeam = availableTeamsList.getSelectionModel().getSelectedItem();
+          mainApp.showTeamDialogWithinProject(selectedTeam, thisStage);
+        }
+      });
+    }
+  }
 }

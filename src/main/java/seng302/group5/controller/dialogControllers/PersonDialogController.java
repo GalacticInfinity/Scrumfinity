@@ -9,6 +9,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ListView;
+import javafx.scene.control.cell.TextFieldListCell;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import seng302.group5.Main;
@@ -225,7 +227,9 @@ public class PersonDialogController {
         person.setFirstName(personFirstName);
         person.setLastName(personLastName);
         person.setSkillSet(personSkillSet);
-        mainApp.refreshList(person);
+        if (Settings.correctList(person)) {
+          mainApp.refreshList(person);
+        }
       }
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
       mainApp.newAction(undoRedoObject);
@@ -292,6 +296,7 @@ public class PersonDialogController {
     } catch (Exception e) {
       e.printStackTrace();
     }
+    setupListView();
   }
 
   /**
@@ -358,4 +363,53 @@ public class PersonDialogController {
       e.printStackTrace();
     }
   }
+
+  /**
+   * Sets the custom behaviour for the skills ListView.
+   */
+  private void setupListView() {
+    //Sets the cell being populated with custom settings defined in the ListViewCell class.
+    this.skillsList.setCellFactory(listView -> new AvailableSkillsListViewCell());
+    this.personSkillList.setCellFactory(listView -> new PersonSkillsListViewCell());
+  }
+  /**
+   * Allows us to override a ListViewCell - a single cell in a ListView.
+   */
+  private class AvailableSkillsListViewCell extends TextFieldListCell<Skill> {
+
+    public AvailableSkillsListViewCell() {
+      super();
+
+      // double click for editing
+      this.setOnMouseClicked(click -> {
+        if (click.getClickCount() == 2 &&
+            click.getButton() == MouseButton.PRIMARY &&
+            !isEmpty()) {
+          Skill selectedSkill = skillsList.getSelectionModel().getSelectedItem();
+          mainApp.showSkillDialogWithinPerson(selectedSkill, thisStage);
+        }
+      });
+    }
+  }
+
+  /**
+   * Allows us to override the a ListViewCell - a single cell in a ListView.
+   */
+  private class PersonSkillsListViewCell extends TextFieldListCell<Skill> {
+
+    public PersonSkillsListViewCell() {
+      super();
+
+      // double click for editing
+      this.setOnMouseClicked(click -> {
+        if (click.getClickCount() == 2 &&
+            click.getButton() == MouseButton.PRIMARY &&
+            !isEmpty()) {
+          Skill selectedSkill = personSkillList.getSelectionModel().getSelectedItem();
+          mainApp.showSkillDialogWithinPerson(selectedSkill, thisStage);
+        }
+      });
+    }
+  }
 }
+

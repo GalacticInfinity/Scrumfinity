@@ -16,6 +16,7 @@ import seng302.group5.model.Project;
 import seng302.group5.model.Release;
 import seng302.group5.model.Role;
 import seng302.group5.model.Skill;
+import seng302.group5.model.Sprint;
 import seng302.group5.model.Story;
 import seng302.group5.model.Team;
 
@@ -34,6 +35,7 @@ public class Saving {
   private List<Story> stories;
   private List<Estimate> estimates;
   private List<Backlog> backlogs;
+  private List<Sprint> sprints;
 
   public Saving(Main main) {
     projects = main.getProjects();
@@ -45,6 +47,7 @@ public class Saving {
     stories = main.getStories();
     estimates = main.getEstimates();
     backlogs = main.getBacklogs();
+    sprints = main.getSprints();
   }
 
   /**
@@ -77,6 +80,9 @@ public class Saving {
       if (Settings.progVersion >= 0.3) {
         saveEstimates(saveFile);
         saveBacklogs(saveFile);
+      }
+      if (Settings.progVersion >= 0.4) {
+        saveSprints(saveFile);
       }
       saveEnd(saveFile);
     } catch (Exception e) {
@@ -376,4 +382,52 @@ public class Saving {
     }
     saveFile.write("</Estimates>\n");
   }
-}
+
+  /**
+   * Appends the sprints data to the save file
+   * @param saveFile file being written to
+   * @throws java.lang.Exception cant write the the file for some reason (file is null).
+   */
+  private void saveSprints(Writer saveFile) throws Exception{
+    saveFile.write("<Sprints>\n");
+    for (Sprint sprint : this.sprints) {
+      saveFile.write("\t<Sprint>\n");
+      saveFile.write("\t\t<sprintLabel>" + sprint.getLabel() + "</sprintLabel>\n");
+      if (sprint.getSprintDescription() != null && !sprint.getSprintDescription().equals("")) {
+        saveFile.write("\t\t<sprintDescription>" + sprint.getSprintDescription() +
+                       "</sprintDescription>\n");
+      }
+      if (sprint.getSprintFullName() != null && !sprint.getSprintFullName().equals("")) {
+        saveFile.write("\t\t<sprintName>" + sprint.getSprintFullName() + "</sprintName>\n");
+      }
+      if (sprint.getSprintTeam() != null && !sprint.getSprintTeam().getLabel().equals("")) {
+        saveFile.write("\t\t<sprintTeam>" + sprint.getSprintTeam() + "</sprintTeam>\n");
+      }
+      if (sprint.getSprintBacklog() != null && !sprint.getSprintBacklog().getLabel().equals("")) {
+        saveFile.write("\t\t<sprintBacklog>" + sprint.getSprintBacklog() + "</sprintBacklog>\n");
+      }
+      if (sprint.getSprintProject() != null && !sprint.getSprintProject().getLabel().equals("")) {
+        saveFile.write("\t\t<sprintProject>" + sprint.getSprintProject() + "</sprintProject>\n");
+      }
+      if (sprint.getSprintRelease() != null && !sprint.getSprintRelease().getLabel().equals("")) {
+        saveFile.write("\t\t<sprintRelease>" + sprint.getSprintRelease() + "</sprintRelease>\n");
+      }
+      if (sprint.getSprintStart() != null && !sprint.getSprintStart().toString().equals("")) {
+        saveFile.write("\t\t<sprintStart>" + sprint.getSprintStart() + "</sprintStart>\n");
+      }
+      if (sprint.getSprintEnd() != null && !sprint.getSprintEnd().toString().equals("")) {
+        saveFile.write("\t\t<sprintEnd>" + sprint.getSprintEnd() + "</sprintEnd>\n");
+      }
+      if (sprint.getSprintStories() != null && !sprint.getSprintStories().isEmpty()) {
+        saveFile.write("\t\t<sprintStories>\n");
+        for (Story story : sprint.getSprintStories()) {
+          saveFile.write("\t\t\t<Story>" + story.getLabel() + "</Story>\n");
+        }
+        saveFile.write("\t\t</sprintStories>\n");
+      }
+      saveFile.write("\t</Sprint>\n");
+    }
+    saveFile.write("</Sprints>\n");
+    }
+  }
+
