@@ -124,7 +124,77 @@ public class SprintDialogController {
     btnConfirm.setDefaultButton(true);
     thisStage.setResizable(false);
 
-    // todo change listeners
+    sprintGoalField.textProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+
+    sprintNameField.textProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+    sprintDescriptionField.textProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+    sprintBacklogCombo.valueProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+    sprintTeamCombo.valueProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+    sprintReleaseCombo.valueProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+    sprintStartDate.valueProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+    sprintEndDate.valueProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+  }
+
+  /**
+   * Check if any of the fields has been changed. If nothing changed,
+   * then confirm button is disabled.
+   */
+  private void checkButtonDisabled() {
+    if (sprintGoalField.getText().equals(sprint.getLabel()) &&
+        sprintNameField.getText().equals(sprint.getSprintFullName()) &&
+        sprintDescriptionField.getText().equals(sprint.getSprintDescription()) &&
+        sprintBacklogCombo.getValue().equals(sprint.getSprintBacklog()) &&
+        (sprintTeamCombo.getValue() == null ||
+         sprintTeamCombo.getValue().equals(sprint.getSprintTeam())) &&
+        (sprintReleaseCombo.getValue() == null ||
+         sprintReleaseCombo.getValue().equals(sprint.getSprintRelease())) &&
+        sprintStartDate.getValue().equals(sprint.getSprintStart()) &&
+        sprintEndDate.getValue().equals(sprint.getSprintEnd()) &&
+        allocatedStoriesPrioritised.equals(sprint.getSprintStories())) {
+      btnConfirm.setDisable(true);
+    } else {
+      btnConfirm.setDisable(false);
+    }
   }
 
   //todo jdoc
@@ -216,6 +286,9 @@ public class SprintDialogController {
       if (!availableStories.isEmpty()) {
         availableStoriesList.getSelectionModel().select(0);
       }
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
     }
   }
 
@@ -234,6 +307,9 @@ public class SprintDialogController {
       availableStoriesList.getSelectionModel().select(selectedStory);
       if (!allocatedStoriesPrioritised.isEmpty()) {
         allocatedStoriesList.getSelectionModel().select(0);
+      }
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
       }
     }
   }
@@ -272,7 +348,6 @@ public class SprintDialogController {
     Release release = sprintReleaseCombo.getValue();
     LocalDate startDate = null;
     LocalDate endDate = null;
-    // todo error checks. maybe check release date before end of sprint too. Nothing can be null?
 
     try {
       sprintGoal = parseSprintGoal(sprintGoalField.getText());
@@ -335,7 +410,19 @@ public class SprintDialogController {
           mainApp.refreshList(sprint);
         }
       } else if (createOrEdit == CreateOrEdit.EDIT) {
-        // todo do it
+        sprint.setSprintGoal(sprintGoal);
+        sprint.setSprintFullName(sprintName);
+        sprint.setSprintDescription(sprintDescription);
+        sprint.setSprintBacklog(backlog);
+        sprint.setSprintProject(project);
+        sprint.setSprintTeam(team);
+        sprint.setSprintRelease(release);
+        sprint.setSprintStart(startDate);
+        sprint.setSprintEnd(endDate);
+        sprint.removeAllStories();
+        sprint.addAllStories(allocatedStoriesPrioritised);
+
+        mainApp.refreshList(sprint);
       }
       // todo undo/redo
       thisStage.close();
