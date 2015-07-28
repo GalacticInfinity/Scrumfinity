@@ -660,6 +660,34 @@ public class Main extends Application {
   }
 
   /**
+   * sets up the dialog box for editing a story when opened from the backlog dialog
+   *
+   * @param story the person that you wanted to view or edit information with
+   * @param stage the stage it is currently on to void unusual behaviour
+   */
+  public void showStoryDialogWithinSprint(Story story, Stage stage) {
+    try {
+      FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(Main.class.getResource("/StoryDialog.fxml"));
+      VBox StoryDialogLayout = loader.load();
+
+      StoryDialogController controller = loader.getController();
+      Scene storyDialogScene = new Scene(StoryDialogLayout);
+      Stage storyDialogStage = new Stage();
+
+      controller.setupController(this, storyDialogStage, CreateOrEdit.EDIT, story);
+
+      storyDialogStage.initModality(Modality.APPLICATION_MODAL);
+      storyDialogStage.initOwner(stage);
+      storyDialogStage.setScene(storyDialogScene);
+      storyDialogStage.showAndWait();
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
    * Sets up a dialog box for creating/editing a backlog.
    *
    * @param createOrEdit The CreateOrEdit object that determines whether you are creating or
@@ -731,6 +759,7 @@ public class Main extends Application {
       e.printStackTrace();
     }
   }
+
 
   /**
    * Sets the cloned lists for revert to be what it is now.

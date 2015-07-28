@@ -18,6 +18,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.TextFieldListCell;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import seng302.group5.Main;
@@ -197,7 +199,10 @@ public class SprintDialogController {
     }
   }
 
-  //todo jdoc
+  /**
+   * Populates a list of available stories for assigning them to sprint
+   */
+  //todo more jdoc
   private void initialiseLists(CreateOrEdit createOrEdit, Sprint sprint) {
     availableStories = FXCollections.observableArrayList();
     allocatedStoriesPrioritised = FXCollections.observableArrayList();
@@ -268,6 +273,7 @@ public class SprintDialogController {
             allocatedStories.clear();
           }
         });
+    setupListView();
   }
 
   /**
@@ -513,4 +519,53 @@ public class SprintDialogController {
     }
     return endDate;
   }
+  /**
+   * Sets the custom behaviour for the stories ListView.
+   */
+  private void setupListView() {
+    //Sets the cell being populated with custom settings defined in the ListViewCell class.
+    this.availableStoriesList.setCellFactory(listView -> new AvailableStoriesListViewCell());
+    this.allocatedStoriesList.setCellFactory(listView -> new SprintStoriesListViewCell());
+  }
+  /**
+   * Allows us to override a ListViewCell - a single cell in a ListView.
+   */
+  private class AvailableStoriesListViewCell extends TextFieldListCell<Story> {
+
+    public AvailableStoriesListViewCell() {
+      super();
+
+      // double click for editing
+      this.setOnMouseClicked(click -> {
+        if (click.getClickCount() == 2 &&
+            click.getButton() == MouseButton.PRIMARY &&
+            !isEmpty()) {
+          Story selectedStory = availableStoriesList.getSelectionModel().getSelectedItem();
+          mainApp.showStoryDialogWithinSprint(selectedStory, thisStage);
+        }
+      });
+    }
+  }
+
+  /**
+   * Allows us to override the a ListViewCell - a single cell in a ListView.
+   */
+  private class SprintStoriesListViewCell extends TextFieldListCell<Story> {
+
+    public SprintStoriesListViewCell() {
+      super();
+
+      // double click for editing
+      this.setOnMouseClicked(click -> {
+        if (click.getClickCount() == 2 &&
+            click.getButton() == MouseButton.PRIMARY &&
+            !isEmpty()) {
+          Story selectedStory = allocatedStoriesList.getSelectionModel().getSelectedItem();
+          mainApp.showStoryDialogWithinSprint(selectedStory, thisStage);
+        }
+      });
+    }
+  }
 }
+
+
