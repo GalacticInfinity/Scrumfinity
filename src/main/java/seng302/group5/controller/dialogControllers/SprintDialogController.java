@@ -1,5 +1,6 @@
 package seng302.group5.controller.dialogControllers;
 
+import java.time.LocalDate;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -26,6 +27,7 @@ import seng302.group5.model.Release;
 import seng302.group5.model.Sprint;
 import seng302.group5.model.Story;
 import seng302.group5.model.Team;
+import seng302.group5.model.util.Settings;
 
 /**
  * A controller for the sprint dialog. TODO: expand once it works
@@ -34,38 +36,22 @@ import seng302.group5.model.Team;
  */
 public class SprintDialogController {
 
-  @FXML
-  private TextField sprintGoalField;
-  @FXML
-  private TextField sprintNameField;
-  @FXML
-  private TextArea sprintDescriptionField;
-  @FXML
-  private ComboBox<Backlog> sprintBacklogCombo;
-  @FXML
-  private Label sprintProjectLabel;
-  @FXML
-  private ComboBox<Team> sprintTeamCombo;
-  @FXML
-  private ComboBox<Release> sprintReleaseCombo;
-  @FXML
-  private DatePicker sprintStartDate;
-  @FXML
-  private DatePicker sprintEndDate;
-  @FXML
-  private ListView<Story> availableStoriesList;
-  @FXML
-  private ListView<Story> allocatedStoriesList;
-  @FXML
-  private Button btnAddStory;
-  @FXML
-  private Button btnRemoveStory;
-  @FXML
-  private HBox btnContainer;
-  @FXML
-  private Button btnConfirm;
-  @FXML
-  private Button btnCancel;
+  @FXML private TextField sprintGoalField;
+  @FXML private TextField sprintNameField;
+  @FXML private TextArea sprintDescriptionField;
+  @FXML private ComboBox<Backlog> sprintBacklogCombo;
+  @FXML private Label sprintProjectLabel;
+  @FXML private ComboBox<Team> sprintTeamCombo;
+  @FXML private ComboBox<Release> sprintReleaseCombo;
+  @FXML private DatePicker sprintStartDate;
+  @FXML private DatePicker sprintEndDate;
+  @FXML private ListView<Story> availableStoriesList;
+  @FXML private ListView<Story> allocatedStoriesList;
+  @FXML private Button btnAddStory;
+  @FXML private Button btnRemoveStory;
+  @FXML private HBox btnContainer;
+  @FXML private Button btnConfirm;
+  @FXML private Button btnCancel;
 
   private Main mainApp;
   private Stage thisStage;
@@ -119,7 +105,10 @@ public class SprintDialogController {
       // todo project label field
       sprintTeamCombo.getSelectionModel().select(sprint.getSprintTeam());
       sprintReleaseCombo.getSelectionModel().select(sprint.getSprintRelease());
-      // todo date fields
+      sprintStartDate.setValue(sprint.getSprintStart());
+      sprintEndDate.setValue(sprint.getSprintEnd());
+      allocatedStories.addAll(sprint.getSprintStories());
+      refreshLists();
     }
     this.createOrEdit = createOrEdit;
 
@@ -223,6 +212,9 @@ public class SprintDialogController {
       allocatedStories.add(selectedStory);
       refreshLists();
       allocatedStoriesList.getSelectionModel().select(selectedStory);
+      if (!availableStories.isEmpty()) {
+        availableStoriesList.getSelectionModel().select(0);
+      }
     }
   }
 
@@ -239,6 +231,9 @@ public class SprintDialogController {
       allocatedStories.remove(selectedStory);
       refreshLists();
       availableStoriesList.getSelectionModel().select(selectedStory);
+      if (!allocatedStoriesPrioritised.isEmpty()) {
+        allocatedStoriesList.getSelectionModel().select(0);
+      }
     }
   }
 
@@ -265,6 +260,34 @@ public class SprintDialogController {
   // todo jdoc
   @FXML
   protected void btnConfirmClick(ActionEvent event) {
+    StringBuilder errors = new StringBuilder();   // todo use these
+    int noErrors = 0;
+
+    String sprintGoal = "";
+    String sprintName = sprintNameField.getText().trim();
+    String sprintDescription = sprintDescriptionField.getText().trim();
+    Backlog backlog = sprintBacklogCombo.getValue();
+    Team team = sprintTeamCombo.getValue();
+    Release release = sprintReleaseCombo.getValue();
+    LocalDate startDate = sprintStartDate.getValue();
+    LocalDate endDate = sprintEndDate.getValue();
+    // todo error checks. maybe check release date before end of sprint too. Nothing can be null?
+
+//    TODO sprintGoal = parseSprintGoal(sprintGoalField.getText()); check replicas, del line below
+    sprintGoal = sprintGoalField.getText().trim();
+
+    if (createOrEdit == CreateOrEdit.CREATE) {
+      sprint = new Sprint(sprintGoal, sprintName, sprintDescription, backlog, project, team,
+                          release, startDate, endDate, allocatedStoriesPrioritised);
+      mainApp.addSprint(sprint);
+      if (Settings.correctList(sprint)) {
+        mainApp.refreshList(sprint);
+      }
+    } else if (createOrEdit == CreateOrEdit.EDIT) {
+      // todo do it
+    }
+    // todo undo/redo
+    thisStage.close();
 
   }
 

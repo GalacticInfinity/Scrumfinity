@@ -253,6 +253,10 @@ public class ReportDialogController {
   public void saveBtnClick(ActionEvent actionEvent) {
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Save Report");
+    FileChooser.ExtensionFilter
+        filter =
+        new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
+    fileChooser.getExtensionFilters().add(filter);
     File file = fileChooser.showSaveDialog(mainApp.getPrimaryStage());
 
     if (file != null) {

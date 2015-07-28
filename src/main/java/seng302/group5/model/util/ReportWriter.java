@@ -567,6 +567,14 @@ public class ReportWriter {
     }
     estElement.appendChild(report.createTextNode(size));
     storyElem.appendChild(estElement);
+
+    Element dependenciesElement = report.createElement("Dependencies");
+    for (Story dependency : story.getDependencies()) {
+      Element depElement = report.createElement("dependency");
+      depElement.appendChild(report.createTextNode(dependency.getLabel()));
+      dependenciesElement.appendChild(depElement);
+    }
+    storyElem.appendChild(dependenciesElement);
   }
 
   /**
