@@ -701,16 +701,15 @@ public class BacklogDialogController {
       // background), and if the value is zero, we'll make it black.
 
       boolean dependent = false;
-      //TODO Come back and add dependencies when they are ready
 
       if (item != null) {
 
         for (StoryEstimate stories : allocatedStoriesList.getItems()) {
           if (item.getStory().getDependencies().contains(stories.getStory())) {
-            if (allocatedStoriesList.getItems().indexOf(stories) <
+            if (allocatedStoriesList.getItems().indexOf(stories) >
                 allocatedStoriesList.getItems().indexOf(item)) {
-              //TODO when Dependencies are fixed, finish this
-            }
+              dependent = true;
+          }
           }
         }
         javafx.scene.shape.Circle rect = new javafx.scene.shape.Circle(5);
