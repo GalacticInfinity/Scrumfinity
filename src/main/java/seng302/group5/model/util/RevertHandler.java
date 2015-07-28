@@ -2,6 +2,7 @@ package seng302.group5.model.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -106,6 +107,7 @@ public class RevertHandler {
     syncBacklogsWithStories(mainApp.getBacklogs(), mainApp.getStories());
     syncBacklogsWithEstimates(mainApp.getBacklogs(), mainApp.getEstimates());
     syncProjectsWithBacklogs(mainApp.getProjects(), mainApp.getBacklogs());
+    syncStoriesWithDependencies(mainApp.getStories());
 
     mainApp.refreshLastSaved();
     mainApp.refreshList(null);
@@ -172,6 +174,7 @@ public class RevertHandler {
     syncBacklogsWithStories(backlogsLastSaved, storiesLastSaved);
     syncBacklogsWithEstimates(backlogsLastSaved, estimatesLastSaved);
     syncProjectsWithBacklogs(projectsLastSaved, backlogsLastSaved);
+    syncStoriesWithDependencies(storiesLastSaved);
   }
 
   /**
@@ -409,4 +412,26 @@ public class RevertHandler {
     }
   }
 
+  /**
+   * Creates proper references between the dependencies stories to the newly reverted stories.
+   *
+   * @param stories Reference story objects
+   */
+  private void syncStoriesWithDependencies(List<Story> stories) {
+    Map<String, Story> storyMap = new IdentityHashMap<>();
+
+    for (Story mainStory : stories) {
+      storyMap.put(mainStory.getLabel(), mainStory);
+    }
+
+    List<Story> tempList;
+    for (Story story : stories) {
+      tempList = new ArrayList<>();
+      for (Story depStory : story.getDependencies()) {
+        tempList.add(storyMap.get(depStory.getLabel()));
+      }
+      story.removeAllDependencies();
+      story.addAllDependencies(tempList);
+    }
+  }
 }
