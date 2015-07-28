@@ -12,6 +12,7 @@ import seng302.group5.model.Person;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
 import seng302.group5.model.Skill;
+import seng302.group5.model.Sprint;
 import seng302.group5.model.Story;
 import seng302.group5.model.Team;
 
@@ -237,6 +238,18 @@ public class UndoRedoHandler {
 
       case BACKLOG_DELETE:
         handleBacklogDelete(undoRedoObject, undoOrRedo);
+        break;
+
+      case SPRINT_CREATE:
+        handleSprintCreate(undoRedoObject, undoOrRedo);
+        break;
+
+      case SPRINT_EDIT:
+        handleSprintEdit(undoRedoObject, undoOrRedo);
+        break;
+
+      case SPRINT_DELETE:
+        handleSprintDelete(undoRedoObject, undoOrRedo);
         break;
 
       case UNDEFINED:
@@ -776,7 +789,6 @@ public class UndoRedoHandler {
     Story storyData = (Story) data.get(0);
     Backlog storyBacklog = null;
     if (data.size() > 1) {
-      storyBacklog = new Backlog();
       storyBacklog = (Backlog) data.get(1);
     }
 
@@ -974,6 +986,96 @@ public class UndoRedoHandler {
       mainApp.deleteBacklog(backlogToChange);
     }
 
+    mainApp.refreshList(null);
+  }
+
+  /**
+   * Undo or redo a sprint creation
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo     Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handleSprintCreate(UndoRedoObject undoRedoObject,
+                                  UndoOrRedo undoOrRedo) throws Exception {
+
+    // Get the data and ensure it has data for the sprint
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 1) {
+      throw new Exception("Can't undo/redo sprint creation - No variables");
+    }
+
+    Sprint sprintToChange = (Sprint) undoRedoObject.getAgileItem();
+    Sprint sprintData = (Sprint) data.get(0);
+
+    // Make the changes and refresh the list
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+      // Delete the sprint from the list in the main application
+      mainApp.deleteSprint(sprintToChange);
+    } else {
+      sprintToChange.copyValues(sprintData);
+      mainApp.addSprint(sprintToChange);
+    }
+    mainApp.refreshList(null);
+  }
+
+  /**
+   * Undo or redo a sprint edit
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo     Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handleSprintEdit(UndoRedoObject undoRedoObject,
+                                UndoOrRedo undoOrRedo) throws Exception {
+
+    // Get the data and ensure it has data for the sprint both before and after
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 2) {
+      throw new Exception("Can't undo/redo sprint edit - Less than 2 variables");
+    }
+
+    Sprint sprintToChange = (Sprint) undoRedoObject.getAgileItem();
+    Sprint sprintData;
+
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+      sprintData = (Sprint) data.get(0);
+    } else {
+      sprintData = (Sprint) data.get(1);
+    }
+
+    // Make the changes and refresh the list
+    sprintToChange.copyValues(sprintData);
+    mainApp.refreshList(null);
+  }
+
+  /**
+   * Undo or redo a sprint deletion
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo     Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handleSprintDelete(UndoRedoObject undoRedoObject,
+                                  UndoOrRedo undoOrRedo) throws Exception {
+
+    // Get the data and ensure it has data for the sprint
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 1) {
+      throw new Exception("Can't undo/redo sprint deletion - No variables");
+    }
+
+    Sprint sprintToChange = (Sprint) undoRedoObject.getAgileItem();
+    Sprint sprintData = (Sprint) data.get(0);
+
+    // Make the changes and refresh the list
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+      // Create the deleted sprint again
+      sprintToChange.copyValues(sprintData);
+      mainApp.addSprint(sprintToChange);
+    } else {
+      mainApp.deleteSprint(sprintToChange);
+    }
     mainApp.refreshList(null);
   }
 
