@@ -4,9 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
-
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -27,7 +26,7 @@ public class SprintTest {
   private LocalDate sprintStart;
   private LocalDate sprintEnd;
 
-  private ObservableList<Story> sprintStories;
+  private List<Story> sprintStories;
 
   private Sprint sprint;
   private Sprint sprint1;
@@ -44,18 +43,20 @@ public class SprintTest {
     sprintRelease = null;
     sprintStart = null;
     sprintEnd = null;
-    sprintStories = FXCollections.observableArrayList();
+    sprintStories = new ArrayList<>();
 
-    sprint = new Sprint(sprintGoal,sprintDescription,sprintFullName,sprintTeam,sprintBacklog,
-                        sprintRelease,sprintStart,sprintEnd,sprintStories,sprintProject);
+    sprint = new Sprint(sprintGoal, sprintFullName, sprintDescription, sprintBacklog, sprintProject,
+                        sprintTeam, sprintRelease, sprintStart, sprintEnd, sprintStories);
 
-    sprint1 = new Sprint(sprintGoal,sprintDescription,sprintFullName,sprintTeam,sprintBacklog,
-                         sprintRelease,sprintStart,sprintEnd,sprintStories,sprintProject);
+    sprint1 = new Sprint(sprintGoal, sprintFullName, sprintDescription, sprintBacklog,
+                         sprintProject, sprintTeam, sprintRelease, sprintStart, sprintEnd,
+                         sprintStories);
 
 
     String sprintGoal2 = "This is a goalololololol!";
-    sprint2 = new Sprint(sprintGoal2,sprintDescription,sprintFullName,sprintTeam,sprintBacklog,
-                         sprintRelease,sprintStart,sprintEnd,sprintStories,sprintProject);
+    sprint2 = new Sprint(sprintGoal2, sprintFullName, sprintDescription, sprintBacklog,
+                         sprintProject, sprintTeam, sprintRelease, sprintStart, sprintEnd,
+                         sprintStories);
   }
 
 
