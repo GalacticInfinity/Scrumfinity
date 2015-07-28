@@ -515,15 +515,16 @@ public class TeamDialogController {
    */
   private void setupListView() {
     //Sets the cell being populated with custom settings defined in the ListViewCell class.
-    this.teamMembersList.setCellFactory(listView -> new ListViewCell());
+    this.teamMembersList.setCellFactory(listView -> new TeamMemberListViewCell());
+    this.availableMembersList.setCellFactory(listView -> new AllMembersListViewCell());
   }
 
   /**
    * Allows us to override the a ListViewCell - a single cell in a ListView.
    */
-  private class ListViewCell extends TextFieldListCell<PersonRole> {
+  private class TeamMemberListViewCell extends TextFieldListCell<PersonRole> {
 
-    public ListViewCell() {
+    public TeamMemberListViewCell() {
       super();
 
       // double click for editing
@@ -533,6 +534,26 @@ public class TeamDialogController {
             !isEmpty()) {
           PersonRole selectedPerson = teamMembersList.getSelectionModel().getSelectedItem();
           mainApp.showPersonDialogWithinTeam(selectedPerson.getPerson(), thisStage);
+        }
+      });
+    }
+  }
+
+  /**
+   * Allows us to override the a ListViewCell - a single cell in a ListView.
+   */
+  private class AllMembersListViewCell extends TextFieldListCell<Person> {
+
+    public AllMembersListViewCell() {
+      super();
+
+      // double click for editing
+      this.setOnMouseClicked(click -> {
+        if (click.getClickCount() == 2 &&
+            click.getButton() == MouseButton.PRIMARY &&
+            !isEmpty()) {
+          Person selectedPerson = availableMembersList.getSelectionModel().getSelectedItem();
+          mainApp.showPersonDialogWithinTeam(selectedPerson, thisStage);
         }
       });
     }
