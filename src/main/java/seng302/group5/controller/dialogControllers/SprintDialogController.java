@@ -10,6 +10,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -269,26 +270,76 @@ public class SprintDialogController {
     Backlog backlog = sprintBacklogCombo.getValue();
     Team team = sprintTeamCombo.getValue();
     Release release = sprintReleaseCombo.getValue();
-    LocalDate startDate = sprintStartDate.getValue();
-    LocalDate endDate = sprintEndDate.getValue();
+    LocalDate startDate = null;
+    LocalDate endDate = null;
     // todo error checks. maybe check release date before end of sprint too. Nothing can be null?
 
-//    TODO sprintGoal = parseSprintGoal(sprintGoalField.getText()); check replicas, del line below
-    sprintGoal = sprintGoalField.getText().trim();
-
-    if (createOrEdit == CreateOrEdit.CREATE) {
-      sprint = new Sprint(sprintGoal, sprintName, sprintDescription, backlog, project, team,
-                          release, startDate, endDate, allocatedStoriesPrioritised);
-      mainApp.addSprint(sprint);
-      if (Settings.correctList(sprint)) {
-        mainApp.refreshList(sprint);
-      }
-    } else if (createOrEdit == CreateOrEdit.EDIT) {
-      // todo do it
+    try {
+      sprintGoal = parseSprintGoal(sprintGoalField.getText());
+    } catch (Exception e) {
+      noErrors++;
+      errors.append(String.format("%s\n", e.getMessage()));
     }
-    // todo undo/redo
-    thisStage.close();
 
+    if (backlog == null) {
+      noErrors++;
+      errors.append(String.format("%s\n", "No backlog selected"));
+    } else if (project == null) {
+      noErrors++;
+      errors.append(String.format("%s\n", "Selected backlog is not assigned to a project"));
+    }
+
+    if (team == null) {
+      noErrors++;
+      errors.append(String.format("%s\n", "No team selected"));
+    }
+
+    if (release == null) {
+      noErrors++;
+      errors.append(String.format("%s\n", "No release selected"));
+    }
+
+    try {
+      startDate = parseStartDate(sprintStartDate.getValue(), release);
+    } catch (Exception e) {
+      noErrors++;
+      errors.append(String.format("%s\n", e.getMessage()));
+    }
+
+    try {
+      endDate = parseEndDate(sprintEndDate.getValue(), sprintStartDate.getValue(), release);
+    } catch (Exception e) {
+      noErrors++;
+      errors.append(String.format("%s\n", e.getMessage()));
+    }
+
+    // Display all errors if they exist
+    if (noErrors > 0) {
+      String title = String.format("%d Invalid Field", noErrors);
+      if (noErrors > 1) {
+        title += "s";  // plural
+      }
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle(title);
+      alert.setHeaderText(null);
+      noErrors += 1;
+      alert.getDialogPane().setPrefHeight(60 + 30 * noErrors);
+      alert.setContentText(errors.toString());
+      alert.showAndWait();
+    } else {
+      if (createOrEdit == CreateOrEdit.CREATE) {
+        sprint = new Sprint(sprintGoal, sprintName, sprintDescription, backlog, project, team,
+                            release, startDate, endDate, allocatedStoriesPrioritised);
+        mainApp.addSprint(sprint);
+        if (Settings.correctList(sprint)) {
+          mainApp.refreshList(sprint);
+        }
+      } else if (createOrEdit == CreateOrEdit.EDIT) {
+        // todo do it
+      }
+      // todo undo/redo
+      thisStage.close();
+    }
   }
 
   /**
@@ -299,5 +350,80 @@ public class SprintDialogController {
   @FXML
   protected void btnCancelClick(ActionEvent event) {
     thisStage.close();
+  }
+
+  /**
+   * Checks if sprint goal field contains valid input.
+   *
+   * @param inputSprintGoal String sprint label or sprint goal.
+   * @return sprint label/goal if sprint label/goal is valid.
+   * @throws Exception If sprint label/goal is not valid.
+   */
+  private String parseSprintGoal(String inputSprintGoal) throws Exception {
+    inputSprintGoal = inputSprintGoal.trim();
+
+    if (inputSprintGoal.isEmpty()) {
+      throw new Exception("Sprint Goal is empty.");
+    } else {
+      String lastSprintGoal;
+      if (lastSprint == null) {
+        lastSprintGoal = "";
+      } else {
+        lastSprintGoal = lastSprint.getLabel();
+      }
+      for (Sprint sprint : mainApp.getSprints()) {
+        String sprintGoal = sprint.getLabel();
+        if (sprint.getLabel().equalsIgnoreCase(inputSprintGoal) &&
+            !sprintGoal.equalsIgnoreCase(lastSprintGoal)) {
+          throw new Exception("Sprint Goal is not unique.");
+        }
+      }
+      return inputSprintGoal;
+    }
+  }
+
+  /**
+   * Verify that the start date is valid in that it is not null and it is before the release date.
+   *
+   * @param startDate Start date of sprint.
+   * @param release Release of sprint used to get date.
+   * @return Start date of sprint if it is valid.
+   * @throws Exception if sprint start date is not valid.
+   */
+  private LocalDate parseStartDate(LocalDate startDate, Release release) throws Exception {
+    if (startDate == null) {
+      throw new Exception("No start date selected");
+    } else if (release != null && startDate.isAfter(release.getReleaseDate())) {
+      throw new Exception("Start date must be before release date");
+    }
+    return startDate;
+  }
+
+  /**
+   * Verify that the end date is valid in that it is not null, it is after the start date, and
+   * it is before the release date.
+   *
+   * @param endDate End date of sprint
+   * @param startDate Start date of sprint
+   * @param release Release of sprint used to get date.
+   * @return End date of sprint if it is valid.
+   * @throws Exception if sprint end date is not valid.
+   */
+  private LocalDate parseEndDate(LocalDate endDate, LocalDate startDate, Release release)
+      throws Exception {
+    if (endDate == null) {
+      throw new Exception("No end date selected");
+    } else {
+      boolean afterReleaseDate = release != null && endDate.isAfter(release.getReleaseDate());
+      boolean beforeStartDate = endDate.isBefore(startDate);
+      if (afterReleaseDate && beforeStartDate) {
+        throw new Exception("End date must be before release date and after start date");
+      } else if (afterReleaseDate) {
+        throw new Exception("End date must be before release date");
+      } else if (beforeStartDate) {
+        throw new Exception("End date must be after start date");
+      }
+    }
+    return endDate;
   }
 }
