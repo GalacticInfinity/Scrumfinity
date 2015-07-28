@@ -9,10 +9,13 @@ import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.cell.TextFieldListCell;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import seng302.group5.Main;
@@ -256,6 +259,7 @@ public class TeamDialogController {
     } catch (Exception e) {
       e.printStackTrace();
     }
+    setupListView();
   }
 
   /**
@@ -504,6 +508,33 @@ public class TeamDialogController {
     @Override
     public int compareTo(PersonRole o) {
       return person.getLabel().compareToIgnoreCase(o.getPerson().getLabel());
+    }
+  }
+  /**
+   * Sets the custom behaviour for the acceptance criteria listview.
+   */
+  private void setupListView() {
+    //Sets the cell being populated with custom settings defined in the ListViewCell class.
+    this.teamMembersList.setCellFactory(listView -> new ListViewCell());
+  }
+
+  /**
+   * Allows us to override the a ListViewCell - a single cell in a ListView.
+   */
+  private class ListViewCell extends TextFieldListCell<PersonRole> {
+
+    public ListViewCell() {
+      super();
+
+      // double click for editing
+      this.setOnMouseClicked(click -> {
+        if (click.getClickCount() == 2 &&
+            click.getButton() == MouseButton.PRIMARY &&
+            !isEmpty()) {
+          PersonRole selectedPerson = teamMembersList.getSelectionModel().getSelectedItem();
+          mainApp.showPersonDialogWithinTeam(selectedPerson.getPerson(), thisStage);
+        }
+      });
     }
   }
 }
