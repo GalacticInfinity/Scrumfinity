@@ -172,6 +172,7 @@ public class RevertHandler {
     syncBacklogsWithStories(backlogsLastSaved, storiesLastSaved);
     syncBacklogsWithEstimates(backlogsLastSaved, estimatesLastSaved);
     syncProjectsWithBacklogs(projectsLastSaved, backlogsLastSaved);
+    syncStoriesWithDependencies(storiesLastSaved);
   }
 
   /**
@@ -409,4 +410,26 @@ public class RevertHandler {
     }
   }
 
+  /**
+   * Creates proper references between the dependencies stories to the newly reverted stories.
+   *
+   * @param stories Reference story objects
+   */
+  private void syncStoriesWithDependencies(List<Story> stories) {
+    Map<String, Story> storyMap = new HashMap<>();
+
+    for (Story mainStory : stories) {
+      storyMap.put(mainStory.getLabel(), mainStory);
+    }
+
+    List<Story> tempList;
+    for (Story story : stories) {
+      tempList = new ArrayList<>();
+      for (Story depStory : story.getDependencies()) {
+        tempList.add(storyMap.get(depStory.getLabel()));
+      }
+      story.removeAllDependencies();
+      story.addAllDependencies(tempList);
+    }
+  }
 }
