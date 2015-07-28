@@ -2,6 +2,8 @@ package seng302.group5.model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -179,14 +181,43 @@ public class Sprint implements AgileItem, Comparable<Sprint> {
   }
 
   public List<Story> getSprintStories() {
-    return sprintStories;
+    return Collections.unmodifiableList(sprintStories);
   }
 
-  public void setSprintStories(List<Story> sprintStories) {
-    this.sprintStories.clear();
-    this.sprintStories.addAll(sprintStories);
+
+  /**
+   * Add all stories in a collection to the sprint.
+   *
+   * @param storyCollection Collection of stories
+   */
+  public void addAllStories(Collection<Story> storyCollection) {
+    sprintStories.addAll(storyCollection);
   }
 
+  /**
+   * Add a story to the sprint.
+   *
+   * @param story Story to add
+   */
+  public void addStory(Story story) {
+    sprintStories.add(story);
+  }
+
+  /**
+   * Remove all stories in the sprint.
+   */
+  public void removeAllStories() {
+    sprintStories.clear();
+  }
+
+  /**
+   * Remove a story from the sprint.
+   *
+   * @param story Story to remove
+   */
+  public void removeStory(Story story) {
+    sprintStories.remove(story);
+  }
 
   /**
    * Copies the Sprint input fields into current object.
