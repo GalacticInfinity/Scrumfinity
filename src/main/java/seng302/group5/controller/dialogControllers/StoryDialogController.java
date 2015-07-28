@@ -610,10 +610,8 @@ public class StoryDialogController {
    */
   public class ListViewCell extends TextFieldListCell<String> {
 
-    private Button editButton;
     private Label cellText;
     private GridPane pane;
-    private String text;
     private double labelWidth;
 
     public ListViewCell() {
@@ -644,7 +642,6 @@ public class StoryDialogController {
      */
     @Override
     public void updateItem(String string, boolean empty) {
-      this.text = string;
       super.updateItem(string, empty);
 
       if (empty || string == null) {
