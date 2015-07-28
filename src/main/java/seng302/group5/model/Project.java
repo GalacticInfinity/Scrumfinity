@@ -1,5 +1,9 @@
 package seng302.group5.model;
 
+import java.time.LocalDate;
+import java.util.Set;
+import java.util.TreeSet;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -87,6 +91,28 @@ public class Project implements AgileItem, Comparable<Project>  {
 
   public ObservableList<AgileHistory> getAllocatedTeams() {
     return this.allocatedTeams;
+  }
+
+  /**
+   * Get the teams that are currently allocated to the Project based on the start/end dates
+   * of the stored team allocations.
+   *
+   * @return A set with the currently allocated teams to guarantee no duplicates.
+   */
+  public Set<Team> getCurrentlyAllocatedTeams() {
+    Set<Team> currentTeams = new TreeSet<>(); // no duplicates
+    for (AgileHistory agileHistory : allocatedTeams) {
+      LocalDate now = LocalDate.now();
+      LocalDate start = agileHistory.getStartDate();
+      LocalDate end = agileHistory.getEndDate();
+      Team team = (Team) agileHistory.getAgileItem();
+
+      if ((start.isBefore(now) || start.isEqual(now)) &&
+          (end == null || end.isAfter(now))) {
+        currentTeams.add(team);
+      }
+    }
+    return currentTeams;
   }
 
   /**

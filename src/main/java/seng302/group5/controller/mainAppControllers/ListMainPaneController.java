@@ -21,6 +21,7 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
@@ -88,13 +89,8 @@ public class ListMainPaneController {
           }
         }
     );
-    listView.setOnMouseClicked(mouseEvent -> {
-      if (mouseEvent.getButton().equals(MouseButton.PRIMARY) &&
-          mouseEvent.getClickCount() == 2 &&
-          listView.getSelectionModel().getSelectedItem() != null) {
-        mainApp.getMBC().editItem(null);
-      }
-    });
+
+    listView.setCellFactory(listView -> new ListViewCell());
   }
 
   /**
@@ -867,5 +863,24 @@ public class ListMainPaneController {
   protected void btnClickDirectAdd(ActionEvent event) {
     // Functionality is implemented in MenuBarController. Simply call that method.
     mainApp.getMBC().btnClickDirectAdd(event);
+  }
+
+  /**
+   * Allows us to override the a ListViewCell - a single cell in a ListView.
+   */
+  private class ListViewCell extends TextFieldListCell<Object> {
+
+    public ListViewCell() {
+      super();
+
+      // double click for editing
+      this.setOnMouseClicked(click -> {
+        if (click.getClickCount() == 2 &&
+            click.getButton() == MouseButton.PRIMARY &&
+            !isEmpty()) {
+          mainApp.getMBC().editItem(null);
+        }
+      });
+    }
   }
 }

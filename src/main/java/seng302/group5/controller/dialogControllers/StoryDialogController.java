@@ -6,7 +6,6 @@ import java.util.Map;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -21,7 +20,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.TextFieldListCell;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -197,20 +196,6 @@ public class StoryDialogController {
           }
         }
     );
-
-    listAC.setOnMouseClicked(new EventHandler<MouseEvent>() {
-
-      @Override
-      public void handle(MouseEvent click) {
-        if (click.getClickCount() == 2) {
-          //Use ListView's getSelected Item
-          listAC.getSelectionModel().getSelectedItem();
-          //use this to open the AC dialog
-          showACDialog(CreateOrEdit.EDIT);
-        }
-      }
-    });
-
   }
 
   /**
@@ -585,12 +570,7 @@ public class StoryDialogController {
    */
   private void setupListView() {
     //Sets the cell being populated with custom settings defined in the ListViewCell class.
-    this.listAC.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
-      @Override
-      public ListCell<String> call(ListView<String> listView) {
-        return new ListViewCell();
-      }
-    });
+    this.listAC.setCellFactory(listView -> new ListViewCell());
   }
 
   /**
@@ -623,27 +603,24 @@ public class StoryDialogController {
   /**
    * Allows us to override the a ListViewCell - a single cell in a ListView.
    */
-  public class ListViewCell extends TextFieldListCell<String> {
+  private class ListViewCell extends TextFieldListCell<String> {
 
-    private Button editButton;
     private Label cellText;
     private GridPane pane;
-    private String text;
     private double labelWidth;
 
     public ListViewCell() {
       super();
 
-      editButton = new Button("Edit");
-      editButton.setOnAction(new EventHandler<ActionEvent>() {
-        @Override
-        public void handle(ActionEvent event) {
-          listAC.getSelectionModel().select(text);
+      this.setOnMouseClicked(click -> {
+        if (click.getClickCount() == 2 &&
+            click.getButton() == MouseButton.PRIMARY &&
+            !isEmpty()) {
           showACDialog(CreateOrEdit.EDIT);
         }
       });
 
-      labelWidth = listAC.getLayoutBounds().getWidth() - 65;
+      labelWidth = listAC.getLayoutBounds().getWidth() - 16;
       cellText = new Label();
       pane = new GridPane();
       pane.getColumnConstraints().add(new ColumnConstraints(labelWidth));
@@ -660,7 +637,6 @@ public class StoryDialogController {
      */
     @Override
     public void updateItem(String string, boolean empty) {
-      this.text = string;
       super.updateItem(string, empty);
 
       if (empty || string == null) {

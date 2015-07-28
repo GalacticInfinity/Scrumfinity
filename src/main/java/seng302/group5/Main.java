@@ -1034,7 +1034,7 @@ public class Main extends Application {
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
           alert.setTitle("Story is in a Backlog");
           alert.setHeaderText(null);
-          String message = String.format("Do you want to delete '%s' and remove it from '%s'",
+          String message = String.format("Do you want to delete '%s' and remove it from '%s'?",
                                          story.getLabel(), storyBacklog.getLabel());
 
           alert.setContentText(message);
@@ -1071,9 +1071,14 @@ public class Main extends Application {
                                          backlog.getLabel());
           for (Story blStory : backlog.getStories()) {
             messageLength++;
-            message += String.format("%s - %s\n",
-                                     blStory.getLabel(),
-                                     blStory.getStoryName());
+            if (blStory.getStoryName().equals("")) {
+              message += String.format("%s - [No name]\n",
+                                       blStory.getLabel());
+            } else {
+              message += String.format("%s - %s\n",
+                                       blStory.getLabel(),
+                                       blStory.getStoryName());
+            }
           }
           alert.getDialogPane().setPrefHeight(60 + 30 * messageLength);
           alert.setContentText(message);

@@ -6,7 +6,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="658.0" prefWidth="451.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.SprintDialogController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="641.0" prefWidth="451.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.SprintDialogController">
     <children>
         <HBox alignment="BOTTOM_LEFT" prefHeight="32.0" prefWidth="434.0" spacing="10.0">
             <children>
@@ -52,7 +52,7 @@
         </HBox>
         <HBox prefHeight="21.0" prefWidth="429.0">
             <children>
-                <Label prefHeight="25.0" prefWidth="135.0" text="Backlog:">
+                <Label prefHeight="25.0" prefWidth="135.0" text="Backlog:*">
                     <font>
                         <Font size="15.0" />
                     </font>
@@ -60,7 +60,7 @@
                         <Insets left="2.0" />
                     </HBox.margin>
                 </Label>
-                <ComboBox fx:id="sprintBacklogCombo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" promptText="Available Backlogs">
+                <ComboBox fx:id="sprintBacklogCombo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" promptText="Available Backlogs" visibleRowCount="5">
                <HBox.margin>
                   <Insets top="2.0" />
                </HBox.margin></ComboBox>
@@ -71,7 +71,7 @@
         </HBox>
       <HBox prefHeight="21.0" prefWidth="429.0">
          <children>
-            <Label prefHeight="21.0" prefWidth="164.0" text="Project:">
+            <Label prefHeight="21.0" prefWidth="164.0" text="Project:*">
                <font>
                   <Font size="15.0" />
                </font>
@@ -79,7 +79,7 @@
                   <Insets left="2.0" />
                </HBox.margin>
             </Label>
-            <Label fx:id="sprintProjectField" prefHeight="21.0" prefWidth="335.0" text="No Project Found">
+            <Label fx:id="sprintProjectLabel" prefHeight="21.0" prefWidth="335.0" text="No Project Found">
                <font>
                   <Font size="15.0" />
                </font>
@@ -94,7 +94,7 @@
       </HBox>
       <HBox prefHeight="28.0" prefWidth="463.0">
          <children>
-            <Label prefHeight="25.0" prefWidth="135.0" text="Team:">
+            <Label prefHeight="25.0" prefWidth="135.0" text="Team:*">
                <font>
                   <Font size="15.0" />
                </font>
@@ -102,7 +102,7 @@
                   <Insets left="2.0" />
                </HBox.margin>
             </Label>
-            <ComboBox fx:id="sprintTeamCombo" prefHeight="25.0" prefWidth="200.0" promptText="Avaliable Teams" />
+            <ComboBox fx:id="sprintTeamCombo" prefHeight="25.0" prefWidth="200.0" promptText="Avaliable Teams" visibleRowCount="5" />
          </children>
          <VBox.margin>
             <Insets top="4.0" />
@@ -110,7 +110,7 @@
       </HBox>
       <HBox prefHeight="28.0" prefWidth="483.0">
          <children>
-            <Label prefHeight="25.0" prefWidth="135.0" text="Release:">
+            <Label prefHeight="25.0" prefWidth="135.0" text="Release:*">
                <HBox.margin>
                   <Insets left="2.0" />
                </HBox.margin>
@@ -118,7 +118,7 @@
                   <Font size="15.0" />
                </font>
             </Label>
-            <ComboBox fx:id="sprintReleaseCombo" prefHeight="25.0" prefWidth="200.0" promptText="Avaliable Releases" />
+            <ComboBox fx:id="sprintReleaseCombo" prefHeight="25.0" prefWidth="200.0" promptText="Avaliable Releases" visibleRowCount="5" />
          </children>
          <VBox.margin>
             <Insets top="4.0" />
@@ -129,7 +129,7 @@
             <Insets top="4.0" />
          </VBox.margin>
          <children>
-            <Label prefHeight="25.0" prefWidth="72.0" text="Start Date:">
+            <Label prefHeight="25.0" text="Start Date:*">
                <font>
                   <Font size="15.0" />
                </font>
@@ -138,12 +138,12 @@
                </HBox.margin>
             </Label>
             <DatePicker fx:id="sprintStartDate" prefHeight="25.0" prefWidth="140.0" />
-            <Label prefHeight="25.0" prefWidth="72.0" text="End Date:">
+            <Label prefHeight="25.0" prefWidth="72.0" text="End Date:*">
                <font>
                   <Font size="15.0" />
                </font>
                <HBox.margin>
-                  <Insets left="15.0" />
+                  <Insets left="12.0" />
                </HBox.margin>
             </Label>
             <DatePicker fx:id="sprintEndDate" prefHeight="25.0" prefWidth="140.0" />
@@ -163,12 +163,12 @@
             </VBox>
             <VBox alignment="CENTER" prefHeight="232.0" prefWidth="61.0">
                <children>
-                  <Button fx:id="btnAddStory" mnemonicParsing="false" onAction="#btnAddStoryClick" prefWidth="60.0" text="→">
+                  <Button fx:id="btnAddSprint" mnemonicParsing="false" onAction="#btnAddSprintClick" prefWidth="60.0" text="→">
                      <VBox.margin>
                         <Insets bottom="20.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="btnRemoveStory" mnemonicParsing="false" onAction="#btnRemoveStoryClick" prefWidth="60.0" text="←">
+                  <Button fx:id="btnRemoveSprint" mnemonicParsing="false" onAction="#btnRemoveSprintClick" prefWidth="60.0" text="←">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
