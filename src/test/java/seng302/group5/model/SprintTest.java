@@ -1,17 +1,24 @@
 package seng302.group5.model;
 
+
 import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Alex Woo
+ * Edited by Craig Barnard
  */
 public class SprintTest {
 
@@ -32,18 +39,28 @@ public class SprintTest {
   private Sprint sprint1;
   private Sprint sprint2;
 
+  private Story story;
+
   @Before
   public void setUp() throws Exception {
+    List<String> fiboEsts = Arrays.asList("Not Set", "1", "2", "3", "5", "8", "13", "Epic");
+    ObservableList<Skill> skillSet = FXCollections.observableArrayList();
+
+    Estimate fibonacci = new Estimate("Fibonacci", fiboEsts);
     sprintGoal = "This is a goal!";
     sprintDescription = "Omg describe me like one of your french girls";
     sprintFullName = "The prisoner of alakazam baybays";
-    sprintTeam = null;
-    sprintBacklog = null;
-    sprintProject = null;
-    sprintRelease = null;
-    sprintStart = null;
-    sprintEnd = null;
+    sprintTeam = new Team("Team 1", "The First Team");
+    Person person1 = new Person("Person 1", "Person", "1", skillSet);
+    sprintBacklog = new Backlog("Backlog 1", "Backlog", "Description", person1, fibonacci);
+    sprintProject = new Project("Project", "Project", "Description");
+    sprintRelease = new Release();
+    sprintStart = LocalDate.now();
+    sprintEnd = LocalDate.MAX;
     sprintStories = new ArrayList<>();
+
+
+    story = new Story("First Story", "Story one", "The First Story", person1);
 
     sprint = new Sprint(sprintGoal, sprintFullName, sprintDescription, sprintBacklog, sprintProject,
                         sprintTeam, sprintRelease, sprintStart, sprintEnd, sprintStories);
@@ -74,4 +91,61 @@ public class SprintTest {
   public void testFalseCase() {
     assertTrue(!sprint.equals(sprint2));
   }
+
+  @Test
+  public void testAddStory() {
+    assertTrue(sprint1.getSprintStories().isEmpty());
+    sprint1.addStory(story);
+    assertFalse(sprint1.getSprintStories().isEmpty());
+    assertTrue(sprint1.getSprintStories().get(0).equals(story));
+  }
+
+  @Test
+  public void testRemoveStory() {
+    assertTrue(sprint1.getSprintStories().isEmpty());
+    sprint1.addStory(story);
+    assertFalse(sprint1.getSprintStories().isEmpty());
+    assertTrue(sprint1.getSprintStories().contains(story));
+    sprint1.removeStory(story);
+    assertFalse(sprint1.getSprintStories().contains(story));
+  }
+
+  @Test
+  public void testCopyValues() throws Exception {
+    assertEquals(sprintGoal, sprint1.getLabel());
+    assertEquals(sprintFullName, sprint1.getSprintFullName());
+    assertEquals(sprintDescription, sprint1.getSprintDescription());
+    assertEquals(sprintStart, sprint1.getSprintStart());
+    assertEquals(sprintEnd, sprint1.getSprintEnd());
+    assertEquals(sprintProject, sprint1.getSprintProject());
+    assertEquals(sprintRelease, sprint1.getSprintRelease());
+    assertEquals(sprintBacklog, sprint1.getSprintBacklog());
+    assertEquals(sprintTeam, sprint1.getSprintTeam());
+    assertEquals(sprintStories, sprint1.getSprintStories());
+
+    Sprint clone = new Sprint();
+    clone.copyValues(sprint1);
+
+    assertEquals(sprintGoal, clone.getLabel());
+    assertEquals(sprintFullName, clone.getSprintFullName());
+    assertEquals(sprintDescription, clone.getSprintDescription());
+    assertEquals(sprintStart, clone.getSprintStart());
+    assertEquals(sprintEnd, clone.getSprintEnd());
+    assertEquals(sprintProject, clone.getSprintProject());
+    assertEquals(sprintRelease, clone.getSprintRelease());
+    assertEquals(sprintBacklog, clone.getSprintBacklog());
+    assertEquals(sprintTeam, clone.getSprintTeam());
+    assertEquals(sprintStories, clone.getSprintStories());
+  }
+
+  @Test
+  public void testHashCode() throws Exception {
+    sprint.addStory(story);
+    sprint1.addStory(story);
+    Sprint sprint3 = new Sprint(sprint1);
+
+    assertEquals(sprint.hashCode(), sprint1.hashCode());
+    assertEquals(sprint.hashCode(), sprint3.hashCode());
+  }
 }
+
