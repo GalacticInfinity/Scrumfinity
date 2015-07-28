@@ -33,6 +33,7 @@ public class DependantsDialogController {
   private Stage thisStage;
   private Story story;
   private Map<String, Story> syncMap;
+  private Map<String, Story> cloneMap;
   private List<Story> clones;
 
   private ObservableList<Story> allStories;
@@ -64,10 +65,21 @@ public class DependantsDialogController {
     this.story = story;
     clones = new ArrayList<>();
     syncMap = new IdentityHashMap<>();
+    cloneMap = new IdentityHashMap<>();
     for (Story origStory : mainApp.getStories()) {
       Story clonedStory = new Story(origStory);
       clones.add(clonedStory);
       syncMap.put(clonedStory.getLabel(), origStory);
+      cloneMap.put(clonedStory.getLabel(), clonedStory);
+    }
+    // Makes the clones's dependency stories also clones.
+    for (Story clone : clones) {
+      List<Story> tempList = new ArrayList<>();
+      for (Story cloneDep : clone.getDependencies()) {
+        tempList.add(cloneMap.get(cloneDep.getLabel()));
+      }
+      clone.removeAllDependencies();
+      clone.addAllDependencies(tempList);
     }
 
     // Populate up in here
@@ -161,8 +173,6 @@ public class DependantsDialogController {
     boolean result = false;
 
     for (Story childNode : root.getDependencies()) {
-      // Get the original story, not clone.
-      childNode = syncMap.get(root.getLabel());
       result = dependencyCheck(childNode);
       if (result) {
         break;

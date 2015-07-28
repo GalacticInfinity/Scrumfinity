@@ -3,8 +3,14 @@ package seng302.group5.controller;
 import org.junit.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 
+import javafx.stage.Stage;
+import seng302.group5.Main;
 import seng302.group5.controller.dialogControllers.DependantsDialogController;
 import seng302.group5.model.Person;
 import seng302.group5.model.Story;
@@ -25,6 +31,10 @@ public class DependantsControllerTest {
   Story storyf;
   Story storyg;
   Story storyh;
+  Map<String, Story> testSyncMap;
+  Main mainApp;
+  Stage newStage;
+  Story newStory;
 
 
   /**
@@ -157,6 +167,4 @@ public class DependantsControllerTest {
     result = ddc.checkIsCyclic(storya);
     assertEquals(true, result);
   }
-
-
 }

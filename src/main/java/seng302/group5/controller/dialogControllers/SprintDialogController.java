@@ -28,29 +28,44 @@ import seng302.group5.model.Story;
 import seng302.group5.model.Team;
 
 /**
- * A controller for the sprint dialog.
- * TODO: expand once it works
+ * A controller for the sprint dialog. TODO: expand once it works
  *
  * Created by Michael Roman and Su-Shing Chen on 24/7/2015.
  */
 public class SprintDialogController {
 
-  @FXML private TextField sprintGoalField;
-  @FXML private TextField sprintNameField;
-  @FXML private TextArea sprintDescriptionField;
-  @FXML private ComboBox<Backlog> sprintBacklogCombo;
-  @FXML private Label sprintProjectLabel;
-  @FXML private ComboBox<Team> sprintTeamCombo;
-  @FXML private ComboBox<Release> sprintReleaseCombo;
-  @FXML private DatePicker sprintStartDate;
-  @FXML private DatePicker sprintEndDate;
-  @FXML private ListView<Story> availableStoriesList;
-  @FXML private ListView<Story> allocatedStoriesList;
-  @FXML private Button btnAddStory;
-  @FXML private Button btnRemoveStory;
-  @FXML private HBox btnContainer;
-  @FXML private Button btnConfirm;
-  @FXML private Button btnCancel;
+  @FXML
+  private TextField sprintGoalField;
+  @FXML
+  private TextField sprintNameField;
+  @FXML
+  private TextArea sprintDescriptionField;
+  @FXML
+  private ComboBox<Backlog> sprintBacklogCombo;
+  @FXML
+  private Label sprintProjectLabel;
+  @FXML
+  private ComboBox<Team> sprintTeamCombo;
+  @FXML
+  private ComboBox<Release> sprintReleaseCombo;
+  @FXML
+  private DatePicker sprintStartDate;
+  @FXML
+  private DatePicker sprintEndDate;
+  @FXML
+  private ListView<Story> availableStoriesList;
+  @FXML
+  private ListView<Story> allocatedStoriesList;
+  @FXML
+  private Button btnAddStory;
+  @FXML
+  private Button btnRemoveStory;
+  @FXML
+  private HBox btnContainer;
+  @FXML
+  private Button btnConfirm;
+  @FXML
+  private Button btnCancel;
 
   private Main mainApp;
   private Stage thisStage;
@@ -196,8 +211,8 @@ public class SprintDialogController {
   }
 
   /**
-   * Adds the selected story from the list of available stories in the selected product backlog
-   * to the allocated stories for the sprint.
+   * Adds the selected story from the list of available stories in the selected product backlog to
+   * the allocated stories for the sprint.
    *
    * @param event Action event
    */
@@ -212,8 +227,8 @@ public class SprintDialogController {
   }
 
   /**
-   * Remove the selected story from the list of allocated stories in the sprint and put it back
-   * in the list of available stories.
+   * Remove the selected story from the list of allocated stories in the sprint and put it back in
+   * the list of available stories.
    *
    * @param event Action event
    */
@@ -228,8 +243,8 @@ public class SprintDialogController {
   }
 
   /**
-   * Refresh the lists such that they maintain the original priority order specified in the
-   * backlog. Call whenever the story allocation changes.
+   * Refresh the lists such that they maintain the original priority order specified in the backlog.
+   * Call whenever the story allocation changes.
    */
   private void refreshLists() {
     Backlog selectedBacklog = sprintBacklogCombo.getSelectionModel().getSelectedItem();
