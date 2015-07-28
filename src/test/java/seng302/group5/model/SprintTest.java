@@ -7,6 +7,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -31,6 +34,9 @@ public class SprintTest {
   private Sprint sprint;
   private Sprint sprint1;
   private Sprint sprint2;
+
+  private Person person1;
+  private Person person2;
 
   @Before
   public void setUp() throws Exception {
@@ -74,4 +80,15 @@ public class SprintTest {
   public void testFalseCase() {
     assertTrue(!sprint.equals(sprint2));
   }
+
+  @Test
+  public void testAddStory() {
+    ObservableList<Skill> skillSet = FXCollections.observableArrayList();
+    Person person1 = new Person("Person 1", "Person", "1", skillSet);
+    Story story = new Story("First Story", "Story one", "The First Story", person1);
+
+    assertTrue(sprint1.getSprintStories().isEmpty());
+
+  }
 }
+
