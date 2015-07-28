@@ -625,6 +625,7 @@ public class BacklogDialogController {
   private void btnIncreasePriorityClick(ActionEvent event) {
     int storyIndex = allocatedStoriesList.getSelectionModel().getSelectedIndex();
     int before = storyIndex - 1;
+
     if (storyIndex > 0) {
       Collections.swap(allocatedStories, before, storyIndex);
       allocatedStoriesList.getSelectionModel().select(before);
@@ -632,6 +633,7 @@ public class BacklogDialogController {
         checkButtonDisabled();
       }
     }
+    showStatus();
   }
 
   /**
@@ -650,6 +652,7 @@ public class BacklogDialogController {
         checkButtonDisabled();
       }
     }
+    showStatus();
   }
 
   private class StoryFormatCell extends ListCell<StoryEstimate> {
@@ -688,22 +691,33 @@ public class BacklogDialogController {
       // or negative (red). If the cell is selected, the text will
       // always be white (so that it can be read against the blue
       // background), and if the value is zero, we'll make it black.
+
       boolean dependent = false;
-      //TODO Come back and add dependencies when they are ready.
+
       if (item != null) {
-        javafx.scene.shape.Circle rect = new javafx.scene.shape.Circle(5);
-        if (item.getStory().getStoryState() == true && item.getEstimateIndex() != 0) {
+
+        for (StoryEstimate stories : allocatedStoriesList.getItems()) {
+          if (item.getStory().getDependencies().contains(stories.getStory())) {
+            if (allocatedStoriesList.getItems().indexOf(stories) >
+                allocatedStoriesList.getItems().indexOf(item)) {
+              dependent = true;
+          }
+          }
+        }
+        javafx.scene.shape.Circle circle = new javafx.scene.shape.Circle(5);
+        if (item.getStory().getStoryState() == true && item.getEstimateIndex() != 0 &&
+            dependent == false) {
           setText(item.toString());
-          rect.setFill(Color.rgb(0, 191, 0));
-          setGraphic(rect);
+          circle.setFill(Color.rgb(0, 191, 0));
+          setGraphic(circle);
         }else if (item.getStory().getAcceptanceCriteria().size() > 0 && item.getEstimateIndex() == 0) {
           setText(item.toString());
-          rect.setFill(Color.rgb(255, 135, 0));
-          setGraphic(rect);
-        } else if (dependent == true) {
+          circle.setFill(Color.rgb(255, 135, 0));
+          setGraphic(circle);
+        } else if (dependent == true && item.getStory().getStoryState() == true) {
           setText(item.toString());
-          rect.setFill(Color.RED);
-          setGraphic(rect);
+          circle.setFill(Color.RED);
+          setGraphic(circle);
         }
         else {
           setText(item.toString());

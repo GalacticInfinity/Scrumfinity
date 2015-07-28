@@ -66,7 +66,7 @@
             </VBox>
             <VBox prefHeight="232.0" prefWidth="160.0">
                <children>
-                  <Label prefHeight="25.0" text="Dependant Stories:">
+                  <Label prefHeight="25.0" text="Depends Upon:">
                      <font>
                         <Font size="15.0" />
                      </font>

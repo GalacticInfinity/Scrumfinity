@@ -226,17 +226,18 @@ public class Story implements AgileItem, Comparable<Story> {
   }
 
   /**
-   * Gets the dependencies
-   * @return A list of stories that this story depends on
+   * Gets the dependencies of this story.
+   *
+   * @return A list of stories that this story depends on.
    */
   public List<Story> getDependencies() {
     return Collections.unmodifiableList(this.dependencies);
   }
 
   /**
-   * Add a story which depends on this story to the model.
+   * Add a story which this story depends on to the model.
    *
-   * @param story A story which depends on this story to be added.
+   * @param story A story which this story depends on.
    */
   public void addDependency(Story story) {
     this.dependencies.add(story);
