@@ -524,6 +524,34 @@ public class Main extends Application {
   }
 
   /**
+   * sets up the dialog box for editing a skill when opened from the person dialog
+   *
+   * @param skill the skill that you wanted to view or edit information with
+   * @param stage the stage it is currently on to void unusual behaviour
+   */
+  public void showSkillDialogWithinPerson(Skill skill, Stage stage) {
+    try {
+      FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(Main.class.getResource("/SkillsDialog.fxml"));
+      VBox skillDialogLayout = loader.load();
+
+      SkillsDialogController controller = loader.getController();
+      Scene skillDialogScene = new Scene(skillDialogLayout);
+      Stage skillDialogStage = new Stage();
+
+      controller.setupController(this, skillDialogStage, CreateOrEdit.EDIT, skill);
+
+      skillDialogStage.initModality(Modality.APPLICATION_MODAL);
+      skillDialogStage.initOwner(stage);
+      skillDialogStage.setScene(skillDialogScene);
+      skillDialogStage.show();
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
    * Sets up a dialog box for creating/editing a Story.
    *
    * @param createOrEdit The CreateOrEdit object that determines whether you are creating or

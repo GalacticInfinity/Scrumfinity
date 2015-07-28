@@ -510,8 +510,9 @@ public class TeamDialogController {
       return person.getLabel().compareToIgnoreCase(o.getPerson().getLabel());
     }
   }
+
   /**
-   * Sets the custom behaviour for the acceptance criteria listview.
+   * Sets the custom behaviour for the person ListView.
    */
   private void setupListView() {
     //Sets the cell being populated with custom settings defined in the ListViewCell class.
@@ -520,7 +521,7 @@ public class TeamDialogController {
   }
 
   /**
-   * Allows us to override the a ListViewCell - a single cell in a ListView.
+   * Allows us to override a ListViewCell - a single cell in a ListView.
    */
   private class TeamMemberListViewCell extends TextFieldListCell<PersonRole> {
 
@@ -540,7 +541,7 @@ public class TeamDialogController {
   }
 
   /**
-   * Allows us to override the a ListViewCell - a single cell in a ListView.
+   * Allows us to override a ListViewCell - a single cell in a ListView.
    */
   private class AllMembersListViewCell extends TextFieldListCell<Person> {
 
