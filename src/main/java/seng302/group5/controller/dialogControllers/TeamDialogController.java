@@ -394,7 +394,9 @@ public class TeamDialogController {
         for (Person memberToRemove : membersToRemove) {
           memberToRemove.removeFromTeam();
         }
-        mainApp.refreshList(team);
+        if (Settings.correctList(team)) {
+          mainApp.refreshList(team);
+        }
       }
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
       mainApp.newAction(undoRedoObject);
