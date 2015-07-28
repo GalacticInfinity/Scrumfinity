@@ -1,9 +1,8 @@
 package seng302.group5.model;
 
 import java.time.LocalDate;
-
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This is the Sprint model.
@@ -28,7 +27,7 @@ public class Sprint implements AgileItem, Comparable<Sprint> {
   private LocalDate sprintStart;
   private LocalDate sprintEnd;
 
-  private ObservableList<Story> sprintStories;
+  private List<Story> sprintStories;
 
   /**
    * Empty constructor used for save/load.
@@ -43,38 +42,39 @@ public class Sprint implements AgileItem, Comparable<Sprint> {
     sprintRelease = null;
     sprintStart = null;
     sprintEnd = null;
-    sprintStories = FXCollections.observableArrayList();
+    sprintStories = new ArrayList<>();
   }
 
   /**
-   * This is the main constructor for the Sprint model.
-   * It takes in all the needed variables to fill in the models variables.
+   * This is the main constructor for the Sprint model. It takes in all the needed variables to fill
+   * in the models variables.
    *
-   *
-   * @param sprintGoal String, not-null, unique in the main set. This also works as the label.
-   * @param sprintDescription String
-   * @param sprintFullName - String
-   * @param sprintTeam - Team
-   * @param sprintBacklog - Backlog
-   * @param sprintRelease - Release
-   * @param sprintStart - LocalDate
-   * @param sprintEnd - LocalDate
-   * @param sprintStories - ObserverableList<Story>
+   * @param sprintGoal Goal for the sprint. Behaves as a label.
+   * @param sprintFullName Full name for the sprint
+   * @param sprintDescription Description of the sprint
+   * @param sprintBacklog Backlog which this sprint is assigned to
+   * @param sprintProject Project which this sprint is assigned to
+   * @param sprintTeam Team assigned to this sprint
+   * @param sprintRelease Release which comes from this sprint
+   * @param sprintStart Start of the sprint
+   * @param sprintEnd End of the sprint
+   * @param sprintStories Stories in the sprint, in priority order
    */
-  public Sprint(String sprintGoal, String sprintDescription, String sprintFullName,
-                Team sprintTeam, Backlog sprintBacklog, Release sprintRelease,
-                LocalDate sprintStart, LocalDate sprintEnd, ObservableList<Story> sprintStories,
-                Project sprintProject) {
+  public Sprint(String sprintGoal, String sprintFullName, String sprintDescription,
+                Backlog sprintBacklog, Project sprintProject, Team sprintTeam,
+                Release sprintRelease, LocalDate sprintStart, LocalDate sprintEnd,
+                List<Story> sprintStories) {
     this.sprintGoal = sprintGoal;
-    this.sprintDescription = sprintDescription;
     this.sprintFullName = sprintFullName;
-    this.sprintTeam = sprintTeam;
+    this.sprintDescription = sprintDescription;
     this.sprintBacklog = sprintBacklog;
+    this.sprintProject = sprintProject;
+    this.sprintTeam = sprintTeam;
     this.sprintRelease = sprintRelease;
     this.sprintStart = sprintStart;
     this.sprintEnd = sprintEnd;
-    this.sprintStories = sprintStories;
-    this.sprintProject = sprintProject;
+    this.sprintStories = new ArrayList<>();
+    this.sprintStories.addAll(sprintStories);
   }
 
   /**
@@ -84,15 +84,16 @@ public class Sprint implements AgileItem, Comparable<Sprint> {
    */
   public Sprint(Sprint clone) {
     this.sprintGoal = clone.getSprintGoal();
-    this.sprintDescription = clone.getSprintDescription();
     this.sprintFullName = clone.getSprintFullName();
-    this.sprintTeam = clone.getSprintTeam();
+    this.sprintDescription = clone.getSprintDescription();
     this.sprintBacklog = clone.getSprintBacklog();
+    this.sprintProject = clone.getSprintProject();
+    this.sprintTeam = clone.getSprintTeam();
     this.sprintRelease = clone.getSprintRelease();
     this.sprintStart = clone.getSprintStart();
     this.sprintEnd = clone.getSprintEnd();
+    this.sprintStories = new ArrayList<>();
     this.sprintStories.addAll(clone.getSprintStories());
-    this.sprintProject = clone.getSprintProject();
   }
 
   @Override
@@ -177,12 +178,13 @@ public class Sprint implements AgileItem, Comparable<Sprint> {
     this.sprintEnd = sprintEnd;
   }
 
-  public ObservableList<Story> getSprintStories() {
+  public List<Story> getSprintStories() {
     return sprintStories;
   }
 
-  public void setSprintStories(ObservableList<Story> sprintStories) {
-    this.sprintStories = sprintStories;
+  public void setSprintStories(List<Story> sprintStories) {
+    this.sprintStories.clear();
+    this.sprintStories.addAll(sprintStories);
   }
 
 
@@ -192,7 +194,7 @@ public class Sprint implements AgileItem, Comparable<Sprint> {
    */
   @Override
   public void copyValues(AgileItem agileItem) {
-    if (agileItem instanceof Story) {
+    if (agileItem instanceof Sprint) {
       Sprint clone = (Sprint) agileItem;
       this.sprintGoal = clone.getSprintGoal();
       this.sprintDescription = clone.getSprintDescription();
