@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -677,21 +678,26 @@ public class RevertHandlerTest {
   }
 
   @Test
-  public void testDependencyRevery() {
+  public void testDependencyRevert() {
     assertTrue(undoRedoHandler.getUndoStack().empty());
-    Story story1 = new Story("One", "name", "desc", new Person());
-    Story story2 = new Story("One", "name", "desc", new Person());
-    Story story3 = new Story("One", "name", "desc", new Person());
-    Story story4 = new Story("One", "name", "desc", new Person());
-    Story story5 = new Story("One", "name", "desc", new Person());
+    Person p = new Person();
+    p.setLabel("Help me");
+    Story story1 = new Story("One", "name", "desc", p);
+    Story story2 = new Story("Two", "name", "desc", p);
+    Story story3 = new Story("Three", "name", "desc", p);
+    Story story4 = new Story("Four", "name", "desc", p);
+    Story story5 = new Story("Five", "name", "desc", p);
 
     story1.addAllDependencies(Arrays.asList(story2, story4));
     story2.addAllDependencies(Arrays.asList(story4, story5));
     story3.addAllDependencies(Arrays.asList(story5));
     story4.addDependency(story3);
 
-    setStories(Arrays.asList(story1, story2, story3, story4, story5));
-
+    addStoryWithDep(story1);
+    addStoryWithDep(story2);
+    addStoryWithDep(story3);
+    addStoryWithDep(story4);
+    addStoryWithDep(story5);
     mainApp.setLastSaved();
 
     story1.removeAllDependencies();
@@ -703,11 +709,11 @@ public class RevertHandlerTest {
     mainApp.revert();
 
     List<Story> mainStories = mainApp.getStories();
-    story1 = mainStories.get(0);
-    story2 = mainStories.get(1);
-    story3 = mainStories.get(2);
+    story1 = mainStories.get(2);
+    story2 = mainStories.get(4);
     story3 = mainStories.get(3);
-    story4 = mainStories.get(4);
+    story4 = mainStories.get(1);
+    story5 = mainStories.get(0);
     assertSame(story2, story1.getDependencies().get(0));
     assertSame(story4, story1.getDependencies().get(1));
     assertSame(story4, story2.getDependencies().get(0));
@@ -715,16 +721,14 @@ public class RevertHandlerTest {
     assertSame(story5, story3.getDependencies().get(0));
   }
 
-  public void setStories(Collection<Story> storyList) {
-    for (Story story : storyList) {
-      mainApp.addStory(story);
+  public void addStoryWithDep(Story story) {
+    mainApp.addStory(story);
 
-      UndoRedoObject undoRedoObject = new UndoRedoObject();
-      undoRedoObject.setAction(Action.STORY_CREATE);
-      undoRedoObject.setAgileItem(story);
-      undoRedoObject.addDatum(new Story(story));
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+    undoRedoObject.setAction(Action.STORY_CREATE);
+    undoRedoObject.setAgileItem(story);
+    undoRedoObject.addDatum(new Story(story));
 
-      undoRedoHandler.newAction(undoRedoObject);
-    }
+    undoRedoHandler.newAction(undoRedoObject);
   }
 }

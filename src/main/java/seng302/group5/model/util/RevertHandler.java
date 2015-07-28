@@ -2,6 +2,7 @@ package seng302.group5.model.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -106,6 +107,7 @@ public class RevertHandler {
     syncBacklogsWithStories(mainApp.getBacklogs(), mainApp.getStories());
     syncBacklogsWithEstimates(mainApp.getBacklogs(), mainApp.getEstimates());
     syncProjectsWithBacklogs(mainApp.getProjects(), mainApp.getBacklogs());
+    syncStoriesWithDependencies(mainApp.getStories());
 
     mainApp.refreshLastSaved();
     mainApp.refreshList(null);
@@ -416,7 +418,7 @@ public class RevertHandler {
    * @param stories Reference story objects
    */
   private void syncStoriesWithDependencies(List<Story> stories) {
-    Map<String, Story> storyMap = new HashMap<>();
+    Map<String, Story> storyMap = new IdentityHashMap<>();
 
     for (Story mainStory : stories) {
       storyMap.put(mainStory.getLabel(), mainStory);
