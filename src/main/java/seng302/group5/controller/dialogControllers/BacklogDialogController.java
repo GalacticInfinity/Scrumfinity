@@ -712,20 +712,20 @@ public class BacklogDialogController {
           }
           }
         }
-        javafx.scene.shape.Circle rect = new javafx.scene.shape.Circle(5);
+        javafx.scene.shape.Circle circle = new javafx.scene.shape.Circle(5);
         if (item.getStory().getStoryState() == true && item.getEstimateIndex() != 0 &&
             dependent == false) {
           setText(item.toString());
-          rect.setFill(Color.rgb(0, 191, 0));
-          setGraphic(rect);
+          circle.setFill(Color.rgb(0, 191, 0));
+          setGraphic(circle);
         }else if (item.getStory().getAcceptanceCriteria().size() > 0 && item.getEstimateIndex() == 0) {
           setText(item.toString());
-          rect.setFill(Color.rgb(255, 135, 0));
-          setGraphic(rect);
+          circle.setFill(Color.rgb(255, 135, 0));
+          setGraphic(circle);
         } else if (dependent == true && item.getStory().getStoryState() == true) {
           setText(item.toString());
-          rect.setFill(Color.RED);
-          setGraphic(rect);
+          circle.setFill(Color.RED);
+          setGraphic(circle);
         }
         else {
           setText(item.toString());
