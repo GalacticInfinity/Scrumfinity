@@ -22,6 +22,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -215,43 +216,17 @@ public class BacklogDialogController {
             });
           }
         });
-    allocatedStoriesList.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
-      @Override
-      public void handle(MouseEvent click) {
-          StoryEstimate currentItemSelected;
-        if (click.getClickCount() == 2) {
-          //Use ListView's getSelected Item
-          currentItemSelected = allocatedStoriesList.getSelectionModel()
-              .getSelectedItem();
-
-          showStatus();
-          mainApp.showStoryDialogWithinBacklog(CreateOrEdit.EDIT, currentItemSelected.getStory(),
-                                               thisStage);
-          showStatus();
-          //use this to do whatever you want to. Open Link etc.
-        }
-      }
-    });
+    allocatedStoriesList.setCellFactory(listView -> new StoryFormatCellFalse());
   }
 
   private void showStatus(){
     if (showState) {
       allocatedStoriesList.setCellFactory(
-          (new Callback<ListView<StoryEstimate>, ListCell<StoryEstimate>>() {
-            @Override
-            public ListCell<StoryEstimate> call(ListView<StoryEstimate> param) {
-              return new StoryFormatCell();
-            }
-          }));
+          (param -> new StoryFormatCell()));
     } else {
       allocatedStoriesList.setCellFactory(
-          (new Callback<ListView<StoryEstimate>, ListCell<StoryEstimate>>() {
-            @Override
-            public ListCell<StoryEstimate> call(ListView<StoryEstimate> param) {
-              return new StoryFormatCellFalse();
-            }
-          }));
+          (param -> new StoryFormatCellFalse()));
     }
   }
   /**
@@ -650,6 +625,7 @@ public class BacklogDialogController {
   private void btnIncreasePriorityClick(ActionEvent event) {
     int storyIndex = allocatedStoriesList.getSelectionModel().getSelectedIndex();
     int before = storyIndex - 1;
+
     if (storyIndex > 0) {
       Collections.swap(allocatedStories, before, storyIndex);
       allocatedStoriesList.getSelectionModel().select(before);
@@ -657,6 +633,7 @@ public class BacklogDialogController {
         checkButtonDisabled();
       }
     }
+    showStatus();
   }
 
   /**
@@ -675,9 +652,10 @@ public class BacklogDialogController {
         checkButtonDisabled();
       }
     }
+    showStatus();
   }
 
-  class StoryFormatCell extends ListCell<StoryEstimate> {
+  private class StoryFormatCell extends ListCell<StoryEstimate> {
 
     /**
      * Cell format class that handles the coloring of cells within the allocated stories list
@@ -686,7 +664,24 @@ public class BacklogDialogController {
      * Created by Craig Alan Barnard 22/07/2015
      */
 
-    public StoryFormatCell() {    }
+    public StoryFormatCell() {
+      super();
+      // double click for editing story
+      this.setOnMouseClicked(click -> {
+        if (click.getClickCount() == 2 &&
+            click.getButton() == MouseButton.PRIMARY &&
+            !isEmpty()) {
+          //Use ListView's getSelected Item
+          StoryEstimate selectedItem = allocatedStoriesList.getSelectionModel().getSelectedItem();
+
+          showStatus();
+          mainApp.showStoryDialogWithinBacklog(CreateOrEdit.EDIT, selectedItem.getStory(),
+                                               thisStage);
+          showStatus();
+          //use this to do whatever you want to. Open Link etc.
+        }
+      });
+    }
 
     @Override protected void updateItem(StoryEstimate item, boolean empty) {
       // calling super here is very important - don't skip this!
@@ -696,22 +691,33 @@ public class BacklogDialogController {
       // or negative (red). If the cell is selected, the text will
       // always be white (so that it can be read against the blue
       // background), and if the value is zero, we'll make it black.
+
       boolean dependent = false;
-      //TODO Come back and add dependencies when they are ready.
+
       if (item != null) {
-        javafx.scene.shape.Circle rect = new javafx.scene.shape.Circle(5);
-        if (item.getStory().getStoryState() == true && item.getEstimateIndex() != 0) {
+
+        for (StoryEstimate stories : allocatedStoriesList.getItems()) {
+          if (item.getStory().getDependencies().contains(stories.getStory())) {
+            if (allocatedStoriesList.getItems().indexOf(stories) >
+                allocatedStoriesList.getItems().indexOf(item)) {
+              dependent = true;
+          }
+          }
+        }
+        javafx.scene.shape.Circle circle = new javafx.scene.shape.Circle(5);
+        if (item.getStory().getStoryState() == true && item.getEstimateIndex() != 0 &&
+            dependent == false) {
           setText(item.toString());
-          rect.setFill(Color.rgb(0, 191, 0));
-          setGraphic(rect);
+          circle.setFill(Color.rgb(0, 191, 0));
+          setGraphic(circle);
         }else if (item.getStory().getAcceptanceCriteria().size() > 0 && item.getEstimateIndex() == 0) {
           setText(item.toString());
-          rect.setFill(Color.rgb(255, 135, 0));
-          setGraphic(rect);
-        } else if (dependent == true) {
+          circle.setFill(Color.rgb(255, 135, 0));
+          setGraphic(circle);
+        } else if (dependent == true && item.getStory().getStoryState() == true) {
           setText(item.toString());
-          rect.setFill(Color.RED);
-          setGraphic(rect);
+          circle.setFill(Color.RED);
+          setGraphic(circle);
         }
         else {
           setText(item.toString());
@@ -719,7 +725,8 @@ public class BacklogDialogController {
 
       }}
   }
-  class StoryFormatCellFalse extends ListCell<StoryEstimate> {
+
+  private class StoryFormatCellFalse extends ListCell<StoryEstimate> {
 
     /**
      * Cell format class that handles the displaying of plain text cells within the allocated
@@ -728,7 +735,24 @@ public class BacklogDialogController {
      * Created by Craig Alan Barnard + Ma Liang 23/07/2015
      */
 
-    public StoryFormatCellFalse() {    }
+    public StoryFormatCellFalse() {
+      super();
+      // double click for editing story
+      this.setOnMouseClicked(click -> {
+        if (click.getClickCount() == 2 &&
+            click.getButton() == MouseButton.PRIMARY &&
+            !isEmpty()) {
+          //Use ListView's getSelected Item
+          StoryEstimate selectedItem = allocatedStoriesList.getSelectionModel().getSelectedItem();
+
+          showStatus();
+          mainApp.showStoryDialogWithinBacklog(CreateOrEdit.EDIT, selectedItem.getStory(),
+                                               thisStage);
+          showStatus();
+          //use this to do whatever you want to. Open Link etc.
+        }
+      });
+    }
 
     @Override protected void updateItem(StoryEstimate item, boolean empty) {
       // calling super here is very important - don't skip this!
@@ -737,6 +761,7 @@ public class BacklogDialogController {
         setText(item.toString());
       }}
   }
+
   /**
    * Inner class for storing/displaying allocated stories with their respective estimates
    */
