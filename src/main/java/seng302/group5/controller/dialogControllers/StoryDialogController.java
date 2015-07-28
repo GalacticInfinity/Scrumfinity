@@ -570,12 +570,7 @@ public class StoryDialogController {
    */
   private void setupListView() {
     //Sets the cell being populated with custom settings defined in the ListViewCell class.
-    this.listAC.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
-      @Override
-      public ListCell<String> call(ListView<String> listView) {
-        return new ListViewCell();
-      }
-    });
+    this.listAC.setCellFactory(listView -> new ListViewCell());
   }
 
   /**
@@ -608,7 +603,7 @@ public class StoryDialogController {
   /**
    * Allows us to override the a ListViewCell - a single cell in a ListView.
    */
-  public class ListViewCell extends TextFieldListCell<String> {
+  private class ListViewCell extends TextFieldListCell<String> {
 
     private Label cellText;
     private GridPane pane;
