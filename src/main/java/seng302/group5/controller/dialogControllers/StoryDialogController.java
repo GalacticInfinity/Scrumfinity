@@ -6,7 +6,6 @@ import java.util.Map;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -21,7 +20,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.TextFieldListCell;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -197,20 +196,6 @@ public class StoryDialogController {
           }
         }
     );
-
-    listAC.setOnMouseClicked(new EventHandler<MouseEvent>() {
-
-      @Override
-      public void handle(MouseEvent click) {
-        if (click.getClickCount() == 2) {
-          //Use ListView's getSelected Item
-          listAC.getSelectionModel().getSelectedItem();
-          //use this to open the AC dialog
-          showACDialog(CreateOrEdit.EDIT);
-        }
-      }
-    });
-
   }
 
   /**
@@ -634,16 +619,15 @@ public class StoryDialogController {
     public ListViewCell() {
       super();
 
-      editButton = new Button("Edit");
-      editButton.setOnAction(new EventHandler<ActionEvent>() {
-        @Override
-        public void handle(ActionEvent event) {
-          listAC.getSelectionModel().select(text);
+      this.setOnMouseClicked(click -> {
+        if (click.getClickCount() == 2 &&
+            click.getButton() == MouseButton.PRIMARY &&
+            !isEmpty()) {
           showACDialog(CreateOrEdit.EDIT);
         }
       });
 
-      labelWidth = listAC.getLayoutBounds().getWidth() - 65;
+      labelWidth = listAC.getLayoutBounds().getWidth() - 16;
       cellText = new Label();
       pane = new GridPane();
       pane.getColumnConstraints().add(new ColumnConstraints(labelWidth));
