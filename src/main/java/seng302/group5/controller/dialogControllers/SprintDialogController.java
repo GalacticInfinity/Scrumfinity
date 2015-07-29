@@ -1,6 +1,7 @@
 package seng302.group5.controller.dialogControllers;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -510,7 +511,9 @@ public class SprintDialogController {
     if (startDate == null) {
       throw new Exception("No start date selected");
     } else if (release != null && startDate.isAfter(release.getReleaseDate())) {
-      throw new Exception("Start date must be before release date");
+      String dateFormat = "dd/MM/yyy";
+      String releaseDate = release.getReleaseDate().format(DateTimeFormatter.ofPattern(dateFormat));
+      throw new Exception("Start date must be before release date - " + releaseDate);
     }
     return startDate;
   }
@@ -535,7 +538,9 @@ public class SprintDialogController {
       if (afterReleaseDate && beforeStartDate) {
         throw new Exception("End date must be before release date and after start date");
       } else if (afterReleaseDate) {
-        throw new Exception("End date must be before release date");
+        String dateFormat = "dd/MM/yyy";
+        String releaseDate = release.getReleaseDate().format(DateTimeFormatter.ofPattern(dateFormat));
+        throw new Exception("End date must be before release date - " + releaseDate);
       } else if (beforeStartDate) {
         throw new Exception("End date must be after start date");
       }
