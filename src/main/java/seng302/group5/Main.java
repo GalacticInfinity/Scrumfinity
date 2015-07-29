@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import javafx.application.Application;
@@ -382,9 +381,8 @@ public class Main extends Application {
       Scene releaseDialogScene = new Scene(releaseDialogLayout);
       Stage releaseDialogStage = new Stage();
 
-      Release release = null;
       if (createOrEdit == CreateOrEdit.EDIT) {
-        release = (Release) LMPC.getSelected();
+        Release release = (Release) LMPC.getSelected();
         if (release == null) {
           Alert alert = new Alert(Alert.AlertType.ERROR);
           alert.setTitle("Error");
@@ -1214,6 +1212,12 @@ public class Main extends Application {
             newAction(undoRedoObject);
           }
         }
+        break;
+      case "Sprints":
+        Sprint sprint = (Sprint) agileItem;
+        deleteSprint(sprint);
+        undoRedoObject = generateDelUndoRedoObject(Action.SPRINT_DELETE, agileItem);
+        newAction(undoRedoObject);
         break;
       default:
 //        System.err.println("Unhandled case for deleting agile item");
