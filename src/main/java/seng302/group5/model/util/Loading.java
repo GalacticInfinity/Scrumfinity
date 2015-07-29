@@ -682,9 +682,9 @@ public class Loading {
     String storyLine;
     String storyData;
 
-    // Until Releases end tag
+    // Until stories end tag
     while (!(storyLine = loadedFile.readLine()).startsWith("</Stories>")) {
-      // For each new release
+      // For each new story
       if (storyLine.matches(".*<Story>")) {
         newStory = new Story();
 
@@ -834,49 +834,95 @@ public class Loading {
         sprint.setLabel(sprintData); //set label
         sprintLine = loadedFile.readLine();
         sprintData = sprintLine.replaceAll("(?i)(.*<sprintTeam.*?>)(.+?)(</sprintTeam>)", "$2");
+
         for (Team team : main.getTeams()) {
-          if (team.getLabel() == sprintData)
+          if (team.getLabel().equals(sprintData)) {
             sprint.setSprintTeam(team); //set team
-          break;
+            break;
+          }
         }
         sprintLine = loadedFile.readLine();
         sprintData = sprintLine.replaceAll("(?i)(.*<sprintBacklog.*?>)(.+?)(</sprintBacklog>)", "$2");
         for (Backlog backlog : main.getBacklogs()) {
-          if (backlog.getLabel() == sprintData) {
+          if (backlog.getLabel().equals(sprintData)) {
             sprint.setSprintBacklog(backlog); //set backlog
             break;
           }
         }
         sprintLine = loadedFile.readLine();
         sprintData = sprintLine.replaceAll("(?i)(.*<sprintProject.*?>)(.+?)(</sprintProject>)", "$2");
+
         for (Project project : main.getProjects()) {
-          if (project.getLabel() == sprintData) {
+          if (project.getLabel().equals(sprintData)) {
             sprint.setSprintProject(project); //set project
             break;
           }
         }
         sprintLine = loadedFile.readLine();
         sprintData = sprintLine.replaceAll("(?i)(.*<sprintRelease.*?>)(.+?)(</sprintRelease>)", "$2");
+
         for (Release release : main.getReleases()) {
-          if (release.getLabel() == sprintData) {
+          if (release.getLabel().equals(sprintData)) {
             sprint.setSprintRelease(release); //set release
             break;
           }
         }
         sprintLine = loadedFile.readLine();
         sprintData = sprintLine.replaceAll("(?i)(.*<sprintStart.*?>)(.+?)(</sprintStart>)", "$2");
+
         start = LocalDate.parse(sprintData);
         sprint.setSprintStart(start); // set start date
+
         sprintLine = loadedFile.readLine();
         sprintData = sprintLine.replaceAll("(?i)(.*<sprintEnd.*?>)(.+?)(</sprintEnd>)", "$2");
+
         end = LocalDate.parse(sprintData);
         sprint.setSprintStart(end); //set end date
+
+        while ((!(sprintLine = loadedFile.readLine()).matches(".*</Sprint>"))) {
+          if (sprintLine.startsWith("\t\t<sprintName>")) {
+            sprintData = sprintLine.replaceAll("(?i)(.*<sprintName.*?>)(.+?)(</sprintName>)", "$2");
+
+            sprint.setSprintFullName(sprintData);
+          }
+          if (sprintLine.startsWith("\t\t<sprintDescription>")) {
+            String descBuilder;
+            if (!sprintLine.endsWith("</sprintDescription>")) {
+              descBuilder = sprintLine
+                                .replaceAll("(?i)(.*<sprintDescription.*?>)(.+?)", "$2") + "\n";
+              while ((!(sprintLine =loadedFile.readLine()).endsWith("</sprintDescription>"))) {
+                descBuilder += sprintLine + "\n";
+              }
+              descBuilder += sprintLine.replaceAll("(.+?)(</sprintDescription>)", "$1");
+            } else {
+              descBuilder =
+                  sprintLine
+                      .replaceAll("(?i)(.*<sprintDescription.*?>)(.+?)(</sprintDescription>)", "$2");
+            }
+
+            sprint.setSprintDescription(descBuilder);
+          }
+
+          if (sprintLine.startsWith("\t\t<sprintStories>")) {
+            while ((!(sprintLine = loadedFile.readLine()).equals("\t\t</sprintStories>"))) {
+                sprintData = sprintLine.replaceAll("(?i)(.*<Story.*?>)(.+?)(</Story>)", "$2");
+                // Sync stories and sprint
+
+                for (Story story : main.getStories()) {
+                  if (story.getLabel().equals(sprintData)) {
+                    sprint.addStory(story);
+                    break;
+
+                }
+              }
+            }
+          }
+        }
+
         main.addSprint(sprint);
 
       }
     }
-
-
   }
   /**
    * A function to sync the temp backlog and real backlogs
