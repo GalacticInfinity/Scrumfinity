@@ -18,6 +18,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.TextFieldListCell;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import seng302.group5.Main;
@@ -31,7 +33,9 @@ import seng302.group5.model.Team;
 import seng302.group5.model.util.Settings;
 
 /**
- * A controller for the sprint dialog. TODO: expand once it works
+ * A controller for the sprint dialog which allows the creating or editing of sprints.
+ * Note that all fields except the full name and description fields and the sprint can have no
+ * stories assigned.
  *
  * Created by Michael Roman and Su-Shing Chen on 24/7/2015.
  */
@@ -72,7 +76,18 @@ public class SprintDialogController {
   private Map<Backlog, Project> projectMap;
   private Set<Story> allocatedStories;   // use to maintain priority order
 
-  //todo jdoc
+  /**
+   * Sets up the controller on start up.
+   * If editing it fills the fields with the values in that sprint object
+   * Otherwise leaves fields empty.
+   * Adds listeners to all fields to enable checking of changes when editing so that the save
+   * button can be greyed out.
+   *
+   * @param mainApp The main class of the program. For checking the list of all existing sprints.
+   * @param thisStage This is the window that will be displayed.
+   * @param createOrEdit This is an ENUM object to determine if creating or editing.
+   * @param sprint The object that will edited or created (made into a valid sprint).
+   */
   public void setupController(Main mainApp, Stage thisStage, CreateOrEdit createOrEdit,
                               Sprint sprint) {
     this.mainApp = mainApp;
@@ -88,7 +103,7 @@ public class SprintDialogController {
     if (createOrEdit == CreateOrEdit.CREATE) {
       thisStage.setTitle("Create New Sprint");
       btnConfirm.setText("Create");
-      initialiseLists(CreateOrEdit.CREATE, sprint);
+      initialiseLists();
 
       sprintTeamCombo.setDisable(true);
       sprintReleaseCombo.setDisable(true);
@@ -97,13 +112,12 @@ public class SprintDialogController {
       thisStage.setTitle("Edit Sprint");
       btnConfirm.setText("Save");
       btnConfirm.setDisable(true);
-      initialiseLists(CreateOrEdit.EDIT, sprint);
+      initialiseLists();
 
       sprintGoalField.setText(sprint.getLabel());
       sprintNameField.setText(sprint.getSprintFullName());
       sprintDescriptionField.setText(sprint.getSprintDescription());
-      sprintBacklogCombo.getSelectionModel().select(sprint.getSprintBacklog());
-      // todo project label field
+      sprintBacklogCombo.getSelectionModel().select(sprint.getSprintBacklog()); // Updates Project
       sprintTeamCombo.getSelectionModel().select(sprint.getSprintTeam());
       sprintReleaseCombo.getSelectionModel().select(sprint.getSprintRelease());
       sprintStartDate.setValue(sprint.getSprintStart());
@@ -197,8 +211,14 @@ public class SprintDialogController {
     }
   }
 
-  //todo jdoc
-  private void initialiseLists(CreateOrEdit createOrEdit, Sprint sprint) {
+  /**
+   * Initialises the models lists and populates these with values from the main application,
+   * such as available stories, allocated stories, backlogs, teams and releases. These values
+   * are then populated into their respective GUI elements. The backlog combo box has a listener
+   * to update other GUI elements which depend on the backlog.
+   * Populates a list of available stories for assigning them to sprint
+   */
+  private void initialiseLists() {
     availableStories = FXCollections.observableArrayList();
     allocatedStoriesPrioritised = FXCollections.observableArrayList();
     backlogs = FXCollections.observableArrayList();
@@ -268,6 +288,7 @@ public class SprintDialogController {
             allocatedStories.clear();
           }
         });
+    setupListView();
   }
 
   /**
@@ -334,10 +355,17 @@ public class SprintDialogController {
     }
   }
 
-  // todo jdoc
+  /**
+   * Handles the event of clicking the save button in this dialog.
+   * Checks for errors with what was input into the fields and displays alerts if errors are found
+   * Otherwise creates or updates sprint depending on if your creating or editing.
+   * Then creates the undo/redo object.
+   *
+   * @param event This is the event of the save button being clicked
+   */
   @FXML
   protected void btnConfirmClick(ActionEvent event) {
-    StringBuilder errors = new StringBuilder();   // todo use these
+    StringBuilder errors = new StringBuilder();
     int noErrors = 0;
 
     String sprintGoal = "";
@@ -425,6 +453,7 @@ public class SprintDialogController {
         mainApp.refreshList(sprint);
       }
       // todo undo/redo
+
       thisStage.close();
     }
   }
@@ -512,5 +541,52 @@ public class SprintDialogController {
       }
     }
     return endDate;
+  }
+  /**
+   * Sets the custom behaviour for the stories ListView.
+   */
+  private void setupListView() {
+    //Sets the cell being populated with custom settings defined in the ListViewCell class.
+    this.availableStoriesList.setCellFactory(listView -> new AvailableStoriesListViewCell());
+    this.allocatedStoriesList.setCellFactory(listView -> new SprintStoriesListViewCell());
+  }
+  /**
+   * Allows us to override a ListViewCell - a single cell in a ListView.
+   */
+  private class AvailableStoriesListViewCell extends TextFieldListCell<Story> {
+
+    public AvailableStoriesListViewCell() {
+      super();
+
+      // double click for editing
+      this.setOnMouseClicked(click -> {
+        if (click.getClickCount() == 2 &&
+            click.getButton() == MouseButton.PRIMARY &&
+            !isEmpty()) {
+          Story selectedStory = availableStoriesList.getSelectionModel().getSelectedItem();
+          mainApp.showStoryDialogWithinSprint(selectedStory, thisStage);
+        }
+      });
+    }
+  }
+
+  /**
+   * Allows us to override the a ListViewCell - a single cell in a ListView.
+   */
+  private class SprintStoriesListViewCell extends TextFieldListCell<Story> {
+
+    public SprintStoriesListViewCell() {
+      super();
+
+      // double click for editing
+      this.setOnMouseClicked(click -> {
+        if (click.getClickCount() == 2 &&
+            click.getButton() == MouseButton.PRIMARY &&
+            !isEmpty()) {
+          Story selectedStory = allocatedStoriesList.getSelectionModel().getSelectedItem();
+          mainApp.showStoryDialogWithinSprint(selectedStory, thisStage);
+        }
+      });
+    }
   }
 }

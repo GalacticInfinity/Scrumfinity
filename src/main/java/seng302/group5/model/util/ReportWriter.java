@@ -29,6 +29,7 @@ import seng302.group5.model.Project;
 import seng302.group5.model.Release;
 import seng302.group5.model.Role;
 import seng302.group5.model.Skill;
+import seng302.group5.model.Sprint;
 import seng302.group5.model.Story;
 import seng302.group5.model.Team;
 
@@ -41,7 +42,6 @@ public class ReportWriter {
 
   private Document report;
   private Element rootElement;
-  //Element projElem;
   Element projElement;
   Element releasesElement;
   Element teamElement;
@@ -53,6 +53,7 @@ public class ReportWriter {
   Element allStories;
   Element allBacklogs;
   Element allEstimations;
+  Element allSprints;
   LocalDate date;
   String dateFormat = "dd/MM/yyyy";
 
@@ -136,6 +137,12 @@ public class ReportWriter {
       rootElement.appendChild(allEstimations);
       for (Estimate estimate : mainApp.getEstimates()) {
         createEstimate(estimate, allEstimations, "EstimateScale");
+      }
+
+      allSprints = report.createElement("Sprints");
+      rootElement.appendChild(allSprints);
+      for (Sprint sprint : mainApp.getSprints()) {
+        createSprint(sprint, allSprints, "Sprint");
       }
 
       String filename = saveLocation.toString();
@@ -223,6 +230,11 @@ public class ReportWriter {
         case ("Estimates"):
           for (AgileItem agileEstimate : reportItems) {
             createEstimate((Estimate) agileEstimate, projElement, "Estimate");
+          }
+          break;
+        case ("Sprints"):
+          for (AgileItem agileSprint : reportItems) {
+            createSprint((Sprint) agileSprint, projElement, "Sprint");
           }
           break;
       }
@@ -595,6 +607,56 @@ public class ReportWriter {
       estimateSize.appendChild(report.createTextNode(estimateKeys.get(i)));
       estimateElem.appendChild(estimateSize);
     }
+  }
+
+  /**
+   * Creates a sprint element, with information on all fields.
+   *
+   * @param sprint Sprint object to be reported
+   * @param sprintElement Element to attach sprint report to
+   * @param typeOfSprint Name of the sprint report tag
+   */
+  private void createSprint(Sprint sprint, Element sprintElement, String typeOfSprint) {
+    Element sprintElem = report.createElement(typeOfSprint);
+    sprintElem.setAttribute("goal", sprint.getLabel());
+    sprintElement.appendChild(sprintElem);
+
+    Element sprintDesc = report.createElement("Description");
+    sprintDesc.appendChild(report.createTextNode(sprint.getSprintDescription()));
+    sprintElem.appendChild(sprintDesc);
+
+    Element sprintFullName = report.createElement("FullName");
+    sprintFullName.appendChild(report.createTextNode(sprint.getSprintFullName()));
+    sprintElem.appendChild(sprintFullName);
+
+    Element sprintBacklog = report.createElement("Backlog");
+    sprintBacklog.appendChild(report.createTextNode(sprint.getSprintBacklog().getLabel()));
+    sprintElem.appendChild(sprintBacklog);
+
+    Element sprintProject = report.createElement("Project");
+    sprintProject.appendChild(report.createTextNode(sprint.getSprintProject().getLabel()));
+    sprintElem.appendChild(sprintProject);
+
+    Team sprintTeam = sprint.getSprintTeam();
+    for (AgileHistory hist : sprint.getSprintProject().getAllocatedTeams()) {
+      Team histTeam = (Team)hist.getAgileItem();
+      if (histTeam.equals(sprintTeam)) {
+        createTeam(hist, sprintElem, "SprintTeam");
+        break;
+      }
+    }
+
+    createRelease(sprint.getSprintRelease(), sprintElem);
+
+    Element sprintStart = report.createElement("StartDate");
+    String formattedDate = sprint.getSprintStart().format(DateTimeFormatter.ofPattern(dateFormat));
+    sprintStart.appendChild(report.createTextNode(formattedDate));
+    sprintElem.appendChild(sprintStart);
+
+    Element sprintEnd = report.createElement("StartDate");
+    formattedDate = sprint.getSprintEnd().format(DateTimeFormatter.ofPattern(dateFormat));
+    sprintEnd.appendChild(report.createTextNode(formattedDate));
+    sprintElem.appendChild(sprintEnd);
   }
 }
 
