@@ -810,9 +810,9 @@ public class ListMainPaneController {
               FXCollections.observableArrayList(backlog.getStories()),
               Comparator.<Story>naturalOrder());
           Map<Story, Integer> sorted = new IdentityHashMap<>(backlog.getSizes());
-          for (Map.Entry<Story, Integer> entry : sorted.entrySet()) {
-            tempTextStoriesBody = new Text("\n• " + entry.getKey() + " - " +
-            backlog.getEstimate().getEstimateNames().get(entry.getValue()));
+          for (Story story : sortedStories) {
+            tempTextStoriesBody = new Text("\n• " + story + " - " +
+            backlog.getEstimate().getEstimateNames().get(sorted.get(story)));
             storiesText.add(tempTextStoriesBody);
             displayTextFlow.getChildren().add(tempTextStoriesBody);
           }
@@ -978,14 +978,12 @@ public class ListMainPaneController {
               Comparator.<Story>naturalOrder());
           Map<Story, Integer> sorted = new IdentityHashMap<>(sprintBacklog.getSizes());
           displayTextFlow.getChildren().removeAll(textDatesHeader, textDatesBody);
-          for (Map.Entry<Story, Integer> entry : sorted.entrySet()) {
-            if (sortedStories.contains(entry.getKey())) {
-              tempTextStoriesBody = new Text("\n• " + entry.getKey() + " - " +
-                                             sprintBacklog.getEstimate().getEstimateNames()
-                                                 .get(entry.getValue()));
-              storiesText.add(tempTextStoriesBody);
-              displayTextFlow.getChildren().add(tempTextStoriesBody);
-            }
+          for (Story story : sortedStories) {
+            tempTextStoriesBody = new Text("\n• " + story + " - " +
+                                           sprintBacklog.getEstimate().getEstimateNames()
+                                               .get(sorted.get(story)));
+            storiesText.add(tempTextStoriesBody);
+            displayTextFlow.getChildren().add(tempTextStoriesBody);
           }
           displayTextFlow.getChildren().addAll(textDatesHeader, textDatesBody);
         } else {
