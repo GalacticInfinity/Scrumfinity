@@ -935,8 +935,8 @@ public class ListMainPaneController {
     List<Text> storiesText = new ArrayList<>();
 
     Text textStoriesBody;
+    Backlog sprintBacklog = sprint.getSprintBacklog();
     if (!sprint.getSprintStories().isEmpty()) {
-      Backlog sprintBacklog = sprint.getSprintBacklog();
       for (Story story : sprint.getSprintStories()) {
         int index = sprintBacklog.getSizes().get(story);
         textStoriesBody = new Text("\n• " + story + " - " +
@@ -965,6 +965,60 @@ public class ListMainPaneController {
     textDatesBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
 
     displayTextFlow.getChildren().addAll(textDatesHeader, textDatesBody);
+
+    sortToggle.setOnAction(event -> {
+      displayTextFlow.getChildren().removeAll(storiesText);
+      storiesText.clear();
+      if (sortToggle.getText().equals(prioritisedOrder)) {
+        // Change to alphabetical order
+        Text tempTextStoriesBody;
+        if (!sprint.getSprintStories().isEmpty()) {
+          SortedList<Story> sortedStories = new SortedList<>(
+              FXCollections.observableArrayList(sprint.getSprintStories()),
+              Comparator.<Story>naturalOrder());
+          Map<Story, Integer> sorted = new IdentityHashMap<>(sprintBacklog.getSizes());
+          displayTextFlow.getChildren().removeAll(textDatesHeader, textDatesBody);
+          for (Map.Entry<Story, Integer> entry : sorted.entrySet()) {
+            if (sortedStories.contains(entry.getKey())) {
+              tempTextStoriesBody = new Text("\n• " + entry.getKey() + " - " +
+                                             sprintBacklog.getEstimate().getEstimateNames()
+                                                 .get(entry.getValue()));
+              storiesText.add(tempTextStoriesBody);
+              displayTextFlow.getChildren().add(tempTextStoriesBody);
+            }
+          }
+          displayTextFlow.getChildren().addAll(textDatesHeader, textDatesBody);
+        } else {
+          tempTextStoriesBody = new Text("\nN/A");
+          storiesText.add(tempTextStoriesBody);
+          displayTextFlow.getChildren().removeAll(textDatesHeader, textDatesBody);
+          displayTextFlow.getChildren().addAll(tempTextStoriesBody,textDatesHeader, textDatesBody);
+        }
+        // Change the mode
+        sortToggle.setText(alphabeticalOrder);
+      } else {
+        // Change to prioritised order
+        Text tempTextStoriesBody;
+        if (!sprint.getSprintStories().isEmpty()) {
+          for (Story story : sprint.getSprintStories()) {
+            int index = sprintBacklog.getSizes().get(story);
+            tempTextStoriesBody = new Text("\n• " + story + " - " +
+                                           sprintBacklog.getEstimate().getEstimateNames()
+                                               .get(index));
+            storiesText.add(tempTextStoriesBody);
+            displayTextFlow.getChildren().removeAll(textDatesHeader, textDatesBody);
+            displayTextFlow.getChildren().addAll(tempTextStoriesBody,textDatesHeader, textDatesBody);
+          }
+        } else {
+          tempTextStoriesBody = new Text("\nN/A");
+          storiesText.add(tempTextStoriesBody);
+          displayTextFlow.getChildren().removeAll(textDatesHeader, textDatesBody);
+          displayTextFlow.getChildren().addAll(tempTextStoriesBody, textDatesHeader, textDatesBody);
+        }
+        // Change the mode
+        sortToggle.setText(prioritisedOrder);
+      }
+    });
   }
 
   /**
