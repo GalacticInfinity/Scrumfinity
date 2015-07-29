@@ -31,6 +31,8 @@ import seng302.group5.model.Release;
 import seng302.group5.model.Sprint;
 import seng302.group5.model.Story;
 import seng302.group5.model.Team;
+import seng302.group5.model.undoredo.Action;
+import seng302.group5.model.undoredo.UndoRedoObject;
 import seng302.group5.model.util.Settings;
 
 /**
@@ -453,7 +455,13 @@ public class SprintDialogController {
 
         mainApp.refreshList(sprint);
       }
-      // todo undo/redo
+      UndoRedoObject undoRedoObject = generateUndoRedoObject();
+      if (sprint != null && createOrEdit == CreateOrEdit.CREATE) {
+        undoRedoObject.addDatum(sprint);
+      } else {
+        undoRedoObject.addDatum(null);
+      }
+      mainApp.newAction(undoRedoObject);
 
       thisStage.close();
     }
@@ -467,6 +475,29 @@ public class SprintDialogController {
   @FXML
   protected void btnCancelClick(ActionEvent event) {
     thisStage.close();
+  }
+
+  /**
+   * Generate an UndoRedoObject to place in the stack.
+   *
+   * @return The UndoRedoObject to store.
+   */
+  private UndoRedoObject generateUndoRedoObject() {
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+
+    if (createOrEdit == CreateOrEdit.CREATE) {
+      undoRedoObject.setAction(Action.SPRINT_CREATE);
+    } else {
+      undoRedoObject.setAction(Action.SPRINT_EDIT);
+      undoRedoObject.addDatum(lastSprint);
+    }
+
+    // Store a copy of sprint to edit in stack to avoid reference problems
+    undoRedoObject.setAgileItem(sprint);
+    Sprint sprintToStore = new Sprint(sprint);
+    undoRedoObject.addDatum(sprintToStore);
+
+    return undoRedoObject;
   }
 
   /**

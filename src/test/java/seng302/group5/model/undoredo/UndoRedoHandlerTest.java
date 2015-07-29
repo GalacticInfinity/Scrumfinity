@@ -20,6 +20,7 @@ import seng302.group5.model.Person;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
 import seng302.group5.model.Skill;
+import seng302.group5.model.Sprint;
 import seng302.group5.model.Story;
 import seng302.group5.model.Team;
 
@@ -98,6 +99,27 @@ public class UndoRedoHandlerTest {
   private List<String> newEstimateList;
   private String newEstimateLabel;
 
+  private String sprintGoal;
+  private String sprintFullName;
+  private String sprintDescription;
+  private Team sprintTeam;
+  private Backlog sprintBacklog;
+  private Project sprintProject;
+  private Release sprintRelease;
+  private LocalDate sprintStart;
+  private LocalDate sprintEnd;
+  private List<Story> sprintStories;
+  private String newSprintGoal;
+  private String newSprintFullName;
+  private String newSprintDescription;
+  private Team newSprintTeam;
+  private Backlog newSprintBacklog;
+  private Project newSprintProject;
+  private Release newSprintRelease;
+  private LocalDate newSprintStart;
+  private LocalDate newSprintEnd;
+  private List<Story> newSprintStories;
+
   private Person person;
   private Skill skill;
   private Team team;
@@ -106,6 +128,7 @@ public class UndoRedoHandlerTest {
   private Story story;
   private Backlog backlog;
   private Estimate estimate;
+  private Sprint sprint;
 
   private UndoRedoHandler undoRedoHandler;
   private Main mainApp;
@@ -704,6 +727,81 @@ public class UndoRedoHandlerTest {
     undoRedoObject.setAgileItem(backlog);
     undoRedoObject.addDatum(lastBacklog);
     undoRedoObject.addDatum(newBacklog);
+
+    undoRedoHandler.newAction(undoRedoObject);
+  }
+
+  private void newSprint() {
+    sprintGoal = "Sprint";
+    sprintFullName = "This is a sprint";
+    sprintDescription = "Once upon a time again";
+    sprintTeam = team;
+    sprintBacklog = backlog;
+    sprintProject = project;
+    sprintRelease = release;
+    sprintStart = LocalDate.of(2000, Month.JANUARY, 4);
+    sprintEnd = LocalDate.of(2000, Month.JANUARY, 25);
+    sprintStories = new ArrayList<>();
+    sprintStories.add(story);
+
+    sprint = new Sprint(sprintGoal, sprintFullName, sprintDescription, backlog, project, team,
+                        release, sprintStart, sprintEnd, sprintStories);
+    mainApp.addSprint(sprint);
+
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+    undoRedoObject.setAction(Action.SPRINT_CREATE);
+    undoRedoObject.setAgileItem(sprint);
+    undoRedoObject.addDatum(new Sprint(sprint));
+
+    undoRedoHandler.newAction(undoRedoObject);
+  }
+
+  private void deleteNewestSprint() {
+    mainApp.deleteSprint(sprint);
+
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+    undoRedoObject.setAction(Action.SPRINT_DELETE);
+    undoRedoObject.setAgileItem(sprint);
+    undoRedoObject.addDatum(new Sprint(sprint));
+
+    undoRedoHandler.newAction(undoRedoObject);
+  }
+
+  private void editNewestSprint() {
+    Sprint lastSprint = new Sprint(sprint);
+
+    newSprintGoal = "New sprint";
+    newSprintFullName = "This is another sprint";
+    newSprintDescription = "This is some other description for a sprint";
+    newSprintTeam = new Team("NEW TEAM", "there's no one here");
+    newSprintBacklog = new Backlog("NEW BACKLOG", "newer backlog", "new desc", new Person(),
+                                   new Estimate());
+    newSprintProject = new Project("NEW PROJECT", "newer project", "new description");
+    newSprintRelease = new Release("NEW RELEASE", "newer release", "??",
+                                   LocalDate.of(2014, Month.APRIL, 1), newSprintProject);
+    newSprintStart = LocalDate.of(2014, Month.FEBRUARY, 1);
+    newSprintEnd = LocalDate.of(2014, Month.FEBRUARY, 20);
+    newSprintStories = new ArrayList<>(); // empty
+
+    sprint.setSprintGoal(newSprintGoal);
+    sprint.setSprintFullName(newSprintFullName);
+    sprint.setSprintDescription(newSprintDescription);
+    sprint.setSprintTeam(newSprintTeam);
+    sprint.setSprintBacklog(newSprintBacklog);
+    sprint.setSprintProject(newSprintProject);
+    sprint.setSprintRelease(newSprintRelease);
+    sprint.setSprintStart(newSprintStart);
+    sprint.setSprintEnd(newSprintEnd);
+    sprint.removeAllStories();
+    sprint.addAllStories(newSprintStories);
+
+    Sprint newSprint = new Sprint(sprint);
+
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+    undoRedoObject.setAction(Action.SPRINT_EDIT);
+    undoRedoObject.setAgileItem(sprint);
+    undoRedoObject.addDatum(lastSprint);
+    undoRedoObject.addDatum(newSprint);
 
     undoRedoHandler.newAction(undoRedoObject);
   }
@@ -3021,6 +3119,205 @@ public class UndoRedoHandlerTest {
     assertEquals(newBacklogDescription, redoneBacklog.getBacklogDescription());
     assertEquals(newProductOwner, redoneBacklog.getProductOwner());
     assertEquals(newBacklogEstimate, redoneBacklog.getEstimate());
+  }
+
+  @Test
+  public void testSprintCreateUndo() throws Exception {
+    assertTrue(mainApp.getSprints().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().isEmpty());
+
+    newPerson();
+    newTeam();
+    newProject();
+    newRelease();
+    newStory();
+    newBacklog();
+    newSprint();
+
+    assertEquals(1, mainApp.getSprints().size());
+    assertEquals(7, undoRedoHandler.getUndoStack().size());
+
+    undoRedoHandler.undo();
+
+    assertTrue(mainApp.getSprints().isEmpty());
+    assertEquals(6, undoRedoHandler.getUndoStack().size());
+  }
+
+  @Test
+  public void testSprintCreateRedo() throws Exception {
+    Sprint before;
+    Sprint after;
+
+    assertTrue(mainApp.getSprints().isEmpty());
+    assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+
+    newPerson();
+    newTeam();
+    newProject();
+    newRelease();
+    newStory();
+    newBacklog();
+    newSprint();
+
+    assertEquals(1, mainApp.getSprints().size());
+    assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+    before = mainApp.getSprints().get(0);
+    assertNotNull(before);
+
+    undoRedoHandler.undo();
+
+    assertTrue(mainApp.getSprints().isEmpty());
+    assertEquals(1, undoRedoHandler.getRedoStack().size());
+
+    undoRedoHandler.redo();
+    assertEquals(1, mainApp.getSprints().size());
+    assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+    after = mainApp.getSprints().get(0);
+    assertNotNull(after);
+
+    assertSame(before, after);
+  }
+
+  @Test
+  public void testSprintDeleteUndo() throws Exception {
+    Sprint before;
+    Sprint after;
+
+    //testing deleting and undoing a sprint
+    assertTrue(mainApp.getSprints().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().isEmpty());
+
+    newPerson();
+    newTeam();
+    newProject();
+    newRelease();
+    newStory();
+    newBacklog();
+    newSprint();
+
+    assertEquals(1, mainApp.getSprints().size());
+    assertEquals(7, undoRedoHandler.getUndoStack().size());
+    before = mainApp.getSprints().get(0);
+    assertNotNull(before);
+
+    deleteNewestSprint();
+
+    assertTrue(mainApp.getSprints().isEmpty());
+    assertEquals(8, undoRedoHandler.getUndoStack().size());
+
+    undoRedoHandler.undo();
+
+    assertEquals(1, mainApp.getSprints().size());
+    assertEquals(7, undoRedoHandler.getUndoStack().size());
+    after = mainApp.getSprints().get(0);
+    assertNotNull(after);
+
+    assertSame(before, after);
+  }
+
+  @Test
+  public void testSprintDeleteRedo() throws Exception {
+    Sprint before;
+    Sprint after;
+
+    //testing deleting and redoing a sprint
+    assertTrue(mainApp.getBacklogs().isEmpty());
+    assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+
+    newPerson();
+    newTeam();
+    newProject();
+    newRelease();
+    newStory();
+    newBacklog();
+    newSprint();
+
+    assertEquals(1, mainApp.getSprints().size());
+    assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+    before = mainApp.getSprints().get(0);
+    assertNotNull(before);
+
+    deleteNewestSprint();
+
+    assertTrue(mainApp.getSprints().isEmpty());
+    assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+
+    undoRedoHandler.undo();
+
+    assertEquals(1, mainApp.getSprints().size());
+    assertEquals(1, undoRedoHandler.getRedoStack().size());
+    after = mainApp.getSprints().get(0);
+    assertNotNull(after);
+
+    assertSame(before, after);
+
+    undoRedoHandler.redo();
+    assertTrue(mainApp.getSprints().isEmpty());
+    assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+  }
+
+  @Test
+  public void testSprintEditUndo() throws Exception {
+    //testing editing and redoing a sprint
+    assertTrue(mainApp.getSprints().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+
+    newPerson();
+    newTeam();
+    newProject();
+    newRelease();
+    newStory();
+    newBacklog();
+    newSprint();
+
+    assertEquals(1, mainApp.getSprints().size());
+    assertEquals(7, undoRedoHandler.getUndoStack().size());
+
+    Sprint createdSprint = mainApp.getSprints().get(0);
+
+    assertEquals(sprintGoal, createdSprint.getSprintGoal());
+    assertEquals(sprintFullName, createdSprint.getSprintFullName());
+    assertEquals(sprintDescription, createdSprint.getSprintDescription());
+    assertEquals(sprintBacklog, createdSprint.getSprintBacklog());
+    assertEquals(sprintStart, createdSprint.getSprintStart());
+    assertEquals(sprintEnd, createdSprint.getSprintEnd());
+    assertEquals(sprintProject, createdSprint.getSprintProject());
+    assertEquals(sprintRelease, createdSprint.getSprintRelease());
+    assertEquals(sprintStories, createdSprint.getSprintStories());
+    assertEquals(sprintTeam, createdSprint.getSprintTeam());
+
+    editNewestSprint();
+
+    assertEquals(1, mainApp.getSprints().size());
+    assertEquals(8, undoRedoHandler.getUndoStack().size());
+
+    Sprint editedSprint = mainApp.getSprints().get(0);
+    assertEquals(newSprintGoal, editedSprint.getSprintGoal());
+    assertEquals(newSprintFullName, editedSprint.getSprintFullName());
+    assertEquals(newSprintDescription, editedSprint.getSprintDescription());
+    assertEquals(newSprintBacklog, editedSprint.getSprintBacklog());
+    assertEquals(newSprintStart, editedSprint.getSprintStart());
+    assertEquals(newSprintEnd, editedSprint.getSprintEnd());
+    assertEquals(newSprintProject, editedSprint.getSprintProject());
+    assertEquals(newSprintRelease, editedSprint.getSprintRelease());
+    assertEquals(newSprintStories, editedSprint.getSprintStories());
+    assertEquals(newSprintTeam, editedSprint.getSprintTeam());
+
+    undoRedoHandler.undo();
+    assertEquals(1, mainApp.getSprints().size());
+    assertEquals(7, undoRedoHandler.getUndoStack().size());
+
+    Sprint undoneSprint = mainApp.getSprints().get(0);
+    assertEquals(sprintGoal, undoneSprint.getSprintGoal());
+    assertEquals(sprintFullName, undoneSprint.getSprintFullName());
+    assertEquals(sprintDescription, undoneSprint.getSprintDescription());
+    assertEquals(sprintBacklog, undoneSprint.getSprintBacklog());
+    assertEquals(sprintStart, undoneSprint.getSprintStart());
+    assertEquals(sprintEnd, undoneSprint.getSprintEnd());
+    assertEquals(sprintProject, undoneSprint.getSprintProject());
+    assertEquals(sprintRelease, undoneSprint.getSprintRelease());
+    assertEquals(sprintStories, undoneSprint.getSprintStories());
+    assertEquals(sprintTeam, undoneSprint.getSprintTeam());
   }
 
   @Test
