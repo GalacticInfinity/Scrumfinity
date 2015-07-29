@@ -315,7 +315,7 @@ public class ListMainPaneController {
     text4.setFill(Color.BLACK);
     text4.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
-    Text text5 = new Text();
+    Text text5;
     if (skill.getSkillDescription().isEmpty()) {
       text5 = new Text("N/A");
       text5.setFill(Color.BLACK);
@@ -366,7 +366,7 @@ public class ListMainPaneController {
     text8.setFill(Color.BLACK);
     text8.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
 
-    Text text9 = new Text();
+    Text text9;
     if (person.isInTeam()) {
       text9 = new Text(person.getTeam().toString());
       text9.setFill(Color.BLACK);
@@ -386,7 +386,7 @@ public class ListMainPaneController {
       listOfSkills.append(skill.getLabel());
       listOfSkills.append(", ");
     }
-    Text text11 = new Text();
+    Text text11;
     if (listOfSkills.length() == 0) {
       text11 = new Text("No skills, please assign skills.");
       text11.setFill(Color.BLACK);
@@ -429,7 +429,7 @@ public class ListMainPaneController {
     text6.setFill(Color.BLACK);
     text6.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
 
-    Text text7 = new Text();
+    Text text7;
     if (project.getProjectDescription().isEmpty()) {
       text7 = new Text("N/A");
       text7.setFill(Color.BLACK);
@@ -450,7 +450,7 @@ public class ListMainPaneController {
         Comparator.<AgileHistory>naturalOrder())) {
         listOfTeams.append("" + team.toString() + " \n");
     }
-    Text text9 = new Text();
+    Text text9;
     if (listOfTeams.length() == 0) {
       text9 = new Text("No Teams assigned, please assign Teams.");
       text9.setFill(Color.BLACK);
@@ -706,6 +706,7 @@ public class ListMainPaneController {
 
   /**
    * Displays the information about a given backlog in the text pane.
+   * Uses a textflow for formatting.
    *
    * @param backlog The backlog to display information about.
    */
@@ -850,8 +851,120 @@ public class ListMainPaneController {
    * @param sprint The sprint to display information about.
    */
   private void displaySprintTextArea(Sprint sprint) {
-    Text textHeader = new Text("Backlog Information");
-    //TODO Do it
+    Text textHeader = new Text("Sprint Information");
+    textHeader.setFill(Color.rgb(1, 0, 1));
+    textHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 20));
+
+    Text textLabelHeader = new Text("\nSprint Goal: ");
+    textLabelHeader.setFill(Color.rgb(1, 0, 1));
+    textLabelHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text textLabelBody = new Text(sprint.getLabel());
+    textLabelBody.setFill(Color.rgb(1, 0, 1));
+    textLabelBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text textNameHeader = new Text("\nSprint Full Name: ");
+    textNameHeader.setFill(Color.rgb(1, 0, 1));
+    textNameHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text textNameBody = new Text(sprint.getSprintFullName());
+    textNameBody.setFill(Color.rgb(1, 0, 1));
+    textNameBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text textDescriptionHeader = new Text("\nSprint Description:\n");
+    textDescriptionHeader.setFill(Color.rgb(1, 0, 1));
+    textDescriptionHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text textDescriptionBody;
+    if (sprint.getSprintDescription().length() != 0) {
+      textDescriptionBody = new Text(sprint.getSprintDescription());
+    } else {
+      textDescriptionBody = new Text("N/A");
+    }
+    textDescriptionBody.setFill(Color.rgb(1, 0, 1));
+    textDescriptionBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text textBacklogHeader = new Text("\nSprint Backlog: ");
+    textBacklogHeader.setFill(Color.rgb(1, 0, 1));
+    textBacklogHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text textBacklogBody = new Text(sprint.getSprintBacklog().toString());
+    textBacklogBody.setFill(Color.rgb(1, 0, 1));
+    textBacklogBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text textProjectHeader = new Text("\nSprint Project: ");
+    textProjectHeader.setFill(Color.rgb(1, 0, 1));
+    textProjectHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text textProjectBody = new Text(sprint.getSprintProject().toString());
+    textProjectBody.setFill(Color.rgb(1, 0, 1));
+    textProjectBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text textTeamHeader = new Text("\nAssigned Team:");
+    textTeamHeader.setFill(Color.rgb(1, 0, 1));
+    textTeamHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text textTeamBody = new Text(sprint.getSprintTeam().toString());
+    textTeamBody.setFill(Color.rgb(1, 0, 1));
+    textTeamBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text textReleaseHeader = new Text("\nPart of Release:");
+    textReleaseHeader.setFill(Color.rgb(1, 0, 1));
+    textReleaseHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text textReleaseBody = new Text(sprint.getSprintRelease().toString());
+    textReleaseBody.setFill(Color.rgb(1, 0, 1));
+    textReleaseBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text textStoriesHeader = new Text("\nStories:");
+    textStoriesHeader.setFill(Color.rgb(1, 0, 1));
+    textStoriesHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    String prioritisedOrder = "Prioritised Order";
+    String alphabeticalOrder = "Alphabetical Order";
+
+    Hyperlink sortToggle = new Hyperlink(prioritisedOrder);
+
+    displayTextFlow.getChildren().addAll(textHeader, textLabelHeader, textLabelBody,
+                                         textNameHeader, textNameBody, textDescriptionHeader,
+                                         textDescriptionBody, textBacklogHeader, textBacklogBody,
+                                         textProjectHeader, textProjectBody, textTeamHeader,
+                                         textTeamBody, textReleaseHeader, textReleaseBody,
+                                         textStoriesHeader, sortToggle);
+
+    List<Text> storiesText = new ArrayList<>();
+
+    Text textStoriesBody;
+    if (!sprint.getSprintStories().isEmpty()) {
+      Backlog sprintBacklog = sprint.getSprintBacklog();
+      for (Story story : sprint.getSprintStories()) {
+        int index = sprintBacklog.getSizes().get(story);
+        textStoriesBody = new Text("\n• " + story + " - " +
+                                   sprintBacklog.getEstimate().getEstimateNames().get(index));
+        storiesText.add(textStoriesBody);
+        displayTextFlow.getChildren().add(textStoriesBody);
+      }
+    } else {
+      textStoriesBody = new Text("\nN/A");
+      storiesText.add(textStoriesBody);
+      displayTextFlow.getChildren().add(textStoriesBody);
+    }
+
+    Text textDatesHeader = new Text("\nSprint Dates:");
+    textDatesHeader.setFill(Color.rgb(1, 0, 1));
+    textDatesHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    LocalDate startDate = sprint.getSprintStart();
+    LocalDate endDate = sprint.getSprintEnd();
+    String format = "dd/MM/yyyy";
+    String startDateString = startDate.format(DateTimeFormatter.ofPattern(format));
+    String endDateString = endDate.format(DateTimeFormatter.ofPattern(format));
+
+    Text textDatesBody = new Text(startDateString + " - " + endDateString);
+    textDatesBody.setFill(Color.rgb(1, 0, 1));
+    textDatesBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    displayTextFlow.getChildren().addAll(textDatesHeader, textDatesBody);
   }
 
   /**
