@@ -25,6 +25,8 @@ public class StoryTest {
   private Story story2;
   private Story story3;
 
+  private boolean isReady = true;
+
   @Before
   public void setUp() throws Exception {
     this.storyLabel = "Story";
@@ -65,6 +67,7 @@ public class StoryTest {
     assertTrue(!storyAC.isEmpty());
     assertEquals(storyAC, story.getAcceptanceCriteria());
 
+    story.setStoryState(isReady);
     Story clone = new Story();
     clone.copyValues(story);
 
@@ -74,6 +77,9 @@ public class StoryTest {
     assertEquals(storyCreator, clone.getCreator());
     assertTrue(!clone.getAcceptanceCriteria().isEmpty());
     assertEquals(storyAC, clone.getAcceptanceCriteria());
+
+    assertTrue(story.getStoryState());
+    assertTrue(clone.getStoryState());
   }
 
   @Test
