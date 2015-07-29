@@ -23,6 +23,7 @@ import seng302.group5.model.Project;
 import seng302.group5.model.Release;
 import seng302.group5.model.Role;
 import seng302.group5.model.Skill;
+import seng302.group5.model.Sprint;
 import seng302.group5.model.Story;
 import seng302.group5.model.Team;
 
@@ -70,6 +71,9 @@ public class Loading {
         loadBacklogs();
       } else {
         main.createDefaultEstimates();
+      }
+      if (saveVersion >= 0.3) {
+        loadSprints();
       }
     } catch (Exception e) {
       Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -813,6 +817,67 @@ public class Loading {
     }
   }
 
+  private void loadSprints() throws Exception {
+    Sprint sprint;
+    String sprintLine;
+    String sprintData;
+    LocalDate start;
+    LocalDate end;
+
+    while (!(sprintLine = loadedFile.readLine()).startsWith("</Sprints>")) {
+      if (sprintLine.matches(".*<Sprint>")) {
+        sprint = new Sprint();
+
+        //Load label/goal
+        sprintLine = loadedFile.readLine();
+        sprintData = sprintLine.replaceAll("(?i)(.*<sprintLabel.*?>)(.+?)(</sprintLabel>)", "$2");
+        sprint.setLabel(sprintData); //set label
+        sprintLine = loadedFile.readLine();
+        sprintData = sprintLine.replaceAll("(?i)(.*<sprintTeam.*?>)(.+?)(</sprintTeam>)", "$2");
+        for (Team team : main.getTeams()) {
+          if (team.getLabel() == sprintData)
+            sprint.setSprintTeam(team); //set team
+          break;
+        }
+        sprintLine = loadedFile.readLine();
+        sprintData = sprintLine.replaceAll("(?i)(.*<sprintBacklog.*?>)(.+?)(</sprintBacklog>)", "$2");
+        for (Backlog backlog : main.getBacklogs()) {
+          if (backlog.getLabel() == sprintData) {
+            sprint.setSprintBacklog(backlog); //set backlog
+            break;
+          }
+        }
+        sprintLine = loadedFile.readLine();
+        sprintData = sprintLine.replaceAll("(?i)(.*<sprintProject.*?>)(.+?)(</sprintProject>)", "$2");
+        for (Project project : main.getProjects()) {
+          if (project.getLabel() == sprintData) {
+            sprint.setSprintProject(project); //set project
+            break;
+          }
+        }
+        sprintLine = loadedFile.readLine();
+        sprintData = sprintLine.replaceAll("(?i)(.*<sprintRelease.*?>)(.+?)(</sprintRelease>)", "$2");
+        for (Release release : main.getReleases()) {
+          if (release.getLabel() == sprintData) {
+            sprint.setSprintRelease(release); //set release
+            break;
+          }
+        }
+        sprintLine = loadedFile.readLine();
+        sprintData = sprintLine.replaceAll("(?i)(.*<sprintStart.*?>)(.+?)(</sprintStart>)", "$2");
+        start = LocalDate.parse(sprintData);
+        sprint.setSprintStart(start); // set start date
+        sprintLine = loadedFile.readLine();
+        sprintData = sprintLine.replaceAll("(?i)(.*<sprintEnd.*?>)(.+?)(</sprintEnd>)", "$2");
+        end = LocalDate.parse(sprintData);
+        sprint.setSprintStart(end); //set end date
+        main.addSprint(sprint);
+
+      }
+    }
+
+
+  }
   /**
    * A function to sync the temp backlog and real backlogs
    */
@@ -856,4 +921,5 @@ public class Loading {
       story.addAllDependencies(dependents);
     }
   }
+
 }
