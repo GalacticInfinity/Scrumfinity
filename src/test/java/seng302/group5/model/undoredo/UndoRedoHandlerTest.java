@@ -130,6 +130,10 @@ public class UndoRedoHandlerTest {
   private Estimate estimate;
   private Sprint sprint;
 
+  private Story dependantStory1;
+  private Story dependantStory2;
+  private Story dependantStory3;
+
   private UndoRedoHandler undoRedoHandler;
   private Main mainApp;
 
@@ -806,13 +810,71 @@ public class UndoRedoHandlerTest {
     undoRedoHandler.newAction(undoRedoObject);
   }
 
+  private void createAndEditStoryDependencies() {
+    dependantStory1 = new Story("story1", "story1", "s1desc", new Person());
+    dependantStory2 = new Story("story2", "story2", "s2desc", new Person());
+    dependantStory3 = new Story("story3", "story3", "s3desc", new Person());
+
+    dependantStory2.addDependency(dependantStory1);
+    dependantStory3.addDependency(dependantStory1);
+    dependantStory3.addDependency(dependantStory2);
+
+    mainApp.addStory(dependantStory1);
+    mainApp.addStory(dependantStory2);
+    mainApp.addStory(dependantStory3);
+
+    // ignore undo for creation for simplicity
+
+    Story lastDependantStory1 = new Story(dependantStory1);
+    Story lastDependantStory2 = new Story(dependantStory2);
+    Story lastDependantStory3 = new Story(dependantStory3);
+
+    dependantStory1.removeAllDependencies();
+    dependantStory2.removeAllDependencies();
+    dependantStory3.removeAllDependencies();
+
+    // reverse order
+    dependantStory1.addDependency(dependantStory2);
+    dependantStory1.addDependency(dependantStory3);
+    dependantStory2.addDependency(dependantStory3);
+
+    Story newDependantStory1 = new Story(dependantStory1);
+    Story newDependantStory2 = new Story(dependantStory2);
+    Story newDependantStory3 = new Story(dependantStory3);
+
+    UndoRedoObject undoRedoObject1 = new UndoRedoObject();
+    undoRedoObject1.setAction(Action.STORY_EDIT);
+    undoRedoObject1.setAgileItem(dependantStory1);
+    undoRedoObject1.addDatum(lastDependantStory1);
+    undoRedoObject1.addDatum(newDependantStory1);
+
+    UndoRedoObject undoRedoObject2 = new UndoRedoObject();
+    undoRedoObject2.setAction(Action.STORY_EDIT);
+    undoRedoObject2.setAgileItem(dependantStory2);
+    undoRedoObject2.addDatum(lastDependantStory2);
+    undoRedoObject2.addDatum(newDependantStory2);
+
+    UndoRedoObject undoRedoObject3 = new UndoRedoObject();
+    undoRedoObject3.setAction(Action.STORY_EDIT);
+    undoRedoObject3.setAgileItem(dependantStory3);
+    undoRedoObject3.addDatum(lastDependantStory3);
+    undoRedoObject3.addDatum(newDependantStory3);
+
+    CompositeUndoRedo compositeUndoRedo = new CompositeUndoRedo();
+    compositeUndoRedo.addUndoRedo(undoRedoObject1);
+    compositeUndoRedo.addUndoRedo(undoRedoObject2);
+    compositeUndoRedo.addUndoRedo(undoRedoObject3);
+
+    undoRedoHandler.newAction(compositeUndoRedo);
+  }
+
   @Test
   public void testPeekUndoStack() throws Exception {
     assertTrue(undoRedoHandler.getUndoStack().empty());
 
     newPerson();
 
-    UndoRedoObject peekObject = undoRedoHandler.peekUndoStack();
+    UndoRedo peekObject = undoRedoHandler.peekUndoStack();
     ArrayList<AgileItem> data = peekObject.getData();
     Person peekPerson = (Person) data.get(0);
 
@@ -3931,6 +3993,116 @@ public class UndoRedoHandlerTest {
     assertTrue(mainApp.getPeople().isEmpty());
     assertEquals(5, undoRedoHandler.getUndoStack().size());
     assertTrue(undoRedoHandler.getRedoStack().empty());
+  }
+
+  @Test
+  public void testEditStoryDependenciesUndo() throws Exception {
+    //testing editing dependencies of multiple stories in one action
+    assertTrue(mainApp.getStories().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+
+    createAndEditStoryDependencies();
+
+    assertEquals(3, mainApp.getStories().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+
+    dependantStory1 = mainApp.getStories().get(0);
+    dependantStory2 = mainApp.getStories().get(1);
+    dependantStory3 = mainApp.getStories().get(2);
+
+    assertEquals(2, dependantStory1.getDependencies().size());
+    assertSame(dependantStory2, dependantStory1.getDependencies().get(0));
+    assertSame(dependantStory3, dependantStory1.getDependencies().get(1));
+    assertEquals(1, dependantStory2.getDependencies().size());
+    assertSame(dependantStory3, dependantStory2.getDependencies().get(0));
+    assertTrue(dependantStory3.getDependencies().isEmpty());
+
+    undoRedoHandler.undo();
+
+    assertEquals(3, mainApp.getStories().size());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+
+    dependantStory1 = mainApp.getStories().get(0);
+    dependantStory2 = mainApp.getStories().get(1);
+    dependantStory3 = mainApp.getStories().get(2);
+
+    assertTrue(dependantStory1.getDependencies().isEmpty());
+    assertEquals(1, dependantStory2.getDependencies().size());
+    assertSame(dependantStory1, dependantStory2.getDependencies().get(0));
+    assertEquals(2, dependantStory3.getDependencies().size());
+    assertSame(dependantStory1, dependantStory3.getDependencies().get(0));
+    assertSame(dependantStory2, dependantStory3.getDependencies().get(1));
+  }
+
+
+  @Test
+  public void testEditStoryDependenciesRedo() throws Exception {
+    //testing editing dependencies of multiple stories in one action
+    assertTrue(mainApp.getStories().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+
+    createAndEditStoryDependencies();
+
+    assertEquals(3, mainApp.getStories().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    dependantStory1 = mainApp.getStories().get(0);
+    dependantStory2 = mainApp.getStories().get(1);
+    dependantStory3 = mainApp.getStories().get(2);
+
+    Story origDependantStory1 = dependantStory1;
+    Story origDependantStory2 = dependantStory2;
+    Story origDependantStory3 = dependantStory3;
+
+    assertEquals(2, dependantStory1.getDependencies().size());
+    assertSame(dependantStory2, dependantStory1.getDependencies().get(0));
+    assertSame(dependantStory3, dependantStory1.getDependencies().get(1));
+    assertEquals(1, dependantStory2.getDependencies().size());
+    assertSame(dependantStory3, dependantStory2.getDependencies().get(0));
+    assertTrue(dependantStory3.getDependencies().isEmpty());
+
+    undoRedoHandler.undo();
+
+    assertEquals(3, mainApp.getStories().size());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+    assertEquals(1, undoRedoHandler.getRedoStack().size());
+
+    dependantStory1 = mainApp.getStories().get(0);
+    dependantStory2 = mainApp.getStories().get(1);
+    dependantStory3 = mainApp.getStories().get(2);
+
+    assertSame(origDependantStory1, dependantStory1);
+    assertSame(origDependantStory2, dependantStory2);
+    assertSame(origDependantStory3, dependantStory3);
+
+    assertTrue(dependantStory1.getDependencies().isEmpty());
+    assertEquals(1, dependantStory2.getDependencies().size());
+    assertSame(dependantStory1, dependantStory2.getDependencies().get(0));
+    assertEquals(2, dependantStory3.getDependencies().size());
+    assertSame(dependantStory1, dependantStory3.getDependencies().get(0));
+    assertSame(dependantStory2, dependantStory3.getDependencies().get(1));
+
+    undoRedoHandler.redo();
+
+    assertEquals(3, mainApp.getStories().size());
+    assertEquals(1, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    dependantStory1 = mainApp.getStories().get(0);
+    dependantStory2 = mainApp.getStories().get(1);
+    dependantStory3 = mainApp.getStories().get(2);
+
+    assertSame(origDependantStory1, dependantStory1);
+    assertSame(origDependantStory2, dependantStory2);
+    assertSame(origDependantStory3, dependantStory3);
+
+    assertEquals(2, dependantStory1.getDependencies().size());
+    assertSame(dependantStory2, dependantStory1.getDependencies().get(0));
+    assertSame(dependantStory3, dependantStory1.getDependencies().get(1));
+    assertEquals(1, dependantStory2.getDependencies().size());
+    assertSame(dependantStory3, dependantStory2.getDependencies().get(0));
+    assertTrue(dependantStory3.getDependencies().isEmpty());
   }
 
 }

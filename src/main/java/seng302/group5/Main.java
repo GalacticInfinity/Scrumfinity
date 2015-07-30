@@ -48,6 +48,7 @@ import seng302.group5.model.Sprint;
 import seng302.group5.model.Story;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
+import seng302.group5.model.undoredo.UndoRedo;
 import seng302.group5.model.undoredo.UndoRedoHandler;
 import seng302.group5.model.undoredo.UndoRedoObject;
 import seng302.group5.model.util.RevertHandler;
@@ -81,7 +82,7 @@ public class Main extends Application {
 
   private UndoRedoHandler undoRedoHandler = new UndoRedoHandler(this);
 
-  private UndoRedoObject lastSavedObject = null;
+  private UndoRedo lastSavedObject = null;
 
   private RevertHandler revertHandler = new RevertHandler(this);
 
@@ -828,7 +829,7 @@ public class Main extends Application {
    * @return Boolean returns true if the project is saved returns true else false
    */
   public boolean checkSaved() {
-    UndoRedoObject topObject = undoRedoHandler.peekUndoStack();
+    UndoRedo topObject = undoRedoHandler.peekUndoStack();
 
     boolean neverSaved = lastSavedObject == null && topObject == null;
 
