@@ -119,6 +119,16 @@
                </font>
             </Label>
             <ComboBox fx:id="sprintReleaseCombo" prefHeight="25.0" prefWidth="200.0" promptText="Avaliable Releases" visibleRowCount="5" />
+            <Label prefHeight="27.0" prefWidth="33.0" text="Date:">
+               <HBox.margin>
+                  <Insets left="2.0" />
+               </HBox.margin>
+            </Label>
+            <Label fx:id="releaseDate" prefHeight="26.0" prefWidth="70.0">
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
+            </Label>
          </children>
          <VBox.margin>
             <Insets top="4.0" />

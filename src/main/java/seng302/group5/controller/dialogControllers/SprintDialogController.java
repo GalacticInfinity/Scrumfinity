@@ -60,7 +60,7 @@ public class SprintDialogController {
   @FXML private HBox btnContainer;
   @FXML private Button btnConfirm;
   @FXML private Button btnCancel;
-
+  @FXML private Label releaseDate;
   private Main mainApp;
   private Stage thisStage;
 
@@ -123,6 +123,7 @@ public class SprintDialogController {
       sprintBacklogCombo.getSelectionModel().select(sprint.getSprintBacklog()); // Updates Project
       sprintTeamCombo.getSelectionModel().select(sprint.getSprintTeam());
       sprintReleaseCombo.getSelectionModel().select(sprint.getSprintRelease());
+      releaseDate.setText(sprint.getSprintRelease().getReleaseDate().toString());
       sprintStartDate.setValue(sprint.getSprintStart());
       sprintEndDate.setValue(sprint.getSprintEnd());
       allocatedStories.addAll(sprint.getSprintStories());
@@ -172,6 +173,18 @@ public class SprintDialogController {
         checkButtonDisabled();
       }
     });
+    sprintReleaseCombo.getSelectionModel().selectedItemProperty()
+        .addListener((observable, oldValue, newValue) -> {
+                       String dateFormat = "dd/MM/yyy";
+                       if (sprintReleaseCombo.getSelectionModel().getSelectedItem() != null &&
+                           sprintReleaseCombo.getSelectionModel().getSelectedItem().getReleaseDate()
+                           != null) {
+                         releaseDate.setText(sprintReleaseCombo.getSelectionModel()
+                                                 .getSelectedItem().getReleaseDate().
+                                 format(DateTimeFormatter.ofPattern(dateFormat)).toString());
+                       }
+                     }
+        );
     sprintReleaseCombo.valueProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
       if (createOrEdit == CreateOrEdit.EDIT) {
