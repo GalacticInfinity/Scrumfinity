@@ -1184,21 +1184,46 @@ public class Main extends Application {
           alert.setTitle("Backlog contains stories");
           alert.setHeaderText(null);
 
-          int messageLength = 1;
+          int messageLength = 2;
           String message = String.format("Are you sure you want to delete backlog '%s' and "
-                                         + "its associated stories:\n\n",
+                                         + "its associated items:\n\n",
                                          backlog.getLabel());
+          message += "Stories:\n";
           for (Story blStory : backlog.getStories()) {
             messageLength++;
             if (blStory.getStoryName().equals("")) {
-              message += String.format("%s - [No name]\n",
+              message += String.format("\t%s - [No name]\n",
                                        blStory.getLabel());
             } else {
-              message += String.format("%s - %s\n",
+              message += String.format("\t%s - %s\n",
                                        blStory.getLabel(),
                                        blStory.getStoryName());
             }
           }
+          // Finding all sprints associated with backlog
+          List<Sprint> deleteSprints = new ArrayList<>();
+          for (Sprint blSprint : getSprints()) {
+            if (blSprint.getSprintBacklog().equals(backlog)) {
+              deleteSprints.add(blSprint);
+            }
+          }
+          // Extending message
+          if (!deleteSprints.isEmpty()) {
+            messageLength ++;
+            message += "Sprints:\n";
+            for (Sprint sprintDelete : deleteSprints) {
+              messageLength++;
+              if (sprintDelete.getSprintFullName().equals("")) {
+                message += String.format("\t%s - [No name]\n",
+                                         sprintDelete.getLabel());
+              } else {
+                message += String.format("\t%s - %s\n",
+                                         sprintDelete.getLabel(),
+                                         sprintDelete.getSprintFullName());
+              }
+            }
+          }
+
           alert.getDialogPane().setPrefHeight(60 + 30 * messageLength);
           alert.setContentText(message);
 
@@ -1206,6 +1231,10 @@ public class Main extends Application {
           if (result.get() == ButtonType.OK) {
             for (Story blstory : backlog.getStories()) {
               deleteStory(blstory);
+            }
+            // Messing with yo %*$& shingy
+            for (Sprint sprint : deleteSprints) {
+              deleteSprint(sprint);
             }
             deleteBacklog(backlog);
             undoRedoObject = generateDelUndoRedoObject(Action.BACKLOG_DELETE, agileItem);
