@@ -304,11 +304,13 @@ public class SprintDialogController {
   protected void btnAddSprintClick(ActionEvent event) {
     Story selectedStory = availableStoriesList.getSelectionModel().getSelectedItem();
     if (selectedStory != null) {
+      int selectedIndex = availableStoriesList.getSelectionModel().getSelectedIndex();
       allocatedStories.add(selectedStory);
       refreshLists();
       allocatedStoriesList.getSelectionModel().select(selectedStory);
       if (!availableStories.isEmpty()) {
-        availableStoriesList.getSelectionModel().select(0);
+        availableStoriesList.getSelectionModel().select(
+            Math.min(selectedIndex, availableStoriesList.getItems().size() - 1));
       }
       if (createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
@@ -326,11 +328,13 @@ public class SprintDialogController {
   protected void btnRemoveSprintClick(ActionEvent event) {
     Story selectedStory = allocatedStoriesList.getSelectionModel().getSelectedItem();
     if (selectedStory != null) {
+      int selectedIndex = allocatedStoriesList.getSelectionModel().getSelectedIndex();
       allocatedStories.remove(selectedStory);
       refreshLists();
       availableStoriesList.getSelectionModel().select(selectedStory);
       if (!allocatedStoriesPrioritised.isEmpty()) {
-        allocatedStoriesList.getSelectionModel().select(0);
+        allocatedStoriesList.getSelectionModel().select(
+            Math.min(selectedIndex, allocatedStoriesList.getItems().size() - 1));
       }
       if (createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
