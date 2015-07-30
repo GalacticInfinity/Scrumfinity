@@ -909,7 +909,7 @@ public class Main extends Application {
   }
 
   /**
-   * Delete a backlog from the list of backlogs.
+   * Delete a sprint from the list of sprints.
    *
    * @param inputSprint Backlog to be deleted.
    */
@@ -1199,7 +1199,8 @@ public class Main extends Application {
                                        blStory.getStoryName());
             }
           }
-          alert.getDialogPane().setPrefHeight(60 + 30 * messageLength);
+          alert.setResizable(true);
+          alert.getDialogPane().setPrefHeight(80 + 30 * messageLength);
           alert.setContentText(message);
 
           Optional<ButtonType> result = alert.showAndWait();
