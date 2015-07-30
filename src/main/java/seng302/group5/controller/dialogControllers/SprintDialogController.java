@@ -3,15 +3,18 @@ package seng302.group5.controller.dialogControllers;
 import java.time.LocalDate;
 import java.util.IdentityHashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -77,6 +80,8 @@ public class SprintDialogController {
 
   private Map<Backlog, Project> projectMap;
   private Set<Story> allocatedStories;   // use to maintain priority order
+
+  private boolean comboListenerFlag;
 
   /**
    * Sets up the controller on start up.
@@ -253,6 +258,13 @@ public class SprintDialogController {
 
     sprintBacklogCombo.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldBacklog, newBacklog) -> {
+
+          if (comboListenerFlag) {
+            // Get out instantly after resetting flag to false
+            comboListenerFlag = false;
+            return;
+          }
+
           // if the backlog is assigned to a project
           if (projectMap.containsKey(newBacklog)) {
             project = projectMap.get(newBacklog);
@@ -278,16 +290,37 @@ public class SprintDialogController {
             allocatedStories.clear();
             refreshLists();
           } else {
-            // todo dialog for confirming change
-            project = null;
-            sprintProjectLabel.setText("No Project Found");
-            sprintTeamCombo.setValue(null);
-            sprintReleaseCombo.setValue(null);
-            sprintTeamCombo.setDisable(true);
-            sprintReleaseCombo.setDisable(true);
-            availableStories.clear();
-            allocatedStoriesPrioritised.clear();
-            allocatedStories.clear();
+            if (oldBacklog != null) {
+              Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+              alert.setTitle("Chosen backlog is not complete");
+              alert.setHeaderText(null);
+              String
+                  message =
+                  String.format(
+                      "The backlog you have selected does not contain all the required information to be able to create a sprint.\n"
+                      + "Do you want to continue?");
+              alert.getDialogPane().setPrefHeight(120);
+              alert.setContentText(message);
+              //checks response
+              Optional<ButtonType> result = alert.showAndWait();
+              if (result.get() == ButtonType.OK) {
+                project = null;
+                sprintProjectLabel.setText("No Project Found");
+                sprintTeamCombo.setValue(null);
+                sprintReleaseCombo.setValue(null);
+                sprintTeamCombo.setDisable(true);
+                sprintReleaseCombo.setDisable(true);
+                availableStories.clear();
+                allocatedStoriesPrioritised.clear();
+                allocatedStories.clear();
+              } else {
+                comboListenerFlag = true;
+                Platform.runLater(() -> {
+                  // to avoid firing the listener from within itself
+                  sprintBacklogCombo.setValue(oldBacklog);
+                });
+              }
+            }
           }
         });
     setupListView();
