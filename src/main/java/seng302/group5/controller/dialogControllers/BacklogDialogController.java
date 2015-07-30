@@ -32,6 +32,7 @@ import seng302.group5.model.Estimate;
 import seng302.group5.model.Person;
 import seng302.group5.model.Role;
 import seng302.group5.model.Skill;
+import seng302.group5.model.Sprint;
 import seng302.group5.model.Story;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoObject;
@@ -483,6 +484,41 @@ public class BacklogDialogController {
     String backlogDescription = backlogDescriptionField.getText().trim();
     Person productOwner = backlogProductOwnerCombo.getValue();
     Estimate estimate = backlogScaleCombo.getValue();
+
+    ArrayList<Sprint> removedSprints = new ArrayList<Sprint>();
+    ArrayList<Story> removedStories = new ArrayList<Story>();
+    for (Story story : availableStories) {
+      if (backlog.getStories().contains(story)) {
+        for (Sprint sprint : mainApp.getSprints()) {
+          if (sprint.getSprintBacklog().equals(backlog) && sprint.getSprintStories().contains(story)) {
+            if (!removedSprints.contains(sprint)) {
+              removedSprints.add(sprint);
+            }
+            removedStories.add(story);
+          }
+        }
+      }
+      if (story.getStoryState()) {
+        undoRedoStoryList.add(story);
+        story.setStoryState(false);
+      }
+    }
+    if (!removedStories.isEmpty()) {
+      Alert alert = new Alert(Alert.AlertType.WARNING);
+      alert.setHeaderText(null);
+      alert.setResizable(true);
+
+      alert.setTitle("Removed stories that are in sprints.");
+      String content = String.format("You are attempting to remove stories from the backlog that"
+                                     + " are associated to a sprint. Please remove"
+                                     + "\n%s\n from \n%s\n before removing it from the backlog.",
+                                     removedStories.toString(), removedSprints.toString());
+      alert.getDialogPane().setPrefSize(480, 150 + removedStories.size() * 10);
+
+      alert.getDialogPane().setContentText(content);
+      alert.showAndWait();
+      return;
+    }
 
     try {
       backlogLabel = parseBacklogLabel(backlogLabelField.getText());

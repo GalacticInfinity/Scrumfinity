@@ -662,8 +662,10 @@ public class Main extends Application {
    *
    * @param story the person that you wanted to view or edit information with
    * @param stage the stage it is currently on to void unusual behaviour
+   * @param fromAllocated whether or not the stage is called from the allocated stories list
+   *                      or the available stories list. (Affects the readiness checkbox).
    */
-  public void showStoryDialogWithinSprint(Story story, Stage stage) {
+  public void showStoryDialogWithinSprint(Story story, Stage stage, boolean fromAllocated) {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/StoryDialog.fxml"));
@@ -674,6 +676,7 @@ public class Main extends Application {
       Stage storyDialogStage = new Stage();
 
       controller.setupController(this, storyDialogStage, CreateOrEdit.EDIT, story);
+      controller.setCheckboxState(fromAllocated);
 
       storyDialogStage.initModality(Modality.APPLICATION_MODAL);
       storyDialogStage.initOwner(stage);
