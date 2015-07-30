@@ -13,7 +13,7 @@ import javafx.collections.ObservableList;
  * work items as user stories. For now, it just have the most basic detail but we’ll add more
  * in subsequent stories.
  * Contains the information about a single story, which includes the label, name,
- * a description, who the creator is, dependencies, and acceptance criteria.
+ * a description, who the creator is, dependencies, acceptance criteria, and the state of the story.
  *
  * Created by Zander on 5/05/2015.
  */

@@ -80,6 +80,7 @@ public class UndoRedoHandlerTest {
   private String newStoryName;
   private String newStoryDescription;
   private ObservableList<String> newStoryAC;
+  private boolean isReady;
 
   private String backlogLabel;
   private String backlogName;
@@ -91,13 +92,10 @@ public class UndoRedoHandlerTest {
   private String newBacklogName;
   private String newBacklogDescription;
   private Person newProductOwner;
-  private List<Story> newBacklogStories;
   private Estimate newBacklogEstimate;
 
   private List<String> estimateList;
   private String estimateLabel;
-  private List<String> newEstimateList;
-  private String newEstimateLabel;
 
   private String sprintGoal;
   private String sprintFullName;
@@ -491,10 +489,18 @@ public class UndoRedoHandlerTest {
     newStoryLabel = "NewStory";
     newStoryName = "New story name";
     newStoryDescription = "Once upon a time... Again!";
+    storyCreator = new Person("Seamus", "Sandy", "Devil", null);
+    storyAC = FXCollections.observableArrayList();
+    storyAC.add("AC1");
+    storyAC.add("AC2");
+    isReady = true;
 
     story.setLabel(newStoryLabel);
     story.setStoryName(newStoryName);
     story.setDescription(newStoryDescription);
+    story.setCreator(storyCreator);
+    story.setStoryState(isReady);
+    story.setAcceptanceCriteria(storyAC);
 
     Story newStory = new Story(story);
 
