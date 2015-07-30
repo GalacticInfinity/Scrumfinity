@@ -1184,29 +1184,74 @@ public class Main extends Application {
           alert.setTitle("Backlog contains stories");
           alert.setHeaderText(null);
 
-          int messageLength = 1;
+          int messageLength = 2;
           String message = String.format("Are you sure you want to delete backlog '%s' and "
-                                         + "its associated stories:\n\n",
+                                         + "its associated items:\n\n",
                                          backlog.getLabel());
+          message += "Stories:\n";
           for (Story blStory : backlog.getStories()) {
             messageLength++;
             if (blStory.getStoryName().equals("")) {
-              message += String.format("%s - [No name]\n",
+              message += String.format("\t%s - [No name]\n",
                                        blStory.getLabel());
             } else {
-              message += String.format("%s - %s\n",
+              message += String.format("\t%s - %s\n",
                                        blStory.getLabel(),
                                        blStory.getStoryName());
             }
           }
+          
+          // Finding all sprints associated with backlog
+          List<Sprint> deleteSprints = new ArrayList<>();
+          for (Sprint blSprint : getSprints()) {
+            if (blSprint.getSprintBacklog().equals(backlog)) {
+              deleteSprints.add(blSprint);
+            }
+          }
+          // Extending message
+          if (!deleteSprints.isEmpty()) {
+            messageLength ++;
+            message += "Sprints:\n";
+            for (Sprint sprintDelete : deleteSprints) {
+              messageLength++;
+              if (sprintDelete.getSprintFullName().equals("")) {
+                message += String.format("\t%s - [No name]\n",
+                                         sprintDelete.getLabel());
+              } else {
+                message += String.format("\t%s - %s\n",
+                                         sprintDelete.getLabel(),
+                                         sprintDelete.getSprintFullName());
+              }
+            }
+          }
+          // Finding proj associated with backlog
+          Project backlogProject = null;
+          for (Project backProj : getProjects()) {
+            if (backProj.getBacklog() != null && backProj.getBacklog().equals(backlog)){
+              backlogProject = backProj;
+              break;
+            }
+          }
+          // Extending message
+          if (backlogProject != null) {
+            messageLength++;
+            message += String.format("Will unassign from Project: %s", backlogProject.getLabel());
+          }
+
           alert.setResizable(true);
-          alert.getDialogPane().setPrefHeight(80 + 30 * messageLength);
-          alert.setContentText(message);
+          alert.getDialogPane().setPrefHeight(80 + 30 * messageLength);          alert.setContentText(message);
 
           Optional<ButtonType> result = alert.showAndWait();
           if (result.get() == ButtonType.OK) {
             for (Story blstory : backlog.getStories()) {
               deleteStory(blstory);
+            }
+            // Deleting associated sprints
+            for (Sprint sprint : deleteSprints) {
+              deleteSprint(sprint);
+            }
+            if (backlogProject != null) {
+              backlogProject.setBacklog(null);
             }
             deleteBacklog(backlog);
             undoRedoObject = generateDelUndoRedoObject(Action.BACKLOG_DELETE, agileItem);
