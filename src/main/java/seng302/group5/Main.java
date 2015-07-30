@@ -658,9 +658,9 @@ public class Main extends Application {
   }
 
   /**
-   * sets up the dialog box for editing a story when opened from the backlog dialog
+   * sets up the dialog box for editing a story when opened from the sprint dialog
    *
-   * @param story the person that you wanted to view or edit information with
+   * @param story the story that you wanted to view or edit information with
    * @param stage the stage it is currently on to void unusual behaviour
    * @param fromAllocated whether or not the stage is called from the allocated stories list
    *                      or the available stories list. (Affects the readiness checkbox).

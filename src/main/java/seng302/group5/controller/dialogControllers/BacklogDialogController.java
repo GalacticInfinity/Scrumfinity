@@ -694,14 +694,13 @@ public class BacklogDialogController {
     showStatus();
   }
 
+  /**
+   * Cell format class that handles the coloring of cells within the allocated stories list
+   * within the backlog controller.
+   *
+   * Created by Craig Alan Barnard 22/07/2015
+   */
   private class StoryFormatCell extends ListCell<StoryEstimate> {
-
-    /**
-     * Cell format class that handles the coloring of cells within the allocated stories list
-     * within the backlog controller.
-     *
-     * Created by Craig Alan Barnard 22/07/2015
-     */
 
     public StoryFormatCell() {
       super();
@@ -766,14 +765,13 @@ public class BacklogDialogController {
       }}
   }
 
+  /**
+   * Cell format class that handles the displaying of plain text cells within the allocated
+   * stories list within the backlog controller.
+   *
+   * Created by Craig Alan Barnard + Ma Liang 23/07/2015
+   */
   private class StoryFormatCellFalse extends ListCell<StoryEstimate> {
-
-    /**
-     * Cell format class that handles the displaying of plain text cells within the allocated
-     * stories list within the backlog controller.
-     *
-     * Created by Craig Alan Barnard + Ma Liang 23/07/2015
-     */
 
     public StoryFormatCellFalse() {
       super();
