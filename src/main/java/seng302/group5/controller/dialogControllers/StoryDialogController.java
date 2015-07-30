@@ -33,6 +33,7 @@ import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Person;
+import seng302.group5.model.Sprint;
 import seng302.group5.model.Story;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoObject;
@@ -116,6 +117,12 @@ public class StoryDialogController {
         readyCheckbox.setSelected(story.getStoryState());
       } else {
         readyCheckbox.setDisable(true);
+      }
+
+      for (Sprint sprint : mainApp.getSprints()) {
+        if (sprint.getSprintStories().contains(story)) {
+          readyCheckbox.setDisable(true);
+        }
       }
     }
     this.createOrEdit = createOrEdit;
@@ -540,6 +547,10 @@ public class StoryDialogController {
     } else {
       return newAC;
     }
+  }
+
+  public void setCheckboxState(boolean state) {
+    readyCheckbox.setDisable(state);
   }
 
   /**
