@@ -1200,7 +1200,6 @@ public class Main extends Application {
                                        blStory.getStoryName());
             }
           }
-          
           // Finding all sprints associated with backlog
           List<Sprint> deleteSprints = new ArrayList<>();
           for (Sprint blSprint : getSprints()) {
@@ -1239,7 +1238,8 @@ public class Main extends Application {
           }
 
           alert.setResizable(true);
-          alert.getDialogPane().setPrefHeight(80 + 30 * messageLength);          alert.setContentText(message);
+          alert.getDialogPane().setPrefHeight(80 + 30 * messageLength);
+          alert.setContentText(message);
 
           Optional<ButtonType> result = alert.showAndWait();
           if (result.get() == ButtonType.OK) {
