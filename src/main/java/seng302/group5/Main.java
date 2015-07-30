@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import javafx.application.Application;
@@ -48,6 +47,7 @@ import seng302.group5.model.Sprint;
 import seng302.group5.model.Story;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
+import seng302.group5.model.undoredo.UndoRedo;
 import seng302.group5.model.undoredo.UndoRedoHandler;
 import seng302.group5.model.undoredo.UndoRedoObject;
 import seng302.group5.model.util.RevertHandler;
@@ -81,7 +81,7 @@ public class Main extends Application {
 
   private UndoRedoHandler undoRedoHandler = new UndoRedoHandler(this);
 
-  private UndoRedoObject lastSavedObject = null;
+  private UndoRedo lastSavedObject = null;
 
   private RevertHandler revertHandler = new RevertHandler(this);
 
@@ -382,9 +382,8 @@ public class Main extends Application {
       Scene releaseDialogScene = new Scene(releaseDialogLayout);
       Stage releaseDialogStage = new Stage();
 
-      Release release = null;
       if (createOrEdit == CreateOrEdit.EDIT) {
-        release = (Release) LMPC.getSelected();
+        Release release = (Release) LMPC.getSelected();
         if (release == null) {
           Alert alert = new Alert(Alert.AlertType.ERROR);
           alert.setTitle("Error");
@@ -828,7 +827,7 @@ public class Main extends Application {
    * @return Boolean returns true if the project is saved returns true else false
    */
   public boolean checkSaved() {
-    UndoRedoObject topObject = undoRedoHandler.peekUndoStack();
+    UndoRedo topObject = undoRedoHandler.peekUndoStack();
 
     boolean neverSaved = lastSavedObject == null && topObject == null;
 
@@ -1214,6 +1213,12 @@ public class Main extends Application {
             newAction(undoRedoObject);
           }
         }
+        break;
+      case "Sprints":
+        Sprint sprint = (Sprint) agileItem;
+        deleteSprint(sprint);
+        undoRedoObject = generateDelUndoRedoObject(Action.SPRINT_DELETE, agileItem);
+        newAction(undoRedoObject);
         break;
       default:
 //        System.err.println("Unhandled case for deleting agile item");

@@ -695,7 +695,7 @@ public class ListMainPaneController {
     Text textACBody;
     if (story.getAcceptanceCriteria().size() != 0) {
       for (String storyAC : story.getAcceptanceCriteria()) {
-        textACBody = new Text("\n•" + storyAC);
+        textACBody = new Text("\n• " + storyAC);
         displayTextFlow.getChildren().addAll(textACBody);
       }
     } else {
@@ -810,9 +810,9 @@ public class ListMainPaneController {
               FXCollections.observableArrayList(backlog.getStories()),
               Comparator.<Story>naturalOrder());
           Map<Story, Integer> sorted = new IdentityHashMap<>(backlog.getSizes());
-          for (Map.Entry<Story, Integer> entry : sorted.entrySet()) {
-            tempTextStoriesBody = new Text("\n• " + entry.getKey() + " - " +
-            backlog.getEstimate().getEstimateNames().get(entry.getValue()));
+          for (Story story : sortedStories) {
+            tempTextStoriesBody = new Text("\n• " + story + " - " +
+            backlog.getEstimate().getEstimateNames().get(sorted.get(story)));
             storiesText.add(tempTextStoriesBody);
             displayTextFlow.getChildren().add(tempTextStoriesBody);
           }
@@ -900,7 +900,7 @@ public class ListMainPaneController {
     textProjectBody.setFill(Color.rgb(1, 0, 1));
     textProjectBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
 
-    Text textTeamHeader = new Text("\nAssigned Team:");
+    Text textTeamHeader = new Text("\nAssigned Team: ");
     textTeamHeader.setFill(Color.rgb(1, 0, 1));
     textTeamHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
@@ -908,7 +908,7 @@ public class ListMainPaneController {
     textTeamBody.setFill(Color.rgb(1, 0, 1));
     textTeamBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
 
-    Text textReleaseHeader = new Text("\nPart of Release:");
+    Text textReleaseHeader = new Text("\nPart of Release: ");
     textReleaseHeader.setFill(Color.rgb(1, 0, 1));
     textReleaseHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
@@ -935,8 +935,8 @@ public class ListMainPaneController {
     List<Text> storiesText = new ArrayList<>();
 
     Text textStoriesBody;
+    Backlog sprintBacklog = sprint.getSprintBacklog();
     if (!sprint.getSprintStories().isEmpty()) {
-      Backlog sprintBacklog = sprint.getSprintBacklog();
       for (Story story : sprint.getSprintStories()) {
         int index = sprintBacklog.getSizes().get(story);
         textStoriesBody = new Text("\n• " + story + " - " +
@@ -950,7 +950,7 @@ public class ListMainPaneController {
       displayTextFlow.getChildren().add(textStoriesBody);
     }
 
-    Text textDatesHeader = new Text("\nSprint Dates:");
+    Text textDatesHeader = new Text("\nSprint Dates: ");
     textDatesHeader.setFill(Color.rgb(1, 0, 1));
     textDatesHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
@@ -965,6 +965,58 @@ public class ListMainPaneController {
     textDatesBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
 
     displayTextFlow.getChildren().addAll(textDatesHeader, textDatesBody);
+
+    sortToggle.setOnAction(event -> {
+      displayTextFlow.getChildren().removeAll(storiesText);
+      storiesText.clear();
+      if (sortToggle.getText().equals(prioritisedOrder)) {
+        // Change to alphabetical order
+        Text tempTextStoriesBody;
+        if (!sprint.getSprintStories().isEmpty()) {
+          SortedList<Story> sortedStories = new SortedList<>(
+              FXCollections.observableArrayList(sprint.getSprintStories()),
+              Comparator.<Story>naturalOrder());
+          Map<Story, Integer> sorted = new IdentityHashMap<>(sprintBacklog.getSizes());
+          displayTextFlow.getChildren().removeAll(textDatesHeader, textDatesBody);
+          for (Story story : sortedStories) {
+            tempTextStoriesBody = new Text("\n• " + story + " - " +
+                                           sprintBacklog.getEstimate().getEstimateNames()
+                                               .get(sorted.get(story)));
+            storiesText.add(tempTextStoriesBody);
+            displayTextFlow.getChildren().add(tempTextStoriesBody);
+          }
+          displayTextFlow.getChildren().addAll(textDatesHeader, textDatesBody);
+        } else {
+          tempTextStoriesBody = new Text("\nN/A");
+          storiesText.add(tempTextStoriesBody);
+          displayTextFlow.getChildren().removeAll(textDatesHeader, textDatesBody);
+          displayTextFlow.getChildren().addAll(tempTextStoriesBody,textDatesHeader, textDatesBody);
+        }
+        // Change the mode
+        sortToggle.setText(alphabeticalOrder);
+      } else {
+        // Change to prioritised order
+        Text tempTextStoriesBody;
+        if (!sprint.getSprintStories().isEmpty()) {
+          for (Story story : sprint.getSprintStories()) {
+            int index = sprintBacklog.getSizes().get(story);
+            tempTextStoriesBody = new Text("\n• " + story + " - " +
+                                           sprintBacklog.getEstimate().getEstimateNames()
+                                               .get(index));
+            storiesText.add(tempTextStoriesBody);
+            displayTextFlow.getChildren().removeAll(textDatesHeader, textDatesBody);
+            displayTextFlow.getChildren().addAll(tempTextStoriesBody,textDatesHeader, textDatesBody);
+          }
+        } else {
+          tempTextStoriesBody = new Text("\nN/A");
+          storiesText.add(tempTextStoriesBody);
+          displayTextFlow.getChildren().removeAll(textDatesHeader, textDatesBody);
+          displayTextFlow.getChildren().addAll(tempTextStoriesBody, textDatesHeader, textDatesBody);
+        }
+        // Change the mode
+        sortToggle.setText(prioritisedOrder);
+      }
+    });
   }
 
   /**
