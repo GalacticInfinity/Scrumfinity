@@ -805,7 +805,7 @@ public class Main extends Application {
    *
    * @param undoRedoObject Action to store
    */
-  public void newAction(UndoRedoObject undoRedoObject) {
+  public void newAction(UndoRedo undoRedoObject) {
     undoRedoHandler.newAction(undoRedoObject);
     toggleName();
     checkUndoRedoMenuItems();

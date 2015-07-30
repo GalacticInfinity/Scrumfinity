@@ -725,6 +725,7 @@ public class BacklogDialogController {
         else {
           setText(item.toString());
         }
+        showStatus();
 
       }}
   }
