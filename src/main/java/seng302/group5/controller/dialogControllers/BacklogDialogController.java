@@ -1,7 +1,5 @@
 package seng302.group5.controller.dialogControllers;
 
-import java.awt.*;
-import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -12,7 +10,6 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -24,12 +21,10 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.*;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Backlog;
@@ -686,14 +681,13 @@ public class BacklogDialogController {
       });
     }
 
-    @Override protected void updateItem(StoryEstimate item, boolean empty) {
+    @Override
+    protected void updateItem(StoryEstimate item, boolean empty) {
       // calling super here is very important - don't skip this!
       super.updateItem(item, empty);
 
-      // change the text fill based on whether it is positive (green)
-      // or negative (red). If the cell is selected, the text will
-      // always be white (so that it can be read against the blue
-      // background), and if the value is zero, we'll make it black.
+      // change the coloured highlight based on whether it is positive (green),
+      // negative (red) or orange.
 
       boolean dependent = false;
 
@@ -704,26 +698,27 @@ public class BacklogDialogController {
             if (allocatedStoriesList.getItems().indexOf(stories) >
                 allocatedStoriesList.getItems().indexOf(item)) {
               dependent = true;
-          }
+            }
           }
         }
-        javafx.scene.shape.Circle circle = new javafx.scene.shape.Circle(5);
-        if (item.getStory().getStoryState() == true && item.getEstimateIndex() != 0 &&
-            dependent == false) {
+        Circle circle = new Circle(5);
+        if (dependent) {
+          setText(item.toString());
+          circle.setFill(Color.RED);
+          setGraphic(circle);
+        } else if (item.getStory().getStoryState() && item.getEstimateIndex() != 0) {
           setText(item.toString());
           circle.setFill(Color.rgb(0, 191, 0));
           setGraphic(circle);
-        }else if (item.getStory().getAcceptanceCriteria().size() > 0 && item.getEstimateIndex() == 0) {
+        } else if (item.getStory().getAcceptanceCriteria().size() > 0 && item.getEstimateIndex() == 0) {
           setText(item.toString());
           circle.setFill(Color.rgb(255, 135, 0));
-          setGraphic(circle);
-        } else if (dependent == true && item.getStory().getStoryState() == true) {
-          setText(item.toString());
-          circle.setFill(Color.RED);
           setGraphic(circle);
         }
         else {
           setText(item.toString());
+          circle.setFill(Color.rgb(0, 0, 0, 0));
+          setGraphic(circle);
         }
         showStatus();
 
@@ -758,7 +753,8 @@ public class BacklogDialogController {
       });
     }
 
-    @Override protected void updateItem(StoryEstimate item, boolean empty) {
+    @Override
+    protected void updateItem(StoryEstimate item, boolean empty) {
       // calling super here is very important - don't skip this!
       super.updateItem(item, empty);
       if (item != null) {
