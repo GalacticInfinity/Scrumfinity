@@ -559,8 +559,18 @@ public class ProjectDialogController {
             !isEmpty()) {
           Team selectedTeam = availableTeamsList.getSelectionModel().getSelectedItem();
           mainApp.showTeamDialogWithinProject(selectedTeam, thisStage);
+          availableTeams.remove(selectedTeam);
+          availableTeams.add(selectedTeam);
         }
       });
+    }
+
+    @Override
+    public void updateItem(Team item, boolean empty) {
+      // calling super here is very important - don't skip this!
+      super.updateItem(item, empty);
+
+      setText(item == null ? "" : item.getLabel());
     }
   }
 }

@@ -537,8 +537,17 @@ public class TeamDialogController {
             !isEmpty()) {
           PersonRole selectedPerson = teamMembersList.getSelectionModel().getSelectedItem();
           mainApp.showPersonDialogWithinTeam(selectedPerson.getPerson(), thisStage);
+          selectedMembers.remove(selectedPerson);
+          selectedMembers.add(selectedPerson);
         }
       });
+    }
+    @Override
+    public void updateItem(PersonRole item, boolean empty) {
+      // calling super here is very important - don't skip this!
+      super.updateItem(item, empty);
+
+      setText(item == null ? "" : item.getPerson().getLabel());
     }
   }
 
@@ -557,8 +566,18 @@ public class TeamDialogController {
             !isEmpty()) {
           Person selectedPerson = availableMembersList.getSelectionModel().getSelectedItem();
           mainApp.showPersonDialogWithinTeam(selectedPerson, thisStage);
+          availableMembers.remove(selectedPerson);
+          availableMembers.add(selectedPerson);
         }
       });
+    }
+
+    @Override
+    public void updateItem(Person item, boolean empty) {
+      // calling super here is very important - don't skip this!
+      super.updateItem(item, empty);
+
+      setText(item == null ? "" : item.getLabel());
     }
   }
 }

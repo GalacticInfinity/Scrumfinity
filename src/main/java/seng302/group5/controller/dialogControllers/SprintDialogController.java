@@ -601,8 +601,18 @@ public class SprintDialogController {
             !isEmpty()) {
           Story selectedStory = availableStoriesList.getSelectionModel().getSelectedItem();
           mainApp.showStoryDialogWithinSprint(selectedStory, thisStage);
+          availableStories.remove(selectedStory);
+          availableStories.add(selectedStory);
         }
       });
+    }
+
+    @Override
+    public void updateItem(Story item, boolean empty) {
+      // calling super here is very important - don't skip this!
+      super.updateItem(item, empty);
+
+      setText(item == null ? "" : item.getLabel());
     }
   }
 
@@ -621,8 +631,18 @@ public class SprintDialogController {
             !isEmpty()) {
           Story selectedStory = allocatedStoriesList.getSelectionModel().getSelectedItem();
           mainApp.showStoryDialogWithinSprint(selectedStory, thisStage);
+          allocatedStories.remove(selectedStory);
+          allocatedStories.add(selectedStory);
         }
       });
+    }
+
+    @Override
+    public void updateItem(Story item, boolean empty) {
+      // calling super here is very important - don't skip this!
+      super.updateItem(item, empty);
+
+      setText(item == null ? "" : item.getLabel());
     }
   }
 }
