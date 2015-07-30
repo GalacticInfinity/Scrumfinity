@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import seng302.group5.model.Person;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
 import seng302.group5.model.Skill;
+import seng302.group5.model.Sprint;
 import seng302.group5.model.Story;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
@@ -28,6 +30,7 @@ import seng302.group5.model.undoredo.UndoRedoObject;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -727,5 +730,67 @@ public class RevertHandlerTest {
     undoRedoObject.addDatum(new Story(story));
 
     undoRedoHandler.newAction(undoRedoObject);
+  }
+
+  @Test
+  public void testSprintRevert() {
+    Project p1 = new Project("p1", "proj1", "its a project");
+    Person pers1 = new Person();
+    pers1.setLabel("pers1");
+    Estimate e1 = new Estimate("test est", Arrays.asList("0", "1", "2", "3"));
+    Backlog b1 = new Backlog("b1", "back1", "Its a backlog", pers1, e1);
+    p1.setBacklog(b1);
+
+    Story s1 = new Story("s1", "story1", "its a story", pers1);
+    Story s2 = new Story("s2", "story2", "its a story", pers1);
+    Story s3 = new Story("s3", "story3", "its a story", pers1);
+    Story s4 = new Story("s4", "story4", "its a story", pers1);
+
+    b1.addStory(s1, 3);
+    b1.addStory(s2, 2);
+    b1.addStory(s3, 0);
+    b1.addStory(s4, 2);
+
+    Team t1 = new Team("t1", "its a team");
+    Release r1 = new Release("r1", "its a release", "to be released", LocalDate.now(), p1);
+    Sprint
+        sprint =
+        new Sprint("s1", "sprint1", "its a sprint", b1, p1, t1, r1, LocalDate.of(1994, 03, 20),
+                   LocalDate.now(), Arrays.asList(s1, s2, s3, s4));
+
+    mainApp.addProject(p1);
+    mainApp.addPerson(pers1);
+    mainApp.addEstimate(e1);
+    mainApp.addBacklog(b1);
+    mainApp.addStory(s1); mainApp.addStory(s2); mainApp.addStory(s3); mainApp.addStory(s4);
+    mainApp.addTeam(t1);
+    mainApp.addRelease(r1);
+    mainApp.addSprint(sprint);
+    mainApp.setLastSaved();
+
+    sprint.setLabel("huehue");
+    sprint.setSprintProject(new Project());
+    sprint.setSprintBacklog(new Backlog());
+    sprint.removeAllStories();
+    sprint.setSprintTeam(new Team());
+
+    mainApp.revert();
+    Sprint revSprint = mainApp.getSprints().get(0);
+    assertNotSame(sprint, revSprint);
+    assertSame(revSprint.getSprintProject(), mainApp.getProjects().get(0));
+    assertSame(revSprint.getSprintBacklog(), mainApp.getBacklogs().get(0));
+    assertSame(revSprint.getSprintTeam(), mainApp.getTeams().get(0));
+    assertSame(revSprint.getSprintRelease(), mainApp.getReleases().get(0));
+    List<Story> mainStories = mainApp.getStories();
+    List<Story> backlogStories = mainApp.getBacklogs().get(0).getStories();
+    List<Story> sprintStories = mainApp.getStories();
+    assertSame(mainStories.get(0), sprintStories.get(0));
+    assertSame(backlogStories.get(0), sprintStories.get(0));
+    assertSame(mainStories.get(1), sprintStories.get(1));
+    assertSame(backlogStories.get(1), sprintStories.get(1));
+    assertSame(mainStories.get(2), sprintStories.get(2));
+    assertSame(backlogStories.get(2), sprintStories.get(2));
+    assertSame(mainStories.get(3), sprintStories.get(3));
+    assertSame(backlogStories.get(3), sprintStories.get(3));
   }
 }
