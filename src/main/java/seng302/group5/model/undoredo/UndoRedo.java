@@ -53,4 +53,9 @@ public interface UndoRedo {
    * @param datum An AgileItem required for undo/redo
    */
   void addDatum(AgileItem datum);
+
+  /**
+   * Return a string detailing the type of action the UndoRedo was created for.
+   */
+  String getActionString();
 }

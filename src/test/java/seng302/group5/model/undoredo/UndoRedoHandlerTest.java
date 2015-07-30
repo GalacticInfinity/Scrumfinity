@@ -618,7 +618,7 @@ public class UndoRedoHandlerTest {
   private void newRelease() {
     releaseLabel = "TheRelease";
     releaseDescription = "The descriptioning";
-    releaseDate = LocalDate.of(1994, Month.JANUARY, 06);
+    releaseDate = LocalDate.of(1994, Month.JANUARY, 6);
     releaseNotes = "Wagga wagga";
     projectRelease = project;
 
@@ -651,7 +651,7 @@ public class UndoRedoHandlerTest {
 
     newReleaseLabel = "NewRelease";
     newReleaseDescription = "The new descriptioning";
-    newReleaseDate = LocalDate.of(1994, Month.JULY, 06);
+    newReleaseDate = LocalDate.of(1994, Month.JULY, 6);
     newReleaseNotes = "New Wagga wagga wagga";
     newProjectRelease = project;
 
@@ -860,7 +860,7 @@ public class UndoRedoHandlerTest {
     undoRedoObject3.addDatum(lastDependantStory3);
     undoRedoObject3.addDatum(newDependantStory3);
 
-    CompositeUndoRedo compositeUndoRedo = new CompositeUndoRedo();
+    CompositeUndoRedo compositeUndoRedo = new CompositeUndoRedo("Edit Story Dependencies");
     compositeUndoRedo.addUndoRedo(undoRedoObject1);
     compositeUndoRedo.addUndoRedo(undoRedoObject2);
     compositeUndoRedo.addUndoRedo(undoRedoObject3);

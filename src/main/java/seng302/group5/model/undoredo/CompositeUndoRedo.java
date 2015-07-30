@@ -16,14 +16,16 @@ public class CompositeUndoRedo implements UndoRedo {
   private AgileItem agileItem;
   private ArrayList<AgileItem> data;
   private List<UndoRedo> undoRedos;
+  private String actionString;
 
   /**
    * Constructor
    */
-  public CompositeUndoRedo() {
+  public CompositeUndoRedo(String actionString) {
     this.action = Action.COMPOSITE;
     this.data = new ArrayList<>();
     this.undoRedos = new ArrayList<>();
+    this.actionString = actionString;
   }
 
   /**
@@ -85,6 +87,14 @@ public class CompositeUndoRedo implements UndoRedo {
   @Override
   public void addDatum(AgileItem datum) {
     this.data.add(datum);
+  }
+
+  /**
+   * Return a string detailing the type of action the UndoRedo was created for.
+   */
+  @Override
+  public String getActionString() {
+    return actionString;
   }
 
   /**

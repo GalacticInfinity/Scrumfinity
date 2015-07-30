@@ -49,4 +49,12 @@ public class UndoRedoObject implements UndoRedo {
   public void addDatum(AgileItem datum) {
     this.data.add(datum);
   }
+
+  /**
+   * Return a string detailing the type of action the UndoRedo was created for.
+   */
+  @Override
+  public String getActionString() {
+    return Action.getActionString(action);
+  }
 }
