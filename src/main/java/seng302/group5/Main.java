@@ -1253,11 +1253,16 @@ public class Main extends Application {
             for (Sprint sprint : deleteSprints) {
               deleteSprint(sprint);
             }
+            // Unassign associated project
             if (backlogProject != null) {
               backlogProject.setBacklog(null);
             }
             deleteBacklog(backlog);
             undoRedoObject = generateDelUndoRedoObject(Action.BACKLOG_DELETE, agileItem);
+            undoRedoObject.addDatum(backlogProject);
+            for (Sprint sprint : deleteSprints) {
+              undoRedoObject.addDatum(sprint);
+            }
             newAction(undoRedoObject);
           }
         }
