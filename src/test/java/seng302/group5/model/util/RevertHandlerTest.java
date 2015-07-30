@@ -5,9 +5,7 @@ import org.junit.Test;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 import javafx.collections.FXCollections;
@@ -30,9 +28,7 @@ import seng302.group5.model.undoredo.UndoRedoObject;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
@@ -256,6 +252,7 @@ public class RevertHandlerTest {
     storyACs.add("FRREEEDOOOMMMMM!!!!!");
 
     story = new Story(storyLabel, storyLongName, storyDescription, storyCreator, storyACs);
+    story.setStoryState(true);
 
     mainApp.addStory(story);
 

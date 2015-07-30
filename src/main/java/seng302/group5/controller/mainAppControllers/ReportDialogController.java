@@ -58,10 +58,14 @@ public class ReportDialogController {
   public void setupController(Main mainApp, Stage thisStage) {
     this.mainApp = mainApp;
     this.thisStage = thisStage;
+
+    thisStage.setTitle("Create Report");
     reportLevelCombo.setItems(reportLevels);
+
     String os = System.getProperty("os.name");
     selectedItemsList.setDisable(true);
     availableItemsList.setDisable(true);
+
     if (!os.startsWith("Windows")) {
       btnContainer.getChildren().remove(saveBtn);
       btnContainer.getChildren().add(saveBtn);

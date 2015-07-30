@@ -289,7 +289,7 @@ public class Main extends Application {
       projectDialogStage.initModality(Modality.APPLICATION_MODAL);
       projectDialogStage.initOwner(primaryStage);
       projectDialogStage.setScene(projectDialogScene);
-      projectDialogStage.show();
+      projectDialogStage.showAndWait();
 
 
     } catch (IOException e) {
@@ -360,7 +360,7 @@ public class Main extends Application {
       teamDialogStage.initModality(Modality.APPLICATION_MODAL);
       teamDialogStage.initOwner(stage);
       teamDialogStage.setScene(teamDialogScene);
-      teamDialogStage.show();
+      teamDialogStage.showAndWait();
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -505,7 +505,7 @@ public class Main extends Application {
       personDialogStage.initModality(Modality.APPLICATION_MODAL);
       personDialogStage.initOwner(stage);
       personDialogStage.setScene(personDialogScene);
-      personDialogStage.show();
+      personDialogStage.showAndWait();
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -572,7 +572,7 @@ public class Main extends Application {
       skillDialogStage.initModality(Modality.APPLICATION_MODAL);
       skillDialogStage.initOwner(stage);
       skillDialogStage.setScene(skillDialogScene);
-      skillDialogStage.show();
+      skillDialogStage.showAndWait();
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -612,7 +612,7 @@ public class Main extends Application {
       storyDialogStage.initModality(Modality.APPLICATION_MODAL);
       storyDialogStage.initOwner(primaryStage);
       storyDialogStage.setScene(storyDialogScene);
-      storyDialogStage.show();
+      storyDialogStage.showAndWait();
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -652,7 +652,6 @@ public class Main extends Application {
       storyDialogStage.initOwner(owner);
       storyDialogStage.setScene(storyDialogScene);
       storyDialogStage.showAndWait();
-
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -753,7 +752,7 @@ public class Main extends Application {
       sprintDialogStage.initModality(Modality.APPLICATION_MODAL);
       sprintDialogStage.initOwner(primaryStage);
       sprintDialogStage.setScene(sprintDialogScene);
-      sprintDialogStage.show();
+      sprintDialogStage.showAndWait();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -806,7 +805,7 @@ public class Main extends Application {
    *
    * @param undoRedoObject Action to store
    */
-  public void newAction(UndoRedoObject undoRedoObject) {
+  public void newAction(UndoRedo undoRedoObject) {
     undoRedoHandler.newAction(undoRedoObject);
     toggleName();
     checkUndoRedoMenuItems();

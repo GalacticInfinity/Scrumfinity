@@ -30,9 +30,6 @@
                <padding>
                   <Insets left="10.0" />
                </padding>
-         <children>
-            <ScrollBar orientation="VERTICAL" prefHeight="31.0" prefWidth="14.0" />
-         </children>
             </TextFlow>
          </content>
       </ScrollPane>

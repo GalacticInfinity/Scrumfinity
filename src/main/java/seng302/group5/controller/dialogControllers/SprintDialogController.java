@@ -4,15 +4,18 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.IdentityHashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -60,7 +63,7 @@ public class SprintDialogController {
   @FXML private HBox btnContainer;
   @FXML private Button btnConfirm;
   @FXML private Button btnCancel;
-
+  @FXML private Label releaseDate;
   private Main mainApp;
   private Stage thisStage;
 
@@ -78,6 +81,8 @@ public class SprintDialogController {
 
   private Map<Backlog, Project> projectMap;
   private Set<Story> allocatedStories;   // use to maintain priority order
+
+  private boolean comboListenerFlag;
 
   /**
    * Sets up the controller on start up.
@@ -123,6 +128,7 @@ public class SprintDialogController {
       sprintBacklogCombo.getSelectionModel().select(sprint.getSprintBacklog()); // Updates Project
       sprintTeamCombo.getSelectionModel().select(sprint.getSprintTeam());
       sprintReleaseCombo.getSelectionModel().select(sprint.getSprintRelease());
+      releaseDate.setText(sprint.getSprintRelease().getReleaseDate().toString());
       sprintStartDate.setValue(sprint.getSprintStart());
       sprintEndDate.setValue(sprint.getSprintEnd());
       allocatedStories.addAll(sprint.getSprintStories());
@@ -172,6 +178,18 @@ public class SprintDialogController {
         checkButtonDisabled();
       }
     });
+    sprintReleaseCombo.getSelectionModel().selectedItemProperty()
+        .addListener((observable, oldValue, newValue) -> {
+                       String dateFormat = "dd/MM/yyy";
+                       if (sprintReleaseCombo.getSelectionModel().getSelectedItem() != null &&
+                           sprintReleaseCombo.getSelectionModel().getSelectedItem().getReleaseDate()
+                           != null) {
+                         releaseDate.setText(sprintReleaseCombo.getSelectionModel()
+                                                 .getSelectedItem().getReleaseDate().
+                                 format(DateTimeFormatter.ofPattern(dateFormat)).toString());
+                       }
+                     }
+        );
     sprintReleaseCombo.valueProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
       if (createOrEdit == CreateOrEdit.EDIT) {
@@ -254,6 +272,13 @@ public class SprintDialogController {
 
     sprintBacklogCombo.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldBacklog, newBacklog) -> {
+
+          if (comboListenerFlag) {
+            // Get out instantly after resetting flag to false
+            comboListenerFlag = false;
+            return;
+          }
+
           // if the backlog is assigned to a project
           if (projectMap.containsKey(newBacklog)) {
             project = projectMap.get(newBacklog);
@@ -279,16 +304,37 @@ public class SprintDialogController {
             allocatedStories.clear();
             refreshLists();
           } else {
-            // todo dialog for confirming change
-            project = null;
-            sprintProjectLabel.setText("No Project Found");
-            sprintTeamCombo.setValue(null);
-            sprintReleaseCombo.setValue(null);
-            sprintTeamCombo.setDisable(true);
-            sprintReleaseCombo.setDisable(true);
-            availableStories.clear();
-            allocatedStoriesPrioritised.clear();
-            allocatedStories.clear();
+            if (oldBacklog != null) {
+              Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+              alert.setTitle("Chosen backlog is not complete");
+              alert.setHeaderText(null);
+              String
+                  message =
+                  String.format(
+                      "The backlog you have selected does not contain all the required information to be able to create a sprint.\n"
+                      + "Do you want to continue?");
+              alert.getDialogPane().setPrefHeight(120);
+              alert.setContentText(message);
+              //checks response
+              Optional<ButtonType> result = alert.showAndWait();
+              if (result.get() == ButtonType.OK) {
+                project = null;
+                sprintProjectLabel.setText("No Project Found");
+                sprintTeamCombo.setValue(null);
+                sprintReleaseCombo.setValue(null);
+                sprintTeamCombo.setDisable(true);
+                sprintReleaseCombo.setDisable(true);
+                availableStories.clear();
+                allocatedStoriesPrioritised.clear();
+                allocatedStories.clear();
+              } else {
+                comboListenerFlag = true;
+                Platform.runLater(() -> {
+                  // to avoid firing the listener from within itself
+                  sprintBacklogCombo.setValue(oldBacklog);
+                });
+              }
+            }
           }
         });
     setupListView();
@@ -304,11 +350,13 @@ public class SprintDialogController {
   protected void btnAddSprintClick(ActionEvent event) {
     Story selectedStory = availableStoriesList.getSelectionModel().getSelectedItem();
     if (selectedStory != null) {
+      int selectedIndex = availableStoriesList.getSelectionModel().getSelectedIndex();
       allocatedStories.add(selectedStory);
       refreshLists();
       allocatedStoriesList.getSelectionModel().select(selectedStory);
       if (!availableStories.isEmpty()) {
-        availableStoriesList.getSelectionModel().select(0);
+        availableStoriesList.getSelectionModel().select(
+            Math.min(selectedIndex, availableStoriesList.getItems().size() - 1));
       }
       if (createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
@@ -326,11 +374,13 @@ public class SprintDialogController {
   protected void btnRemoveSprintClick(ActionEvent event) {
     Story selectedStory = allocatedStoriesList.getSelectionModel().getSelectedItem();
     if (selectedStory != null) {
+      int selectedIndex = allocatedStoriesList.getSelectionModel().getSelectedIndex();
       allocatedStories.remove(selectedStory);
       refreshLists();
       availableStoriesList.getSelectionModel().select(selectedStory);
       if (!allocatedStoriesPrioritised.isEmpty()) {
-        allocatedStoriesList.getSelectionModel().select(0);
+        allocatedStoriesList.getSelectionModel().select(
+            Math.min(selectedIndex, allocatedStoriesList.getItems().size() - 1));
       }
       if (createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
@@ -601,8 +651,18 @@ public class SprintDialogController {
             !isEmpty()) {
           Story selectedStory = availableStoriesList.getSelectionModel().getSelectedItem();
           mainApp.showStoryDialogWithinSprint(selectedStory, thisStage);
+          availableStories.remove(selectedStory);
+          availableStories.add(selectedStory);
         }
       });
+    }
+
+    @Override
+    public void updateItem(Story item, boolean empty) {
+      // calling super here is very important - don't skip this!
+      super.updateItem(item, empty);
+
+      setText(item == null ? "" : item.getLabel());
     }
   }
 
@@ -621,8 +681,18 @@ public class SprintDialogController {
             !isEmpty()) {
           Story selectedStory = allocatedStoriesList.getSelectionModel().getSelectedItem();
           mainApp.showStoryDialogWithinSprint(selectedStory, thisStage);
+          allocatedStories.remove(selectedStory);
+          allocatedStories.add(selectedStory);
         }
       });
+    }
+
+    @Override
+    public void updateItem(Story item, boolean empty) {
+      // calling super here is very important - don't skip this!
+      super.updateItem(item, empty);
+
+      setText(item == null ? "" : item.getLabel());
     }
   }
 }
