@@ -289,7 +289,7 @@ public class Main extends Application {
       projectDialogStage.initModality(Modality.APPLICATION_MODAL);
       projectDialogStage.initOwner(primaryStage);
       projectDialogStage.setScene(projectDialogScene);
-      projectDialogStage.show();
+      projectDialogStage.showAndWait();
 
 
     } catch (IOException e) {
@@ -360,7 +360,7 @@ public class Main extends Application {
       teamDialogStage.initModality(Modality.APPLICATION_MODAL);
       teamDialogStage.initOwner(stage);
       teamDialogStage.setScene(teamDialogScene);
-      teamDialogStage.show();
+      teamDialogStage.showAndWait();
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -505,7 +505,7 @@ public class Main extends Application {
       personDialogStage.initModality(Modality.APPLICATION_MODAL);
       personDialogStage.initOwner(stage);
       personDialogStage.setScene(personDialogScene);
-      personDialogStage.show();
+      personDialogStage.showAndWait();
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -572,7 +572,7 @@ public class Main extends Application {
       skillDialogStage.initModality(Modality.APPLICATION_MODAL);
       skillDialogStage.initOwner(stage);
       skillDialogStage.setScene(skillDialogScene);
-      skillDialogStage.show();
+      skillDialogStage.showAndWait();
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -612,7 +612,7 @@ public class Main extends Application {
       storyDialogStage.initModality(Modality.APPLICATION_MODAL);
       storyDialogStage.initOwner(primaryStage);
       storyDialogStage.setScene(storyDialogScene);
-      storyDialogStage.show();
+      storyDialogStage.showAndWait();
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -652,7 +652,6 @@ public class Main extends Application {
       storyDialogStage.initOwner(owner);
       storyDialogStage.setScene(storyDialogScene);
       storyDialogStage.showAndWait();
-
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -663,8 +662,10 @@ public class Main extends Application {
    *
    * @param story the person that you wanted to view or edit information with
    * @param stage the stage it is currently on to void unusual behaviour
+   * @param fromAllocated whether or not the stage is called from the allocated stories list
+   *                      or the available stories list. (Affects the readiness checkbox).
    */
-  public void showStoryDialogWithinSprint(Story story, Stage stage) {
+  public void showStoryDialogWithinSprint(Story story, Stage stage, boolean fromAllocated) {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/StoryDialog.fxml"));
@@ -675,6 +676,7 @@ public class Main extends Application {
       Stage storyDialogStage = new Stage();
 
       controller.setupController(this, storyDialogStage, CreateOrEdit.EDIT, story);
+      controller.setCheckboxState(fromAllocated);
 
       storyDialogStage.initModality(Modality.APPLICATION_MODAL);
       storyDialogStage.initOwner(stage);
@@ -753,7 +755,7 @@ public class Main extends Application {
       sprintDialogStage.initModality(Modality.APPLICATION_MODAL);
       sprintDialogStage.initOwner(primaryStage);
       sprintDialogStage.setScene(sprintDialogScene);
-      sprintDialogStage.show();
+      sprintDialogStage.showAndWait();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -806,7 +808,7 @@ public class Main extends Application {
    *
    * @param undoRedoObject Action to store
    */
-  public void newAction(UndoRedoObject undoRedoObject) {
+  public void newAction(UndoRedo undoRedoObject) {
     undoRedoHandler.newAction(undoRedoObject);
     toggleName();
     checkUndoRedoMenuItems();
@@ -910,7 +912,7 @@ public class Main extends Application {
   }
 
   /**
-   * Delete a backlog from the list of backlogs.
+   * Delete a sprint from the list of sprints.
    *
    * @param inputSprint Backlog to be deleted.
    */
@@ -1185,28 +1187,74 @@ public class Main extends Application {
           alert.setTitle("Backlog contains stories");
           alert.setHeaderText(null);
 
-          int messageLength = 1;
+          int messageLength = 2;
           String message = String.format("Are you sure you want to delete backlog '%s' and "
-                                         + "its associated stories:\n\n",
+                                         + "its associated items:\n\n",
                                          backlog.getLabel());
+          message += "Stories:\n";
           for (Story blStory : backlog.getStories()) {
             messageLength++;
             if (blStory.getStoryName().equals("")) {
-              message += String.format("%s - [No name]\n",
+              message += String.format("\t%s - [No name]\n",
                                        blStory.getLabel());
             } else {
-              message += String.format("%s - %s\n",
+              message += String.format("\t%s - %s\n",
                                        blStory.getLabel(),
                                        blStory.getStoryName());
             }
           }
-          alert.getDialogPane().setPrefHeight(60 + 30 * messageLength);
+          // Finding all sprints associated with backlog
+          List<Sprint> deleteSprints = new ArrayList<>();
+          for (Sprint blSprint : getSprints()) {
+            if (blSprint.getSprintBacklog().equals(backlog)) {
+              deleteSprints.add(blSprint);
+            }
+          }
+          // Extending message
+          if (!deleteSprints.isEmpty()) {
+            messageLength ++;
+            message += "Sprints:\n";
+            for (Sprint sprintDelete : deleteSprints) {
+              messageLength++;
+              if (sprintDelete.getSprintFullName().equals("")) {
+                message += String.format("\t%s - [No name]\n",
+                                         sprintDelete.getLabel());
+              } else {
+                message += String.format("\t%s - %s\n",
+                                         sprintDelete.getLabel(),
+                                         sprintDelete.getSprintFullName());
+              }
+            }
+          }
+          // Finding proj associated with backlog
+          Project backlogProject = null;
+          for (Project backProj : getProjects()) {
+            if (backProj.getBacklog() != null && backProj.getBacklog().equals(backlog)){
+              backlogProject = backProj;
+              break;
+            }
+          }
+          // Extending message
+          if (backlogProject != null) {
+            messageLength++;
+            message += String.format("Will unassign from Project: %s", backlogProject.getLabel());
+          }
+
+          alert.setResizable(true);
+          alert.getDialogPane().setPrefHeight(80 + 30 * messageLength);
           alert.setContentText(message);
 
           Optional<ButtonType> result = alert.showAndWait();
           if (result.get() == ButtonType.OK) {
             for (Story blstory : backlog.getStories()) {
               deleteStory(blstory);
+            }
+            // Deleting associated sprints
+            for (Sprint sprint : deleteSprints) {
+              deleteSprint(sprint);
+            }
+            if (backlogProject != null) {
+              backlogProject.setBacklog(null);
             }
             deleteBacklog(backlog);
             undoRedoObject = generateDelUndoRedoObject(Action.BACKLOG_DELETE, agileItem);

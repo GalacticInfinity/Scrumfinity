@@ -378,8 +378,9 @@ public class MenuBarController {
     alert.setTitle("Are you sure?!");
     alert.setHeaderText(null);
 
-    String message = "This cannot be undone! Are you sure you want to do this? We suggest doing a \"Save as..\" first!";
-    alert.getDialogPane().setPrefHeight(100);
+    String message = "This cannot be undone! Are you sure you want to do this?\nWe suggest doing a \"Save as..\" first!";
+    alert.setResizable(true);
+    alert.getDialogPane().setPrefHeight(150);
     alert.setContentText(message);
 
     ButtonType buttonTypeSaveAs = new ButtonType("Save as then revert");

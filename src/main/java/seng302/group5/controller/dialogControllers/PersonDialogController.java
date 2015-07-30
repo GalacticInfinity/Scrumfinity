@@ -387,8 +387,18 @@ public class PersonDialogController {
             !isEmpty()) {
           Skill selectedSkill = skillsList.getSelectionModel().getSelectedItem();
           mainApp.showSkillDialogWithinPerson(selectedSkill, thisStage);
+          availableSkills.remove(selectedSkill);
+          availableSkills.add(selectedSkill);
         }
       });
+    }
+
+    @Override
+    public void updateItem(Skill item, boolean empty) {
+      // calling super here is very important - don't skip this!
+      super.updateItem(item, empty);
+
+      setText(item == null ? "" : item.getLabel());
     }
   }
 
@@ -407,8 +417,18 @@ public class PersonDialogController {
             !isEmpty()) {
           Skill selectedSkill = personSkillList.getSelectionModel().getSelectedItem();
           mainApp.showSkillDialogWithinPerson(selectedSkill, thisStage);
+          selectedSkills.remove(selectedSkill);
+          selectedSkills.add(selectedSkill);
         }
       });
+    }
+
+    @Override
+    public void updateItem(Skill item, boolean empty) {
+      // calling super here is very important - don't skip this!
+      super.updateItem(item, empty);
+
+      setText(item == null ? "" : item.getLabel());
     }
   }
 }

@@ -347,7 +347,7 @@ public class SprintDialogController {
    * @param event Action event
    */
   @FXML
-  protected void btnAddSprintClick(ActionEvent event) {
+  protected void btnAddStoryClick(ActionEvent event) {
     Story selectedStory = availableStoriesList.getSelectionModel().getSelectedItem();
     if (selectedStory != null) {
       int selectedIndex = availableStoriesList.getSelectionModel().getSelectedIndex();
@@ -371,7 +371,7 @@ public class SprintDialogController {
    * @param event Action event
    */
   @FXML
-  protected void btnRemoveSprintClick(ActionEvent event) {
+  protected void btnRemoveStoryClick(ActionEvent event) {
     Story selectedStory = allocatedStoriesList.getSelectionModel().getSelectedItem();
     if (selectedStory != null) {
       int selectedIndex = allocatedStoriesList.getSelectionModel().getSelectedIndex();
@@ -403,7 +403,9 @@ public class SprintDialogController {
       if (allocatedStories.contains(story)) {
         allocatedStoriesPrioritised.add(story);
       } else {
-        availableStories.add(story);
+        if (story.getStoryState()) {
+          availableStories.add(story);
+        }
       }
     }
   }
@@ -650,9 +652,19 @@ public class SprintDialogController {
             click.getButton() == MouseButton.PRIMARY &&
             !isEmpty()) {
           Story selectedStory = availableStoriesList.getSelectionModel().getSelectedItem();
-          mainApp.showStoryDialogWithinSprint(selectedStory, thisStage);
+          //Tells the controller not to disable the readiness checkbox.
+          mainApp.showStoryDialogWithinSprint(selectedStory, thisStage, false);
+          refreshLists();
         }
       });
+    }
+
+    @Override
+    public void updateItem(Story item, boolean empty) {
+      // calling super here is very important - don't skip this!
+      super.updateItem(item, empty);
+
+      setText(item == null ? "" : item.getLabel());
     }
   }
 
@@ -670,9 +682,19 @@ public class SprintDialogController {
             click.getButton() == MouseButton.PRIMARY &&
             !isEmpty()) {
           Story selectedStory = allocatedStoriesList.getSelectionModel().getSelectedItem();
-          mainApp.showStoryDialogWithinSprint(selectedStory, thisStage);
+          //Tells the controller to disable the readiness checkbox.
+          mainApp.showStoryDialogWithinSprint(selectedStory, thisStage, true);
+          refreshLists();
         }
       });
+    }
+
+    @Override
+    public void updateItem(Story item, boolean empty) {
+      // calling super here is very important - don't skip this!
+      super.updateItem(item, empty);
+
+      setText(item == null ? "" : item.getLabel());
     }
   }
 }

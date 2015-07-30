@@ -22,6 +22,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -371,6 +372,8 @@ public class BacklogDialogController {
     } catch (Exception e) {
       e.printStackTrace();
     }
+
+    setupListView();
   }
 
   /**
@@ -796,7 +799,8 @@ public class BacklogDialogController {
       super.updateItem(item, empty);
       if (item != null) {
         setText(item.toString());
-      }}
+      }
+    }
   }
 
   /**
@@ -862,6 +866,44 @@ public class BacklogDialogController {
     @Override
     public String toString() {
       return story.toString() + "  -  " + estimate;
+    }
+  }
+
+  /**
+   * Sets the custom behaviour for the available stories ListView.
+   */
+  private void setupListView() {
+    //Sets the cell being populated with custom settings defined in the ListViewCell class.
+    this.availableStoriesList.setCellFactory(listView -> new AvailableStoriesListViewCell());
+  }
+
+  /**
+   * Allows us to override a ListViewCell - a single cell in a ListView.
+   */
+  private class AvailableStoriesListViewCell extends TextFieldListCell<Story> {
+
+    public AvailableStoriesListViewCell() {
+      super();
+
+      // double click for editing
+      this.setOnMouseClicked(click -> {
+        if (click.getClickCount() == 2 &&
+            click.getButton() == MouseButton.PRIMARY &&
+            !isEmpty()) {
+          Story selectedStory = availableStoriesList.getSelectionModel().getSelectedItem();
+          mainApp.showStoryDialogWithinBacklog(CreateOrEdit.EDIT, selectedStory, thisStage);
+          availableStories.remove(selectedStory);
+          availableStories.add(selectedStory);
+        }
+      });
+    }
+
+    @Override
+    public void updateItem(Story item, boolean empty) {
+      // calling super here is very important - don't skip this!
+      super.updateItem(item, empty);
+
+      setText(item == null ? "" : item.getLabel());
     }
   }
 }

@@ -17,6 +17,7 @@ import seng302.group5.model.Project;
 import seng302.group5.model.Release;
 import seng302.group5.model.Role;
 import seng302.group5.model.Skill;
+import seng302.group5.model.Sprint;
 import seng302.group5.model.Story;
 import seng302.group5.model.Team;
 
@@ -36,6 +37,7 @@ public class RevertHandler {
   private ObservableList<Story> storiesLastSaved;
   private ObservableList<Backlog> backlogsLastSaved;
   private ObservableList<Estimate> estimatesLastSaved;
+  private ObservableList<Sprint> sprintsLastSaved;
 
   /**
    * Constructor. Set the main app to communicate with and initialise lists
@@ -53,15 +55,16 @@ public class RevertHandler {
     this.storiesLastSaved = FXCollections.observableArrayList();
     this.backlogsLastSaved = FXCollections.observableArrayList();
     this.estimatesLastSaved = FXCollections.observableArrayList();
+    this.sprintsLastSaved = FXCollections.observableArrayList();
   }
 
 
   /**
-   * Used when the revert button is pushed.
-   * It undoes until it is in the previously saved state. IT then clears the undo and redo stacks
+   * Used when the revert button is pushed. It undoes until it is in the previously saved state. IT
+   * then clears the undo and redo stacks
    */
   public void revert() {
-    for (Project project : projectsLastSaved){
+    for (Project project : projectsLastSaved) {
       mainApp.addProject(new Project(project));
     }
 
@@ -77,7 +80,7 @@ public class RevertHandler {
       mainApp.addSkill(new Skill(skill));
     }
 
-    for (Release release: releasesLastSaved) {
+    for (Release release : releasesLastSaved) {
       mainApp.addRelease(new Release(release));
     }
 
@@ -97,6 +100,10 @@ public class RevertHandler {
       mainApp.addEstimate(new Estimate(estimate));
     }
 
+    for (Sprint sprint : sprintsLastSaved) {
+      mainApp.addSprint(new Sprint(sprint));
+    }
+
     // Ensure data in main refer to each other
     syncPeopleWithSkills(mainApp.getPeople(), mainApp.getSkills());
     syncTeamsWithPeople(mainApp.getTeams(), mainApp.getPeople(), mainApp.getRoles());
@@ -108,14 +115,19 @@ public class RevertHandler {
     syncBacklogsWithEstimates(mainApp.getBacklogs(), mainApp.getEstimates());
     syncProjectsWithBacklogs(mainApp.getProjects(), mainApp.getBacklogs());
     syncStoriesWithDependencies(mainApp.getStories());
+    syncSprintsWithBacklogs(mainApp.getSprints(), mainApp.getBacklogs());
+    syncSprintsWithProjects(mainApp.getSprints(), mainApp.getProjects());
+    syncSprintsWithTeams(mainApp.getSprints(), mainApp.getTeams());
+    syncSprintsWithReleases(mainApp.getSprints(), mainApp.getReleases());
+    syncSprintsWithStories(mainApp.getSprints(), mainApp.getStories());
 
     mainApp.refreshLastSaved();
     mainApp.refreshList(null);
   }
 
   /**
-   * Makes the last saved lists copy the current state list.
-   * used when saving so that a revert maybe done.
+   * Makes the last saved lists copy the current state list. used when saving so that a revert maybe
+   * done.
    */
   public void setLastSaved() {
 
@@ -164,6 +176,11 @@ public class RevertHandler {
       estimatesLastSaved.add(new Estimate(estimate));
     }
 
+    sprintsLastSaved.clear();
+    for (Sprint sprint : mainApp.getSprints()) {
+      sprintsLastSaved.addAll(new Sprint(sprint));
+    }
+
     // Ensure data in the copies refer to each other
     syncPeopleWithSkills(peopleLastSaved, skillsLastSaved);
     syncTeamsWithPeople(teamsLastSaved, peopleLastSaved, rolesLastSaved);
@@ -175,6 +192,11 @@ public class RevertHandler {
     syncBacklogsWithEstimates(backlogsLastSaved, estimatesLastSaved);
     syncProjectsWithBacklogs(projectsLastSaved, backlogsLastSaved);
     syncStoriesWithDependencies(storiesLastSaved);
+    syncSprintsWithBacklogs(sprintsLastSaved, backlogsLastSaved);
+    syncSprintsWithProjects(sprintsLastSaved, projectsLastSaved);
+    syncSprintsWithTeams(sprintsLastSaved, teamsLastSaved);
+    syncSprintsWithReleases(sprintsLastSaved, releasesLastSaved);
+    syncSprintsWithStories(sprintsLastSaved, storiesLastSaved);
   }
 
   /**
@@ -205,9 +227,9 @@ public class RevertHandler {
   /**
    * Creates concurrency between people in main app and people in teams.
    *
-   * @param teams Reference Team objects to link together
+   * @param teams  Reference Team objects to link together
    * @param people Reference Person objects to link together
-   * @param roles Reference Role objects to link together
+   * @param roles  Reference Role objects to link together
    */
   private void syncTeamsWithPeople(List<Team> teams, List<Person> people, List<Role> roles) {
     Map<String, Person> personMap = new HashMap<>();
@@ -248,7 +270,7 @@ public class RevertHandler {
    * Creates proper object reference between projects and skills.
    *
    * @param projects Reference Project objects to link together
-   * @param teams Reference Team objects to link together
+   * @param teams    Reference Team objects to link together
    */
   private void syncProjectsWithTeams(List<Project> projects, List<Team> teams) {
     Map<String, Team> teamMap = new HashMap<>();
@@ -298,7 +320,7 @@ public class RevertHandler {
   /**
    * Creates proper object reference between roles and required skills.
    *
-   * @param roles Reference Role objects to link together
+   * @param roles  Reference Role objects to link together
    * @param skills Reference Skill objects to link together
    */
   private void syncRolesWithSkills(List<Role> roles, List<Skill> skills) {
@@ -322,7 +344,7 @@ public class RevertHandler {
    * Creates the proper reference to the Person object (Creator) related to the story.
    *
    * @param stories Reference story objects to link to the person
-   * @param people Reference person object to link to the story
+   * @param people  Reference person object to link to the story
    */
   private void syncStoriesWithPeople(List<Story> stories, List<Person> people) {
     Map<String, Person> personMap = new HashMap<>();
@@ -343,7 +365,7 @@ public class RevertHandler {
    * Creates the proper reference to the Story objects related to the backlog
    *
    * @param backlogs Reference backlog objects to link the story
-   * @param stories Reference story object to link the backlog
+   * @param stories  Reference story object to link the backlog
    */
   private void syncBacklogsWithStories(List<Backlog> backlogs, List<Story> stories) {
     Map<String, Story> storyMap = new HashMap<>();
@@ -373,7 +395,7 @@ public class RevertHandler {
   /**
    * Creates the proper reference to the Estimate objects in the Backlog
    *
-   * @param backlogs Reference backlog objects
+   * @param backlogs  Reference backlog objects
    * @param estimates Reference estimate objects
    */
   private void syncBacklogsWithEstimates(List<Backlog> backlogs, List<Estimate> estimates) {
@@ -406,8 +428,8 @@ public class RevertHandler {
     String backlogLabel;
     for (Project project : projects) {
       if (project.getBacklog() != null) {
-      backlogLabel = project.getBacklog().getLabel();
-      project.setBacklog(backlogMap.get(backlogLabel));
+        backlogLabel = project.getBacklog().getLabel();
+        project.setBacklog(backlogMap.get(backlogLabel));
       }
     }
   }
@@ -432,6 +454,111 @@ public class RevertHandler {
       }
       story.removeAllDependencies();
       story.addAllDependencies(tempList);
+    }
+  }
+
+  /**
+   * Creates proper references between the Backlog inside the Sprint object and mainApp backlog
+   *
+   * @param sprints List of mainApp sprints
+   * @param backlogs List of mainApp backlogs (correct references)
+   */
+  public void syncSprintsWithBacklogs(List<Sprint> sprints, List<Backlog> backlogs) {
+    Map<String, Backlog> backlogMap = new IdentityHashMap<>();
+
+    for (Backlog mainBacklog : backlogs) {
+      backlogMap.put(mainBacklog.getLabel(), mainBacklog);
+    }
+
+    String backlogLabel;
+    for (Sprint sprint : sprints) {
+      backlogLabel = sprint.getSprintBacklog().getLabel();
+      sprint.setSprintBacklog(backlogMap.get(backlogLabel));
+    }
+  }
+
+
+  /**
+   * Creates proper references between the Project inside the Sprint object and mainApp Project
+   *
+   * @param sprints List of mainApp sprints
+   * @param projects List of mainApp projects (correct references)
+   */
+  public void syncSprintsWithProjects(List<Sprint> sprints, List<Project> projects) {
+    Map<String, Project> projectMap = new IdentityHashMap<>();
+
+    for (Project mainProject : projects) {
+      projectMap.put(mainProject.getLabel(), mainProject);
+    }
+
+    String projectLabel;
+    for (Sprint sprint : sprints) {
+      projectLabel = sprint.getSprintProject().getLabel();
+      sprint.setSprintProject(projectMap.get(projectLabel));
+    }
+  };
+
+  /**
+   * Creates proper references between the Team inside the Sprint object and mainApp Team
+   *
+   * @param sprints List of mainApp sprints
+   * @param teams List of mainApp teams (correct references)
+   */
+  public void syncSprintsWithTeams(List<Sprint> sprints, List<Team> teams) {
+    Map<String, Team> teamMap = new IdentityHashMap<>();
+
+    for (Team mainTeam : teams) {
+      teamMap.put(mainTeam.getLabel(), mainTeam);
+    }
+
+    String teamLabel;
+    for (Sprint sprint : sprints) {
+      teamLabel = sprint.getSprintTeam().getLabel();
+      sprint.setSprintTeam(teamMap.get(teamLabel));
+    }
+  };
+
+  /**
+   * Creates proper references between the Release inside the Sprint object and mainApp Release
+   *
+   * @param sprints List of mainApp sprints
+   * @param releases List of mainApp releases (correct references)
+   */
+  public void syncSprintsWithReleases(List<Sprint> sprints, List<Release> releases) {
+    Map<String, Release> releaseMap = new IdentityHashMap<>();
+
+    for (Release mainRelease : releases) {
+      releaseMap.put(mainRelease.getLabel(), mainRelease);
+    }
+
+    String releaseLabel;
+    for (Sprint sprint : sprints) {
+      releaseLabel = sprint.getSprintRelease().getLabel();
+      sprint.setSprintRelease(releaseMap.get(releaseLabel));
+    }
+  };
+
+  /**
+   * Creates proper references between the Stories inside the Sprint object and mainApp Stories
+   *
+   * @param sprints List of mainApp sprints
+   * @param stories List of mainApp releases (correct references)
+   */
+  public void syncSprintsWithStories(List<Sprint> sprints, List<Story> stories) {
+    Map<String, Story> storyMap = new IdentityHashMap<>();
+
+    for (Story mainStory : stories) {
+      storyMap.put(mainStory.getLabel(), mainStory);
+    }
+
+    List<Story> tempList;
+    for (Sprint sprint : sprints) {
+      tempList = new ArrayList<>();
+      for (Story depStory : sprint.getSprintStories()) {
+        tempList.add(storyMap.get(depStory.getLabel()));
+      }
+      sprint.removeAllStories();
+      sprint.addAllStories(tempList);
     }
   }
 }
