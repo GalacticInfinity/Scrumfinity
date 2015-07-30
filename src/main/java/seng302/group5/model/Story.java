@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.List;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 
 /**
@@ -82,13 +81,13 @@ public class Story implements AgileItem, Comparable<Story> {
   }
 
   /**
-   * Consructor for all fields.
-   * @param label
-   * @param storyName
-   * @param description
-   * @param creator
-   * @param acceptanceCriteria
-   * @param dependencies
+   * Constructor for all fields.
+   * @param label               Unique none-null id of the story.
+   * @param storyName           A full name for this story.
+   * @param description         A full description for this story.
+   * @param creator             The owner of the story, who physically created it in the first place.
+   * @param acceptanceCriteria  List of acceptance criteria of the story.
+   * @param dependencies        List of stories that this story depends on.
    */
   public Story(String label, String storyName, String description, Person creator,
                ObservableList<String> acceptanceCriteria, List<Story> dependencies) {

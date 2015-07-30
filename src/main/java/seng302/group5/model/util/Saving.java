@@ -393,13 +393,7 @@ public class Saving {
     for (Sprint sprint : this.sprints) {
       saveFile.write("\t<Sprint>\n");
       saveFile.write("\t\t<sprintLabel>" + sprint.getLabel() + "</sprintLabel>\n");
-      if (sprint.getSprintDescription() != null && !sprint.getSprintDescription().equals("")) {
-        saveFile.write("\t\t<sprintDescription>" + sprint.getSprintDescription() +
-                       "</sprintDescription>\n");
-      }
-      if (sprint.getSprintFullName() != null && !sprint.getSprintFullName().equals("")) {
-        saveFile.write("\t\t<sprintName>" + sprint.getSprintFullName() + "</sprintName>\n");
-      }
+
       if (sprint.getSprintTeam() != null && !sprint.getSprintTeam().getLabel().equals("")) {
         saveFile.write("\t\t<sprintTeam>" + sprint.getSprintTeam() + "</sprintTeam>\n");
       }
@@ -417,6 +411,13 @@ public class Saving {
       }
       if (sprint.getSprintEnd() != null && !sprint.getSprintEnd().toString().equals("")) {
         saveFile.write("\t\t<sprintEnd>" + sprint.getSprintEnd() + "</sprintEnd>\n");
+      }
+      if (sprint.getSprintDescription() != null && !sprint.getSprintDescription().equals("")) {
+        saveFile.write("\t\t<sprintDescription>" + sprint.getSprintDescription() +
+                       "</sprintDescription>\n");
+      }
+      if (sprint.getSprintFullName() != null && !sprint.getSprintFullName().equals("")) {
+        saveFile.write("\t\t<sprintName>" + sprint.getSprintFullName() + "</sprintName>\n");
       }
       if (sprint.getSprintStories() != null && !sprint.getSprintStories().isEmpty()) {
         saveFile.write("\t\t<sprintStories>\n");
