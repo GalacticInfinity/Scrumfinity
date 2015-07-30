@@ -1,6 +1,7 @@
 package seng302.group5.controller.dialogControllers;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -336,11 +337,13 @@ public class SprintDialogController {
   protected void btnAddSprintClick(ActionEvent event) {
     Story selectedStory = availableStoriesList.getSelectionModel().getSelectedItem();
     if (selectedStory != null) {
+      int selectedIndex = availableStoriesList.getSelectionModel().getSelectedIndex();
       allocatedStories.add(selectedStory);
       refreshLists();
       allocatedStoriesList.getSelectionModel().select(selectedStory);
       if (!availableStories.isEmpty()) {
-        availableStoriesList.getSelectionModel().select(0);
+        availableStoriesList.getSelectionModel().select(
+            Math.min(selectedIndex, availableStoriesList.getItems().size() - 1));
       }
       if (createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
@@ -358,11 +361,13 @@ public class SprintDialogController {
   protected void btnRemoveSprintClick(ActionEvent event) {
     Story selectedStory = allocatedStoriesList.getSelectionModel().getSelectedItem();
     if (selectedStory != null) {
+      int selectedIndex = allocatedStoriesList.getSelectionModel().getSelectedIndex();
       allocatedStories.remove(selectedStory);
       refreshLists();
       availableStoriesList.getSelectionModel().select(selectedStory);
       if (!allocatedStoriesPrioritised.isEmpty()) {
-        allocatedStoriesList.getSelectionModel().select(0);
+        allocatedStoriesList.getSelectionModel().select(
+            Math.min(selectedIndex, allocatedStoriesList.getItems().size() - 1));
       }
       if (createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
@@ -574,7 +579,9 @@ public class SprintDialogController {
     if (startDate == null) {
       throw new Exception("No start date selected");
     } else if (release != null && startDate.isAfter(release.getReleaseDate())) {
-      throw new Exception("Start date must be before release date");
+      String dateFormat = "dd/MM/yyy";
+      String releaseDate = release.getReleaseDate().format(DateTimeFormatter.ofPattern(dateFormat));
+      throw new Exception("Start date must be before release date - " + releaseDate);
     }
     return startDate;
   }
@@ -599,7 +606,9 @@ public class SprintDialogController {
       if (afterReleaseDate && beforeStartDate) {
         throw new Exception("End date must be before release date and after start date");
       } else if (afterReleaseDate) {
-        throw new Exception("End date must be before release date");
+        String dateFormat = "dd/MM/yyy";
+        String releaseDate = release.getReleaseDate().format(DateTimeFormatter.ofPattern(dateFormat));
+        throw new Exception("End date must be before release date - " + releaseDate);
       } else if (beforeStartDate) {
         throw new Exception("End date must be after start date");
       }

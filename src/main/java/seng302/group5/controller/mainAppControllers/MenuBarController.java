@@ -755,8 +755,7 @@ public class MenuBarController {
       undoMenuItem.setText("Undo");
     } else {
       undoMenuItem.setDisable(false);
-      undoMenuItem.setText(
-          "Undo " + Action.getActionString(undoRedoHandler.peekUndoStack().getAction()));
+      undoMenuItem.setText("Undo " + undoRedoHandler.peekUndoStack().getActionString());
     }
 
     // redo menu item
@@ -765,8 +764,7 @@ public class MenuBarController {
       redoMenuItem.setText("Redo");
     } else {
       redoMenuItem.setDisable(false);
-      redoMenuItem.setText(
-          "Redo " + Action.getActionString(undoRedoHandler.peekRedoStack().getAction()));
+      redoMenuItem.setText("Redo " + undoRedoHandler.peekRedoStack().getActionString());
     }
 
     // workaround to refresh edit menu size

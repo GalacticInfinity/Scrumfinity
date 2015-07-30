@@ -33,6 +33,7 @@ public enum Action {
   SPRINT_CREATE,  // Sprint creation - 1 AgileItem
   SPRINT_EDIT,    // Sprint edit - 2 AgileItems
   SPRINT_DELETE,  // Sprint delete - 1 AgileItem
+  COMPOSITE,      // Composite undo/redo instances
   UNDEFINED;      // Undefined action - no AgileItems
 
   private static Map<Action, String> actionStringMap;

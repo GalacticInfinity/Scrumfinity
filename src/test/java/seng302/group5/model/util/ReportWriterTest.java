@@ -51,9 +51,6 @@ public class ReportWriterTest {
   Release release1;
   Release release2;
   Release release3;
-  AgileHistory teamHistory1;
-  AgileHistory teamHistory2;
-  AgileHistory teamHistory3;
   Story story1;
   Story story2;
   Story story3;
@@ -212,6 +209,7 @@ public class ReportWriterTest {
     acs3.add("Pokemon is better than digimon");
 
     story1 = new Story("Story1", "Starter Story", "Huehuehuehue", person1, acs1);
+    story1.setStoryState(true);
     mainApp.addStory(story1);
 
     story2 = new Story();
@@ -219,6 +217,7 @@ public class ReportWriterTest {
     story2.setStoryName("Moar Story");
     story2.setCreator(person2);
     story2.setAcceptanceCriteria(acs2);
+    story2.setStoryState(true);
     mainApp.addStory(story2);
 
     story3 = new Story();
@@ -226,6 +225,7 @@ public class ReportWriterTest {
     story3.setDescription("They story-ening is now");
     story3.setCreator(person1);
     story3.setAcceptanceCriteria(acs3);
+    story3.setStoryState(false);
     mainApp.addStory(story3);
   }
 
