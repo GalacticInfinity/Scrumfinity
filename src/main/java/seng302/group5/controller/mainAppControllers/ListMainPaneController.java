@@ -695,7 +695,7 @@ public class ListMainPaneController {
     Text textACBody;
     if (story.getAcceptanceCriteria().size() != 0) {
       for (String storyAC : story.getAcceptanceCriteria()) {
-        textACBody = new Text("\n•" + storyAC);
+        textACBody = new Text("\n• " + storyAC);
         displayTextFlow.getChildren().addAll(textACBody);
       }
     } else {
@@ -900,7 +900,7 @@ public class ListMainPaneController {
     textProjectBody.setFill(Color.rgb(1, 0, 1));
     textProjectBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
 
-    Text textTeamHeader = new Text("\nAssigned Team:");
+    Text textTeamHeader = new Text("\nAssigned Team: ");
     textTeamHeader.setFill(Color.rgb(1, 0, 1));
     textTeamHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
@@ -908,7 +908,7 @@ public class ListMainPaneController {
     textTeamBody.setFill(Color.rgb(1, 0, 1));
     textTeamBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
 
-    Text textReleaseHeader = new Text("\nPart of Release:");
+    Text textReleaseHeader = new Text("\nPart of Release: ");
     textReleaseHeader.setFill(Color.rgb(1, 0, 1));
     textReleaseHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
@@ -950,7 +950,7 @@ public class ListMainPaneController {
       displayTextFlow.getChildren().add(textStoriesBody);
     }
 
-    Text textDatesHeader = new Text("\nSprint Dates:");
+    Text textDatesHeader = new Text("\nSprint Dates: ");
     textDatesHeader.setFill(Color.rgb(1, 0, 1));
     textDatesHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
