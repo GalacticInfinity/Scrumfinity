@@ -217,6 +217,11 @@ public class BacklogDialogController {
     allocatedStoriesList.setCellFactory(listView -> new StoryFormatCellFalse());
   }
 
+  /**
+   * Checks the current state and calls the correct cell factory for the current state.
+   * If true, it calls StoryFormatCell and shows highlights else it calls StoryFormatCellFalse
+   * and just shows labels.
+   */
   private void showStatus(){
     if (showState) {
       allocatedStoriesList.setCellFactory(
