@@ -2,16 +2,13 @@ package seng302.group5.model;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Collections;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import static org.junit.Assert.*;
 
 /**
- * Created by Zander on 6/05/2015.
+ * @author Zander, Liang
  */
 public class StoryTest {
 
@@ -24,8 +21,6 @@ public class StoryTest {
   private Story story;
   private Story story2;
   private Story story3;
-
-  private boolean isReady = true;
 
   @Before
   public void setUp() throws Exception {
@@ -67,7 +62,7 @@ public class StoryTest {
     assertTrue(!storyAC.isEmpty());
     assertEquals(storyAC, story.getAcceptanceCriteria());
 
-    story.setStoryState(isReady);
+    story.setStoryState(true);
     Story clone = new Story();
     clone.copyValues(story);
 

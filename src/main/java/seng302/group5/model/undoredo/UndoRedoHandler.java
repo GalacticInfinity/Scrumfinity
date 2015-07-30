@@ -24,8 +24,8 @@ import seng302.group5.model.Team;
 public class UndoRedoHandler {
 
   private Main mainApp;
-  private Stack<UndoRedoObject> undoStack;
-  private Stack<UndoRedoObject> redoStack;
+  private Stack<UndoRedo> undoStack;
+  private Stack<UndoRedo> redoStack;
   /**
    * Constructor. Set the main app to communicate with and initialise stacks
    *
@@ -42,7 +42,7 @@ public class UndoRedoHandler {
    *
    * @return The top element of the undo stack, or null if it's empty
    */
-  public UndoRedoObject peekUndoStack() {
+  public UndoRedo peekUndoStack() {
     if (undoStack.isEmpty()) {
       return null;
     } else {
@@ -55,7 +55,7 @@ public class UndoRedoHandler {
    *
    * @return The top element of the redo stack, or null if it's empty
    */
-  public UndoRedoObject peekRedoStack() {
+  public UndoRedo peekRedoStack() {
     if (redoStack.isEmpty()) {
       return null;
     } else {
@@ -74,10 +74,10 @@ public class UndoRedoHandler {
   /**
    * Add a new action onto the undo stack
    *
-   * @param undoRedoObject The action object
+   * @param undoRedo The action object
    */
-  public void newAction(UndoRedoObject undoRedoObject) {
-    undoStack.push(undoRedoObject);
+  public void newAction(UndoRedo undoRedo) {
+    undoStack.push(undoRedo);
     redoStack.clear();
   }
 
@@ -93,10 +93,10 @@ public class UndoRedoHandler {
     }
     // Rearrange stacks
     redoStack.push(undoStack.peek());
-    UndoRedoObject undoRedoObject = undoStack.pop();
+    UndoRedo undoRedo = undoStack.pop();
 
     // Handle the action
-    handleUndoRedoObject(undoRedoObject, UndoOrRedo.UNDO);
+    handleUndoRedoObject(undoRedo, UndoOrRedo.UNDO);
   }
 
   /**
@@ -111,23 +111,26 @@ public class UndoRedoHandler {
     }
     // Rearrange stacks
     undoStack.push(redoStack.peek());
-    UndoRedoObject undoRedoObject = redoStack.pop();
+    UndoRedo undoRedo = redoStack.pop();
 
     // Handle the action
-    handleUndoRedoObject(undoRedoObject, UndoOrRedo.REDO);
+    handleUndoRedoObject(undoRedo, UndoOrRedo.REDO);
   }
 
   /**
    * Handle a undo or redo call
    *
-   * @param undoRedoObject Object containing the action data
+   * @param undoRedo Object containing the action data
    * @param undoOrRedo     Whether undoing or redoing the action
    * @throws Exception Error message if data is invalid
    */
-  private void handleUndoRedoObject(UndoRedoObject undoRedoObject,
+  private void handleUndoRedoObject(UndoRedo undoRedo,
                                     UndoOrRedo undoOrRedo) throws Exception {
 
-    Action action = undoRedoObject.getAction();
+    Action action = undoRedo.getAction();
+
+    if (undoRedo instanceof UndoRedoObject) {
+      UndoRedoObject undoRedoObject = (UndoRedoObject) undoRedo;
 
 //    TODO: Put commented printlns into a JavaFX status bar
 //    String undoOrRedoStr;
@@ -137,126 +140,132 @@ public class UndoRedoHandler {
 //      undoOrRedoStr = "redo";
 //    }
 
-    switch (action) {
-      case PROJECT_CREATE:
+      switch (action) {
+        case PROJECT_CREATE:
 //        System.out.println(String.format("I am %sing a project creation", undoOrRedoStr)); // temp
-        handleProjectCreate(undoRedoObject, undoOrRedo);
-        break;
+          handleProjectCreate(undoRedoObject, undoOrRedo);
+          break;
 
-      case PROJECT_EDIT:
+        case PROJECT_EDIT:
 //        System.out.println(String.format("I am %sing a project edit", undoOrRedoStr));     // temp
-        handleProjectEdit(undoRedoObject, undoOrRedo);
-        break;
+          handleProjectEdit(undoRedoObject, undoOrRedo);
+          break;
 
-      case PROJECT_DELETE:
+        case PROJECT_DELETE:
 //        System.out.println(String.format("I am %sing a project deletion", undoOrRedoStr)); // temp
-        handleProjectDelete(undoRedoObject, undoOrRedo);
-        break;
+          handleProjectDelete(undoRedoObject, undoOrRedo);
+          break;
 
-      case PERSON_CREATE:
+        case PERSON_CREATE:
 //        System.out.println(String.format("I am %sing a person creation", undoOrRedoStr)); // temp
-        handlePersonCreate(undoRedoObject, undoOrRedo);
-        break;
+          handlePersonCreate(undoRedoObject, undoOrRedo);
+          break;
 
-      case PERSON_EDIT:
+        case PERSON_EDIT:
 //        System.out.println(String.format("I am %sing a person edit", undoOrRedoStr)); // temp
-        handlePersonEdit(undoRedoObject, undoOrRedo);
-        break;
+          handlePersonEdit(undoRedoObject, undoOrRedo);
+          break;
 
-      case PERSON_DELETE:
+        case PERSON_DELETE:
 //        System.out.println(String.format("I am %sing a person deletion", undoOrRedoStr)); // temp
-        handlePersonDelete(undoRedoObject, undoOrRedo);
-        break;
+          handlePersonDelete(undoRedoObject, undoOrRedo);
+          break;
 
-      case SKILL_CREATE:
+        case SKILL_CREATE:
 //        System.out.println(String.format("I am %sing a skill creation", undoOrRedoStr)); // temp
-        handleSkillCreate(undoRedoObject, undoOrRedo);
-        break;
+          handleSkillCreate(undoRedoObject, undoOrRedo);
+          break;
 
-      case SKILL_EDIT:
+        case SKILL_EDIT:
 //        System.out.println(String.format("I am %sing a skill edit", undoOrRedoStr)); // temp
-        handleSkillEdit(undoRedoObject, undoOrRedo);
-        break;
+          handleSkillEdit(undoRedoObject, undoOrRedo);
+          break;
 
-      case SKILL_DELETE:
+        case SKILL_DELETE:
 //        System.out.println(String.format("I am %sing a skill deletion", undoOrRedoStr));   // temp
-        handleSkillDelete(undoRedoObject, undoOrRedo);
-        break;
+          handleSkillDelete(undoRedoObject, undoOrRedo);
+          break;
 
-      case TEAM_CREATE:
+        case TEAM_CREATE:
 //        System.out.println(String.format("I am %sing a team creation", undoOrRedoStr));   // temp
-        handleTeamCreate(undoRedoObject, undoOrRedo);
-        break;
+          handleTeamCreate(undoRedoObject, undoOrRedo);
+          break;
 
-      case TEAM_EDIT:
+        case TEAM_EDIT:
 //        System.out.println(String.format("I am %sing a team edit", undoOrRedoStr));   // temp
-        handleTeamEdit(undoRedoObject, undoOrRedo);
-        break;
+          handleTeamEdit(undoRedoObject, undoOrRedo);
+          break;
 
-      case TEAM_DELETE:
+        case TEAM_DELETE:
 //        System.out.println(String.format("I am %sing a team deletion", undoOrRedoStr));   // temp
-        handleTeamDelete(undoRedoObject, undoOrRedo);
-        break;
+          handleTeamDelete(undoRedoObject, undoOrRedo);
+          break;
 
-      case RELEASE_CREATE:
+        case RELEASE_CREATE:
 //        System.out.println(String.format("I am %sing a release creation", undoOrRedoStr)); // temp
-        handleReleaseCreate(undoRedoObject, undoOrRedo);
-        break;
+          handleReleaseCreate(undoRedoObject, undoOrRedo);
+          break;
 
-      case RELEASE_EDIT:
+        case RELEASE_EDIT:
 //        System.out.println(String.format("I am %sing a release edit", undoOrRedoStr));   // temp
-        handleReleaseEdit(undoRedoObject, undoOrRedo);
-        break;
+          handleReleaseEdit(undoRedoObject, undoOrRedo);
+          break;
 
-      case RELEASE_DELETE:
+        case RELEASE_DELETE:
 //        System.out.println(String.format("I am %sing a release delete", undoOrRedoStr));   // temp
-        handleReleaseDelete(undoRedoObject, undoOrRedo);
-        break;
+          handleReleaseDelete(undoRedoObject, undoOrRedo);
+          break;
 
-      case STORY_CREATE:
+        case STORY_CREATE:
 //        System.out.println(String.format("I am %sing a story creation", undoOrRedoStr));   // temp
-        handleStoryCreate(undoRedoObject, undoOrRedo);
-        break;
+          handleStoryCreate(undoRedoObject, undoOrRedo);
+          break;
 
-      case STORY_EDIT:
+        case STORY_EDIT:
 //        System.out.println(String.format("I am %sing a story creation", undoOrRedoStr));   // temp
-        handleStoryEdit(undoRedoObject, undoOrRedo);
-        break;
+          handleStoryEdit(undoRedoObject, undoOrRedo);
+          break;
 
-      case STORY_DELETE:
+        case STORY_DELETE:
 //        System.out.println(String.format("I am %sing a story creation", undoOrRedoStr));   // temp
-        handleStoryDelete(undoRedoObject, undoOrRedo);
-        break;
+          handleStoryDelete(undoRedoObject, undoOrRedo);
+          break;
 
-      case BACKLOG_CREATE:
-        handleBacklogCreate(undoRedoObject, undoOrRedo);
-        break;
+        case BACKLOG_CREATE:
+          handleBacklogCreate(undoRedoObject, undoOrRedo);
+          break;
 
-      case BACKLOG_EDIT:
-        handleBacklogEdit(undoRedoObject, undoOrRedo);
-        break;
+        case BACKLOG_EDIT:
+          handleBacklogEdit(undoRedoObject, undoOrRedo);
+          break;
 
-      case BACKLOG_DELETE:
-        handleBacklogDelete(undoRedoObject, undoOrRedo);
-        break;
+        case BACKLOG_DELETE:
+          handleBacklogDelete(undoRedoObject, undoOrRedo);
+          break;
 
-      case SPRINT_CREATE:
-        handleSprintCreate(undoRedoObject, undoOrRedo);
-        break;
+        case SPRINT_CREATE:
+          handleSprintCreate(undoRedoObject, undoOrRedo);
+          break;
 
-      case SPRINT_EDIT:
-        handleSprintEdit(undoRedoObject, undoOrRedo);
-        break;
+        case SPRINT_EDIT:
+          handleSprintEdit(undoRedoObject, undoOrRedo);
+          break;
 
-      case SPRINT_DELETE:
-        handleSprintDelete(undoRedoObject, undoOrRedo);
-        break;
+        case SPRINT_DELETE:
+          handleSprintDelete(undoRedoObject, undoOrRedo);
+          break;
 
-      case UNDEFINED:
-        throw new Exception("Unreadable UndoRedoObject");
+        case UNDEFINED:
+          throw new Exception("Unreadable UndoRedoObject");
 
-      default:
-        throw new Exception("Undo/Redo case is not handled");
+        default:
+          throw new Exception("Undo/Redo case is not handled");
+      }
+    } else if (undoRedo instanceof CompositeUndoRedo) {
+      CompositeUndoRedo compositeUndoRedo = (CompositeUndoRedo) undoRedo;
+      for (UndoRedo nestedUndoRedo : compositeUndoRedo.getUndoRedos()) {
+        handleUndoRedoObject(nestedUndoRedo, undoOrRedo);
+      }
     }
   }
 
@@ -1079,11 +1088,11 @@ public class UndoRedoHandler {
     mainApp.refreshList(null);
   }
 
-  public Stack<UndoRedoObject> getUndoStack() {
+  public Stack<UndoRedo> getUndoStack() {
     return undoStack;
   }
 
-  public Stack<UndoRedoObject> getRedoStack() {
+  public Stack<UndoRedo> getRedoStack() {
     return redoStack;
   }
 
