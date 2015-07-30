@@ -1223,6 +1223,19 @@ public class Main extends Application {
               }
             }
           }
+          // Finding proj associated with backlog
+          Project backlogProject = null;
+          for (Project backProj : getProjects()) {
+            if (backProj.getBacklog() != null && backProj.getBacklog().equals(backlog)){
+              backlogProject = backProj;
+              break;
+            }
+          }
+          // Extending message
+          if (backlogProject != null) {
+            messageLength++;
+            message += String.format("Will unassign from Project: %s", backlogProject.getLabel());
+          }
 
           alert.getDialogPane().setPrefHeight(60 + 30 * messageLength);
           alert.setContentText(message);
@@ -1232,9 +1245,12 @@ public class Main extends Application {
             for (Story blstory : backlog.getStories()) {
               deleteStory(blstory);
             }
-            // Messing with yo %*$& shingy
+            // Deleting associated sprints
             for (Sprint sprint : deleteSprints) {
               deleteSprint(sprint);
+            }
+            if (backlogProject != null) {
+              backlogProject.setBacklog(null);
             }
             deleteBacklog(backlog);
             undoRedoObject = generateDelUndoRedoObject(Action.BACKLOG_DELETE, agileItem);
