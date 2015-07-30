@@ -1,7 +1,6 @@
 package seng302.group5.controller.dialogControllers;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +18,10 @@ import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.model.Story;
+import seng302.group5.model.undoredo.Action;
+import seng302.group5.model.undoredo.CompositeUndoRedo;
+import seng302.group5.model.undoredo.UndoRedo;
+import seng302.group5.model.undoredo.UndoRedoObject;
 
 /**
  * A controller for the dependency dialog which shows the dependencies between stories in
@@ -41,6 +44,10 @@ public class DependantsDialogController {
   private ObservableList<Story> dependantStories;
 
   private Set<Story> visitedStories;
+
+  // for undo/redo
+  private Map<Story, Story> beforeMap;
+  private Map<Story, Story> afterMap;
 
   @FXML private ListView<Story> allStoriesList;
   @FXML private ListView<Story> availableStoriesList;
@@ -66,11 +73,15 @@ public class DependantsDialogController {
     clones = new ArrayList<>();
     syncMap = new IdentityHashMap<>();
     cloneMap = new IdentityHashMap<>();
+    beforeMap = new IdentityHashMap<>();
+    afterMap = new IdentityHashMap<>();
     for (Story origStory : mainApp.getStories()) {
       Story clonedStory = new Story(origStory);
       clones.add(clonedStory);
       syncMap.put(clonedStory.getLabel(), origStory);
       cloneMap.put(clonedStory.getLabel(), clonedStory);
+
+      beforeMap.put(origStory, new Story(origStory)); // put fresh clone in map for before the edit
     }
     // Makes the clones's dependency stories also clones.
     for (Story clone : clones) {
@@ -256,7 +267,10 @@ public class DependantsDialogController {
         Story mainDep = syncMap.get(cloneDep.getLabel());
         mainStory.addDependency(mainDep);
       }
+      afterMap.put(mainStory, new Story(mainStory));  // put fresh clone in map for after the edit
     }
+    UndoRedo undoRedo = generateUndoRedoObject();
+    mainApp.newAction(undoRedo);
     thisStage.close();
   }
 
@@ -268,5 +282,25 @@ public class DependantsDialogController {
   @FXML
   protected void setBtnCancel(ActionEvent event) {
     thisStage.close();
+  }
+
+  /**
+   * Generate a CompositeUndoRedo to place in the stack containing all stories.
+   *
+   * @return The CompositeUndoRedo to store.
+   */
+  private UndoRedo generateUndoRedoObject() {
+    CompositeUndoRedo compositeUndoRedo = new CompositeUndoRedo("Edit Story Dependencies");
+
+    for (Story story : beforeMap.keySet()) {
+      UndoRedoObject undoRedoObject = new UndoRedoObject();
+      undoRedoObject.setAction(Action.STORY_EDIT);
+      undoRedoObject.setAgileItem(story);
+      undoRedoObject.addDatum(beforeMap.get(story));
+      undoRedoObject.addDatum(afterMap.get(story));
+      compositeUndoRedo.addUndoRedo(undoRedoObject);
+    }
+
+    return compositeUndoRedo;
   }
 }
