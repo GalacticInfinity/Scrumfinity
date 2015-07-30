@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -875,9 +876,9 @@ public class Loading {
 
         sprintLine = loadedFile.readLine();
         sprintData = sprintLine.replaceAll("(?i)(.*<sprintEnd.*?>)(.+?)(</sprintEnd>)", "$2");
-
         end = LocalDate.parse(sprintData);
-        sprint.setSprintStart(end); //set end date
+
+        sprint.setSprintEnd(end); //set end date
 
         while ((!(sprintLine = loadedFile.readLine()).matches(".*</Sprint>"))) {
           if (sprintLine.startsWith("\t\t<sprintName>")) {
