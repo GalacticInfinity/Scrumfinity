@@ -637,6 +637,12 @@ public class ReportWriter {
     sprintProject.appendChild(report.createTextNode(sprint.getSprintProject().getLabel()));
     sprintElem.appendChild(sprintProject);
 
+    Element sprintStories = report.createElement("Stories");
+    for (Story story : sprint.getSprintStories()) {
+      createStory(story, sprintStories, "Story");
+    }
+    sprintElem.appendChild(sprintStories);
+
     Team sprintTeam = sprint.getSprintTeam();
     for (AgileHistory hist : sprint.getSprintProject().getAllocatedTeams()) {
       Team histTeam = (Team)hist.getAgileItem();
