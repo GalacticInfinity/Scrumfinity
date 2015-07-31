@@ -128,7 +128,9 @@ public class SprintDialogController {
       sprintBacklogCombo.getSelectionModel().select(sprint.getSprintBacklog()); // Updates Project
       sprintTeamCombo.getSelectionModel().select(sprint.getSprintTeam());
       sprintReleaseCombo.getSelectionModel().select(sprint.getSprintRelease());
-      releaseDate.setText(sprint.getSprintRelease().getReleaseDate().toString());
+      String dateFormat = "dd/MM/yyy";
+      releaseDate.setText(sprint.getSprintRelease().getReleaseDate().format(
+          DateTimeFormatter.ofPattern(dateFormat)).toString());
       sprintStartDate.setValue(sprint.getSprintStart());
       sprintEndDate.setValue(sprint.getSprintEnd());
       allocatedStories.addAll(sprint.getSprintStories());
