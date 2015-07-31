@@ -662,12 +662,14 @@ public class Main extends Application {
   }
 
   /**
-   * sets up the dialog box for editing a story when opened from the backlog dialog
+   * sets up the dialog box for editing a story when opened from the sprint dialog
    *
-   * @param story the person that you wanted to view or edit information with
+   * @param story the story that you wanted to view or edit information with
    * @param stage the stage it is currently on to void unusual behaviour
+   * @param fromAllocated whether or not the stage is called from the allocated stories list
+   *                      or the available stories list. (Affects the readiness checkbox).
    */
-  public void showStoryDialogWithinSprint(Story story, Stage stage) {
+  public void showStoryDialogWithinSprint(Story story, Stage stage, boolean fromAllocated) {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/StoryDialog.fxml"));
@@ -678,6 +680,7 @@ public class Main extends Application {
       Stage storyDialogStage = new Stage();
 
       controller.setupController(this, storyDialogStage, CreateOrEdit.EDIT, story);
+      controller.setCheckboxState(fromAllocated);
 
       storyDialogStage.initModality(Modality.APPLICATION_MODAL);
       storyDialogStage.initOwner(stage);
@@ -1271,11 +1274,16 @@ public class Main extends Application {
             for (Sprint sprint : deleteSprints) {
               deleteSprint(sprint);
             }
+            // Unassign associated project
             if (backlogProject != null) {
               backlogProject.setBacklog(null);
             }
             deleteBacklog(backlog);
             undoRedoObject = generateDelUndoRedoObject(Action.BACKLOG_DELETE, agileItem);
+            undoRedoObject.addDatum(backlogProject);
+            for (Sprint sprint : deleteSprints) {
+              undoRedoObject.addDatum(sprint);
+            }
             newAction(undoRedoObject);
           }
         }

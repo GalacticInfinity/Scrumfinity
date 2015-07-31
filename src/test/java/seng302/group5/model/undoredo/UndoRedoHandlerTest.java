@@ -708,11 +708,19 @@ public class UndoRedoHandlerTest {
     mainApp.deleteBacklog(backlog);
 
     UndoRedoObject undoRedoObject = new UndoRedoObject();
+
     undoRedoObject.setAction(Action.BACKLOG_DELETE);
     undoRedoObject.setAgileItem(backlog);
     undoRedoObject.addDatum(new Backlog(backlog));
-
+    undoRedoObject.addDatum(project);
+    for (Sprint sprint : mainApp.getSprints()) {
+      if (sprint.getSprintBacklog().equals(backlog)) {
+        undoRedoObject.addDatum(sprint);
+      }
+    }
     undoRedoHandler.newAction(undoRedoObject);
+
+
   }
 
   private void editNewestBacklog() {

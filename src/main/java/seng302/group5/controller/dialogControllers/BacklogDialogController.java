@@ -1,7 +1,5 @@
 package seng302.group5.controller.dialogControllers;
 
-import java.awt.*;
-import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -12,7 +10,6 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -24,12 +21,10 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.*;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Backlog;
@@ -37,6 +32,7 @@ import seng302.group5.model.Estimate;
 import seng302.group5.model.Person;
 import seng302.group5.model.Role;
 import seng302.group5.model.Skill;
+import seng302.group5.model.Sprint;
 import seng302.group5.model.Story;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoObject;
@@ -221,6 +217,11 @@ public class BacklogDialogController {
     allocatedStoriesList.setCellFactory(listView -> new StoryFormatCellFalse());
   }
 
+  /**
+   * Checks the current state and calls the correct cell factory for the current state.
+   * If true, it calls StoryFormatCell and shows highlights else it calls StoryFormatCellFalse
+   * and just shows labels.
+   */
   private void showStatus(){
     if (showState) {
       allocatedStoriesList.setCellFactory(
@@ -489,6 +490,41 @@ public class BacklogDialogController {
     Person productOwner = backlogProductOwnerCombo.getValue();
     Estimate estimate = backlogScaleCombo.getValue();
 
+    ArrayList<Sprint> removedSprints = new ArrayList<Sprint>();
+    ArrayList<Story> removedStories = new ArrayList<Story>();
+    for (Story story : availableStories) {
+      if (backlog.getStories().contains(story)) {
+        for (Sprint sprint : mainApp.getSprints()) {
+          if (sprint.getSprintBacklog().equals(backlog) && sprint.getSprintStories().contains(story)) {
+            if (!removedSprints.contains(sprint)) {
+              removedSprints.add(sprint);
+            }
+            removedStories.add(story);
+          }
+        }
+      }
+      if (story.getStoryState()) {
+        undoRedoStoryList.add(story);
+        story.setStoryState(false);
+      }
+    }
+    if (!removedStories.isEmpty()) {
+      Alert alert = new Alert(Alert.AlertType.WARNING);
+      alert.setHeaderText(null);
+      alert.setResizable(true);
+
+      alert.setTitle("Removed stories that are in sprints.");
+      String content = String.format("You are attempting to remove stories from the backlog that"
+                                     + " are associated to a sprint. Please remove"
+                                     + "\n%s\n from \n%s\n before removing it from the backlog.",
+                                     removedStories.toString(), removedSprints.toString());
+      alert.getDialogPane().setPrefSize(480, 150 + removedStories.size() * 10);
+
+      alert.getDialogPane().setContentText(content);
+      alert.showAndWait();
+      return;
+    }
+
     try {
       backlogLabel = parseBacklogLabel(backlogLabelField.getText());
     } catch (Exception e) {
@@ -658,14 +694,13 @@ public class BacklogDialogController {
     showStatus();
   }
 
+  /**
+   * Cell format class that handles the coloring of cells within the allocated stories list
+   * within the backlog controller.
+   *
+   * Created by Craig Alan Barnard 22/07/2015
+   */
   private class StoryFormatCell extends ListCell<StoryEstimate> {
-
-    /**
-     * Cell format class that handles the coloring of cells within the allocated stories list
-     * within the backlog controller.
-     *
-     * Created by Craig Alan Barnard 22/07/2015
-     */
 
     public StoryFormatCell() {
       super();
@@ -686,14 +721,13 @@ public class BacklogDialogController {
       });
     }
 
-    @Override protected void updateItem(StoryEstimate item, boolean empty) {
+    @Override
+    protected void updateItem(StoryEstimate item, boolean empty) {
       // calling super here is very important - don't skip this!
       super.updateItem(item, empty);
 
-      // change the text fill based on whether it is positive (green)
-      // or negative (red). If the cell is selected, the text will
-      // always be white (so that it can be read against the blue
-      // background), and if the value is zero, we'll make it black.
+      // change the coloured highlight based on whether it is positive (green),
+      // negative (red) or orange.
 
       boolean dependent = false;
 
@@ -704,40 +738,40 @@ public class BacklogDialogController {
             if (allocatedStoriesList.getItems().indexOf(stories) >
                 allocatedStoriesList.getItems().indexOf(item)) {
               dependent = true;
-          }
+            }
           }
         }
-        javafx.scene.shape.Circle circle = new javafx.scene.shape.Circle(5);
-        if (item.getStory().getStoryState() == true && item.getEstimateIndex() != 0 &&
-            dependent == false) {
+        Circle circle = new Circle(5);
+        if (dependent) {
+          setText(item.toString());
+          circle.setFill(Color.RED);
+          setGraphic(circle);
+        } else if (item.getStory().getStoryState() && item.getEstimateIndex() != 0) {
           setText(item.toString());
           circle.setFill(Color.rgb(0, 191, 0));
           setGraphic(circle);
-        }else if (item.getStory().getAcceptanceCriteria().size() > 0 && item.getEstimateIndex() == 0) {
+        } else if (item.getStory().getAcceptanceCriteria().size() > 0 && item.getEstimateIndex() == 0) {
           setText(item.toString());
           circle.setFill(Color.rgb(255, 135, 0));
-          setGraphic(circle);
-        } else if (dependent == true && item.getStory().getStoryState() == true) {
-          setText(item.toString());
-          circle.setFill(Color.RED);
           setGraphic(circle);
         }
         else {
           setText(item.toString());
+          circle.setFill(Color.rgb(0, 0, 0, 0));
+          setGraphic(circle);
         }
         showStatus();
 
       }}
   }
 
+  /**
+   * Cell format class that handles the displaying of plain text cells within the allocated
+   * stories list within the backlog controller.
+   *
+   * Created by Craig Alan Barnard + Ma Liang 23/07/2015
+   */
   private class StoryFormatCellFalse extends ListCell<StoryEstimate> {
-
-    /**
-     * Cell format class that handles the displaying of plain text cells within the allocated
-     * stories list within the backlog controller.
-     *
-     * Created by Craig Alan Barnard + Ma Liang 23/07/2015
-     */
 
     public StoryFormatCellFalse() {
       super();
@@ -758,7 +792,8 @@ public class BacklogDialogController {
       });
     }
 
-    @Override protected void updateItem(StoryEstimate item, boolean empty) {
+    @Override
+    protected void updateItem(StoryEstimate item, boolean empty) {
       // calling super here is very important - don't skip this!
       super.updateItem(item, empty);
       if (item != null) {

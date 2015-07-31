@@ -17,7 +17,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldListCell;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -191,7 +190,7 @@ public class ProjectDialogController {
       availableBacklogs.addAll(mainApp.getBacklogs());
 
       for (Project pro : mainApp.getProjects()) {
-        if (pro.getBacklog() != null) {
+        if (pro.getBacklog() != null && pro != project) {
           availableBacklogs.remove(pro.getBacklog());
         }
       }
@@ -561,6 +560,10 @@ public class ProjectDialogController {
           mainApp.showTeamDialogWithinProject(selectedTeam, thisStage);
           availableTeams.remove(selectedTeam);
           availableTeams.add(selectedTeam);
+          //This is a hella shitty fix to get the list to update when nested editing coz fml.
+          AgileHistory ag = new AgileHistory(new Team(), LocalDate.now(), LocalDate.MAX);
+          allocatedTeams.add(ag);
+          allocatedTeams.remove(ag);
         }
       });
     }
