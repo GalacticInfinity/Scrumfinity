@@ -114,7 +114,7 @@ public class ReportDialogController {
 
   private void initialiseLists() {
     this.reportLevels.addAll("All", "Projects", "Teams", "People", "Skills", "Releases",
-                             "Stories", "Backlogs", "Estimates"); // Add backlogs when they are done.
+                             "Stories", "Backlogs", "Estimates", "Sprints"); // Add backlogs when they are done.
     availableItemsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     selectedItemsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     availableItemsList.setItems(availableItems.sorted());
@@ -180,6 +180,12 @@ public class ReportDialogController {
       case ("Estimates"):
         this.availableItems.clear();
         this.availableItems.setAll(mainApp.getEstimates());
+        this.availableItemsList.setItems(availableItems);
+        updateLists();
+        break;
+      case ("Sprints"):
+        this.availableItems.clear();
+        this.availableItems.setAll(mainApp.getSprints());
         this.availableItemsList.setItems(availableItems);
         updateLists();
         break;
