@@ -27,6 +27,7 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
+import seng302.group5.controller.mainAppControllers.ListMainPaneController;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Estimate;
 import seng302.group5.model.Person;
@@ -622,6 +623,9 @@ public class BacklogDialogController {
    */
   @FXML
   protected void btnCancelClick(ActionEvent event) {
+    if (createOrEdit == createOrEdit.EDIT || Settings.correctList(backlog)) {
+      mainApp.refreshList(backlog);
+    }
     thisStage.close();
   }
 

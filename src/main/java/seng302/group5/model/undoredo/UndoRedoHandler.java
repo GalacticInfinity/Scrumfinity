@@ -980,6 +980,8 @@ public class UndoRedoHandler {
     // Get the Release to undo/redo deletion of
     Backlog backlogToChange = (Backlog) undoRedoObject.getAgileItem();
     Backlog backlogData = (Backlog) data.get(0);
+    Project project = (Project) data.get(1);
+    List<AgileItem> blSprints = new ArrayList<>(data.subList(2, data.size()));
 
     // Make the changes and refresh the list
     if (undoOrRedo == UndoOrRedo.UNDO) {
@@ -987,10 +989,24 @@ public class UndoRedoHandler {
       for (Story blStory: backlogToChange.getStories()) {
         mainApp.addStory(blStory);
       }
+      for (AgileItem blSprint : blSprints) {
+        Sprint mainSprint = (Sprint) blSprint;
+        mainApp.addSprint(mainSprint);
+      }
+      if (project != null) {
+        project.setBacklog(backlogToChange);
+      }
       mainApp.addBacklog(backlogToChange);
     } else {
       for (Story blStory : backlogToChange.getStories()) {
         mainApp.deleteStory(blStory);
+      }
+      for (AgileItem blSprint : blSprints) {
+        Sprint mainSprint = (Sprint) blSprint;
+        mainApp.addSprint(mainSprint);
+      }
+      if (project != null) {
+        project.setBacklog(null);
       }
       mainApp.deleteBacklog(backlogToChange);
     }
