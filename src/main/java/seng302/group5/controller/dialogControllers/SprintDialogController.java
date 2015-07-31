@@ -526,6 +526,9 @@ public class SprintDialogController {
    */
   @FXML
   protected void btnCancelClick(ActionEvent event) {
+    if (createOrEdit == createOrEdit.EDIT && Settings.correctList(sprint)) {
+      mainApp.refreshList(sprint);
+    }
     thisStage.close();
   }
 

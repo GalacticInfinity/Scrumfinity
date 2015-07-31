@@ -14,7 +14,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -28,7 +27,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Backlog;
@@ -332,6 +330,9 @@ public class StoryDialogController {
    */
   @FXML
   protected void btnCancelClick(ActionEvent event) {
+    if (Settings.correctList(story) && createOrEdit == CreateOrEdit.EDIT) {
+      mainApp.refreshList(story);
+    }
     thisStage.close();
   }
 
