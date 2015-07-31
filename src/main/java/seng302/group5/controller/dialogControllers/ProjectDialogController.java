@@ -551,6 +551,9 @@ public class ProjectDialogController {
    */
   @FXML
   protected void btnCancelClick() {
+    if (createOrEdit == createOrEdit.EDIT && Settings.correctList(project)) {
+      mainApp.refreshList(project);
+    }
     thisStage.close();
   }
 
