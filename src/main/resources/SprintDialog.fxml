@@ -6,7 +6,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="641.0" prefWidth="451.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.SprintDialogController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="641.0" prefWidth="482.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.SprintDialogController">
     <children>
         <HBox alignment="BOTTOM_LEFT" prefHeight="32.0" prefWidth="434.0" spacing="10.0">
             <children>
@@ -21,12 +21,15 @@
                 <TextField fx:id="sprintGoalField" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="200.0" promptText="Unique goal/label of sprint">
                <tooltip>
                   <Tooltip text="Label should be 20 characters or less or application may not behave as expected." />
-               </tooltip></TextField>
+               </tooltip>
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin></TextField>
             </children>
         </HBox>
         <HBox alignment="CENTER_LEFT" prefHeight="38.0" prefWidth="369.0" spacing="10.0">
             <children>
-                <Label prefHeight="25.0" prefWidth="125.0" text="Sprint Full Name:">
+                <Label prefHeight="25.0" prefWidth="132.0" text="Sprint Full Name:">
                     <font>
                         <Font size="15.0" />
                     </font>
@@ -34,7 +37,10 @@
                   <Insets left="2.0" />
                </HBox.margin>
                 </Label>
-                <TextField fx:id="sprintNameField" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="285.0" promptText="Full name of sprint" />
+                <TextField fx:id="sprintNameField" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="293.0" promptText="Full name of sprint">
+               <HBox.margin>
+                  <Insets left="3.0" />
+               </HBox.margin></TextField>
             </children>
         </HBox>
         <HBox prefHeight="30.0" prefWidth="429.0" spacing="10.0">
@@ -47,7 +53,10 @@
                   <Insets left="2.0" />
                </HBox.margin>
                 </Label>
-            <TextArea fx:id="sprintDescriptionField" minHeight="130.0" prefHeight="130.0" prefWidth="300.0" promptText="Description of sprint" wrapText="true" />
+            <TextArea fx:id="sprintDescriptionField" minHeight="130.0" prefHeight="130.0" prefWidth="299.0" promptText="Description of sprint" wrapText="true">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin></TextArea>
             </children>
         </HBox>
         <HBox prefHeight="21.0" prefWidth="429.0">
@@ -62,7 +71,7 @@
                 </Label>
                 <ComboBox fx:id="sprintBacklogCombo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" promptText="Available Backlogs" visibleRowCount="5">
                <HBox.margin>
-                  <Insets top="2.0" />
+                  <Insets left="10.0" top="2.0" />
                </HBox.margin></ComboBox>
             </children>
             <VBox.margin>
@@ -102,7 +111,10 @@
                   <Insets left="2.0" />
                </HBox.margin>
             </Label>
-            <ComboBox fx:id="sprintTeamCombo" prefHeight="25.0" prefWidth="200.0" promptText="Avaliable Teams" visibleRowCount="5" />
+            <ComboBox fx:id="sprintTeamCombo" prefHeight="25.0" prefWidth="200.0" promptText="Avaliable Teams" visibleRowCount="5">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin></ComboBox>
          </children>
          <VBox.margin>
             <Insets top="4.0" />
@@ -118,13 +130,16 @@
                   <Font size="15.0" />
                </font>
             </Label>
-            <ComboBox fx:id="sprintReleaseCombo" prefHeight="25.0" prefWidth="200.0" promptText="Avaliable Releases" visibleRowCount="5" />
-            <Label prefHeight="27.0" prefWidth="33.0" text="Date:">
+            <ComboBox fx:id="sprintReleaseCombo" prefHeight="25.0" prefWidth="200.0" promptText="Avaliable Releases" visibleRowCount="5">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin></ComboBox>
+            <Label prefHeight="27.0" prefWidth="41.0" text="Date:">
                <HBox.margin>
                   <Insets left="2.0" />
                </HBox.margin>
             </Label>
-            <Label fx:id="releaseDate" prefHeight="26.0" prefWidth="70.0">
+            <Label fx:id="releaseDate" prefHeight="26.0" prefWidth="82.0">
                <HBox.margin>
                   <Insets left="5.0" />
                </HBox.margin>
@@ -139,7 +154,7 @@
             <Insets top="4.0" />
          </VBox.margin>
          <children>
-            <Label prefHeight="25.0" text="Start Date:*">
+            <Label prefHeight="25.0" prefWidth="91.0" text="Start Date:*">
                <font>
                   <Font size="15.0" />
                </font>
@@ -148,7 +163,7 @@
                </HBox.margin>
             </Label>
             <DatePicker fx:id="sprintStartDate" prefHeight="25.0" prefWidth="140.0" />
-            <Label prefHeight="25.0" prefWidth="72.0" text="End Date:*">
+            <Label prefHeight="25.0" prefWidth="90.0" text="End Date:*">
                <font>
                   <Font size="15.0" />
                </font>
@@ -156,7 +171,7 @@
                   <Insets left="12.0" />
                </HBox.margin>
             </Label>
-            <DatePicker fx:id="sprintEndDate" prefHeight="25.0" prefWidth="140.0" />
+            <DatePicker fx:id="sprintEndDate" prefHeight="25.0" prefWidth="139.0" />
          </children>
       </HBox>
       <HBox alignment="CENTER_LEFT" prefHeight="232.0" prefWidth="487.0" spacing="10.0">
