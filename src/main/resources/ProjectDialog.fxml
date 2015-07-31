@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
@@ -59,7 +60,11 @@
                   <Font size="15.0" />
                </font>
             </Label>
-            <ComboBox fx:id="backlogComboBox" prefHeight="26.0" prefWidth="185.0" promptText="Available Backlogs" />
+            <Label fx:id="backlogContainer">
+               <graphic>
+                  <ComboBox fx:id="backlogComboBox" prefHeight="26.0" prefWidth="185.0" promptText="Available Backlogs" />
+               </graphic>
+            </Label>
          </children>
          <opaqueInsets>
             <Insets />
