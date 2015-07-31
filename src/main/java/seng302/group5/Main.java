@@ -14,11 +14,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -658,9 +662,9 @@ public class Main extends Application {
   }
 
   /**
-   * sets up the dialog box for editing a story when opened from the backlog dialog
+   * sets up the dialog box for editing a story when opened from the sprint dialog
    *
-   * @param story the person that you wanted to view or edit information with
+   * @param story the story that you wanted to view or edit information with
    * @param stage the stage it is currently on to void unusual behaviour
    * @param fromAllocated whether or not the stage is called from the allocated stories list
    *                      or the available stories list. (Affects the readiness checkbox).
@@ -1186,11 +1190,14 @@ public class Main extends Application {
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
           alert.setTitle("Backlog contains stories");
           alert.setHeaderText(null);
-
-          int messageLength = 2;
-          String message = String.format("Are you sure you want to delete backlog '%s' and "
-                                         + "its associated items:\n\n",
+          String contentText = String.format("Are you sure you want to delete backlog '%s' and "
+                                         + "its associated items?",
                                          backlog.getLabel());
+          alert.setResizable(true);
+          alert.getDialogPane().setPrefSize(500, 350);
+          alert.setContentText(contentText);
+          int messageLength = 2;
+          String message = "";
           message += "Stories:\n";
           for (Story blStory : backlog.getStories()) {
             messageLength++;
@@ -1237,12 +1244,26 @@ public class Main extends Application {
           // Extending message
           if (backlogProject != null) {
             messageLength++;
-            message += String.format("Will unassign from Project: %s", backlogProject.getLabel());
+            message += String.format("\nThese will un-assign from Project: %s", backlogProject.getLabel());
           }
 
-          alert.setResizable(true);
-          alert.getDialogPane().setPrefHeight(80 + 30 * messageLength);
-          alert.setContentText(message);
+          Label label = new Label("The affected items are:");
+          TextArea textArea = new TextArea(message);
+          textArea.setEditable(false);
+          textArea.setWrapText(true);
+
+          textArea.setMaxWidth(Double.MAX_VALUE);
+          textArea.setMaxHeight(Double.MAX_VALUE);
+          GridPane.setVgrow(textArea, Priority.ALWAYS);
+          GridPane.setHgrow(textArea, Priority.ALWAYS);
+
+          GridPane expContent = new GridPane();
+          expContent.setMaxWidth(Double.MAX_VALUE);
+          expContent.add(label, 0, 0);
+          expContent.add(textArea, 0, 1);
+
+          // Set expandable Exception into the dialog pane.
+          alert.getDialogPane().setExpandableContent(expContent);
 
           Optional<ButtonType> result = alert.showAndWait();
           if (result.get() == ButtonType.OK) {
@@ -1253,11 +1274,16 @@ public class Main extends Application {
             for (Sprint sprint : deleteSprints) {
               deleteSprint(sprint);
             }
+            // Unassign associated project
             if (backlogProject != null) {
               backlogProject.setBacklog(null);
             }
             deleteBacklog(backlog);
             undoRedoObject = generateDelUndoRedoObject(Action.BACKLOG_DELETE, agileItem);
+            undoRedoObject.addDatum(backlogProject);
+            for (Sprint sprint : deleteSprints) {
+              undoRedoObject.addDatum(sprint);
+            }
             newAction(undoRedoObject);
           }
         }

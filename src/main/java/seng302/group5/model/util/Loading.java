@@ -80,7 +80,9 @@ public class Loading {
       Alert alert = new Alert(Alert.AlertType.ERROR);
       alert.setTitle("Loading Error");
       alert.setHeaderText(null);
-      alert.setContentText("There was a problem with loading, file is corrupted.");
+      alert.setContentText("There was a problem loading the file. "
+                           + "It may be corrupted, or from an unsupported version. Things may not "
+                           + "function as expected.");
       alert.showAndWait();
       e.printStackTrace();
     } finally {

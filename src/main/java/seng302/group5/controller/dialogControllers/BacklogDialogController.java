@@ -27,6 +27,7 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
+import seng302.group5.controller.mainAppControllers.ListMainPaneController;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Estimate;
 import seng302.group5.model.Person;
@@ -622,6 +623,9 @@ public class BacklogDialogController {
    */
   @FXML
   protected void btnCancelClick(ActionEvent event) {
+    if (createOrEdit == createOrEdit.EDIT || Settings.correctList(backlog)) {
+      mainApp.refreshList(backlog);
+    }
     thisStage.close();
   }
 
@@ -694,14 +698,13 @@ public class BacklogDialogController {
     showStatus();
   }
 
+  /**
+   * Cell format class that handles the coloring of cells within the allocated stories list
+   * within the backlog controller.
+   *
+   * Created by Craig Alan Barnard 22/07/2015
+   */
   private class StoryFormatCell extends ListCell<StoryEstimate> {
-
-    /**
-     * Cell format class that handles the coloring of cells within the allocated stories list
-     * within the backlog controller.
-     *
-     * Created by Craig Alan Barnard 22/07/2015
-     */
 
     public StoryFormatCell() {
       super();
@@ -766,14 +769,13 @@ public class BacklogDialogController {
       }}
   }
 
+  /**
+   * Cell format class that handles the displaying of plain text cells within the allocated
+   * stories list within the backlog controller.
+   *
+   * Created by Craig Alan Barnard + Ma Liang 23/07/2015
+   */
   private class StoryFormatCellFalse extends ListCell<StoryEstimate> {
-
-    /**
-     * Cell format class that handles the displaying of plain text cells within the allocated
-     * stories list within the backlog controller.
-     *
-     * Created by Craig Alan Barnard + Ma Liang 23/07/2015
-     */
 
     public StoryFormatCellFalse() {
       super();

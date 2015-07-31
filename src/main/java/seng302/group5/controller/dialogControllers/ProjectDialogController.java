@@ -13,9 +13,11 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
@@ -25,6 +27,7 @@ import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.AgileHistory;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Project;
+import seng302.group5.model.Sprint;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoObject;
@@ -46,6 +49,7 @@ public class ProjectDialogController {
   @FXML private DatePicker teamEndDate;
   @FXML private Button btnConfirm;
   @FXML private HBox btnContainer;
+  @FXML private Label backlogContainer;
   @FXML private ComboBox<Backlog> backlogComboBox;
 
   private Main mainApp;
@@ -101,6 +105,13 @@ public class ProjectDialogController {
       projectNameField.setText(project.getProjectName());
       projectDescriptionField.setText(project.getProjectDescription());
       backlogComboBox.setValue(project.getBacklog());
+
+      for (Sprint sprint : mainApp.getSprints()) {
+        if (sprint.getSprintProject().equals(project)) {
+          backlogComboBox.setDisable(true);
+          backlogContainer.setTooltip(new Tooltip("Backlog cannot be changed if it is assigned to a sprint."));
+        }
+      }
     }
     this.createOrEdit = createOrEdit;
 
@@ -190,7 +201,7 @@ public class ProjectDialogController {
       availableBacklogs.addAll(mainApp.getBacklogs());
 
       for (Project pro : mainApp.getProjects()) {
-        if (pro.getBacklog() != null) {
+        if (pro.getBacklog() != null && pro != project) {
           availableBacklogs.remove(pro.getBacklog());
         }
       }
@@ -540,6 +551,9 @@ public class ProjectDialogController {
    */
   @FXML
   protected void btnCancelClick() {
+    if (createOrEdit == createOrEdit.EDIT && Settings.correctList(project)) {
+      mainApp.refreshList(project);
+    }
     thisStage.close();
   }
 

@@ -245,6 +245,9 @@ public class PersonDialogController {
    */
   @FXML
   protected void btnCancelClick(ActionEvent event) {
+    if (createOrEdit == createOrEdit.EDIT && Settings.correctList(person)) {
+      mainApp.refreshList(person);
+    }
     thisStage.close();
   }
 
