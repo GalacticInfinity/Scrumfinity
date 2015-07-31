@@ -81,6 +81,7 @@ public class SprintDialogController {
 
   private Map<Backlog, Project> projectMap;
   private Set<Story> allocatedStories;   // use to maintain priority order
+  private Set<Story> otherSprintsStories;
 
   private boolean comboListenerFlag;
 
@@ -134,6 +135,15 @@ public class SprintDialogController {
       sprintStartDate.setValue(sprint.getSprintStart());
       sprintEndDate.setValue(sprint.getSprintEnd());
       allocatedStories.addAll(sprint.getSprintStories());
+
+      // Stories from other sprints with same backlog
+      for (Sprint mainSprint : mainApp.getSprints()) {
+        if (!mainSprint.equals(sprint) &&
+            mainSprint.getSprintBacklog().equals(sprint.getSprintBacklog())) {
+          otherSprintsStories.addAll(mainSprint.getSprintStories());
+        }
+      }
+
       refreshLists();
     }
     this.createOrEdit = createOrEdit;
@@ -153,6 +163,11 @@ public class SprintDialogController {
       //For disabling the button
       if (createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
+      }
+      if (newValue.trim().length() > 20) {
+        sprintGoalField.setStyle("-fx-text-inner-color: red;");
+      } else {
+        sprintGoalField.setStyle("-fx-text-inner-color: black;");
       }
     });
 
@@ -258,6 +273,7 @@ public class SprintDialogController {
     }
 
     allocatedStories = new TreeSet<>();
+    otherSprintsStories = new TreeSet<>();
 
     backlogs.setAll(mainApp.getBacklogs());
 
@@ -304,6 +320,17 @@ public class SprintDialogController {
             sprintTeamCombo.getSelectionModel().select(null);
             sprintReleaseCombo.getSelectionModel().select(null);
             allocatedStories.clear();
+
+            // Stories from other sprints with same backlog
+            otherSprintsStories.clear();
+            for (Sprint mainSprint : mainApp.getSprints()) {
+              if ((sprint == null) ||
+                  (!mainSprint.equals(sprint) &&
+                   mainSprint.getSprintBacklog().equals(sprint.getSprintBacklog()))) {
+                otherSprintsStories.addAll(mainSprint.getSprintStories());
+              }
+            }
+
             refreshLists();
           } else {
             if (oldBacklog != null) {
@@ -405,7 +432,7 @@ public class SprintDialogController {
       if (allocatedStories.contains(story)) {
         allocatedStoriesPrioritised.add(story);
       } else {
-        if (story.getStoryState()) {
+        if (story.getStoryState() && !otherSprintsStories.contains(story)) {
           availableStories.add(story);
         }
       }
