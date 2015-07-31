@@ -222,8 +222,8 @@
                         <Font name="System Italic" size="13.0" />
                     </font>
                 </Label>
-                <Button fx:id="btnConfirm" mnemonicParsing="false" onAction="#btnConfirmClick" prefHeight="25.0" prefWidth="56.0" text="Save" />
-                <Button fx:id="btnCancel" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#btnCancelClick" text="Cancel" />
+                <Button fx:id="btnConfirm" mnemonicParsing="false" onAction="#btnConfirmClick" prefHeight="25.0" prefWidth="78.0" text="Save" />
+                <Button fx:id="btnCancel" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#btnCancelClick" prefHeight="25.0" prefWidth="80.0" text="Cancel" />
             </children>
             <opaqueInsets>
                 <Insets />
