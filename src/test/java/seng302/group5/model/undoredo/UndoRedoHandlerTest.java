@@ -698,6 +698,27 @@ public class UndoRedoHandlerTest {
     undoRedoHandler.newAction(undoRedoObject);
   }
 
+  private void newBacklogWithSprint() {
+    backlogLabel = "Backlog";
+    backlogName = "This is a backlog";
+    backlogDescription = "Once upon a time...BAM!";
+    productOwner = person;
+    backlog = new Backlog(backlogLabel, backlogName, backlogDescription, productOwner, null);
+    backlog.addStory(story);
+    backlog.setEstimate(estimate);
+    sprint.setSprintBacklog(backlog);
+    backlogEstimate = estimate;
+    backlogStories = backlog.getStories();
+    mainApp.addBacklog(backlog);
+
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+    undoRedoObject.setAction(Action.BACKLOG_CREATE);
+    undoRedoObject.setAgileItem(backlog);
+    undoRedoObject.addDatum(new Backlog(backlog));
+
+    undoRedoHandler.newAction(undoRedoObject);
+  }
+
   private void newEstimate() {
     estimateLabel = "Estimate";
     estimateList = Arrays.asList("Size 0", "Size 1", "Size 2", "Size 3");
@@ -4119,4 +4140,82 @@ public class UndoRedoHandlerTest {
     assertTrue(dependantStory3.getDependencies().isEmpty());
   }
 
+  @Test
+  public void testBacklogCascadingDeleteUndo() throws Exception {
+    Backlog before;
+    Backlog after;
+
+    //testing deleting and undoing an empty backlog
+    assertTrue(mainApp.getBacklogs().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().isEmpty());
+
+    newPerson();
+    newStory();
+    newEstimate();
+    newSprint();
+    newBacklogWithSprint();
+
+    assertEquals(1, mainApp.getBacklogs().size());
+    assertEquals(4, undoRedoHandler.getUndoStack().size());
+    before = mainApp.getBacklogs().get(0);
+    assertNotNull(before);
+
+    deleteNewestBacklog();
+
+    assertTrue(mainApp.getBacklogs().isEmpty());
+    assertEquals(5, undoRedoHandler.getUndoStack().size());
+
+    undoRedoHandler.undo();
+
+    assertEquals(1, mainApp.getBacklogs().size());
+    assertEquals(4, undoRedoHandler.getUndoStack().size());
+    after = mainApp.getBacklogs().get(0);
+    assertNotNull(after);
+
+    assertSame(before, after);
+  }
+
+  @Test
+  public void testBacklogCascadingDeleteRedo() throws Exception {
+    Backlog before;
+    Backlog after;
+
+    assertTrue(mainApp.getBacklogs().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().isEmpty());
+    assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+
+    newPerson();
+    newStory();
+    newEstimate();
+    newSprint();
+    newBacklogWithSprint();
+
+
+    assertEquals(1, mainApp.getBacklogs().size());
+    assertEquals(4, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+    before = mainApp.getBacklogs().get(0);
+    assertNotNull(before);
+
+    deleteNewestBacklog();
+
+    assertTrue(mainApp.getBacklogs().isEmpty());
+    assertEquals(5, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+
+    undoRedoHandler.undo();
+
+    assertEquals(1, mainApp.getBacklogs().size());
+    assertEquals(4, undoRedoHandler.getUndoStack().size());
+    assertEquals(1, undoRedoHandler.getRedoStack().size());
+    after = mainApp.getBacklogs().get(0);
+    assertNotNull(after);
+
+    assertSame(before, after);
+
+    undoRedoHandler.redo();
+    assertTrue(mainApp.getBacklogs().isEmpty());
+    assertEquals(5, undoRedoHandler.getUndoStack().size());
+    assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+  }
 }
