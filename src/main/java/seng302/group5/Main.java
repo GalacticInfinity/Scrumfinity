@@ -1151,7 +1151,28 @@ public class Main extends Application {
         break;
       case "Teams":
         Team team = (Team) agileItem;
-        if (team.getTeamMembers().isEmpty()) {
+        // Check if team assigned to a sprint
+        Sprint assignedSprint = null;
+        for (Sprint sprint : getSprints()) {
+          if (sprint.getSprintTeam().equals(team)) {
+            assignedSprint = sprint;
+          }
+        }
+        if (assignedSprint != null) {
+          Alert alert = new Alert(Alert.AlertType.WARNING);
+          alert.setHeaderText(null);
+          alert.setResizable(false);
+
+          alert.setTitle("Team assigned to a Sprint");
+          String content = String.format("You are attempting to delete a team that"
+                                         + " is allocated to a sprint.\nPlease remove"
+                                         + "'%s' from '%s' before deleting it.",
+                                         team.toString(), assignedSprint.toString());
+          alert.getDialogPane().setPrefSize(480, 120 + 1 * 10);
+
+          alert.getDialogPane().setContentText(content);
+          alert.showAndWait();
+        } else if (team.getTeamMembers().isEmpty()) {
           deleteTeam(team);
           undoRedoObject = generateDelUndoRedoObject(Action.TEAM_DELETE, agileItem);
           newAction(undoRedoObject);
