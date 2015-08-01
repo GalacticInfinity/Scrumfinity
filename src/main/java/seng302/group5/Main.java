@@ -1169,7 +1169,11 @@ public class Main extends Application {
                                          + "'%s' from the following sprints before deleting it:\n",
                                          team.toString());
           for (Sprint sprint : teamSprints) {
-            content += String.format("\t%s\n", sprint.toString());
+            if (sprint.getSprintFullName().isEmpty()) {
+              content += String.format("\t%s - [No name]\n", sprint.toString());
+            } else {
+              content += String.format("\t%s - %s\n", sprint.toString(), sprint.getSprintFullName());
+            }
           }
           alert.getDialogPane().setPrefSize(510, 150 + teamSprints.size() * 10);
 
@@ -1229,7 +1233,11 @@ public class Main extends Application {
                                          + "'%s' from the following sprints before deleting it:\n",
                                          release.toString());
           for (Sprint sprint : releaseSprints) {
-            content += String.format("\t%s\n", sprint.toString());
+            if (sprint.getSprintFullName().isEmpty()) {
+              content += String.format("\t%s - [No name]\n", sprint.toString());
+            } else {
+              content += String.format("\t%s - %s\n", sprint.toString(), sprint.getSprintFullName());
+            }
           }
           alert.getDialogPane().setPrefSize(510, 150 + releaseSprints.size() * 10);
 
