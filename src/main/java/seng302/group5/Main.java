@@ -960,6 +960,9 @@ public class Main extends Application {
       case BACKLOG_DELETE:
         itemToStore = new Backlog((Backlog) agileItem);
         break;
+      case SPRINT_DELETE:
+        itemToStore = new Sprint((Sprint) agileItem);
+        break;
       default:
         itemToStore = null; // should never happen
     }
