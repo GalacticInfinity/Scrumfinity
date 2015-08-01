@@ -1151,7 +1151,31 @@ public class Main extends Application {
         break;
       case "Teams":
         Team team = (Team) agileItem;
-        if (team.getTeamMembers().isEmpty()) {
+        // Check if team assigned to a sprint
+        List<Sprint> teamSprints = new ArrayList<>();
+        for (Sprint sprint : getSprints()) {
+          if (sprint.getSprintTeam().equals(team)) {
+            teamSprints.add(sprint);
+          }
+        }
+        if (!teamSprints.isEmpty()) {
+          Alert alert = new Alert(Alert.AlertType.WARNING);
+          alert.setHeaderText(null);
+          alert.setResizable(false);
+
+          alert.setTitle("Team assigned to a Sprint");
+          String content = String.format("You are attempting to delete a team that"
+                                         + " is allocated to a sprint.\nPlease remove "
+                                         + "'%s' from the following sprints before deleting it:\n",
+                                         team.toString());
+          for (Sprint sprint : teamSprints) {
+            content += String.format("\t%s\n", sprint.toString());
+          }
+          alert.getDialogPane().setPrefSize(510, 150 + teamSprints.size() * 10);
+
+          alert.getDialogPane().setContentText(content);
+          alert.showAndWait();
+        } else if (team.getTeamMembers().isEmpty()) {
           deleteTeam(team);
           undoRedoObject = generateDelUndoRedoObject(Action.TEAM_DELETE, agileItem);
           newAction(undoRedoObject);
@@ -1188,9 +1212,34 @@ public class Main extends Application {
         break;
       case "Releases":
         Release release = (Release) agileItem;
-        deleteRelease(release);
-        undoRedoObject = generateDelUndoRedoObject(Action.RELEASE_DELETE, agileItem);
-        newAction(undoRedoObject);
+        // Check if release assigned to a sprint
+        List<Sprint> releaseSprints = new ArrayList<>();
+        for (Sprint sprint : getSprints()) {
+          if (sprint.getSprintRelease().equals(release)) {
+            releaseSprints.add(sprint);
+          }
+        }
+        if (!releaseSprints.isEmpty()) {
+          Alert alert = new Alert(Alert.AlertType.WARNING);
+          alert.setHeaderText(null);
+          alert.setResizable(false);
+
+          String content = String.format("You are attempting to delete a release that"
+                                         + " is allocated to a sprint.\nPlease remove "
+                                         + "'%s' from the following sprints before deleting it:\n",
+                                         release.toString());
+          for (Sprint sprint : releaseSprints) {
+            content += String.format("\t%s\n", sprint.toString());
+          }
+          alert.getDialogPane().setPrefSize(510, 150 + releaseSprints.size() * 10);
+
+          alert.getDialogPane().setContentText(content);
+          alert.showAndWait();
+        } else {
+          deleteRelease(release);
+          undoRedoObject = generateDelUndoRedoObject(Action.RELEASE_DELETE, agileItem);
+          newAction(undoRedoObject);
+        }
         break;
       case "Stories":
         Story story = (Story) agileItem;
