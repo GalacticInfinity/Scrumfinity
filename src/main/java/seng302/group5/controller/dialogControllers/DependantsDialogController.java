@@ -121,7 +121,7 @@ public class DependantsDialogController {
         story = allStoriesList.getSelectionModel().getSelectedItem();
         refreshLists();
     }});
-    availableStoriesList.setOnMouseClicked(mouseEvent -> {
+/*    availableStoriesList.setOnMouseClicked(mouseEvent -> {
       if (mouseEvent.getButton().equals(MouseButton.PRIMARY) &&
           mouseEvent.getClickCount()%2 == 0 &&
           availableStoriesList.getSelectionModel().getSelectedItem() != null) {
@@ -136,7 +136,7 @@ public class DependantsDialogController {
         btnRemoveStoryClick(new ActionEvent());
         refreshLists();
       }
-    });
+    });*/
   }
 
   /**
