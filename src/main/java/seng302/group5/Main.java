@@ -1217,7 +1217,6 @@ public class Main extends Application {
                                          + "its associated items?",
                                          backlog.getLabel());
           alert.setResizable(true);
-          alert.getDialogPane().setPrefSize(500, 350);
           alert.setContentText(contentText);
           int messageLength = 2;
           String message = "";
