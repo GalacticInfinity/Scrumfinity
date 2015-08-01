@@ -937,12 +937,15 @@ public class ListMainPaneController {
     Text textStoriesBody;
     Backlog sprintBacklog = sprint.getSprintBacklog();
     if (!sprint.getSprintStories().isEmpty()) {
-      for (Story story : sprint.getSprintStories()) {
-        int index = sprintBacklog.getSizes().get(story);
-        textStoriesBody = new Text("\n• " + story + " - " +
-                                   sprintBacklog.getEstimate().getEstimateNames().get(index));
-        storiesText.add(textStoriesBody);
-        displayTextFlow.getChildren().add(textStoriesBody);
+      for (Story story : sprintBacklog.getStories()) {
+        // TODO quick diplay fix, model still broke.
+        if (sprint.getSprintStories().contains(story)) {
+          int index = sprintBacklog.getSizes().get(story);
+          textStoriesBody = new Text("\n• " + story + " - " +
+                                     sprintBacklog.getEstimate().getEstimateNames().get(index));
+          storiesText.add(textStoriesBody);
+          displayTextFlow.getChildren().add(textStoriesBody);
+        }
       }
     } else {
       textStoriesBody = new Text("\nN/A");
@@ -998,14 +1001,18 @@ public class ListMainPaneController {
         // Change to prioritised order
         Text tempTextStoriesBody;
         if (!sprint.getSprintStories().isEmpty()) {
-          for (Story story : sprint.getSprintStories()) {
-            int index = sprintBacklog.getSizes().get(story);
-            tempTextStoriesBody = new Text("\n• " + story + " - " +
-                                           sprintBacklog.getEstimate().getEstimateNames()
-                                               .get(index));
-            storiesText.add(tempTextStoriesBody);
-            displayTextFlow.getChildren().removeAll(textDatesHeader, textDatesBody);
-            displayTextFlow.getChildren().addAll(tempTextStoriesBody,textDatesHeader, textDatesBody);
+          for (Story story : sprintBacklog.getStories()) {
+            // TODO just a display fix, need to fix underlying model
+            if (sprint.getSprintStories().contains(story)) {
+              int index = sprintBacklog.getSizes().get(story);
+              tempTextStoriesBody = new Text("\n• " + story + " - " +
+                                             sprintBacklog.getEstimate().getEstimateNames()
+                                                 .get(index));
+              storiesText.add(tempTextStoriesBody);
+              displayTextFlow.getChildren().removeAll(textDatesHeader, textDatesBody);
+              displayTextFlow.getChildren()
+                  .addAll(tempTextStoriesBody, textDatesHeader, textDatesBody);
+            }
           }
         } else {
           tempTextStoriesBody = new Text("\nN/A");
