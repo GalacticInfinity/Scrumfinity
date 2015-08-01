@@ -1310,8 +1310,8 @@ public class Main extends Application {
           alert.setTitle("Backlog contains stories");
           alert.setHeaderText(null);
           String contentText = String.format("Are you sure you want to delete backlog '%s' and "
-                                         + "its associated items?",
-                                         backlog.getLabel());
+                                             + "its associated items?",
+                                             backlog.getLabel());
           alert.setResizable(true);
           alert.setContentText(contentText);
           int messageLength = 2;
