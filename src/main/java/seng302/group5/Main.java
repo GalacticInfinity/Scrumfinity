@@ -1160,8 +1160,24 @@ public class Main extends Application {
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
           alert.setTitle("Story is in a Backlog");
           alert.setHeaderText(null);
-          String message = String.format("Do you want to delete '%s' and remove it from '%s'?`",
-                                         story.getLabel(), storyBacklog.getLabel());
+          Story storySprint = null;
+          for (Sprint sprint : getSprints()) {
+            if (sprint.getSprintStories().contains(story)) {
+              storySprint = story;
+              break;
+            }
+          }
+          String message;
+          if (storySprint != null) {
+            message =
+                String.format("Do you want to delete '%s' and remove it from Backlog: '%s'"
+                              + " and Sprint: '%s'?",
+                              story.getLabel(), storyBacklog.getLabel(), storySprint.getLabel());
+          } else {
+            message =
+                String.format("Do you want to delete '%s' and remove it from Backlog: '%s'?",
+                              story.getLabel(), storyBacklog.getLabel());
+          }
 
           alert.setContentText(message);
           //checks response
@@ -1178,6 +1194,13 @@ public class Main extends Application {
         undoRedoObject = generateDelUndoRedoObject(Action.STORY_DELETE, agileItem);
         undoRedoObject.addDatum(storyBacklog);
         undoRedoObject.addDatum(estimateBacklog);
+        // The stories that were dependent on this story
+        for (Story mainStory : getStories()) {
+          if (mainStory.getDependencies().contains(story)) {
+            mainStory.removeDependency(story);
+            undoRedoObject.addDatum(mainStory);
+          }
+        }
         newAction(undoRedoObject);
         break;
       case "Backlogs":

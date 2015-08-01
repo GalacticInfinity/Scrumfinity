@@ -869,6 +869,7 @@ public class UndoRedoHandler {
     Story storyData = (Story) data.get(0);
     Backlog storyBacklog = (Backlog) data.get(1);
     Backlog estimateBacklog = (Backlog) data.get(2);
+    List<AgileItem> dependencyStories = data.subList(3, data.size());
 
     // Make the changes and refresh the list
     if (undoOrRedo == UndoOrRedo.UNDO) {
@@ -879,6 +880,12 @@ public class UndoRedoHandler {
         storyBacklog.addStory(index, storyToChange, estimate);
       }
       mainApp.addStory(storyToChange);
+      // Re adding the dependencies to stories.
+      Story mainStory;
+      for (AgileItem agileStory : dependencyStories) {
+        mainStory = (Story) agileStory;
+        mainStory.addDependency(storyToChange);
+      }
     } else {
       if (storyBacklog != null) {
         storyBacklog.removeStory(storyToChange);
