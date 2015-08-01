@@ -15,7 +15,7 @@
                   <Font size="33.0" />
                </font>
             </Label>
-            <Label text="Enter an organization name">
+            <Label text="Enter an organisation name">
                <VBox.margin>
                   <Insets top="80.0" />
                </VBox.margin>

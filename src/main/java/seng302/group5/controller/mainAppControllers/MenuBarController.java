@@ -491,8 +491,8 @@ public class MenuBarController {
   protected void btnClickOrganization() {
     // Basic setup
     Dialog<String> orgDialog = new Dialog<>();
-    orgDialog.setTitle("Organization Name");
-    orgDialog.setHeaderText("Enter organization name");
+    orgDialog.setTitle("Organisation Name");
+    orgDialog.setHeaderText("Enter organisation name");
     orgDialog.setGraphic(null);
 
     ButtonType acceptButtonType = new ButtonType("Accept", ButtonBar.ButtonData.OK_DONE);
@@ -510,7 +510,7 @@ public class MenuBarController {
 
     // Deactivates button if no changes.
     orgField.textProperty().addListener((observable, oldValue, newValue) -> {
-      acceptButton.setDisable(newValue.equals(Settings.organizationName));
+      acceptButton.setDisable(newValue.equals(Settings.organizationName) || newValue.equals("__undefined__"));
     });
 
     orgDialog.getDialogPane().setContent(orgField);
