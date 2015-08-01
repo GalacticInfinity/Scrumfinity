@@ -13,6 +13,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seng302.group5.Main;
 import seng302.group5.controller.mainAppControllers.ListMainPaneController;
+import seng302.group5.model.AgileHistory;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Estimate;
@@ -589,12 +590,36 @@ public class UndoRedoHandlerTest {
   }
 
   private void deleteNewestProject() {
+    // get releases and sprints assigned to the project
+    List<Release> projectsReleases = new ArrayList<>();
+    List<Sprint> projectsSprints = new ArrayList<>();
+    for (Release release : mainApp.getReleases()) {
+      if (release.getProjectRelease().equals(project)) {
+        projectsReleases.add(release);
+      }
+    }
+    for (Sprint sprint : mainApp.getSprints()) {
+      if (sprint.getSprintProject().equals(project)) {
+        projectsSprints.add(sprint);
+      }
+    }
+
     mainApp.deleteProject(project);
 
     UndoRedoObject undoRedoObject = new UndoRedoObject();
     undoRedoObject.setAction(Action.PROJECT_DELETE);
     undoRedoObject.setAgileItem(project);
     undoRedoObject.addDatum(new Project(project));
+
+    // do deletion and undo/redo managing all at once (not how it works in main application)
+    for (Release release : projectsReleases) {
+      mainApp.deleteRelease(release);
+      undoRedoObject.addDatum(release);
+    }
+    for (Sprint sprint : projectsSprints) {
+      mainApp.deleteSprint(sprint);
+      undoRedoObject.addDatum(sprint);
+    }
 
     undoRedoHandler.newAction(undoRedoObject);
   }
@@ -617,6 +642,24 @@ public class UndoRedoHandlerTest {
     undoRedoObject.setAgileItem(project);
     undoRedoObject.addDatum(lastProject);
     undoRedoObject.addDatum(newProject);
+
+    undoRedoHandler.newAction(undoRedoObject);
+  }
+
+  private void newProjectWithTeamAndBacklog() {
+    projectLabel = "proj";
+    projectName = "The Project's Name";
+    projectDescription = "This is a description for the project";
+    project = new Project(projectLabel, projectName, projectDescription);
+    project.addTeam(new AgileHistory(team, LocalDate.MIN, LocalDate.MAX)); // assigned forever
+    project.setBacklog(backlog);
+
+    mainApp.addProject(project);
+
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+    undoRedoObject.setAction(Action.PROJECT_CREATE);
+    undoRedoObject.setAgileItem(project);
+    undoRedoObject.addDatum(new Project(project));
 
     undoRedoHandler.newAction(undoRedoObject);
   }
@@ -4217,5 +4260,162 @@ public class UndoRedoHandlerTest {
     assertTrue(mainApp.getBacklogs().isEmpty());
     assertEquals(5, undoRedoHandler.getUndoStack().size());
     assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+  }
+
+  @Test
+  public void testSpecialDeleteProjectUndo() throws Exception {
+    // assign both release and sprints to a project and test that undo brings them back
+    assertTrue(mainApp.getPeople().isEmpty());
+    assertTrue(mainApp.getTeams().isEmpty());
+    assertTrue(mainApp.getStories().isEmpty());
+    assertTrue(mainApp.getBacklogs().isEmpty());
+    assertTrue(mainApp.getProjects().isEmpty());
+    assertTrue(mainApp.getReleases().isEmpty());
+    assertTrue(mainApp.getSprints().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().isEmpty());
+
+    newPerson();
+    newTeamWithMember();
+    newStoryWithAC();
+    newBacklog();
+    newProjectWithTeamAndBacklog();
+    newRelease();
+    newSprint();
+
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(1, mainApp.getTeams().size());
+    assertEquals(1, mainApp.getStories().size());
+    assertEquals(1, mainApp.getBacklogs().size());
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(1, mainApp.getReleases().size());
+    assertEquals(1, mainApp.getSprints().size());
+    assertEquals(7, undoRedoHandler.getUndoStack().size());
+
+    Project origProject = mainApp.getProjects().get(0);
+    Release origRelease = mainApp.getReleases().get(0);
+    Sprint origSprint = mainApp.getSprints().get(0);
+
+    deleteNewestProject();
+
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(1, mainApp.getTeams().size());
+    assertEquals(1, mainApp.getStories().size());
+    assertEquals(1, mainApp.getBacklogs().size());
+    assertTrue(mainApp.getProjects().isEmpty());
+    assertTrue(mainApp.getReleases().isEmpty());
+    assertTrue(mainApp.getSprints().isEmpty());
+    assertEquals(8, undoRedoHandler.getUndoStack().size());
+
+    undoRedoHandler.undo();
+
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(1, mainApp.getTeams().size());
+    assertEquals(1, mainApp.getStories().size());
+    assertEquals(1, mainApp.getBacklogs().size());
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(1, mainApp.getReleases().size());
+    assertEquals(1, mainApp.getSprints().size());
+    assertEquals(7, undoRedoHandler.getUndoStack().size());
+
+    assertSame(origProject, mainApp.getProjects().get(0));
+    assertSame(origRelease, mainApp.getReleases().get(0));
+    assertSame(origProject, mainApp.getReleases().get(0).getProjectRelease());
+    assertSame(origSprint, mainApp.getSprints().get(0));
+    assertSame(origProject, mainApp.getSprints().get(0).getSprintProject());
+    assertSame(origRelease, mainApp.getSprints().get(0).getSprintRelease());
+  }
+
+  @Test
+  public void testSpecialDeleteProjectRedo() throws Exception {
+    // assign both release and sprints to a project and test that undo brings them back and redo
+    // deletes them again
+    assertTrue(mainApp.getPeople().isEmpty());
+    assertTrue(mainApp.getTeams().isEmpty());
+    assertTrue(mainApp.getStories().isEmpty());
+    assertTrue(mainApp.getBacklogs().isEmpty());
+    assertTrue(mainApp.getProjects().isEmpty());
+    assertTrue(mainApp.getReleases().isEmpty());
+    assertTrue(mainApp.getSprints().isEmpty());
+    assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+
+    newPerson();
+    newTeamWithMember();
+    newStoryWithAC();
+    newBacklog();
+    newProjectWithTeamAndBacklog();
+    newRelease();
+    newSprint();
+
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(1, mainApp.getTeams().size());
+    assertEquals(1, mainApp.getStories().size());
+    assertEquals(1, mainApp.getBacklogs().size());
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(1, mainApp.getReleases().size());
+    assertEquals(1, mainApp.getSprints().size());
+    assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+
+    Project origProject = mainApp.getProjects().get(0);
+    Release origRelease = mainApp.getReleases().get(0);
+    Sprint origSprint = mainApp.getSprints().get(0);
+
+    deleteNewestProject();
+
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(1, mainApp.getTeams().size());
+    assertEquals(1, mainApp.getStories().size());
+    assertEquals(1, mainApp.getBacklogs().size());
+    assertTrue(mainApp.getProjects().isEmpty());
+    assertTrue(mainApp.getReleases().isEmpty());
+    assertTrue(mainApp.getSprints().isEmpty());
+    assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+
+    undoRedoHandler.undo();
+
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(1, mainApp.getTeams().size());
+    assertEquals(1, mainApp.getStories().size());
+    assertEquals(1, mainApp.getBacklogs().size());
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(1, mainApp.getReleases().size());
+    assertEquals(1, mainApp.getSprints().size());
+    assertEquals(1, undoRedoHandler.getRedoStack().size());
+
+    assertSame(origProject, mainApp.getProjects().get(0));
+    assertSame(origRelease, mainApp.getReleases().get(0));
+    assertSame(origProject, mainApp.getReleases().get(0).getProjectRelease());
+    assertSame(origSprint, mainApp.getSprints().get(0));
+    assertSame(origProject, mainApp.getSprints().get(0).getSprintProject());
+    assertSame(origRelease, mainApp.getSprints().get(0).getSprintRelease());
+
+    undoRedoHandler.redo();
+
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(1, mainApp.getTeams().size());
+    assertEquals(1, mainApp.getStories().size());
+    assertEquals(1, mainApp.getBacklogs().size());
+    assertTrue(mainApp.getProjects().isEmpty());
+    assertTrue(mainApp.getReleases().isEmpty());
+    assertTrue(mainApp.getSprints().isEmpty());
+    assertTrue(undoRedoHandler.getRedoStack().isEmpty());
+
+    // undo again for good measure, mainly for testing object references
+    undoRedoHandler.undo();
+
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(1, mainApp.getTeams().size());
+    assertEquals(1, mainApp.getStories().size());
+    assertEquals(1, mainApp.getBacklogs().size());
+    assertEquals(1, mainApp.getProjects().size());
+    assertEquals(1, mainApp.getReleases().size());
+    assertEquals(1, mainApp.getSprints().size());
+    assertEquals(1, undoRedoHandler.getRedoStack().size());
+
+    assertSame(origProject, mainApp.getProjects().get(0));
+    assertSame(origRelease, mainApp.getReleases().get(0));
+    assertSame(origProject, mainApp.getReleases().get(0).getProjectRelease());
+    assertSame(origSprint, mainApp.getSprints().get(0));
+    assertSame(origProject, mainApp.getSprints().get(0).getSprintProject());
+    assertSame(origRelease, mainApp.getSprints().get(0).getSprintRelease());
   }
 }
