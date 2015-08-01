@@ -350,24 +350,34 @@ public class UndoRedoHandler {
     Project projectToChange = (Project) undoRedoObject.getAgileItem();
     Project projectData = (Project) data.get(0);
 
-    // Get the projects releases
-    List<AgileItem> releases = data.subList(1, data.size());
+    // Get the projects releases and sprints
+    List<AgileItem> additionalData = data.subList(1, data.size());
 
     // Make the changes and refresh the list
     if (undoOrRedo == UndoOrRedo.UNDO) {
       // Create the deleted project again
       projectToChange.copyValues(projectData);
       mainApp.addProject(projectToChange);
-      //for each of its releases make them again and add them to the project
-      for (AgileItem agileItem : releases) {
-        Release theRelease = (Release) agileItem;
-        mainApp.addRelease(theRelease);
+      // for each of its releases and sprints make them again and add them to the project
+      for (AgileItem agileItem : additionalData) {
+        if (agileItem instanceof Release) {
+          Release release = (Release) agileItem;
+          mainApp.addRelease(release);
+        } else if (agileItem instanceof Sprint) {
+          Sprint sprint = (Sprint) agileItem;
+          mainApp.addSprint(sprint);
+        }
       }
     } else {
       mainApp.deleteProject(projectToChange);
-      for (AgileItem agileItem : releases) {
-        Release theRelease = (Release) agileItem;
-        mainApp.deleteRelease(theRelease);
+      for (AgileItem agileItem : additionalData) {
+        if (agileItem instanceof Release) {
+          Release release = (Release) agileItem;
+          mainApp.deleteRelease(release);
+        } else if (agileItem instanceof Sprint) {
+          Sprint sprint = (Sprint) agileItem;
+          mainApp.deleteSprint(sprint);
+        }
       }
     }
     mainApp.refreshList(null);

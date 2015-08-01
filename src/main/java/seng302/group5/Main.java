@@ -986,32 +986,73 @@ public class Main extends Application {
         Project project = (Project) agileItem;
 
         ArrayList<Release> projectsReleases = new ArrayList<>();
+        ArrayList<Sprint> projectsSprints = new ArrayList<>();
 
         for (Release release : releases) {
           if (release.getProjectRelease().equals(project)) {
             projectsReleases.add(release);
           }
         }
+        for (Sprint sprint : sprints) {
+          if (sprint.getSprintProject().equals(project)) {
+            projectsSprints.add(sprint);
+          }
+        }
         if (!projectsReleases.isEmpty()) {
-          //if so open a yes/no dialog
+          //if so open a yes/no dialog (note can't have sprints on project without releases)
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
           alert.setTitle("Releases still exist for this project");
           alert.setHeaderText(null);
-          int messageLength = 1;
-          String message = String.format("Do you want to delete project '%s' and its releases:\n\n",
-                                         project.getProjectName());
-          for (Release releases : projectsReleases) {
-            messageLength++;
-            message += String.format("%s\n",
-                                     releases.getLabel());
+          String contentText = String.format("Do you want to delete project '%s' and its "
+                                         + "associated items?", project.getProjectName());
+          alert.setResizable(true);
+          alert.setContentText(contentText);
+
+          String message = "Releases:\n";
+          for (Release release : projectsReleases) {
+            message += String.format("\t%s\n", release.getLabel());
           }
-          alert.getDialogPane().setPrefHeight(60 + 30 * messageLength);
-          alert.setContentText(message);
+          // Extending message for sprints
+          if (!projectsSprints.isEmpty()) {
+            message += "Sprints:\n";
+            for (Sprint sprintDelete : projectsSprints) {
+              if (sprintDelete.getSprintFullName().equals("")) {
+                message += String.format("\t%s - [No name]\n",
+                                         sprintDelete.getLabel());
+              } else {
+                message += String.format("\t%s - %s\n",
+                                         sprintDelete.getLabel(),
+                                         sprintDelete.getSprintFullName());
+              }
+            }
+          }
+
+          Label label = new Label("The affected items are:");
+          TextArea textArea = new TextArea(message);
+          textArea.setEditable(false);
+          textArea.setWrapText(true);
+
+          textArea.setMaxWidth(Double.MAX_VALUE);
+          textArea.setMaxHeight(Double.MAX_VALUE);
+          GridPane.setVgrow(textArea, Priority.ALWAYS);
+          GridPane.setHgrow(textArea, Priority.ALWAYS);
+
+          GridPane expContent = new GridPane();
+          expContent.setMaxWidth(Double.MAX_VALUE);
+          expContent.add(label, 0, 0);
+          expContent.add(textArea, 0, 1);
+
+          // Set expandable Exception into the dialog pane.
+          alert.getDialogPane().setExpandableContent(expContent);
+
           //checks response
           Optional<ButtonType> result = alert.showAndWait();
           if (result.get() == ButtonType.OK) {
             for (Release release : projectsReleases) {
               deleteRelease(release);
+            }
+            for (Sprint sprint : projectsSprints) {
+              deleteSprint(sprint);
             }
             deleteProject(project);
           } else {
@@ -1023,6 +1064,9 @@ public class Main extends Application {
         undoRedoObject = generateDelUndoRedoObject(Action.PROJECT_DELETE, agileItem);
         for (Release release : projectsReleases) {
           undoRedoObject.addDatum(release);
+        }
+        for (Sprint sprint : projectsSprints) {
+          undoRedoObject.addDatum(sprint);
         }
         newAction(undoRedoObject);
         break;
