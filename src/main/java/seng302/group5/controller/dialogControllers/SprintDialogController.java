@@ -131,7 +131,7 @@ public class SprintDialogController {
       sprintReleaseCombo.getSelectionModel().select(sprint.getSprintRelease());
       String dateFormat = "dd/MM/yyy";
       releaseDate.setText(sprint.getSprintRelease().getReleaseDate().format(
-          DateTimeFormatter.ofPattern(dateFormat)).toString());
+          DateTimeFormatter.ofPattern(dateFormat)));
       sprintStartDate.setValue(sprint.getSprintStart());
       sprintEndDate.setValue(sprint.getSprintEnd());
       allocatedStories.addAll(sprint.getSprintStories());
@@ -203,7 +203,7 @@ public class SprintDialogController {
                            != null) {
                          releaseDate.setText(sprintReleaseCombo.getSelectionModel()
                                                  .getSelectedItem().getReleaseDate().
-                                 format(DateTimeFormatter.ofPattern(dateFormat)).toString());
+                                 format(DateTimeFormatter.ofPattern(dateFormat)));
                        }
                      }
         );
@@ -288,6 +288,8 @@ public class SprintDialogController {
     availableStoriesList.setItems(availableStories);
     allocatedStoriesList.setItems(allocatedStoriesPrioritised);
 
+    comboListenerFlag = false;
+
     sprintBacklogCombo.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldBacklog, newBacklog) -> {
 
@@ -333,36 +335,32 @@ public class SprintDialogController {
 
             refreshLists();
           } else {
-            if (oldBacklog != null) {
-              Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-              alert.setTitle("Chosen backlog is not complete");
-              alert.setHeaderText(null);
-              String
-                  message =
-                  String.format(
-                      "The backlog you have selected does not contain all the required information to be able to create a sprint.\n"
-                      + "Do you want to continue?");
-              alert.getDialogPane().setPrefHeight(120);
-              alert.setContentText(message);
-              //checks response
-              Optional<ButtonType> result = alert.showAndWait();
-              if (result.get() == ButtonType.OK) {
-                project = null;
-                sprintProjectLabel.setText("No Project Found");
-                sprintTeamCombo.setValue(null);
-                sprintReleaseCombo.setValue(null);
-                sprintTeamCombo.setDisable(true);
-                sprintReleaseCombo.setDisable(true);
-                availableStories.clear();
-                allocatedStoriesPrioritised.clear();
-                allocatedStories.clear();
-              } else {
-                comboListenerFlag = true;
-                Platform.runLater(() -> {
-                  // to avoid firing the listener from within itself
-                  sprintBacklogCombo.setValue(oldBacklog);
-                });
-              }
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Chosen backlog is not complete");
+            alert.setHeaderText(null);
+            String message = "The backlog you have selected does not contain all the required "
+                             + "information to be able to create a sprint.\n"
+                             + "Do you want to continue?";
+            alert.getDialogPane().setPrefHeight(120);
+            alert.setContentText(message);
+            //checks response
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+              project = null;
+              sprintProjectLabel.setText("No Project Found");
+              sprintTeamCombo.setValue(null);
+              sprintReleaseCombo.setValue(null);
+              sprintTeamCombo.setDisable(true);
+              sprintReleaseCombo.setDisable(true);
+              availableStories.clear();
+              allocatedStoriesPrioritised.clear();
+              allocatedStories.clear();
+            } else {
+              comboListenerFlag = true;
+              Platform.runLater(() -> {
+                // to avoid firing the listener from within itself
+                sprintBacklogCombo.setValue(oldBacklog);
+              });
             }
           }
         });
@@ -555,7 +553,7 @@ public class SprintDialogController {
    */
   @FXML
   protected void btnCancelClick(ActionEvent event) {
-    if (createOrEdit == createOrEdit.EDIT && Settings.correctList(sprint)) {
+    if (createOrEdit == CreateOrEdit.EDIT && Settings.correctList(sprint)) {
       mainApp.refreshList(sprint);
     }
     thisStage.close();
