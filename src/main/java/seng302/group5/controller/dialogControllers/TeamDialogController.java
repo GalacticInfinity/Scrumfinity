@@ -410,7 +410,7 @@ public class TeamDialogController {
    */
   @FXML
   protected void btnCancelClick(ActionEvent event) {
-    if (createOrEdit == createOrEdit.EDIT && Settings.correctList(team)) {
+    if (createOrEdit == CreateOrEdit.EDIT && Settings.correctList(team)) {
       mainApp.refreshList(team);
     }
     thisStage.close();
@@ -549,7 +549,7 @@ public class TeamDialogController {
       // calling super here is very important - don't skip this!
       super.updateItem(item, empty);
 
-      setText(item == null ? "" : item.getPerson().getLabel());
+      setText(item == null ? "" : item.toString());
     }
   }
 
