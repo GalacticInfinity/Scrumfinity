@@ -6,7 +6,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="503.0" prefWidth="430.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.StoryDialogController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="519.0" prefWidth="430.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.StoryDialogController">
     <children>
         <HBox alignment="BOTTOM_LEFT" prefHeight="32.0" prefWidth="434.0" spacing="10.0">
             <children>
@@ -138,6 +138,19 @@
                   <Tooltip text="The estimate can only be changed in the backlog it is assigned too" />
                </tooltip>
             </Label>
+         </children>
+         <VBox.margin>
+            <Insets top="5.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox prefHeight="25.0" prefWidth="425.0">
+         <children>
+            <Label prefHeight="39.0" prefWidth="135.0" text="Status">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="statusCombo" prefHeight="25.0" prefWidth="200.0" promptText="Set status" />
          </children>
          <VBox.margin>
             <Insets top="5.0" />
