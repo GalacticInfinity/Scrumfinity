@@ -704,12 +704,14 @@ public class Loading {
             break;
           }
         }
-        storyLine = loadedFile.readLine();
-        storyData = storyLine.replaceAll("(?i)(.*<readiness.*?>)(.+?)(</readiness>)", "$2");
-        if (storyData.equals("true")) {
-          newStory.setStoryState(true);
-        } else {
-          newStory.setStoryState(false);
+        if (saveVersion >= 0.4) {
+          storyLine = loadedFile.readLine();
+          storyData = storyLine.replaceAll("(?i)(.*<readiness.*?>)(.+?)(</readiness>)", "$2");
+          if (storyData.equals("true")) {
+            newStory.setStoryState(true);
+          } else {
+            newStory.setStoryState(false);
+          }
         }
 
         // Non-mandatory fields
