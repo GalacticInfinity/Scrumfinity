@@ -377,7 +377,7 @@ public class RevertHandler {
     // For every available backlog
     for (Backlog backlog : backlogs) {
       List<Story> storyList = new ArrayList<>();
-      Map<Story, Integer> storyEstimateMap = new HashMap<>();
+      Map<Story, Integer> storyEstimateMap = new IdentityHashMap<>();
       // For every story in that backlog
       for (Story backlogStory : backlog.getStories()) {
         Story story = storyMap.get(backlogStory.getLabel());
@@ -496,7 +496,7 @@ public class RevertHandler {
       projectLabel = sprint.getSprintProject().getLabel();
       sprint.setSprintProject(projectMap.get(projectLabel));
     }
-  };
+  }
 
   /**
    * Creates proper references between the Team inside the Sprint object and mainApp Team
@@ -516,7 +516,7 @@ public class RevertHandler {
       teamLabel = sprint.getSprintTeam().getLabel();
       sprint.setSprintTeam(teamMap.get(teamLabel));
     }
-  };
+  }
 
   /**
    * Creates proper references between the Release inside the Sprint object and mainApp Release
@@ -536,7 +536,7 @@ public class RevertHandler {
       releaseLabel = sprint.getSprintRelease().getLabel();
       sprint.setSprintRelease(releaseMap.get(releaseLabel));
     }
-  };
+  }
 
   /**
    * Creates proper references between the Stories inside the Sprint object and mainApp Stories

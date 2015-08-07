@@ -1,6 +1,7 @@
 package seng302.group5.controller.dialogControllers;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import javafx.collections.FXCollections;
@@ -29,6 +30,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
+import seng302.group5.controller.enums.Status;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Person;
 import seng302.group5.model.Sprint;
@@ -59,6 +61,7 @@ public class StoryDialogController {
   @FXML private Button btnCreateStory;
   @FXML private HBox btnContainer;
   @FXML private Label shownEstimate;
+  @FXML private ComboBox<String> statusCombo;
 
   private Main mainApp;
   private Stage thisStage;
@@ -70,6 +73,9 @@ public class StoryDialogController {
   private ObservableList<Person> availablePeople = FXCollections.observableArrayList();
   private ObservableList<String> acceptanceCriteria = FXCollections.observableArrayList();
   private ObservableList<Backlog> backlogs = FXCollections.observableArrayList();
+  private ObservableList<String> statuses = FXCollections.observableArrayList();
+
+  Map<String, Status> statusStringMap;
 
   /**
    * Setup the Story dialog controller.
@@ -84,6 +90,12 @@ public class StoryDialogController {
     this.thisStage = thisStage;
 
     String os = System.getProperty("os.name");
+
+    statusStringMap = new HashMap<>();
+    statusStringMap.put("Done", Status.DONE);
+    statusStringMap.put("Verify", Status.VERIFY);
+    statusStringMap.put("In Progress", Status.IN_PROGRESS);
+    statusStringMap.put("Not Started", Status.NOT_STARTED);
 
     if (!os.startsWith("Windows")) {
       btnContainer.getChildren().remove(btnCreateStory);
@@ -105,6 +117,13 @@ public class StoryDialogController {
       storyDescriptionField.setText(story.getDescription());
       storyCreatorList.setValue(story.getCreator());
       acceptanceCriteria.setAll(story.getAcceptanceCriteria());
+
+      for (Map.Entry<String, Status> entry : statusStringMap.entrySet())
+      {
+        if (story.getStatus() == entry.getValue()){
+          statusCombo.setValue(entry.getKey());
+        }
+      }
 
       initialiseLists();
       storyCreatorList.setDisable(true);
@@ -257,6 +276,7 @@ public class StoryDialogController {
     String storyDescription = storyDescriptionField.getText().trim();
     Person creator = storyCreatorList.getValue();
     Backlog backlog = backlogCombo.getValue();
+    Status status = statusStringMap.get(statusCombo.getValue());
 
     try {
       label = parseStoryLabel(storyLabelField.getText());
@@ -285,7 +305,7 @@ public class StoryDialogController {
       alert.showAndWait();
     } else {
       if (createOrEdit == CreateOrEdit.CREATE) {
-        story = new Story(label, storyName, storyDescription, creator, acceptanceCriteria);
+        story = new Story(label, storyName, storyDescription, creator, acceptanceCriteria, status);
         mainApp.addStory(story);
         if (backlog != null) {
           backlog.addStory(story);
@@ -306,6 +326,7 @@ public class StoryDialogController {
         if (lastBacklog == null && backlog != null) {
           backlog.addStory(story);
         }
+        story.setStatus(status);
 
         if (Settings.correctList(story)) {
           mainApp.refreshList(story);
@@ -563,6 +584,12 @@ public class StoryDialogController {
         availablePeople.add(person);
       }
       this.backlogs.addAll(mainApp.getBacklogs());
+
+      for (String status : statusStringMap.keySet()) {
+        this.statuses.add(status);
+      }
+      this.statusCombo.setItems(statuses); //This is the only way i can think to do this with an
+                                          // Enum. I know how shit this is :C i am so sad
 
       this.storyCreatorList.setVisibleRowCount(5);
       this.storyCreatorList.setItems(availablePeople);

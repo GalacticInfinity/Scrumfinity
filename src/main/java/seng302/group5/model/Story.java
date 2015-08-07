@@ -7,6 +7,7 @@ import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import seng302.group5.controller.enums.Status;
 
 /**
  * Story model. So that managers can keep track of the things people need to do, a way to record
@@ -26,6 +27,7 @@ public class Story implements AgileItem, Comparable<Story> {
   private List<Story> dependencies;
   private boolean isReady = false;
   private ObservableList<String> acceptanceCriteria;
+  private Status status;
 
   /**
    * Empty constructor used for save/load.
@@ -38,6 +40,7 @@ public class Story implements AgileItem, Comparable<Story> {
     this.acceptanceCriteria = FXCollections.observableArrayList();
     this.isReady = false;
     this.dependencies = new ArrayList<>();
+    this.status = Status.NOT_STARTED;
   }
 
   /**
@@ -55,6 +58,7 @@ public class Story implements AgileItem, Comparable<Story> {
     this.acceptanceCriteria = FXCollections.observableArrayList();
     this.isReady = false;
     this.dependencies = new ArrayList<>();
+    this.status = Status.NOT_STARTED;
   }
 
   /**
@@ -78,10 +82,11 @@ public class Story implements AgileItem, Comparable<Story> {
     }
     this.isReady = false;
     this.dependencies = new ArrayList<>();
+    this.status = Status.NOT_STARTED;
   }
 
   /**
-   * Constructor for all fields.
+   * Constructor for all fields but not STATUS.
    * @param label               Unique none-null id of the story.
    * @param storyName           A full name for this story.
    * @param description         A full description for this story.
@@ -105,6 +110,61 @@ public class Story implements AgileItem, Comparable<Story> {
     } else {
       this.dependencies = dependencies;
     }
+    this.status = Status.NOT_STARTED;
+  }
+
+  /**
+   * Constructor for all fields. minus dependancies.
+   * @param label               Unique none-null id of the story.
+   * @param storyName           A full name for this story.
+   * @param description         A full description for this story.
+   * @param creator             The owner of the story, who physically created it in the first place.
+   * @param acceptanceCriteria  List of acceptance criteria of the story.
+   * @param status              The status that the story is in. (Done, Not started, etc)
+   */
+  public Story(String label, String storyName, String description, Person creator,
+               ObservableList<String> acceptanceCriteria, Status status) {
+    this.label = label;
+    this.storyName = storyName;
+    this.description = description;
+    this.creator = creator;
+    if (acceptanceCriteria == null) {
+      this.acceptanceCriteria = FXCollections.observableArrayList();
+    } else {
+      this.acceptanceCriteria = acceptanceCriteria;
+    }
+    this.dependencies = new ArrayList<>();
+    this.status = status;
+  }
+
+
+  /**
+   * Constructor for all fields.
+   * @param label               Unique none-null id of the story.
+   * @param storyName           A full name for this story.
+   * @param description         A full description for this story.
+   * @param creator             The owner of the story, who physically created it in the first place.
+   * @param acceptanceCriteria  List of acceptance criteria of the story.
+   * @param dependencies        List of stories that this story depends on.
+   * @param status              The status that the story is in. (Done, Not started, etc)
+   */
+  public Story(String label, String storyName, String description, Person creator,
+               ObservableList<String> acceptanceCriteria, List<Story> dependencies, Status status) {
+    this.label = label;
+    this.storyName = storyName;
+    this.description = description;
+    this.creator = creator;
+    if (acceptanceCriteria == null) {
+      this.acceptanceCriteria = FXCollections.observableArrayList();
+    } else {
+      this.acceptanceCriteria = acceptanceCriteria;
+    }
+    if (dependencies == null) {
+      this.dependencies = new ArrayList<>();
+    } else {
+      this.dependencies = dependencies;
+    }
+    this.status = status;
   }
 
   /**
@@ -126,6 +186,7 @@ public class Story implements AgileItem, Comparable<Story> {
       this.dependencies.addAll(clone.getDependencies());
     }
     this.isReady = clone.getStoryState();
+    this.status = clone.getStatus();
   }
 
   /**
@@ -267,6 +328,15 @@ public class Story implements AgileItem, Comparable<Story> {
     this.dependencies.clear();
   }
 
+
+  public Status getStatus() {
+    return status;
+  }
+
+  public void setStatus(Status status) {
+    this.status = status;
+  }
+
   /**
    * Copies the story input fields into current object.
    * @param agileItem Story that's fields are to be copied.
@@ -284,6 +354,7 @@ public class Story implements AgileItem, Comparable<Story> {
       this.acceptanceCriteria.addAll(clone.getAcceptanceCriteria());
       this.dependencies.clear();
       this.dependencies.addAll(clone.getDependencies());
+      this.status = clone.getStatus();
     }
   }
 
@@ -330,6 +401,9 @@ public class Story implements AgileItem, Comparable<Story> {
     if (!dependencies.equals(story.dependencies)) {
       return false;
     }
+    if(!status.equals(story.status)) {
+      return false;
+    }
     return acceptanceCriteria.equals(story.acceptanceCriteria);
 
   }
@@ -346,6 +420,7 @@ public class Story implements AgileItem, Comparable<Story> {
     result = 31 * result + dependencies.hashCode();
     result = 31 * result + (isReady ? 1 : 0);
     result = 31 * result + acceptanceCriteria.hashCode();
+    result = 31 * result + status.name().hashCode();
     return result;
   }
 
