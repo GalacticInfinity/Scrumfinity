@@ -61,6 +61,7 @@ public class StoryDialogController {
   @FXML private Button btnCreateStory;
   @FXML private HBox btnContainer;
   @FXML private Label shownEstimate;
+  @FXML private TextField impedimentsTextField;
   @FXML private ComboBox<String> statusCombo;
 
   private Main mainApp;
@@ -116,6 +117,7 @@ public class StoryDialogController {
       storyNameField.setText(story.getStoryName());
       storyDescriptionField.setText(story.getDescription());
       storyCreatorList.setValue(story.getCreator());
+      impedimentsTextField.setText(story.getImpediments());
       acceptanceCriteria.setAll(story.getAcceptanceCriteria());
 
       for (Map.Entry<String, Status> entry : statusStringMap.entrySet())
@@ -212,6 +214,13 @@ public class StoryDialogController {
       }
     });
 
+    impedimentsTextField.textProperty().addListener((observable, oldValues, newVlaue) -> {
+      //For disabling the button
+      if(createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+
     backlogCombo.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldValue, newValue) -> {
           //For disabling the button
@@ -229,6 +238,7 @@ public class StoryDialogController {
     if (storyDescriptionField.getText().equals(story.getDescription()) &&
         storyLabelField.getText().equals(story.getLabel()) &&
         storyNameField.getText().equals(story.getStoryName()) &&
+        impedimentsTextField.getText().equals(story.getImpediments()) &&
         listAC.getItems().equals(story.getAcceptanceCriteria()) &&
         readyCheckbox.isSelected() == story.getStoryState() &&
         (backlogCombo.getValue() == null || backlogCombo.getValue().equals(lastBacklog))) {
@@ -274,6 +284,7 @@ public class StoryDialogController {
     String label = "";
     String storyName = storyNameField.getText().trim();
     String storyDescription = storyDescriptionField.getText().trim();
+    String impediments = impedimentsTextField.getText().trim();
     Person creator = storyCreatorList.getValue();
     Backlog backlog = backlogCombo.getValue();
     Status status = statusStringMap.get(statusCombo.getValue());
@@ -305,6 +316,8 @@ public class StoryDialogController {
       alert.showAndWait();
     } else {
       if (createOrEdit == CreateOrEdit.CREATE) {
+        story = new Story(label, storyName, storyDescription, creator, acceptanceCriteria);
+        story.setImpediments(impediments);
         story = new Story(label, storyName, storyDescription, creator, acceptanceCriteria, status);
         mainApp.addStory(story);
         if (backlog != null) {
@@ -320,6 +333,7 @@ public class StoryDialogController {
         story.setLabel(label);
         story.setStoryName(storyName);
         story.setDescription(storyDescription);
+        story.setImpediments(impediments);
         story.setCreator(creator);
         story.setAcceptanceCriteria(acceptanceCriteria);
         story.setStoryState(readyCheckbox.isSelected());

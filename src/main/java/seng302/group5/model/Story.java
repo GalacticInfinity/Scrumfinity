@@ -24,6 +24,7 @@ public class Story implements AgileItem, Comparable<Story> {
   private String storyName;
   private String description;
   private Person creator;
+  private String impediments;
   private List<Story> dependencies;
   private boolean isReady = false;
   private ObservableList<String> acceptanceCriteria;
@@ -37,6 +38,7 @@ public class Story implements AgileItem, Comparable<Story> {
     this.storyName = "";
     this.description = "";
     this.creator = null;
+    this.impediments = "";
     this.acceptanceCriteria = FXCollections.observableArrayList();
     this.isReady = false;
     this.dependencies = new ArrayList<>();
@@ -177,6 +179,7 @@ public class Story implements AgileItem, Comparable<Story> {
     this.storyName = clone.getStoryName();
     this.description = clone.getDescription();
     this.creator = clone.getCreator();
+    this.impediments = clone.getImpediments();
     this.acceptanceCriteria = FXCollections.observableArrayList();
     if (clone.getAcceptanceCriteria() != null) {
       this.acceptanceCriteria.addAll(clone.getAcceptanceCriteria());
@@ -235,6 +238,22 @@ public class Story implements AgileItem, Comparable<Story> {
    */
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  /**
+   * Gets the impediments of story.
+   * @return Impediments of story.
+   */
+  public String getImpediments() {
+    return this.impediments;
+  }
+
+  /**
+   * Sets the impediments of story.
+   * @param impediments The impediments as String.
+   */
+  public void setImpediments(String impediments) {
+    this.impediments = impediments;
   }
 
   /**
@@ -348,6 +367,7 @@ public class Story implements AgileItem, Comparable<Story> {
       this.label = clone.getLabel();
       this.storyName = clone.getStoryName();
       this.description = clone.getDescription();
+      this.impediments = clone.getImpediments();
       this.creator = clone.getCreator();
       this.isReady = clone.getStoryState();
       this.acceptanceCriteria.clear();
@@ -392,6 +412,9 @@ public class Story implements AgileItem, Comparable<Story> {
     if (!storyName.equals(story.storyName)) {
       return false;
     }
+    if (!impediments.equals(story.impediments)) {
+      return false;
+    }
     if (!description.equals(story.description)) {
       return false;
     }
@@ -417,6 +440,7 @@ public class Story implements AgileItem, Comparable<Story> {
     result = 31 * result + storyName.hashCode();
     result = 31 * result + description.hashCode();
     result = 31 * result + creator.hashCode();
+    result = 31 * result + impediments.hashCode();
     result = 31 * result + dependencies.hashCode();
     result = 31 * result + (isReady ? 1 : 0);
     result = 31 * result + acceptanceCriteria.hashCode();

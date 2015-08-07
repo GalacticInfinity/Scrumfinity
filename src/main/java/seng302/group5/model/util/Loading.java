@@ -716,6 +716,13 @@ public class Loading {
 
         // Non-mandatory fields
         while ((!(storyLine = loadedFile.readLine()).matches(".*</Story>"))) {
+          if (saveVersion >= 0.5) {
+            if (storyLine.startsWith("\t\t<impediments>")) {
+              storyData =
+                  storyLine.replaceAll("(?i)(.*<impediments.*?>)(.+?)(</impediments>)", "$2");
+              newStory.setImpediments(storyData);
+            }
+          }
           if (storyLine.startsWith("\t\t<longName>")) {
             storyData = storyLine.replaceAll("(?i)(.*<longName.*?>)(.+?)(</longName>)", "$2");
             newStory.setStoryName(storyData);
