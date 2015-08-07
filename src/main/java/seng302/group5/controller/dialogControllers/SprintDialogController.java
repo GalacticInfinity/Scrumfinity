@@ -102,6 +102,14 @@ public class SprintDialogController {
     this.mainApp = mainApp;
     this.thisStage = thisStage;
 
+    if (sprint != null) {
+      this.sprint = sprint;
+      this.lastSprint = new Sprint(sprint);
+    } else {
+      this.sprint = null;
+      this.lastSprint = null;
+    }
+
     String os = System.getProperty("os.name");
 
     if (!os.startsWith("Windows")) {
@@ -147,14 +155,6 @@ public class SprintDialogController {
       refreshLists();
     }
     this.createOrEdit = createOrEdit;
-
-    if (sprint != null) {
-      this.sprint = sprint;
-      this.lastSprint = new Sprint(sprint);
-    } else {
-      this.sprint = null;
-      this.lastSprint = null;
-    }
 
     btnConfirm.setDefaultButton(true);
     thisStage.setResizable(false);
