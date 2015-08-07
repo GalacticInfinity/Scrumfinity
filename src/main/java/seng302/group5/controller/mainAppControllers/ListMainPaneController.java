@@ -687,11 +687,11 @@ public class ListMainPaneController {
     textImpedimentsHeader.setFill(Color.rgb(1, 0, 1));
     textImpedimentsHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
-    Text textImpedimentsBody;
-    if (story.getImpediments().length() != 0) {
-      textImpedimentsBody = new Text(story.getImpediments());
+    Text textImpedimentsBody = new Text();
+    if (!story.getImpediments().equals("")) {
+      textImpedimentsBody.setText(story.getImpediments());
     } else {
-      textImpedimentsBody = new Text("N/A");
+      textImpedimentsBody.setText("N/A");
     }
     textImpedimentsBody.setFill(Color.rgb(1, 0, 1));
     textImpedimentsBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));

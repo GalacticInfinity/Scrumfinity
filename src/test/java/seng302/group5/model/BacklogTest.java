@@ -121,6 +121,7 @@ public class BacklogTest {
   @Test
   public void testHashCode() throws Exception {
     Story story = new Story("the story", "the very story", "description", productOwner, null);
+    story.setImpediments("The is a problem!");
     backlog.addStory(story);
 
     Backlog backlog2 = new Backlog(label, backlogName, backlogDescription, productOwner, fibonacci);

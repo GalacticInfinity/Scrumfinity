@@ -182,7 +182,7 @@ public class StoryDialogController {
 
     storyLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
-      if(createOrEdit == CreateOrEdit.EDIT) {
+      if (createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
       }
       // Handle TextField text changes.
@@ -316,9 +316,8 @@ public class StoryDialogController {
       alert.showAndWait();
     } else {
       if (createOrEdit == CreateOrEdit.CREATE) {
-        story = new Story(label, storyName, storyDescription, creator, acceptanceCriteria);
-        story.setImpediments(impediments);
         story = new Story(label, storyName, storyDescription, creator, acceptanceCriteria, status);
+        story.setImpediments(impediments);
         mainApp.addStory(story);
         if (backlog != null) {
           backlog.addStory(story);

@@ -88,7 +88,7 @@ public class Story implements AgileItem, Comparable<Story> {
   }
 
   /**
-   * Constructor for all fields but not STATUS.
+   * Constructor for all fields but not STATUS or impediments.
    * @param label               Unique none-null id of the story.
    * @param storyName           A full name for this story.
    * @param description         A full description for this story.
@@ -116,7 +116,7 @@ public class Story implements AgileItem, Comparable<Story> {
   }
 
   /**
-   * Constructor for all fields. minus dependancies.
+   * Constructor for all fields. minus dependancies and impediments.
    * @param label               Unique none-null id of the story.
    * @param storyName           A full name for this story.
    * @param description         A full description for this story.
@@ -141,7 +141,7 @@ public class Story implements AgileItem, Comparable<Story> {
 
 
   /**
-   * Constructor for all fields.
+   * Constructor for all fields except impediments.
    * @param label               Unique none-null id of the story.
    * @param storyName           A full name for this story.
    * @param description         A full description for this story.
