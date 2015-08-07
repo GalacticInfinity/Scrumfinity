@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Person;
+import seng302.group5.model.Task;
 
 /**
  * A controller to handle the creation or editing tasks. Tasks involve a label, description,
