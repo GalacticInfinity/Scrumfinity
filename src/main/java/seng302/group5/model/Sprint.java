@@ -16,7 +16,7 @@ import java.util.List;
  *
  * Created by Alex Woo
  */
-public class Sprint implements AgileItem, HasTask, Comparable<Sprint> {
+public class Sprint implements AgileItem, Taskable, Comparable<Sprint> {
 
   private String sprintGoal;
   private String sprintDescription;

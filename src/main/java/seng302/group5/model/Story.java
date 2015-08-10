@@ -17,7 +17,7 @@ import javafx.collections.ObservableList;
  *
  * Created by Zander on 5/05/2015.
  */
-public class Story implements AgileItem, HasTask, Comparable<Story> {
+public class Story implements AgileItem, Taskable, Comparable<Story> {
 
   private String label;
   private String storyName;
