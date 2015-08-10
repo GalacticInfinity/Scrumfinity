@@ -17,7 +17,7 @@ import javafx.collections.ObservableList;
  *
  * Created by Zander on 5/05/2015.
  */
-public class Story implements AgileItem, Comparable<Story> {
+public class Story implements AgileItem, HasTask, Comparable<Story> {
 
   private String label;
   private String storyName;
@@ -25,6 +25,7 @@ public class Story implements AgileItem, Comparable<Story> {
   private Person creator;
   private String impediments;
   private List<Story> dependencies;
+  private List<Task> tasks;
   private boolean isReady = false;
   private ObservableList<String> acceptanceCriteria;
   private Status status;
@@ -41,6 +42,7 @@ public class Story implements AgileItem, Comparable<Story> {
     this.acceptanceCriteria = FXCollections.observableArrayList();
     this.isReady = false;
     this.dependencies = new ArrayList<>();
+    this.tasks = new ArrayList<>();
     this.status = Status.NOT_STARTED;
   }
 
@@ -59,6 +61,7 @@ public class Story implements AgileItem, Comparable<Story> {
     this.acceptanceCriteria = FXCollections.observableArrayList();
     this.isReady = false;
     this.dependencies = new ArrayList<>();
+    this.tasks = new ArrayList<>();
     this.status = Status.NOT_STARTED;
   }
 
@@ -83,6 +86,7 @@ public class Story implements AgileItem, Comparable<Story> {
     }
     this.isReady = false;
     this.dependencies = new ArrayList<>();
+    this.tasks = new ArrayList<>();
     this.status = Status.NOT_STARTED;
   }
 
@@ -111,6 +115,7 @@ public class Story implements AgileItem, Comparable<Story> {
     } else {
       this.dependencies = dependencies;
     }
+    this.tasks = new ArrayList<>();
     this.status = Status.NOT_STARTED;
   }
 
@@ -135,6 +140,7 @@ public class Story implements AgileItem, Comparable<Story> {
       this.acceptanceCriteria = acceptanceCriteria;
     }
     this.dependencies = new ArrayList<>();
+    this.tasks = new ArrayList<>();
     this.status = status;
   }
 
@@ -165,6 +171,7 @@ public class Story implements AgileItem, Comparable<Story> {
     } else {
       this.dependencies = dependencies;
     }
+    this.tasks = new ArrayList<>();
     this.status = status;
   }
 
@@ -188,6 +195,8 @@ public class Story implements AgileItem, Comparable<Story> {
       this.dependencies.addAll(clone.getDependencies());
     }
     this.isReady = clone.getStoryState();
+    this.tasks = new ArrayList<>();
+    this.tasks.addAll(clone.getTasks());
     this.status = clone.getStatus();
   }
 
@@ -346,6 +355,53 @@ public class Story implements AgileItem, Comparable<Story> {
     this.dependencies.clear();
   }
 
+  /**
+   * Get the tasks of the story.
+   *
+   * @return List of Task objects assigned to story.
+   */
+  @Override
+  public List<Task> getTasks() {
+    return Collections.unmodifiableList(tasks);
+  }
+
+  /**
+   * Add a single task to the story.
+   *
+   * @param task Task to add.
+   */
+  @Override
+  public void addTask(Task task) {
+    this.tasks.add(task);
+  }
+
+  /**
+   * Add a collection of tasks to the story.
+   *
+   * @param tasks Collection of tasks to add.
+   */
+  @Override
+  public void addAllTasks(Collection<Task> tasks) {
+    this.tasks.addAll(tasks);
+  }
+
+  /**
+   * Remove a single task from the story.
+   *
+   * @param task Task to remove.
+   */
+  @Override
+  public void removeTask(Task task) {
+    this.tasks.remove(task);
+  }
+
+  /**
+   * Remove all tasks from the story.
+   */
+  @Override
+  public void removeAllTasks() {
+    this.tasks.clear();
+  }
 
   public Status getStatus() {
     return status;
@@ -373,6 +429,8 @@ public class Story implements AgileItem, Comparable<Story> {
       this.acceptanceCriteria.addAll(clone.getAcceptanceCriteria());
       this.dependencies.clear();
       this.dependencies.addAll(clone.getDependencies());
+      this.tasks.clear();
+      this.tasks.addAll(clone.getTasks());
       this.status = clone.getStatus();
     }
   }
