@@ -7,7 +7,6 @@ import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import seng302.group5.controller.enums.Status;
 
 /**
  * Story model. So that managers can keep track of the things people need to do, a way to record
