@@ -36,6 +36,7 @@ import seng302.group5.model.Person;
 import seng302.group5.model.Sprint;
 import seng302.group5.model.Story;
 import seng302.group5.model.Task;
+import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoObject;
 import seng302.group5.model.util.Settings;
@@ -248,6 +249,7 @@ public class StoryDialogController {
    * Checks if there are any changed fields and disables or enables the button accordingly
    */
   private void checkButtonDisabled() {
+    // todo verify it works for editing tasks
     if (storyDescriptionField.getText().equals(story.getDescription()) &&
         storyLabelField.getText().equals(story.getLabel()) &&
         storyNameField.getText().equals(story.getStoryName()) &&
@@ -255,7 +257,8 @@ public class StoryDialogController {
         listAC.getItems().equals(story.getAcceptanceCriteria()) &&
         readyCheckbox.isSelected() == story.getStoryState() &&
         statusCombo.getValue().equals(story.getStatusString()) &&
-        (backlogCombo.getValue() == null || backlogCombo.getValue().equals(lastBacklog))) {
+        (backlogCombo.getValue() == null || backlogCombo.getValue().equals(lastBacklog)) &&
+        tasks.equals(story.getTasks())) {
       btnCreateStory.setDisable(true);
     } else {
       btnCreateStory.setDisable(false);
@@ -332,6 +335,7 @@ public class StoryDialogController {
       if (createOrEdit == CreateOrEdit.CREATE) {
         story = new Story(label, storyName, storyDescription, creator, acceptanceCriteria, status);
         story.setImpediments(impediments);
+        story.addAllTasks(tasks);
         mainApp.addStory(story);
         if (backlog != null) {
           backlog.addStory(story);
@@ -350,6 +354,8 @@ public class StoryDialogController {
         story.setCreator(creator);
         story.setAcceptanceCriteria(acceptanceCriteria);
         story.setStoryState(readyCheckbox.isSelected());
+        story.removeAllTasks();
+        story.addAllTasks(tasks);
         if (lastBacklog == null && backlog != null) {
           backlog.addStory(story);
         }
@@ -667,6 +673,41 @@ public class StoryDialogController {
       }
     }
     return false;
+  }
+
+  /**
+   * Open the dialog for task dialog creation. The created task will be added to the tasks list,
+   * not the story model.
+   */
+  @FXML
+  private void addTask() {
+    Team team = null;
+    if (story != null) {
+      for (Sprint sprint : mainApp.getSprints()) {
+        if (sprint.getSprintStories().contains(story)) {
+          team = sprint.getSprintTeam();
+          break;
+        }
+      }
+    }
+    mainApp.showTaskDialog(tasks, null, team, CreateOrEdit.CREATE, thisStage);
+    if (createOrEdit == CreateOrEdit.EDIT) {
+      checkButtonDisabled();
+    }
+  }
+
+  /**
+   * Remove the selected task from the list.
+   */
+  @FXML
+  private void removeTask() {
+    Task selectedTask = taskList.getSelectionModel().getSelectedItem();
+    if (selectedTask != null) {
+      tasks.remove(selectedTask);
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    }
   }
 
   /**

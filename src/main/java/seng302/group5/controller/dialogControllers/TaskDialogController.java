@@ -1,5 +1,7 @@
 package seng302.group5.controller.dialogControllers;
 
+import java.util.Collection;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -15,11 +17,8 @@ import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Person;
-import seng302.group5.model.Sprint;
 import seng302.group5.model.Status;
-import seng302.group5.model.Story;
 import seng302.group5.model.Task;
-import seng302.group5.model.Taskable;
 import seng302.group5.model.Team;
 
 /**
@@ -43,7 +42,7 @@ public class TaskDialogController {
   @FXML private Button btnCancel;
 
   private Main mainApp;
-  private Taskable parent;
+  private Collection<Task> taskCollection;
   private Stage thisStage;
   private CreateOrEdit createOrEdit;
   private Task task;
@@ -54,15 +53,17 @@ public class TaskDialogController {
   /**
    * Sets up the controller on start up. TODO: expand when it does more
    *
-   * @param parent The agileItem which will contain the task
+   * @param mainApp The main application which contains the sprint's teams
+   * @param taskCollection The collection which will contain the task
+   * @param team The team of the sprint which will contain the task
    * @param thisStage This is the window that will be displayed
    * @param createOrEdit This is an ENUM object to determine if creating or editing
    * @param task The object that will be edited (null if creating)
    */
-  public void setupController(Main mainApp, Taskable parent, Stage thisStage,
-                              CreateOrEdit createOrEdit, Task task) {
+  public void setupController(Main mainApp, Collection<Task> taskCollection, Team team,
+                              Stage thisStage, CreateOrEdit createOrEdit, Task task) {
     this.mainApp = mainApp;
-    this.parent = parent;
+    this.taskCollection = taskCollection;
     this.thisStage = thisStage;
 
     if (task != null) {
@@ -80,7 +81,7 @@ public class TaskDialogController {
       btnContainer.getChildren().add(btnConfirm);
     }
 
-    initialiseLists();
+    initialiseLists(team);
 
     if (createOrEdit == CreateOrEdit.CREATE) {
       thisStage.setTitle("Create New Task");
@@ -109,24 +110,11 @@ public class TaskDialogController {
   /**
    * Initialises the models lists todo expand when it does more
    */
-  private void initialiseLists() {
+  private void initialiseLists(Team team) {
     availablePeople = FXCollections.observableArrayList();
     allocatedPeople = FXCollections.observableArrayList();
 
-    Sprint sprint = null;
-    if (parent instanceof Sprint) {
-      sprint = (Sprint) parent;
-    } else if (parent instanceof Story) {
-      Story story = (Story) parent;
-      for (Sprint mainSprint : mainApp.getSprints()) {
-        if (mainSprint.getSprintStories().contains(story)) {
-          sprint = mainSprint;
-          break;
-        }
-      }
-    }
-    if (sprint != null) {
-      Team team = sprint.getSprintTeam();
+    if (team != null) {
       availablePeople.addAll(team.getTeamMembers());
     }
 
@@ -191,7 +179,7 @@ public class TaskDialogController {
     if (createOrEdit == CreateOrEdit.CREATE) {
       task = new Task(taskLabel, taskDescription, taskEstimateMinutes, taskStatus, allocatedPeople);
       // todo set logged effort of all people
-      parent.addTask(task);
+      taskCollection.add(task);
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       task.setLabel(taskLabel);
       task.setTaskDescription(taskDescription);

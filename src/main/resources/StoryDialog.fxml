@@ -235,12 +235,12 @@
             </VBox>
             <VBox prefHeight="540.0" prefWidth="70.0">
                <children>
-                  <Button fx:id="addTask" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" text="+">
+                  <Button fx:id="btnAddTask" mnemonicParsing="false" onAction="#addTask" prefHeight="30.0" prefWidth="50.0" text="+">
                      <VBox.margin>
                         <Insets left="10.0" right="2.0" top="220.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="removeTask" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" text="-">
+                  <Button fx:id="btnRemoveTask" mnemonicParsing="false" onAction="#removeTask" prefHeight="30.0" prefWidth="50.0" text="-">
                      <VBox.margin>
                         <Insets left="10.0" top="20.0" />
                      </VBox.margin>
