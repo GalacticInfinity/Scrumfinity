@@ -61,6 +61,8 @@ import seng302.group5.model.util.RevertHandler;
  */
 public class Main extends Application {
 
+
+
   private Stage primaryStage;
   private BorderPane rootLayout;
   private BorderPane loginLayout;
@@ -1488,6 +1490,19 @@ public class Main extends Application {
     return skills.sorted(Comparator.<Skill>naturalOrder());
   }
 
+  public ObservableList<Release> getReleasesbydate() {
+    Comparator<Release> byDate = new Comparator<Release>() {
+      @Override
+      public int compare(Release o1, Release o2) {
+        if (o1.getReleaseDate().isAfter(o2.getReleaseDate())) {
+          return 1;
+        } else return 0;
+      }
+      //
+    };
+    return releases.sorted(byDate);
+  }
+
   public ObservableList<Release> getReleases() {
     return releases.sorted(Comparator.<Release>naturalOrder());
   }
@@ -1511,6 +1526,18 @@ public class Main extends Application {
 
   public ObservableList<Sprint> getSprints() {
     return sprints.sorted(Comparator.<Sprint>naturalOrder());
+  }
+  public ObservableList<Sprint> getSprintsByDate() {
+    Comparator<Sprint> byDate = new Comparator<Sprint>() {
+      @Override
+      public int compare(Sprint o1, Sprint o2) {
+        if (o1.getSprintStart().isAfter(o2.getSprintStart())) {
+          return 1;
+        } else return 0;
+      }
+      //
+    };
+    return sprints.sorted(byDate);
   }
 
   public ArrayList<AgileItem> getNonRemovable() {
