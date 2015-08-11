@@ -739,6 +739,25 @@ public class ListMainPaneController {
       textACBody = new Text("\nN/A");
       displayTextFlow.getChildren().addAll(textACBody);
     }
+
+    Text textStoryTasksHeader = new Text("\nTasks");
+    textStoryTasksHeader.setFill(Color.rgb(1, 0, 1));
+    textStoryTasksHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+    displayTextFlow.getChildren().add(textStoryTasksHeader);
+
+    List<Text> storyTasksText = new ArrayList<>();
+    Text textStoryTasksBody;
+    if (!story.getTasks().isEmpty()) {
+      for (Task task : story.getTasks()) {
+        textStoryTasksBody = new Text("\n• " + task + " - " + task + ", STATUS: " + Status.getStatusString(task.getStatus()));
+        storyTasksText.add(textStoryTasksBody);
+        displayTextFlow.getChildren().add(textStoryTasksBody);
+      }
+    } else {
+      textStoryTasksBody = new Text("\nN/A");
+      storyTasksText.add(textStoryTasksBody);
+      displayTextFlow.getChildren().add(textStoryTasksBody);
+    }
   }
 
   /**
