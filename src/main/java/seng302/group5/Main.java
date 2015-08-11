@@ -152,10 +152,11 @@ public class Main extends Application {
    * dino scale.
    */
   public void createDefaultEstimates() {
-    List<String> fiboEsts = Arrays.asList("Not Set", "1", "2", "3", "5", "8", "13", "Epic");
+    List<String> fiboEsts = Arrays.asList("Not Set", "1", "2", "3", "5", "8", "13", "21", "Epic");
     Estimate fibonacci = new Estimate("Fibonacci", fiboEsts);
     List<String> dinoEsts = Arrays.asList("Not Set", "Dino Egg", "Dino Baby", "Dino Toddler",
-                                          "Dino Kid", "Dino Teen", "Dino Saur", "Elder Dino");
+                                          "Dino Kid", "Dino Teen", "Dino Saur", "Elder Dino",
+                                          "Epic Dino");
     Estimate dinos = new Estimate("Dinos", dinoEsts);
 
     estimates.addAll(fibonacci, dinos);
@@ -640,7 +641,7 @@ public class Main extends Application {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/StoryDialog.fxml"));
-      VBox StoryDialogLayout = loader.load();
+      HBox StoryDialogLayout = loader.load();
 
       StoryDialogController controller = loader.getController();
       Scene storyDialogScene = new Scene(StoryDialogLayout);
@@ -679,7 +680,7 @@ public class Main extends Application {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/StoryDialog.fxml"));
-      VBox StoryDialogLayout = loader.load();
+      HBox StoryDialogLayout = loader.load();
 
       StoryDialogController controller = loader.getController();
       Scene storyDialogScene = new Scene(StoryDialogLayout);
