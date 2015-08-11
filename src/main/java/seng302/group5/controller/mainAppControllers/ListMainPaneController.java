@@ -1,6 +1,5 @@
 package seng302.group5.controller.mainAppControllers;
 
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -16,7 +15,6 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
@@ -40,7 +38,9 @@ import seng302.group5.model.Backlog;
 import seng302.group5.model.Release;
 import seng302.group5.model.Role;
 import seng302.group5.model.Sprint;
+import seng302.group5.model.Status;
 import seng302.group5.model.Story;
+import seng302.group5.model.Task;
 import seng302.group5.model.util.Settings;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
@@ -741,6 +741,25 @@ public class ListMainPaneController {
       textACBody = new Text("\nN/A");
       displayTextFlow.getChildren().addAll(textACBody);
     }
+
+    Text textStoryTasksHeader = new Text("\nTasks");
+    textStoryTasksHeader.setFill(Color.rgb(1, 0, 1));
+    textStoryTasksHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+    displayTextFlow.getChildren().add(textStoryTasksHeader);
+
+    List<Text> storyTasksText = new ArrayList<>();
+    Text textStoryTasksBody;
+    if (!story.getTasks().isEmpty()) {
+      for (Task task : story.getTasks()) {
+        textStoryTasksBody = new Text("\n• " + task + " - " + task + ", STATUS: " + Status.getStatusString(task.getStatus()));
+        storyTasksText.add(textStoryTasksBody);
+        displayTextFlow.getChildren().add(textStoryTasksBody);
+      }
+    } else {
+      textStoryTasksBody = new Text("\nN/A");
+      storyTasksText.add(textStoryTasksBody);
+      displayTextFlow.getChildren().add(textStoryTasksBody);
+    }
   }
 
   /**
@@ -851,7 +870,8 @@ public class ListMainPaneController {
           Map<Story, Integer> sorted = new IdentityHashMap<>(backlog.getSizes());
           for (Story story : sortedStories) {
             tempTextStoriesBody = new Text("\n• " + story + " - " +
-            backlog.getEstimate().getEstimateNames().get(sorted.get(story)));
+                                           backlog.getEstimate().getEstimateNames()
+                                               .get(sorted.get(story)));
             storiesText.add(tempTextStoriesBody);
             displayTextFlow.getChildren().add(tempTextStoriesBody);
           }
@@ -1006,6 +1026,25 @@ public class ListMainPaneController {
       displayTextFlow.getChildren().add(textStoriesBody);
     }
 
+    Text textSprintTasksHeader = new Text("\nTasks");
+    textSprintTasksHeader.setFill(Color.rgb(1, 0, 1));
+    textSprintTasksHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+    displayTextFlow.getChildren().add(textSprintTasksHeader);
+
+    List<Text> sprintTasksText = new ArrayList<>();
+    Text textSprintTasksBody;
+    if (!sprint.getTasks().isEmpty()) {
+      for (Task task : sprint.getTasks()) {
+        textSprintTasksBody = new Text("\n• " + task + " - " + task + ", STATUS: " + Status.getStatusString(task.getStatus()));
+        sprintTasksText.add(textSprintTasksBody);
+        displayTextFlow.getChildren().add(textSprintTasksBody);
+      }
+    } else {
+      textSprintTasksBody = new Text("\nN/A");
+      sprintTasksText.add(textSprintTasksBody);
+      displayTextFlow.getChildren().add(textSprintTasksBody);
+    }
+
     Text textDatesHeader = new Text("\nSprint Dates: ");
     textDatesHeader.setFill(Color.rgb(1, 0, 1));
     textDatesHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
@@ -1033,6 +1072,7 @@ public class ListMainPaneController {
               FXCollections.observableArrayList(sprint.getSprintStories()),
               Comparator.<Story>naturalOrder());
           Map<Story, Integer> sorted = new IdentityHashMap<>(sprintBacklog.getSizes());
+          removePostStory(textSprintTasksHeader, sprintTasksText, displayTextFlow);
           displayTextFlow.getChildren().removeAll(textDatesHeader, textDatesBody);
           for (Story story : sortedStories) {
             tempTextStoriesBody = new Text("\n• " + story + " - " +
@@ -1041,12 +1081,16 @@ public class ListMainPaneController {
             storiesText.add(tempTextStoriesBody);
             displayTextFlow.getChildren().add(tempTextStoriesBody);
           }
+          addPostStory(textSprintTasksHeader, sprintTasksText, displayTextFlow);
           displayTextFlow.getChildren().addAll(textDatesHeader, textDatesBody);
         } else {
           tempTextStoriesBody = new Text("\nN/A");
           storiesText.add(tempTextStoriesBody);
           displayTextFlow.getChildren().removeAll(textDatesHeader, textDatesBody);
-          displayTextFlow.getChildren().addAll(tempTextStoriesBody,textDatesHeader, textDatesBody);
+          removePostStory(textSprintTasksHeader, sprintTasksText, displayTextFlow);
+          displayTextFlow.getChildren().add(tempTextStoriesBody);
+          addPostStory(textSprintTasksHeader, sprintTasksText, displayTextFlow);
+          displayTextFlow.getChildren().addAll(textDatesHeader, textDatesBody);
         }
         // Change the mode
         sortToggle.setText(alphabeticalOrder);
@@ -1054,6 +1098,8 @@ public class ListMainPaneController {
         // Change to prioritised order
         Text tempTextStoriesBody;
         if (!sprint.getSprintStories().isEmpty()) {
+          removePostStory(textSprintTasksHeader, sprintTasksText, displayTextFlow);
+          displayTextFlow.getChildren().removeAll(textDatesHeader, textDatesBody);
           for (Story story : sprintBacklog.getStories()) {
             // TODO just a display fix, need to fix underlying model
             if (sprint.getSprintStories().contains(story)) {
@@ -1062,21 +1108,49 @@ public class ListMainPaneController {
                                              sprintBacklog.getEstimate().getEstimateNames()
                                                  .get(index));
               storiesText.add(tempTextStoriesBody);
-              displayTextFlow.getChildren().removeAll(textDatesHeader, textDatesBody);
-              displayTextFlow.getChildren()
-                  .addAll(tempTextStoriesBody, textDatesHeader, textDatesBody);
+              displayTextFlow.getChildren().add(tempTextStoriesBody);
             }
           }
+          addPostStory(textSprintTasksHeader, sprintTasksText, displayTextFlow);
+          displayTextFlow.getChildren().addAll(textDatesHeader, textDatesBody);
         } else {
           tempTextStoriesBody = new Text("\nN/A");
           storiesText.add(tempTextStoriesBody);
+          removePostStory(textSprintTasksHeader, sprintTasksText, displayTextFlow);
           displayTextFlow.getChildren().removeAll(textDatesHeader, textDatesBody);
-          displayTextFlow.getChildren().addAll(tempTextStoriesBody, textDatesHeader, textDatesBody);
+          displayTextFlow.getChildren().add(tempTextStoriesBody);
+          addPostStory(textSprintTasksHeader, sprintTasksText, displayTextFlow);
+          displayTextFlow.getChildren().addAll(textDatesHeader, textDatesBody);
         }
         // Change the mode
         sortToggle.setText(prioritisedOrder);
       }
     });
+  }
+
+  /**
+   * Mupltiple places needed this exact code for Sprints display, so moved out to its own function
+   * @param header Task object Text header
+   * @param bodyList List of Task object's Text bodies
+   * @param textFlow Text flow to remove from.
+   */
+  public void removePostStory(Text header, List<Text> bodyList, TextFlow textFlow) {
+    textFlow.getChildren().remove(header);
+    for (Text text : bodyList) {
+      textFlow.getChildren().remove(text);
+    }
+  }
+  /**
+   * Mupltiple places needed this exact code for Sprints display, so moved out to its own function
+   * @param header Task object Text header
+   * @param bodyList List of Task object's Text bodies
+   * @param textFlow Text flow to add to.
+   */
+  public void addPostStory(Text header, List<Text> bodyList, TextFlow textFlow) {
+    textFlow.getChildren().add(header);
+    for (Text text : bodyList) {
+      textFlow.getChildren().add(text);
+    }
   }
 
   /**

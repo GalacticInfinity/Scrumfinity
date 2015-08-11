@@ -36,7 +36,10 @@ import seng302.group5.model.Person;
 import seng302.group5.model.Sprint;
 import seng302.group5.model.Story;
 import seng302.group5.model.Task;
+import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
+import seng302.group5.model.undoredo.CompositeUndoRedo;
+import seng302.group5.model.undoredo.UndoRedo;
 import seng302.group5.model.undoredo.UndoRedoObject;
 import seng302.group5.model.util.Settings;
 
@@ -74,6 +77,7 @@ public class StoryDialogController {
   private Story story;
   private Story lastStory;
   private Backlog lastBacklog;
+  private Team team;
 
   private ObservableList<Person> availablePeople = FXCollections.observableArrayList();
   private ObservableList<String> acceptanceCriteria = FXCollections.observableArrayList();
@@ -81,7 +85,9 @@ public class StoryDialogController {
   private ObservableList<String> statuses = FXCollections.observableArrayList();
   private ObservableList<Task> tasks = FXCollections.observableArrayList();
 
-  Map<String, Status> statusStringMap;
+  private CompositeUndoRedo taskEditsUndoRedo;  // Contains all the task edits within the dialog
+
+  private Map<String, Status> statusStringMap;
 
   /**
    * Setup the Story dialog controller.
@@ -101,7 +107,7 @@ public class StoryDialogController {
     statusStringMap.put("Done", Status.DONE);
     statusStringMap.put("Verify", Status.VERIFY);
     statusStringMap.put("In Progress", Status.IN_PROGRESS);
-    statusStringMap.put("Not Started", Status.NOT_STARTED);
+    statusStringMap.put("Not Started", Status.NOT_STARTED); //TODO this is duplicate use the globals
 
     if (!os.startsWith("Windows")) {
       btnContainer.getChildren().remove(btnCreateStory);
@@ -126,9 +132,8 @@ public class StoryDialogController {
       acceptanceCriteria.setAll(story.getAcceptanceCriteria());
       tasks.setAll(story.getTasks());
 
-      for (Map.Entry<String, Status> entry : statusStringMap.entrySet())
-      {
-        if (story.getStatus() == entry.getValue()){
+      for (Map.Entry<String, Status> entry : statusStringMap.entrySet()) {
+        if (story.getStatus() == entry.getValue()) {
           statusCombo.setValue(entry.getKey());
         }
       }
@@ -156,6 +161,7 @@ public class StoryDialogController {
       this.story = story;
       this.lastStory = new Story(story);
       this.lastBacklog = null;    // Stays null if not found
+      this.team = null;
 
       Backlog back = new Backlog();
       if (Settings.correctList(back)) {
@@ -177,11 +183,19 @@ public class StoryDialogController {
           break;
         }
       }
+      for (Sprint sprint : mainApp.getSprints()) {
+        if (sprint.getSprintStories().contains(story)) {
+          this.team = sprint.getSprintTeam();
+          break;
+        }
+      }
     } else {
       this.story = null;
       this.lastStory = null;
       this.lastBacklog = null;
     }
+
+    this.taskEditsUndoRedo = new CompositeUndoRedo("Edit Multiple Tasks");
 
     btnCreateStory.setDefaultButton(true);
     thisStage.setResizable(false);
@@ -255,7 +269,9 @@ public class StoryDialogController {
         listAC.getItems().equals(story.getAcceptanceCriteria()) &&
         readyCheckbox.isSelected() == story.getStoryState() &&
         statusCombo.getValue().equals(story.getStatusString()) &&
-        (backlogCombo.getValue() == null || backlogCombo.getValue().equals(lastBacklog))) {
+        (backlogCombo.getValue() == null || backlogCombo.getValue().equals(lastBacklog)) &&
+        tasks.equals(story.getTasks()) &&
+        taskEditsUndoRedo.getUndoRedos().isEmpty()) {
       btnCreateStory.setDisable(true);
     } else {
       btnCreateStory.setDisable(false);
@@ -332,6 +348,7 @@ public class StoryDialogController {
       if (createOrEdit == CreateOrEdit.CREATE) {
         story = new Story(label, storyName, storyDescription, creator, acceptanceCriteria, status);
         story.setImpediments(impediments);
+        story.addAllTasks(tasks);
         mainApp.addStory(story);
         if (backlog != null) {
           backlog.addStory(story);
@@ -350,6 +367,8 @@ public class StoryDialogController {
         story.setCreator(creator);
         story.setAcceptanceCriteria(acceptanceCriteria);
         story.setStoryState(readyCheckbox.isSelected());
+        story.removeAllTasks();
+        story.addAllTasks(tasks);
         if (lastBacklog == null && backlog != null) {
           backlog.addStory(story);
         }
@@ -381,6 +400,8 @@ public class StoryDialogController {
     if (Settings.correctList(story) && createOrEdit == CreateOrEdit.EDIT) {
       mainApp.refreshList(story);
     }
+    // undo all editing of existing tasks made within this dialog
+    mainApp.quickUndo(taskEditsUndoRedo);
     thisStage.close();
   }
 
@@ -635,11 +656,12 @@ public class StoryDialogController {
   }
 
   /**
-   * Sets the custom behaviour for the acceptance criteria listview.
+   * Sets the custom behaviour for the acceptance criteria and task ListViews.
    */
   private void setupListView() {
     //Sets the cell being populated with custom settings defined in the ListViewCell class.
     this.listAC.setCellFactory(listView -> new ListViewCell());
+    this.taskList.setCellFactory(listView -> new TaskListCell());
   }
 
   /**
@@ -667,6 +689,32 @@ public class StoryDialogController {
       }
     }
     return false;
+  }
+
+  /**
+   * Open the dialog for task dialog creation. The created task will be added to the tasks list,
+   * not the story model.
+   */
+  @FXML
+  private void addTask() {
+    mainApp.showTaskDialog(tasks, null, team, CreateOrEdit.CREATE, thisStage);
+    if (createOrEdit == CreateOrEdit.EDIT) {
+      checkButtonDisabled();
+    }
+  }
+
+  /**
+   * Remove the selected task from the list.
+   */
+  @FXML
+  private void removeTask() {
+    Task selectedTask = taskList.getSelectionModel().getSelectedItem();
+    if (selectedTask != null) {
+      tasks.remove(selectedTask);
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    }
   }
 
   /**
@@ -734,6 +782,33 @@ public class StoryDialogController {
         }
         setGraphic(pane);
       }
+    }
+  }
+
+  /**
+   * Allow double clicking for editing a Task.
+   */
+  private class TaskListCell extends TextFieldListCell<Task> {
+
+    public TaskListCell() {
+      super();
+      this.setOnMouseClicked(click -> {
+        if (click.getClickCount() == 2 &&
+            click.getButton() == MouseButton.PRIMARY &&
+            !isEmpty()) {
+          UndoRedo taskEdit =
+              mainApp.showTaskDialog(tasks, getItem(), team, CreateOrEdit.EDIT, thisStage);
+          if (taskEdit != null) {
+            taskEditsUndoRedo.addUndoRedo(taskEdit);
+            taskList.setItems(null);
+            taskList.setItems(tasks);
+            taskList.getSelectionModel().select(getItem());
+            if (createOrEdit == CreateOrEdit.EDIT) {
+              checkButtonDisabled();
+            }
+          }
+        }
+      });
     }
   }
 }
