@@ -34,7 +34,7 @@ public class TaskDialogController {
   @FXML private TextField labelField;
   @FXML private TextArea descriptionField;
   @FXML private TextField estimateField;
-  @FXML private ComboBox statusComboBox;
+  @FXML private ComboBox<String> statusComboBox;
   @FXML private ListView<Person> availablePeopleList;
   @FXML private ListView<Person> allocatedPeopleList;
   @FXML private Button btnAddPerson;
@@ -121,6 +121,13 @@ public class TaskDialogController {
 
     availablePeopleList.setItems(availablePeople);
     allocatedPeopleList.setItems(allocatedPeople);
+
+    ObservableList<String> availableStatuses = FXCollections.observableArrayList();
+    for (Status status : Status.values()) {
+      availableStatuses.add(Status.getStatusString(status));
+    }
+    statusComboBox.setItems(availableStatuses);
+    statusComboBox.getSelectionModel().select(0);
   }
 
   /**
@@ -181,35 +188,57 @@ public class TaskDialogController {
   protected void btnConfirmClick(ActionEvent event) {
     // todo implement and javadoc
     // todo error parsing
-    String taskLabel = labelField.getText().trim();
+    StringBuilder errors = new StringBuilder();
+    int noErrors = 0;
+
+    String taskLabel = "";
     String taskDescription = descriptionField.getText().trim();
     int taskEstimateMinutes = 0;
-    Status taskStatus = null;
+    Status taskStatus = Status.getStatusEnum(statusComboBox.getValue());
 
-    // todo parsing
-
-    // todo remove temp values
-    taskEstimateMinutes = 120;
-    taskStatus = Status.IN_PROGRESS;
-
-    if (createOrEdit == CreateOrEdit.CREATE) {
-      task = new Task(taskLabel, taskDescription, taskEstimateMinutes, taskStatus, allocatedPeople);
-      // todo set logged effort of all people
-      taskCollection.add(task);
-    } else if (createOrEdit == CreateOrEdit.EDIT) {
-      task.setLabel(taskLabel);
-      task.setTaskDescription(taskDescription);
-      task.setTaskEstimation(taskEstimateMinutes);
-      task.setStatus(taskStatus);
-      task.removeAllTaskPeople();
-      task.addAllTaskPeople(allocatedPeople);
-      // todo set logged effort of all people
-      generateEditUndoRedoObject();
+    // todo more parsing
+    try {
+      taskLabel = parseTaskLabel(labelField.getText());
+    } catch (Exception e) {
+      noErrors++;
+      errors.append(String.format("%s\n", e.getMessage()));
     }
-    // todo newAction in main or return value for nested transaction?
+
+    // todo parse minutes
+    taskEstimateMinutes = 120;
+
+    // Display all errors if they exist
+    if (noErrors > 0) {
+      String title = String.format("%d Invalid Field", noErrors);
+      if (noErrors > 1) {
+        title += "s";  // plural
+      }
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle(title);
+      alert.setHeaderText(null);
+      alert.setContentText(errors.toString());
+      alert.showAndWait();
+    } else {
+      if (createOrEdit == CreateOrEdit.CREATE) {
+        task =
+            new Task(taskLabel, taskDescription, taskEstimateMinutes, taskStatus, allocatedPeople);
+        // todo set logged effort of all people
+        taskCollection.add(task);
+      } else if (createOrEdit == CreateOrEdit.EDIT) {
+        task.setLabel(taskLabel);
+        task.setTaskDescription(taskDescription);
+        task.setTaskEstimation(taskEstimateMinutes);
+        task.setStatus(taskStatus);
+        task.removeAllTaskPeople();
+        task.addAllTaskPeople(allocatedPeople);
+        // todo set logged effort of all people
+        generateEditUndoRedoObject();
+      }
+      // todo newAction in main or return value for nested transaction?
 //    UndoRedoObject undoRedoObject = generateUndoRedoObject();
 //    mainApp.newAction(undoRedoObject);
-    thisStage.close();
+      thisStage.close();
+    }
   }
 
   /**
@@ -220,6 +249,36 @@ public class TaskDialogController {
   @FXML
   protected void btnCancelClick(ActionEvent event) {
     thisStage.close();
+  }
+
+  /**
+   * Parse a task label to make sure the label is not empty and unique within the task collection
+   *
+   * @param inputTaskLabel Task label from entry field.
+   * @return Task label if label is valid.
+   * @throws Exception Any invalid input.
+   */
+  private String parseTaskLabel(String inputTaskLabel) throws Exception {
+    inputTaskLabel = inputTaskLabel.trim();
+
+    if (inputTaskLabel.isEmpty()) {
+      throw new Exception("Task Label is empty.");
+    } else {
+      String lastTaskLabel;
+      if (lastTask== null) {
+        lastTaskLabel = "";
+      } else {
+        lastTaskLabel = lastTask.getLabel();
+      }
+      for (Task task : taskCollection) {
+        String taskLabel = task.getLabel();
+        if (task.getLabel().equalsIgnoreCase(inputTaskLabel) &&
+            !taskLabel.equalsIgnoreCase(lastTaskLabel)) {
+          throw new Exception("Task Label is not unique within the object.");
+        }
+      }
+      return inputTaskLabel;
+    }
   }
 
   /**

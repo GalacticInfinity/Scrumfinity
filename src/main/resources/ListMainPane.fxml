@@ -33,14 +33,35 @@
             </ToggleButton>
          </children>
       </AnchorPane>
-      <ScrollPane prefHeight="200.0" prefWidth="200.0">
-         <content>
-            <TextFlow fx:id="displayTextFlow" lineSpacing="5.0" minHeight="360.0" minWidth="401.0" prefWidth="401.0">
-               <padding>
-                  <Insets left="10.0" />
-               </padding>
-            </TextFlow>
-         </content>
-      </ScrollPane>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <tabs>
+                <Tab text="Basic Info">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="258.0" prefWidth="329.0">
+                           <children>
+                              <ScrollPane prefHeight="343.0" prefWidth="414.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <content>
+                                    <TextFlow fx:id="displayTextFlow" lineSpacing="5.0" minHeight="339.0" minWidth="401.0" prefHeight="339.0" prefWidth="401.0">
+                                       <padding>
+                                          <Insets left="10.0" />
+                                       </padding>
+                                    </TextFlow>
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </Tab>
+                <Tab text="Scrum Board">
+                  <content>
+                      <fx:include fx:id="scrumBoard" source="ScrumBoard.fxml" />
+                  </content>
+                </Tab>
+              </tabs>
+            </TabPane>
+         </children>
+      </AnchorPane>
    </items>
 </SplitPane>
