@@ -25,7 +25,9 @@ import seng302.group5.model.Release;
 import seng302.group5.model.Role;
 import seng302.group5.model.Skill;
 import seng302.group5.model.Sprint;
+import seng302.group5.model.Status;
 import seng302.group5.model.Story;
+import seng302.group5.model.Task;
 import seng302.group5.model.Team;
 
 /**
@@ -684,6 +686,10 @@ public class Loading {
     Story newStory;
     String storyLine;
     String storyData;
+    Map<String, Person> taskPersonMap = new IdentityHashMap<>();
+    for (Person person : main.getPeople()) {
+      taskPersonMap.put(person.getLabel(), person);
+    }
 
     // Until stories end tag
     while (!(storyLine = loadedFile.readLine()).startsWith("</Stories>")) {
@@ -721,6 +727,65 @@ public class Loading {
               storyData =
                   storyLine.replaceAll("(?i)(.*<impediments.*?>)(.+?)(</impediments>)", "$2");
               newStory.setImpediments(storyData);
+            }
+          }
+          if (saveVersion >= 0.5) {
+            if (storyLine.startsWith("\t\t<Tasks>")) {
+              List<Task> tasks = new ArrayList<>();
+              while ((!(storyLine = loadedFile.readLine()).equals("\t\t</Tasks>"))) {
+                Task storyTask;
+                if (storyLine.startsWith("\t\t\t<Task>")) {
+                  storyTask = new Task();
+                  storyLine = loadedFile.readLine();
+                  storyData =
+                      storyLine.replaceAll("(?i)(.*<taskLabel.*?>)(.+?)(</taskLabel>)", "$2");
+                  storyTask.setLabel(storyData);
+                  storyLine = loadedFile.readLine();
+                  storyData = storyLine.replaceAll(
+                      "(?i)(.*<taskStatus.*?>)(.+?)(</taskStatus>)", "$2");
+                  storyTask.setStatus(Status.getStatusEnum(storyData));
+                  while (!(storyLine = loadedFile.readLine()).startsWith("\t\t\t</Task>")) {
+                    // Description builder
+                    if (storyLine.startsWith("\t\t\t\t<description>")) {
+                      String descBuilder;
+                      if (!storyLine.endsWith("</description>")) {
+                        descBuilder = storyLine
+                                          .replaceAll("(?i)(.*<description.*?>)(.+?)", "$2") + "\n";
+                        while ((!(storyLine = loadedFile.readLine()).endsWith("</description>"))) {
+                          descBuilder += storyLine + "\n";
+                        }
+                        descBuilder += storyLine.replaceAll("(.+?)(</description>)", "$1");
+                      } else {
+                        descBuilder =
+                            storyLine
+                                .replaceAll("(?i)(.*<description.*?>)(.+?)(</description>)", "$2");
+                      }
+                      storyTask.setTaskDescription(descBuilder);
+                    }
+                    if (storyLine.startsWith("\t\t\t\t<taskEstimate>")) {
+                      storyData = storyLine.replaceAll("(?i)(.*<taskEstimate.*?>)(.+?)(</taskEstimate>)", "$2");
+                      storyTask.setTaskEstimation(Integer.parseInt(storyData));
+                    }
+                    if (storyLine.startsWith("\t\t\t\t<TaskPeople>")) {
+                      while ((!(storyLine = loadedFile.readLine()).endsWith("</TaskPeople>"))) {
+                        storyData = storyLine.replaceAll("(?i)(.*<person.*?>)(.+?)(</person>)", "$2");
+                        storyTask.addTaskPerson(taskPersonMap.get(storyData));
+                      }
+                    }
+                    if (storyLine.startsWith("\t\t\t\t<TaskEffort>")) {
+                      String effortData;
+                      while ((!(storyLine = loadedFile.readLine()).endsWith("</TaskEffort>"))) {
+                        storyData = storyLine.replaceAll("(?i)(.*<person.*?>)(.+?)(</person>)", "$2");
+                        storyLine = loadedFile.readLine();
+                        effortData = storyLine.replaceAll("(?i)(.*<effort.*?>)(.+?)(</effort>)",
+                                                          "$2");
+                        storyTask.updateSpentEffort(taskPersonMap.get(storyData), Integer.parseInt(effortData));
+                      }
+                    }
+                  }
+                  newStory.addTask(storyTask);
+                }
+              }
             }
           }
           if (storyLine.startsWith("\t\t<longName>")) {
