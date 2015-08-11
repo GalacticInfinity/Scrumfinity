@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
@@ -15,6 +16,7 @@ import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Person;
 import seng302.group5.model.Sprint;
+import seng302.group5.model.Status;
 import seng302.group5.model.Story;
 import seng302.group5.model.Task;
 import seng302.group5.model.Taskable;
@@ -174,6 +176,34 @@ public class TaskDialogController {
   @FXML
   protected void btnConfirmClick(ActionEvent event) {
     // todo implement and javadoc
+    // todo error parsing
+    String taskLabel = labelField.getText().trim();
+    String taskDescription = descriptionField.getText().trim();
+    int taskEstimateMinutes = 0;
+    Status taskStatus = null;
+
+    // todo parsing
+
+    // todo remove temp values
+    taskEstimateMinutes = 120;
+    taskStatus = Status.IN_PROGRESS;
+
+    if (createOrEdit == CreateOrEdit.CREATE) {
+      task = new Task(taskLabel, taskDescription, taskEstimateMinutes, taskStatus, allocatedPeople);
+      // todo set logged effort of all people
+      parent.addTask(task);
+    } else if (createOrEdit == CreateOrEdit.EDIT) {
+      task.setLabel(taskLabel);
+      task.setTaskDescription(taskDescription);
+      task.setTaskEstimation(taskEstimateMinutes);
+      task.setStatus(taskStatus);
+      task.removeAllTaskPeople();
+      task.addAllTaskPeople(allocatedPeople);
+      // todo set logged effort of all people
+    }
+    // todo newAction in main or return value for nested transaction?
+//    UndoRedoObject undoRedoObject = generateUndoRedoObject();
+//    mainApp.newAction(undoRedoObject);
     thisStage.close();
   }
 
