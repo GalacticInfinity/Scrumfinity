@@ -6,7 +6,6 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
 <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="745.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.StoryDialogController">
    <children>
       <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="538.0" prefWidth="430.0" stylesheets="@font.css">
@@ -228,7 +227,7 @@
                         <Font size="15.0" />
                      </font>
                   </Label>
-                  <ListView prefHeight="472.0" prefWidth="207.0" />
+                  <ListView fx:id="taskList" prefHeight="472.0" prefWidth="207.0" />
                </children>
                <HBox.margin>
                   <Insets left="5.0" />
@@ -236,12 +235,12 @@
             </VBox>
             <VBox prefHeight="540.0" prefWidth="70.0">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" text="+">
+                  <Button fx:id="addTask" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" text="+">
                      <VBox.margin>
                         <Insets left="10.0" right="2.0" top="220.0" />
                      </VBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" text="-">
+                  <Button fx:id="removeTask" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" text="-">
                      <VBox.margin>
                         <Insets left="10.0" top="20.0" />
                      </VBox.margin>
