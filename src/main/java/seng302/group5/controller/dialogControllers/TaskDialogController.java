@@ -15,6 +15,7 @@ import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Person;
 import seng302.group5.model.Task;
+import seng302.group5.model.Taskable;
 
 /**
  * A controller to handle the creation or editing tasks. Tasks involve a label, description,
@@ -36,7 +37,7 @@ public class TaskDialogController {
   @FXML private Button btnConfirm;
   @FXML private Button btnCancel;
 
-  private AgileItem parent;
+  private Taskable parent;
   private Stage thisStage;
   private CreateOrEdit createOrEdit;
   private Task task;
@@ -52,7 +53,7 @@ public class TaskDialogController {
    * @param createOrEdit This is an ENUM object to determine if creating or editing
    * @param task The object that will be edited (null if creating)
    */
-  public void setupController(AgileItem parent, Stage thisStage, CreateOrEdit createOrEdit,
+  public void setupController(Taskable parent, Stage thisStage, CreateOrEdit createOrEdit,
                               Task task) {
     this.parent = parent;
     this.thisStage = thisStage;

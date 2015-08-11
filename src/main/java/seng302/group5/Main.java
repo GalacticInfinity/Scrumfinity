@@ -28,6 +28,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng302.group5.controller.dialogControllers.BacklogDialogController;
 import seng302.group5.controller.dialogControllers.SprintDialogController;
+import seng302.group5.controller.dialogControllers.TaskDialogController;
 import seng302.group5.controller.mainAppControllers.ListMainPaneController;
 import seng302.group5.controller.mainAppControllers.LoginController;
 import seng302.group5.controller.mainAppControllers.MenuBarController;
@@ -49,6 +50,8 @@ import seng302.group5.model.Skill;
 import seng302.group5.model.Person;
 import seng302.group5.model.Sprint;
 import seng302.group5.model.Story;
+import seng302.group5.model.Task;
+import seng302.group5.model.Taskable;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedo;
@@ -761,6 +764,36 @@ public class Main extends Application {
       sprintDialogStage.setScene(sprintDialogScene);
       sprintDialogStage.showAndWait();
     } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * sets up the dialog box for editing a task when opened from another dialog
+   *
+   * @param parent the object who owns/will own the task (it is not stored in Main)
+   * @param task the task that to view or edit (null if creating)
+   * @param createOrEdit Whether editing or creating the task
+   * @param stage the stage it is currently on to void unusual behaviour
+   */
+  public void showTaskDialog(Taskable parent, Task task, CreateOrEdit createOrEdit, Stage stage) {
+    try {
+      FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(Main.class.getResource("/TaskDialog.fxml"));
+      Pane taskDialogLayout = loader.load();
+
+      TaskDialogController controller = loader.getController();
+      Scene taskDialogScene = new Scene(taskDialogLayout);
+      Stage taskDialogStage = new Stage();
+
+      controller.setupController(parent, taskDialogStage, createOrEdit, task);
+
+      taskDialogStage.initModality(Modality.APPLICATION_MODAL);
+      taskDialogStage.initOwner(stage);
+      taskDialogStage.setScene(taskDialogScene);
+      taskDialogStage.showAndWait();
+
+    } catch (IOException e) {
       e.printStackTrace();
     }
   }
