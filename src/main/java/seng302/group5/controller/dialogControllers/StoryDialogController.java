@@ -107,7 +107,7 @@ public class StoryDialogController {
     statusStringMap.put("Done", Status.DONE);
     statusStringMap.put("Verify", Status.VERIFY);
     statusStringMap.put("In Progress", Status.IN_PROGRESS);
-    statusStringMap.put("Not Started", Status.NOT_STARTED);
+    statusStringMap.put("Not Started", Status.NOT_STARTED); //TODO this is duplicate use the globals
 
     if (!os.startsWith("Windows")) {
       btnContainer.getChildren().remove(btnCreateStory);
