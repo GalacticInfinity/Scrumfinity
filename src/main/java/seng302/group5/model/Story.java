@@ -407,6 +407,18 @@ public class Story implements AgileItem, Taskable, Comparable<Story> {
     return status;
   }
 
+  public String getStatusString() {
+    if (status == Status.NOT_STARTED) {
+      return "Not Started";
+    } else if (status == Status.DONE) {
+      return "Done";
+    } else if (status == Status.VERIFY) {
+      return "Verify";
+    } else {
+      return "In Progress";
+    }
+  }
+
   public void setStatus(Status status) {
     this.status = status;
   }

@@ -551,6 +551,10 @@ public class ReportWriter {
     storyCreator.appendChild(report.createTextNode(story.getCreator().getLabel()));
     storyElem.appendChild(storyCreator);
 
+    Element storyImpediments = report.createElement("Impediments");
+    storyImpediments.appendChild(report.createTextNode(story.getImpediments()));
+    storyElem.appendChild(storyImpediments);
+
     Element acElements = report.createElement("AcceptanceCriteria");
     storyElem.appendChild(acElements);
     for (String ac : story.getAcceptanceCriteria()) {
@@ -653,6 +657,10 @@ public class ReportWriter {
     }
 
     createRelease(sprint.getSprintRelease(), sprintElem);
+
+    Element sprintImpediments = report.createElement("Impediments");
+    sprintImpediments.appendChild(report.createTextNode(sprint.getSprintImpediments()));
+    sprintElem.appendChild(sprintImpediments);
 
     Element sprintStart = report.createElement("StartDate");
     String formattedDate = sprint.getSprintStart().format(DateTimeFormatter.ofPattern(dateFormat));
