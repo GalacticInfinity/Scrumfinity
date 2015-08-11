@@ -115,8 +115,8 @@ public class Main extends Application {
 
     this.primaryStage = primaryStage;
     this.primaryStage.setTitle(mainTitle);
-    this.primaryStage.setMinHeight(400);
-    this.primaryStage.setMinWidth(600);
+    this.primaryStage.setMinHeight(500);
+    this.primaryStage.setMinWidth(820);
     // Constructs the application
     initRootLayout();
     showMenuBar();
