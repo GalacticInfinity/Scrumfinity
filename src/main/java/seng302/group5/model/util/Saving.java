@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.List;
+import java.util.Map;
 
 import seng302.group5.Main;
 import seng302.group5.model.AgileHistory;
@@ -17,7 +18,9 @@ import seng302.group5.model.Release;
 import seng302.group5.model.Role;
 import seng302.group5.model.Skill;
 import seng302.group5.model.Sprint;
+import seng302.group5.model.Status;
 import seng302.group5.model.Story;
+import seng302.group5.model.Task;
 import seng302.group5.model.Team;
 
 /**
@@ -320,6 +323,37 @@ public class Saving {
         saveFile.write("\t\t</Dependencies>\n");
       }
 
+      if (!story.getTasks().isEmpty()) {
+        saveFile.write("\t\t<Tasks>\n");
+        for (Task task : story.getTasks()) {
+          saveFile.write("\t\t\t<Task>\n");
+          saveFile.write("\t\t\t\t<label>" + task.getLabel() + "</label>\n");
+          saveFile.write("\t\t\t\t<status>" + Status.getStatusString(task.getStatus()) + "</status>\n");
+          if (task.getTaskDescription() != null && !task.getTaskDescription().isEmpty()) {
+            saveFile.write("\t\t\t\t<description>" + task.getTaskDescription() + "</description>\n");
+          }
+          if (task.getTaskEstimation() != null) {
+            saveFile.write("\t\t\t\t<estimate>" + task.getTaskEstimation().toString() + "</estimate>\n");
+          }
+          if (!task.getTaskPeople().isEmpty()) {
+            saveFile.write("\t\t\t\t<People>\n");
+            for (Person person : task.getTaskPeople()) {
+              saveFile.write("\t\t\t\t\t<person>" + person.getLabel() + "</person>\n");
+            }
+            saveFile.write("\t\t\t\t</People>\n");
+          }
+          if (!task.getSpentEffort().isEmpty()) {
+            saveFile.write("\t\t\t\t<Effort>\n");
+            for (Map.Entry<Person, Integer> entry : task.getSpentEffort().entrySet()) {
+              saveFile.write("\t\t\t\t\t<person>" + entry.getKey().getLabel() + "</person>\n");
+              saveFile.write("\t\t\t\t\t<effort>" + entry.getValue().toString() + "</effort>\n");
+            }
+            saveFile.write("\t\t\t\t</Effort>\n");
+          }
+          saveFile.write("\t\t\t</Task>\n");
+        }
+        saveFile.write("\t\t</Tasks>\n");
+      }
       saveFile.write("\t</Story>\n");
     }
     saveFile.write("</Stories>\n");
