@@ -149,6 +149,19 @@
             <Insets top="4.0" />
          </VBox.margin>
       </HBox>
+      <HBox prefHeight="25.0" prefWidth="200.0">
+         <children>
+            <Label prefWidth="147.0" text="Impediments:">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <TextField fx:id="sprintImpedimentsField" prefWidth="200.0" />
+         </children>
+         <VBox.margin>
+            <Insets top="5.0" />
+         </VBox.margin>
+      </HBox>
       <HBox prefHeight="28.0" prefWidth="483.0">
          <VBox.margin>
             <Insets top="4.0" />
