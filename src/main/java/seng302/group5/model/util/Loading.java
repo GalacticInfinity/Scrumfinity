@@ -823,6 +823,16 @@ public class Loading {
               estimateLine.replaceAll("(?i)(.*<size-\\d*.*?>)(.+?)(</size-\\d*.*?>)", "$2");
           estimateNames.add(estimateData);
         }
+        //If the version is less than 0.5 then add Epic Dino to the Dino scale
+        //and 21 to the Fibonacci scale.
+        if (saveVersion < 0.5) {
+          if (newEstimate.getLabel().equals("Dinos")) {
+            estimateNames.add("Epic Dino");
+          }
+          if (newEstimate.getLabel().equals("Fibonacci")) {
+            estimateNames.add(estimateNames.size() - 1, "21");
+          }
+        }
         newEstimate.setEstimateNames(estimateNames);
         main.addEstimate(newEstimate);
       }
