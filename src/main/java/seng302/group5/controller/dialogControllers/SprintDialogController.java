@@ -3,6 +3,7 @@ package seng302.group5.controller.dialogControllers;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -33,8 +34,11 @@ import seng302.group5.model.Project;
 import seng302.group5.model.Release;
 import seng302.group5.model.Sprint;
 import seng302.group5.model.Story;
+import seng302.group5.model.Task;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
+import seng302.group5.model.undoredo.CompositeUndoRedo;
+import seng302.group5.model.undoredo.UndoRedo;
 import seng302.group5.model.undoredo.UndoRedoObject;
 import seng302.group5.model.util.Settings;
 
@@ -63,6 +67,9 @@ public class SprintDialogController {
   @FXML private HBox btnContainer;
   @FXML private Button btnConfirm;
   @FXML private Button btnCancel;
+  @FXML private Button addTask;
+  @FXML private Button removeTask;
+  @FXML private ListView<Task> taskList;
   @FXML private Label releaseDate;
   @FXML private TextField sprintImpedimentsField;
 
@@ -80,10 +87,14 @@ public class SprintDialogController {
   private ObservableList<Backlog> backlogs;
   private ObservableList<Team> teams;
   private ObservableList<Release> releases;
+  private ObservableList<Task> tasks;
 
   private Map<Backlog, Project> projectMap;
   private Set<Story> allocatedStories;   // use to maintain priority order
   private Set<Story> otherSprintsStories;
+
+  private CompositeUndoRedo taskEditsUndoRedo;
+
 
   private boolean comboListenerFlag;
 
@@ -146,6 +157,8 @@ public class SprintDialogController {
       sprintStartDate.setValue(sprint.getSprintStart());
       sprintEndDate.setValue(sprint.getSprintEnd());
       allocatedStories.addAll(sprint.getSprintStories());
+      tasks.addAll(sprint.getTasks());
+
 
       // Stories from other sprints with same backlog
       for (Sprint mainSprint : mainApp.getSprints()) {
@@ -161,6 +174,8 @@ public class SprintDialogController {
 
     btnConfirm.setDefaultButton(true);
     thisStage.setResizable(false);
+
+    this.taskEditsUndoRedo = new CompositeUndoRedo("Edit Multiple Tasks");
 
     sprintGoalField.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
@@ -198,6 +213,7 @@ public class SprintDialogController {
         checkButtonDisabled();
       }
     });
+
     sprintTeamCombo.valueProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
       if (createOrEdit == CreateOrEdit.EDIT) {
@@ -234,6 +250,7 @@ public class SprintDialogController {
         checkButtonDisabled();
       }
     });
+
   }
 
   /**
@@ -252,7 +269,9 @@ public class SprintDialogController {
          sprintReleaseCombo.getValue().equals(sprint.getSprintRelease())) &&
         sprintStartDate.getValue().equals(sprint.getSprintStart()) &&
         sprintEndDate.getValue().equals(sprint.getSprintEnd()) &&
-        allocatedStoriesPrioritised.equals(sprint.getSprintStories())) {
+        tasks.equals(sprint.getTasks()) &&
+        allocatedStoriesPrioritised.equals(sprint.getSprintStories()) &&
+        taskEditsUndoRedo.getUndoRedos().isEmpty()) {
       btnConfirm.setDisable(true);
     } else {
       btnConfirm.setDisable(false);
@@ -268,6 +287,7 @@ public class SprintDialogController {
    */
   private void initialiseLists() {
     availableStories = FXCollections.observableArrayList();
+    tasks = FXCollections.observableArrayList();
     allocatedStoriesPrioritised = FXCollections.observableArrayList();
     backlogs = FXCollections.observableArrayList();
     teams = FXCollections.observableArrayList();
@@ -297,6 +317,7 @@ public class SprintDialogController {
 
     availableStoriesList.setItems(availableStories);
     allocatedStoriesList.setItems(allocatedStoriesPrioritised);
+    taskList.setItems(tasks);
 
     comboListenerFlag = false;
 
@@ -426,6 +447,38 @@ public class SprintDialogController {
   }
 
   /**
+   * Open the dialog for task dialog creation. The created task will be added to the tasks list,
+   * not the story model.
+   */
+  @FXML
+  private void addTask() {
+    if (sprintTeamCombo.getSelectionModel().getSelectedItem() == null) {
+      mainApp.showTaskDialog(tasks, null, null,
+                             CreateOrEdit.CREATE, thisStage);
+    } else {
+      mainApp.showTaskDialog(tasks, null, sprintTeamCombo.getSelectionModel().getSelectedItem(),
+                             CreateOrEdit.CREATE, thisStage);
+    }
+
+    if (createOrEdit == CreateOrEdit.EDIT) {
+      checkButtonDisabled();
+    }
+  }
+
+  /**
+   * Remove the selected task from the list.
+   */
+  @FXML
+  private void removeTask() {
+    Task selectedTask = taskList.getSelectionModel().getSelectedItem();
+    if (selectedTask != null) {
+      tasks.remove(selectedTask);
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    }
+  }
+  /**
    * Refresh the lists such that they maintain the original priority order specified in the backlog.
    * Call whenever the story allocation changes.
    */
@@ -527,7 +580,9 @@ public class SprintDialogController {
         sprint = new Sprint(sprintGoal, sprintName, sprintDescription, backlog, project, team,
                             release, startDate, endDate, allocatedStoriesPrioritised);
         sprint.setSprintImpediments(sprintImpediments);
+        sprint.addAllTasks(tasks);
         mainApp.addSprint(sprint);
+
         if (Settings.correctList(sprint)) {
           mainApp.refreshList(sprint);
         }
@@ -544,6 +599,9 @@ public class SprintDialogController {
         sprint.setSprintEnd(endDate);
         sprint.removeAllStories();
         sprint.addAllStories(allocatedStoriesPrioritised);
+        sprint.removeAllTasks();
+        sprint.addAllTasks(tasks);
+
 
         mainApp.refreshList(sprint);
       }
@@ -569,6 +627,7 @@ public class SprintDialogController {
     if (createOrEdit == CreateOrEdit.EDIT && Settings.correctList(sprint)) {
       mainApp.refreshList(sprint);
     }
+    mainApp.quickUndo(taskEditsUndoRedo);
     thisStage.close();
   }
 
@@ -680,6 +739,7 @@ public class SprintDialogController {
     //Sets the cell being populated with custom settings defined in the ListViewCell class.
     this.availableStoriesList.setCellFactory(listView -> new AvailableStoriesListViewCell());
     this.allocatedStoriesList.setCellFactory(listView -> new SprintStoriesListViewCell());
+    this.taskList.setCellFactory(listView -> new TaskListCell());
   }
   /**
    * Allows us to override a ListViewCell - a single cell in a ListView.
@@ -738,6 +798,35 @@ public class SprintDialogController {
       super.updateItem(item, empty);
 
       setText(item == null ? "" : item.getLabel());
+    }
+  }
+
+
+  /**
+   * Allow double clicking for editing a Task.
+   */
+  private class TaskListCell extends TextFieldListCell<Task> {
+
+    public TaskListCell() {
+      super();
+      this.setOnMouseClicked(click -> {
+        if (click.getClickCount() == 2 &&
+            click.getButton() == MouseButton.PRIMARY &&
+            !isEmpty()) {
+          UndoRedo taskEdit =
+              mainApp.showTaskDialog(tasks, getItem(), sprintTeamCombo.getSelectionModel().
+                  getSelectedItem(), CreateOrEdit.EDIT, thisStage);
+          if (taskEdit != null) {
+            taskEditsUndoRedo.addUndoRedo(taskEdit);
+            taskList.setItems(null);
+            taskList.setItems(tasks);
+            taskList.getSelectionModel().select(getItem());
+            if (createOrEdit == CreateOrEdit.EDIT) {
+              checkButtonDisabled();
+            }
+          }
+        }
+      });
     }
   }
 }

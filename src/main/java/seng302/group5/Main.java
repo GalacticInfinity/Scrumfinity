@@ -115,8 +115,8 @@ public class Main extends Application {
 
     this.primaryStage = primaryStage;
     this.primaryStage.setTitle(mainTitle);
-    this.primaryStage.setMinHeight(400);
-    this.primaryStage.setMinWidth(600);
+    this.primaryStage.setMinHeight(500);
+    this.primaryStage.setMinWidth(820);
     // Constructs the application
     initRootLayout();
     showMenuBar();
@@ -747,7 +747,7 @@ public class Main extends Application {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/SprintDialog.fxml"));
-      VBox sprintDialogLayout = loader.load();
+      HBox sprintDialogLayout = loader.load();
 
       SprintDialogController controller = loader.getController();
       Scene sprintDialogScene = new Scene(sprintDialogLayout);
