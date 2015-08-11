@@ -75,6 +75,7 @@ public class StoryDialogController {
   private Story story;
   private Story lastStory;
   private Backlog lastBacklog;
+  private Team team;
 
   private ObservableList<Person> availablePeople = FXCollections.observableArrayList();
   private ObservableList<String> acceptanceCriteria = FXCollections.observableArrayList();
@@ -157,6 +158,7 @@ public class StoryDialogController {
       this.story = story;
       this.lastStory = new Story(story);
       this.lastBacklog = null;    // Stays null if not found
+      this.team = null;
 
       Backlog back = new Backlog();
       if (Settings.correctList(back)) {
@@ -175,6 +177,12 @@ public class StoryDialogController {
             this.shownEstimate.setText(backlog.getEstimate().getEstimateNames() //This gets the estimate name to be shown on the story dialog
                                            .get(backlog.getSizes().get(story)));
           }
+          break;
+        }
+      }
+      for (Sprint sprint : mainApp.getSprints()) {
+        if (sprint.getSprintStories().contains(story)) {
+          this.team = sprint.getSprintTeam();
           break;
         }
       }
@@ -641,11 +649,12 @@ public class StoryDialogController {
   }
 
   /**
-   * Sets the custom behaviour for the acceptance criteria listview.
+   * Sets the custom behaviour for the acceptance criteria and task ListViews.
    */
   private void setupListView() {
     //Sets the cell being populated with custom settings defined in the ListViewCell class.
     this.listAC.setCellFactory(listView -> new ListViewCell());
+    this.taskList.setCellFactory(listView -> new TaskListCell());
   }
 
   /**
@@ -681,15 +690,6 @@ public class StoryDialogController {
    */
   @FXML
   private void addTask() {
-    Team team = null;
-    if (story != null) {
-      for (Sprint sprint : mainApp.getSprints()) {
-        if (sprint.getSprintStories().contains(story)) {
-          team = sprint.getSprintTeam();
-          break;
-        }
-      }
-    }
     mainApp.showTaskDialog(tasks, null, team, CreateOrEdit.CREATE, thisStage);
     if (createOrEdit == CreateOrEdit.EDIT) {
       checkButtonDisabled();
@@ -775,6 +775,26 @@ public class StoryDialogController {
         }
         setGraphic(pane);
       }
+    }
+  }
+
+  /**
+   * Allow double clicking for editing a Task.
+   */
+  private class TaskListCell extends TextFieldListCell<Task> {
+
+    public TaskListCell() {
+      super();
+      this.setOnMouseClicked(click -> {
+        if (click.getClickCount() == 2 &&
+            click.getButton() == MouseButton.PRIMARY &&
+            !isEmpty()) {
+          mainApp.showTaskDialog(tasks, getItem(), team, CreateOrEdit.EDIT, thisStage);
+          taskList.setItems(null);
+          taskList.setItems(tasks);
+          taskList.getSelectionModel().select(getItem());
+        }
+      });
     }
   }
 }

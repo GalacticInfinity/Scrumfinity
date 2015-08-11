@@ -778,7 +778,7 @@ public class Main extends Application {
    *
    * @param taskCollection the collection which owns/will own the task (it is not stored in Main)
    * @param task the task that to view or edit (null if creating)
-   * @param team the team of the sprint which will contain the task
+   * @param team the team of the sprint which will contain the task (non-null if story in sprint)
    * @param createOrEdit Whether editing or creating the task
    * @param stage the stage it is currently on to void unusual behaviour
    */

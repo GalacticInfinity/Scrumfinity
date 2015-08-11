@@ -90,7 +90,7 @@ public class TaskDialogController {
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       thisStage.setTitle("Edit Task");
       btnConfirm.setText("Save");
-      btnConfirm.setDisable(true);
+//      btnConfirm.setDisable(true); // todo checkButtonDisabled()
     }
     this.createOrEdit = createOrEdit;
 
