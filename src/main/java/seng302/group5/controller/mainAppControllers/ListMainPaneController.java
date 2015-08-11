@@ -1,5 +1,6 @@
 package seng302.group5.controller.mainAppControllers;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -22,6 +23,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.cell.TextFieldListCell;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
@@ -61,9 +64,16 @@ public class ListMainPaneController {
   @FXML private Label listViewLabel;
   @FXML private ToggleButton temporal;
   @FXML private ScrumBoardController scrumBoardController;
+  @FXML private ImageView sortImage;
   private Main mainApp;
   private boolean isListShown = true;
   private boolean isTemporal = false;
+
+  private File dSort = new File("src/main/resources/DSortButton.png");
+  Image dSortImage = new Image(dSort.toURI().toString());
+
+  private File aSort = new File("src/main/resources/ASortButton.png");
+  Image aSortImage = new Image(aSort.toURI().toString());
 
   private AgileItem selectedItem;
 
@@ -148,22 +158,28 @@ public class ListMainPaneController {
     switch (listType) {
       case "Projects":
         isListShown = true;
+        temporal.setVisible(false);
+       // temporal.visibleProperty().setValue(true);
         listView.setItems(mainApp.getProjects().sorted(Comparator.<Project>naturalOrder()));
         break;
       case "People":
         isListShown = true;
+        temporal.setVisible(false);
         listView.setItems(mainApp.getPeople().sorted(Comparator.<Person>naturalOrder()));
         break;
       case "Skills":
         isListShown = true;
+        temporal.setVisible(false);
         listView.setItems(mainApp.getSkills().sorted(Comparator.<Skill>naturalOrder()));
         break;
       case "Teams":
         isListShown = true;
+        temporal.setVisible(false);
         listView.setItems(mainApp.getTeams().sorted(Comparator.<Team>naturalOrder()));
         break;
       case "Releases":
         isListShown = true;
+        temporal.setVisible(true);
         if (isTemporal) {
           listView.setItems(mainApp.getReleasesbydate());
         } else {
@@ -172,14 +188,17 @@ public class ListMainPaneController {
         break;
       case "Stories":
         isListShown = true;
+        temporal.setVisible(false);
         listView.setItems(mainApp.getStories().sorted(Comparator.<Story>naturalOrder()));
         break;
       case "Backlogs":
         isListShown = true;
+        temporal.setVisible(false);
         listView.setItems(mainApp.getBacklogs().sorted(Comparator.<Backlog>naturalOrder()));
         break;
       case "Sprints":
         isListShown = true;
+        temporal.setVisible(true);
         if (isTemporal) {
           listView.setItems(mainApp.getSprintsByDate());
         } else {
@@ -224,6 +243,7 @@ public class ListMainPaneController {
         }
         return selectedItem;
       case "Releases":
+        temporal.visibleProperty().setValue(true);
         if (!isListShown || !listType.equals("Releases")) {
           return null;
         }
@@ -392,7 +412,7 @@ public class ListMainPaneController {
     }
     Text text10 = new Text("\nSkills: ");
     text10.setFill(Color.BLACK);
-    text10.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
+    text10.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
 
     StringBuilder listOfSkills = new StringBuilder();
@@ -1171,8 +1191,10 @@ public class ListMainPaneController {
   @FXML
   protected void btnClickTemporalSort(ActionEvent event) {
     if (isTemporal){
+      sortImage.setImage(aSortImage);
       isTemporal = false;
     } else {
+      sortImage.setImage(dSortImage);
       isTemporal = true;
     }
     refreshList(selectedItem);
