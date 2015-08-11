@@ -262,7 +262,6 @@ public class StoryDialogController {
    * Checks if there are any changed fields and disables or enables the button accordingly
    */
   private void checkButtonDisabled() {
-    // todo verify it works for editing tasks
     if (storyDescriptionField.getText().equals(story.getDescription()) &&
         storyLabelField.getText().equals(story.getLabel()) &&
         storyNameField.getText().equals(story.getStoryName()) &&
@@ -271,7 +270,8 @@ public class StoryDialogController {
         readyCheckbox.isSelected() == story.getStoryState() &&
         statusCombo.getValue().equals(story.getStatusString()) &&
         (backlogCombo.getValue() == null || backlogCombo.getValue().equals(lastBacklog)) &&
-        tasks.equals(story.getTasks())) {
+        tasks.equals(story.getTasks()) &&
+        taskEditsUndoRedo.getUndoRedos().isEmpty()) {
       btnCreateStory.setDisable(true);
     } else {
       btnCreateStory.setDisable(false);
@@ -803,6 +803,9 @@ public class StoryDialogController {
             taskList.setItems(null);
             taskList.setItems(tasks);
             taskList.getSelectionModel().select(getItem());
+            if (createOrEdit == CreateOrEdit.EDIT) {
+              checkButtonDisabled();
+            }
           }
         }
       });
