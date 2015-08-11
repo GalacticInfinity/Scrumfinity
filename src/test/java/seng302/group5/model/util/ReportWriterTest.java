@@ -7,6 +7,7 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,7 +21,9 @@ import seng302.group5.model.Person;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
 import seng302.group5.model.Skill;
+import seng302.group5.model.Status;
 import seng302.group5.model.Story;
+import seng302.group5.model.Task;
 import seng302.group5.model.Team;
 
 /**
@@ -57,6 +60,9 @@ public class ReportWriterTest {
   Backlog backlog1;
   Backlog backlog2;
   Backlog backlog3;
+  Task task1;
+  Task task2;
+  Task task3;
 
   @Before
   public void setUp() {
@@ -251,8 +257,19 @@ public class ReportWriterTest {
     mainApp.addBacklog(backlog3);
   }
 
+  private void createTasksAndAddToStories() {
+    task1 = new Task("task1", "This is a taskarooni", 123, Status.DONE, new ArrayList<>());
+    task2 = new Task("task2", "This is a taskarooni2", 1234, Status.IN_PROGRESS, new ArrayList<>());
+    task3 = new Task("task3", "This is a taskarooni3", 12356, Status.VERIFY, new ArrayList<>());
+
+    story1.addTask(task1);
+    story1.addTask(task2);
+    story2.addTask(task3);
+  }
+
+
   @Test
-  public void testAllReport() {
+  public void testReport() {
 
     createVanillaPeople();
     createSkillsWithDependency();
@@ -262,6 +279,33 @@ public class ReportWriterTest {
     createTeamWithDependency();
     createProjectsWithDependency();
     createReleaseWithDependency();
+
+    report = new ReportWriter();
+    File file = new File(System.getProperty("user.dir")
+                         + File.separator
+                         + "ReportTestAll.xml");
+    if (file.exists()) {
+      file.delete();
+    }
+    assertFalse(file.exists());
+    report.writeReport(mainApp, file);
+    assertTrue(file.exists());
+
+    file.delete();
+  }
+
+  @Test
+  public void testAllReportWithTasks() {
+
+    createVanillaPeople();
+    createSkillsWithDependency();
+    createStories();
+    createStoriesWithACs();
+    createBacklogs();
+    createTeamWithDependency();
+    createProjectsWithDependency();
+    createReleaseWithDependency();
+    createTasksAndAddToStories();
 
     report = new ReportWriter();
     File file = new File(System.getProperty("user.dir")
