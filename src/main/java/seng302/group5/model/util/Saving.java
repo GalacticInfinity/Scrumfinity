@@ -482,7 +482,7 @@ public class Saving {
         }
         saveFile.write("\t\t</sprintStories>\n");
       }
-      if (!sprint.getTasks().isEmpty()) {
+      if (!sprint.getTasks().isEmpty() && sprint.getTasks() != null) {
         saveFile.write("\t\t<Tasks>\n");
         for (Task task : sprint.getTasks()) {
           saveFile.write("\t\t\t<Task>\n");
@@ -517,8 +517,8 @@ public class Saving {
         saveFile.write("\t\t</Tasks>\n");
         saveFile.write("\t</Sprint>\n");
       }
-      saveFile.write("</Sprints>\n");
     }
+    saveFile.write("</Sprints>\n");
   }
 }
 
