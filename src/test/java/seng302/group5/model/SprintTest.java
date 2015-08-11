@@ -7,10 +7,12 @@ import org.junit.Test;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -38,6 +40,7 @@ public class SprintTest {
   private Sprint sprint;
   private Sprint sprint1;
   private Sprint sprint2;
+  private Sprint sprint3;
 
   private Story story;
 
@@ -75,8 +78,43 @@ public class SprintTest {
     sprint2 = new Sprint(sprintGoal2, sprintFullName, sprintDescription, sprintBacklog,
                          sprintProject, sprintTeam, sprintRelease, sprintStart, sprintEnd,
                          sprintStories);
+
+    sprint3 = new Sprint("sprint5", sprintFullName, sprintDescription, sprintBacklog,
+                                sprintProject, sprintTeam, sprintRelease, LocalDate.MIN, sprintEnd,
+                                sprintStories);
   }
 
+  @Test
+  public void testTemporalOrder() {
+
+    ObservableList<Sprint> sprints = FXCollections.observableArrayList();
+    sprints.add(sprint1);
+    sprints.add(sprint2);
+    sprints.add(sprint3);
+    Comparator<Sprint> byDate = new Comparator<Sprint>() {
+      @Override
+      public int compare(Sprint o1, Sprint o2) {
+        if (o1.getSprintStart().isAfter(o2.getSprintStart())) {
+          return 1;
+        } else return 0;
+      }
+      //
+    };
+
+    assertTrue(sprints.get(0).equals(sprint1));
+    assertTrue(sprints.get(1).equals(sprint2));
+    assertTrue(sprints.get(2).equals(sprint3));
+    assertTrue(sprints.get(2).getSprintStart().isBefore(sprints.get(0).getSprintStart()));
+    assertTrue(sprints.get(2).getSprintStart().isBefore(sprints.get(1).getSprintStart()));
+
+    sprints = sprints.sorted(byDate);
+    assertTrue(sprints.get(0).equals(sprint3));
+
+    assertTrue(sprints.get(1).getSprintStart().equals(sprints.get(2).getSprintStart()));
+    assertTrue(sprints.get(0).getSprintStart().isBefore(sprints.get(1).getSprintStart()));
+    assertTrue(sprints.get(0).getSprintStart().isBefore(sprints.get(2).getSprintStart()));
+
+  }
 
   @Test
   public void testToString() {
