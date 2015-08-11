@@ -10,10 +10,10 @@ import java.util.Map;
  * @author Alex Woo
  */
 public enum Status {
-  DONE,
-  VERIFY,
+  NOT_STARTED,
   IN_PROGRESS,
-  NOT_STARTED;
+  VERIFY,
+  DONE;
 
 
   private static Map<Status, String> statusStringMap;
