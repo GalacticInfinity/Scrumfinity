@@ -5,7 +5,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
-import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Sprint;
@@ -26,27 +25,17 @@ public class ScrumBoardController {
   @FXML private ComboBox<Story> storyCombo;
 
   private Main mainApp;
-  private Stage thisStage;
 
-  private Backlog backlog;
-  private Sprint sprint;
-  private Story story;
-
-  private ObservableList<Backlog> availableBacklogs;
   private ObservableList<Sprint> availableSprints;
   private ObservableList<Story> availableStories;
 
   /**
    * This function sets up the scrum board dialog controller.
    * @param mainApp     The main application object
-   * @param thisStage   The stage of the dialog
    */
-  public void setupController(Main mainApp, Stage thisStage) {
+  public void setupController(Main mainApp) {
     this.mainApp = mainApp;
-    this.thisStage = thisStage;
 
-    thisStage.setTitle("Scrum Board Support");
-    thisStage.setResizable(false);
     initialiseLists();
     sprintCombo.setDisable(true);
     storyCombo.setDisable(true);
@@ -59,18 +48,15 @@ public class ScrumBoardController {
    * to update other GUI elements which depend on the backlog.
    */
   private void initialiseLists() {
-    availableBacklogs = FXCollections.observableArrayList();
     availableSprints = FXCollections.observableArrayList();
     availableStories = FXCollections.observableArrayList();
-
-    availableBacklogs.setAll(mainApp.getBacklogs());
+    Story nonStory = new Story();
+    nonStory.setLabel("Non-story Tasks");
 
     backlogCombo.setVisibleRowCount(5);
     sprintCombo.setVisibleRowCount(5);
     storyCombo.setVisibleRowCount(5);
-    backlogCombo.setItems(availableBacklogs);
-    sprintCombo.setItems(availableSprints);
-    storyCombo.setItems(availableStories);
+    backlogCombo.setItems(mainApp.getBacklogs());
 
     backlogCombo.getSelectionModel().selectedItemProperty().addListener(
       (observable, oldBacklog, newBacklog) -> {
@@ -78,8 +64,8 @@ public class ScrumBoardController {
         sprintCombo.setDisable(false);
 
         // get backlog's sprints
-        availableSprints.addAll(mainApp.getSprints().stream()
-                                    .filter(sprint -> sprint.getSprintBacklog().equals(backlog))
+        availableSprints.setAll(mainApp.getSprints().stream()
+                                    .filter(sprint -> sprint.getSprintBacklog().equals(newBacklog))
                                     .collect(Collectors.toList()));
         sprintCombo.setItems(availableSprints);
       }
@@ -89,12 +75,19 @@ public class ScrumBoardController {
         (observable, oldSprint, newSprint) -> {
 
           storyCombo.setDisable(false);
-
-          availableStories.removeAll();
+          availableStories.setAll(nonStory);
           availableStories.addAll(newSprint.getSprintStories());
-
           storyCombo.setItems(availableStories);
         }
     );
+  }
+
+  /**
+   * Sets the main app to the param
+   *
+   * @param mainApp The main application object
+   */
+  public void setMainApp(Main mainApp) {
+    this.mainApp = mainApp;
   }
 }

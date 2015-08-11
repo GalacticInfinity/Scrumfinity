@@ -30,7 +30,9 @@ import seng302.group5.model.Release;
 import seng302.group5.model.Role;
 import seng302.group5.model.Skill;
 import seng302.group5.model.Sprint;
+import seng302.group5.model.Status;
 import seng302.group5.model.Story;
+import seng302.group5.model.Task;
 import seng302.group5.model.Team;
 
 
@@ -591,6 +593,45 @@ public class ReportWriter {
       dependenciesElement.appendChild(depElement);
     }
     storyElem.appendChild(dependenciesElement);
+
+
+    //shows the tasks in the story and displays their details
+    Element tasksElement = report.createElement("Tasks");
+    for (Task task : story.getTasks()){
+      Element taskElement = report.createElement("task");
+      Element nameEle = report.createElement("name");
+      taskElement.appendChild(nameEle);
+      nameEle.appendChild(report.createTextNode(task.getLabel()));
+      Element descEle = report.createElement("description");
+      taskElement.appendChild(descEle);
+      descEle.appendChild(report.createTextNode(task.getTaskDescription()));
+      Element estiEle = report.createElement("estimation");
+      taskElement.appendChild(estiEle);
+      estiEle.appendChild(report.createTextNode(task.getTaskEstimation().toString()));
+      Element statusEle = report.createElement("status");
+      taskElement.appendChild(statusEle);
+      statusEle.appendChild(report.createTextNode(Status.getStatusString(task.getStatus())));
+
+      Element peopleElem = report.createElement("assigned-people");
+      taskElement.appendChild(peopleElem);
+      for (Person person : task.getTaskPeople()) {
+        Element personElem = report.createElement("assigned-person");
+        peopleElem.appendChild(personElem);
+        personElem.appendChild(report.createTextNode(person.getLabel()));
+      }
+      Element spentEffortElem = report.createElement("spent-effort");
+      taskElement.appendChild(spentEffortElem);
+      for (Map.Entry<Person, Integer> entry : task.getSpentEffort().entrySet()) {
+        Element personsEffortElem = report.createElement("persons-effort");
+        spentEffortElem.appendChild(personsEffortElem);
+        personsEffortElem.appendChild(report.createTextNode(entry.getKey().getLabel() +
+                                                            " -> " + entry.getValue().toString()));
+      }
+      tasksElement.appendChild(taskElement);
+      }
+      storyElem.appendChild(tasksElement);
+
+
   }
 
   /**
@@ -671,6 +712,42 @@ public class ReportWriter {
     formattedDate = sprint.getSprintEnd().format(DateTimeFormatter.ofPattern(dateFormat));
     sprintEnd.appendChild(report.createTextNode(formattedDate));
     sprintElem.appendChild(sprintEnd);
+
+    //Shows the tasks in the sprint and its details.
+    Element tasksElement = report.createElement("Tasks");
+    for (Task task : sprint.getTasks()){
+      Element taskElement = report.createElement("task");
+      Element nameEle = report.createElement("name");
+      taskElement.appendChild(nameEle);
+      nameEle.appendChild(report.createTextNode(task.getLabel()));
+      Element descEle = report.createElement("description");
+      taskElement.appendChild(descEle);
+      descEle.appendChild(report.createTextNode(task.getTaskDescription()));
+      Element estiEle = report.createElement("estimation");
+      taskElement.appendChild(estiEle);
+      estiEle.appendChild(report.createTextNode(task.getTaskEstimation().toString()));
+      Element statusEle = report.createElement("status");
+      taskElement.appendChild(statusEle);
+      statusEle.appendChild(report.createTextNode(Status.getStatusString(task.getStatus())));
+
+      Element peopleElem = report.createElement("assigned-people");
+      taskElement.appendChild(peopleElem);
+      for (Person person : task.getTaskPeople()) {
+        Element personElem = report.createElement("assigned-person");
+        peopleElem.appendChild(personElem);
+        personElem.appendChild(report.createTextNode(person.getLabel()));
+      }
+      Element spentEffortElem = report.createElement("spent-effort");
+      taskElement.appendChild(spentEffortElem);
+      for (Map.Entry<Person, Integer> entry : task.getSpentEffort().entrySet()) {
+        Element personsEffortElem = report.createElement("persons-effort");
+        spentEffortElem.appendChild(personsEffortElem);
+        personsEffortElem.appendChild(report.createTextNode(entry.getKey().getLabel() +
+                                                            " -> " + entry.getValue().toString()));
+      }
+      tasksElement.appendChild(taskElement);
+    }
+    sprintElem.appendChild(tasksElement);
   }
 }
 

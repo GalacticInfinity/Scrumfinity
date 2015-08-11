@@ -31,6 +31,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import seng302.group5.Main;
+import seng302.group5.controller.dialogControllers.ScrumBoardController;
 import seng302.group5.model.AgileHistory;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Backlog;
@@ -59,6 +60,7 @@ public class ListMainPaneController {
   @FXML private AnchorPane listViewPane;
   @FXML private Label listViewLabel;
   @FXML private ToggleButton temporal;
+  @FXML private ScrumBoardController scrumBoardController;
   private Main mainApp;
   private boolean isListShown = true;
   private boolean isTemporal = false;
@@ -439,7 +441,7 @@ public class ListMainPaneController {
 
     Text text6 = new Text("\nProject Description: \n");
     text6.setFill(Color.BLACK);
-    text6.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
+    text6.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
     Text text7;
     if (project.getProjectDescription().isEmpty()) {
@@ -1175,6 +1177,11 @@ public class ListMainPaneController {
     }
     refreshList(selectedItem);
   }
+
+  public void initScrumBoard() {
+    scrumBoardController.setupController(mainApp);
+  }
+
   /**
    * Allows us to override the a ListViewCell - a single cell in a ListView.
    */
