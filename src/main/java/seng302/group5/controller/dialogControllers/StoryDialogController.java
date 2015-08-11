@@ -133,7 +133,7 @@ public class StoryDialogController {
       tasks.setAll(story.getTasks());
 
       for (Map.Entry<String, Status> entry : statusStringMap.entrySet()) {
-        if (story.getStatus() == entry.getValue()){
+        if (story.getStatus() == entry.getValue()) {
           statusCombo.setValue(entry.getKey());
         }
       }
