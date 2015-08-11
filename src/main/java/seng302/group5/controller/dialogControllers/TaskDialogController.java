@@ -43,7 +43,6 @@ public class TaskDialogController {
   @FXML private Button btnConfirm;
   @FXML private Button btnCancel;
 
-  private Main mainApp;
   private Collection<Task> taskCollection;
   private Stage thisStage;
   private CreateOrEdit createOrEdit;
@@ -57,16 +56,14 @@ public class TaskDialogController {
   /**
    * Sets up the controller on start up. TODO: expand when it does more
    *
-   * @param mainApp The main application which contains the sprint's teams
    * @param taskCollection The collection which will contain the task
    * @param team The team of the sprint which will contain the task
    * @param thisStage This is the window that will be displayed
    * @param createOrEdit This is an ENUM object to determine if creating or editing
    * @param task The object that will be edited (null if creating)
    */
-  public void setupController(Main mainApp, Collection<Task> taskCollection, Team team,
+  public void setupController(Collection<Task> taskCollection, Team team,
                               Stage thisStage, CreateOrEdit createOrEdit, Task task) {
-    this.mainApp = mainApp;
     this.taskCollection = taskCollection;
     this.thisStage = thisStage;
 

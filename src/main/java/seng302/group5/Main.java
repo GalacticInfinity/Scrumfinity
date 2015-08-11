@@ -795,7 +795,7 @@ public class Main extends Application {
       Scene taskDialogScene = new Scene(taskDialogLayout);
       Stage taskDialogStage = new Stage();
 
-      controller.setupController(this, taskCollection, team, taskDialogStage, createOrEdit, task);
+      controller.setupController(taskCollection, team, taskDialogStage, createOrEdit, task);
 
       taskDialogStage.initModality(Modality.APPLICATION_MODAL);
       taskDialogStage.initOwner(stage);
