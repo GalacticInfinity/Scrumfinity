@@ -700,7 +700,7 @@ public class ListMainPaneController {
     textACHeader.setFill(Color.rgb(1, 0, 1));
     textACHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
-    Text textStatusHeader = new Text("\nStatus:");
+    Text textStatusHeader = new Text("\nStatus: ");
     textStatusHeader.setFill(Color.rgb(1, 0, 1));
     textStatusHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
@@ -714,7 +714,7 @@ public class ListMainPaneController {
                                          textDescriptionBody, textCreatorHeader, textCreatorBody,
                                          textReadinessHeader, textReadinessBody,
                                          textImpedimentsHeader, textImpedimentsBody,
-                                         textReadinessHeader, textReadinessBody, textStatusHeader,
+                                         textStatusHeader,
                                          textStatusBody, textACHeader);
 
     Text textACBody;
