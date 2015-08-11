@@ -6,208 +6,248 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="538.0" prefWidth="430.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.StoryDialogController">
-    <children>
-        <HBox alignment="BOTTOM_LEFT" prefHeight="32.0" prefWidth="434.0" spacing="10.0">
-            <children>
-                <Label prefHeight="25.0" prefWidth="125.0" text="Story Label:*">
-                    <font>
-                        <Font size="15.0" />
-                    </font>
-                </Label>
-                <TextField fx:id="storyLabelField" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="200.0" promptText="Unique label of story">
-               <tooltip>
-                  <Tooltip text="Label should be 20 characters or less or application may not behave as expected." />
-               </tooltip></TextField>
-            </children>
-         <VBox.margin>
-            <Insets />
-         </VBox.margin>
-        </HBox>
-        <HBox alignment="CENTER_LEFT" prefHeight="38.0" prefWidth="369.0" spacing="10.0">
-            <children>
-                <Label prefHeight="25.0" prefWidth="125.0" text="Story Name:">
-                    <font>
-                        <Font size="15.0" />
-                    </font>
-                </Label>
-                <TextField fx:id="storyNameField" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="200.0" promptText="Name of story" />
-            </children>
-        </HBox>
-        <HBox prefHeight="30.0" prefWidth="429.0" spacing="10.0">
-            <children>
-                <Label prefHeight="25.0" prefWidth="125.0" text="Description:">
-                    <font>
-                        <Font size="15.0" />
-                    </font>
-                </Label>
-            <TextArea fx:id="storyDescriptionField" minHeight="130.0" prefHeight="140.0" prefWidth="285.0" promptText="Description of story" wrapText="true" />
-            </children>
-        </HBox>
-        <HBox prefHeight="21.0" prefWidth="429.0">
-            <children>
-                <Label prefHeight="25.0" prefWidth="135.0" text="Creator:*">
-                    <font>
-                        <Font size="15.0" />
-                    </font>
-                    <HBox.margin>
-                        <Insets />
-                    </HBox.margin>
-                </Label>
-                <ComboBox fx:id="storyCreatorList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" promptText="Available people">
-               <HBox.margin>
-                  <Insets top="2.0" />
-               </HBox.margin></ComboBox>
-            </children>
-            <VBox.margin>
-                <Insets top="4.0" />
-            </VBox.margin>
-        </HBox>
-      <HBox prefHeight="132.0" prefWidth="425.0">
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="745.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.StoryDialogController">
+   <children>
+      <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="538.0" prefWidth="430.0" stylesheets="@font.css">
          <children>
-            <Label fx:id="acLabel" prefHeight="38.0" prefWidth="134.0" text="Acceptance&#10;      Criteria:">
-               <font>
-                  <Font size="15.0" />
-               </font>
-               <HBox.margin>
-                  <Insets top="5.0" />
-               </HBox.margin>
-            </Label>
-            <ListView fx:id="listAC" prefHeight="131.0" prefWidth="253.0">
-               <HBox.margin>
-                  <Insets right="3.0" />
-               </HBox.margin>
-            </ListView>
-            <VBox prefHeight="131.0" prefWidth="34.0">
+            <HBox alignment="BOTTOM_LEFT" prefHeight="32.0" prefWidth="434.0" spacing="10.0">
                <children>
-                  <Button fx:id="addAC" maxHeight="30.0" maxWidth="30.0" mnemonicParsing="false" onAction="#btnAddAC" prefHeight="30.0" prefWidth="30.0" text="+" />
-                  <Button fx:id="removeAC" maxHeight="30.0" maxWidth="30.0" mnemonicParsing="false" onAction="#btnRemoveAC" prefHeight="30.0" prefWidth="30.0" text="-">
-                     <VBox.margin>
+                  <Label prefHeight="25.0" prefWidth="125.0" text="Story Label:*">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="storyLabelField" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="200.0" promptText="Unique label of story">
+                     <tooltip>
+                        <Tooltip text="Label should be 20 characters or less or application may not behave as expected." />
+                     </tooltip>
+                  </TextField>
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="38.0" prefWidth="369.0" spacing="10.0">
+               <children>
+                  <Label prefHeight="25.0" prefWidth="125.0" text="Story Name:">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="storyNameField" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="200.0" promptText="Name of story" />
+               </children>
+            </HBox>
+            <HBox prefHeight="30.0" prefWidth="429.0" spacing="10.0">
+               <children>
+                  <Label prefHeight="25.0" prefWidth="125.0" text="Description:">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <TextArea fx:id="storyDescriptionField" minHeight="130.0" prefHeight="140.0" prefWidth="285.0" promptText="Description of story" wrapText="true" />
+               </children>
+            </HBox>
+            <HBox prefHeight="21.0" prefWidth="429.0">
+               <children>
+                  <Label prefHeight="25.0" prefWidth="135.0" text="Creator:*">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Label>
+                  <ComboBox fx:id="storyCreatorList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" promptText="Available people">
+                     <HBox.margin>
+                        <Insets top="2.0" />
+                     </HBox.margin>
+                  </ComboBox>
+               </children>
+               <VBox.margin>
+                  <Insets top="4.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox prefHeight="132.0" prefWidth="425.0">
+               <children>
+                  <Label fx:id="acLabel" prefHeight="38.0" prefWidth="134.0" text="Acceptance&#10;      Criteria:">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <HBox.margin>
                         <Insets top="5.0" />
+                     </HBox.margin>
+                  </Label>
+                  <ListView fx:id="listAC" prefHeight="131.0" prefWidth="253.0">
+                     <HBox.margin>
+                        <Insets right="3.0" />
+                     </HBox.margin>
+                  </ListView>
+                  <VBox prefHeight="131.0" prefWidth="34.0">
+                     <children>
+                        <Button fx:id="addAC" maxHeight="30.0" maxWidth="30.0" mnemonicParsing="false" onAction="#btnAddAC" prefHeight="30.0" prefWidth="30.0" text="+" />
+                        <Button fx:id="removeAC" maxHeight="30.0" maxWidth="30.0" mnemonicParsing="false" onAction="#btnRemoveAC" prefHeight="30.0" prefWidth="30.0" text="-">
+                           <VBox.margin>
+                              <Insets top="5.0" />
+                           </VBox.margin>
+                        </Button>
+                        <Button fx:id="upAC" maxHeight="30.0" maxWidth="30.0" mnemonicParsing="false" onAction="#btnUpAC" prefHeight="30.0" prefWidth="30.0" text="↑">
+                           <VBox.margin>
+                              <Insets top="5.0" />
+                           </VBox.margin>
+                        </Button>
+                        <Button fx:id="downAC" maxHeight="30.0" maxWidth="30.0" mnemonicParsing="false" onAction="#btnDownAC" prefHeight="30.0" prefWidth="30.0" text="↓">
+                           <VBox.margin>
+                              <Insets top="5.0" />
+                           </VBox.margin>
+                        </Button>
+                     </children>
+                  </VBox>
+               </children>
+               <VBox.margin>
+                  <Insets top="6.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox prefHeight="25.0" prefWidth="200.0">
+               <children>
+                  <Label prefWidth="135.0" text="Impendiments:">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="impedimentsTextField" prefHeight="25.0" prefWidth="200.0" />
+               </children>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox prefHeight="25.0" prefWidth="429.0">
+               <children>
+                  <Label prefHeight="25.0" prefWidth="135.0" text="Backlog:">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Label>
+                  <Label fx:id="backlogContainer">
+                     <graphic>
+                        <ComboBox fx:id="backlogCombo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" promptText="Available backlogs" />
+                     </graphic>
+                  </Label>
+               </children>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox prefHeight="25.0" prefWidth="200.0">
+               <children>
+                  <Label fx:id="estimateLabel" prefHeight="39.0" prefWidth="138.0" text="Estimate:">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="shownEstimate" prefHeight="39.0" prefWidth="231.0" text="Not Estimated">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <tooltip>
+                        <Tooltip text="The estimate can only be changed in the backlog it is assigned too" />
+                     </tooltip>
+                  </Label>
+               </children>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox prefHeight="25.0" prefWidth="425.0">
+               <children>
+                  <Label prefHeight="39.0" prefWidth="135.0" text="Status">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="statusCombo" prefHeight="25.0" prefWidth="200.0" promptText="Set status" />
+               </children>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox prefHeight="25.0" prefWidth="200.0">
+               <children>
+                  <Label prefHeight="25.0" prefWidth="125.0" text="Readiness:">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <CheckBox fx:id="readyCheckbox" mnemonicParsing="false" onAction="#readinessCheckboxClick" prefHeight="25.0">
+                     <HBox.margin>
+                        <Insets left="10.0" top="5.0" />
+                     </HBox.margin>
+                  </CheckBox>
+               </children>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox fx:id="btnContainer" alignment="BOTTOM_RIGHT" prefHeight="39.0" prefWidth="434.0" spacing="10.0">
+               <children>
+                  <Label prefHeight="25.0" prefWidth="270.0" text="* Fields cannot be empty.">
+                     <font>
+                        <Font name="System Italic" size="13.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="btnCreateStory" mnemonicParsing="false" onAction="#btnCreateStoryClick" text="Save" />
+                  <Button fx:id="btnCancel" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#btnCancelClick" text="Cancel" />
+               </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <padding>
+                  <Insets bottom="5.0" right="5.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets bottom="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+         <padding>
+            <Insets left="5.0" />
+         </padding>
+      </VBox>
+      <HBox prefHeight="540.0" prefWidth="317.0">
+         <children>
+            <VBox prefHeight="540.0" prefWidth="236.0">
+               <children>
+                  <Label prefHeight="24.0" prefWidth="61.0" text="Tasks: ">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <ListView fx:id="taskList" prefHeight="472.0" prefWidth="207.0" />
+               </children>
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
+            </VBox>
+            <VBox prefHeight="540.0" prefWidth="70.0">
+               <children>
+                  <Button fx:id="addTask" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" text="+">
+                     <VBox.margin>
+                        <Insets left="10.0" right="2.0" top="220.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="upAC" maxHeight="30.0" maxWidth="30.0" mnemonicParsing="false" onAction="#btnUpAC" prefHeight="30.0" prefWidth="30.0" text="↑">
+                  <Button fx:id="removeTask" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" text="-">
                      <VBox.margin>
-                        <Insets top="5.0" />
-                     </VBox.margin>
-                  </Button>
-                  <Button fx:id="downAC" maxHeight="30.0" maxWidth="30.0" mnemonicParsing="false" onAction="#btnDownAC" prefHeight="30.0" prefWidth="30.0" text="↓">
-                     <VBox.margin>
-                        <Insets top="5.0" />
+                        <Insets left="10.0" top="20.0" />
                      </VBox.margin>
                   </Button>
                </children>
             </VBox>
          </children>
-         <VBox.margin>
-            <Insets top="6.0" />
-         </VBox.margin>
       </HBox>
-      <HBox prefHeight="25.0" prefWidth="200.0">
-         <children>
-            <Label prefWidth="135.0" text="Impendiments:">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <TextField fx:id="impedimentsTextField" prefHeight="25.0" prefWidth="200.0" />
-         </children>
-         <VBox.margin>
-            <Insets top="5.0" />
-         </VBox.margin>
-      </HBox>
-      <HBox prefHeight="25.0" prefWidth="429.0">
-         <children>
-            <Label prefHeight="25.0" prefWidth="135.0" text="Backlog:">
-               <font>
-                  <Font size="15.0" />
-               </font>
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-            </Label>
-            <Label fx:id="backlogContainer">
-               <graphic>
-                  <ComboBox fx:id="backlogCombo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" promptText="Available backlogs" />
-               </graphic>
-            </Label>
-         </children>
-         <VBox.margin>
-            <Insets top="5.0" />
-         </VBox.margin>
-      </HBox>
-      <HBox prefHeight="25.0" prefWidth="200.0">
-         <children>
-            <Label fx:id="estimateLabel" prefHeight="39.0" prefWidth="138.0" text="Estimate:">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label fx:id="shownEstimate" prefHeight="39.0" prefWidth="231.0" text="Not Estimated">
-               <font>
-                  <Font size="15.0" />
-               </font>
-               <tooltip>
-                  <Tooltip text="The estimate can only be changed in the backlog it is assigned too" />
-               </tooltip>
-            </Label>
-         </children>
-         <VBox.margin>
-            <Insets top="5.0" />
-         </VBox.margin>
-      </HBox>
-      <HBox prefHeight="25.0" prefWidth="425.0">
-         <children>
-            <Label prefHeight="39.0" prefWidth="135.0" text="Status">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <ComboBox fx:id="statusCombo" prefHeight="25.0" prefWidth="200.0" promptText="Set status" />
-         </children>
-         <VBox.margin>
-            <Insets top="5.0" />
-         </VBox.margin>
-      </HBox>
-      <HBox prefHeight="25.0" prefWidth="200.0">
-         <children>
-            <Label prefHeight="25.0" prefWidth="125.0" text="Readiness:">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <CheckBox fx:id="readyCheckbox" mnemonicParsing="false" onAction="#readinessCheckboxClick" prefHeight="25.0">
-               <HBox.margin>
-                  <Insets left="10.0" top="5.0" />
-               </HBox.margin>
-            </CheckBox>
-         </children>
-         <VBox.margin>
-            <Insets top="5.0" />
-         </VBox.margin>
-      </HBox>
-        <HBox fx:id="btnContainer" alignment="BOTTOM_RIGHT" prefHeight="39.0" prefWidth="434.0" spacing="10.0">
-            <children>
-                <Label prefHeight="25.0" prefWidth="270.0" text="* Fields cannot be empty.">
-                    <font>
-                        <Font name="System Italic" size="13.0" />
-                    </font>
-                </Label>
-                <Button fx:id="btnCreateStory" mnemonicParsing="false" onAction="#btnCreateStoryClick" text="Save" />
-                <Button fx:id="btnCancel" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#btnCancelClick" text="Cancel" />
-            </children>
-            <opaqueInsets>
-                <Insets />
-            </opaqueInsets>
-            <VBox.margin>
-                <Insets bottom="5.0" right="5.0" top="5.0" />
-            </VBox.margin>
-         <padding>
-            <Insets bottom="5.0" right="5.0" />
-         </padding>
-        </HBox>
-    </children>
-    <padding>
-        <Insets left="5.0" />
-    </padding>
-</VBox>
+   </children>
+</HBox>

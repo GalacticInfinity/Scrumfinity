@@ -35,6 +35,7 @@ import seng302.group5.model.Backlog;
 import seng302.group5.model.Person;
 import seng302.group5.model.Sprint;
 import seng302.group5.model.Story;
+import seng302.group5.model.Task;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoObject;
 import seng302.group5.model.util.Settings;
@@ -59,10 +60,13 @@ public class StoryDialogController {
   @FXML private Button upAC;
   @FXML private Button downAC;
   @FXML private Button btnCreateStory;
+  @FXML private Button addTask;
+  @FXML private Button removeTask;
   @FXML private HBox btnContainer;
   @FXML private Label shownEstimate;
   @FXML private TextField impedimentsTextField;
   @FXML private ComboBox<String> statusCombo;
+  @FXML private ListView<Task> taskList;
 
   private Main mainApp;
   private Stage thisStage;
@@ -75,6 +79,7 @@ public class StoryDialogController {
   private ObservableList<String> acceptanceCriteria = FXCollections.observableArrayList();
   private ObservableList<Backlog> backlogs = FXCollections.observableArrayList();
   private ObservableList<String> statuses = FXCollections.observableArrayList();
+  private ObservableList<Task> tasks = FXCollections.observableArrayList();
 
   Map<String, Status> statusStringMap;
 
@@ -119,6 +124,7 @@ public class StoryDialogController {
       storyCreatorList.setValue(story.getCreator());
       impedimentsTextField.setText(story.getImpediments());
       acceptanceCriteria.setAll(story.getAcceptanceCriteria());
+      tasks.setAll(story.getTasks());
 
       for (Map.Entry<String, Status> entry : statusStringMap.entrySet())
       {
@@ -611,6 +617,9 @@ public class StoryDialogController {
       }
       this.statusCombo.setItems(statuses); //This is the only way i can think to do this with an
                                           // Enum. I know how shit this is :C i am so sad
+      this.taskList.setItems(tasks);
+
+      this.statusCombo.setValue("Not Started"); // For setting this to not started as its a reasonable assumption also fixes hashcode bug
 
       this.storyCreatorList.setVisibleRowCount(5);
       this.storyCreatorList.setItems(availablePeople);

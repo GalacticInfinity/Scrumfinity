@@ -21,6 +21,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -598,7 +599,7 @@ public class Main extends Application {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/StoryDialog.fxml"));
-      VBox StoryDialogLayout = loader.load();
+      HBox StoryDialogLayout = loader.load();
 
       StoryDialogController controller = loader.getController();
       Scene storyDialogScene = new Scene(StoryDialogLayout);
