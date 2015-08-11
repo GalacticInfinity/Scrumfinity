@@ -14,12 +14,12 @@ import java.util.Map;
  */
 public class Task implements AgileItem, Comparable<Task> {
 
-  String label;
-  String description;
-  double estimation;
-  Status status;
-  List<Person> assignedPeople;
-  Map<Person, Double> spentEffort;
+  private String label;
+  private String description;
+  private int estimation;
+  private Status status;
+  private List<Person> assignedPeople;
+  private Map<Person, Integer> spentEffort;
 
 
   /**
@@ -29,10 +29,21 @@ public class Task implements AgileItem, Comparable<Task> {
   public Task() {
     this.label = "";
     this.description = "";
-    this.estimation = 0.0;
+    this.estimation = 0;
     this.status = Status.NOT_STARTED;
     assignedPeople = new ArrayList<>();
     spentEffort = new IdentityHashMap<>();
+  }
+
+  public Task(String label, String description, Integer estimation, Status status,
+              List<Person> persons) {
+    this.label = label;
+    this.description = description;
+    this.status = status;
+    this.estimation = estimation;
+    this.assignedPeople = new ArrayList<>();
+    this.spentEffort = new IdentityHashMap<>();
+    addAllTaskPeople(persons);
   }
 
   /**
@@ -42,6 +53,7 @@ public class Task implements AgileItem, Comparable<Task> {
   public Task(Task clone) {
     this.label = clone.getLabel();
     this.description = clone.getTaskDescription();
+    this.estimation = clone.getTaskEstimation();
     this.status = clone.getStatus();
     assignedPeople = new ArrayList<>();
     assignedPeople.addAll(clone.getTaskPeople());
@@ -67,11 +79,11 @@ public class Task implements AgileItem, Comparable<Task> {
     this.description = description;
   }
 
-  public double getTaskEstimation() {
+  public Integer getTaskEstimation() {
     return estimation;
   }
 
-  public void setTaskEstimation(double estimation) {
+  public void setTaskEstimation(Integer estimation) {
     this.estimation = estimation;
   }
 
@@ -90,7 +102,7 @@ public class Task implements AgileItem, Comparable<Task> {
 
   public void addTaskPerson(Person person) {
     assignedPeople.add(person);
-    spentEffort.put(person, 0.0);
+    spentEffort.put(person, 0);
   }
 
   public void removeAllTaskPeople() {
@@ -112,7 +124,7 @@ public class Task implements AgileItem, Comparable<Task> {
     return this.status;
   }
 
-  public Map<Person, Double> getSpentEffort() {
+  public Map<Person, Integer> getSpentEffort() {
     return Collections.unmodifiableMap(spentEffort);
   }
 
@@ -121,7 +133,7 @@ public class Task implements AgileItem, Comparable<Task> {
    * @param person who did their effort
    * @param effort their effort (in hours)
    */
-  public void updateSpentEffort(Person person, Double effort) {
+  public void updateSpentEffort(Person person, Integer effort) {
     if (spentEffort.containsKey(person)) {
       spentEffort.remove(person);
     }
@@ -132,7 +144,7 @@ public class Task implements AgileItem, Comparable<Task> {
    * Adds all spent effort for a map. Deletes the previous map.
    * @param effortMap effortMap to be copied in
    */
-  public void updateSpentEffort(Map<Person, Double> effortMap) {
+  public void updateSpentEffort(Map<Person, Integer> effortMap) {
     spentEffort.clear();
     spentEffort.putAll(effortMap);
   }
@@ -152,7 +164,7 @@ public class Task implements AgileItem, Comparable<Task> {
       for (Person person : clone.getTaskPeople()) {
         this.assignedPeople.add(person);
       }
-      for (Map.Entry<Person, Double> entry : clone.getSpentEffort().entrySet()) {
+      for (Map.Entry<Person, Integer> entry : clone.getSpentEffort().entrySet()) {
         spentEffort.put(entry.getKey(), entry.getValue());
       }
     }
