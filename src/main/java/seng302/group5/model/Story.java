@@ -7,7 +7,6 @@ import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import seng302.group5.controller.enums.Status;
 
 /**
  * Story model. So that managers can keep track of the things people need to do, a way to record
@@ -18,13 +17,15 @@ import seng302.group5.controller.enums.Status;
  *
  * Created by Zander on 5/05/2015.
  */
-public class Story implements AgileItem, Comparable<Story> {
+public class Story implements AgileItem, Taskable, Comparable<Story> {
 
   private String label;
   private String storyName;
   private String description;
   private Person creator;
+  private String impediments;
   private List<Story> dependencies;
+  private List<Task> tasks;
   private boolean isReady = false;
   private ObservableList<String> acceptanceCriteria;
   private Status status;
@@ -37,9 +38,11 @@ public class Story implements AgileItem, Comparable<Story> {
     this.storyName = "";
     this.description = "";
     this.creator = null;
+    this.impediments = "";
     this.acceptanceCriteria = FXCollections.observableArrayList();
     this.isReady = false;
     this.dependencies = new ArrayList<>();
+    this.tasks = new ArrayList<>();
     this.status = Status.NOT_STARTED;
   }
 
@@ -58,6 +61,7 @@ public class Story implements AgileItem, Comparable<Story> {
     this.acceptanceCriteria = FXCollections.observableArrayList();
     this.isReady = false;
     this.dependencies = new ArrayList<>();
+    this.tasks = new ArrayList<>();
     this.status = Status.NOT_STARTED;
   }
 
@@ -82,11 +86,12 @@ public class Story implements AgileItem, Comparable<Story> {
     }
     this.isReady = false;
     this.dependencies = new ArrayList<>();
+    this.tasks = new ArrayList<>();
     this.status = Status.NOT_STARTED;
   }
 
   /**
-   * Constructor for all fields but not STATUS.
+   * Constructor for all fields but not STATUS or impediments.
    * @param label               Unique none-null id of the story.
    * @param storyName           A full name for this story.
    * @param description         A full description for this story.
@@ -110,11 +115,12 @@ public class Story implements AgileItem, Comparable<Story> {
     } else {
       this.dependencies = dependencies;
     }
+    this.tasks = new ArrayList<>();
     this.status = Status.NOT_STARTED;
   }
 
   /**
-   * Constructor for all fields. minus dependancies.
+   * Constructor for all fields. minus dependancies and impediments.
    * @param label               Unique none-null id of the story.
    * @param storyName           A full name for this story.
    * @param description         A full description for this story.
@@ -134,12 +140,13 @@ public class Story implements AgileItem, Comparable<Story> {
       this.acceptanceCriteria = acceptanceCriteria;
     }
     this.dependencies = new ArrayList<>();
+    this.tasks = new ArrayList<>();
     this.status = status;
   }
 
 
   /**
-   * Constructor for all fields.
+   * Constructor for all fields except impediments.
    * @param label               Unique none-null id of the story.
    * @param storyName           A full name for this story.
    * @param description         A full description for this story.
@@ -164,6 +171,7 @@ public class Story implements AgileItem, Comparable<Story> {
     } else {
       this.dependencies = dependencies;
     }
+    this.tasks = new ArrayList<>();
     this.status = status;
   }
 
@@ -177,6 +185,7 @@ public class Story implements AgileItem, Comparable<Story> {
     this.storyName = clone.getStoryName();
     this.description = clone.getDescription();
     this.creator = clone.getCreator();
+    this.impediments = clone.getImpediments();
     this.acceptanceCriteria = FXCollections.observableArrayList();
     if (clone.getAcceptanceCriteria() != null) {
       this.acceptanceCriteria.addAll(clone.getAcceptanceCriteria());
@@ -186,6 +195,8 @@ public class Story implements AgileItem, Comparable<Story> {
       this.dependencies.addAll(clone.getDependencies());
     }
     this.isReady = clone.getStoryState();
+    this.tasks = new ArrayList<>();
+    this.tasks.addAll(clone.getTasks());
     this.status = clone.getStatus();
   }
 
@@ -235,6 +246,22 @@ public class Story implements AgileItem, Comparable<Story> {
    */
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  /**
+   * Gets the impediments of story.
+   * @return Impediments of story.
+   */
+  public String getImpediments() {
+    return this.impediments;
+  }
+
+  /**
+   * Sets the impediments of story.
+   * @param impediments The impediments as String.
+   */
+  public void setImpediments(String impediments) {
+    this.impediments = impediments;
   }
 
   /**
@@ -328,6 +355,53 @@ public class Story implements AgileItem, Comparable<Story> {
     this.dependencies.clear();
   }
 
+  /**
+   * Get the tasks of the story.
+   *
+   * @return List of Task objects assigned to story.
+   */
+  @Override
+  public List<Task> getTasks() {
+    return Collections.unmodifiableList(tasks);
+  }
+
+  /**
+   * Add a single task to the story.
+   *
+   * @param task Task to add.
+   */
+  @Override
+  public void addTask(Task task) {
+    this.tasks.add(task);
+  }
+
+  /**
+   * Add a collection of tasks to the story.
+   *
+   * @param tasks Collection of tasks to add.
+   */
+  @Override
+  public void addAllTasks(Collection<Task> tasks) {
+    this.tasks.addAll(tasks);
+  }
+
+  /**
+   * Remove a single task from the story.
+   *
+   * @param task Task to remove.
+   */
+  @Override
+  public void removeTask(Task task) {
+    this.tasks.remove(task);
+  }
+
+  /**
+   * Remove all tasks from the story.
+   */
+  @Override
+  public void removeAllTasks() {
+    this.tasks.clear();
+  }
 
   public Status getStatus() {
     return status;
@@ -348,12 +422,15 @@ public class Story implements AgileItem, Comparable<Story> {
       this.label = clone.getLabel();
       this.storyName = clone.getStoryName();
       this.description = clone.getDescription();
+      this.impediments = clone.getImpediments();
       this.creator = clone.getCreator();
       this.isReady = clone.getStoryState();
       this.acceptanceCriteria.clear();
       this.acceptanceCriteria.addAll(clone.getAcceptanceCriteria());
       this.dependencies.clear();
       this.dependencies.addAll(clone.getDependencies());
+      this.tasks.clear();
+      this.tasks.addAll(clone.getTasks());
       this.status = clone.getStatus();
     }
   }
@@ -392,6 +469,9 @@ public class Story implements AgileItem, Comparable<Story> {
     if (!storyName.equals(story.storyName)) {
       return false;
     }
+    if (!impediments.equals(story.impediments)) {
+      return false;
+    }
     if (!description.equals(story.description)) {
       return false;
     }
@@ -417,6 +497,7 @@ public class Story implements AgileItem, Comparable<Story> {
     result = 31 * result + storyName.hashCode();
     result = 31 * result + description.hashCode();
     result = 31 * result + creator.hashCode();
+    result = 31 * result + impediments.hashCode();
     result = 31 * result + dependencies.hashCode();
     result = 31 * result + (isReady ? 1 : 0);
     result = 31 * result + acceptanceCriteria.hashCode();

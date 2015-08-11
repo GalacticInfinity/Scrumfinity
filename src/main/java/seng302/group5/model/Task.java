@@ -5,9 +5,6 @@ import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-
-import seng302.group5.controller.enums.Status;
 
 /**
  * The Task class is a way to log and store effort spent by people on a story.

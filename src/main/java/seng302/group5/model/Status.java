@@ -1,4 +1,4 @@
-package seng302.group5.controller.enums;
+package seng302.group5.model;
 
 /**
  * Created by @author Alex Woo

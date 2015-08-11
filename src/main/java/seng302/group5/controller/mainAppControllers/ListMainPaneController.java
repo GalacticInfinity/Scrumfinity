@@ -683,6 +683,19 @@ public class ListMainPaneController {
       textReadinessBody.setText("Not ready");
     }
 
+    Text textImpedimentsHeader = new Text("\nImpediments: ");
+    textImpedimentsHeader.setFill(Color.rgb(1, 0, 1));
+    textImpedimentsHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text textImpedimentsBody = new Text();
+    if (!story.getImpediments().equals("")) {
+      textImpedimentsBody.setText(story.getImpediments());
+    } else {
+      textImpedimentsBody.setText("N/A");
+    }
+    textImpedimentsBody.setFill(Color.rgb(1, 0, 1));
+    textImpedimentsBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
     Text textACHeader = new Text("\nAcceptance Criteria:");
     textACHeader.setFill(Color.rgb(1, 0, 1));
     textACHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
@@ -690,7 +703,8 @@ public class ListMainPaneController {
     displayTextFlow.getChildren().addAll(textHeader, textLabelHeader, textLabelBody,
                                          textNameHeader, textNameBody, textDescriptionHeader,
                                          textDescriptionBody, textCreatorHeader, textCreatorBody,
-                                         textReadinessHeader, textReadinessBody, textACHeader);
+                                         textReadinessHeader, textReadinessBody,
+                                         textImpedimentsHeader, textImpedimentsBody, textACHeader);
 
     Text textACBody;
     if (story.getAcceptanceCriteria().size() != 0) {
