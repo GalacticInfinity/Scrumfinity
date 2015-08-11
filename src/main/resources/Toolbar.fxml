@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ToolBar prefHeight="40.0" prefWidth="472.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+  <items>
+    <Button mnemonicParsing="false" text="Save" />
+      <Button mnemonicParsing="false" text="Save As" />
+      <Button mnemonicParsing="false" text="Load" />
+      <Separator orientation="VERTICAL" />
+      <Button mnemonicParsing="false" text="Undo" />
+      <Button mnemonicParsing="false" text="Redo" />
+      <Separator orientation="VERTICAL" />
+      <Button mnemonicParsing="false" text="Edit" />
+      <Button mnemonicParsing="false" text="Delete" />
+      <Button mnemonicParsing="false" text="Dependencies" />
+  </items>
+</ToolBar>
