@@ -612,6 +612,8 @@ public class StoryDialogController {
       this.statusCombo.setItems(statuses); //This is the only way i can think to do this with an
                                           // Enum. I know how shit this is :C i am so sad
 
+      this.statusCombo.setValue("Not Started"); // For setting this to not started as its a reasonable assumption also fixes hashcode bug
+
       this.storyCreatorList.setVisibleRowCount(5);
       this.storyCreatorList.setItems(availablePeople);
 
