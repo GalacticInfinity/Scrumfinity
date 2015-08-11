@@ -654,6 +654,10 @@ public class ReportWriter {
 
     createRelease(sprint.getSprintRelease(), sprintElem);
 
+    Element sprintImpediments = report.createElement("Impediments");
+    sprintImpediments.appendChild(report.createTextNode(sprint.getSprintImpediments()));
+    sprintElem.appendChild(sprintImpediments);
+
     Element sprintStart = report.createElement("StartDate");
     String formattedDate = sprint.getSprintStart().format(DateTimeFormatter.ofPattern(dateFormat));
     sprintStart.appendChild(report.createTextNode(formattedDate));
