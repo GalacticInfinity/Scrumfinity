@@ -61,6 +61,7 @@ public class SprintTest {
 
 
     story = new Story("First Story", "Story one", "The First Story", person1);
+    story.setImpediments("There is a problem!");
 
     sprint = new Sprint(sprintGoal, sprintFullName, sprintDescription, sprintBacklog, sprintProject,
                         sprintTeam, sprintRelease, sprintStart, sprintEnd, sprintStories);

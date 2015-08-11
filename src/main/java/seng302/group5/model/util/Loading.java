@@ -704,16 +704,25 @@ public class Loading {
             break;
           }
         }
-        storyLine = loadedFile.readLine();
-        storyData = storyLine.replaceAll("(?i)(.*<readiness.*?>)(.+?)(</readiness>)", "$2");
-        if (storyData.equals("true")) {
-          newStory.setStoryState(true);
-        } else {
-          newStory.setStoryState(false);
+        if (saveVersion >= 0.4) {
+          storyLine = loadedFile.readLine();
+          storyData = storyLine.replaceAll("(?i)(.*<readiness.*?>)(.+?)(</readiness>)", "$2");
+          if (storyData.equals("true")) {
+            newStory.setStoryState(true);
+          } else {
+            newStory.setStoryState(false);
+          }
         }
 
         // Non-mandatory fields
         while ((!(storyLine = loadedFile.readLine()).matches(".*</Story>"))) {
+          if (saveVersion >= 0.5) {
+            if (storyLine.startsWith("\t\t<impediments>")) {
+              storyData =
+                  storyLine.replaceAll("(?i)(.*<impediments.*?>)(.+?)(</impediments>)", "$2");
+              newStory.setImpediments(storyData);
+            }
+          }
           if (storyLine.startsWith("\t\t<longName>")) {
             storyData = storyLine.replaceAll("(?i)(.*<longName.*?>)(.+?)(</longName>)", "$2");
             newStory.setStoryName(storyData);
