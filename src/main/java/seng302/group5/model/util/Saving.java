@@ -409,6 +409,10 @@ public class Saving {
       if (sprint.getSprintRelease() != null && !sprint.getSprintRelease().getLabel().equals("")) {
         saveFile.write("\t\t<sprintRelease>" + sprint.getSprintRelease() + "</sprintRelease>\n");
       }
+      if (sprint.getSprintImpediments() != null && !sprint.getSprintImpediments().equals("")) {
+        saveFile.write("\t\t<sprintImpediments>" + sprint.getSprintImpediments() +
+                       "</sprintImpediments>\n");
+      }
       if (sprint.getSprintStart() != null && !sprint.getSprintStart().toString().equals("")) {
         saveFile.write("\t\t<sprintStart>" + sprint.getSprintStart() + "</sprintStart>\n");
       }

@@ -953,6 +953,19 @@ public class ListMainPaneController {
     textReleaseBody.setFill(Color.rgb(1, 0, 1));
     textReleaseBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
 
+    Text textImpedimentsHeader = new Text("\nImpediments: ");
+    textImpedimentsHeader.setFill(Color.rgb(1, 0, 1));
+    textImpedimentsHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text textImpedimentsBody = new Text();
+    if (!sprint.getSprintImpediments().equals("")) {
+      textImpedimentsBody.setText(sprint.getSprintImpediments());
+    } else {
+      textImpedimentsBody.setText("N/A");
+    }
+    textImpedimentsBody.setFill(Color.rgb(1, 0, 1));
+    textImpedimentsBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
     Text textStoriesHeader = new Text("\nStories:");
     textStoriesHeader.setFill(Color.rgb(1, 0, 1));
     textStoriesHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
@@ -967,6 +980,7 @@ public class ListMainPaneController {
                                          textDescriptionBody, textBacklogHeader, textBacklogBody,
                                          textProjectHeader, textProjectBody, textTeamHeader,
                                          textTeamBody, textReleaseHeader, textReleaseBody,
+                                         textImpedimentsHeader, textImpedimentsBody,
                                          textStoriesHeader, sortToggle);
 
     List<Text> storiesText = new ArrayList<>();

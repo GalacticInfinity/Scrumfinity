@@ -879,6 +879,13 @@ public class Loading {
             break;
           }
         }
+        if (saveVersion >= 0.5) {
+          sprintLine = loadedFile.readLine();
+          sprintData = sprintLine.replaceAll("(?i)(.*<sprintImpediments.*?>)(.+?)"
+                                             + "(</sprintImpediments>)", "$2");
+          sprint.setSprintImpediments(sprintData);
+        }
+
         sprintLine = loadedFile.readLine();
         sprintData = sprintLine.replaceAll("(?i)(.*<sprintStart.*?>)(.+?)(</sprintStart>)", "$2");
 
