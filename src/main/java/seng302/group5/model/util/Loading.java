@@ -897,6 +897,13 @@ public class Loading {
 
             sprint.setSprintFullName(sprintData);
           }
+          if (saveVersion >= 0.5) {
+            if (sprintLine.startsWith("\t\t<sprintImpediments>")) {
+              sprintData = sprintLine.replaceAll("(?i)(.*<sprintImpediments.*?>)(.+?)"
+                                                 + "(</sprintImpediments>)", "$2");
+              sprint.setSprintImpediments(sprintData);
+            }
+          }
           if (sprintLine.startsWith("\t\t<sprintDescription>")) {
             String descBuilder;
             if (!sprintLine.endsWith("</sprintDescription>")) {

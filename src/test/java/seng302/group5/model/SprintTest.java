@@ -12,7 +12,6 @@ import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -27,6 +26,7 @@ public class SprintTest {
   private String sprintGoal;
   private String sprintDescription;
   private String sprintFullName;
+  private String sprintImpediments;
   private Team sprintTeam;
   private Backlog sprintBacklog;
   private Project sprintProject;
@@ -53,6 +53,7 @@ public class SprintTest {
     sprintGoal = "This is a goal!";
     sprintDescription = "Omg describe me like one of your french girls";
     sprintFullName = "The prisoner of alakazam baybays";
+    sprintImpediments = "Something has gone horribly wrong!";
     sprintTeam = new Team("Team 1", "The First Team");
     Person person1 = new Person("Person 1", "Person", "1", skillSet);
     sprintBacklog = new Backlog("Backlog 1", "Backlog", "Description", person1, fibonacci);
@@ -68,10 +69,12 @@ public class SprintTest {
 
     sprint = new Sprint(sprintGoal, sprintFullName, sprintDescription, sprintBacklog, sprintProject,
                         sprintTeam, sprintRelease, sprintStart, sprintEnd, sprintStories);
+    sprint.setSprintImpediments(sprintImpediments);
 
     sprint1 = new Sprint(sprintGoal, sprintFullName, sprintDescription, sprintBacklog,
                          sprintProject, sprintTeam, sprintRelease, sprintStart, sprintEnd,
                          sprintStories);
+    sprint1.setSprintImpediments(sprintImpediments);
 
 
     String sprintGoal2 = "This is a goalololololol!";
@@ -82,6 +85,7 @@ public class SprintTest {
     sprint3 = new Sprint("sprint5", sprintFullName, sprintDescription, sprintBacklog,
                                 sprintProject, sprintTeam, sprintRelease, LocalDate.MIN, sprintEnd,
                                 sprintStories);
+    sprint2.setSprintImpediments(sprintImpediments);
   }
 
   @Test
@@ -154,6 +158,7 @@ public class SprintTest {
     assertEquals(sprintGoal, sprint1.getLabel());
     assertEquals(sprintFullName, sprint1.getSprintFullName());
     assertEquals(sprintDescription, sprint1.getSprintDescription());
+    assertEquals(sprintImpediments, sprint1.getSprintImpediments());
     assertEquals(sprintStart, sprint1.getSprintStart());
     assertEquals(sprintEnd, sprint1.getSprintEnd());
     assertEquals(sprintProject, sprint1.getSprintProject());
@@ -168,6 +173,7 @@ public class SprintTest {
     assertEquals(sprintGoal, clone.getLabel());
     assertEquals(sprintFullName, clone.getSprintFullName());
     assertEquals(sprintDescription, clone.getSprintDescription());
+    assertEquals(sprintImpediments, clone.getSprintImpediments());
     assertEquals(sprintStart, clone.getSprintStart());
     assertEquals(sprintEnd, clone.getSprintEnd());
     assertEquals(sprintProject, clone.getSprintProject());

@@ -101,6 +101,7 @@ public class UndoRedoHandlerTest {
   private String sprintGoal;
   private String sprintFullName;
   private String sprintDescription;
+  private String sprintImpediments;
   private Team sprintTeam;
   private Backlog sprintBacklog;
   private Project sprintProject;
@@ -111,6 +112,7 @@ public class UndoRedoHandlerTest {
   private String newSprintGoal;
   private String newSprintFullName;
   private String newSprintDescription;
+  private String newSprintImpediments;
   private Team newSprintTeam;
   private Backlog newSprintBacklog;
   private Project newSprintProject;
@@ -817,6 +819,7 @@ public class UndoRedoHandlerTest {
     sprintGoal = "Sprint";
     sprintFullName = "This is a sprint";
     sprintDescription = "Once upon a time again";
+    sprintImpediments = "Something bad has happened!";
     sprintTeam = team;
     sprintBacklog = backlog;
     sprintProject = project;
@@ -828,6 +831,7 @@ public class UndoRedoHandlerTest {
 
     sprint = new Sprint(sprintGoal, sprintFullName, sprintDescription, backlog, project, team,
                         release, sprintStart, sprintEnd, sprintStories);
+    sprint.setSprintImpediments(sprintImpediments);
     mainApp.addSprint(sprint);
 
     UndoRedoObject undoRedoObject = new UndoRedoObject();
@@ -855,6 +859,7 @@ public class UndoRedoHandlerTest {
     newSprintGoal = "New sprint";
     newSprintFullName = "This is another sprint";
     newSprintDescription = "This is some other description for a sprint";
+    newSprintImpediments = "Something terrible has happened!";
     newSprintTeam = new Team("NEW TEAM", "there's no one here");
     newSprintBacklog = new Backlog("NEW BACKLOG", "newer backlog", "new desc", new Person(),
                                    new Estimate());
@@ -868,6 +873,7 @@ public class UndoRedoHandlerTest {
     sprint.setSprintGoal(newSprintGoal);
     sprint.setSprintFullName(newSprintFullName);
     sprint.setSprintDescription(newSprintDescription);
+    sprint.setSprintImpediments(newSprintImpediments);
     sprint.setSprintTeam(newSprintTeam);
     sprint.setSprintBacklog(newSprintBacklog);
     sprint.setSprintProject(newSprintProject);
@@ -3418,6 +3424,7 @@ public class UndoRedoHandlerTest {
     assertEquals(sprintGoal, createdSprint.getSprintGoal());
     assertEquals(sprintFullName, createdSprint.getSprintFullName());
     assertEquals(sprintDescription, createdSprint.getSprintDescription());
+    assertEquals(sprintImpediments, createdSprint.getSprintImpediments());
     assertEquals(sprintBacklog, createdSprint.getSprintBacklog());
     assertEquals(sprintStart, createdSprint.getSprintStart());
     assertEquals(sprintEnd, createdSprint.getSprintEnd());
@@ -3435,6 +3442,7 @@ public class UndoRedoHandlerTest {
     assertEquals(newSprintGoal, editedSprint.getSprintGoal());
     assertEquals(newSprintFullName, editedSprint.getSprintFullName());
     assertEquals(newSprintDescription, editedSprint.getSprintDescription());
+    assertEquals(newSprintImpediments, editedSprint.getSprintImpediments());
     assertEquals(newSprintBacklog, editedSprint.getSprintBacklog());
     assertEquals(newSprintStart, editedSprint.getSprintStart());
     assertEquals(newSprintEnd, editedSprint.getSprintEnd());
@@ -3451,6 +3459,7 @@ public class UndoRedoHandlerTest {
     assertEquals(sprintGoal, undoneSprint.getSprintGoal());
     assertEquals(sprintFullName, undoneSprint.getSprintFullName());
     assertEquals(sprintDescription, undoneSprint.getSprintDescription());
+    assertEquals(sprintImpediments, undoneSprint.getSprintImpediments());
     assertEquals(sprintBacklog, undoneSprint.getSprintBacklog());
     assertEquals(sprintStart, undoneSprint.getSprintStart());
     assertEquals(sprintEnd, undoneSprint.getSprintEnd());
