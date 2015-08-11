@@ -20,6 +20,8 @@ import seng302.group5.model.Person;
 import seng302.group5.model.Status;
 import seng302.group5.model.Task;
 import seng302.group5.model.Team;
+import seng302.group5.model.undoredo.Action;
+import seng302.group5.model.undoredo.UndoRedoObject;
 
 /**
  * A controller to handle the creation or editing tasks. Tasks involve a label, description,
@@ -49,6 +51,8 @@ public class TaskDialogController {
   private Task lastTask;
   private ObservableList<Person> allocatedPeople;
   private ObservableList<Person> availablePeople;
+
+  private UndoRedoObject editUndoRedoObject;
 
   /**
    * Sets up the controller on start up. TODO: expand when it does more
@@ -161,6 +165,21 @@ public class TaskDialogController {
     }
   }
 
+  /**
+   * Generate an UndoRedoObject to represent a task edit action and store it globally. This is so
+   * a cancel in a dialog higher in the hierarchy can undo the changes made to the task.
+   */
+  private void generateEditUndoRedoObject() {
+    editUndoRedoObject = new UndoRedoObject();
+    editUndoRedoObject.setAction(Action.TASK_EDIT);
+    editUndoRedoObject.addDatum(lastTask);
+
+    // Store a copy of task to edit in object to avoid reference problems
+    editUndoRedoObject.setAgileItem(task);
+    Task taskToStore = new Task(task);
+    editUndoRedoObject.addDatum(taskToStore);
+  }
+
   @FXML
   protected void btnConfirmClick(ActionEvent event) {
     // todo implement and javadoc
@@ -188,6 +207,7 @@ public class TaskDialogController {
       task.removeAllTaskPeople();
       task.addAllTaskPeople(allocatedPeople);
       // todo set logged effort of all people
+      generateEditUndoRedoObject();
     }
     // todo newAction in main or return value for nested transaction?
 //    UndoRedoObject undoRedoObject = generateUndoRedoObject();
@@ -203,5 +223,15 @@ public class TaskDialogController {
   @FXML
   protected void btnCancelClick(ActionEvent event) {
     thisStage.close();
+  }
+
+  /**
+   * Get the UndoRedoObject representing the editing of the task. Use this as a return value of
+   * the dialog.
+   *
+   * @return The UndoRedoObject representing the successful task edit.
+   */
+  public UndoRedoObject getEditUndoRedoObject() {
+    return editUndoRedoObject;
   }
 }

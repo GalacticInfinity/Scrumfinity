@@ -781,9 +781,11 @@ public class Main extends Application {
    * @param team the team of the sprint which will contain the task (non-null if story in sprint)
    * @param createOrEdit Whether editing or creating the task
    * @param stage the stage it is currently on to void unusual behaviour
+   * @return the UndoRedo instance representing a task edit (null in all other cases)
    */
-  public void showTaskDialog(Collection<Task> taskCollection, Task task, Team team,
+  public UndoRedo showTaskDialog(Collection<Task> taskCollection, Task task, Team team,
                              CreateOrEdit createOrEdit, Stage stage) {
+    UndoRedo taskEditUndoRedo = null;
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/TaskDialog.fxml"));
@@ -800,9 +802,11 @@ public class Main extends Application {
       taskDialogStage.setScene(taskDialogScene);
       taskDialogStage.showAndWait();
 
+      taskEditUndoRedo = controller.getEditUndoRedoObject();
     } catch (IOException e) {
       e.printStackTrace();
     }
+    return taskEditUndoRedo;
   }
 
 
@@ -842,6 +846,19 @@ public class Main extends Application {
       undoRedoHandler.redo();
       toggleName();
       checkUndoRedoMenuItems();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * Undo an action which was not stored on the stacks. Use with care.
+   *
+   * @param undoRedo The UndoRedo instance to undo.
+   */
+  public void quickUndo(UndoRedo undoRedo) {
+    try {
+      undoRedoHandler.quickUndo(undoRedo);
     } catch (Exception e) {
       e.printStackTrace();
     }

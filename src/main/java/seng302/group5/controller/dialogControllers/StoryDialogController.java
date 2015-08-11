@@ -38,6 +38,8 @@ import seng302.group5.model.Story;
 import seng302.group5.model.Task;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
+import seng302.group5.model.undoredo.CompositeUndoRedo;
+import seng302.group5.model.undoredo.UndoRedo;
 import seng302.group5.model.undoredo.UndoRedoObject;
 import seng302.group5.model.util.Settings;
 
@@ -83,7 +85,9 @@ public class StoryDialogController {
   private ObservableList<String> statuses = FXCollections.observableArrayList();
   private ObservableList<Task> tasks = FXCollections.observableArrayList();
 
-  Map<String, Status> statusStringMap;
+  private CompositeUndoRedo taskEditsUndoRedo;  // Contains all the task edits within the dialog
+
+  private Map<String, Status> statusStringMap;
 
   /**
    * Setup the Story dialog controller.
@@ -128,8 +132,7 @@ public class StoryDialogController {
       acceptanceCriteria.setAll(story.getAcceptanceCriteria());
       tasks.setAll(story.getTasks());
 
-      for (Map.Entry<String, Status> entry : statusStringMap.entrySet())
-      {
+      for (Map.Entry<String, Status> entry : statusStringMap.entrySet()) {
         if (story.getStatus() == entry.getValue()){
           statusCombo.setValue(entry.getKey());
         }
@@ -191,6 +194,8 @@ public class StoryDialogController {
       this.lastStory = null;
       this.lastBacklog = null;
     }
+
+    this.taskEditsUndoRedo = new CompositeUndoRedo("Edit Multiple Tasks");
 
     btnCreateStory.setDefaultButton(true);
     thisStage.setResizable(false);
@@ -395,6 +400,8 @@ public class StoryDialogController {
     if (Settings.correctList(story) && createOrEdit == CreateOrEdit.EDIT) {
       mainApp.refreshList(story);
     }
+    // undo all editing of existing tasks made within this dialog
+    mainApp.quickUndo(taskEditsUndoRedo);
     thisStage.close();
   }
 
@@ -789,10 +796,14 @@ public class StoryDialogController {
         if (click.getClickCount() == 2 &&
             click.getButton() == MouseButton.PRIMARY &&
             !isEmpty()) {
-          mainApp.showTaskDialog(tasks, getItem(), team, CreateOrEdit.EDIT, thisStage);
-          taskList.setItems(null);
-          taskList.setItems(tasks);
-          taskList.getSelectionModel().select(getItem());
+          UndoRedo taskEdit =
+              mainApp.showTaskDialog(tasks, getItem(), team, CreateOrEdit.EDIT, thisStage);
+          if (taskEdit != null) {
+            taskEditsUndoRedo.addUndoRedo(taskEdit);
+            taskList.setItems(null);
+            taskList.setItems(tasks);
+            taskList.getSelectionModel().select(getItem());
+          }
         }
       });
     }
