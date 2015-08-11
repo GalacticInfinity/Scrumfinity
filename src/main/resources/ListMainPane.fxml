@@ -22,11 +22,11 @@
                </graphic>
             </Button>
             <ListView fx:id="listView" layoutX="-6.0" layoutY="20.0" maxHeight="1.7976931348623157E308" maxWidth="200.0" minHeight="353.0" minWidth="150.0" prefHeight="353.0" prefWidth="150.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0" />
-            <ToggleButton fx:id="temporal" layoutX="104.0" layoutY="3.0" mnemonicParsing="false" onAction="#btnClickTemporalSort" prefHeight="20.0" prefWidth="22.0">
+            <ToggleButton maxHeight="22.0" maxWidth="22.0" fx:id="temporal" layoutX="104.0" layoutY="3.0" mnemonicParsing="false" onAction="#btnClickTemporalSort" prefHeight="20.0" prefWidth="22.0">
                <graphic>
-                  <ImageView fitHeight="15.0" fitWidth="21.0">
+                  <ImageView fitHeight="16.0" fitWidth="16.0">
                      <image>
-                        <Image url="@../../../../../../Users/bunir_000/Documents/sort.png" />
+                        <Image url="ASortButton.png"/>
                      </image>
                   </ImageView>
                </graphic>
