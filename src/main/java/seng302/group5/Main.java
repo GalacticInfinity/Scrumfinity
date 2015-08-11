@@ -263,6 +263,9 @@ public class Main extends Application {
       LMPC = controller;
 
       rootLayout.setCenter(splitPane);
+
+      // init scrum board within LMPC
+      LMPC.initScrumBoard();
     } catch (IOException e) {
       e.printStackTrace();
     }
