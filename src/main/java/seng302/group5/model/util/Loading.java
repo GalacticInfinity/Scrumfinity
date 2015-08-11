@@ -995,6 +995,14 @@ public class Loading {
     }
   }
 
+  /**
+   * Loads a single task from the save file. Must be called when BufferedReader object
+   * is on the Task tag
+   * @param loadedFile The BufferedReader
+   * @param taskPersonMap A map of Label to Person for people in mainApp
+   * @return a loaded Task
+   * @throws Exception Something went wrong
+   */
   public Task loadATask(BufferedReader loadedFile, Map<String, Person> taskPersonMap) throws Exception {
     Task storyTask;
     String storyLine;
