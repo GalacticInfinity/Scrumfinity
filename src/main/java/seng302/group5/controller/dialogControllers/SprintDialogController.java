@@ -64,6 +64,8 @@ public class SprintDialogController {
   @FXML private Button btnConfirm;
   @FXML private Button btnCancel;
   @FXML private Label releaseDate;
+  @FXML private TextField sprintImpedimentsField;
+
   private Main mainApp;
   private Stage thisStage;
 
@@ -137,6 +139,7 @@ public class SprintDialogController {
       sprintBacklogCombo.getSelectionModel().select(sprint.getSprintBacklog()); // Updates Project
       sprintTeamCombo.getSelectionModel().select(sprint.getSprintTeam());
       sprintReleaseCombo.getSelectionModel().select(sprint.getSprintRelease());
+      sprintImpedimentsField.setText(sprint.getSprintImpediments());
       String dateFormat = "dd/MM/yyy";
       releaseDate.setText(sprint.getSprintRelease().getReleaseDate().format(
           DateTimeFormatter.ofPattern(dateFormat)));
@@ -172,6 +175,12 @@ public class SprintDialogController {
     });
 
     sprintNameField.textProperty().addListener((observable, oldValue, newValue) -> {
+      //For disabling the button
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+    sprintImpedimentsField.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
       if (createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
@@ -235,6 +244,7 @@ public class SprintDialogController {
     if (sprintGoalField.getText().equals(sprint.getLabel()) &&
         sprintNameField.getText().equals(sprint.getSprintFullName()) &&
         sprintDescriptionField.getText().equals(sprint.getSprintDescription()) &&
+        sprintImpedimentsField.getText().equals(sprint.getSprintImpediments()) &&
         sprintBacklogCombo.getValue().equals(sprint.getSprintBacklog()) &&
         (sprintTeamCombo.getValue() == null ||
          sprintTeamCombo.getValue().equals(sprint.getSprintTeam())) &&
@@ -453,6 +463,7 @@ public class SprintDialogController {
     String sprintGoal = "";
     String sprintName = sprintNameField.getText().trim();
     String sprintDescription = sprintDescriptionField.getText().trim();
+    String sprintImpediments = sprintImpedimentsField.getText().trim();
     Backlog backlog = sprintBacklogCombo.getValue();
     Team team = sprintTeamCombo.getValue();
     Release release = sprintReleaseCombo.getValue();
@@ -515,6 +526,7 @@ public class SprintDialogController {
       if (createOrEdit == CreateOrEdit.CREATE) {
         sprint = new Sprint(sprintGoal, sprintName, sprintDescription, backlog, project, team,
                             release, startDate, endDate, allocatedStoriesPrioritised);
+        sprint.setSprintImpediments(sprintImpediments);
         mainApp.addSprint(sprint);
         if (Settings.correctList(sprint)) {
           mainApp.refreshList(sprint);
@@ -527,6 +539,7 @@ public class SprintDialogController {
         sprint.setSprintProject(project);
         sprint.setSprintTeam(team);
         sprint.setSprintRelease(release);
+        sprint.setSprintImpediments(sprintImpediments);
         sprint.setSprintStart(startDate);
         sprint.setSprintEnd(endDate);
         sprint.removeAllStories();

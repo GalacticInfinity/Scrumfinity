@@ -177,18 +177,21 @@ public class ReportWriterTest {
 
   public void createStories() {
     story1 = new Story("Story1", "Starter Story", "Huehuehuehue", person1, null); //null is fine
+    story1.setImpediments("Something bad has happened!");
     mainApp.addStory(story1);
 
     story2 = new Story();
     story2.setLabel("Story2");
     story2.setStoryName("Moar Story");
     story2.setCreator(person2);
+    story2.setImpediments("Something bad has happened!");
     mainApp.addStory(story2);
 
     story3 = new Story();
     story3.setLabel("Story3");
     story3.setDescription("They story-ening is now");
     story3.setCreator(person1);
+    story3.setImpediments("Something terriable had happened!");
     mainApp.addStory(story3);
   }
 
@@ -210,6 +213,7 @@ public class ReportWriterTest {
 
     story1 = new Story("Story1", "Starter Story", "Huehuehuehue", person1, acs1);
     story1.setStoryState(true);
+    story1.setImpediments("Something horrible has happened!");
     mainApp.addStory(story1);
 
     story2 = new Story();
@@ -218,6 +222,7 @@ public class ReportWriterTest {
     story2.setCreator(person2);
     story2.setAcceptanceCriteria(acs2);
     story2.setStoryState(true);
+    story2.setImpediments("Something horrible has happened!");
     mainApp.addStory(story2);
 
     story3 = new Story();
@@ -226,6 +231,7 @@ public class ReportWriterTest {
     story3.setCreator(person1);
     story3.setAcceptanceCriteria(acs3);
     story3.setStoryState(false);
+    story3.setImpediments("Something horrible has happened!");
     mainApp.addStory(story3);
   }
 

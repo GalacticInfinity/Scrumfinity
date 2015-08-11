@@ -493,20 +493,25 @@ public class BacklogDialogController {
 
     ArrayList<Sprint> removedSprints = new ArrayList<Sprint>();
     ArrayList<Story> removedStories = new ArrayList<Story>();
-    for (Story story : availableStories) {
-      if (backlog.getStories().contains(story)) {
-        for (Sprint sprint : mainApp.getSprints()) {
-          if (sprint.getSprintBacklog().equals(backlog) && sprint.getSprintStories().contains(story)) {
-            if (!removedSprints.contains(sprint)) {
-              removedSprints.add(sprint);
+    if (createOrEdit == CreateOrEdit.EDIT) {
+      for (Story story : availableStories) {
+        System.out.println(backlog);
+        System.out.println(backlog.getStories());
+        if (backlog.getStories().contains(story)) {
+          for (Sprint sprint : mainApp.getSprints()) {
+            if (sprint.getSprintBacklog().equals(backlog) && sprint.getSprintStories()
+                .contains(story)) {
+              if (!removedSprints.contains(sprint)) {
+                removedSprints.add(sprint);
+              }
+              removedStories.add(story);
             }
-            removedStories.add(story);
           }
         }
-      }
-      if (story.getStoryState()) {
-        undoRedoStoryList.add(story);
-        story.setStoryState(false);
+        if (story.getStoryState()) {
+          undoRedoStoryList.add(story);
+          story.setStoryState(false);
+        }
       }
     }
     if (!removedStories.isEmpty()) {

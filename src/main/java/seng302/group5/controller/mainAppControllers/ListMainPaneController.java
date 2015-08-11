@@ -16,11 +16,13 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
@@ -56,8 +58,10 @@ public class ListMainPaneController {
   @FXML private SplitPane splitPane;
   @FXML private AnchorPane listViewPane;
   @FXML private Label listViewLabel;
+  @FXML private ToggleButton temporal;
   private Main mainApp;
   private boolean isListShown = true;
+  private boolean isTemporal = false;
 
   private AgileItem selectedItem;
 
@@ -158,7 +162,11 @@ public class ListMainPaneController {
         break;
       case "Releases":
         isListShown = true;
-        listView.setItems(mainApp.getReleases().sorted(Comparator.<Release>naturalOrder()));
+        if (isTemporal) {
+          listView.setItems(mainApp.getReleasesbydate());
+        } else {
+          listView.setItems(mainApp.getReleases().sorted(Comparator.<Release>naturalOrder()));
+        }
         break;
       case "Stories":
         isListShown = true;
@@ -170,7 +178,11 @@ public class ListMainPaneController {
         break;
       case "Sprints":
         isListShown = true;
-        listView.setItems(mainApp.getSprints().sorted(Comparator.<Sprint>naturalOrder()));
+        if (isTemporal) {
+          listView.setItems(mainApp.getSprintsByDate());
+        } else {
+          listView.setItems(mainApp.getSprints().sorted(Comparator.<Sprint>naturalOrder()));
+        }
         break;
     }
     // Set the list label
@@ -683,14 +695,39 @@ public class ListMainPaneController {
       textReadinessBody.setText("Not ready");
     }
 
+    Text textImpedimentsHeader = new Text("\nImpediments: ");
+    textImpedimentsHeader.setFill(Color.rgb(1, 0, 1));
+    textImpedimentsHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text textImpedimentsBody = new Text();
+    if (!story.getImpediments().equals("")) {
+      textImpedimentsBody.setText(story.getImpediments());
+    } else {
+      textImpedimentsBody.setText("N/A");
+    }
+    textImpedimentsBody.setFill(Color.rgb(1, 0, 1));
+    textImpedimentsBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
     Text textACHeader = new Text("\nAcceptance Criteria:");
     textACHeader.setFill(Color.rgb(1, 0, 1));
     textACHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
+    Text textStatusHeader = new Text("\nStatus: ");
+    textStatusHeader.setFill(Color.rgb(1, 0, 1));
+    textStatusHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text textStatusBody = new Text(story.getStatusString());
+    textStatusBody.setFill(Color.rgb(1, 0, 1));
+    textStatusBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+
     displayTextFlow.getChildren().addAll(textHeader, textLabelHeader, textLabelBody,
                                          textNameHeader, textNameBody, textDescriptionHeader,
                                          textDescriptionBody, textCreatorHeader, textCreatorBody,
-                                         textReadinessHeader, textReadinessBody, textACHeader);
+                                         textReadinessHeader, textReadinessBody,
+                                         textImpedimentsHeader, textImpedimentsBody,
+                                         textStatusHeader,
+                                         textStatusBody, textACHeader);
 
     Text textACBody;
     if (story.getAcceptanceCriteria().size() != 0) {
@@ -916,6 +953,19 @@ public class ListMainPaneController {
     textReleaseBody.setFill(Color.rgb(1, 0, 1));
     textReleaseBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
 
+    Text textImpedimentsHeader = new Text("\nImpediments: ");
+    textImpedimentsHeader.setFill(Color.rgb(1, 0, 1));
+    textImpedimentsHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text textImpedimentsBody = new Text();
+    if (!sprint.getSprintImpediments().equals("")) {
+      textImpedimentsBody.setText(sprint.getSprintImpediments());
+    } else {
+      textImpedimentsBody.setText("N/A");
+    }
+    textImpedimentsBody.setFill(Color.rgb(1, 0, 1));
+    textImpedimentsBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
     Text textStoriesHeader = new Text("\nStories:");
     textStoriesHeader.setFill(Color.rgb(1, 0, 1));
     textStoriesHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
@@ -930,6 +980,7 @@ public class ListMainPaneController {
                                          textDescriptionBody, textBacklogHeader, textBacklogBody,
                                          textProjectHeader, textProjectBody, textTeamHeader,
                                          textTeamBody, textReleaseHeader, textReleaseBody,
+                                         textImpedimentsHeader, textImpedimentsBody,
                                          textStoriesHeader, sortToggle);
 
     List<Text> storiesText = new ArrayList<>();
@@ -1037,6 +1088,19 @@ public class ListMainPaneController {
     mainApp.getMBC().btnClickDirectAdd(event);
   }
 
+  /**
+   * A button function that toggles between temporal sort order and alphabetical sort order.
+   * @param event the toggle button is activated.
+   */
+  @FXML
+  protected void btnClickTemporalSort(ActionEvent event) {
+    if (isTemporal){
+      isTemporal = false;
+    } else {
+      isTemporal = true;
+    }
+    refreshList(selectedItem);
+  }
   /**
    * Allows us to override the a ListViewCell - a single cell in a ListView.
    */

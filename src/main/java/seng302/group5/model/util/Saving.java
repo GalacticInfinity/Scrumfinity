@@ -295,6 +295,9 @@ public class Saving {
       saveFile.write("\t\t<storyLabel>" + story.getLabel() + "</storyLabel>\n");
       saveFile.write("\t\t<creator>" + story.getCreator().getLabel() + "</creator>\n");
       saveFile.write("\t\t<readiness>" + story.getStoryState() + "</readiness>\n");
+      if (story.getImpediments() != null && !story.getImpediments().equals("")) {
+        saveFile.write("\t\t<impediments>" + story.getImpediments() + "</impediments>\n");
+      }
       if (story.getStoryName() != null && !story.getStoryName().equals("")) {
         saveFile.write("\t\t<longName>" + story.getStoryName() + "</longName>\n");
       }
@@ -418,6 +421,10 @@ public class Saving {
       }
       if (sprint.getSprintFullName() != null && !sprint.getSprintFullName().equals("")) {
         saveFile.write("\t\t<sprintName>" + sprint.getSprintFullName() + "</sprintName>\n");
+      }
+      if (sprint.getSprintImpediments() != null && !sprint.getSprintImpediments().equals("")) {
+        saveFile.write("\t\t<sprintImpediments>" + sprint.getSprintImpediments() +
+                       "</sprintImpediments>\n");
       }
       if (sprint.getSprintStories() != null && !sprint.getSprintStories().isEmpty()) {
         saveFile.write("\t\t<sprintStories>\n");

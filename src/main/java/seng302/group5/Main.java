@@ -21,6 +21,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -28,6 +29,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng302.group5.controller.dialogControllers.BacklogDialogController;
 import seng302.group5.controller.dialogControllers.SprintDialogController;
+import seng302.group5.controller.dialogControllers.TaskDialogController;
 import seng302.group5.controller.mainAppControllers.ListMainPaneController;
 import seng302.group5.controller.mainAppControllers.LoginController;
 import seng302.group5.controller.mainAppControllers.MenuBarController;
@@ -49,6 +51,8 @@ import seng302.group5.model.Skill;
 import seng302.group5.model.Person;
 import seng302.group5.model.Sprint;
 import seng302.group5.model.Story;
+import seng302.group5.model.Task;
+import seng302.group5.model.Taskable;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedo;
@@ -60,6 +64,8 @@ import seng302.group5.model.util.RevertHandler;
  * Main class to run the application
  */
 public class Main extends Application {
+
+
 
   private Stage primaryStage;
   private BorderPane rootLayout;
@@ -593,7 +599,7 @@ public class Main extends Application {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/StoryDialog.fxml"));
-      VBox StoryDialogLayout = loader.load();
+      HBox StoryDialogLayout = loader.load();
 
       StoryDialogController controller = loader.getController();
       Scene storyDialogScene = new Scene(StoryDialogLayout);
@@ -761,6 +767,36 @@ public class Main extends Application {
       sprintDialogStage.setScene(sprintDialogScene);
       sprintDialogStage.showAndWait();
     } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * sets up the dialog box for editing a task when opened from another dialog
+   *
+   * @param parent the object who owns/will own the task (it is not stored in Main)
+   * @param task the task that to view or edit (null if creating)
+   * @param createOrEdit Whether editing or creating the task
+   * @param stage the stage it is currently on to void unusual behaviour
+   */
+  public void showTaskDialog(Taskable parent, Task task, CreateOrEdit createOrEdit, Stage stage) {
+    try {
+      FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(Main.class.getResource("/TaskDialog.fxml"));
+      Pane taskDialogLayout = loader.load();
+
+      TaskDialogController controller = loader.getController();
+      Scene taskDialogScene = new Scene(taskDialogLayout);
+      Stage taskDialogStage = new Stage();
+
+      controller.setupController(this, parent, taskDialogStage, createOrEdit, task);
+
+      taskDialogStage.initModality(Modality.APPLICATION_MODAL);
+      taskDialogStage.initOwner(stage);
+      taskDialogStage.setScene(taskDialogScene);
+      taskDialogStage.showAndWait();
+
+    } catch (IOException e) {
       e.printStackTrace();
     }
   }
@@ -1488,6 +1524,19 @@ public class Main extends Application {
     return skills.sorted(Comparator.<Skill>naturalOrder());
   }
 
+  public ObservableList<Release> getReleasesbydate() {
+    Comparator<Release> byDate = new Comparator<Release>() {
+      @Override
+      public int compare(Release o1, Release o2) {
+        if (o1.getReleaseDate().isAfter(o2.getReleaseDate())) {
+          return 1;
+        } else return 0;
+      }
+      //
+    };
+    return releases.sorted(byDate);
+  }
+
   public ObservableList<Release> getReleases() {
     return releases.sorted(Comparator.<Release>naturalOrder());
   }
@@ -1511,6 +1560,18 @@ public class Main extends Application {
 
   public ObservableList<Sprint> getSprints() {
     return sprints.sorted(Comparator.<Sprint>naturalOrder());
+  }
+  public ObservableList<Sprint> getSprintsByDate() {
+    Comparator<Sprint> byDate = new Comparator<Sprint>() {
+      @Override
+      public int compare(Sprint o1, Sprint o2) {
+        if (o1.getSprintStart().isAfter(o2.getSprintStart())) {
+          return 1;
+        } else return 0;
+      }
+      //
+    };
+    return sprints.sorted(byDate);
   }
 
   public ArrayList<AgileItem> getNonRemovable() {

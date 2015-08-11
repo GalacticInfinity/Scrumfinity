@@ -16,7 +16,7 @@ import java.util.List;
  *
  * Created by Alex Woo
  */
-public class Sprint implements AgileItem, Comparable<Sprint> {
+public class Sprint implements AgileItem, Taskable, Comparable<Sprint> {
 
   private String sprintGoal;
   private String sprintDescription;
@@ -25,11 +25,13 @@ public class Sprint implements AgileItem, Comparable<Sprint> {
   private Backlog sprintBacklog;
   private Project sprintProject;
   private Release sprintRelease;
+  private String sprintImpediments;
 
   private LocalDate sprintStart;
   private LocalDate sprintEnd;
 
   private List<Story> sprintStories;
+  private List<Task> tasks;
 
   /**
    * Empty constructor used for save/load.
@@ -38,6 +40,7 @@ public class Sprint implements AgileItem, Comparable<Sprint> {
     sprintGoal = "";
     sprintDescription = "";
     sprintFullName = "";
+    sprintImpediments = "";
     sprintTeam = null;
     sprintBacklog = null;
     sprintProject = null;
@@ -45,6 +48,7 @@ public class Sprint implements AgileItem, Comparable<Sprint> {
     sprintStart = null;
     sprintEnd = null;
     sprintStories = new ArrayList<>();
+    tasks = new ArrayList<>();
   }
 
   /**
@@ -77,6 +81,7 @@ public class Sprint implements AgileItem, Comparable<Sprint> {
     this.sprintEnd = sprintEnd;
     this.sprintStories = new ArrayList<>();
     this.sprintStories.addAll(sprintStories);
+    this.tasks = new ArrayList<>();
   }
 
   /**
@@ -94,8 +99,11 @@ public class Sprint implements AgileItem, Comparable<Sprint> {
     this.sprintRelease = clone.getSprintRelease();
     this.sprintStart = clone.getSprintStart();
     this.sprintEnd = clone.getSprintEnd();
+    this.sprintImpediments = clone.getSprintImpediments();
     this.sprintStories = new ArrayList<>();
     this.sprintStories.addAll(clone.getSprintStories());
+    this.tasks = new ArrayList<>();
+    this.tasks.addAll(clone.getTasks());
   }
 
   @Override
@@ -122,6 +130,14 @@ public class Sprint implements AgileItem, Comparable<Sprint> {
 
   public void setSprintDescription(String sprintDescription) {
     this.sprintDescription = sprintDescription;
+  }
+
+  public String getSprintImpediments() {
+    return this.sprintImpediments;
+  }
+
+  public void setSprintImpediments(String impediment) {
+    this.sprintImpediments = impediment;
   }
 
   public String getSprintFullName() {
@@ -220,6 +236,54 @@ public class Sprint implements AgileItem, Comparable<Sprint> {
   }
 
   /**
+   * Get the tasks of the sprint.
+   *
+   * @return List of Task objects assigned to sprint.
+   */
+  @Override
+  public List<Task> getTasks() {
+    return Collections.unmodifiableList(tasks);
+  }
+
+  /**
+   * Add a single task to the sprint.
+   *
+   * @param task Task to add.
+   */
+  @Override
+  public void addTask(Task task) {
+    this.tasks.add(task);
+  }
+
+  /**
+   * Add a collection of tasks to the sprint.
+   *
+   * @param tasks Collection of tasks to add.
+   */
+  @Override
+  public void addAllTasks(Collection<Task> tasks) {
+    this.tasks.addAll(tasks);
+  }
+
+  /**
+   * Remove a single task from the sprint.
+   *
+   * @param task Task to remove.
+   */
+  @Override
+  public void removeTask(Task task) {
+    this.tasks.remove(task);
+  }
+
+  /**
+   * Remove all tasks from the sprint.
+   */
+  @Override
+  public void removeAllTasks() {
+    this.tasks.clear();
+  }
+
+  /**
    * Copies the Sprint input fields into current object.
    * @param agileItem Sprint that's fields are to be copied.
    */
@@ -235,8 +299,11 @@ public class Sprint implements AgileItem, Comparable<Sprint> {
       this.sprintRelease = clone.getSprintRelease();
       this.sprintStart = clone.getSprintStart();
       this.sprintEnd = clone.getSprintEnd();
+      this.sprintImpediments = clone.getSprintImpediments();
       this.sprintStories.clear();
       this.sprintStories.addAll(clone.getSprintStories());
+      this.tasks.clear();
+      this.tasks.addAll(clone.getTasks());
       this.sprintProject = clone.getSprintProject();
     }
   }
@@ -281,6 +348,10 @@ public class Sprint implements AgileItem, Comparable<Sprint> {
                                : sprint.sprintFullName != null) {
       return false;
     }
+    if (sprintImpediments != null ? !sprintImpediments.equals(sprint.sprintImpediments)
+                                  : sprint.sprintImpediments != null) {
+      return false;
+    }
     if (!sprintGoal.equals(sprint.sprintGoal)) {
       return false;
     }
@@ -320,6 +391,7 @@ public class Sprint implements AgileItem, Comparable<Sprint> {
     result = 31 * result + (sprintBacklog != null ? sprintBacklog.hashCode() : 0);
     result = 31 * result + (sprintProject != null ? sprintProject.hashCode() : 0);
     result = 31 * result + (sprintRelease != null ? sprintRelease.hashCode() : 0);
+    result = 31 * result + (sprintImpediments != null ? sprintImpediments.hashCode() : 0);
     result = 31 * result + (sprintStart != null ? sprintStart.hashCode() : 0);
     result = 31 * result + (sprintEnd != null ? sprintEnd.hashCode() : 0);
     result = 31 * result + (sprintStories != null ? sprintStories.hashCode() : 0);
