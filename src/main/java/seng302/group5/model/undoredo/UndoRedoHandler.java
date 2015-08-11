@@ -14,6 +14,7 @@ import seng302.group5.model.Release;
 import seng302.group5.model.Skill;
 import seng302.group5.model.Sprint;
 import seng302.group5.model.Story;
+import seng302.group5.model.Task;
 import seng302.group5.model.Team;
 
 /**
@@ -115,6 +116,16 @@ public class UndoRedoHandler {
 
     // Handle the action
     handleUndoRedoObject(undoRedo, UndoOrRedo.REDO);
+  }
+
+  /**
+   * Undo an action which was not stored on the stacks. Use with care.
+   *
+   * @param undoRedo The UndoRedo instance to undo.
+   * @throws Exception Error message if data is invalid.
+   */
+  public void quickUndo(UndoRedo undoRedo) throws Exception {
+    handleUndoRedoObject(undoRedo, UndoOrRedo.UNDO);
   }
 
   /**
@@ -254,6 +265,14 @@ public class UndoRedoHandler {
         case SPRINT_DELETE:
           handleSprintDelete(undoRedoObject, undoOrRedo);
           break;
+
+//        case TASK_CREATE: TODO
+
+        case TASK_EDIT:
+          handleTaskEdit(undoRedoObject, undoOrRedo);
+          break;
+
+//        case TASK_DELETE: TODO
 
         case UNDEFINED:
           throw new Exception("Unreadable UndoRedoObject");
@@ -1118,6 +1137,36 @@ public class UndoRedoHandler {
     } else {
       mainApp.deleteSprint(sprintToChange);
     }
+    mainApp.refreshList(null);
+  }
+
+  /**
+   * Undo or redo a task edit
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo     Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handleTaskEdit(UndoRedoObject undoRedoObject,
+                              UndoOrRedo undoOrRedo) throws Exception {
+
+    // Get the data and ensure it has data for the sprint both before and after
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 2) {
+      throw new Exception("Can't undo/redo task edit - Less than 2 variables");
+    }
+
+    Task taskToChange = (Task) undoRedoObject.getAgileItem();
+    Task taskData;
+
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+      taskData = (Task) data.get(0);
+    } else {
+      taskData = (Task) data.get(1);
+    }
+
+    // Make the changes and refresh the list
+    taskToChange.copyValues(taskData);
     mainApp.refreshList(null);
   }
 

@@ -33,6 +33,9 @@ public enum Action {
   SPRINT_CREATE,  // Sprint creation - 1 AgileItem
   SPRINT_EDIT,    // Sprint edit - 2 AgileItems
   SPRINT_DELETE,  // Sprint delete - 1 AgileItem
+  TASK_CREATE,    // Task creation - 1 AgileItem plus 1 Taskable
+  TASK_EDIT,      // Task edit - 2 AgileItems
+  TASK_DELETE,    // Task delete - 1 AgileItem plus 1 Taskable
   COMPOSITE,      // Composite undo/redo instances
   UNDEFINED;      // Undefined action - no AgileItems
 
@@ -52,6 +55,7 @@ public enum Action {
     String storyStr = "Story";
     String backlogStr = "Backlog";
     String sprintStr = "Sprint";
+    String taskStr = "Task";
 
     String actionStr;
     String typeStr;
@@ -84,6 +88,8 @@ public enum Action {
         typeStr = backlogStr;
       } else if (action.name().contains("SPRINT")) {
         typeStr = sprintStr;
+      } else if (action.name().contains("TASK")) {
+        typeStr = taskStr;
       } else {
         typeStr = null;
       }
