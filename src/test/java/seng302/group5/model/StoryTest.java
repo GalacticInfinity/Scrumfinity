@@ -40,6 +40,32 @@ public class StoryTest {
   }
 
   @Test
+  public void testStatusExists() throws  Exception {
+    Status status = story.getStatus();
+    String statusString = story.getStatusString();
+
+    assertEquals(Status.NOT_STARTED, status);
+    assertEquals("Not Started", statusString);
+  }
+
+  @Test
+  public void testStatusChangeable() throws  Exception {
+    Status status = story.getStatus();
+    String statusString = story.getStatusString();
+
+    assertEquals(Status.NOT_STARTED, status);
+    assertEquals("Not Started", statusString);
+
+    story.setStatus(Status.DONE);
+
+    status = story.getStatus();
+    statusString = story.getStatusString();
+
+    assertEquals(Status.DONE, status);
+    assertEquals("Done", statusString);
+  }
+
+  @Test
   public void testACsExist() throws Exception {
     String firstAC = story.getAcceptanceCriteria().get(0);
     String secondAC = story.getAcceptanceCriteria().get(1);

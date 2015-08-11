@@ -422,6 +422,10 @@ public class Saving {
       if (sprint.getSprintFullName() != null && !sprint.getSprintFullName().equals("")) {
         saveFile.write("\t\t<sprintName>" + sprint.getSprintFullName() + "</sprintName>\n");
       }
+      if (sprint.getSprintImpediments() != null && !sprint.getSprintImpediments().equals("")) {
+        saveFile.write("\t\t<sprintImpediments>" + sprint.getSprintImpediments() +
+                       "</sprintImpediments>\n");
+      }
       if (sprint.getSprintStories() != null && !sprint.getSprintStories().isEmpty()) {
         saveFile.write("\t\t<sprintStories>\n");
         for (Story story : sprint.getSprintStories()) {

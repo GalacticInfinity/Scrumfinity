@@ -25,6 +25,7 @@ public class Sprint implements AgileItem, Taskable, Comparable<Sprint> {
   private Backlog sprintBacklog;
   private Project sprintProject;
   private Release sprintRelease;
+  private String sprintImpediments;
 
   private LocalDate sprintStart;
   private LocalDate sprintEnd;
@@ -39,6 +40,7 @@ public class Sprint implements AgileItem, Taskable, Comparable<Sprint> {
     sprintGoal = "";
     sprintDescription = "";
     sprintFullName = "";
+    sprintImpediments = "";
     sprintTeam = null;
     sprintBacklog = null;
     sprintProject = null;
@@ -97,6 +99,7 @@ public class Sprint implements AgileItem, Taskable, Comparable<Sprint> {
     this.sprintRelease = clone.getSprintRelease();
     this.sprintStart = clone.getSprintStart();
     this.sprintEnd = clone.getSprintEnd();
+    this.sprintImpediments = clone.getSprintImpediments();
     this.sprintStories = new ArrayList<>();
     this.sprintStories.addAll(clone.getSprintStories());
     this.tasks = new ArrayList<>();
@@ -127,6 +130,14 @@ public class Sprint implements AgileItem, Taskable, Comparable<Sprint> {
 
   public void setSprintDescription(String sprintDescription) {
     this.sprintDescription = sprintDescription;
+  }
+
+  public String getSprintImpediments() {
+    return this.sprintImpediments;
+  }
+
+  public void setSprintImpediments(String impediment) {
+    this.sprintImpediments = impediment;
   }
 
   public String getSprintFullName() {
@@ -288,6 +299,7 @@ public class Sprint implements AgileItem, Taskable, Comparable<Sprint> {
       this.sprintRelease = clone.getSprintRelease();
       this.sprintStart = clone.getSprintStart();
       this.sprintEnd = clone.getSprintEnd();
+      this.sprintImpediments = clone.getSprintImpediments();
       this.sprintStories.clear();
       this.sprintStories.addAll(clone.getSprintStories());
       this.tasks.clear();
@@ -336,6 +348,10 @@ public class Sprint implements AgileItem, Taskable, Comparable<Sprint> {
                                : sprint.sprintFullName != null) {
       return false;
     }
+    if (sprintImpediments != null ? !sprintImpediments.equals(sprint.sprintImpediments)
+                                  : sprint.sprintImpediments != null) {
+      return false;
+    }
     if (!sprintGoal.equals(sprint.sprintGoal)) {
       return false;
     }
@@ -375,6 +391,7 @@ public class Sprint implements AgileItem, Taskable, Comparable<Sprint> {
     result = 31 * result + (sprintBacklog != null ? sprintBacklog.hashCode() : 0);
     result = 31 * result + (sprintProject != null ? sprintProject.hashCode() : 0);
     result = 31 * result + (sprintRelease != null ? sprintRelease.hashCode() : 0);
+    result = 31 * result + (sprintImpediments != null ? sprintImpediments.hashCode() : 0);
     result = 31 * result + (sprintStart != null ? sprintStart.hashCode() : 0);
     result = 31 * result + (sprintEnd != null ? sprintEnd.hashCode() : 0);
     result = 31 * result + (sprintStories != null ? sprintStories.hashCode() : 0);
