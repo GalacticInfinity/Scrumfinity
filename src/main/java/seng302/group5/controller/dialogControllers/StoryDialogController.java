@@ -191,6 +191,13 @@ public class StoryDialogController {
       }
     });
 
+    statusCombo.getSelectionModel().selectedItemProperty().addListener(
+        (observable, oldValue, newValue) -> {
+          if (createOrEdit == CreateOrEdit.EDIT) {
+            checkButtonDisabled();
+          }
+        });
+
     storyNameField.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
       if(createOrEdit == CreateOrEdit.EDIT) {
@@ -231,6 +238,7 @@ public class StoryDialogController {
         storyNameField.getText().equals(story.getStoryName()) &&
         listAC.getItems().equals(story.getAcceptanceCriteria()) &&
         readyCheckbox.isSelected() == story.getStoryState() &&
+        statusCombo.getValue().equals(story.getStatusString()) &&
         (backlogCombo.getValue() == null || backlogCombo.getValue().equals(lastBacklog))) {
       btnCreateStory.setDisable(true);
     } else {

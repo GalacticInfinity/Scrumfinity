@@ -687,10 +687,20 @@ public class ListMainPaneController {
     textACHeader.setFill(Color.rgb(1, 0, 1));
     textACHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
+    Text textStatusHeader = new Text("\nStatus:");
+    textStatusHeader.setFill(Color.rgb(1, 0, 1));
+    textStatusHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text textStatusBody = new Text(story.getStatusString());
+    textStatusBody.setFill(Color.rgb(1, 0, 1));
+    textStatusBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+
     displayTextFlow.getChildren().addAll(textHeader, textLabelHeader, textLabelBody,
                                          textNameHeader, textNameBody, textDescriptionHeader,
                                          textDescriptionBody, textCreatorHeader, textCreatorBody,
-                                         textReadinessHeader, textReadinessBody, textACHeader);
+                                         textReadinessHeader, textReadinessBody, textStatusHeader,
+                                         textStatusBody, textACHeader);
 
     Text textACBody;
     if (story.getAcceptanceCriteria().size() != 0) {
