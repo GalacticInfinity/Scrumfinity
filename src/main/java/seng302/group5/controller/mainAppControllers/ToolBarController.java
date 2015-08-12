@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import seng302.group5.Main;
+import seng302.group5.model.undoredo.UndoRedoHandler;
 
 /**
  * Created by Zander on 12/08/2015.
@@ -20,6 +21,27 @@ public class ToolBarController {
   @FXML private Button editButton;
   @FXML private Button deleteButton;
   @FXML private Button dependenciesButton;
+
+  public void setupController() {
+    undoButton.setDisable(true);
+    redoButton.setDisable(true);
+  }
+
+  public void checkUndoRedoToolbarButtons(UndoRedoHandler undoRedoHandler) {
+    // undo menu item
+    if (undoRedoHandler.peekUndoStack() == null) {
+      undoButton.setDisable(true);
+    } else {
+      undoButton.setDisable(false);
+    }
+
+    // redo menu item
+    if (undoRedoHandler.peekRedoStack() == null) {
+      redoButton.setDisable(true);
+    } else {
+      redoButton.setDisable(false);
+    }
+  }
 
   /**
    * Handles the save button click event.
