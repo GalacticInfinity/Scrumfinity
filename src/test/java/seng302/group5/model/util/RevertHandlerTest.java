@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.mainAppControllers.ListMainPaneController;
 import seng302.group5.controller.mainAppControllers.MenuBarController;
+import seng302.group5.controller.mainAppControllers.ToolBarController;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Estimate;
 import seng302.group5.model.Person;
@@ -97,11 +98,13 @@ public class RevertHandlerTest {
 
     ListMainPaneController listMainPaneController = mock(ListMainPaneController.class);
     MenuBarController menuBarController = mock(MenuBarController.class);
+    ToolBarController toolBarController = mock(ToolBarController.class);
     Stage primaryStage = mock(Stage.class);
 
     mainApp = new Main();
     mainApp.setLMPC(listMainPaneController);
     mainApp.setMBC(menuBarController);
+    mainApp.setTBC(toolBarController);
     mainApp.setPrimaryStage(primaryStage);
 
     undoRedoHandler = mainApp.getUndoRedoHandler();

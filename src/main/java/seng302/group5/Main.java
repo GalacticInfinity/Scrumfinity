@@ -1557,6 +1557,11 @@ public class Main extends Application {
     this.MBC = MBC;
   }
 
+  public void setTBC(ToolBarController TBC) {
+    // This is for tests
+    this.TBC = TBC;
+  }
+
   public ObservableList<Project> getProjects() {
     return projects.sorted(Comparator.<Project>naturalOrder());
   }
