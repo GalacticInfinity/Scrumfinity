@@ -383,7 +383,7 @@ public class RevertHandler {
     for (AgileItem item : items) {
       if (item.getClass().equals(Story.class)) {
         for (Task task : ((Story) item).getTasks()) {
-          List<Person> peopleList = null;
+          ArrayList<Person> peopleList = new ArrayList<>();
         for (Person person : task.getTaskPeople()) {
           Person mainPerson = personMap.get(person.getLabel());
           peopleList.add(mainPerson);
@@ -410,7 +410,7 @@ public class RevertHandler {
     for (AgileItem item : items) {
       if (item.getClass().equals(Sprint.class)) {
         for (Task task : ((Sprint) item).getTasks()) {
-          List<Person> peopleList = null;
+          ArrayList<Person> peopleList = new ArrayList<>();
           for (Person person : task.getTaskPeople()) {
             Person mainPerson = personMap.get(person.getLabel());
             peopleList.add(mainPerson);
