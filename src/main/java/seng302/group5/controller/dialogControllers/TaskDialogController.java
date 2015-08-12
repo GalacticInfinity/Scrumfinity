@@ -14,7 +14,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Person;
 import seng302.group5.model.Status;
@@ -22,6 +21,7 @@ import seng302.group5.model.Task;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoObject;
+import seng302.group5.model.util.TimeFormat;
 
 /**
  * A controller to handle the creation or editing tasks. Tasks involve a label, description,
@@ -91,6 +91,12 @@ public class TaskDialogController {
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       thisStage.setTitle("Edit Task");
       btnConfirm.setText("Save");
+
+      labelField.setText(task.getLabel());
+      descriptionField.setText(task.getTaskDescription());
+      estimateField.setText(TimeFormat.parseTime(task.getTaskEstimation()));
+      statusComboBox.setValue(Status.getStatusString(task.getStatus()));
+
 //      btnConfirm.setDisable(true); // todo checkButtonDisabled()
     }
     this.createOrEdit = createOrEdit;
@@ -117,6 +123,12 @@ public class TaskDialogController {
 
     if (team != null) {
       availablePeople.addAll(team.getTeamMembers());
+    }
+    if (task != null) {
+      for (Person person : task.getTaskPeople()) {
+        allocatedPeople.add(person);
+        availablePeople.remove(person);
+      }
     }
 
     availablePeopleList.setItems(availablePeople);
