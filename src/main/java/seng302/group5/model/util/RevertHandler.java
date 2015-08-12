@@ -10,6 +10,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seng302.group5.Main;
 import seng302.group5.model.AgileHistory;
+import seng302.group5.model.AgileItem;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Estimate;
 import seng302.group5.model.Person;
@@ -19,6 +20,7 @@ import seng302.group5.model.Role;
 import seng302.group5.model.Skill;
 import seng302.group5.model.Sprint;
 import seng302.group5.model.Story;
+import seng302.group5.model.Task;
 import seng302.group5.model.Team;
 
 /**
@@ -38,6 +40,7 @@ public class RevertHandler {
   private ObservableList<Backlog> backlogsLastSaved;
   private ObservableList<Estimate> estimatesLastSaved;
   private ObservableList<Sprint> sprintsLastSaved;
+  private ObservableList<Task> tasksLastSaved;
 
   /**
    * Constructor. Set the main app to communicate with and initialise lists
@@ -104,6 +107,7 @@ public class RevertHandler {
       mainApp.addSprint(new Sprint(sprint));
     }
 
+
     // Ensure data in main refer to each other
     syncPeopleWithSkills(mainApp.getPeople(), mainApp.getSkills());
     syncTeamsWithPeople(mainApp.getTeams(), mainApp.getPeople(), mainApp.getRoles());
@@ -120,6 +124,9 @@ public class RevertHandler {
     syncSprintsWithTeams(mainApp.getSprints(), mainApp.getTeams());
     syncSprintsWithReleases(mainApp.getSprints(), mainApp.getReleases());
     syncSprintsWithStories(mainApp.getSprints(), mainApp.getStories());
+    syncSprintTasksWithPeople(mainApp.getSprints(), mainApp.getPeople());
+    syncStoriesTasksWithPeople(mainApp.getStories(), mainApp.getPeople());
+
 
     mainApp.refreshLastSaved();
     mainApp.refreshList(null);
@@ -361,6 +368,60 @@ public class RevertHandler {
     }
   }
 
+  /**
+   * Syncs story tasks and people so that references are accurate on revert.
+   * @param items The list of stories that will be synced.
+   * @param people The list of people that will be synced with tasks.
+   */
+  private void syncStoriesTasksWithPeople(List<Story> items, List<Person> people) {
+    Map<String, Person> personMap = new HashMap<>();
+
+    for (Person mainPerson : people) {
+      personMap.put(mainPerson.getLabel(), mainPerson);
+    }
+
+    for (AgileItem item : items) {
+      if (item.getClass().equals(Story.class)) {
+        for (Task task : ((Story) item).getTasks()) {
+          ArrayList<Person> peopleList = new ArrayList<>();
+        for (Person person : task.getTaskPeople()) {
+          Person mainPerson = personMap.get(person.getLabel());
+          peopleList.add(mainPerson);
+        }
+        task.removeAllTaskPeople();
+        task.addAllTaskPeople(peopleList);
+      }
+      }
+    }
+  }
+
+  /**
+   * Syncs Sprint tasks and people so that references are accurate on revert.
+   * @param items The list of Sprints that will be synced.
+   * @param people The list of people that will be synced with tasks.
+   */
+  private void syncSprintTasksWithPeople(List<Sprint> items, List<Person> people) {
+    Map<String, Person> personMap = new HashMap<>();
+
+    for (Person mainPerson : people) {
+      personMap.put(mainPerson.getLabel(), mainPerson);
+    }
+
+    for (AgileItem item : items) {
+      if (item.getClass().equals(Sprint.class)) {
+        for (Task task : ((Sprint) item).getTasks()) {
+          ArrayList<Person> peopleList = new ArrayList<>();
+          for (Person person : task.getTaskPeople()) {
+            Person mainPerson = personMap.get(person.getLabel());
+            peopleList.add(mainPerson);
+          }
+          task.removeAllTaskPeople();
+          task.addAllTaskPeople(peopleList);
+        }
+      }
+    }
+
+  }
   /**
    * Creates the proper reference to the Story objects related to the backlog
    *
