@@ -280,7 +280,6 @@ public class TaskDialogController {
       noErrors++;
       errors.append(String.format("%s\n", "Invalid estimate time format (e.g. 1h30m)."));
     }
-    // todo double check alert height for 3 errors
 
     Map<Person, Integer> peoplesEffort = new IdentityHashMap<>();
     for (PersonEffort personEffort : allocatedPeopleList.getItems()) {
@@ -303,6 +302,7 @@ public class TaskDialogController {
       Alert alert = new Alert(Alert.AlertType.ERROR);
       alert.setTitle(title);
       alert.setHeaderText(null);
+      alert.getDialogPane().setPrefHeight(60 + 30 * noErrors);
       alert.setContentText(errors.toString());
       alert.showAndWait();
     } else {

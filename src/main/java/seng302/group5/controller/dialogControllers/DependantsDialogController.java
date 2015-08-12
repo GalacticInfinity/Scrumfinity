@@ -152,8 +152,8 @@ public class DependantsDialogController {
     } else {
       btnAddStory.setDisable(false);
       btnRemoveStory.setDisable(false);
-    }
       dependantStories.setAll(story.getDependencies());
+    }
       availableStories.remove(story);
       availableStories.removeAll(dependantStories);
     if (availableStories.isEmpty()) {
