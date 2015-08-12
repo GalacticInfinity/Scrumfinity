@@ -57,6 +57,9 @@ public class LoadingTest {
   Backlog backlog3;
   Estimate estimate1;
   Estimate estimate2;
+  Task task1;
+  Task task2;
+  Task task3;
 
   //for testing acs:
   ObservableList<String> acs;
@@ -945,5 +948,67 @@ public class LoadingTest {
     if (!file.delete()) {
       fail();
     }
+  }
+
+  private void createStoriesWithTasks() {
+    createStories();
+
+    task1 = new Task();
+    task1.setLabel("Task1");
+    task1.setTaskDescription("Descriptioso");
+    task1.setStatus(Status.NOT_STARTED);
+    task1.addAllTaskPeople(Arrays.asList(person1, person2));
+    task1.updateSpentEffort(person2, 34);
+    task1.setTaskEstimation(250);
+
+    task2 = new Task();
+    task2.setLabel("Task2");
+    task2.setTaskDescription("Descriptiosossss");
+    task2.setStatus(Status.DONE);
+    task2.addAllTaskPeople(Arrays.asList(person2, person3));
+    task2.updateSpentEffort(person2, 44);
+    task2.setTaskEstimation(251);
+
+    task3 = new Task();
+    task3.setLabel("Task3");
+    task3.setTaskDescription("Nope");
+    task3.setStatus(Status.IN_PROGRESS);
+    task3.addAllTaskPeople(Arrays.asList(person3, person1));
+    task3.updateSpentEffort(person2, 60);
+    task3.setTaskEstimation(253);
+
+    story1.addAllTasks(Arrays.asList(task1, task2));
+    story2.addTask(task3);
+  }
+
+  @Test
+  public void testingStoriesTaskLoading() {
+    createStoriesWithTasks();
+    saving = new Saving(savedMain);
+    File file = new File(System.getProperty("user.dir")
+                         + File.separator
+                         + "StorySave.xml");
+    saving.saveData(file);
+
+    loading = new Loading(loadedMain);
+    loading.loadFile(file);
+
+    Story storyOne = new Story();
+    Story storyTwo = new Story();
+    List<Story> stories = loadedMain.getStories();
+    for (Story story : stories) {
+      if (story.getLabel().equals("Story1")) {
+        storyOne = story;
+      }
+      if (story.getLabel().equals("Story2")) {
+        storyTwo = story;
+      }
+    }
+
+    assertEquals(story1, storyOne);
+    assertEquals(story2, storyTwo);
+
+    assertSame(loadedMain.getPeople().get(0),
+               storyOne.getTasks().get(0).getTaskPeople().get(0));
   }
 }

@@ -79,6 +79,7 @@ public class Sprint implements AgileItem, Taskable, Comparable<Sprint> {
     this.sprintRelease = sprintRelease;
     this.sprintStart = sprintStart;
     this.sprintEnd = sprintEnd;
+    this.sprintImpediments = "";
     this.sprintStories = new ArrayList<>();
     this.sprintStories.addAll(sprintStories);
     this.tasks = new ArrayList<>();
