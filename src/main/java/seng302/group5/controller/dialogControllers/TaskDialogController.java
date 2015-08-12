@@ -11,9 +11,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.TextFieldListCell;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import seng302.group5.controller.enums.CreateOrEdit;
@@ -136,6 +140,8 @@ public class TaskDialogController {
           }
         }
     );
+
+    editUndoRedoObject = null;
     // TODO finish
   }
 
@@ -180,6 +186,8 @@ public class TaskDialogController {
     }
     statusComboBox.setItems(availableStatuses);
     statusComboBox.getSelectionModel().select(0);
+
+    allocatedPeopleList.setCellFactory(listView -> new PersonEffortCell());
   }
 
   /**
@@ -239,7 +247,6 @@ public class TaskDialogController {
   @FXML
   protected void btnConfirmClick(ActionEvent event) {
     // todo implement and javadoc
-    // todo error parsing
     StringBuilder errors = new StringBuilder();
     int noErrors = 0;
 
@@ -248,7 +255,7 @@ public class TaskDialogController {
     int taskEstimateMinutes;
     Status taskStatus = Status.getStatusEnum(statusComboBox.getValue());
 
-    // todo more parsing
+    // todo more parsing for logging effort
     try {
       taskLabel = parseTaskLabel(labelField.getText());
     } catch (Exception e) {
@@ -345,5 +352,50 @@ public class TaskDialogController {
    */
   public UndoRedoObject getEditUndoRedoObject() {
     return editUndoRedoObject;
+  }
+
+  /**
+   * List cell to combine a person with their logged effort.
+   */
+  public class PersonEffortCell extends TextFieldListCell<Person> {
+
+    private TextField effortField;
+    private Label cellText;
+    private double labelWidth;
+    private GridPane pane;
+
+    public PersonEffortCell() {
+      super();
+
+      cellText = new Label();
+      effortField = new TextField("0m");
+      effortField.setMaxWidth(55);
+      labelWidth = allocatedPeopleList.getLayoutBounds().getWidth() - 76;
+      pane = new GridPane();
+      pane.getColumnConstraints().add(new ColumnConstraints(labelWidth));
+      pane.setHgap(5);
+      pane.add(cellText, 0, 0);
+      pane.add(effortField, 1, 0);
+    }
+
+    /**
+     * Sets the overridden parameters for the PersonEffortCell when the cell is updated.
+     * @param person The Person being added to the cell.
+     * @param empty Whether or not string is empty as a boolean flag.
+     */
+    @Override
+    public void updateItem(Person person, boolean empty) {
+      super.updateItem(person, empty);
+
+      if (empty) {
+        cellText.setText(null);
+        setText(null);
+        setGraphic(null);
+      } else {
+        cellText.setText(person.toString());
+        setText(null);
+        setGraphic(pane);
+      }
+    }
   }
 }
