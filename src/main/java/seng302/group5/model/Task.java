@@ -182,9 +182,9 @@ public class Task implements AgileItem, Comparable<Task> {
   }
 
   /**
-   * Equals method, compares every single field in the class
-   * @param o Object to compare to
-   * @return boolean
+   * Equals to check if the fields of two task objects are the same.
+   * @param o Object to check against
+   * @return Boolean
    */
   @Override
   public boolean equals(Object o) {
@@ -197,7 +197,7 @@ public class Task implements AgileItem, Comparable<Task> {
 
     Task task = (Task) o;
 
-    if (Double.compare(task.estimation, estimation) != 0) {
+    if (estimation != task.estimation) {
       return false;
     }
     if (!label.equals(task.label)) {
@@ -206,7 +206,7 @@ public class Task implements AgileItem, Comparable<Task> {
     if (description != null ? !description.equals(task.description) : task.description != null) {
       return false;
     }
-    if (!status.equals(task.status)) {
+    if (status != task.status) {
       return false;
     }
     if (assignedPeople != null ? !assignedPeople.equals(task.assignedPeople)
@@ -218,18 +218,11 @@ public class Task implements AgileItem, Comparable<Task> {
 
   }
 
-  /**
-   * Hash code override
-   * @return integer smaller larger or equal
-   */
   @Override
   public int hashCode() {
-    int result;
-    long temp;
-    result = label.hashCode();
+    int result = label.hashCode();
     result = 31 * result + (description != null ? description.hashCode() : 0);
-    temp = Double.doubleToLongBits(estimation);
-    result = 31 * result + (int) (temp ^ (temp >>> 32));
+    result = 31 * result + estimation;
     result = 31 * result + status.hashCode();
     result = 31 * result + (assignedPeople != null ? assignedPeople.hashCode() : 0);
     result = 31 * result + (spentEffort != null ? spentEffort.hashCode() : 0);

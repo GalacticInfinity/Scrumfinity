@@ -77,6 +77,7 @@ public class Main extends Application {
 
   private ListMainPaneController LMPC;
   private MenuBarController MBC;
+  private ToolBarController TBC;
 
   private ObservableList<Project> projects = FXCollections.observableArrayList();
   private ObservableList<Team> teams = FXCollections.observableArrayList();
@@ -193,8 +194,8 @@ public class Main extends Application {
     try {
       this.primaryStage = primaryStage;
       this.primaryStage.setTitle(mainTitle);
-      this.primaryStage.setMinHeight(400);
-      this.primaryStage.setMinWidth(600);
+      this.primaryStage.setMinHeight(500);
+      this.primaryStage.setMinWidth(820);
 
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(LoginController.class.getResource("/LoginScreen.fxml"));
@@ -263,6 +264,8 @@ public class Main extends Application {
 
       ToolBarController controller = loader.getController();
       controller.setMainApp(this);
+      TBC = controller;
+      controller.setupController();
 
       topVBox.getChildren().add(toolBar);
     } catch (IOException e) {
@@ -857,7 +860,7 @@ public class Main extends Application {
     try {
       undoRedoHandler.undo();
       toggleName();
-      checkUndoRedoMenuItems();
+      checkUndoRedoItems();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -870,7 +873,7 @@ public class Main extends Application {
     try {
       undoRedoHandler.redo();
       toggleName();
-      checkUndoRedoMenuItems();
+      checkUndoRedoItems();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -897,7 +900,7 @@ public class Main extends Application {
   public void newAction(UndoRedo undoRedoObject) {
     undoRedoHandler.newAction(undoRedoObject);
     toggleName();
-    checkUndoRedoMenuItems();
+    checkUndoRedoItems();
   }
 
   /**
@@ -906,7 +909,7 @@ public class Main extends Application {
   public void refreshLastSaved() {
     lastSavedObject = undoRedoHandler.peekUndoStack();
     toggleName();
-    checkUndoRedoMenuItems();
+    checkUndoRedoItems();
   }
 
   /**
@@ -1683,13 +1686,18 @@ public class Main extends Application {
   }
 
   /**
-   * Refresh the undo and redo menu items based on the state of the undo/redo handler
+   * Refresh the undo and redo menu and toolbar items based on the state of the undo/redo handler
    */
-  public void checkUndoRedoMenuItems() {
+  public void checkUndoRedoItems() {
     MBC.checkUndoRedoMenuItems(undoRedoHandler);
+    TBC.checkUndoRedoToolbarButtons(undoRedoHandler);
   }
 
   public void setMainScene() {
     this.primaryStage.setScene(mainScene);
+  }
+
+  public Stage getStage() {
+    return this.primaryStage;
   }
 }

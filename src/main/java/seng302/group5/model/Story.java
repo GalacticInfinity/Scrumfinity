@@ -58,6 +58,7 @@ public class Story implements AgileItem, Taskable, Comparable<Story> {
     this.storyName = storyName;
     this.description = description;
     this.creator = creator;
+    this.impediments = "";
     this.acceptanceCriteria = FXCollections.observableArrayList();
     this.isReady = false;
     this.dependencies = new ArrayList<>();
@@ -79,6 +80,7 @@ public class Story implements AgileItem, Taskable, Comparable<Story> {
     this.storyName = storyName;
     this.description = description;
     this.creator = creator;
+    this.impediments = "";
     if (acceptanceCriteria == null) {
       this.acceptanceCriteria = FXCollections.observableArrayList();
     } else {
@@ -105,6 +107,7 @@ public class Story implements AgileItem, Taskable, Comparable<Story> {
     this.storyName = storyName;
     this.description = description;
     this.creator = creator;
+    this.impediments = "";
     if (acceptanceCriteria == null) {
       this.acceptanceCriteria = FXCollections.observableArrayList();
     } else {
@@ -134,6 +137,7 @@ public class Story implements AgileItem, Taskable, Comparable<Story> {
     this.storyName = storyName;
     this.description = description;
     this.creator = creator;
+    this.impediments = "";
     if (acceptanceCriteria == null) {
       this.acceptanceCriteria = FXCollections.observableArrayList();
     } else {
@@ -161,6 +165,7 @@ public class Story implements AgileItem, Taskable, Comparable<Story> {
     this.storyName = storyName;
     this.description = description;
     this.creator = creator;
+    this.impediments = "";
     if (acceptanceCriteria == null) {
       this.acceptanceCriteria = FXCollections.observableArrayList();
     } else {
