@@ -769,7 +769,7 @@ public class Main extends Application {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/SprintDialog.fxml"));
-      VBox sprintDialogLayout = loader.load();
+      HBox sprintDialogLayout = loader.load();
 
       SprintDialogController controller = loader.getController();
       Scene sprintDialogScene = new Scene(sprintDialogLayout);
