@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.List;
+import java.util.Map;
 
 import seng302.group5.Main;
 import seng302.group5.model.AgileHistory;
@@ -17,7 +18,9 @@ import seng302.group5.model.Release;
 import seng302.group5.model.Role;
 import seng302.group5.model.Skill;
 import seng302.group5.model.Sprint;
+import seng302.group5.model.Status;
 import seng302.group5.model.Story;
+import seng302.group5.model.Task;
 import seng302.group5.model.Team;
 
 /**
@@ -96,19 +99,21 @@ public class Saving {
    * @param saveFile Save file being written to
    * @throws Exception Required field is missing/ error with writer
    */
-  private void saveHeader(Writer saveFile) throws Exception{
+  private void saveHeader(Writer saveFile) throws Exception {
     String orgName;
     if (!Settings.organizationName.isEmpty()) {
       orgName = Settings.organizationName;
     } else {
       orgName = "__undefined__";
     }
-    saveFile.write("<scrumfinity version=\"" + Settings.progVersion + "\" organization=\"" + orgName + "\">\n");
+    saveFile.write("<scrumfinity version=\"" + Settings.progVersion + "\" organization=\"" + orgName
+                   + "\">\n");
   }
 
   /**
-   * Function to simply write the /scrumfinity tag. As everything else has it's own function
-   * to write to save file, this does too.
+   * Function to simply write the /scrumfinity tag. As everything else has it's own function to
+   * write to save file, this does too.
+   *
    * @param saveFile Save file being written to
    * @throws Exception Error with writer
    */
@@ -130,7 +135,8 @@ public class Saving {
       saveFile.write("\t\t<projectLabel>" + project.getLabel() + "</projectLabel>\n");
       saveFile.write("\t\t<projectName>" + project.getProjectName() + "</projectName>\n");
       if (project.getProjectDescription() != null && !project.getProjectDescription().isEmpty()) {
-        saveFile.write("\t\t<projectDescription>" + project.getProjectDescription() + "</projectDescription>\n");
+        saveFile.write("\t\t<projectDescription>" + project.getProjectDescription()
+                       + "</projectDescription>\n");
       }
       if (!project.getAllocatedTeams().isEmpty()) {
         saveFile.write("\t\t<AllocatedTeams>\n");
@@ -146,7 +152,8 @@ public class Saving {
       }
       if (Settings.progVersion >= 0.4) {
         if (project.getBacklog() != null) {
-          saveFile.write("\t\t<projectBacklog>" + project.getBacklog().getLabel() + "</projectBacklog>\n");
+          saveFile.write(
+              "\t\t<projectBacklog>" + project.getBacklog().getLabel() + "</projectBacklog>\n");
         }
       }
       saveFile.write("\t</Project>\n");
@@ -198,7 +205,8 @@ public class Saving {
       saveFile.write("\t<Skill>\n");
       saveFile.write("\t\t<skillLabel>" + skill.getLabel() + "</skillLabel>\n");
       if (skill.getSkillDescription() != null && !skill.getSkillDescription().isEmpty()) {
-        saveFile.write("\t\t<skillDescription>" + skill.getSkillDescription() + "</skillDescription>\n");
+        saveFile.write(
+            "\t\t<skillDescription>" + skill.getSkillDescription() + "</skillDescription>\n");
       }
       saveFile.write("\t</Skill>\n");
     }
@@ -219,7 +227,8 @@ public class Saving {
       saveFile.write("\t<Team>\n");
       saveFile.write("\t\t<teamLabel>" + team.getLabel() + "</teamLabel>\n");
       if (team.getTeamDescription() != null && !team.getTeamDescription().isEmpty()) {
-        saveFile.write("\t\t<teamDescription>" + team.getTeamDescription() + "</teamDescription>\n");
+        saveFile
+            .write("\t\t<teamDescription>" + team.getTeamDescription() + "</teamDescription>\n");
       }
       if (!team.getTeamMembers().isEmpty()) {
         saveFile.write("\t\t<TeamPeople>\n");
@@ -250,9 +259,11 @@ public class Saving {
     for (Release release : this.releases) {
       saveFile.write("\t<Release>\n");
       saveFile.write("\t\t<releaseLabel>" + release.getLabel() + "</releaseLabel>\n");
-      saveFile.write("\t\t<releaseDescription>" + release.getReleaseDescription() + "</releaseDescription>\n");
+      saveFile.write(
+          "\t\t<releaseDescription>" + release.getReleaseDescription() + "</releaseDescription>\n");
       saveFile.write("\t\t<releaseNotes>" + release.getReleaseNotes() + "</releaseNotes>\n");
-      saveFile.write("\t\t<releaseProject>" + release.getProjectRelease().getLabel() + "</releaseProject>\n");
+      saveFile.write(
+          "\t\t<releaseProject>" + release.getProjectRelease().getLabel() + "</releaseProject>\n");
       saveFile.write("\t\t<releaseDate>" + release.getReleaseDate() + "</releaseDate>\n");
       saveFile.write("\t</Release>\n");
     }
@@ -320,6 +331,40 @@ public class Saving {
         saveFile.write("\t\t</Dependencies>\n");
       }
 
+      if (!story.getTasks().isEmpty()) {
+        saveFile.write("\t\t<Tasks>\n");
+        for (Task task : story.getTasks()) {
+          saveFile.write("\t\t\t<Task>\n");
+          saveFile.write("\t\t\t\t<label>" + task.getLabel() + "</label>\n");
+          saveFile
+              .write("\t\t\t\t<status>" + Status.getStatusString(task.getStatus()) + "</status>\n");
+          if (task.getTaskDescription() != null && !task.getTaskDescription().isEmpty()) {
+            saveFile
+                .write("\t\t\t\t<description>" + task.getTaskDescription() + "</description>\n");
+          }
+          if (task.getTaskEstimation() != null) {
+            saveFile.write(
+                "\t\t\t\t<estimate>" + task.getTaskEstimation().toString() + "</estimate>\n");
+          }
+          if (!task.getTaskPeople().isEmpty()) {
+            saveFile.write("\t\t\t\t<People>\n");
+            for (Person person : task.getTaskPeople()) {
+              saveFile.write("\t\t\t\t\t<person>" + person.getLabel() + "</person>\n");
+            }
+            saveFile.write("\t\t\t\t</People>\n");
+          }
+          if (!task.getSpentEffort().isEmpty()) {
+            saveFile.write("\t\t\t\t<Effort>\n");
+            for (Map.Entry<Person, Integer> entry : task.getSpentEffort().entrySet()) {
+              saveFile.write("\t\t\t\t\t<person>" + entry.getKey().getLabel() + "</person>\n");
+              saveFile.write("\t\t\t\t\t<effort>" + entry.getValue().toString() + "</effort>\n");
+            }
+            saveFile.write("\t\t\t\t</Effort>\n");
+          }
+          saveFile.write("\t\t\t</Task>\n");
+        }
+        saveFile.write("\t\t</Tasks>\n");
+      }
       saveFile.write("\t</Story>\n");
     }
     saveFile.write("</Stories>\n");
@@ -336,13 +381,15 @@ public class Saving {
     for (Backlog backlog : this.backlogs) {
       saveFile.write("\t<Backlog>\n");
       saveFile.write("\t\t<backlogLabel>" + backlog.getLabel() + "</backlogLabel>\n");
-      saveFile.write("\t\t<productOwner>" + backlog.getProductOwner().getLabel() + "</productOwner>\n");
+      saveFile
+          .write("\t\t<productOwner>" + backlog.getProductOwner().getLabel() + "</productOwner>\n");
 
       if (backlog.getBacklogName() != null && !backlog.getBacklogName().equals("")) {
         saveFile.write("\t\t<backlogName>" + backlog.getBacklogName() + "</backlogName>\n");
       }
       if (backlog.getBacklogDescription() != null && !backlog.getBacklogDescription().equals("")) {
-        saveFile.write("\t\t<backlogDescription>" + backlog.getBacklogDescription() + "</backlogDescription>\n");
+        saveFile.write("\t\t<backlogDescription>" + backlog.getBacklogDescription()
+                       + "</backlogDescription>\n");
       }
 
       if (!backlog.getStories().isEmpty()) {
@@ -366,6 +413,7 @@ public class Saving {
 
   /**
    * Appends the estimates data to the save file
+   *
    * @param saveFile file being writtent to
    * @throws Exception Cant write to file for whatever reason (a filed is null possibly)
    */
@@ -388,10 +436,11 @@ public class Saving {
 
   /**
    * Appends the sprints data to the save file
+   *
    * @param saveFile file being written to
    * @throws java.lang.Exception cant write the the file for some reason (file is null).
    */
-  private void saveSprints(Writer saveFile) throws Exception{
+  private void saveSprints(Writer saveFile) throws Exception {
     saveFile.write("<Sprints>\n");
     for (Sprint sprint : this.sprints) {
       saveFile.write("\t<Sprint>\n");
@@ -433,9 +482,43 @@ public class Saving {
         }
         saveFile.write("\t\t</sprintStories>\n");
       }
-      saveFile.write("\t</Sprint>\n");
+      if (!sprint.getTasks().isEmpty() && sprint.getTasks() != null) {
+        saveFile.write("\t\t<Tasks>\n");
+        for (Task task : sprint.getTasks()) {
+          saveFile.write("\t\t\t<Task>\n");
+          saveFile.write("\t\t\t\t<taskLabel>" + task.getLabel() + "</taskLabel>\n");
+          saveFile
+              .write("\t\t\t\t<taskStatus>" + Status.getStatusString(task.getStatus()) + "</taskStatus>\n");
+          if (task.getTaskDescription() != null && !task.getTaskDescription().isEmpty()) {
+            saveFile
+                .write("\t\t\t\t<taskDescription>" + task.getTaskDescription() + "</taskDescription>\n");
+          }
+          if (task.getTaskEstimation() != null) {
+            saveFile.write(
+                "\t\t\t\t<taskEstimate>" + task.getTaskEstimation().toString() + "</taskEstimate>\n");
+          }
+          if (!task.getTaskPeople().isEmpty()) {
+            saveFile.write("\t\t\t\t<TaskPeople>\n");
+            for (Person person : task.getTaskPeople()) {
+              saveFile.write("\t\t\t\t\t<person>" + person.getLabel() + "</person>\n");
+            }
+            saveFile.write("\t\t\t\t</TaskPeople>\n");
+          }
+          if (!task.getSpentEffort().isEmpty()) {
+            saveFile.write("\t\t\t\t<TaskEffort>\n");
+            for (Map.Entry<Person, Integer> entry : task.getSpentEffort().entrySet()) {
+              saveFile.write("\t\t\t\t\t<person>" + entry.getKey().getLabel() + "</person>\n");
+              saveFile.write("\t\t\t\t\t<effort>" + entry.getValue().toString() + "</effort>\n");
+            }
+            saveFile.write("\t\t\t\t</TaskEffort>\n");
+          }
+          saveFile.write("\t\t\t</Task>\n");
+        }
+        saveFile.write("\t\t</Tasks>\n");
+        saveFile.write("\t</Sprint>\n");
+      }
     }
     saveFile.write("</Sprints>\n");
-    }
   }
+}
 

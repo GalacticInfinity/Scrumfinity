@@ -1,6 +1,11 @@
 package seng302.group5.controller.dialogControllers;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,12 +14,15 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.TextFieldListCell;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Person;
 import seng302.group5.model.Status;
@@ -22,6 +30,7 @@ import seng302.group5.model.Task;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoObject;
+import seng302.group5.model.util.TimeFormat;
 
 /**
  * A controller to handle the creation or editing tasks. Tasks involve a label, description,
@@ -36,7 +45,7 @@ public class TaskDialogController {
   @FXML private TextField estimateField;
   @FXML private ComboBox<String> statusComboBox;
   @FXML private ListView<Person> availablePeopleList;
-  @FXML private ListView<Person> allocatedPeopleList;
+  @FXML private ListView<PersonEffort> allocatedPeopleList;
   @FXML private Button btnAddPerson;
   @FXML private Button btnRemovePerson;
   @FXML private HBox btnContainer;
@@ -48,8 +57,9 @@ public class TaskDialogController {
   private CreateOrEdit createOrEdit;
   private Task task;
   private Task lastTask;
-  private ObservableList<Person> allocatedPeople;
   private ObservableList<Person> availablePeople;
+  private ObservableList<PersonEffort> allocatedPeople;
+  private ObservableList<PersonEffort> originalPeople;
 
   private UndoRedoObject editUndoRedoObject;
 
@@ -91,7 +101,13 @@ public class TaskDialogController {
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       thisStage.setTitle("Edit Task");
       btnConfirm.setText("Save");
-//      btnConfirm.setDisable(true); // todo checkButtonDisabled()
+
+      labelField.setText(task.getLabel());
+      descriptionField.setText(task.getTaskDescription());
+      estimateField.setText(TimeFormat.parseTime(task.getTaskEstimation()));
+      statusComboBox.setValue(Status.getStatusString(task.getStatus()));
+
+      btnConfirm.setDisable(true);
     }
     this.createOrEdit = createOrEdit;
 
@@ -104,8 +120,48 @@ public class TaskDialogController {
       } else {
         labelField.setStyle("-fx-text-inner-color: black;");
       }
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
     });
+
+    descriptionField.textProperty().addListener((observable, oldValue, newValue) -> {
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+
+    estimateField.textProperty().addListener((observable, oldValue, newValue) -> {
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+
+    statusComboBox.getSelectionModel().selectedItemProperty().addListener(
+        (observable, oldValue, newValue) -> {
+          if (createOrEdit == CreateOrEdit.EDIT) {
+            checkButtonDisabled();
+          }
+        }
+    );
+
+    editUndoRedoObject = null;
     // TODO finish
+  }
+
+  /**
+   * Checks if there are any changed fields and disables or enables the button accordingly
+   */
+  private void checkButtonDisabled() {
+    if (labelField.getText().equals(task.getLabel()) &&
+        descriptionField.getText().equals(task.getTaskDescription()) &&
+        TimeFormat.parseMinutes(estimateField.getText()) == task.getTaskEstimation() &&
+        Status.getStatusEnum(statusComboBox.getValue()).equals(task.getStatus()) &&
+        allocatedPeopleList.getItems().equals(originalPeople)) {
+      btnConfirm.setDisable(true);
+    } else {
+      btnConfirm.setDisable(false);
+    }
   }
 
   /**
@@ -114,13 +170,23 @@ public class TaskDialogController {
   private void initialiseLists(Team team) {
     availablePeople = FXCollections.observableArrayList();
     allocatedPeople = FXCollections.observableArrayList();
+    originalPeople = FXCollections.observableArrayList();
 
     if (team != null) {
       availablePeople.addAll(team.getTeamMembers());
     }
+    if (task != null) {
+      for (Person person : task.getTaskPeople()) {
+        int effort = task.getSpentEffort().get(person);
+        PersonEffort personEffort = new PersonEffort(person, TimeFormat.parseTime(effort));
+        allocatedPeople.add(personEffort);
+        availablePeople.remove(person);
+        originalPeople.add(new PersonEffort(person, TimeFormat.parseTime(effort)));
+      }
+    }
 
-    availablePeopleList.setItems(availablePeople);
-    allocatedPeopleList.setItems(allocatedPeople);
+    availablePeopleList.setItems(availablePeople.sorted(Comparator.<Person>naturalOrder()));
+    allocatedPeopleList.setItems(allocatedPeople.sorted(Comparator.<PersonEffort>naturalOrder()));
 
     ObservableList<String> availableStatuses = FXCollections.observableArrayList();
     for (Status status : Status.values()) {
@@ -128,6 +194,8 @@ public class TaskDialogController {
     }
     statusComboBox.setItems(availableStatuses);
     statusComboBox.getSelectionModel().select(0);
+
+    allocatedPeopleList.setCellFactory(listView -> new PersonEffortCell());
   }
 
   /**
@@ -138,15 +206,15 @@ public class TaskDialogController {
   @FXML
   protected void btnAddPersonClick(ActionEvent event) {
     Person selectedPerson = availablePeopleList.getSelectionModel().getSelectedItem();
-    // todo effort logging
     if (selectedPerson != null) {
-      allocatedPeople.add(selectedPerson);
+      PersonEffort personEffort = new PersonEffort(selectedPerson, "0m");
+      allocatedPeople.add(personEffort);
       availablePeople.remove(selectedPerson);
 
-      allocatedPeopleList.getSelectionModel().select(selectedPerson);
-//      if (createOrEdit == CreateOrEdit.EDIT) { // TODO
-//        checkButtonDisabled();
-//      }
+      allocatedPeopleList.getSelectionModel().select(personEffort);
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
     }
   }
 
@@ -157,15 +225,15 @@ public class TaskDialogController {
    */
   @FXML
   protected void btnRemovePersonClick(ActionEvent event) {
-    Person selectedPerson = allocatedPeopleList.getSelectionModel().getSelectedItem();
-    if (selectedPerson != null) {
-      availablePeople.add(selectedPerson);
-      allocatedPeople.remove(selectedPerson);
+    PersonEffort selectedPersonEffort = allocatedPeopleList.getSelectionModel().getSelectedItem();
+    if (selectedPersonEffort != null) {
+      availablePeople.add(selectedPersonEffort.getPerson());
+      allocatedPeople.remove(selectedPersonEffort);
 
-      availablePeopleList.getSelectionModel().select(selectedPerson);
-//      if (createOrEdit == CreateOrEdit.EDIT) { // TODO
-//        checkButtonDisabled();
-//      }
+      availablePeopleList.getSelectionModel().select(selectedPersonEffort.getPerson());
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
     }
   }
 
@@ -184,19 +252,22 @@ public class TaskDialogController {
     editUndoRedoObject.addDatum(taskToStore);
   }
 
+  /**
+   * Handles the action of clicking the confirm button. It parses the values that were input
+   * into the dialog fields and updates or creates the task it is looking at.
+   *
+   * @param event Action event
+   */
   @FXML
   protected void btnConfirmClick(ActionEvent event) {
-    // todo implement and javadoc
-    // todo error parsing
     StringBuilder errors = new StringBuilder();
     int noErrors = 0;
 
     String taskLabel = "";
     String taskDescription = descriptionField.getText().trim();
-    int taskEstimateMinutes = 0;
+    int taskEstimateMinutes;
     Status taskStatus = Status.getStatusEnum(statusComboBox.getValue());
 
-    // todo more parsing
     try {
       taskLabel = parseTaskLabel(labelField.getText());
     } catch (Exception e) {
@@ -204,8 +275,24 @@ public class TaskDialogController {
       errors.append(String.format("%s\n", e.getMessage()));
     }
 
-    // todo parse minutes
-    taskEstimateMinutes = 120;
+    taskEstimateMinutes = TimeFormat.parseMinutes(estimateField.getText());
+    if (taskEstimateMinutes < 0) {
+      noErrors++;
+      errors.append(String.format("%s\n", "Invalid estimate time format (e.g. 1h30m)."));
+    }
+    // todo double check alert height for 3 errors
+
+    Map<Person, Integer> peoplesEffort = new IdentityHashMap<>();
+    for (PersonEffort personEffort : allocatedPeopleList.getItems()) {
+      Person person = personEffort.getPerson();
+      int effort = TimeFormat.parseMinutes(personEffort.getEffortStr());
+      if (effort < 0) {
+        noErrors++;
+        errors.append(String.format("Invalid effort time format for %s (e.g. 1h30m).\n", person));
+        break;
+      }
+      peoplesEffort.put(person, effort);
+    }
 
     // Display all errors if they exist
     if (noErrors > 0) {
@@ -219,10 +306,14 @@ public class TaskDialogController {
       alert.setContentText(errors.toString());
       alert.showAndWait();
     } else {
+      List<Person> allocatedPeopleSorted = new ArrayList<>();
+      for (PersonEffort personEffort : allocatedPeopleList.getItems()) {
+        allocatedPeopleSorted.add(personEffort.getPerson());
+      }
       if (createOrEdit == CreateOrEdit.CREATE) {
-        task =
-            new Task(taskLabel, taskDescription, taskEstimateMinutes, taskStatus, allocatedPeople);
-        // todo set logged effort of all people
+        task = new Task(taskLabel, taskDescription, taskEstimateMinutes, taskStatus,
+                        allocatedPeopleSorted);
+        task.updateSpentEffort(peoplesEffort);
         taskCollection.add(task);
       } else if (createOrEdit == CreateOrEdit.EDIT) {
         task.setLabel(taskLabel);
@@ -230,8 +321,8 @@ public class TaskDialogController {
         task.setTaskEstimation(taskEstimateMinutes);
         task.setStatus(taskStatus);
         task.removeAllTaskPeople();
-        task.addAllTaskPeople(allocatedPeople);
-        // todo set logged effort of all people
+        task.addAllTaskPeople(allocatedPeopleSorted);
+        task.updateSpentEffort(peoplesEffort);
         generateEditUndoRedoObject();
       }
       // todo newAction in main or return value for nested transaction?
@@ -289,5 +380,147 @@ public class TaskDialogController {
    */
   public UndoRedoObject getEditUndoRedoObject() {
     return editUndoRedoObject;
+  }
+
+  /**
+   * Class for containing a person and their effort against the task.
+   */
+  private class PersonEffort implements Comparable<PersonEffort> {
+
+    private Person person;
+    private String effortStr;
+
+    /**
+     * Default constructor using person and role default constructors
+     */
+    public PersonEffort() {
+      this.person = new Person();
+      this.effortStr = "";
+    }
+
+    /**
+     * Constructor for PersonEffort object
+     *
+     * @param person Person to store
+     * @param effortStr Effort string to store
+     */
+    public PersonEffort(Person person, String effortStr) {
+      this.person = person;
+      this.effortStr = effortStr;
+    }
+
+    /**
+     * gets the person object from this object
+     *
+     * @return Person object
+     */
+    public Person getPerson() {
+      return person;
+    }
+
+    /**
+     * gets the effort string from this object
+     *
+     * @return Effort string
+     */
+    public String getEffortStr() {
+      return effortStr;
+    }
+
+    /**
+     * Set the effort string to this object
+     *
+     * @param effortStr Effort string
+     */
+    public void setEffortStr(String effortStr) {
+      this.effortStr = effortStr;
+    }
+
+    @Override
+    public String toString() {
+      return person.toString() + " " + effortStr;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (o == null || getClass() != o.getClass()) {
+        return false;
+      }
+
+      PersonEffort that = (PersonEffort) o;
+
+      if (!person.equals(that.person)) {
+        return false;
+      }
+      return TimeFormat.parseMinutes(effortStr) == (TimeFormat.parseMinutes(that.effortStr));
+
+    }
+
+    @Override
+    public int hashCode() {
+      int result = person.hashCode();
+      result = 31 * result + Integer.valueOf(TimeFormat.parseMinutes(effortStr)).hashCode();
+      return result;
+    }
+
+    @Override
+    public int compareTo(PersonEffort o) {
+      return person.getLabel().compareToIgnoreCase(o.getPerson().getLabel());
+    }
+  }
+
+  /**
+   * List cell to combine a person with their logged effort.
+   */
+  private class PersonEffortCell extends TextFieldListCell<PersonEffort> {
+
+    private TextField effortField;
+    private Label cellText;
+    private double labelWidth;
+    private GridPane pane;
+
+    public PersonEffortCell() {
+      super();
+
+      cellText = new Label();
+      effortField = new TextField("0m");
+      effortField.setMaxWidth(55);
+      effortField.textProperty().addListener(observable -> {
+        getItem().setEffortStr(effortField.getText());
+        if (createOrEdit == CreateOrEdit.EDIT) {
+          checkButtonDisabled();
+        }
+      });
+      labelWidth = allocatedPeopleList.getLayoutBounds().getWidth() - 76;
+      pane = new GridPane();
+      pane.getColumnConstraints().add(new ColumnConstraints(labelWidth));
+      pane.setHgap(5);
+      pane.add(cellText, 0, 0);
+      pane.add(effortField, 1, 0);
+    }
+
+    /**
+     * Sets the overridden parameters for the PersonEffortCell when the cell is updated.
+     * @param personEffort The Person being added to the cell with their effort.
+     * @param empty Whether or not string is empty as a boolean flag.
+     */
+    @Override
+    public void updateItem(PersonEffort personEffort, boolean empty) {
+      super.updateItem(personEffort, empty);
+
+      if (empty) {
+        cellText.setText(null);
+        setText(null);
+        setGraphic(null);
+      } else {
+        cellText.setText(personEffort.getPerson().toString());
+        effortField.setText(personEffort.getEffortStr());
+        setText(null);
+        setGraphic(pane);
+      }
+    }
   }
 }

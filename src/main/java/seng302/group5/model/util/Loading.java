@@ -25,7 +25,9 @@ import seng302.group5.model.Release;
 import seng302.group5.model.Role;
 import seng302.group5.model.Skill;
 import seng302.group5.model.Sprint;
+import seng302.group5.model.Status;
 import seng302.group5.model.Story;
+import seng302.group5.model.Task;
 import seng302.group5.model.Team;
 
 /**
@@ -153,14 +155,15 @@ public class Loading {
             if (!projectLine.endsWith("</projectDescription>")) {
               descBuilder = projectLine
                                 .replaceAll("(?i)(.*<projectDescription.*?>)(.+?)", "$2") + "\n";
-              while ((!(projectLine =loadedFile.readLine()).endsWith("</projectDescription>"))) {
+              while ((!(projectLine = loadedFile.readLine()).endsWith("</projectDescription>"))) {
                 descBuilder += projectLine + "\n";
               }
               descBuilder += projectLine.replaceAll("(.+?)(</projectDescription>)", "$1");
             } else {
               descBuilder =
                   projectLine
-                      .replaceAll("(?i)(.*<projectDescription.*?>)(.+?)(</projectDescription>)", "$2");
+                      .replaceAll("(?i)(.*<projectDescription.*?>)(.+?)(</projectDescription>)",
+                                  "$2");
             }
             newProject.setProjectDescription(descBuilder);
           }
@@ -200,7 +203,8 @@ public class Loading {
           }
           // As of version 0.4, load a backlog
           if (projectLine.startsWith("\t\t<projectBacklog>")) {
-            projectData = projectLine.replaceAll("(?i)(.*<projectBacklog.*?>)(.+?)(</projectBacklog>)", "$2");
+            projectData =
+                projectLine.replaceAll("(?i)(.*<projectBacklog.*?>)(.+?)(</projectBacklog>)", "$2");
             tempBacklog = new Backlog();
             tempBacklog.setLabel(projectData);
             newProject.setBacklog(tempBacklog);
@@ -292,9 +296,9 @@ public class Loading {
           if (skillLine.startsWith("\t\t<skillDescription>")) {
             String descBuilder;
             if (!skillLine.endsWith("</skillDescription>")) {
-               descBuilder = skillLine
-                  .replaceAll("(?i)(.*<skillDescription.*?>)(.+?)", "$2") + "\n";
-              while ((!(skillLine =loadedFile.readLine()).endsWith("</skillDescription>"))) {
+              descBuilder = skillLine
+                                .replaceAll("(?i)(.*<skillDescription.*?>)(.+?)", "$2") + "\n";
+              while ((!(skillLine = loadedFile.readLine()).endsWith("</skillDescription>"))) {
                 descBuilder += skillLine + "\n";
               }
               descBuilder += skillLine.replaceAll("(.+?)(</skillDescription>)", "$1");
@@ -459,7 +463,7 @@ public class Loading {
         if (!releaseLine.endsWith("</releaseDescription>")) {
           descBuilder = releaseLine
                             .replaceAll("(?i)(.*<releaseDescription.*?>)(.+?)", "$2") + "\n";
-          while ((!(releaseLine =loadedFile.readLine()).endsWith("</releaseDescription>"))) {
+          while ((!(releaseLine = loadedFile.readLine()).endsWith("</releaseDescription>"))) {
             descBuilder += releaseLine + "\n";
           }
           descBuilder += releaseLine.replaceAll("(.+?)(</releaseDescription>)", "$1");
@@ -473,7 +477,7 @@ public class Loading {
         if (!releaseLine.endsWith("</releaseNotes>")) {
           descBuilder = releaseLine
                             .replaceAll("(?i)(.*<releaseNotes.*?>)(.+?)", "$2") + "\n";
-          while ((!(releaseLine =loadedFile.readLine()).endsWith("</releaseNotes>"))) {
+          while ((!(releaseLine = loadedFile.readLine()).endsWith("</releaseNotes>"))) {
             descBuilder += releaseLine + "\n";
           }
           descBuilder += releaseLine.replaceAll("(.+?)(</releaseNotes>)", "$1");
@@ -573,7 +577,8 @@ public class Loading {
                                              "$2");
         newBacklog.setLabel(backlogData);
         backlogLine = loadedFile.readLine();
-        backlogData = backlogLine.replaceAll("(?i)(.*<productOwner.*?>)(.+?)(</productOwner>)", "$2");
+        backlogData =
+            backlogLine.replaceAll("(?i)(.*<productOwner.*?>)(.+?)(</productOwner>)", "$2");
         // Syncs with current people objects
         for (Person person : main.getPeople()) {
           if (person.getLabel().equals(backlogData)) {
@@ -585,7 +590,8 @@ public class Loading {
         // Optional data
         while ((!(backlogLine = loadedFile.readLine()).equals("\t</Backlog>"))) {
           if (backlogLine.startsWith("\t\t<backlogName>")) {
-            backlogData = backlogLine.replaceAll("(?i)(.*<backlogName.*?>)(.+?)(</backlogName>)", "$2");
+            backlogData =
+                backlogLine.replaceAll("(?i)(.*<backlogName.*?>)(.+?)(</backlogName>)", "$2");
             newBacklog.setBacklogName(backlogData);
           }
           if (backlogLine.startsWith("\t\t<backlogDescription>")) {
@@ -606,11 +612,14 @@ public class Loading {
             newBacklog.setBacklogDescription(descBuilder);
           }
           // Loads in backlog stories
-            if (backlogLine.startsWith("\t\t<BacklogStories>")) {
+          if (backlogLine.startsWith("\t\t<BacklogStories>")) {
             while ((!(backlogLine = loadedFile.readLine()).equals("\t\t</BacklogStories>"))) {
               if (backlogLine.startsWith("\t\t\t<backlogStory>")) {
-                backlogData = backlogLine.replaceAll("(?i)(.*<backlogStory.*?>)(.+?)(</backlogStory>)", "$2");
-                storySize = loadedFile.readLine().replaceAll("(?i)(.*<storySize.*?>)(.+?)(</storySize>)", "$2");
+                backlogData =
+                    backlogLine.replaceAll("(?i)(.*<backlogStory.*?>)(.+?)(</backlogStory>)", "$2");
+                storySize =
+                    loadedFile.readLine()
+                        .replaceAll("(?i)(.*<storySize.*?>)(.+?)(</storySize>)", "$2");
                 // Sync stories and backlog
                 for (Story story : main.getStories()) {
                   if (story.getLabel().equals(backlogData)) {
@@ -623,7 +632,9 @@ public class Loading {
           }
 
           if (backlogLine.startsWith("\t\t<backlogEstimate>")) {
-            backlogData = backlogLine.replaceAll("(?i)(.*<backlogEstimate.*?>)(.+?)(</backlogEstimate>)", "$2");
+            backlogData =
+                backlogLine
+                    .replaceAll("(?i)(.*<backlogEstimate.*?>)(.+?)(</backlogEstimate>)", "$2");
             for (Estimate estimate : main.getEstimates()) {
               if (backlogData.equals(estimate.getLabel())) {
                 newBacklog.setEstimate(estimate);
@@ -678,12 +689,17 @@ public class Loading {
 
   /**
    * Loads stories from xml into main app
+   *
    * @throws Exception things went wrong in loading. Badly formatted
    */
   private void loadStories() throws Exception {
     Story newStory;
     String storyLine;
     String storyData;
+    Map<String, Person> taskPersonMap = new IdentityHashMap<>();
+    for (Person person : main.getPeople()) {
+      taskPersonMap.put(person.getLabel(), person);
+    }
 
     // Until stories end tag
     while (!(storyLine = loadedFile.readLine()).startsWith("</Stories>")) {
@@ -723,6 +739,19 @@ public class Loading {
               newStory.setImpediments(storyData);
             }
           }
+          if (saveVersion >= 0.5) {
+            if (storyLine.startsWith("\t\t<Tasks>")) {
+              while ((!(storyLine = loadedFile.readLine()).equals("\t\t</Tasks>"))) {
+                Task storyTask;
+                if (storyLine.startsWith("\t\t\t<Task>")) {
+                  storyTask = loadATask(loadedFile, taskPersonMap);
+                  if (storyTask != null) {
+                    newStory.addTask(storyTask);
+                  }
+                }
+              }
+            }
+          }
           if (storyLine.startsWith("\t\t<longName>")) {
             storyData = storyLine.replaceAll("(?i)(.*<longName.*?>)(.+?)(</longName>)", "$2");
             newStory.setStoryName(storyData);
@@ -732,7 +761,7 @@ public class Loading {
             if (!storyLine.endsWith("</description>")) {
               descBuilder = storyLine
                                 .replaceAll("(?i)(.*<description.*?>)(.+?)", "$2") + "\n";
-              while ((!(storyLine =loadedFile.readLine()).endsWith("</description>"))) {
+              while ((!(storyLine = loadedFile.readLine()).endsWith("</description>"))) {
                 descBuilder += storyLine + "\n";
               }
               descBuilder += storyLine.replaceAll("(.+?)(</description>)", "$1");
@@ -786,18 +815,9 @@ public class Loading {
   }
 
   /**
-   * Loads estimates from xml into app. Loads the label and the estimate scale.
-   * format of:
-   * Estimates
-   *   Estimate
-   *     estimateLabel Label of estimate /estimateLabel
-   *     EstimateNames
-   *       size-0 Not Set /size-0
-   *       size-1 Start of actual scale /size-1
-   *       etc.....
-   *     /EstimateNames
-   *   /Estimate
-   * /Estimates
+   * Loads estimates from xml into app. Loads the label and the estimate scale. format of: Estimates
+   * Estimate estimateLabel Label of estimate /estimateLabel EstimateNames size-0 Not Set /size-0
+   * size-1 Start of actual scale /size-1 etc..... /EstimateNames /Estimate /Estimates
    *
    * @throws Exception Something went wrong with reader
    */
@@ -845,6 +865,10 @@ public class Loading {
     String sprintData;
     LocalDate start;
     LocalDate end;
+    Map<String, Person> taskPersonMap = new IdentityHashMap<>();
+    for (Person person : main.getPeople()) {
+      taskPersonMap.put(person.getLabel(), person);
+    }
 
     while (!(sprintLine = loadedFile.readLine()).startsWith("</Sprints>")) {
       if (sprintLine.matches(".*<Sprint>")) {
@@ -864,7 +888,8 @@ public class Loading {
           }
         }
         sprintLine = loadedFile.readLine();
-        sprintData = sprintLine.replaceAll("(?i)(.*<sprintBacklog.*?>)(.+?)(</sprintBacklog>)", "$2");
+        sprintData =
+            sprintLine.replaceAll("(?i)(.*<sprintBacklog.*?>)(.+?)(</sprintBacklog>)", "$2");
         for (Backlog backlog : main.getBacklogs()) {
           if (backlog.getLabel().equals(sprintData)) {
             sprint.setSprintBacklog(backlog); //set backlog
@@ -872,7 +897,8 @@ public class Loading {
           }
         }
         sprintLine = loadedFile.readLine();
-        sprintData = sprintLine.replaceAll("(?i)(.*<sprintProject.*?>)(.+?)(</sprintProject>)", "$2");
+        sprintData =
+            sprintLine.replaceAll("(?i)(.*<sprintProject.*?>)(.+?)(</sprintProject>)", "$2");
 
         for (Project project : main.getProjects()) {
           if (project.getLabel().equals(sprintData)) {
@@ -881,7 +907,8 @@ public class Loading {
           }
         }
         sprintLine = loadedFile.readLine();
-        sprintData = sprintLine.replaceAll("(?i)(.*<sprintRelease.*?>)(.+?)(</sprintRelease>)", "$2");
+        sprintData =
+            sprintLine.replaceAll("(?i)(.*<sprintRelease.*?>)(.+?)(</sprintRelease>)", "$2");
 
         for (Release release : main.getReleases()) {
           if (release.getLabel().equals(sprintData)) {
@@ -914,19 +941,33 @@ public class Loading {
               sprint.setSprintImpediments(sprintData);
             }
           }
+          if (saveVersion >= 0.5) {
+            if (sprintLine.startsWith("\t\t<Tasks>")) {
+              while ((!(sprintLine = loadedFile.readLine()).equals("\t\t</Tasks>"))) {
+                Task sprintTask;
+                if (sprintLine.startsWith("\t\t\t<Task>")) {
+                  sprintTask = loadATask(loadedFile, taskPersonMap);
+                  if (sprintTask != null) {
+                    sprint.addTask(sprintTask);
+                  }
+                }
+              }
+            }
+          }
           if (sprintLine.startsWith("\t\t<sprintDescription>")) {
             String descBuilder;
             if (!sprintLine.endsWith("</sprintDescription>")) {
               descBuilder = sprintLine
                                 .replaceAll("(?i)(.*<sprintDescription.*?>)(.+?)", "$2") + "\n";
-              while ((!(sprintLine =loadedFile.readLine()).endsWith("</sprintDescription>"))) {
+              while ((!(sprintLine = loadedFile.readLine()).endsWith("</sprintDescription>"))) {
                 descBuilder += sprintLine + "\n";
               }
               descBuilder += sprintLine.replaceAll("(.+?)(</sprintDescription>)", "$1");
             } else {
               descBuilder =
                   sprintLine
-                      .replaceAll("(?i)(.*<sprintDescription.*?>)(.+?)(</sprintDescription>)", "$2");
+                      .replaceAll("(?i)(.*<sprintDescription.*?>)(.+?)(</sprintDescription>)",
+                                  "$2");
             }
 
             sprint.setSprintDescription(descBuilder);
@@ -934,13 +975,13 @@ public class Loading {
 
           if (sprintLine.startsWith("\t\t<sprintStories>")) {
             while ((!(sprintLine = loadedFile.readLine()).equals("\t\t</sprintStories>"))) {
-                sprintData = sprintLine.replaceAll("(?i)(.*<Story.*?>)(.+?)(</Story>)", "$2");
-                // Sync stories and sprint
+              sprintData = sprintLine.replaceAll("(?i)(.*<Story.*?>)(.+?)(</Story>)", "$2");
+              // Sync stories and sprint
 
-                for (Story story : main.getStories()) {
-                  if (story.getLabel().equals(sprintData)) {
-                    sprint.addStory(story);
-                    break;
+              for (Story story : main.getStories()) {
+                if (story.getLabel().equals(sprintData)) {
+                  sprint.addStory(story);
+                  break;
 
                 }
               }
@@ -953,6 +994,73 @@ public class Loading {
       }
     }
   }
+
+  /**
+   * Loads a single task from the save file. Must be called when BufferedReader object
+   * is on the Task tag
+   * @param loadedFile The BufferedReader
+   * @param taskPersonMap A map of Label to Person for people in mainApp
+   * @return a loaded Task
+   * @throws Exception Something went wrong
+   */
+  public Task loadATask(BufferedReader loadedFile, Map<String, Person> taskPersonMap) throws Exception {
+    Task storyTask;
+    String storyLine;
+    String storyData;
+    storyTask = new Task();
+    storyLine = loadedFile.readLine();
+    storyData =
+        storyLine.replaceAll("(?i)(.*<taskLabel.*?>)(.+?)(</taskLabel>)", "$2");
+    storyTask.setLabel(storyData);
+    storyLine = loadedFile.readLine();
+    storyData = storyLine.replaceAll(
+        "(?i)(.*<taskStatus.*?>)(.+?)(</taskStatus>)", "$2");
+    storyTask.setStatus(Status.getStatusEnum(storyData));
+    while (!(storyLine = loadedFile.readLine()).startsWith("\t\t\t</Task>")) {
+      // Description builder
+      if (storyLine.startsWith("\t\t\t\t<description>")) {
+        String descBuilder;
+        if (!storyLine.endsWith("</description>")) {
+          descBuilder = storyLine
+                            .replaceAll("(?i)(.*<description.*?>)(.+?)", "$2") + "\n";
+          while ((!(storyLine = loadedFile.readLine()).endsWith("</description>"))) {
+            descBuilder += storyLine + "\n";
+          }
+          descBuilder += storyLine.replaceAll("(.+?)(</description>)", "$1");
+        } else {
+          descBuilder =
+              storyLine
+                  .replaceAll("(?i)(.*<description.*?>)(.+?)(</description>)", "$2");
+        }
+        storyTask.setTaskDescription(descBuilder);
+      }
+      if (storyLine.startsWith("\t\t\t\t<taskEstimate>")) {
+        storyData =
+            storyLine.replaceAll("(?i)(.*<taskEstimate.*?>)(.+?)(</taskEstimate>)", "$2");
+        storyTask.setTaskEstimation(Integer.parseInt(storyData));
+      }
+      if (storyLine.startsWith("\t\t\t\t<TaskPeople>")) {
+        while ((!(storyLine = loadedFile.readLine()).endsWith("</TaskPeople>"))) {
+          storyData = storyLine.replaceAll("(?i)(.*<person.*?>)(.+?)(</person>)", "$2");
+          storyTask.addTaskPerson(taskPersonMap.get(storyData));
+        }
+      }
+      if (storyLine.startsWith("\t\t\t\t<TaskEffort>")) {
+        String effortData;
+        while ((!(storyLine = loadedFile.readLine()).endsWith("</TaskEffort>"))) {
+          storyData = storyLine.replaceAll("(?i)(.*<person.*?>)(.+?)(</person>)", "$2");
+          storyLine = loadedFile.readLine();
+          effortData = storyLine.replaceAll("(?i)(.*<effort.*?>)(.+?)(</effort>)",
+                                            "$2");
+          storyTask
+              .updateSpentEffort(taskPersonMap.get(storyData), Integer.parseInt(effortData));
+        }
+      }
+    }
+    return storyTask;
+  }
+
+
   /**
    * A function to sync the temp backlog and real backlogs
    */

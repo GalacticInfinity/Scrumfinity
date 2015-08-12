@@ -38,12 +38,7 @@
                   <Font size="15.0" />
                </font>
             </Label>
-            <TextField fx:id="estimateField" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="60.0" />
-            <Label text="hrs">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
+            <TextField fx:id="estimateField" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="75.0" promptText="e.g. 1h30m" />
          </children>
       </HBox>
         <HBox alignment="CENTER_LEFT" prefHeight="39.0" prefWidth="429.0" spacing="10.0">

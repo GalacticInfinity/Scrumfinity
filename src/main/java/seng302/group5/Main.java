@@ -19,6 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -42,6 +43,7 @@ import seng302.group5.controller.dialogControllers.StoryDialogController;
 import seng302.group5.controller.dialogControllers.TeamDialogController;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.controller.dialogControllers.SkillsDialogController;
+import seng302.group5.controller.mainAppControllers.ToolBarController;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Estimate;
@@ -66,10 +68,9 @@ import seng302.group5.model.util.RevertHandler;
  */
 public class Main extends Application {
 
-
-
   private Stage primaryStage;
   private BorderPane rootLayout;
+  private VBox topVBox;
   private BorderPane loginLayout;
   private Scene mainScene;
   private Scene loginScene;
@@ -120,6 +121,7 @@ public class Main extends Application {
     // Constructs the application
     initRootLayout();
     showMenuBar();
+    showToolBar();
     showListMainPane();
 
     //Set predetermined roles and skills
@@ -218,6 +220,7 @@ public class Main extends Application {
       loader.setLocation(Main.class.getResource("/Main.fxml"));
       rootLayout = loader.load();
 
+      topVBox = new VBox();
       mainScene = new Scene(rootLayout);
 /*      primaryStage.setScene(mainScene);
       primaryStage.show();*/
@@ -242,7 +245,26 @@ public class Main extends Application {
       controller.setMainApp(this);
       MBC = controller;
 
-      rootLayout.setTop(menuBar);
+      topVBox.getChildren().add(menuBar);
+      rootLayout.setTop(topVBox);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * Shows the tool bar inside of the ListMainPane.
+   */
+  public void showToolBar() {
+    try {
+      FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(ToolBarController.class.getResource("/ToolBar.fxml"));
+      ToolBar toolBar = loader.load();
+
+      ToolBarController controller = loader.getController();
+      controller.setMainApp(this);
+
+      topVBox.getChildren().add(toolBar);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -747,7 +769,7 @@ public class Main extends Application {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/SprintDialog.fxml"));
-      VBox sprintDialogLayout = loader.load();
+      HBox sprintDialogLayout = loader.load();
 
       SprintDialogController controller = loader.getController();
       Scene sprintDialogScene = new Scene(sprintDialogLayout);
@@ -787,7 +809,7 @@ public class Main extends Application {
    * @return the UndoRedo instance representing a task edit (null in all other cases)
    */
   public UndoRedo showTaskDialog(Collection<Task> taskCollection, Task task, Team team,
-                             CreateOrEdit createOrEdit, Stage stage) {
+                                 CreateOrEdit createOrEdit, Stage stage) {
     UndoRedo taskEditUndoRedo = null;
     try {
       FXMLLoader loader = new FXMLLoader();

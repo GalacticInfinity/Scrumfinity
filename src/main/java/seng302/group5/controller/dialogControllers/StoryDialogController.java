@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -397,12 +398,30 @@ public class StoryDialogController {
    */
   @FXML
   protected void btnCancelClick(ActionEvent event) {
-    if (Settings.correctList(story) && createOrEdit == CreateOrEdit.EDIT) {
-      mainApp.refreshList(story);
+    Alert alert = null;
+    if ((createOrEdit == CreateOrEdit.CREATE && !tasks.isEmpty()) ||
+        (createOrEdit == CreateOrEdit.EDIT && (!tasks.equals(story.getTasks()) ||
+                                               !taskEditsUndoRedo.getUndoRedos().isEmpty()))) {
+
+      alert = new Alert(Alert.AlertType.CONFIRMATION);
+      alert.setTitle("Changes have been made to the story's tasks");
+      alert.setHeaderText(null);
+      String message = "By cancelling this dialog you will lose all changes you have made "
+                       + "to tasks since this story dialog was opened. Are you sure you wish "
+                       + "to continue?";
+      alert.getDialogPane().setPrefHeight(120);
+      alert.setContentText(message);
+      //checks response
+      alert.showAndWait();
     }
-    // undo all editing of existing tasks made within this dialog
-    mainApp.quickUndo(taskEditsUndoRedo);
-    thisStage.close();
+    if (alert == null || alert.getResult() == ButtonType.OK) {
+      if (Settings.correctList(story) && createOrEdit == CreateOrEdit.EDIT) {
+        mainApp.refreshList(story);
+      }
+      // undo all editing of existing tasks made within this dialog
+      mainApp.quickUndo(taskEditsUndoRedo);
+      thisStage.close();
+    }
   }
 
   /**
