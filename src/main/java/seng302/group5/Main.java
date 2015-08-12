@@ -1670,4 +1670,8 @@ public class Main extends Application {
   public void setMainScene() {
     this.primaryStage.setScene(mainScene);
   }
+
+  public Stage getStage() {
+    return this.primaryStage;
+  }
 }

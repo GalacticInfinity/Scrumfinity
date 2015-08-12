@@ -64,14 +64,14 @@
                            <children>
                               <HBox layoutX="-8.0" prefHeight="317.0" prefWidth="596.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                                  <children>
-                                    <ListView fx:id="notStarted" prefHeight="320.0" prefWidth="150.0">
+                                    <ListView fx:id="notStartedList" prefHeight="320.0" prefWidth="150.0">
                                        <HBox.margin>
                                           <Insets />
                                        </HBox.margin>
                                     </ListView>
-                                    <ListView fx:id="inProgress" layoutX="10.0" layoutY="10.0" prefHeight="320.0" prefWidth="150.0" />
-                                    <ListView fx:id="verify" layoutX="160.0" layoutY="10.0" prefHeight="320.0" prefWidth="150.0" />
-                                    <ListView fx:id="done" layoutX="310.0" layoutY="10.0" prefHeight="320.0" prefWidth="150.0" />
+                                    <ListView fx:id="inProgressList" layoutX="10.0" layoutY="10.0" prefHeight="320.0" prefWidth="150.0" />
+                                    <ListView fx:id="verifyList" layoutX="160.0" layoutY="10.0" prefHeight="320.0" prefWidth="150.0" />
+                                    <ListView fx:id="doneList" layoutX="310.0" layoutY="10.0" prefHeight="320.0" prefWidth="150.0" />
                                  </children>
                               </HBox>
                            </children>
