@@ -78,6 +78,9 @@ public class Loading {
       if (saveVersion >= 0.3) {
         loadSprints();
       }
+      if (saveVersion >= 0.5) {
+        syncTaskPeople();
+      }
     } catch (Exception e) {
       Alert alert = new Alert(Alert.AlertType.ERROR);
       alert.setTitle("Loading Error");
@@ -696,7 +699,7 @@ public class Loading {
     Story newStory;
     String storyLine;
     String storyData;
-    Map<String, Person> taskPersonMap = new IdentityHashMap<>();
+    Map<String, Person> taskPersonMap = new HashMap<>();
     for (Person person : main.getPeople()) {
       taskPersonMap.put(person.getLabel(), person);
     }
@@ -865,7 +868,7 @@ public class Loading {
     String sprintData;
     LocalDate start;
     LocalDate end;
-    Map<String, Person> taskPersonMap = new IdentityHashMap<>();
+    Map<String, Person> taskPersonMap = new HashMap<>();
     for (Person person : main.getPeople()) {
       taskPersonMap.put(person.getLabel(), person);
     }
@@ -1018,19 +1021,19 @@ public class Loading {
     storyTask.setStatus(Status.getStatusEnum(storyData));
     while (!(storyLine = loadedFile.readLine()).startsWith("\t\t\t</Task>")) {
       // Description builder
-      if (storyLine.startsWith("\t\t\t\t<description>")) {
+      if (storyLine.startsWith("\t\t\t\t<taskDescription>")) {
         String descBuilder;
-        if (!storyLine.endsWith("</description>")) {
+        if (!storyLine.endsWith("</taskDescription>")) {
           descBuilder = storyLine
-                            .replaceAll("(?i)(.*<description.*?>)(.+?)", "$2") + "\n";
-          while ((!(storyLine = loadedFile.readLine()).endsWith("</description>"))) {
+                            .replaceAll("(?i)(.*<taskDescription.*?>)(.+?)", "$2") + "\n";
+          while ((!(storyLine = loadedFile.readLine()).endsWith("</taskDescription>"))) {
             descBuilder += storyLine + "\n";
           }
-          descBuilder += storyLine.replaceAll("(.+?)(</description>)", "$1");
+          descBuilder += storyLine.replaceAll("(.+?)(</taskDescription>)", "$1");
         } else {
           descBuilder =
               storyLine
-                  .replaceAll("(?i)(.*<description.*?>)(.+?)(</description>)", "$2");
+                  .replaceAll("(?i)(.*<taskDescription.*?>)(.+?)(</taskDescription>)", "$2");
         }
         storyTask.setTaskDescription(descBuilder);
       }
@@ -1105,4 +1108,53 @@ public class Loading {
     }
   }
 
+  /**
+   * Sync the task people and main app people.
+   */
+  private void syncTaskPeople() {
+    Map<String, Person> personMap = new HashMap<>();
+    for (Person person : main.getPeople()) {
+      personMap.put(person.getLabel(), person);
+    }
+
+    for (Story story : main.getStories()) {
+      if (!story.getTasks().isEmpty()) {
+        for (Task task : story.getTasks()) {
+          if (!task.getTaskPeople().isEmpty()) {
+            List<Person> newPersList = new ArrayList<>();
+            Map<Person, Integer> newPersMap = new HashMap<>();
+            for (Person person : task.getTaskPeople()) {
+              newPersList.add(personMap.get(person.getLabel()));
+            }
+            for (Map.Entry<Person, Integer> entry : task.getSpentEffort().entrySet()) {
+              newPersMap.put(entry.getKey(), entry.getValue());
+            }
+            task.removeAllTaskPeople();
+            task.addAllTaskPeople(newPersList);
+            task.updateSpentEffort(newPersMap);
+          }
+        }
+      }
+    }
+
+    for (Sprint sprint : main.getSprints()) {
+      if (!sprint.getTasks().isEmpty()) {
+        for (Task task : sprint.getTasks()) {
+          if (!task.getTaskPeople().isEmpty()) {
+            List<Person> newPersList = new ArrayList<>();
+            Map<Person, Integer> newPersMap = new HashMap<>();
+            for (Person person : task.getTaskPeople()) {
+              newPersList.add(personMap.get(person.getLabel()));
+            }
+            for (Map.Entry<Person, Integer> entry : task.getSpentEffort().entrySet()) {
+              newPersMap.put(entry.getKey(), entry.getValue());
+            }
+            task.removeAllTaskPeople();
+            task.addAllTaskPeople(newPersList);
+            task.updateSpentEffort(newPersMap);
+          }
+        }
+      }
+    }
+  }
 }
