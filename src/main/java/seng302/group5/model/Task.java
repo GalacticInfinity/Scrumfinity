@@ -161,6 +161,7 @@ public class Task implements AgileItem, Comparable<Task> {
       this.description = clone.getTaskDescription();
       this.estimation = clone.getTaskEstimation();
       this.status = clone.getStatus();
+      removeAllTaskPeople();
       for (Person person : clone.getTaskPeople()) {
         this.assignedPeople.add(person);
       }
