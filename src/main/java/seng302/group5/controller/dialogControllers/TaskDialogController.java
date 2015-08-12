@@ -205,7 +205,7 @@ public class TaskDialogController {
 
     String taskLabel = "";
     String taskDescription = descriptionField.getText().trim();
-    int taskEstimateMinutes = 0;
+    int taskEstimateMinutes;
     Status taskStatus = Status.getStatusEnum(statusComboBox.getValue());
 
     // todo more parsing
@@ -216,8 +216,11 @@ public class TaskDialogController {
       errors.append(String.format("%s\n", e.getMessage()));
     }
 
-    // todo parse minutes
-    taskEstimateMinutes = 120;
+    taskEstimateMinutes = TimeFormat.parseMinutes(estimateField.getText());
+    if (taskEstimateMinutes < 0) {
+      noErrors++;
+      errors.append(String.format("%s\n", "Invalid estimate time format."));
+    }
 
     // Display all errors if they exist
     if (noErrors > 0) {
