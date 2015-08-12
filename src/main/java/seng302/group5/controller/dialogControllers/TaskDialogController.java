@@ -1,6 +1,8 @@
 package seng302.group5.controller.dialogControllers;
 
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -97,7 +99,7 @@ public class TaskDialogController {
       estimateField.setText(TimeFormat.parseTime(task.getTaskEstimation()));
       statusComboBox.setValue(Status.getStatusString(task.getStatus()));
 
-//      btnConfirm.setDisable(true); // todo checkButtonDisabled()
+      btnConfirm.setDisable(true);
     }
     this.createOrEdit = createOrEdit;
 
@@ -110,8 +112,46 @@ public class TaskDialogController {
       } else {
         labelField.setStyle("-fx-text-inner-color: black;");
       }
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
     });
+
+    descriptionField.textProperty().addListener((observable, oldValue, newValue) -> {
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+
+    estimateField.textProperty().addListener((observable, oldValue, newValue) -> {
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+
+    statusComboBox.getSelectionModel().selectedItemProperty().addListener(
+        (observable, oldValue, newValue) -> {
+          if (createOrEdit == CreateOrEdit.EDIT) {
+            checkButtonDisabled();
+          }
+        }
+    );
     // TODO finish
+  }
+
+  /**
+   * Checks if there are any changed fields and disables or enables the button accordingly
+   */
+  private void checkButtonDisabled() {
+    if (labelField.getText().equals(task.getLabel()) &&
+        descriptionField.getText().equals(task.getTaskDescription()) &&
+        TimeFormat.parseMinutes(estimateField.getText()) == task.getTaskEstimation() &&
+        Status.getStatusEnum(statusComboBox.getValue()).equals(task.getStatus()) &&
+        allocatedPeopleList.getItems().equals(task.getTaskPeople())) {
+      btnConfirm.setDisable(true);
+    } else {
+      btnConfirm.setDisable(false);
+    }
   }
 
   /**
@@ -131,8 +171,8 @@ public class TaskDialogController {
       }
     }
 
-    availablePeopleList.setItems(availablePeople);
-    allocatedPeopleList.setItems(allocatedPeople);
+    availablePeopleList.setItems(availablePeople.sorted(Comparator.<Person>naturalOrder()));
+    allocatedPeopleList.setItems(allocatedPeople.sorted(Comparator.<Person>naturalOrder()));
 
     ObservableList<String> availableStatuses = FXCollections.observableArrayList();
     for (Status status : Status.values()) {
@@ -156,9 +196,9 @@ public class TaskDialogController {
       availablePeople.remove(selectedPerson);
 
       allocatedPeopleList.getSelectionModel().select(selectedPerson);
-//      if (createOrEdit == CreateOrEdit.EDIT) { // TODO
-//        checkButtonDisabled();
-//      }
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
     }
   }
 
@@ -175,9 +215,9 @@ public class TaskDialogController {
       allocatedPeople.remove(selectedPerson);
 
       availablePeopleList.getSelectionModel().select(selectedPerson);
-//      if (createOrEdit == CreateOrEdit.EDIT) { // TODO
-//        checkButtonDisabled();
-//      }
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
     }
   }
 
@@ -219,7 +259,7 @@ public class TaskDialogController {
     taskEstimateMinutes = TimeFormat.parseMinutes(estimateField.getText());
     if (taskEstimateMinutes < 0) {
       noErrors++;
-      errors.append(String.format("%s\n", "Invalid estimate time format."));
+      errors.append(String.format("%s\n", "Invalid estimate time format (e.g. 1h30m)."));
     }
 
     // Display all errors if they exist
@@ -234,9 +274,10 @@ public class TaskDialogController {
       alert.setContentText(errors.toString());
       alert.showAndWait();
     } else {
+      List<Person> allocatedPeopleSorted = allocatedPeopleList.getItems();
       if (createOrEdit == CreateOrEdit.CREATE) {
-        task =
-            new Task(taskLabel, taskDescription, taskEstimateMinutes, taskStatus, allocatedPeople);
+        task = new Task(taskLabel, taskDescription, taskEstimateMinutes, taskStatus,
+                        allocatedPeopleSorted);
         // todo set logged effort of all people
         taskCollection.add(task);
       } else if (createOrEdit == CreateOrEdit.EDIT) {
@@ -245,7 +286,7 @@ public class TaskDialogController {
         task.setTaskEstimation(taskEstimateMinutes);
         task.setStatus(taskStatus);
         task.removeAllTaskPeople();
-        task.addAllTaskPeople(allocatedPeople);
+        task.addAllTaskPeople(allocatedPeopleSorted);
         // todo set logged effort of all people
         generateEditUndoRedoObject();
       }
