@@ -14,7 +14,7 @@ public class TimeFormat {
    * @param inputString The time formatted string to parse.
    * @return The time in minutes, -1 if input is invalid.
    */
-  public static int parseTime(String inputString) {
+  public static int parseMinutes(String inputString) {
     String timeRegex = "([0-9]+h)?([0-9]+m)?";
     inputString = inputString.trim();
     int hours = 0;
@@ -36,6 +36,29 @@ public class TimeFormat {
       result = hours * 60 + minutes;
     }
 
+    return result;
+  }
+
+  /**
+   * Get the time formatted string from an integer number of minutes. For zero it will return
+   * 0m and for negative numbers it will be an empty string.
+   *
+   * @return Time formatted string.
+   */
+  public static String parseTime(int totalMinutes) {
+    int hours = totalMinutes / 60;
+    int minutes = totalMinutes % 60;
+    String result = "";
+    if (totalMinutes == 0) {
+      result = "0m";
+    } else {
+      if (hours > 0) {
+        result += hours + "h";
+      }
+      if (minutes > 0) {
+        result += minutes + "m";
+      }
+    }
     return result;
   }
 }
