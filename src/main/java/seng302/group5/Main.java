@@ -809,7 +809,7 @@ public class Main extends Application {
    * @return the UndoRedo instance representing a task edit (null in all other cases)
    */
   public UndoRedo showTaskDialog(Collection<Task> taskCollection, Task task, Team team,
-                             CreateOrEdit createOrEdit, Stage stage) {
+                                 CreateOrEdit createOrEdit, Stage stage) {
     UndoRedo taskEditUndoRedo = null;
     try {
       FXMLLoader loader = new FXMLLoader();
@@ -1691,5 +1691,9 @@ public class Main extends Application {
 
   public void setMainScene() {
     this.primaryStage.setScene(mainScene);
+  }
+
+  public Stage getStage() {
+    return this.primaryStage;
   }
 }

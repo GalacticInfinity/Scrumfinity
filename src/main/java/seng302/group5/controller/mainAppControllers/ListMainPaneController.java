@@ -33,6 +33,7 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.dialogControllers.ScrumBoardController;
 import seng302.group5.model.AgileHistory;
@@ -1201,7 +1202,7 @@ public class ListMainPaneController {
   }
 
   public void initScrumBoard() {
-    scrumBoardController.setupController(mainApp);
+    scrumBoardController.setupController(mainApp, mainApp.getStage());
   }
 
   /**
