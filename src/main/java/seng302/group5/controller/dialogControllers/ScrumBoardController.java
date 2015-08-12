@@ -1,6 +1,5 @@
 package seng302.group5.controller.dialogControllers;
 
-import java.time.LocalDate;
 import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,13 +11,11 @@ import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
-import seng302.group5.model.AgileHistory;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Sprint;
 import seng302.group5.model.Status;
 import seng302.group5.model.Story;
 import seng302.group5.model.Task;
-import seng302.group5.model.Team;
 
 /**
  * The controller class for the scrum board dialog. Tasks can be viewed from this dialog by
@@ -135,13 +132,12 @@ public class ScrumBoardController {
     public ListCell(ListView<Task> taskListView) {
       super();
 
-      ListView<Task> thisList = taskListView;
       // double click for editing
       this.setOnMouseClicked(click -> {
         if (click.getClickCount() == 2 &&
             click.getButton() == MouseButton.PRIMARY &&
             !isEmpty()) {
-          Task selectedTask = thisList.getSelectionModel().getSelectedItem();
+          Task selectedTask = taskListView.getSelectionModel().getSelectedItem();
           mainApp.showTaskDialog(storyCombo.getValue().getTasks(), selectedTask,
                                  sprintCombo.getValue().getSprintTeam(),
                                  CreateOrEdit.EDIT, stage);
