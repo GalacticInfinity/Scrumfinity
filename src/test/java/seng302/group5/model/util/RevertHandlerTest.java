@@ -800,31 +800,69 @@ public class RevertHandlerTest {
 
   @Test
   public void testTaskRevert() {
-    Person person1 = new Person();
-    Person person2 = new Person();
-    List<Person> personList = new ArrayList<>();
-    personList.add(person1);
-    personList.add(person2);
-    Sprint sprint1 = new Sprint();
+    Project proj1 = new Project("p1", "proj1", "its a project");
+    Person pers1 = new Person();
+    pers1.setLabel("pers1");
+    Estimate e1 = new Estimate("test est", Arrays.asList("0", "1", "2", "3"));
+    Backlog b1 = new Backlog("b1", "back1", "Its a backlog", pers1, e1);
+    proj1.setBacklog(b1);
 
-    Story story1 = new Story();
+    Story s1 = new Story("s1", "story1", "its a story", pers1);
+    Story s2 = new Story("s2", "story2", "its a story", pers1);
+    Story s3 = new Story("s3", "story3", "its a story", pers1);
+    Story s4 = new Story("s4", "story4", "its a story", pers1);
 
-    Task task1 = new Task("Label", "desc", 2, null, personList);
-    sprint1.addTask(task1);
-    story1.addTask(task1);
+    b1.addStory(s1, 3);
+    b1.addStory(s2, 2);
+    b1.addStory(s3, 0);
+    b1.addStory(s4, 2);
 
-    assertSame(person1, sprint1.getTasks().get(0).getTaskPeople().get(0));
-    assertSame(person2, sprint1.getTasks().get(0).getTaskPeople().get(1));
+    Team team1 = new Team("t1", "its a team");
+    team1.addTeamMember(pers1);
+    Release r1 = new Release("r1", "its a release", "to be released", LocalDate.now(), proj1);
+    Sprint sprint =
+        new Sprint("s1", "sprint1", "its a sprint", b1, proj1, team1, r1, LocalDate.of(1994, 3, 20),
+                   LocalDate.now(), Arrays.asList(s1, s2, s3, s4));
 
-    assertSame(person1, story1.getTasks().get(0).getTaskPeople().get(0));
-    assertSame(person2, story1.getTasks().get(0).getTaskPeople().get(1));
+    List<Person> allocatedPeople = new ArrayList<>();
+    allocatedPeople.add(pers1);
+    Task task1 = new Task("Task Label", "descr", 20, null, allocatedPeople);
+    task1.updateSpentEffort(pers1, 67);
+    Task task2 = new Task("Task sprint", "descr", 20, null, allocatedPeople);
+    task2.updateSpentEffort(pers1, 9001);
+    s1.addTask(task1);
+    sprint.addTask(task2);
+
+    mainApp.addProject(proj1);
+    mainApp.addPerson(pers1);
+    mainApp.addEstimate(e1);
+    mainApp.addBacklog(b1);
+    mainApp.addStory(s1); mainApp.addStory(s2); mainApp.addStory(s3); mainApp.addStory(s4);
+    mainApp.addTeam(team1);
+    mainApp.addRelease(r1);
+    mainApp.addSprint(sprint);
+    mainApp.setLastSaved();
+
+    task1.setLabel("HUEHUHFUEHIVUHSIDUH");
+    task1.setTaskDescription("HUEHUHFUEHIVUHSIDUH");
+    task1.setTaskEstimation(9001);
+    task1.removeAllTaskPeople();
+    task2.setLabel("HUEHUHFUEHIVUHSIDUH");
+    task2.setTaskDescription("HUEHUHFUEHIVUHSIDUH");
+    task2.setTaskEstimation(420);
+    task2.removeAllTaskPeople();
 
     mainApp.revert();
 
-    assertSame(person1, sprint1.getTasks().get(0).getTaskPeople().get(0));
-    assertSame(person2, sprint1.getTasks().get(0).getTaskPeople().get(1));
+    Person revPerson = mainApp.getPeople().get(0);
+    Story revStory = mainApp.getStories().get(0);
+    Sprint revSprint = mainApp.getSprints().get(0);
+    Task revTask1 = revStory.getTasks().get(0);
+    Task revTask2 = revSprint.getTasks().get(0);
 
-    assertSame(person1, story1.getTasks().get(0).getTaskPeople().get(0));
-    assertSame(person2, story1.getTasks().get(0).getTaskPeople().get(1));
+    assertSame(revPerson, revTask1.getTaskPeople().get(0));
+    assertSame(revPerson, revTask2.getTaskPeople().get(0));
+    assertEquals((long) 67, (long) revTask1.getSpentEffort().get(revPerson));
+    assertEquals((long) 9001, (long) revTask2.getSpentEffort().get(revPerson));
   }
 }

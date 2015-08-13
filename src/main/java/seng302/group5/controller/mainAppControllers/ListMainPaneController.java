@@ -1201,8 +1201,15 @@ public class ListMainPaneController {
     refreshList(selectedItem);
   }
 
+  /**
+   * Initialize the scrum board when the main application start.
+   */
   public void initScrumBoard() {
     scrumBoardController.setupController(mainApp, mainApp.getStage());
+  }
+
+  public ScrumBoardController getScrumBoardController() {
+    return scrumBoardController;
   }
 
   /**
