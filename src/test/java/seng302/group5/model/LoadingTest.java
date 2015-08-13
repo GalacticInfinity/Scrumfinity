@@ -1011,4 +1011,22 @@ public class LoadingTest {
     assertSame(loadedMain.getPeople().get(0),
                storyOne.getTasks().get(0).getTaskPeople().get(0));
   }
+
+  @Test
+  public void testStoryImpedimentsLoading() {
+    createStories();
+    story1.setImpediments("Imped1");
+    story2.setImpediments("Impeedi, dos");
+    saving = new Saving(savedMain);
+    File file = new File(System.getProperty("user.dir")
+                         + File.separator
+                         + "StorySave.xml");
+    saving.saveData(file);
+
+    loading = new Loading(loadedMain);
+    loading.loadFile(file);
+
+    assertEquals("Impedi1", loadedMain.getStories().get(0).getImpediments());
+    assertEquals("Impeedi, dos", loadedMain.getStories().get(1).getImpediments());
+  }
 }

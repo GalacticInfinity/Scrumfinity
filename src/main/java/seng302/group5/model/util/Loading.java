@@ -732,6 +732,11 @@ public class Loading {
             newStory.setStoryState(false);
           }
         }
+        if (saveVersion >= 0.5) {
+          storyLine = loadedFile.readLine();
+          storyData = storyLine.replaceAll("(?i)(.*<status.*?>)(.+?)(</status>)", "$2");
+          newStory.setStatus(Status.getStatusEnum(storyData));
+        }
 
         // Non-mandatory fields
         while ((!(storyLine = loadedFile.readLine()).matches(".*</Story>"))) {
