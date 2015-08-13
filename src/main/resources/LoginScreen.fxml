@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.mainAppControllers.LoginController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="500.0" minWidth="820.0" prefHeight="500.0" prefWidth="820.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.mainAppControllers.LoginController">
    <center>
       <VBox alignment="BASELINE_CENTER" prefHeight="400.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
@@ -14,6 +14,9 @@
                <font>
                   <Font size="33.0" />
                </font>
+               <VBox.margin>
+                  <Insets top="60.0" />
+               </VBox.margin>
             </Label>
             <Label text="Enter an organisation name">
                <VBox.margin>

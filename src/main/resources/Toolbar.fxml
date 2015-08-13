@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
@@ -16,7 +17,10 @@
                   <Image url="toolbar_save.png" />
                </image>
             </ImageView>
-         </graphic></Button>
+         </graphic>
+         <tooltip>
+            <Tooltip text="Save" />
+         </tooltip></Button>
       <Button fx:id="saveAsButton" mnemonicParsing="false" onAction="#btnSaveAsClick">
          <graphic>
             <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
@@ -24,7 +28,10 @@
                   <Image url="toolbar_saveas.png" />
                </image>
             </ImageView>
-         </graphic></Button>
+         </graphic>
+         <tooltip>
+            <Tooltip text="Save As" />
+         </tooltip></Button>
       <Button fx:id="loadButton" mnemonicParsing="false" onAction="#btnLoadClick">
          <graphic>
             <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
@@ -32,7 +39,10 @@
                   <Image url="toolbar_load.png" />
                </image>
             </ImageView>
-         </graphic></Button>
+         </graphic>
+         <tooltip>
+            <Tooltip text="Load" />
+         </tooltip></Button>
       <Separator orientation="VERTICAL" />
       <Button fx:id="undoButton" mnemonicParsing="false" onAction="#btnUndoClick">
          <graphic>
@@ -41,7 +51,10 @@
                   <Image url="toolbar_undo.png" />
                </image>
             </ImageView>
-         </graphic></Button>
+         </graphic>
+         <tooltip>
+            <Tooltip text="Undo" />
+         </tooltip></Button>
       <Button fx:id="redoButton" mnemonicParsing="false" onAction="#btnRedoClick">
          <graphic>
             <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
@@ -49,7 +62,10 @@
                   <Image url="toolbar_redo.png" />
                </image>
             </ImageView>
-         </graphic></Button>
+         </graphic>
+         <tooltip>
+            <Tooltip text="Redo" />
+         </tooltip></Button>
       <Separator orientation="VERTICAL" />
       <Button fx:id="editButton" mnemonicParsing="false" onAction="#btnEditClick">
          <graphic>
@@ -58,7 +74,10 @@
                   <Image url="toolbar_edit.png" />
                </image>
             </ImageView>
-         </graphic></Button>
+         </graphic>
+         <tooltip>
+            <Tooltip text="Edit Item" />
+         </tooltip></Button>
       <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#btnDeleteClick">
          <graphic>
             <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
@@ -66,7 +85,10 @@
                   <Image url="toolbar_delete.png" />
                </image>
             </ImageView>
-         </graphic></Button>
+         </graphic>
+         <tooltip>
+            <Tooltip text="Delete Item" />
+         </tooltip></Button>
       <Separator orientation="VERTICAL" />
       <Button fx:id="dependenciesButton" mnemonicParsing="false" onAction="#btnDependenciesClick">
          <graphic>
@@ -75,6 +97,9 @@
                   <Image url="toolbar_dependencies.png" />
                </image>
             </ImageView>
-         </graphic></Button>
+         </graphic>
+         <tooltip>
+            <Tooltip text="Story Dependencies" />
+         </tooltip></Button>
   </items>
 </ToolBar>
