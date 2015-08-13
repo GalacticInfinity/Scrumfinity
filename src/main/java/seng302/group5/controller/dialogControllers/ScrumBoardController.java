@@ -23,6 +23,8 @@ import seng302.group5.model.Sprint;
 import seng302.group5.model.Status;
 import seng302.group5.model.Story;
 import seng302.group5.model.Task;
+import seng302.group5.model.undoredo.Action;
+import seng302.group5.model.undoredo.UndoRedoObject;
 
 
 /**
@@ -46,6 +48,10 @@ public class ScrumBoardController {
   private Main mainApp;
   private Stage stage;
 
+  private UndoRedoObject undoRedoObject;
+  private Task task;
+  private Task lastTask;
+
   private ObservableList<Sprint> availableSprints;
   private ObservableList<Story> availableStories;
   private ObservableList<Task> notStartedTasks;
@@ -61,7 +67,9 @@ public class ScrumBoardController {
   public void setupController(Main mainApp, Stage stage) {
     this.mainApp = mainApp;
     this.stage = stage;
-
+    task = new Task();
+    lastTask = new Task();
+    undoRedoObject = new UndoRedoObject();
     initialiseLists();
     sprintCombo.setDisable(true);
     storyCombo.setDisable(true);
@@ -69,6 +77,15 @@ public class ScrumBoardController {
     setupListView();
   }
 
+  /**
+   * Get the UndoRedoObject representing the editing of the task. Use this as a return value of
+   * the dialog.
+   *
+   * @return The UndoRedoObject representing the successful task edit.
+   */
+  public UndoRedoObject getUndoRedoObject() {
+    return undoRedoObject;
+  }
   /**
    * Initialises the models lists and populates these with values from the main application,
    * such as available backlogs, sprints and stories. These values
@@ -125,6 +142,7 @@ public class ScrumBoardController {
     );
   }
 
+
   /**
    * Sets the custom behaviour for all four tasks ListView.
    */
@@ -141,6 +159,31 @@ public class ScrumBoardController {
    */
   private class ListCell extends TextFieldListCell<Task> {
     private String state;
+
+    /**
+     * rate an UndoRedoObject to represent a task edit action and store it globally. This is so
+     * a cancel in a dialog higher in the hierarchy can undo the changes made to the task.
+     */
+    private void generateUndoRedoObject() {
+
+
+      // Store a copy of task to edit in object to avoid reference problems
+      if (task != null) {
+        undoRedoObject.setAgileItem(task);
+
+        undoRedoObject = new UndoRedoObject();
+        undoRedoObject.setAction(Action.TASK_EDIT);
+        undoRedoObject.addDatum(lastTask);
+
+        // Store a copy of task to edit in object to avoid reference problems
+        undoRedoObject.setAgileItem(task);
+        Task taskToStore = new Task(task);
+        undoRedoObject.addDatum(taskToStore);
+        mainApp.newAction(undoRedoObject);
+      }
+    }
+
+
 
     public ListCell(ListView<Task> taskListView) {
       super();
@@ -161,6 +204,8 @@ public class ScrumBoardController {
       taskListView.setOnDragDetected(event -> {
         if (taskListView.getSelectionModel().getSelectedItem() != null) {
           state = "";
+          lastTask = new Task(taskListView.getSelectionModel().getSelectedItem());
+          task = taskListView.getSelectionModel().getSelectedItem();
 
           Dragboard dragBoard = taskListView.startDragAndDrop(TransferMode.MOVE);
 
@@ -179,31 +224,33 @@ public class ScrumBoardController {
           doneList.setOnDragOver(hover -> state = "done");
         }
       });
-      //TODO Add undo Redo for drag and dropping tasks
-      taskListView.setOnDragDone(
-                                  event -> {
-                                    if (taskListView.getSelectionModel().getSelectedItem() != null) {
-                                      if (state.equals("notstarted")) {
-                                        taskListView.getSelectionModel()
-                                            .getSelectedItem()
-                                            .setStatus(Status.NOT_STARTED);
 
-                } else if (Objects.equals(state, "progress")) {
-                  taskListView.getSelectionModel()
-                      .getSelectedItem()
-                      .setStatus(Status.IN_PROGRESS);
-                } else if (Objects.equals(state, "verify")) {
-                  taskListView.getSelectionModel()
-                      .getSelectedItem()
-                      .setStatus(Status.VERIFY);
-                } else if (Objects.equals(state, "done")) {
-                                        taskListView.getSelectionModel()
-                                            .getSelectedItem()
-                                            .setStatus(Status.DONE);
-                                      }
-                refreshLists();
+      taskListView.setOnDragDone(
+          event -> {
+            if (taskListView.getSelectionModel().getSelectedItem() != null) {
+              if (state.equals("notstarted")) {
+                taskListView.getSelectionModel()
+                    .getSelectedItem()
+                    .setStatus(Status.NOT_STARTED);
+              } else if (Objects.equals(state, "progress")) {
+                taskListView.getSelectionModel()
+                    .getSelectedItem()
+                    .setStatus(Status.IN_PROGRESS);
+              } else if (Objects.equals(state, "verify")) {
+                taskListView.getSelectionModel()
+                    .getSelectedItem()
+                    .setStatus(Status.VERIFY);
+              } else if (Objects.equals(state, "done")) {
+                taskListView.getSelectionModel()
+                    .getSelectedItem()
+                    .setStatus(Status.DONE);
               }
-            });
+              if (!task.getStatus().equals(lastTask.getStatus())) {
+                generateUndoRedoObject();
+              }
+              refreshLists();
+            }
+          });
       refreshLists();
           }
         }
