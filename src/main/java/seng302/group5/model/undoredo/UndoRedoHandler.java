@@ -2,7 +2,6 @@ package seng302.group5.model.undoredo;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Stack;
 
 import seng302.group5.Main;
@@ -1173,6 +1172,7 @@ public class UndoRedoHandler {
       taskToChange.copyValues(taskData);
       taskable.addTask(taskToChange);
     }
+    mainApp.getLMPC().getScrumBoardController().refreshLists();
     mainApp.refreshList(null);
   }
 
@@ -1203,6 +1203,7 @@ public class UndoRedoHandler {
 
     // Make the changes and refresh the list
     taskToChange.copyValues(taskData);
+    mainApp.getLMPC().getScrumBoardController().refreshLists();
     mainApp.refreshList(null);
   }
 
@@ -1234,6 +1235,7 @@ public class UndoRedoHandler {
     } else {
       taskable.removeTask(taskToChange);
     }
+    mainApp.getLMPC().getScrumBoardController().refreshLists();
     mainApp.refreshList(null);
   }
 

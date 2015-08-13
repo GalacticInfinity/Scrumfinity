@@ -23,8 +23,9 @@ import seng302.group5.model.Sprint;
 import seng302.group5.model.Status;
 import seng302.group5.model.Story;
 import seng302.group5.model.Task;
+import seng302.group5.model.undoredo.Action;
+import seng302.group5.model.undoredo.UndoRedoObject;
 import seng302.group5.model.undoredo.UndoRedo;
-
 
 /**
  * The controller class for the scrum board dialog. Tasks can be viewed from this dialog by
@@ -47,6 +48,10 @@ public class ScrumBoardController {
   private Main mainApp;
   private Stage stage;
 
+  private UndoRedoObject undoRedoObject;
+  private Task task;
+  private Task lastTask;
+
   private ObservableList<Sprint> availableSprints;
   private ObservableList<Story> availableStories;
   private ObservableList<Task> notStartedTasks;
@@ -64,7 +69,9 @@ public class ScrumBoardController {
   public void setupController(Main mainApp, Stage stage) {
     this.mainApp = mainApp;
     this.stage = stage;
-
+    task = new Task();
+    lastTask = new Task();
+    undoRedoObject = new UndoRedoObject();
     initialiseLists();
     sprintCombo.setDisable(true);
     storyCombo.setDisable(true);
@@ -72,6 +79,15 @@ public class ScrumBoardController {
     setupListView();
   }
 
+  /**
+   * Get the UndoRedoObject representing the editing of the task. Use this as a return value of
+   * the dialog.
+   *
+   * @return The UndoRedoObject representing the successful task edit.
+   */
+  public UndoRedoObject getUndoRedoObject() {
+    return undoRedoObject;
+  }
   /**
    * Initialises the models lists and populates these with values from the main application,
    * such as available backlogs, sprints and stories. These values
@@ -96,26 +112,29 @@ public class ScrumBoardController {
 
     backlogCombo.getSelectionModel().selectedItemProperty().addListener(
       (observable, oldBacklog, newBacklog) -> {
+        if (newBacklog != null) {
+          sprintCombo.setDisable(false);
 
-        sprintCombo.setDisable(false);
-
-        // get backlog's sprints
-        availableSprints.setAll(mainApp.getSprints().stream()
-                                    .filter(sprint -> sprint.getSprintBacklog().equals(newBacklog))
-                                    .collect(Collectors.toList()));
-        sprintCombo.setItems(availableSprints);
+          // get backlog's sprints
+          availableSprints.setAll(mainApp.getSprints().stream()
+                                      .filter(
+                                          sprint -> sprint.getSprintBacklog().equals(newBacklog))
+                                      .collect(Collectors.toList()));
+          sprintCombo.setItems(availableSprints);
+        }
       }
     );
 
     sprintCombo.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldSprint, newSprint) -> {
-
-          storyCombo.setDisable(false);
-          availableStories.setAll(newSprint.getSprintStories());
-          availableStories.add(0, nonStory);
-          storyCombo.setItems(availableStories);
-          storyCombo.setValue(nonStory);
-          refreshLists();
+          if (newSprint != null) {
+            storyCombo.setDisable(false);
+            availableStories.setAll(newSprint.getSprintStories());
+            availableStories.add(0, nonStory);
+            storyCombo.setItems(availableStories);
+            storyCombo.setValue(nonStory);
+            refreshLists();
+          }
         }
     );
 
@@ -145,6 +164,31 @@ public class ScrumBoardController {
   private class ListCell extends TextFieldListCell<Task> {
     private String state;
 
+    /**
+     * rate an UndoRedoObject to represent a task edit action and store it globally. This is so
+     * a cancel in a dialog higher in the hierarchy can undo the changes made to the task.
+     */
+    private void generateUndoRedoObject() {
+
+
+      // Store a copy of task to edit in object to avoid reference problems
+      if (task != null) {
+        undoRedoObject.setAgileItem(task);
+
+        undoRedoObject = new UndoRedoObject();
+        undoRedoObject.setAction(Action.TASK_EDIT);
+        undoRedoObject.addDatum(lastTask);
+
+        // Store a copy of task to edit in object to avoid reference problems
+        undoRedoObject.setAgileItem(task);
+        Task taskToStore = new Task(task);
+        undoRedoObject.addDatum(taskToStore);
+        mainApp.newAction(undoRedoObject);
+      }
+    }
+
+
+
     public ListCell(ListView<Task> taskListView) {
       super();
 
@@ -164,6 +208,8 @@ public class ScrumBoardController {
       taskListView.setOnDragDetected(event -> {
         if (taskListView.getSelectionModel().getSelectedItem() != null) {
           state = "";
+          lastTask = new Task(taskListView.getSelectionModel().getSelectedItem());
+          task = taskListView.getSelectionModel().getSelectedItem();
 
           Dragboard dragBoard = taskListView.startDragAndDrop(TransferMode.MOVE);
 
@@ -182,31 +228,32 @@ public class ScrumBoardController {
           doneList.setOnDragOver(hover -> state = "done");
         }
       });
-      //TODO Add undo Redo for drag and dropping tasks
       taskListView.setOnDragDone(
-                                  event -> {
-                                    if (taskListView.getSelectionModel().getSelectedItem() != null) {
-                                      if (state.equals("notstarted")) {
-                                        taskListView.getSelectionModel()
-                                            .getSelectedItem()
-                                            .setStatus(Status.NOT_STARTED);
-
-                } else if (Objects.equals(state, "progress")) {
-                  taskListView.getSelectionModel()
-                      .getSelectedItem()
-                      .setStatus(Status.IN_PROGRESS);
-                } else if (Objects.equals(state, "verify")) {
-                  taskListView.getSelectionModel()
-                      .getSelectedItem()
-                      .setStatus(Status.VERIFY);
-                } else if (Objects.equals(state, "done")) {
-                                        taskListView.getSelectionModel()
-                                            .getSelectedItem()
-                                            .setStatus(Status.DONE);
-                                      }
-                refreshLists();
+          event -> {
+            if (taskListView.getSelectionModel().getSelectedItem() != null) {
+              if (state.equals("notstarted")) {
+                taskListView.getSelectionModel()
+                    .getSelectedItem()
+                    .setStatus(Status.NOT_STARTED);
+              } else if (Objects.equals(state, "progress")) {
+                taskListView.getSelectionModel()
+                    .getSelectedItem()
+                    .setStatus(Status.IN_PROGRESS);
+              } else if (Objects.equals(state, "verify")) {
+                taskListView.getSelectionModel()
+                    .getSelectedItem()
+                    .setStatus(Status.VERIFY);
+              } else if (Objects.equals(state, "done")) {
+                taskListView.getSelectionModel()
+                    .getSelectedItem()
+                    .setStatus(Status.DONE);
               }
-            });
+              if (!task.getStatus().equals(lastTask.getStatus())) {
+                generateUndoRedoObject();
+              }
+              refreshLists();
+            }
+          });
       refreshLists();
           }
         }
@@ -268,6 +315,24 @@ public class ScrumBoardController {
     }
   }
 
+  /**
+   * On loading the scrum board needs to be completely reset. This functions does that, clears all
+   * selections.
+   */
+  public void clearSelections() {
+    storyCombo.getSelectionModel().clearSelection();
+    storyCombo.setDisable(true);
+    sprintCombo.getSelectionModel().clearSelection();
+    sprintCombo.setDisable(true);
+    backlogCombo.getSelectionModel().clearSelection();
+    availableSprints.clear();
+    availableStories.clear();
+    notStartedTasks.clear();
+    inProgressTasks.clear();
+    verifyTasks.clear();
+    doneTasks.clear();
+  }
+
 
   /**
    * A button which when clicked can add a task to either the selected story, or if the "nonStory"
@@ -290,5 +355,4 @@ public class ScrumBoardController {
       }
     }
   }
-
 }
