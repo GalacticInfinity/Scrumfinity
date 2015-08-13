@@ -57,6 +57,7 @@ import seng302.group5.model.Task;
 import seng302.group5.model.Taskable;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
+import seng302.group5.model.undoredo.CompositeUndoRedo;
 import seng302.group5.model.undoredo.UndoRedo;
 import seng302.group5.model.undoredo.UndoRedoHandler;
 import seng302.group5.model.undoredo.UndoRedoObject;
@@ -652,7 +653,6 @@ public class Main extends Application {
       storyDialogStage.initOwner(primaryStage);
       storyDialogStage.setScene(storyDialogScene);
       storyDialogStage.showAndWait();
-
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -721,7 +721,6 @@ public class Main extends Application {
       storyDialogStage.initOwner(stage);
       storyDialogStage.setScene(storyDialogScene);
       storyDialogStage.showAndWait();
-
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -829,6 +828,7 @@ public class Main extends Application {
       taskDialogStage.setScene(taskDialogScene);
       taskDialogStage.showAndWait();
 
+      this.getLMPC().getScrumBoardController().refreshLists();
       taskUndoRedo = controller.getUndoRedoObject();
     } catch (IOException e) {
       e.printStackTrace();
@@ -1159,14 +1159,82 @@ public class Main extends Application {
         break;
       case "People":
         Person person = (Person) agileItem;
+        Boolean inBacklog = false;
+        Boolean inStory = false;
+        Boolean inTask = false;
+        List<Task> taskList = new ArrayList<>();
 
-        if (person.isInTeam()) {
+        for (Story story : getStories()) {
+          if (story.getCreator() == person) {
+            inStory = true;
+            break;
+          }
+          for (Task task : story.getTasks()) {
+            if (task.getTaskPeople().contains(person)) {
+              inTask = true;
+              taskList.add(task);
+            }
+          }
+        }
+        for (Sprint sprint : getSprints()) {
+          for (Task task : sprint.getTasks()) {
+            if (task.getTaskPeople().contains(person)) {
+              inTask = true;
+              taskList.add(task);
+            }
+          }
+        }
+
+        if(inStory) {
           String message = String.format(
-              "Do you want to delete '%s' and remove him/her from the team '%s'?",
-              person.getLabel(),
-              person.getTeamLabel());
+              "This person is a creator of a story! You cannot delete him until you delete the "
+              + "story created by this person");
+          Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setTitle("Person is a Story creator");
+          alert.setHeaderText(null);
+          alert.setContentText(message);
+          alert.showAndWait();
+          break;
+        }
+
+        for (Backlog backlog : getBacklogs()) {
+          if (backlog.getProductOwner() == person) {
+            inBacklog = true;
+          }
+        }
+
+        if(inBacklog) {
+          String message = String.format(
+              "This person is a product owner of a backlog. You must unassign them from the story"
+              + " before you can delete them.");
+          Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setTitle("Person is a backlog product owner!");
+          alert.setHeaderText(null);
+          alert.setContentText(message);
+          alert.showAndWait();
+          break;
+        }
+
+        CompositeUndoRedo compositeUndoRedo =
+            new CompositeUndoRedo(Action.getActionString(Action.PERSON_DELETE));
+        if (person.isInTeam()) {
+          String message;
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-          alert.setTitle("Person is in team");
+          if (inTask) {
+            message = String.format(
+                "Do you want to delete '%s' and remove him/her from the team '%s' and unassign"
+                + " them from their assigned tasks?",
+                person.getLabel(),
+                person.getTeamLabel());
+            alert.getDialogPane().setPrefHeight(128);
+            alert.setTitle("Person is in team and assigned to tasks");
+          } else {
+            message = String.format(
+                "Do you want to delete '%s' and remove him/her from the team '%s'?",
+                person.getLabel(),
+                person.getTeamLabel());
+            alert.setTitle("Person is in team");
+          }
           alert.setHeaderText(null);
           alert.setContentText(message);
           //checks response
@@ -1174,6 +1242,19 @@ public class Main extends Application {
           if (result.get() == ButtonType.OK) {
             //if yes then remove
             person.getTeam().getTeamMembers().remove(person);
+            if (inTask) {
+              for (Task task : taskList) {
+                Task before = new Task(task);
+                task.removeTaskPerson(person);
+                Task after = new Task(task);
+                UndoRedo taskEdit = new UndoRedoObject();
+                taskEdit.setAction(Action.TASK_EDIT);
+                taskEdit.setAgileItem(task);
+                taskEdit.addDatum(before);
+                taskEdit.addDatum(after);
+                compositeUndoRedo.addUndoRedo(taskEdit);
+              }
+            }
             deletePerson(person);
           } else {
             return;
@@ -1182,7 +1263,8 @@ public class Main extends Application {
           deletePerson(person);
         }
         undoRedoObject = generateDelUndoRedoObject(Action.PERSON_DELETE, agileItem);
-        newAction(undoRedoObject);
+        compositeUndoRedo.addUndoRedo(undoRedoObject);
+        newAction(compositeUndoRedo);
         break;
       case "Skills":
         Skill skill = (Skill) agileItem;

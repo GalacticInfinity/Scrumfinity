@@ -709,6 +709,7 @@ public class Loading {
       // For each new story
       if (storyLine.matches(".*<Story>")) {
         newStory = new Story();
+        newStory.setStatus(Status.NOT_STARTED);
 
         // Mandatory fields
         storyLine = loadedFile.readLine();
@@ -731,6 +732,11 @@ public class Loading {
           } else {
             newStory.setStoryState(false);
           }
+        }
+        if (saveVersion >= 0.5) {
+          storyLine = loadedFile.readLine();
+          storyData = storyLine.replaceAll("(?i)(.*<status.*?>)(.+?)(</status>)", "$2");
+          newStory.setStatus(Status.getStatusEnum(storyData));
         }
 
         // Non-mandatory fields

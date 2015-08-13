@@ -306,6 +306,7 @@ public class Saving {
       saveFile.write("\t\t<storyLabel>" + story.getLabel() + "</storyLabel>\n");
       saveFile.write("\t\t<creator>" + story.getCreator().getLabel() + "</creator>\n");
       saveFile.write("\t\t<readiness>" + story.getStoryState() + "</readiness>\n");
+      saveFile.write("\t\t<status>" + story.getStatusString() + "</status>\n");
       if (story.getImpediments() != null && !story.getImpediments().equals("")) {
         saveFile.write("\t\t<impediments>" + story.getImpediments() + "</impediments>\n");
       }

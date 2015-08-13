@@ -632,7 +632,7 @@ public class SprintDialogController {
 
         mainApp.refreshList(sprint);
       }
-      UndoRedoObject undoRedoObject = generateUndoRedoObject();
+      UndoRedo undoRedoObject = generateUndoRedoObject();
       if (sprint != null && createOrEdit == CreateOrEdit.CREATE) {
         undoRedoObject.addDatum(sprint);
       } else {
@@ -682,22 +682,35 @@ public class SprintDialogController {
    *
    * @return The UndoRedoObject to store.
    */
-  private UndoRedoObject generateUndoRedoObject() {
-    UndoRedoObject undoRedoObject = new UndoRedoObject();
+  private UndoRedo generateUndoRedoObject() {
+    Action action;
+    UndoRedoObject sprintChanges = new UndoRedoObject();
 
     if (createOrEdit == CreateOrEdit.CREATE) {
-      undoRedoObject.setAction(Action.SPRINT_CREATE);
+      action = Action.SPRINT_CREATE;
+      sprintChanges.setAction(action);
     } else {
-      undoRedoObject.setAction(Action.SPRINT_EDIT);
-      undoRedoObject.addDatum(lastSprint);
+      action = Action.SPRINT_EDIT;
+      sprintChanges.setAction(action);
+      sprintChanges.addDatum(lastSprint);
     }
 
     // Store a copy of sprint to edit in stack to avoid reference problems
-    undoRedoObject.setAgileItem(sprint);
+    sprintChanges.setAgileItem(sprint);
     Sprint sprintToStore = new Sprint(sprint);
-    undoRedoObject.addDatum(sprintToStore);
+    sprintChanges.addDatum(sprintToStore);
 
-    return undoRedoObject;
+    // Create composite undo/redo with original action string to handle sprint and task changes
+    CompositeUndoRedo sprintAndTaskChanges = new CompositeUndoRedo(Action.getActionString(action));
+    sprintAndTaskChanges.addUndoRedo(sprintChanges);
+    for (UndoRedo taskChange : tasksUndoRedo.getUndoRedos()) {
+      // only include edits to avoid doubling tasks
+      if (taskChange.getAction().equals(Action.TASK_EDIT)) {
+        sprintAndTaskChanges.addUndoRedo(taskChange);
+      }
+    }
+
+    return sprintAndTaskChanges;
   }
 
   /**

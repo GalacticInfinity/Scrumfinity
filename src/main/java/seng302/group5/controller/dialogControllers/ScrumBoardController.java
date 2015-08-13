@@ -1,13 +1,20 @@
 package seng302.group5.controller.dialogControllers;
 
+import java.io.File;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.cell.TextFieldListCell;
+import javafx.scene.image.Image;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.TransferMode;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
@@ -16,6 +23,7 @@ import seng302.group5.model.Sprint;
 import seng302.group5.model.Status;
 import seng302.group5.model.Story;
 import seng302.group5.model.Task;
+
 
 /**
  * The controller class for the scrum board dialog. Tasks can be viewed from this dialog by
@@ -76,6 +84,7 @@ public class ScrumBoardController {
     doneTasks = FXCollections.observableArrayList();
     Story nonStory = new Story();
     nonStory.setLabel("Non-story Tasks");
+    availableStories.add(nonStory);
 
     backlogCombo.setVisibleRowCount(5);
     sprintCombo.setVisibleRowCount(5);
@@ -99,16 +108,19 @@ public class ScrumBoardController {
         (observable, oldSprint, newSprint) -> {
 
           storyCombo.setDisable(false);
-          availableStories.setAll(nonStory);
-          availableStories.addAll(newSprint.getSprintStories());
+          availableStories.setAll(newSprint.getSprintStories());
+          availableStories.add(0, nonStory);
           storyCombo.setItems(availableStories);
+          storyCombo.setValue(nonStory);
+          refreshLists();
         }
     );
 
     storyCombo.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldStory, newStory) -> {
-
-          refreshLists(newStory);
+          //if (oldStory != null && newStory != null) {
+          refreshLists();
+          //}
         }
     );
   }
@@ -128,6 +140,7 @@ public class ScrumBoardController {
    * Allows us to override a ListViewCell - a single cell in the ListView.
    */
   private class ListCell extends TextFieldListCell<Task> {
+    private String state;
 
     public ListCell(ListView<Task> taskListView) {
       super();
@@ -141,16 +154,67 @@ public class ScrumBoardController {
           mainApp.showTaskDialog(storyCombo.getValue(), selectedTask,
                                  sprintCombo.getValue().getSprintTeam(),
                                  CreateOrEdit.EDIT, stage);
-          refreshLists(storyCombo.getValue());
+          refreshLists();
         }
       });
-    }
-  }
+
+      taskListView.setOnDragDetected(event -> {
+        if (taskListView.getSelectionModel().getSelectedItem() != null) {
+          state = "";
+
+          Dragboard dragBoard = taskListView.startDragAndDrop(TransferMode.MOVE);
+
+          ClipboardContent content = new ClipboardContent();
+          File dragFileImage = new File("src/main/resources/DragCursor.png");
+          Image dragImage = new Image(dragFileImage.toURI().toString());
+          dragBoard.setDragView(dragImage);
+
+          content.putString(taskListView.getSelectionModel().getSelectedItem().getLabel());
+
+          dragBoard.setContent(content);
+
+          notStartedList.setOnDragOver(hover -> state = "notstarted");
+          inProgressList.setOnDragOver(hover -> state = "progress");
+          verifyList.setOnDragOver(hover -> state = "verify");
+          doneList.setOnDragOver(hover -> state = "done");
+        }
+      });
+      //TODO Add undo Redo for drag and dropping tasks
+      taskListView.setOnDragDone(
+                                  event -> {
+                                    if (taskListView.getSelectionModel().getSelectedItem() != null) {
+                                      if (state.equals("notstarted")) {
+                                        taskListView.getSelectionModel()
+                                            .getSelectedItem()
+                                            .setStatus(Status.NOT_STARTED);
+
+                } else if (Objects.equals(state, "progress")) {
+                  taskListView.getSelectionModel()
+                      .getSelectedItem()
+                      .setStatus(Status.IN_PROGRESS);
+                } else if (Objects.equals(state, "verify")) {
+                  taskListView.getSelectionModel()
+                      .getSelectedItem()
+                      .setStatus(Status.VERIFY);
+                } else if (Objects.equals(state, "done")) {
+                                        taskListView.getSelectionModel()
+                                            .getSelectedItem()
+                                            .setStatus(Status.DONE);
+                                      }
+                refreshLists();
+              }
+            });
+      refreshLists();
+          }
+        }
+
+
+
 
   /**
    * Refreshes the four list views when any of the tasks within the story is updated.
    */
-  private void refreshLists(Story story) {
+  public void refreshLists() {
     Story nonStory = new Story();
     nonStory.setLabel("Non-story Tasks");
 
@@ -159,15 +223,27 @@ public class ScrumBoardController {
     verifyTasks.clear();
     doneTasks.clear();
 
-    if (story.getLabel().equals(nonStory.getLabel())) {
+    if (!sprintCombo.getValue().getTasks().isEmpty() &&
+        storyCombo.getValue().getLabel().equals(nonStory.getLabel())) {
       sprintCombo.getValue().getTasks().forEach(this::sortTaskToLists);
+    } else if (!storyCombo.getValue().getTasks().isEmpty()) {
+      storyCombo.getValue().getTasks().forEach(this::sortTaskToLists);
     } else {
-      story.getTasks().forEach(this::sortTaskToLists);
+      Task newTask = new Task();
+      notStartedTasks.add(newTask);
+      inProgressTasks.add(newTask);
+      verifyTasks.add(newTask);
+      doneTasks.add(newTask);
+      notStartedTasks.clear();
+      inProgressTasks.clear();
+      verifyTasks.clear();
+      doneTasks.clear();
     }
     notStartedList.setItems(notStartedTasks);
     inProgressList.setItems(inProgressTasks);
     verifyList.setItems(verifyTasks);
     doneList.setItems(doneTasks);
+
   }
 
   /**
@@ -184,5 +260,12 @@ public class ScrumBoardController {
     } else if (task.getStatus().equals(Status.DONE)) {
       doneTasks.add(task);
     }
+  }
+
+
+  //Todo jdoc
+  @FXML
+  protected void addNewTask(ActionEvent event) {
+    //if (sprintCombo)
   }
 }

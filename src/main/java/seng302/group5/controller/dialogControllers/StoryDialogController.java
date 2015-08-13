@@ -112,6 +112,7 @@ public class StoryDialogController {
     if (createOrEdit == CreateOrEdit.CREATE) {
       thisStage.setTitle("Create New Story");
       btnCreateStory.setText("Create");
+      statusCombo.getSelectionModel().select(Status.getStatusString(Status.NOT_STARTED));
 
       initialiseLists();
       readyCheckbox.setDisable(true);
@@ -276,22 +277,35 @@ public class StoryDialogController {
    *
    * @return The UndoRedoObject to store.
    */
-  private UndoRedoObject generateUndoRedoObject() {
-    UndoRedoObject undoRedoObject = new UndoRedoObject();
+  private UndoRedo generateUndoRedoObject() {
+    Action action;
+    UndoRedoObject storyChanges = new UndoRedoObject();
 
     if (createOrEdit == CreateOrEdit.CREATE) {
-      undoRedoObject.setAction(Action.STORY_CREATE);
+      action = Action.STORY_CREATE;
+      storyChanges.setAction(action);
     } else {
-      undoRedoObject.setAction(Action.STORY_EDIT);
-      undoRedoObject.addDatum(lastStory);
+      action = Action.STORY_EDIT;
+      storyChanges.setAction(action);
+      storyChanges.addDatum(lastStory);
     }
 
     // Store a copy of story to edit in stack to avoid reference problems
-    undoRedoObject.setAgileItem(story);
+    storyChanges.setAgileItem(story);
     Story storyToStore = new Story(story);
-    undoRedoObject.addDatum(storyToStore);
+    storyChanges.addDatum(storyToStore);
 
-    return undoRedoObject;
+    // Create composite undo/redo with original action string to handle story and task changes
+    CompositeUndoRedo storyAndTaskChanges = new CompositeUndoRedo(Action.getActionString(action));
+    storyAndTaskChanges.addUndoRedo(storyChanges);
+    for (UndoRedo taskChange : tasksUndoRedo.getUndoRedos()) {
+      // only include edits to avoid doubling tasks
+      if (taskChange.getAction().equals(Action.TASK_EDIT)) {
+        storyAndTaskChanges.addUndoRedo(taskChange);
+      }
+    }
+
+    return storyAndTaskChanges;
   }
 
   /**
@@ -375,7 +389,7 @@ public class StoryDialogController {
           mainApp.refreshList(story);
         }
       }
-      UndoRedoObject undoRedoObject = generateUndoRedoObject();
+      UndoRedo undoRedoObject = generateUndoRedoObject();
       if (backlog != null && createOrEdit == CreateOrEdit.CREATE) {
         undoRedoObject.addDatum(backlog);
       } else {
