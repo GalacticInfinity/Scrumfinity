@@ -33,7 +33,7 @@
         </HBox>
         <HBox fx:id="btnContainer" alignment="BOTTOM_RIGHT" prefHeight="25.0" prefWidth="429.0" spacing="10.0">
             <children>
-                <Label prefHeight="25.0" prefWidth="275.0" text="* Fields cannot be empty.">
+                <Label prefHeight="25.0" prefWidth="301.0" text="* Fields cannot be empty.">
                     <font>
                         <Font name="System Italic" size="13.0" />
                     </font>
