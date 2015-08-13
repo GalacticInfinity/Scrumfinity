@@ -30,7 +30,6 @@ import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.util.Loading;
 import seng302.group5.model.util.Saving;
-import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoHandler;
 import seng302.group5.model.util.Settings;
 
@@ -434,37 +433,63 @@ public class MenuBarController {
    */
   @FXML
   protected void btnClickOpen(ActionEvent event) {
+    Optional<ButtonType> result = null;
+    ButtonType buttonTypeYes = new ButtonType("Yes", ButtonBar.ButtonData.YES);
+    ButtonType buttonTypeNo = new ButtonType("No", ButtonBar.ButtonData.NO);
+    ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
-    FileChooser fileChooser = new FileChooser();
-    fileChooser.setTitle("Open Project");
-    FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
-    fileChooser.getExtensionFilters().add(filter);
-    if (Settings.currentFile != null) {
-      fileChooser.setInitialDirectory(Settings.currentFile.getParentFile());
-    } else if (Settings.defaultFilepath != null) {
-      fileChooser.setInitialDirectory(Settings.defaultFilepath);
+    if (!mainApp.checkSaved()) {
+      Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+      alert.setTitle("Unsaved changes");
+      alert.setHeaderText(null);
+      alert.setContentText("There are unsaved changes. Do you wish to save "
+                           + "before loading a new file?");
+
+      alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo, buttonTypeCancel);
+
+      result = alert.showAndWait();
     }
-    try {
-      File file = fileChooser.showOpenDialog(mainApp.getPrimaryStage());
-      if (file != null) {
-        Settings.currentFile = file;
-        mainApp.resetAll();
-        Loading load = new Loading(mainApp);
-        load.loadFile(file);
 
-        mainApp.getLMPC().refreshList(null);
-        if (!(Settings.organizationName.equals(""))) {
-          mainApp.setMainTitle("Scrumfinity - " + Settings.organizationName);
-        } else {
-          mainApp.setMainTitle("Scrumfinity");
-        }
-        mainApp.toggleName();
-        showListMenuItem.setSelected(true);
-        deselectList(Settings.currentListType);
-        mainApp.setLastSaved(); //for revert
+    if (result == null || result.get() == buttonTypeYes || result.get() == buttonTypeNo) {
+
+      if (result != null && result.get() == buttonTypeYes) {
+        // save first before continuing
+        btnClickSave(null);
       }
-    } catch (Exception e) {
+
+      FileChooser fileChooser = new FileChooser();
+      fileChooser.setTitle("Open Project");
+      FileChooser.ExtensionFilter
+          filter =
+          new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
+      fileChooser.getExtensionFilters().add(filter);
+      if (Settings.currentFile != null) {
+        fileChooser.setInitialDirectory(Settings.currentFile.getParentFile());
+      } else if (Settings.defaultFilepath != null) {
+        fileChooser.setInitialDirectory(Settings.defaultFilepath);
+      }
+      try {
+        File file = fileChooser.showOpenDialog(mainApp.getPrimaryStage());
+        if (file != null) {
+          Settings.currentFile = file;
+          mainApp.resetAll();
+          Loading load = new Loading(mainApp);
+          load.loadFile(file);
+
+          mainApp.getLMPC().refreshList(null);
+          if (!(Settings.organizationName.equals(""))) {
+            mainApp.setMainTitle("Scrumfinity - " + Settings.organizationName);
+          } else {
+            mainApp.setMainTitle("Scrumfinity");
+          }
+          mainApp.toggleName();
+          showListMenuItem.setSelected(true);
+          deselectList(Settings.currentListType);
+          mainApp.setLastSaved(); //for revert
+        }
+      } catch (Exception e) {
 //      System.out.println("No file selected");
+      }
     }
   }
 
