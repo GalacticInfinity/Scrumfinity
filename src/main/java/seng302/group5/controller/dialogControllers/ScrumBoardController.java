@@ -219,8 +219,7 @@ public class ScrumBoardController {
     if (!sprintCombo.getValue().getTasks().isEmpty() &&
         storyCombo.getValue().getLabel().equals(nonStory.getLabel())) {
       sprintCombo.getValue().getTasks().forEach(this::sortTaskToLists);
-    } else if (!sprintCombo.getValue().getTasks().isEmpty() &&
-               !storyCombo.getValue().getTasks().isEmpty()) {
+    } else if (!storyCombo.getValue().getTasks().isEmpty()) {
       storyCombo.getValue().getTasks().forEach(this::sortTaskToLists);
     } else {
       Task newTask = new Task();
