@@ -1159,6 +1159,44 @@ public class Main extends Application {
         break;
       case "People":
         Person person = (Person) agileItem;
+        Boolean inBacklog = false;
+        Boolean inStory = false;
+
+        for (Story story : getStories()) {
+          if (story.getCreator() == person) {
+            inStory = true;
+          }
+        }
+
+        if(inStory) {
+          String message = String.format(
+              "This person is a creator of a story! You cannot delete him until you delete the "
+              + "story created by this person");
+          Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setTitle("Person is a Story creator");
+          alert.setHeaderText(null);
+          alert.setContentText(message);
+          alert.showAndWait();
+          break;
+        }
+
+        for (Backlog backlog : getBacklogs()) {
+          if (backlog.getProductOwner() == person) {
+            inBacklog = true;
+          }
+        }
+
+        if(inBacklog) {
+          String message = String.format(
+              "This person is a product owner of a backlog. You must unassign them from the story"
+              + " before you can delete them.");
+          Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setTitle("Person is a backlog product owner!");
+          alert.setHeaderText(null);
+          alert.setContentText(message);
+          alert.showAndWait();
+          break;
+        }
 
         if (person.isInTeam()) {
           String message = String.format(
