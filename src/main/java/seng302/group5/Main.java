@@ -57,6 +57,7 @@ import seng302.group5.model.Task;
 import seng302.group5.model.Taskable;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
+import seng302.group5.model.undoredo.CompositeUndoRedo;
 import seng302.group5.model.undoredo.UndoRedo;
 import seng302.group5.model.undoredo.UndoRedoHandler;
 import seng302.group5.model.undoredo.UndoRedoObject;
@@ -1161,10 +1162,27 @@ public class Main extends Application {
         Person person = (Person) agileItem;
         Boolean inBacklog = false;
         Boolean inStory = false;
+        Boolean inTask = false;
+        List<Task> taskList = new ArrayList<>();
 
         for (Story story : getStories()) {
           if (story.getCreator() == person) {
             inStory = true;
+            break;
+          }
+          for (Task task : story.getTasks()) {
+            if (task.getTaskPeople().contains(person)) {
+              inTask = true;
+              taskList.add(task);
+            }
+          }
+        }
+        for (Sprint sprint : getSprints()) {
+          for (Task task : sprint.getTasks()) {
+            if (task.getTaskPeople().contains(person)) {
+              inTask = true;
+              taskList.add(task);
+            }
           }
         }
 
@@ -1198,13 +1216,26 @@ public class Main extends Application {
           break;
         }
 
+        CompositeUndoRedo compositeUndoRedo =
+            new CompositeUndoRedo(Action.getActionString(Action.PERSON_DELETE));
         if (person.isInTeam()) {
-          String message = String.format(
-              "Do you want to delete '%s' and remove him/her from the team '%s'?",
-              person.getLabel(),
-              person.getTeamLabel());
+          String message;
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-          alert.setTitle("Person is in team");
+          if (inTask) {
+            message = String.format(
+                "Do you want to delete '%s' and remove him/her from the team '%s' and unassign"
+                + " them from their assigned tasks?",
+                person.getLabel(),
+                person.getTeamLabel());
+            alert.getDialogPane().setPrefHeight(128);
+            alert.setTitle("Person is in team and assigned to tasks");
+          } else {
+            message = String.format(
+                "Do you want to delete '%s' and remove him/her from the team '%s'?",
+                person.getLabel(),
+                person.getTeamLabel());
+            alert.setTitle("Person is in team");
+          }
           alert.setHeaderText(null);
           alert.setContentText(message);
           //checks response
@@ -1212,6 +1243,19 @@ public class Main extends Application {
           if (result.get() == ButtonType.OK) {
             //if yes then remove
             person.getTeam().getTeamMembers().remove(person);
+            if (inTask) {
+              for (Task task : taskList) {
+                Task before = new Task(task);
+                task.removeTaskPerson(person);
+                Task after = new Task(task);
+                UndoRedo taskEdit = new UndoRedoObject();
+                taskEdit.setAction(Action.TASK_EDIT);
+                taskEdit.setAgileItem(task);
+                taskEdit.addDatum(before);
+                taskEdit.addDatum(after);
+                compositeUndoRedo.addUndoRedo(taskEdit);
+              }
+            }
             deletePerson(person);
           } else {
             return;
@@ -1220,7 +1264,8 @@ public class Main extends Application {
           deletePerson(person);
         }
         undoRedoObject = generateDelUndoRedoObject(Action.PERSON_DELETE, agileItem);
-        newAction(undoRedoObject);
+        compositeUndoRedo.addUndoRedo(undoRedoObject);
+        newAction(compositeUndoRedo);
         break;
       case "Skills":
         Skill skill = (Skill) agileItem;
