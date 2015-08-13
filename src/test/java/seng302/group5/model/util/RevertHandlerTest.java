@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.mainAppControllers.ListMainPaneController;
 import seng302.group5.controller.mainAppControllers.MenuBarController;
+import seng302.group5.controller.mainAppControllers.ToolBarController;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Estimate;
 import seng302.group5.model.Person;
@@ -23,6 +24,7 @@ import seng302.group5.model.Release;
 import seng302.group5.model.Skill;
 import seng302.group5.model.Sprint;
 import seng302.group5.model.Story;
+import seng302.group5.model.Task;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoHandler;
@@ -96,11 +98,13 @@ public class RevertHandlerTest {
 
     ListMainPaneController listMainPaneController = mock(ListMainPaneController.class);
     MenuBarController menuBarController = mock(MenuBarController.class);
+    ToolBarController toolBarController = mock(ToolBarController.class);
     Stage primaryStage = mock(Stage.class);
 
     mainApp = new Main();
     mainApp.setLMPC(listMainPaneController);
     mainApp.setMBC(menuBarController);
+    mainApp.setTBC(toolBarController);
     mainApp.setPrimaryStage(primaryStage);
 
     undoRedoHandler = mainApp.getUndoRedoHandler();
@@ -267,7 +271,6 @@ public class RevertHandlerTest {
     undoRedoHandler.newAction(undoRedoObject);
   }
 
-
   private void newBacklog() {
     backlogLabel = "Backlog";
     backlogName = "This is a backlog";
@@ -399,6 +402,7 @@ public class RevertHandlerTest {
     assertTrue(undoRedoHandler.getRedoStack().empty());
 
   }
+
 
   @Test
   public void testStoryWithACRevert() throws Exception {
@@ -792,5 +796,35 @@ public class RevertHandlerTest {
     assertSame(backlogStories.get(2), sprintStories.get(2));
     assertSame(mainStories.get(3), sprintStories.get(3));
     assertSame(backlogStories.get(3), sprintStories.get(3));
+  }
+
+  @Test
+  public void testTaskRevert() {
+    Person person1 = new Person();
+    Person person2 = new Person();
+    List<Person> personList = new ArrayList<>();
+    personList.add(person1);
+    personList.add(person2);
+    Sprint sprint1 = new Sprint();
+
+    Story story1 = new Story();
+
+    Task task1 = new Task("Label", "desc", 2, null, personList);
+    sprint1.addTask(task1);
+    story1.addTask(task1);
+
+    assertSame(person1, sprint1.getTasks().get(0).getTaskPeople().get(0));
+    assertSame(person2, sprint1.getTasks().get(0).getTaskPeople().get(1));
+
+    assertSame(person1, story1.getTasks().get(0).getTaskPeople().get(0));
+    assertSame(person2, story1.getTasks().get(0).getTaskPeople().get(1));
+
+    mainApp.revert();
+
+    assertSame(person1, sprint1.getTasks().get(0).getTaskPeople().get(0));
+    assertSame(person2, sprint1.getTasks().get(0).getTaskPeople().get(1));
+
+    assertSame(person1, story1.getTasks().get(0).getTaskPeople().get(0));
+    assertSame(person2, story1.getTasks().get(0).getTaskPeople().get(1));
   }
 }

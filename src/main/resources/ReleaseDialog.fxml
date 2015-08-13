@@ -6,7 +6,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="354.0" prefWidth="436.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.ReleaseDialogController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="355.0" prefWidth="436.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.ReleaseDialogController">
     <children>
         <HBox alignment="BOTTOM_LEFT" prefWidth="520.0">
             <children>
@@ -106,7 +106,7 @@
                 <Insets right="5.0" top="15.0" />
             </VBox.margin>
          <children>
-            <Label prefHeight="25.0" prefWidth="275.0" text="* Fields cannot be empty.">
+            <Label prefHeight="25.0" prefWidth="302.0" text="* Fields cannot be empty.">
                <font>
                   <Font name="System Italic" size="13.0" />
                </font>

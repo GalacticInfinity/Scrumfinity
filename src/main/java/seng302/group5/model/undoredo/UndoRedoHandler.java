@@ -15,6 +15,7 @@ import seng302.group5.model.Skill;
 import seng302.group5.model.Sprint;
 import seng302.group5.model.Story;
 import seng302.group5.model.Task;
+import seng302.group5.model.Taskable;
 import seng302.group5.model.Team;
 
 /**
@@ -266,13 +267,17 @@ public class UndoRedoHandler {
           handleSprintDelete(undoRedoObject, undoOrRedo);
           break;
 
-//        case TASK_CREATE: TODO
+        case TASK_CREATE:
+          handleTaskCreate(undoRedoObject, undoOrRedo);
+          break;
 
         case TASK_EDIT:
           handleTaskEdit(undoRedoObject, undoOrRedo);
           break;
 
-//        case TASK_DELETE: TODO
+        case TASK_DELETE:
+          handleTaskDelete(undoRedoObject, undoOrRedo);
+          break;
 
         case UNDEFINED:
           throw new Exception("Unreadable UndoRedoObject");
@@ -1141,6 +1146,37 @@ public class UndoRedoHandler {
   }
 
   /**
+   * Undo or redo a task create
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo     Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handleTaskCreate(UndoRedoObject undoRedoObject,
+                                UndoOrRedo undoOrRedo) throws Exception {
+
+    // Get the data and ensure it has data for the task and its container
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 2) {
+      throw new Exception("Can't undo/redo task create - Less than 2 variables");
+    }
+
+    Task taskToChange = (Task) undoRedoObject.getAgileItem();
+    Task taskData = (Task) data.get(0);
+    Taskable taskable = (Taskable) data.get(1);
+
+    // Make the changes and refresh the list
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+      // Delete the task from its container
+      taskable.removeTask(taskToChange);
+    } else {
+      taskToChange.copyValues(taskData);
+      taskable.addTask(taskToChange);
+    }
+    mainApp.refreshList(null);
+  }
+
+  /**
    * Undo or redo a task edit
    *
    * @param undoRedoObject Object containing the action data
@@ -1167,6 +1203,37 @@ public class UndoRedoHandler {
 
     // Make the changes and refresh the list
     taskToChange.copyValues(taskData);
+    mainApp.refreshList(null);
+  }
+
+  /**
+   * Undo or redo a task deletion
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo     Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handleTaskDelete(UndoRedoObject undoRedoObject,
+                                UndoOrRedo undoOrRedo) throws Exception {
+
+    // Get the data and ensure it has data for the task
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 2) {
+      throw new Exception("Can't undo/redo task deletion - Less than 2 variables");
+    }
+
+    Task taskToChange = (Task) undoRedoObject.getAgileItem();
+    Task taskData = (Task) data.get(0);
+    Taskable taskable = (Taskable) data.get(1);
+
+    // Make the changes and refresh the list
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+      // Create the deleted task again
+      taskToChange.copyValues(taskData);
+      taskable.addTask(taskToChange);
+    } else {
+      taskable.removeTask(taskToChange);
+    }
     mainApp.refreshList(null);
   }
 

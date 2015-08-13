@@ -335,31 +335,31 @@ public class Saving {
         saveFile.write("\t\t<Tasks>\n");
         for (Task task : story.getTasks()) {
           saveFile.write("\t\t\t<Task>\n");
-          saveFile.write("\t\t\t\t<label>" + task.getLabel() + "</label>\n");
+          saveFile.write("\t\t\t\t<taskLabel>" + task.getLabel() + "</taskLabel>\n");
           saveFile
-              .write("\t\t\t\t<status>" + Status.getStatusString(task.getStatus()) + "</status>\n");
+              .write("\t\t\t\t<taskStatus>" + Status.getStatusString(task.getStatus()) + "</taskStatus>\n");
           if (task.getTaskDescription() != null && !task.getTaskDescription().isEmpty()) {
             saveFile
-                .write("\t\t\t\t<description>" + task.getTaskDescription() + "</description>\n");
+                .write("\t\t\t\t<taskDescription>" + task.getTaskDescription() + "</taskDescription>\n");
           }
           if (task.getTaskEstimation() != null) {
             saveFile.write(
-                "\t\t\t\t<estimate>" + task.getTaskEstimation().toString() + "</estimate>\n");
+                "\t\t\t\t<taskEstimate>" + task.getTaskEstimation().toString() + "</taskEstimate>\n");
           }
           if (!task.getTaskPeople().isEmpty()) {
-            saveFile.write("\t\t\t\t<People>\n");
+            saveFile.write("\t\t\t\t<TaskPeople>\n");
             for (Person person : task.getTaskPeople()) {
               saveFile.write("\t\t\t\t\t<person>" + person.getLabel() + "</person>\n");
             }
-            saveFile.write("\t\t\t\t</People>\n");
+            saveFile.write("\t\t\t\t</TaskPeople>\n");
           }
           if (!task.getSpentEffort().isEmpty()) {
-            saveFile.write("\t\t\t\t<Effort>\n");
+            saveFile.write("\t\t\t\t<TaskEffort>\n");
             for (Map.Entry<Person, Integer> entry : task.getSpentEffort().entrySet()) {
               saveFile.write("\t\t\t\t\t<person>" + entry.getKey().getLabel() + "</person>\n");
               saveFile.write("\t\t\t\t\t<effort>" + entry.getValue().toString() + "</effort>\n");
             }
-            saveFile.write("\t\t\t\t</Effort>\n");
+            saveFile.write("\t\t\t\t</TaskEffort>\n");
           }
           saveFile.write("\t\t\t</Task>\n");
         }
@@ -515,8 +515,8 @@ public class Saving {
           saveFile.write("\t\t\t</Task>\n");
         }
         saveFile.write("\t\t</Tasks>\n");
-        saveFile.write("\t</Sprint>\n");
       }
+      saveFile.write("\t</Sprint>\n");
     }
     saveFile.write("</Sprints>\n");
   }

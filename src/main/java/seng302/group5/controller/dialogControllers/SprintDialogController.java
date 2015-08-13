@@ -624,11 +624,30 @@ public class SprintDialogController {
    */
   @FXML
   protected void btnCancelClick(ActionEvent event) {
-    if (createOrEdit == CreateOrEdit.EDIT && Settings.correctList(sprint)) {
-      mainApp.refreshList(sprint);
+    Alert alert = null;
+    if ((createOrEdit == CreateOrEdit.CREATE && !tasks.isEmpty()) ||
+        (createOrEdit == CreateOrEdit.EDIT && (!tasks.equals(sprint.getTasks()) ||
+                                               !taskEditsUndoRedo.getUndoRedos().isEmpty()))) {
+
+      alert = new Alert(Alert.AlertType.CONFIRMATION);
+      alert.setTitle("Changes have been made to the sprint's tasks");
+      alert.setHeaderText(null);
+      String message = "By cancelling this dialog you will lose all changes you have made "
+                       + "to tasks since this sprint dialog was opened. Are you sure you wish "
+                       + "to continue?";
+      alert.getDialogPane().setPrefHeight(120);
+      alert.setContentText(message);
+      //checks response
+      alert.showAndWait();
     }
-    mainApp.quickUndo(taskEditsUndoRedo);
-    thisStage.close();
+    if (alert == null || alert.getResult() == ButtonType.OK) {
+      if (createOrEdit == CreateOrEdit.EDIT && Settings.correctList(sprint)) {
+        mainApp.refreshList(sprint);
+      }
+      // undo all editing of existing tasks made within this dialog
+      mainApp.quickUndo(taskEditsUndoRedo);
+      thisStage.close();
+    }
   }
 
   /**
