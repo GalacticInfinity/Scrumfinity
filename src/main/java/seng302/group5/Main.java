@@ -653,7 +653,6 @@ public class Main extends Application {
       storyDialogStage.initOwner(primaryStage);
       storyDialogStage.setScene(storyDialogScene);
       storyDialogStage.showAndWait();
-
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -722,7 +721,6 @@ public class Main extends Application {
       storyDialogStage.initOwner(stage);
       storyDialogStage.setScene(storyDialogScene);
       storyDialogStage.showAndWait();
-
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -830,6 +828,7 @@ public class Main extends Application {
       taskDialogStage.setScene(taskDialogScene);
       taskDialogStage.showAndWait();
 
+      this.getLMPC().getScrumBoardController().refreshLists();
       taskEditUndoRedo = controller.getEditUndoRedoObject();
     } catch (IOException e) {
       e.printStackTrace();

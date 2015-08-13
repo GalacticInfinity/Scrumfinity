@@ -76,6 +76,7 @@ public class ScrumBoardController {
     doneTasks = FXCollections.observableArrayList();
     Story nonStory = new Story();
     nonStory.setLabel("Non-story Tasks");
+    availableStories.add(nonStory);
 
     backlogCombo.setVisibleRowCount(5);
     sprintCombo.setVisibleRowCount(5);
@@ -99,16 +100,19 @@ public class ScrumBoardController {
         (observable, oldSprint, newSprint) -> {
 
           storyCombo.setDisable(false);
-          availableStories.setAll(nonStory);
-          availableStories.addAll(newSprint.getSprintStories());
+          availableStories.setAll(newSprint.getSprintStories());
+          availableStories.add(0, nonStory);
           storyCombo.setItems(availableStories);
+          storyCombo.setValue(nonStory);
+          refreshLists();
         }
     );
 
     storyCombo.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldStory, newStory) -> {
-
-          refreshLists(newStory);
+          if (oldStory != null && newStory != null) {
+            refreshLists();
+          }
         }
     );
   }
@@ -141,7 +145,7 @@ public class ScrumBoardController {
           mainApp.showTaskDialog(storyCombo.getValue().getTasks(), selectedTask,
                                  sprintCombo.getValue().getSprintTeam(),
                                  CreateOrEdit.EDIT, stage);
-          refreshLists(storyCombo.getValue());
+          refreshLists();
         }
       });
     }
@@ -150,7 +154,7 @@ public class ScrumBoardController {
   /**
    * Refreshes the four list views when any of the tasks within the story is updated.
    */
-  private void refreshLists(Story story) {
+  public void refreshLists() {
     Story nonStory = new Story();
     nonStory.setLabel("Non-story Tasks");
 
@@ -159,15 +163,28 @@ public class ScrumBoardController {
     verifyTasks.clear();
     doneTasks.clear();
 
-    if (story.getLabel().equals(nonStory.getLabel())) {
+    if (!sprintCombo.getValue().getTasks().isEmpty() &&
+        storyCombo.getValue().getLabel().equals(nonStory.getLabel())) {
       sprintCombo.getValue().getTasks().forEach(this::sortTaskToLists);
+    } else if (!sprintCombo.getValue().getTasks().isEmpty() &&
+               !storyCombo.getValue().getTasks().isEmpty()) {
+      storyCombo.getValue().getTasks().forEach(this::sortTaskToLists);
     } else {
-      story.getTasks().forEach(this::sortTaskToLists);
+      Task newTask = new Task();
+      notStartedTasks.add(newTask);
+      inProgressTasks.add(newTask);
+      verifyTasks.add(newTask);
+      doneTasks.add(newTask);
+      notStartedTasks.clear();
+      inProgressTasks.clear();
+      verifyTasks.clear();
+      doneTasks.clear();
     }
     notStartedList.setItems(notStartedTasks);
     inProgressList.setItems(inProgressTasks);
     verifyList.setItems(verifyTasks);
     doneList.setItems(doneTasks);
+
   }
 
   /**
