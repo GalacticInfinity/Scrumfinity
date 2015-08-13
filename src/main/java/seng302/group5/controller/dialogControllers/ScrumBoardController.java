@@ -96,26 +96,29 @@ public class ScrumBoardController {
 
     backlogCombo.getSelectionModel().selectedItemProperty().addListener(
       (observable, oldBacklog, newBacklog) -> {
+        if (newBacklog != null) {
+          sprintCombo.setDisable(false);
 
-        sprintCombo.setDisable(false);
-
-        // get backlog's sprints
-        availableSprints.setAll(mainApp.getSprints().stream()
-                                    .filter(sprint -> sprint.getSprintBacklog().equals(newBacklog))
-                                    .collect(Collectors.toList()));
-        sprintCombo.setItems(availableSprints);
+          // get backlog's sprints
+          availableSprints.setAll(mainApp.getSprints().stream()
+                                      .filter(
+                                          sprint -> sprint.getSprintBacklog().equals(newBacklog))
+                                      .collect(Collectors.toList()));
+          sprintCombo.setItems(availableSprints);
+        }
       }
     );
 
     sprintCombo.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldSprint, newSprint) -> {
-
-          storyCombo.setDisable(false);
-          availableStories.setAll(newSprint.getSprintStories());
-          availableStories.add(0, nonStory);
-          storyCombo.setItems(availableStories);
-          storyCombo.setValue(nonStory);
-          refreshLists();
+          if (newSprint != null) {
+            storyCombo.setDisable(false);
+            availableStories.setAll(newSprint.getSprintStories());
+            availableStories.add(0, nonStory);
+            storyCombo.setItems(availableStories);
+            storyCombo.setValue(nonStory);
+            refreshLists();
+          }
         }
     );
 
@@ -266,6 +269,24 @@ public class ScrumBoardController {
     } else if (task.getStatus().equals(Status.DONE)) {
       doneTasks.add(task);
     }
+  }
+
+  /**
+   * On loading the scrum board needs to be completely reset. This functions does that, clears all
+   * selections.
+   */
+  public void clearSelections() {
+    storyCombo.getSelectionModel().clearSelection();
+    storyCombo.setDisable(true);
+    sprintCombo.getSelectionModel().clearSelection();
+    sprintCombo.setDisable(true);
+    backlogCombo.getSelectionModel().clearSelection();
+    availableSprints.clear();
+    availableStories.clear();
+    notStartedTasks.clear();
+    inProgressTasks.clear();
+    verifyTasks.clear();
+    doneTasks.clear();
   }
 
 
