@@ -1172,7 +1172,6 @@ public class UndoRedoHandler {
       taskToChange.copyValues(taskData);
       taskable.addTask(taskToChange);
     }
-    mainApp.getLMPC().getScrumBoardController().refreshLists();
     mainApp.refreshList(null);
   }
 
@@ -1203,7 +1202,6 @@ public class UndoRedoHandler {
 
     // Make the changes and refresh the list
     taskToChange.copyValues(taskData);
-    mainApp.getLMPC().getScrumBoardController().refreshLists();
     mainApp.refreshList(null);
   }
 
@@ -1235,7 +1233,6 @@ public class UndoRedoHandler {
     } else {
       taskable.removeTask(taskToChange);
     }
-    mainApp.getLMPC().getScrumBoardController().refreshLists();
     mainApp.refreshList(null);
   }
 
