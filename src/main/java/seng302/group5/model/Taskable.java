@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Interface for representing an object that can contain tasks.
  */
-public interface Taskable {
+public interface Taskable extends AgileItem {
 
   /**
    * Get the tasks of the object.
