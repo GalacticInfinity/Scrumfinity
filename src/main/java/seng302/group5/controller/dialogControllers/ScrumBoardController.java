@@ -12,10 +12,8 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
@@ -25,7 +23,6 @@ import seng302.group5.model.Status;
 import seng302.group5.model.Story;
 import seng302.group5.model.Task;
 
-import static javafx.scene.paint.Color.GREEN;
 
 /**
  * The controller class for the scrum board dialog. Tasks can be viewed from this dialog by
