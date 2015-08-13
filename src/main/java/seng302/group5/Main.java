@@ -259,7 +259,7 @@ public class Main extends Application {
   public void showToolBar() {
     try {
       FXMLLoader loader = new FXMLLoader();
-      loader.setLocation(ToolBarController.class.getResource("/ToolBar.fxml"));
+      loader.setLocation(ToolBarController.class.getResource("/Toolbar.fxml"));
       ToolBar toolBar = loader.load();
 
       ToolBarController controller = loader.getController();
