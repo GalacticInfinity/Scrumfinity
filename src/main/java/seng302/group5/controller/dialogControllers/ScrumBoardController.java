@@ -1,5 +1,6 @@
 package seng302.group5.controller.dialogControllers;
 
+import java.io.File;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
@@ -8,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.cell.TextFieldListCell;
+import javafx.scene.image.Image;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
@@ -162,6 +164,10 @@ public class ScrumBoardController {
           Dragboard dragBoard = taskListView.startDragAndDrop(TransferMode.MOVE);
 
           ClipboardContent content = new ClipboardContent();
+          File dragFileImage = new File("src/main/resources/DragCursor.png");
+          Image dragImage = new Image(dragFileImage.toURI().toString());
+          dragBoard.setDragView(dragImage);
+
 
           content.putString(taskListView.getSelectionModel().getSelectedItem().getLabel());
 
@@ -173,7 +179,8 @@ public class ScrumBoardController {
           doneList.setOnDragOver(hover -> state = "done");
         }
       });
-      taskListView.setOnDragDone( //TODO Add undo Redo for drag and dropping tasks
+      //TODO Add undo Redo for drag and dropping tasks
+      taskListView.setOnDragDone(
                                   event -> {
                                     if (taskListView.getSelectionModel().getSelectedItem() != null) {
                                       if (state.equals("notstarted")) {
@@ -190,10 +197,10 @@ public class ScrumBoardController {
                       .getSelectedItem()
                       .setStatus(Status.VERIFY);
                 } else if (Objects.equals(state, "done")) {
-                  taskListView.getSelectionModel()
-                      .getSelectedItem()
-                      .setStatus(Status.DONE);
-                }
+                                        taskListView.getSelectionModel()
+                                            .getSelectedItem()
+                                            .setStatus(Status.DONE);
+                                      }
                 refreshLists();
               }
             });
