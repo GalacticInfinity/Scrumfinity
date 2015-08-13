@@ -92,7 +92,14 @@ public class RevertHandler {
     }
 
     for (Story story : storiesLastSaved) {
-      mainApp.addStory(new Story(story));
+      Story storyClone = new Story(story);
+      ArrayList<Task> taskClones = new ArrayList<>();
+      for (Task task : story.getTasks()) {
+        taskClones.add(new Task(task));
+      }
+      storyClone.removeAllTasks();
+      storyClone.addAllTasks(taskClones);
+      mainApp.addStory(storyClone);
     }
 
     for (Backlog backlog : backlogsLastSaved) {
@@ -104,7 +111,14 @@ public class RevertHandler {
     }
 
     for (Sprint sprint : sprintsLastSaved) {
-      mainApp.addSprint(new Sprint(sprint));
+      Sprint sprintClone = new Sprint(sprint);
+      ArrayList<Task> taskClones = new ArrayList<>();
+      for (Task task : sprint.getTasks()) {
+        taskClones.add(new Task(task));
+      }
+      sprintClone.removeAllTasks();
+      sprintClone.addAllTasks(taskClones);
+      mainApp.addSprint(sprintClone);
     }
 
 
@@ -170,7 +184,14 @@ public class RevertHandler {
 
     storiesLastSaved.clear();
     for (Story story : mainApp.getStories()) {
-      storiesLastSaved.add(new Story(story));
+      Story storyClone = new Story(story);
+      ArrayList<Task> taskClones = new ArrayList<>();
+      for (Task task : story.getTasks()) {
+        taskClones.add(new Task(task));
+      }
+      storyClone.removeAllTasks();
+      storyClone.addAllTasks(taskClones);
+      storiesLastSaved.add(storyClone);
     }
 
     backlogsLastSaved.clear();
@@ -185,7 +206,14 @@ public class RevertHandler {
 
     sprintsLastSaved.clear();
     for (Sprint sprint : mainApp.getSprints()) {
-      sprintsLastSaved.addAll(new Sprint(sprint));
+      Sprint sprintClone = new Sprint(sprint);
+      ArrayList<Task> taskClones = new ArrayList<>();
+      for (Task task : sprint.getTasks()) {
+        taskClones.add(new Task(task));
+      }
+      sprintClone.removeAllTasks();
+      sprintClone.addAllTasks(taskClones);
+      sprintsLastSaved.add(sprintClone);
     }
 
     // Ensure data in the copies refer to each other
@@ -204,6 +232,8 @@ public class RevertHandler {
     syncSprintsWithTeams(sprintsLastSaved, teamsLastSaved);
     syncSprintsWithReleases(sprintsLastSaved, releasesLastSaved);
     syncSprintsWithStories(sprintsLastSaved, storiesLastSaved);
+    syncSprintTasksWithPeople(sprintsLastSaved, peopleLastSaved);
+    syncStoriesTasksWithPeople(storiesLastSaved, peopleLastSaved);
   }
 
   /**
@@ -370,54 +400,58 @@ public class RevertHandler {
 
   /**
    * Syncs story tasks and people so that references are accurate on revert.
-   * @param items The list of stories that will be synced.
+   * @param stories The list of stories that will be synced.
    * @param people The list of people that will be synced with tasks.
    */
-  private void syncStoriesTasksWithPeople(List<Story> items, List<Person> people) {
+  private void syncStoriesTasksWithPeople(List<Story> stories, List<Person> people) {
     Map<String, Person> personMap = new HashMap<>();
 
     for (Person mainPerson : people) {
       personMap.put(mainPerson.getLabel(), mainPerson);
     }
 
-    for (AgileItem item : items) {
-      if (item.getClass().equals(Story.class)) {
-        for (Task task : ((Story) item).getTasks()) {
-          ArrayList<Person> peopleList = new ArrayList<>();
+    for (Story story : stories) {
+      for (Task task : story.getTasks()) {
+        ArrayList<Person> peopleList = new ArrayList<>();
+        Map<Person, Integer> peoplesEffort = new IdentityHashMap<>();
         for (Person person : task.getTaskPeople()) {
           Person mainPerson = personMap.get(person.getLabel());
+          int effort = task.getSpentEffort().get(person);
           peopleList.add(mainPerson);
+          peoplesEffort.put(mainPerson, effort);
         }
         task.removeAllTaskPeople();
         task.addAllTaskPeople(peopleList);
-      }
+        task.updateSpentEffort(peoplesEffort);
       }
     }
   }
 
   /**
    * Syncs Sprint tasks and people so that references are accurate on revert.
-   * @param items The list of Sprints that will be synced.
+   * @param sprints The list of Sprints that will be synced.
    * @param people The list of people that will be synced with tasks.
    */
-  private void syncSprintTasksWithPeople(List<Sprint> items, List<Person> people) {
+  private void syncSprintTasksWithPeople(List<Sprint> sprints, List<Person> people) {
     Map<String, Person> personMap = new HashMap<>();
 
     for (Person mainPerson : people) {
       personMap.put(mainPerson.getLabel(), mainPerson);
     }
 
-    for (AgileItem item : items) {
-      if (item.getClass().equals(Sprint.class)) {
-        for (Task task : ((Sprint) item).getTasks()) {
-          ArrayList<Person> peopleList = new ArrayList<>();
-          for (Person person : task.getTaskPeople()) {
-            Person mainPerson = personMap.get(person.getLabel());
-            peopleList.add(mainPerson);
-          }
-          task.removeAllTaskPeople();
-          task.addAllTaskPeople(peopleList);
+    for (Sprint sprint : sprints) {
+      for (Task task : sprint.getTasks()) {
+        ArrayList<Person> peopleList = new ArrayList<>();
+        Map<Person, Integer> peoplesEffort = new IdentityHashMap<>();
+        for (Person person : task.getTaskPeople()) {
+          Person mainPerson = personMap.get(person.getLabel());
+          int effort = task.getSpentEffort().get(person);
+          peopleList.add(mainPerson);
+          peoplesEffort.put(mainPerson, effort);
         }
+        task.removeAllTaskPeople();
+        task.addAllTaskPeople(peopleList);
+        task.updateSpentEffort(peoplesEffort);
       }
     }
 
