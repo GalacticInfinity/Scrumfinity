@@ -364,9 +364,6 @@ public class ReleaseDialogController {
 
     if (createOrEdit == CreateOrEdit.EDIT) {
       for (Sprint sprint : mainApp.getSprints()) {
-        System.out.println(sprint.getSprintRelease().getLabel());
-        System.out.println(releaseLabelField.getText().trim());
-        System.out.println();
         if (sprint.getSprintRelease().getLabel().equals(releaseLabelField.getText().trim())) {
           if (sprint.getSprintEnd().isAfter(releaseDateField.getValue())) {
             throw new Exception("Release date must be after the end date of the Sprint"
