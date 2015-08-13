@@ -210,11 +210,11 @@ public class ScrumBoardController {
                       .getSelectedItem()
                       .setStatus(Status.DONE);
                 }
-                refreshList(storyCombo.getSelectionModel().getSelectedItem());
+                refreshLists(storyCombo.getSelectionModel().getSelectedItem());
               }
             }
           });
-      refreshList(storyCombo.getSelectionModel().getSelectedItem());
+      refreshLists(storyCombo.getSelectionModel().getSelectedItem());
       }
 
   }
