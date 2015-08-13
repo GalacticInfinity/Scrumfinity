@@ -64,7 +64,10 @@ public class TaskDialogController {
   private UndoRedoObject undoRedoObject;
 
   /**
-   * Sets up the controller on start up. TODO: expand when it does more
+   * Sets up the controller on start up. Is called currently from sprints, stories and scrum board
+   * but can be called from many places. The Taskable instance is used instead of Main compared to
+   * other dialogs because Tasks cannot exist on their own, i.e. taskable.addTask() rather than
+   * mainApp.addStory().
    *
    * @param taskable The collection which will contain the task
    * @param team The team of the sprint which will contain the task
@@ -146,7 +149,6 @@ public class TaskDialogController {
     );
 
     undoRedoObject = null;
-    // TODO finish
   }
 
   /**
@@ -165,7 +167,8 @@ public class TaskDialogController {
   }
 
   /**
-   * Initialises the models lists todo expand when it does more
+   * Initialises the models lists including available people, allocated people with their logged
+   * effort, available statuses, and sets the custom list cell of the allocated people list view.
    */
   private void initialiseLists(Team team) {
     availablePeople = FXCollections.observableArrayList();
@@ -265,7 +268,10 @@ public class TaskDialogController {
 
   /**
    * Handles the action of clicking the confirm button. It parses the values that were input
-   * into the dialog fields and updates or creates the task it is looking at.
+   * into the dialog fields and updates or creates the task it is looking at. It creates
+   * the UndoRedoObject for the changes made but does not force it onto the stack in
+   * UndoRedoHandler. It is up to the object that is using the dialog to use it by accessing
+   * it using the getter.
    *
    * @param event Action event
    */
@@ -336,9 +342,6 @@ public class TaskDialogController {
         task.updateSpentEffort(peoplesEffort);
       }
       generateUndoRedoObject();
-      // todo newAction in main or return value for nested transaction?
-//    UndoRedoObject undoRedoObject = generateUndoRedoObject();
-//    mainApp.newAction(undoRedoObject);
       thisStage.close();
     }
   }
@@ -400,14 +403,6 @@ public class TaskDialogController {
 
     private Person person;
     private String effortStr;
-
-    /**
-     * Default constructor using person and role default constructors
-     */
-    public PersonEffort() {
-      this.person = new Person();
-      this.effortStr = "";
-    }
 
     /**
      * Constructor for PersonEffort object
