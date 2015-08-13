@@ -112,6 +112,7 @@ public class StoryDialogController {
     if (createOrEdit == CreateOrEdit.CREATE) {
       thisStage.setTitle("Create New Story");
       btnCreateStory.setText("Create");
+      statusCombo.getSelectionModel().select(Status.getStatusString(Status.NOT_STARTED));
 
       initialiseLists();
       readyCheckbox.setDisable(true);

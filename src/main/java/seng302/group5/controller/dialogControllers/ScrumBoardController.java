@@ -5,6 +5,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
@@ -168,7 +169,6 @@ public class ScrumBoardController {
           Image dragImage = new Image(dragFileImage.toURI().toString());
           dragBoard.setDragView(dragImage);
 
-
           content.putString(taskListView.getSelectionModel().getSelectedItem().getLabel());
 
           dragBoard.setContent(content);
@@ -260,5 +260,12 @@ public class ScrumBoardController {
     } else if (task.getStatus().equals(Status.DONE)) {
       doneTasks.add(task);
     }
+  }
+
+
+  //Todo jdoc
+  @FXML
+  protected void addNewTask(ActionEvent event) {
+    //if (sprintCombo)
   }
 }

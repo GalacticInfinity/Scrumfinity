@@ -709,6 +709,7 @@ public class Loading {
       // For each new story
       if (storyLine.matches(".*<Story>")) {
         newStory = new Story();
+        newStory.setStatus(Status.NOT_STARTED);
 
         // Mandatory fields
         storyLine = loadedFile.readLine();

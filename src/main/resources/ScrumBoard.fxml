@@ -28,6 +28,11 @@
                               <Insets left="10.0" top="10.0" />
                            </HBox.margin>
                         </ComboBox>
+                        <Button fx:id="btnNewTask" mnemonicParsing="false" onAction="#addNewTask" prefHeight="30.0" prefWidth="45.0" text="New">
+                           <HBox.margin>
+                              <Insets left="10.0" right="10.0" top="10.0" />
+                           </HBox.margin>
+                        </Button>
                      </children>
                   </HBox>
                </children>
