@@ -22,6 +22,7 @@ import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Release;
 import seng302.group5.model.Project;
+import seng302.group5.model.Sprint;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoObject;
 import seng302.group5.model.util.Settings;
@@ -360,6 +361,21 @@ public class ReleaseDialogController {
     if (inputReleaseDate == null) {
       throw new Exception("Release Date is empty.");
     }
+
+    if (createOrEdit == CreateOrEdit.EDIT) {
+      for (Sprint sprint : mainApp.getSprints()) {
+        System.out.println(sprint.getSprintRelease().getLabel());
+        System.out.println(releaseLabelField.getText().trim());
+        System.out.println();
+        if (sprint.getSprintRelease().getLabel().equals(releaseLabelField.getText().trim())) {
+          if (sprint.getSprintEnd().isAfter(releaseDateField.getValue())) {
+            throw new Exception("Release date must be after the end date of the Sprint"
+                                + " it is assigned to");
+          }
+        }
+      }
+    }
+
     return inputReleaseDate;
   }
 
