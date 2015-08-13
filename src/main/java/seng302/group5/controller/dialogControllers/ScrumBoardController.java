@@ -3,11 +3,19 @@ package seng302.group5.controller.dialogControllers;
 import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.cell.TextFieldListCell;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseDragEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
@@ -16,6 +24,8 @@ import seng302.group5.model.Sprint;
 import seng302.group5.model.Status;
 import seng302.group5.model.Story;
 import seng302.group5.model.Task;
+
+import static javafx.scene.paint.Color.GREEN;
 
 /**
  * The controller class for the scrum board dialog. Tasks can be viewed from this dialog by
@@ -128,6 +138,7 @@ public class ScrumBoardController {
    * Allows us to override a ListViewCell - a single cell in the ListView.
    */
   private class ListCell extends TextFieldListCell<Task> {
+    private String state;
 
     public ListCell(ListView<Task> taskListView) {
       super();
@@ -144,7 +155,68 @@ public class ScrumBoardController {
           refreshList(storyCombo.getValue());
         }
       });
-    }
+
+      taskListView.setOnDragDetected(new EventHandler<MouseEvent>() {
+
+        @Override
+        public void handle(MouseEvent event) {
+          if (taskListView.getSelectionModel().getSelectedItem() != null) {
+            state = "";
+
+            Dragboard dragBoard = taskListView.startDragAndDrop(TransferMode.MOVE);
+
+            ClipboardContent content = new ClipboardContent();
+
+            content.putString(taskListView.getSelectionModel().getSelectedItem().getLabel());
+
+            dragBoard.setContent(content);
+
+            notStartedList.setOnDragOver(hover -> {
+              state = "notstarted";
+            });
+            inProgressList.setOnDragOver(hover -> {
+              state = "progress";
+            });
+            verifyList.setOnDragOver(hover -> {
+              state = "verify";
+            });
+            doneList.setOnDragOver(hover -> {
+              state = "done";
+            });
+
+          }
+        }
+        });
+      taskListView.setOnDragDone( //TODO Add undo Redo for drag and dropping tasks
+          new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+              if (taskListView.getSelectionModel().getSelectedItem() != null) {
+                if (state == "notstarted") {
+                  taskListView.getSelectionModel()
+                      .getSelectedItem()
+                      .setStatus(Status.NOT_STARTED);
+
+                } else if (state == "progress") {
+                  taskListView.getSelectionModel()
+                      .getSelectedItem()
+                      .setStatus(Status.IN_PROGRESS);
+                } else if (state == "verify") {
+                  taskListView.getSelectionModel()
+                      .getSelectedItem()
+                      .setStatus(Status.VERIFY);
+                } else if (state == "done") {
+                  taskListView.getSelectionModel()
+                      .getSelectedItem()
+                      .setStatus(Status.DONE);
+                }
+                refreshList(storyCombo.getSelectionModel().getSelectedItem());
+              }
+            }
+          });
+      refreshList(storyCombo.getSelectionModel().getSelectedItem());
+      }
+
   }
 
   /**
