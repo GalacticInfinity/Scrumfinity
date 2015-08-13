@@ -108,7 +108,7 @@ public class ScrumBoardController {
     storyCombo.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldStory, newStory) -> {
 
-          refreshList(newStory);
+          refreshLists(newStory);
         }
     );
   }
@@ -141,7 +141,7 @@ public class ScrumBoardController {
           mainApp.showTaskDialog(storyCombo.getValue().getTasks(), selectedTask,
                                  sprintCombo.getValue().getSprintTeam(),
                                  CreateOrEdit.EDIT, stage);
-          refreshList(storyCombo.getValue());
+          refreshLists(storyCombo.getValue());
         }
       });
     }
@@ -150,26 +150,39 @@ public class ScrumBoardController {
   /**
    * Refreshes the four list views when any of the tasks within the story is updated.
    */
-  private void refreshList(Story story) {
+  private void refreshLists(Story story) {
+    Story nonStory = new Story();
+    nonStory.setLabel("Non-story Tasks");
+
     notStartedTasks.clear();
     inProgressTasks.clear();
     verifyTasks.clear();
     doneTasks.clear();
 
-    for (Task task : story.getTasks()) {
-      if (task.getStatus().equals(Status.NOT_STARTED)) {
-        notStartedTasks.add(task);
-      } else if (task.getStatus().equals(Status.IN_PROGRESS)) {
-        inProgressTasks.add(task);
-      } else if (task.getStatus().equals(Status.VERIFY)) {
-        verifyTasks.add(task);
-      } else if (task.getStatus().equals(Status.DONE)) {
-        doneTasks.add(task);
-      }
+    if (story.getLabel().equals(nonStory.getLabel())) {
+      sprintCombo.getValue().getTasks().forEach(this::sortTaskToLists);
+    } else {
+      story.getTasks().forEach(this::sortTaskToLists);
     }
     notStartedList.setItems(notStartedTasks);
     inProgressList.setItems(inProgressTasks);
     verifyList.setItems(verifyTasks);
     doneList.setItems(doneTasks);
+  }
+
+  /**
+   * Sorting tasks to the correct list according to their current status.
+   * @param task the task that's within the story or sprint
+   */
+  private void sortTaskToLists(Task task) {
+    if (task.getStatus().equals(Status.NOT_STARTED)) {
+      notStartedTasks.add(task);
+    } else if (task.getStatus().equals(Status.IN_PROGRESS)) {
+      inProgressTasks.add(task);
+    } else if (task.getStatus().equals(Status.VERIFY)) {
+      verifyTasks.add(task);
+    } else if (task.getStatus().equals(Status.DONE)) {
+      doneTasks.add(task);
+    }
   }
 }
