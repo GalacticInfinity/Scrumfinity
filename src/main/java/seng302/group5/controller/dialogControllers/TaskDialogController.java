@@ -1,7 +1,6 @@
 package seng302.group5.controller.dialogControllers;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -27,6 +26,7 @@ import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Person;
 import seng302.group5.model.Status;
 import seng302.group5.model.Task;
+import seng302.group5.model.Taskable;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoObject;
@@ -52,7 +52,7 @@ public class TaskDialogController {
   @FXML private Button btnConfirm;
   @FXML private Button btnCancel;
 
-  private Collection<Task> taskCollection;
+  private Taskable taskable;
   private Stage thisStage;
   private CreateOrEdit createOrEdit;
   private Task task;
@@ -61,20 +61,20 @@ public class TaskDialogController {
   private ObservableList<PersonEffort> allocatedPeople;
   private ObservableList<PersonEffort> originalPeople;
 
-  private UndoRedoObject editUndoRedoObject;
+  private UndoRedoObject undoRedoObject;
 
   /**
    * Sets up the controller on start up. TODO: expand when it does more
    *
-   * @param taskCollection The collection which will contain the task
+   * @param taskable The collection which will contain the task
    * @param team The team of the sprint which will contain the task
    * @param thisStage This is the window that will be displayed
    * @param createOrEdit This is an ENUM object to determine if creating or editing
    * @param task The object that will be edited (null if creating)
    */
-  public void setupController(Collection<Task> taskCollection, Team team,
+  public void setupController(Taskable taskable, Team team,
                               Stage thisStage, CreateOrEdit createOrEdit, Task task) {
-    this.taskCollection = taskCollection;
+    this.taskable = taskable;
     this.thisStage = thisStage;
 
     if (task != null) {
@@ -145,7 +145,7 @@ public class TaskDialogController {
         }
     );
 
-    editUndoRedoObject = null;
+    undoRedoObject = null;
     // TODO finish
   }
 
@@ -241,15 +241,26 @@ public class TaskDialogController {
    * Generate an UndoRedoObject to represent a task edit action and store it globally. This is so
    * a cancel in a dialog higher in the hierarchy can undo the changes made to the task.
    */
-  private void generateEditUndoRedoObject() {
-    editUndoRedoObject = new UndoRedoObject();
-    editUndoRedoObject.setAction(Action.TASK_EDIT);
-    editUndoRedoObject.addDatum(lastTask);
+  private void generateUndoRedoObject() {
+    if (createOrEdit == CreateOrEdit.CREATE) {
+      undoRedoObject = new UndoRedoObject();
+      undoRedoObject.setAction(Action.TASK_CREATE);
+      undoRedoObject.addDatum(new Task(task));
+      undoRedoObject.addDatum(taskable);
 
-    // Store a copy of task to edit in object to avoid reference problems
-    editUndoRedoObject.setAgileItem(task);
-    Task taskToStore = new Task(task);
-    editUndoRedoObject.addDatum(taskToStore);
+      // Store a copy of task to edit in object to avoid reference problems
+      undoRedoObject.setAgileItem(task);
+
+    } else if (createOrEdit == CreateOrEdit.EDIT) {
+      undoRedoObject = new UndoRedoObject();
+      undoRedoObject.setAction(Action.TASK_EDIT);
+      undoRedoObject.addDatum(lastTask);
+
+      // Store a copy of task to edit in object to avoid reference problems
+      undoRedoObject.setAgileItem(task);
+      Task taskToStore = new Task(task);
+      undoRedoObject.addDatum(taskToStore);
+    }
   }
 
   /**
@@ -314,7 +325,7 @@ public class TaskDialogController {
         task = new Task(taskLabel, taskDescription, taskEstimateMinutes, taskStatus,
                         allocatedPeopleSorted);
         task.updateSpentEffort(peoplesEffort);
-        taskCollection.add(task);
+        taskable.addTask(task);
       } else if (createOrEdit == CreateOrEdit.EDIT) {
         task.setLabel(taskLabel);
         task.setTaskDescription(taskDescription);
@@ -323,8 +334,8 @@ public class TaskDialogController {
         task.removeAllTaskPeople();
         task.addAllTaskPeople(allocatedPeopleSorted);
         task.updateSpentEffort(peoplesEffort);
-        generateEditUndoRedoObject();
       }
+      generateUndoRedoObject();
       // todo newAction in main or return value for nested transaction?
 //    UndoRedoObject undoRedoObject = generateUndoRedoObject();
 //    mainApp.newAction(undoRedoObject);
@@ -361,7 +372,7 @@ public class TaskDialogController {
       } else {
         lastTaskLabel = lastTask.getLabel();
       }
-      for (Task task : taskCollection) {
+      for (Task task : taskable.getTasks()) {
         String taskLabel = task.getLabel();
         if (task.getLabel().equalsIgnoreCase(inputTaskLabel) &&
             !taskLabel.equalsIgnoreCase(lastTaskLabel)) {
@@ -378,8 +389,8 @@ public class TaskDialogController {
    *
    * @return The UndoRedoObject representing the successful task edit.
    */
-  public UndoRedoObject getEditUndoRedoObject() {
-    return editUndoRedoObject;
+  public UndoRedoObject getUndoRedoObject() {
+    return undoRedoObject;
   }
 
   /**

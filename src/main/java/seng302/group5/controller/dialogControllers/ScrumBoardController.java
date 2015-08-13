@@ -138,7 +138,7 @@ public class ScrumBoardController {
             click.getButton() == MouseButton.PRIMARY &&
             !isEmpty()) {
           Task selectedTask = taskListView.getSelectionModel().getSelectedItem();
-          mainApp.showTaskDialog(storyCombo.getValue().getTasks(), selectedTask,
+          mainApp.showTaskDialog(storyCombo.getValue(), selectedTask,
                                  sprintCombo.getValue().getSprintTeam(),
                                  CreateOrEdit.EDIT, stage);
           refreshList(storyCombo.getValue());

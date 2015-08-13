@@ -3,7 +3,6 @@ package seng302.group5;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -804,16 +803,16 @@ public class Main extends Application {
   /**
    * sets up the dialog box for editing a task when opened from another dialog
    *
-   * @param taskCollection the collection which owns/will own the task (it is not stored in Main)
+   * @param taskable the object which owns/will own the task (it is not stored in Main)
    * @param task the task that to view or edit (null if creating)
    * @param team the team of the sprint which will contain the task (non-null if story in sprint)
    * @param createOrEdit Whether editing or creating the task
    * @param stage the stage it is currently on to void unusual behaviour
    * @return the UndoRedo instance representing a task edit (null in all other cases)
    */
-  public UndoRedo showTaskDialog(Collection<Task> taskCollection, Task task, Team team,
+  public UndoRedo showTaskDialog(Taskable taskable, Task task, Team team,
                                  CreateOrEdit createOrEdit, Stage stage) {
-    UndoRedo taskEditUndoRedo = null;
+    UndoRedo taskUndoRedo = null;
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/TaskDialog.fxml"));
@@ -823,18 +822,18 @@ public class Main extends Application {
       Scene taskDialogScene = new Scene(taskDialogLayout);
       Stage taskDialogStage = new Stage();
 
-      controller.setupController(taskCollection, team, taskDialogStage, createOrEdit, task);
+      controller.setupController(taskable, team, taskDialogStage, createOrEdit, task);
 
       taskDialogStage.initModality(Modality.APPLICATION_MODAL);
       taskDialogStage.initOwner(stage);
       taskDialogStage.setScene(taskDialogScene);
       taskDialogStage.showAndWait();
 
-      taskEditUndoRedo = controller.getEditUndoRedoObject();
+      taskUndoRedo = controller.getUndoRedoObject();
     } catch (IOException e) {
       e.printStackTrace();
     }
-    return taskEditUndoRedo;
+    return taskUndoRedo;
   }
 
 
