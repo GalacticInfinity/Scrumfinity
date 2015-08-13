@@ -4,11 +4,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,8 +45,11 @@ public class Loading {
    * Loads all the data from the xml file into main app
    *
    * @param file File to load from
+   * @return boolean indicating if file is fully loaded or it broke
    */
-  public void loadFile(File file) {
+  public boolean loadFile(File file) {
+    boolean successfulLoad = true;
+
     // Turns the file into a string
     String filename = file.toString();
     if (!filename.endsWith(".xml")) {
@@ -75,21 +75,37 @@ public class Loading {
       } else {
         main.createDefaultEstimates();
       }
-      if (saveVersion >= 0.3) {
+      if (saveVersion >= 0.4) {
         loadSprints();
       }
       if (saveVersion >= 0.5) {
         syncTaskPeople();
       }
+
     } catch (Exception e) {
+      successfulLoad = false;
+
       Alert alert = new Alert(Alert.AlertType.ERROR);
       alert.setTitle("Loading Error");
       alert.setHeaderText(null);
-      alert.setContentText("There was a problem loading the file. "
-                           + "It may be corrupted, or from an unsupported version. Things may not "
-                           + "function as expected.");
+
+      String message;
+
+      if(Settings.organizationName.equals("")) {
+        message = "This is not a Scrumfinity file or is an"
+                  + " unsupported file version and cannot be loaded.";
+      } else if(saveVersion == Settings.progVersion) {
+        message = "This file appears to have corrupted and cannot be loaded.";
+      } else {
+        message = "This file may be corrupted or is from"
+                  + " an unsupported version and cannot be loaded";
+      }
+
+
+      alert.setContentText(message);
+      alert.getDialogPane().setPrefHeight(120);
       alert.showAndWait();
-      e.printStackTrace();
+//      e.printStackTrace();
     } finally {
       try {
         if (loadedFile != null) {
@@ -99,6 +115,7 @@ public class Loading {
         ex.printStackTrace();
       }
     }
+    return successfulLoad;
   }
 
   /**
