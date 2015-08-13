@@ -41,6 +41,7 @@ public class LoginController {
 
   @FXML
   protected void btnLoginLoad(ActionEvent event) {
+
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Open Project");
     FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
@@ -51,21 +52,27 @@ public class LoginController {
     try {
       File file = fileChooser.showOpenDialog(mainApp.getPrimaryStage());
       if (file != null) {
+        boolean successfulLoad;
         Settings.currentFile = file;
         mainApp.resetAll();
         Loading load = new Loading(mainApp);
-        load.loadFile(file);
+        successfulLoad = load.loadFile(file);
 
-        mainApp.getLMPC().refreshList(null);
-        if (!Settings.organizationName.isEmpty()) {
-          mainApp.setMainTitle("Scrumfinity - " + Settings.organizationName);
-          mainApp.toggleName();
+        if (successfulLoad) {
+          mainApp.getLMPC().refreshList(null);
+          if (!Settings.organizationName.isEmpty()) {
+            mainApp.setMainTitle("Scrumfinity - " + Settings.organizationName);
+            mainApp.toggleName();
+          }
+          mainApp.setLastSaved(); //for revert
+          mainApp.setMainScene();
+        } else {
+          mainApp.resetAll();
+          mainApp.showLoginScreen(mainApp.getPrimaryStage());
         }
-        mainApp.setLastSaved(); //for revert
-        mainApp.setMainScene();
       }
     } catch (Exception e) {
-      e.printStackTrace();
+//      e.printStackTrace();
       Alert alert = new Alert(Alert.AlertType.INFORMATION);
       alert.setTitle("LoadingError");
       alert.setHeaderText(null);

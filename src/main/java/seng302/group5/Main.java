@@ -860,6 +860,7 @@ public class Main extends Application {
       undoRedoHandler.undo();
       toggleName();
       checkUndoRedoItems();
+      LMPC.getScrumBoardController().refreshLists();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -873,6 +874,7 @@ public class Main extends Application {
       undoRedoHandler.redo();
       toggleName();
       checkUndoRedoItems();
+      LMPC.getScrumBoardController().refreshLists();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -1186,9 +1188,9 @@ public class Main extends Application {
         }
 
         if(inStory) {
-          String message = String.format(
+          String message =
               "This person is a creator of a story! You cannot delete him until you delete the "
-              + "story created by this person");
+              + "story created by this person";
           Alert alert = new Alert(Alert.AlertType.ERROR);
           alert.setTitle("Person is a Story creator");
           alert.setHeaderText(null);
@@ -1204,9 +1206,9 @@ public class Main extends Application {
         }
 
         if(inBacklog) {
-          String message = String.format(
+          String message =
               "This person is a product owner of a backlog. You must unassign them from the story"
-              + " before you can delete them.");
+              + " before you can delete them.";
           Alert alert = new Alert(Alert.AlertType.ERROR);
           alert.setTitle("Person is a backlog product owner!");
           alert.setHeaderText(null);

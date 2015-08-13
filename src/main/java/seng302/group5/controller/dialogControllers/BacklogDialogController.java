@@ -495,8 +495,6 @@ public class BacklogDialogController {
     ArrayList<Story> removedStories = new ArrayList<Story>();
     if (createOrEdit == CreateOrEdit.EDIT) {
       for (Story story : availableStories) {
-        System.out.println(backlog);
-        System.out.println(backlog.getStories());
         if (backlog.getStories().contains(story)) {
           for (Sprint sprint : mainApp.getSprints()) {
             if (sprint.getSprintBacklog().equals(backlog) && sprint.getSprintStories()

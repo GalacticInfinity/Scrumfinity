@@ -1015,7 +1015,7 @@ public class LoadingTest {
   @Test
   public void testStoryImpedimentsLoading() {
     createStories();
-    story1.setImpediments("Imped1");
+    story1.setImpediments("Impedi1");
     story2.setImpediments("Impeedi, dos");
     saving = new Saving(savedMain);
     File file = new File(System.getProperty("user.dir")
