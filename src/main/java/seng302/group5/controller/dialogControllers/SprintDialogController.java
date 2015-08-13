@@ -2,6 +2,7 @@ package seng302.group5.controller.dialogControllers;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,12 +89,13 @@ public class SprintDialogController {
   private ObservableList<Team> teams;
   private ObservableList<Release> releases;
   private ObservableList<Task> tasks;
+  private List<Task> originalTasks;
 
   private Map<Backlog, Project> projectMap;
   private Set<Story> allocatedStories;   // use to maintain priority order
   private Set<Story> otherSprintsStories;
 
-  private CompositeUndoRedo taskEditsUndoRedo;
+  private CompositeUndoRedo tasksUndoRedo;
 
 
   private boolean comboListenerFlag;
@@ -119,7 +121,7 @@ public class SprintDialogController {
       this.sprint = sprint;
       this.lastSprint = new Sprint(sprint);
     } else {
-      this.sprint = null;
+      this.sprint = new Sprint(); // different because tasks
       this.lastSprint = null;
     }
 
@@ -158,6 +160,7 @@ public class SprintDialogController {
       sprintEndDate.setValue(sprint.getSprintEnd());
       allocatedStories.addAll(sprint.getSprintStories());
       tasks.addAll(sprint.getTasks());
+      originalTasks.addAll(sprint.getTasks());
 
 
       // Stories from other sprints with same backlog
@@ -175,7 +178,7 @@ public class SprintDialogController {
     btnConfirm.setDefaultButton(true);
     thisStage.setResizable(false);
 
-    this.taskEditsUndoRedo = new CompositeUndoRedo("Edit Multiple Tasks");
+    this.tasksUndoRedo = new CompositeUndoRedo("Edit Multiple Tasks");
 
     sprintGoalField.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
@@ -269,9 +272,9 @@ public class SprintDialogController {
          sprintReleaseCombo.getValue().equals(sprint.getSprintRelease())) &&
         sprintStartDate.getValue().equals(sprint.getSprintStart()) &&
         sprintEndDate.getValue().equals(sprint.getSprintEnd()) &&
-        tasks.equals(sprint.getTasks()) &&
+        tasks.equals(originalTasks) &&
         allocatedStoriesPrioritised.equals(sprint.getSprintStories()) &&
-        taskEditsUndoRedo.getUndoRedos().isEmpty()) {
+        tasksUndoRedo.getUndoRedos().isEmpty()) {
       btnConfirm.setDisable(true);
     } else {
       btnConfirm.setDisable(false);
@@ -292,6 +295,7 @@ public class SprintDialogController {
     backlogs = FXCollections.observableArrayList();
     teams = FXCollections.observableArrayList();
     releases = FXCollections.observableArrayList();
+    originalTasks = new ArrayList<>();
 
     // set up map from backlog to project
     projectMap = new IdentityHashMap<>();
@@ -452,16 +456,21 @@ public class SprintDialogController {
    */
   @FXML
   private void addTask() {
+    UndoRedo taskCreate;
     if (sprintTeamCombo.getSelectionModel().getSelectedItem() == null) {
-      mainApp.showTaskDialog(tasks, null, null,
+      taskCreate = mainApp.showTaskDialog(sprint, null, null,
                              CreateOrEdit.CREATE, thisStage);
     } else {
-      mainApp.showTaskDialog(tasks, null, sprintTeamCombo.getSelectionModel().getSelectedItem(),
+      taskCreate = mainApp.showTaskDialog(sprint, null, sprintTeamCombo.getSelectionModel().getSelectedItem(),
                              CreateOrEdit.CREATE, thisStage);
     }
+    if (taskCreate != null) {
+      tasksUndoRedo.addUndoRedo(taskCreate);
+      tasks.setAll(sprint.getTasks());
 
-    if (createOrEdit == CreateOrEdit.EDIT) {
-      checkButtonDisabled();
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
     }
   }
 
@@ -472,7 +481,18 @@ public class SprintDialogController {
   private void removeTask() {
     Task selectedTask = taskList.getSelectionModel().getSelectedItem();
     if (selectedTask != null) {
-      tasks.remove(selectedTask);
+      UndoRedo taskDelete = new UndoRedoObject();
+      taskDelete.setAction(Action.TASK_DELETE);
+      taskDelete.addDatum(new Task(selectedTask));
+      taskDelete.addDatum(sprint);
+
+      // Store a copy of task to edit in object to avoid reference problems
+      taskDelete.setAgileItem(selectedTask);
+
+      sprint.removeTask(selectedTask);
+      tasksUndoRedo.addUndoRedo(taskDelete);
+
+      tasks.setAll(sprint.getTasks());
       if (createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
       }
@@ -577,10 +597,18 @@ public class SprintDialogController {
       alert.showAndWait();
     } else {
       if (createOrEdit == CreateOrEdit.CREATE) {
-        sprint = new Sprint(sprintGoal, sprintName, sprintDescription, backlog, project, team,
-                            release, startDate, endDate, allocatedStoriesPrioritised);
+        sprint.setSprintGoal(sprintGoal);
+        sprint.setSprintFullName(sprintName);
+        sprint.setSprintDescription(sprintDescription);
+        sprint.setSprintBacklog(backlog);
+        sprint.setSprintProject(project);
+        sprint.setSprintTeam(team);
+        sprint.setSprintRelease(release);
+        sprint.setSprintStart(startDate);
+        sprint.setSprintEnd(endDate);
+        sprint.addAllStories(allocatedStoriesPrioritised);
         sprint.setSprintImpediments(sprintImpediments);
-        sprint.addAllTasks(tasks);
+        // tasks are already in sprint
         mainApp.addSprint(sprint);
 
         if (Settings.correctList(sprint)) {
@@ -599,13 +627,12 @@ public class SprintDialogController {
         sprint.setSprintEnd(endDate);
         sprint.removeAllStories();
         sprint.addAllStories(allocatedStoriesPrioritised);
-        sprint.removeAllTasks();
-        sprint.addAllTasks(tasks);
+        // tasks are already in sprint
 
 
         mainApp.refreshList(sprint);
       }
-      UndoRedoObject undoRedoObject = generateUndoRedoObject();
+      UndoRedo undoRedoObject = generateUndoRedoObject();
       if (sprint != null && createOrEdit == CreateOrEdit.CREATE) {
         undoRedoObject.addDatum(sprint);
       } else {
@@ -627,7 +654,7 @@ public class SprintDialogController {
     Alert alert = null;
     if ((createOrEdit == CreateOrEdit.CREATE && !tasks.isEmpty()) ||
         (createOrEdit == CreateOrEdit.EDIT && (!tasks.equals(sprint.getTasks()) ||
-                                               !taskEditsUndoRedo.getUndoRedos().isEmpty()))) {
+                                               !tasksUndoRedo.getUndoRedos().isEmpty()))) {
 
       alert = new Alert(Alert.AlertType.CONFIRMATION);
       alert.setTitle("Changes have been made to the sprint's tasks");
@@ -645,7 +672,7 @@ public class SprintDialogController {
         mainApp.refreshList(sprint);
       }
       // undo all editing of existing tasks made within this dialog
-      mainApp.quickUndo(taskEditsUndoRedo);
+      mainApp.quickUndo(tasksUndoRedo);
       thisStage.close();
     }
   }
@@ -655,22 +682,35 @@ public class SprintDialogController {
    *
    * @return The UndoRedoObject to store.
    */
-  private UndoRedoObject generateUndoRedoObject() {
-    UndoRedoObject undoRedoObject = new UndoRedoObject();
+  private UndoRedo generateUndoRedoObject() {
+    Action action;
+    UndoRedoObject sprintChanges = new UndoRedoObject();
 
     if (createOrEdit == CreateOrEdit.CREATE) {
-      undoRedoObject.setAction(Action.SPRINT_CREATE);
+      action = Action.SPRINT_CREATE;
+      sprintChanges.setAction(action);
     } else {
-      undoRedoObject.setAction(Action.SPRINT_EDIT);
-      undoRedoObject.addDatum(lastSprint);
+      action = Action.SPRINT_EDIT;
+      sprintChanges.setAction(action);
+      sprintChanges.addDatum(lastSprint);
     }
 
     // Store a copy of sprint to edit in stack to avoid reference problems
-    undoRedoObject.setAgileItem(sprint);
+    sprintChanges.setAgileItem(sprint);
     Sprint sprintToStore = new Sprint(sprint);
-    undoRedoObject.addDatum(sprintToStore);
+    sprintChanges.addDatum(sprintToStore);
 
-    return undoRedoObject;
+    // Create composite undo/redo with original action string to handle sprint and task changes
+    CompositeUndoRedo sprintAndTaskChanges = new CompositeUndoRedo(Action.getActionString(action));
+    sprintAndTaskChanges.addUndoRedo(sprintChanges);
+    for (UndoRedo taskChange : tasksUndoRedo.getUndoRedos()) {
+      // only include edits to avoid doubling tasks
+      if (taskChange.getAction().equals(Action.TASK_EDIT)) {
+        sprintAndTaskChanges.addUndoRedo(taskChange);
+      }
+    }
+
+    return sprintAndTaskChanges;
   }
 
   /**
@@ -833,10 +873,10 @@ public class SprintDialogController {
             click.getButton() == MouseButton.PRIMARY &&
             !isEmpty()) {
           UndoRedo taskEdit =
-              mainApp.showTaskDialog(tasks, getItem(), sprintTeamCombo.getSelectionModel().
+              mainApp.showTaskDialog(sprint, getItem(), sprintTeamCombo.getSelectionModel().
                   getSelectedItem(), CreateOrEdit.EDIT, thisStage);
           if (taskEdit != null) {
-            taskEditsUndoRedo.addUndoRedo(taskEdit);
+            tasksUndoRedo.addUndoRedo(taskEdit);
             taskList.setItems(null);
             taskList.setItems(tasks);
             taskList.getSelectionModel().select(getItem());

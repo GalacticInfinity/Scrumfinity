@@ -3737,7 +3737,7 @@ public class UndoRedoHandlerTest {
     assertEquals(taskPeople, undoneTask.getTaskPeople());
     assertEquals(taskEffort, undoneTask.getSpentEffort());
   }
-//
+
   @Test
   public void testTaskEditRedo() throws Exception {
     assertTrue(mainApp.getPeople().isEmpty());

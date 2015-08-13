@@ -1,7 +1,8 @@
 package seng302.group5.controller.dialogControllers;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javafx.collections.FXCollections;
@@ -85,10 +86,9 @@ public class StoryDialogController {
   private ObservableList<Backlog> backlogs = FXCollections.observableArrayList();
   private ObservableList<String> statuses = FXCollections.observableArrayList();
   private ObservableList<Task> tasks = FXCollections.observableArrayList();
+  private List<Task> originalTasks = new ArrayList<>();
 
-  private CompositeUndoRedo taskEditsUndoRedo;  // Contains all the task edits within the dialog
-
-  private Map<String, Status> statusStringMap;
+  private CompositeUndoRedo tasksUndoRedo;  // Contains all the task changes within the dialog
 
   /**
    * Setup the Story dialog controller.
@@ -103,12 +103,6 @@ public class StoryDialogController {
     this.thisStage = thisStage;
 
     String os = System.getProperty("os.name");
-
-    statusStringMap = new HashMap<>();
-    statusStringMap.put("Done", Status.DONE);
-    statusStringMap.put("Verify", Status.VERIFY);
-    statusStringMap.put("In Progress", Status.IN_PROGRESS);
-    statusStringMap.put("Not Started", Status.NOT_STARTED); //TODO this is duplicate use the globals
 
     if (!os.startsWith("Windows")) {
       btnContainer.getChildren().remove(btnCreateStory);
@@ -132,14 +126,12 @@ public class StoryDialogController {
       impedimentsTextField.setText(story.getImpediments());
       acceptanceCriteria.setAll(story.getAcceptanceCriteria());
       tasks.setAll(story.getTasks());
-
-      for (Map.Entry<String, Status> entry : statusStringMap.entrySet()) {
-        if (story.getStatus() == entry.getValue()) {
-          statusCombo.setValue(entry.getKey());
-        }
-      }
+      originalTasks.addAll(story.getTasks());
 
       initialiseLists();
+
+      statusCombo.getSelectionModel().select(Status.getStatusString(story.getStatus()));
+
       storyCreatorList.setDisable(true);
       btnCreateStory.setDisable(true);
 
@@ -191,12 +183,12 @@ public class StoryDialogController {
         }
       }
     } else {
-      this.story = null;
+      this.story = new Story(); // different because tasks
       this.lastStory = null;
       this.lastBacklog = null;
     }
 
-    this.taskEditsUndoRedo = new CompositeUndoRedo("Edit Multiple Tasks");
+    this.tasksUndoRedo = new CompositeUndoRedo("Edit Multiple Tasks");
 
     btnCreateStory.setDefaultButton(true);
     thisStage.setResizable(false);
@@ -271,8 +263,8 @@ public class StoryDialogController {
         readyCheckbox.isSelected() == story.getStoryState() &&
         statusCombo.getValue().equals(story.getStatusString()) &&
         (backlogCombo.getValue() == null || backlogCombo.getValue().equals(lastBacklog)) &&
-        tasks.equals(story.getTasks()) &&
-        taskEditsUndoRedo.getUndoRedos().isEmpty()) {
+        tasks.equals(originalTasks) &&
+        tasksUndoRedo.getUndoRedos().isEmpty()) {
       btnCreateStory.setDisable(true);
     } else {
       btnCreateStory.setDisable(false);
@@ -284,22 +276,35 @@ public class StoryDialogController {
    *
    * @return The UndoRedoObject to store.
    */
-  private UndoRedoObject generateUndoRedoObject() {
-    UndoRedoObject undoRedoObject = new UndoRedoObject();
+  private UndoRedo generateUndoRedoObject() {
+    Action action;
+    UndoRedoObject storyChanges = new UndoRedoObject();
 
     if (createOrEdit == CreateOrEdit.CREATE) {
-      undoRedoObject.setAction(Action.STORY_CREATE);
+      action = Action.STORY_CREATE;
+      storyChanges.setAction(action);
     } else {
-      undoRedoObject.setAction(Action.STORY_EDIT);
-      undoRedoObject.addDatum(lastStory);
+      action = Action.STORY_EDIT;
+      storyChanges.setAction(action);
+      storyChanges.addDatum(lastStory);
     }
 
     // Store a copy of story to edit in stack to avoid reference problems
-    undoRedoObject.setAgileItem(story);
+    storyChanges.setAgileItem(story);
     Story storyToStore = new Story(story);
-    undoRedoObject.addDatum(storyToStore);
+    storyChanges.addDatum(storyToStore);
 
-    return undoRedoObject;
+    // Create composite undo/redo with original action string to handle story and task changes
+    CompositeUndoRedo storyAndTaskChanges = new CompositeUndoRedo(Action.getActionString(action));
+    storyAndTaskChanges.addUndoRedo(storyChanges);
+    for (UndoRedo taskChange : tasksUndoRedo.getUndoRedos()) {
+      // only include edits to avoid doubling tasks
+      if (taskChange.getAction().equals(Action.TASK_EDIT)) {
+        storyAndTaskChanges.addUndoRedo(taskChange);
+      }
+    }
+
+    return storyAndTaskChanges;
   }
 
   /**
@@ -318,7 +323,7 @@ public class StoryDialogController {
     String impediments = impedimentsTextField.getText().trim();
     Person creator = storyCreatorList.getValue();
     Backlog backlog = backlogCombo.getValue();
-    Status status = statusStringMap.get(statusCombo.getValue());
+    Status status = Status.getStatusEnum(statusCombo.getValue());
 
     try {
       label = parseStoryLabel(storyLabelField.getText());
@@ -347,9 +352,14 @@ public class StoryDialogController {
       alert.showAndWait();
     } else {
       if (createOrEdit == CreateOrEdit.CREATE) {
-        story = new Story(label, storyName, storyDescription, creator, acceptanceCriteria, status);
+        story.setLabel(label);
+        story.setStoryName(storyName);
+        story.setDescription(storyDescription);
+        story.setCreator(creator);
+        story.setAcceptanceCriteria(acceptanceCriteria);
+        story.setStatus(status);
         story.setImpediments(impediments);
-        story.addAllTasks(tasks);
+        // tasks are already in story
         mainApp.addStory(story);
         if (backlog != null) {
           backlog.addStory(story);
@@ -368,8 +378,7 @@ public class StoryDialogController {
         story.setCreator(creator);
         story.setAcceptanceCriteria(acceptanceCriteria);
         story.setStoryState(readyCheckbox.isSelected());
-        story.removeAllTasks();
-        story.addAllTasks(tasks);
+        // tasks are already in story
         if (lastBacklog == null && backlog != null) {
           backlog.addStory(story);
         }
@@ -379,7 +388,7 @@ public class StoryDialogController {
           mainApp.refreshList(story);
         }
       }
-      UndoRedoObject undoRedoObject = generateUndoRedoObject();
+      UndoRedo undoRedoObject = generateUndoRedoObject();
       if (backlog != null && createOrEdit == CreateOrEdit.CREATE) {
         undoRedoObject.addDatum(backlog);
       } else {
@@ -401,7 +410,7 @@ public class StoryDialogController {
     Alert alert = null;
     if ((createOrEdit == CreateOrEdit.CREATE && !tasks.isEmpty()) ||
         (createOrEdit == CreateOrEdit.EDIT && (!tasks.equals(story.getTasks()) ||
-                                               !taskEditsUndoRedo.getUndoRedos().isEmpty()))) {
+                                               !tasksUndoRedo.getUndoRedos().isEmpty()))) {
 
       alert = new Alert(Alert.AlertType.CONFIRMATION);
       alert.setTitle("Changes have been made to the story's tasks");
@@ -419,7 +428,7 @@ public class StoryDialogController {
         mainApp.refreshList(story);
       }
       // undo all editing of existing tasks made within this dialog
-      mainApp.quickUndo(taskEditsUndoRedo);
+      mainApp.quickUndo(tasksUndoRedo);
       thisStage.close();
     }
   }
@@ -652,8 +661,9 @@ public class StoryDialogController {
       }
       this.backlogs.addAll(mainApp.getBacklogs());
 
-      for (String status : statusStringMap.keySet()) {
-        this.statuses.add(status);
+      for (Status status : Status.values()) {
+        String statusStr = Status.getStatusString(status);
+        this.statuses.add(statusStr);
       }
       this.statusCombo.setItems(statuses); //This is the only way i can think to do this with an
                                           // Enum. I know how shit this is :C i am so sad
@@ -716,9 +726,13 @@ public class StoryDialogController {
    */
   @FXML
   private void addTask() {
-    mainApp.showTaskDialog(tasks, null, team, CreateOrEdit.CREATE, thisStage);
-    if (createOrEdit == CreateOrEdit.EDIT) {
-      checkButtonDisabled();
+    UndoRedo taskCreate = mainApp.showTaskDialog(story, null, team, CreateOrEdit.CREATE, thisStage);
+    if (taskCreate != null) {
+      tasksUndoRedo.addUndoRedo(taskCreate);
+      tasks.setAll(story.getTasks());
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
     }
   }
 
@@ -729,7 +743,18 @@ public class StoryDialogController {
   private void removeTask() {
     Task selectedTask = taskList.getSelectionModel().getSelectedItem();
     if (selectedTask != null) {
-      tasks.remove(selectedTask);
+      UndoRedo taskDelete = new UndoRedoObject();
+      taskDelete.setAction(Action.TASK_DELETE);
+      taskDelete.addDatum(new Task(selectedTask));
+      taskDelete.addDatum(story);
+
+      // Store a copy of task to edit in object to avoid reference problems
+      taskDelete.setAgileItem(selectedTask);
+
+      story.removeTask(selectedTask);
+      tasksUndoRedo.addUndoRedo(taskDelete);
+
+      tasks.setAll(story.getTasks());
       if (createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
       }
@@ -816,9 +841,9 @@ public class StoryDialogController {
             click.getButton() == MouseButton.PRIMARY &&
             !isEmpty()) {
           UndoRedo taskEdit =
-              mainApp.showTaskDialog(tasks, getItem(), team, CreateOrEdit.EDIT, thisStage);
+                     mainApp.showTaskDialog(story, getItem(), team, CreateOrEdit.EDIT, thisStage);
           if (taskEdit != null) {
-            taskEditsUndoRedo.addUndoRedo(taskEdit);
+            tasksUndoRedo.addUndoRedo(taskEdit);
             taskList.setItems(null);
             taskList.setItems(tasks);
             taskList.getSelectionModel().select(getItem());
