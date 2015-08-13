@@ -118,9 +118,9 @@ public class ScrumBoardController {
 
     storyCombo.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldStory, newStory) -> {
-          //if (oldStory != null && newStory != null) {
-          refreshLists();
-          //}
+          if (oldStory != null && newStory != null) {
+            refreshLists();
+          }
         }
     );
   }
@@ -223,21 +223,24 @@ public class ScrumBoardController {
     verifyTasks.clear();
     doneTasks.clear();
 
-    if (!sprintCombo.getValue().getTasks().isEmpty() &&
-        storyCombo.getValue().getLabel().equals(nonStory.getLabel())) {
-      sprintCombo.getValue().getTasks().forEach(this::sortTaskToLists);
-    } else if (!storyCombo.getValue().getTasks().isEmpty()) {
-      storyCombo.getValue().getTasks().forEach(this::sortTaskToLists);
-    } else {
-      Task newTask = new Task();
-      notStartedTasks.add(newTask);
-      inProgressTasks.add(newTask);
-      verifyTasks.add(newTask);
-      doneTasks.add(newTask);
-      notStartedTasks.clear();
-      inProgressTasks.clear();
-      verifyTasks.clear();
-      doneTasks.clear();
+    if (backlogCombo.getSelectionModel().getSelectedItem() != null &&
+        sprintCombo.getSelectionModel().getSelectedItem() != null) {
+
+      if (storyCombo.getValue().getLabel().equals(nonStory.getLabel())) {
+        sprintCombo.getValue().getTasks().forEach(this::sortTaskToLists);
+      } else if (!storyCombo.getValue().getTasks().isEmpty()) {
+        storyCombo.getValue().getTasks().forEach(this::sortTaskToLists);
+      } else {
+        Task newTask = new Task();
+        notStartedTasks.add(newTask);
+        inProgressTasks.add(newTask);
+        verifyTasks.add(newTask);
+        doneTasks.add(newTask);
+        notStartedTasks.clear();
+        inProgressTasks.clear();
+        verifyTasks.clear();
+        doneTasks.clear();
+      }
     }
     notStartedList.setItems(notStartedTasks);
     inProgressList.setItems(inProgressTasks);
