@@ -23,6 +23,7 @@ import seng302.group5.model.Sprint;
 import seng302.group5.model.Status;
 import seng302.group5.model.Story;
 import seng302.group5.model.Task;
+import seng302.group5.model.undoredo.UndoRedo;
 
 
 /**
@@ -52,6 +53,8 @@ public class ScrumBoardController {
   private ObservableList<Task> inProgressTasks;
   private ObservableList<Task> verifyTasks;
   private ObservableList<Task> doneTasks;
+
+  private Story nonStory;
 
   /**
    * This function sets up the scrum board dialog controller.
@@ -215,7 +218,7 @@ public class ScrumBoardController {
    * Refreshes the four list views when any of the tasks within the story is updated.
    */
   public void refreshLists() {
-    Story nonStory = new Story();
+    nonStory = new Story();
     nonStory.setLabel("Non-story Tasks");
 
     notStartedTasks.clear();
@@ -266,9 +269,26 @@ public class ScrumBoardController {
   }
 
 
-  //Todo jdoc
+  /**
+   * A button which when clicked can add a task to either the selected story, or if the "nonStory"
+   * of sprint tasks, can add into there as well. Also adds to undo/redo stack so creationg is undoable
+   * @param event Button click
+   */
   @FXML
   protected void addNewTask(ActionEvent event) {
-    //if (sprintCombo)
+    Story story = storyCombo.getSelectionModel().getSelectedItem();
+    if (storyCombo.getSelectionModel().getSelectedItem() != null) {
+      Sprint sprint = sprintCombo.getSelectionModel().getSelectedItem();
+      UndoRedo undoRedoCreate;
+      if (story == nonStory) {
+        undoRedoCreate = mainApp.showTaskDialog(sprint, null, sprint.getSprintTeam(), CreateOrEdit.CREATE, stage);
+      } else {
+        undoRedoCreate = mainApp.showTaskDialog(story, null, sprint.getSprintTeam(), CreateOrEdit.CREATE, stage);
+      }
+      if (undoRedoCreate != null) {
+        mainApp.newAction(undoRedoCreate);
+      }
+    }
   }
+
 }
