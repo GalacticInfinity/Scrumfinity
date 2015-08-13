@@ -48,7 +48,6 @@ public class ScrumBoardController {
   private Main mainApp;
   private Stage stage;
 
-  private UndoRedoObject undoRedoObject;
   private Task task;
   private Task lastTask;
 
@@ -71,7 +70,6 @@ public class ScrumBoardController {
     this.stage = stage;
     task = new Task();
     lastTask = new Task();
-    undoRedoObject = new UndoRedoObject();
     initialiseLists();
     sprintCombo.setDisable(true);
     storyCombo.setDisable(true);
@@ -79,15 +77,6 @@ public class ScrumBoardController {
     setupListView();
   }
 
-  /**
-   * Get the UndoRedoObject representing the editing of the task. Use this as a return value of
-   * the dialog.
-   *
-   * @return The UndoRedoObject representing the successful task edit.
-   */
-  public UndoRedoObject getUndoRedoObject() {
-    return undoRedoObject;
-  }
   /**
    * Initialises the models lists and populates these with values from the main application,
    * such as available backlogs, sprints and stories. These values
@@ -173,6 +162,8 @@ public class ScrumBoardController {
 
       // Store a copy of task to edit in object to avoid reference problems
       if (task != null) {
+        UndoRedo undoRedoObject = new UndoRedoObject();
+
         undoRedoObject.setAgileItem(task);
 
         undoRedoObject = new UndoRedoObject();
@@ -232,21 +223,13 @@ public class ScrumBoardController {
           event -> {
             if (taskListView.getSelectionModel().getSelectedItem() != null) {
               if (state.equals("notstarted")) {
-                taskListView.getSelectionModel()
-                    .getSelectedItem()
-                    .setStatus(Status.NOT_STARTED);
+                task.setStatus(Status.NOT_STARTED);
               } else if (Objects.equals(state, "progress")) {
-                taskListView.getSelectionModel()
-                    .getSelectedItem()
-                    .setStatus(Status.IN_PROGRESS);
+                task.setStatus(Status.IN_PROGRESS);
               } else if (Objects.equals(state, "verify")) {
-                taskListView.getSelectionModel()
-                    .getSelectedItem()
-                    .setStatus(Status.VERIFY);
+                task.setStatus(Status.VERIFY);
               } else if (Objects.equals(state, "done")) {
-                taskListView.getSelectionModel()
-                    .getSelectedItem()
-                    .setStatus(Status.DONE);
+                task.setStatus(Status.DONE);
               }
               if (!task.getStatus().equals(lastTask.getStatus())) {
                 generateUndoRedoObject();
@@ -255,10 +238,8 @@ public class ScrumBoardController {
             }
           });
       refreshLists();
-          }
-        }
-
-
+    }
+  }
 
 
   /**
