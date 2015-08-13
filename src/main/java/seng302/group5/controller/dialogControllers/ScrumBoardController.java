@@ -11,7 +11,6 @@ import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.stage.Stage;
 import seng302.group5.Main;
@@ -116,9 +115,9 @@ public class ScrumBoardController {
 
     storyCombo.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldStory, newStory) -> {
-          if (oldStory != null && newStory != null) {
-            refreshLists();
-          }
+          //if (oldStory != null && newStory != null) {
+          refreshLists();
+          //}
         }
     );
   }
@@ -182,27 +181,28 @@ public class ScrumBoardController {
                                             .getSelectedItem()
                                             .setStatus(Status.NOT_STARTED);
 
-                } else if (state == "progress") {
+                } else if (Objects.equals(state, "progress")) {
                   taskListView.getSelectionModel()
                       .getSelectedItem()
                       .setStatus(Status.IN_PROGRESS);
-                } else if (state == "verify") {
+                } else if (Objects.equals(state, "verify")) {
                   taskListView.getSelectionModel()
                       .getSelectedItem()
                       .setStatus(Status.VERIFY);
-                } else if (state == "done") {
+                } else if (Objects.equals(state, "done")) {
                   taskListView.getSelectionModel()
                       .getSelectedItem()
                       .setStatus(Status.DONE);
                 }
-                refreshLists(storyCombo.getSelectionModel().getSelectedItem());
+                refreshLists();
               }
-            }
-          });
-      refreshLists(storyCombo.getSelectionModel().getSelectedItem());
-      }
+            });
+      refreshLists();
+          }
+        }
 
-  }
+
+
 
   /**
    * Refreshes the four list views when any of the tasks within the story is updated.
