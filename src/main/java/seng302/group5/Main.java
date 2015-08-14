@@ -653,6 +653,8 @@ public class Main extends Application {
       storyDialogStage.initOwner(primaryStage);
       storyDialogStage.setScene(storyDialogScene);
       storyDialogStage.showAndWait();
+
+      LMPC.getScrumBoardController().refreshLists();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -691,6 +693,8 @@ public class Main extends Application {
       storyDialogStage.initOwner(owner);
       storyDialogStage.setScene(storyDialogScene);
       storyDialogStage.showAndWait();
+
+      LMPC.getScrumBoardController().refreshLists();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -721,6 +725,8 @@ public class Main extends Application {
       storyDialogStage.initOwner(stage);
       storyDialogStage.setScene(storyDialogScene);
       storyDialogStage.showAndWait();
+
+      LMPC.getScrumBoardController().refreshLists();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -794,6 +800,8 @@ public class Main extends Application {
       sprintDialogStage.initOwner(primaryStage);
       sprintDialogStage.setScene(sprintDialogScene);
       sprintDialogStage.showAndWait();
+
+      LMPC.getScrumBoardController().refreshLists();
     } catch (Exception e) {
       e.printStackTrace();
     }

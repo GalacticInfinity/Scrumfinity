@@ -56,7 +56,9 @@
                 </Tab>
                 <Tab text="Scrum Board">
                   <content>
-                      <fx:include fx:id="scrumBoard" source="ScrumBoard.fxml" />
+                      <AnchorPane>
+                          <fx:include fx:id="scrumBoard" source="ScrumBoard.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                      </AnchorPane>
                   </content>
                 </Tab>
               </tabs>
