@@ -62,6 +62,12 @@ public class ScrumBoardController {
 
   private Story nonStory;
 
+  @FXML
+  private void initialize() {
+    nonStory = new Story();
+    nonStory.setLabel("Non-story Tasks");
+  }
+
   /**
    * This function sets up the scrum board dialog controller.
    * @param mainApp     The main application object
@@ -93,13 +99,12 @@ public class ScrumBoardController {
     inProgressTasks = FXCollections.observableArrayList();
     verifyTasks = FXCollections.observableArrayList();
     doneTasks = FXCollections.observableArrayList();
-    Story nonStory = new Story();
-    nonStory.setLabel("Non-story Tasks");
     availableStories.add(nonStory);
 
     backlogCombo.setVisibleRowCount(5);
     sprintCombo.setVisibleRowCount(5);
     storyCombo.setVisibleRowCount(5);
+    backlogCombo.getSelectionModel().clearSelection();
     backlogCombo.setItems(mainApp.getBacklogs());
 
     backlogCombo.getSelectionModel().selectedItemProperty().addListener(
@@ -249,9 +254,6 @@ public class ScrumBoardController {
    * Refreshes the four list views when any of the tasks within the story is updated.
    */
   public void refreshLists() {
-    nonStory = new Story();
-    nonStory.setLabel("Non-story Tasks");
-
     notStartedTasks.clear();
     inProgressTasks.clear();
     verifyTasks.clear();
@@ -261,7 +263,7 @@ public class ScrumBoardController {
 
     if (backlogCombo.getSelectionModel().getSelectedItem() != null &&
         sprintCombo.getSelectionModel().getSelectedItem() != null) {
-      if (storyCombo.getValue().getLabel().equals(nonStory.getLabel())) {
+      if (storyCombo.getValue() == nonStory) {
         btnNewTask.setDisable(false);
         sprintCombo.getValue().getTasks().forEach(this::sortTaskToLists);
       } else if (!storyCombo.getSelectionModel().getSelectedItem().getTasks().isEmpty()) {

@@ -850,6 +850,7 @@ public class Main extends Application {
   public void revert() {
     resetAll();
     revertHandler.revert();
+    LMPC.getScrumBoardController().setupController(this, primaryStage);
   }
 
   /**
