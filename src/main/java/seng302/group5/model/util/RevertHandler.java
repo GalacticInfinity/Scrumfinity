@@ -67,6 +67,8 @@ public class RevertHandler {
    * then clears the undo and redo stacks
    */
   public void revert() {
+    mainApp.resetAll();
+
     for (Project project : projectsLastSaved) {
       mainApp.addProject(new Project(project));
     }
