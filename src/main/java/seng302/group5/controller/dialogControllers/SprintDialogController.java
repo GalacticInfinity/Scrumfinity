@@ -1,5 +1,7 @@
 package seng302.group5.controller.dialogControllers;
 
+import org.mockito.cglib.core.Local;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -538,7 +540,7 @@ public class SprintDialogController {
     String sprintDescription = sprintDescriptionField.getText().trim();
     String sprintImpediments = sprintImpedimentsField.getText().trim();
     Backlog backlog = sprintBacklogCombo.getValue();
-    Team team = sprintTeamCombo.getValue();
+    Team team = null;
     Release release = sprintReleaseCombo.getValue();
     LocalDate startDate = null;
     LocalDate endDate = null;
@@ -558,11 +560,6 @@ public class SprintDialogController {
       errors.append(String.format("%s\n", "Selected backlog is not assigned to a project"));
     }
 
-    if (team == null) {
-      noErrors++;
-      errors.append(String.format("%s\n", "No team selected"));
-    }
-
     if (release == null) {
       noErrors++;
       errors.append(String.format("%s\n", "No release selected"));
@@ -577,6 +574,13 @@ public class SprintDialogController {
 
     try {
       endDate = parseEndDate(sprintEndDate.getValue(), sprintStartDate.getValue(), release);
+    } catch (Exception e) {
+      noErrors++;
+      errors.append(String.format("%s\n", e.getMessage()));
+    }
+
+    try {
+      team = parseTeam(sprintTeamCombo.getValue(), startDate, endDate);
     } catch (Exception e) {
       noErrors++;
       errors.append(String.format("%s\n", e.getMessage()));
@@ -741,6 +745,42 @@ public class SprintDialogController {
       }
       return inputSprintGoal;
     }
+  }
+
+  /**
+   * Verifies that the team is not already assigned at this time and that the team is not null.
+   *
+   * @param team The team for checking
+   * @param startDate The start date of the sprint.
+   * @param endDate The end date of the sprint.
+   * @return The team if it is valid
+   * @throws Exception If the team is not valid.
+   */
+  private Team parseTeam(Team team, LocalDate startDate, LocalDate endDate) throws Exception {
+    if (team == null) {
+      throw new Exception("No team selected");
+    } else if (startDate != null && endDate != null) {
+      //If team is already assigned to a sprint, make sure the dates don't overlap.
+      for (Sprint sprint : mainApp.getSprints()) {
+        if (sprint.getSprintTeam() == team && sprint != this.sprint) {
+          //Sorry for the horrible if statement!
+          //Checks if the dates overlap.
+          if (((startDate.isAfter(sprint.getSprintStart()) ||
+                startDate.isEqual(sprint.getSprintStart())) &&
+                startDate.isBefore(sprint.getSprintEnd())) ||
+              ((endDate.isBefore(sprint.getSprintEnd()) ||
+               endDate.isEqual((sprint.getSprintEnd()))) &&
+               endDate.isAfter(sprint.getSprintStart())) ||
+              ((startDate.isBefore(sprint.getSprintStart()) ||
+               startDate.isEqual(sprint.getSprintStart())) &&
+               (endDate.isAfter(sprint.getSprintEnd()) ||
+               endDate.isEqual(sprint.getSprintEnd())))) {
+            throw new Exception("Team is already assigned to a sprint in selected timeframe.");
+          }
+        }
+      }
+    }
+    return team;
   }
 
   /**

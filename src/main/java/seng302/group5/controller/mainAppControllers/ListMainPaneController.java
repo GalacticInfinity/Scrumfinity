@@ -772,7 +772,7 @@ public class ListMainPaneController {
     Text textStoryTasksBody;
     if (!story.getTasks().isEmpty()) {
       for (Task task : story.getTasks()) {
-        textStoryTasksBody = new Text("\n• " + task + " - " + task + ", STATUS: " + Status.getStatusString(task.getStatus()));
+        textStoryTasksBody = new Text("\n• " + task + ", STATUS: " + Status.getStatusString(task.getStatus()));
         storyTasksText.add(textStoryTasksBody);
         displayTextFlow.getChildren().add(textStoryTasksBody);
       }
@@ -1056,7 +1056,7 @@ public class ListMainPaneController {
     Text textSprintTasksBody;
     if (!sprint.getTasks().isEmpty()) {
       for (Task task : sprint.getTasks()) {
-        textSprintTasksBody = new Text("\n• " + task + " - " + task + ", STATUS: " + Status.getStatusString(task.getStatus()));
+        textSprintTasksBody = new Text("\n• " + task + ", STATUS: " + Status.getStatusString(task.getStatus()));
         sprintTasksText.add(textSprintTasksBody);
         displayTextFlow.getChildren().add(textSprintTasksBody);
       }

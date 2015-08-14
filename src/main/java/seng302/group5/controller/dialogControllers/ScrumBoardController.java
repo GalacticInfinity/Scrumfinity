@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.Cursor;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.cell.TextFieldListCell;
@@ -207,6 +208,9 @@ public class ScrumBoardController {
         }
       });
 
+      taskListView.setCursor(Cursor.OPEN_HAND);
+
+
       taskListView.setOnDragDetected(event -> {
         if (taskListView.getSelectionModel().getSelectedItem() != null) {
           state = "";
@@ -289,6 +293,7 @@ public class ScrumBoardController {
     inProgressList.setItems(inProgressTasks);
     verifyList.setItems(verifyTasks);
     doneList.setItems(doneTasks);
+
   }
 
   /**
