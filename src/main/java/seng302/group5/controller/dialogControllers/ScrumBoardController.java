@@ -196,11 +196,14 @@ public class ScrumBoardController {
         if (click.getClickCount() == 2 &&
             click.getButton() == MouseButton.PRIMARY &&
             !isEmpty()) {
-          Task selectedTask = taskListView.getSelectionModel().getSelectedItem();
-          mainApp.showTaskDialog(storyCombo.getValue(), selectedTask,
-                                 sprintCombo.getValue().getSprintTeam(),
-                                 CreateOrEdit.EDIT, stage);
-          refreshLists();
+          Task selectedTask = getItem();
+          UndoRedo taskEdit = mainApp.showTaskDialog(storyCombo.getValue(), selectedTask,
+                                                     sprintCombo.getValue().getSprintTeam(),
+                                                     CreateOrEdit.EDIT, stage);
+          if (taskEdit != null) {
+            mainApp.newAction(taskEdit);
+            refreshLists();
+          }
         }
       });
 
