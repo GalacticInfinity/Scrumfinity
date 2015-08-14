@@ -91,6 +91,7 @@ public class RevertHandlerTest {
   private Estimate estimate;
 
   private UndoRedoHandler undoRedoHandler;
+  private RevertHandler revertHandler;
   private Main mainApp;
 
   @Before
@@ -108,6 +109,7 @@ public class RevertHandlerTest {
     mainApp.setPrimaryStage(primaryStage);
 
     undoRedoHandler = mainApp.getUndoRedoHandler();
+    revertHandler = mainApp.getRevertHandler();
   }
 
   private void newPerson() {
@@ -309,7 +311,7 @@ public class RevertHandlerTest {
 
     assertEquals(1, mainApp.getPeople().size());
 
-    mainApp.revert();
+    revertHandler.revert();
 
     assertTrue(mainApp.getPeople().isEmpty());
     assertTrue(undoRedoHandler.getUndoStack().empty());
@@ -327,7 +329,7 @@ public class RevertHandlerTest {
 
     assertEquals(1, mainApp.getProjects().size());
 
-    mainApp.revert();
+    revertHandler.revert();
 
     assertTrue(mainApp.getProjects().isEmpty());
     assertTrue(undoRedoHandler.getUndoStack().empty());
@@ -344,7 +346,7 @@ public class RevertHandlerTest {
 
     assertEquals(1, mainApp.getSkills().size());
 
-    mainApp.revert();
+    revertHandler.revert();
 
     assertTrue(mainApp.getSkills().isEmpty());
     assertTrue(undoRedoHandler.getUndoStack().empty());
@@ -361,7 +363,7 @@ public class RevertHandlerTest {
 
     assertEquals(1, mainApp.getTeams().size());
 
-    mainApp.revert();
+    revertHandler.revert();
 
     assertTrue(mainApp.getTeams().isEmpty());
     assertTrue(undoRedoHandler.getUndoStack().empty());
@@ -378,7 +380,7 @@ public class RevertHandlerTest {
 
     assertEquals(1, mainApp.getReleases().size());
 
-    mainApp.revert();
+    revertHandler.revert();
 
     assertTrue(mainApp.getReleases().isEmpty());
     assertTrue(undoRedoHandler.getUndoStack().empty());
@@ -395,7 +397,7 @@ public class RevertHandlerTest {
 
     assertEquals(1, mainApp.getStories().size());
 
-    mainApp.revert();
+    revertHandler.revert();
 
     assertTrue(mainApp.getStories().isEmpty());
     assertTrue(undoRedoHandler.getUndoStack().empty());
@@ -413,7 +415,7 @@ public class RevertHandlerTest {
 
     assertEquals(1, mainApp.getStories().size());
 
-    mainApp.revert();
+    revertHandler.revert();
 
     assertTrue(mainApp.getStories().isEmpty());
     assertTrue(undoRedoHandler.getUndoStack().empty());
@@ -431,7 +433,7 @@ public class RevertHandlerTest {
 
     assertEquals(2, mainApp.getStories().size());
 
-    mainApp.revert();
+    revertHandler.revert();
 
     assertTrue(mainApp.getStories().isEmpty());
     assertTrue(undoRedoHandler.getUndoStack().empty());
@@ -449,7 +451,7 @@ public class RevertHandlerTest {
 
     assertEquals(2, mainApp.getStories().size());
 
-    mainApp.revert();
+    revertHandler.revert();
 
     assertTrue(mainApp.getStories().isEmpty());
     assertTrue(undoRedoHandler.getUndoStack().empty());
@@ -469,7 +471,7 @@ public class RevertHandlerTest {
 
     assertEquals(2, mainApp.getStories().size());
 
-    mainApp.revert();
+    revertHandler.revert();
 
     assertTrue(mainApp.getStories().isEmpty());
     assertTrue(undoRedoHandler.getUndoStack().empty());
@@ -490,7 +492,7 @@ public class RevertHandlerTest {
     assertEquals(1, mainApp.getStories().size());
     assertEquals(1, mainApp.getBacklogs().size());
 
-    mainApp.revert();
+    revertHandler.revert();
 
     assertTrue(mainApp.getPeople().isEmpty());
     assertTrue(mainApp.getStories().isEmpty());
@@ -515,7 +517,7 @@ public class RevertHandlerTest {
     assertEquals(1, mainApp.getEstimates().size());
     assertEquals(1, mainApp.getBacklogs().size());
 
-    mainApp.revert();
+    revertHandler.revert();
 
     assertTrue(mainApp.getPeople().isEmpty());
     assertTrue(mainApp.getStories().isEmpty());
@@ -539,7 +541,7 @@ public class RevertHandlerTest {
     assertNotEquals(null, project.getBacklog());
     assertEquals(backlog, project.getBacklog());
 
-    mainApp.revert();
+    revertHandler.revert();
 
     assertTrue(mainApp.getProjects().isEmpty());
     assertTrue(mainApp.getBacklogs().isEmpty());
@@ -556,7 +558,7 @@ public class RevertHandlerTest {
     newBacklog();
     newProject();
 
-    mainApp.setLastSaved(); // as if we just loaded
+    revertHandler.setLastSaved(); // as if we just loaded
 
     assertEquals(1, mainApp.getProjects().size());
     assertEquals(1, mainApp.getBacklogs().size());
@@ -568,7 +570,7 @@ public class RevertHandlerTest {
     assertNotEquals(null, project.getBacklog());
     assertEquals(backlog, project.getBacklog());
 
-    mainApp.revert();
+    revertHandler.revert();
 
     project = mainApp.getProjects().get(0);  //Makes the project the proper project
     assertEquals(null, project.getBacklog());
@@ -592,7 +594,7 @@ public class RevertHandlerTest {
     assertTrue(mainApp.getBacklogs().isEmpty());
     assertTrue(mainApp.getEstimates().isEmpty());
 
-    mainApp.revert();
+    revertHandler.revert();
 
     assertTrue(mainApp.getStories().isEmpty());
     assertTrue(mainApp.getReleases().isEmpty());
@@ -641,7 +643,7 @@ public class RevertHandlerTest {
     assertEquals(1, mainApp.getBacklogs().size());
     assertEquals(1, mainApp.getEstimates().size());
 
-    mainApp.revert();
+    revertHandler.revert();
 
     assertTrue(mainApp.getStories().isEmpty());
     assertTrue(mainApp.getReleases().isEmpty());
@@ -676,7 +678,7 @@ public class RevertHandlerTest {
     assertEquals(1, undoRedoHandler.getRedoStack().size());
 
     // Clear stacks
-    mainApp.revert();
+    revertHandler.revert();
     assertTrue(undoRedoHandler.getUndoStack().empty());
     assertTrue(undoRedoHandler.getRedoStack().empty());
   }
@@ -702,7 +704,7 @@ public class RevertHandlerTest {
     addStoryWithDep(story3);
     addStoryWithDep(story4);
     addStoryWithDep(story5);
-    mainApp.setLastSaved();
+    revertHandler.setLastSaved();
 
     story1.removeAllDependencies();
     story2.removeAllDependencies();
@@ -710,7 +712,7 @@ public class RevertHandlerTest {
     story4.removeAllDependencies();
     story5.removeAllDependencies();
 
-    mainApp.revert();
+    revertHandler.revert();
 
     List<Story> mainStories = mainApp.getStories();
     story1 = mainStories.get(2);
@@ -770,7 +772,7 @@ public class RevertHandlerTest {
     mainApp.addTeam(t1);
     mainApp.addRelease(r1);
     mainApp.addSprint(sprint);
-    mainApp.setLastSaved();
+    revertHandler.setLastSaved();
 
     sprint.setLabel("huehue");
     sprint.setSprintProject(new Project());
@@ -778,7 +780,7 @@ public class RevertHandlerTest {
     sprint.removeAllStories();
     sprint.setSprintTeam(new Team());
 
-    mainApp.revert();
+    revertHandler.revert();
     Sprint revSprint = mainApp.getSprints().get(0);
     assertNotSame(sprint, revSprint);
     assertSame(revSprint.getSprintProject(), mainApp.getProjects().get(0));
@@ -841,7 +843,7 @@ public class RevertHandlerTest {
     mainApp.addTeam(team1);
     mainApp.addRelease(r1);
     mainApp.addSprint(sprint);
-    mainApp.setLastSaved();
+    revertHandler.setLastSaved();
 
     task1.setLabel("HUEHUHFUEHIVUHSIDUH");
     task1.setTaskDescription("HUEHUHFUEHIVUHSIDUH");
@@ -852,7 +854,7 @@ public class RevertHandlerTest {
     task2.setTaskEstimation(420);
     task2.removeAllTaskPeople();
 
-    mainApp.revert();
+    revertHandler.revert();
 
     Person revPerson = mainApp.getPeople().get(0);
     Story revStory = mainApp.getStories().get(0);

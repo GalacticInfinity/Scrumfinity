@@ -848,7 +848,6 @@ public class Main extends Application {
    * Reverts the current state to the last saved state.
    */
   public void revert() {
-    resetAll();
     revertHandler.revert();
     LMPC.getScrumBoardController().setupController(this, primaryStage);
   }
@@ -1759,6 +1758,11 @@ public class Main extends Application {
   public UndoRedoHandler getUndoRedoHandler() {
     // This is for tests
     return undoRedoHandler;
+  }
+
+  public RevertHandler getRevertHandler() {
+    // This is for tests
+    return revertHandler;
   }
 
   public void setMainTitle(String title) {
