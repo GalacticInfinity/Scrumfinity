@@ -7,6 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.Cursor;
 import javafx.scene.control.ComboBox;
@@ -210,29 +211,33 @@ public class ScrumBoardController {
 
       taskListView.setCursor(Cursor.OPEN_HAND);
 
-
       taskListView.setOnDragDetected(event -> {
         if (taskListView.getSelectionModel().getSelectedItem() != null) {
           state = "";
           lastTask = new Task(taskListView.getSelectionModel().getSelectedItem());
           task = taskListView.getSelectionModel().getSelectedItem();
 
-          Dragboard dragBoard = taskListView.startDragAndDrop(TransferMode.MOVE);
+          Dragboard dragBoard = taskListView.startDragAndDrop(TransferMode.ANY);
 
           ClipboardContent content = new ClipboardContent();
+          //content.putString(taskListView.getSelectionModel().getSelectedItem().getLabel());
           File dragFileImage = new File("src/main/resources/DragCursor.png");
           Image dragImage = new Image(dragFileImage.toURI().toString());
-          dragBoard.setDragView(dragImage);
+          //dragBoard.setDragView(dragImage);
 
-          content.putString(taskListView.getSelectionModel().getSelectedItem().getLabel());
+          content.putString("Dragging");
 
           dragBoard.setContent(content);
+          dragBoard.setDragViewOffsetX(1.0);
+          dragBoard.setDragViewOffsetY(1.0);
 
           notStartedList.setOnDragOver(hover -> state = "notstarted");
           inProgressList.setOnDragOver(hover -> state = "progress");
           verifyList.setOnDragOver(hover -> state = "verify");
           doneList.setOnDragOver(hover -> state = "done");
+
         }
+        event.consume();
       });
       taskListView.setOnDragDone(
           event -> {
@@ -249,8 +254,10 @@ public class ScrumBoardController {
               if (!task.getStatus().equals(lastTask.getStatus())) {
                 generateUndoRedoObject();
               }
+
               refreshLists();
             }
+            event.consume();
           });
       refreshLists();
     }
