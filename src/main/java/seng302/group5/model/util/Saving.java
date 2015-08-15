@@ -347,6 +347,10 @@ public class Saving {
             saveFile.write(
                 "\t\t\t\t<taskEstimate>" + task.getTaskEstimation().toString() + "</taskEstimate>\n");
           }
+          if (task.getImpediments() != null && !task.getImpediments().isEmpty()) {
+            saveFile.write(
+                "\t\t\t\t<taskImpediments>" + task.getImpediments() + "</taskImpediments>\n");
+          }
           if (!task.getTaskPeople().isEmpty()) {
             saveFile.write("\t\t\t\t<TaskPeople>\n");
             for (Person person : task.getTaskPeople()) {
@@ -497,6 +501,10 @@ public class Saving {
           if (task.getTaskEstimation() != null) {
             saveFile.write(
                 "\t\t\t\t<taskEstimate>" + task.getTaskEstimation().toString() + "</taskEstimate>\n");
+          }
+          if (task.getImpediments() != null && !task.getImpediments().isEmpty()) {
+            saveFile.write(
+                "\t\t\t\t<taskImpediments>" + task.getImpediments() + "</taskImpediments>\n");
           }
           if (!task.getTaskPeople().isEmpty()) {
             saveFile.write("\t\t\t\t<TaskPeople>\n");

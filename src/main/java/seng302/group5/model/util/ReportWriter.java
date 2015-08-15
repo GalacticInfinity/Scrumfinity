@@ -608,6 +608,9 @@ public class ReportWriter {
       Element estiEle = report.createElement("estimation");
       taskElement.appendChild(estiEle);
       estiEle.appendChild(report.createTextNode(task.getTaskEstimation().toString()));
+      Element impedEle = report.createElement("impediments");
+      taskElement.appendChild(impedEle);
+      impedEle.appendChild(report.createTextNode(task.getImpediments()));
       Element statusEle = report.createElement("status");
       taskElement.appendChild(statusEle);
       statusEle.appendChild(report.createTextNode(Status.getStatusString(task.getStatus())));
@@ -726,6 +729,9 @@ public class ReportWriter {
       Element estiEle = report.createElement("estimation");
       taskElement.appendChild(estiEle);
       estiEle.appendChild(report.createTextNode(task.getTaskEstimation().toString()));
+      Element impedEle = report.createElement("impediments");
+      taskElement.appendChild(impedEle);
+      impedEle.appendChild(report.createTextNode(task.getImpediments()));
       Element statusEle = report.createElement("status");
       taskElement.appendChild(statusEle);
       statusEle.appendChild(report.createTextNode(Status.getStatusString(task.getStatus())));
