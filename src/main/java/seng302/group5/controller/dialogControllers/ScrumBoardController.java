@@ -23,6 +23,7 @@ import seng302.group5.model.Sprint;
 import seng302.group5.model.Status;
 import seng302.group5.model.Story;
 import seng302.group5.model.Task;
+import seng302.group5.model.Taskable;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoObject;
 import seng302.group5.model.undoredo.UndoRedo;
@@ -246,7 +247,13 @@ public class ScrumBoardController {
             click.getButton() == MouseButton.PRIMARY &&
             !isEmpty()) {
           Task selectedTask = getItem();
-          UndoRedo taskEdit = mainApp.showTaskDialog(storyCombo.getValue(), selectedTask,
+          Taskable taskable;
+          if (storyCombo.getValue() == nonStory) {
+            taskable = sprintCombo.getValue();
+          } else {
+            taskable = storyCombo.getValue();
+          }
+          UndoRedo taskEdit = mainApp.showTaskDialog(taskable, selectedTask,
                                                      sprintCombo.getValue().getSprintTeam(),
                                                      CreateOrEdit.EDIT, stage);
           if (taskEdit != null) {
