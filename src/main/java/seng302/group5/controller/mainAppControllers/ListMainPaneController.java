@@ -1192,10 +1192,10 @@ public class ListMainPaneController {
   @FXML
   protected void btnClickTemporalSort(ActionEvent event) {
     if (isTemporal){
-      sortImage.setImage(aSortImage);
+      //sortImage.setImage(aSortImage);
       isTemporal = false;
     } else {
-      sortImage.setImage(dSortImage);
+     // sortImage.setImage(dSortImage);
       isTemporal = true;
     }
     refreshList(selectedItem);
