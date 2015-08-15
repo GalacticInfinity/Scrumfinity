@@ -220,12 +220,10 @@ public class ScrumBoardController {
           Dragboard dragBoard = taskListView.startDragAndDrop(TransferMode.ANY);
 
           ClipboardContent content = new ClipboardContent();
-          //content.putString(taskListView.getSelectionModel().getSelectedItem().getLabel());
+          content.putString(taskListView.getSelectionModel().getSelectedItem().getLabel());
           File dragFileImage = new File("src/main/resources/DragCursor.png");
           Image dragImage = new Image(dragFileImage.toURI().toString());
-          //dragBoard.setDragView(dragImage);
-
-          content.putString("Dragging");
+          dragBoard.setDragView(dragImage);
 
           dragBoard.setContent(content);
           dragBoard.setDragViewOffsetX(1.0);
