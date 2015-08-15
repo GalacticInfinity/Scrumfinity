@@ -1600,6 +1600,10 @@ public class Main extends Application {
 //        System.err.println("Unhandled case for deleting agile item");
         break;
     }
+    //todo this is where it should be called the hard reset thing for scrumboard
+//    System.out.println("HARD RESET");
+//    LMPC.getScrumBoardController().hardReset();
+//    System.out.println("mainapp stories =  " + stories);
   }
 
   /**

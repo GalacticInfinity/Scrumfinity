@@ -85,6 +85,39 @@ public class ScrumBoardController {
     setupListView();
   }
 
+
+  //todo Make this work lol it should ensure that the combo boxes are reset properly selecting the right items after something is deleted, edited or created.
+//  public void hardReset() {
+//    Backlog backlog = backlogCombo.getValue();
+//    Sprint sprint = sprintCombo.getValue();
+//    Story story = storyCombo.getValue();
+//
+//    initialiseLists();
+//    setupController(mainApp, stage);
+
+//    if (mainApp.getBacklogs().contains(backlog)) {
+//      backlogCombo.setValue(backlog);
+//
+//      if(availableSprints.contains(sprint)){
+//        sprintCombo.setValue(sprint);
+//
+//        if(availableStories.contains(story)) {
+//          System.out.println("story = " + story);
+//          storyCombo.setValue(story);
+//        } else {
+//          storyCombo.setValue(nonStory);
+//          System.out.println("story = " + story);
+//        }
+//      } else {
+//        sprintCombo.setValue(null);
+//        storyCombo.setValue(null);
+//      }
+//    }
+//    refreshLists();
+//  }
+
+
+
   /**
    * Initialises the models lists and populates these with values from the main application,
    * such as available backlogs, sprints and stories. These values
@@ -116,6 +149,7 @@ public class ScrumBoardController {
                                       .filter(
                                           sprint -> sprint.getSprintBacklog().equals(newBacklog))
                                       .collect(Collectors.toList()));
+          sprintCombo.setItems(null);
           sprintCombo.setItems(availableSprints);
           refreshLists();
           sprintCombo.setValue(null);
@@ -129,8 +163,20 @@ public class ScrumBoardController {
         (observable, oldSprint, newSprint) -> {
           if (newSprint != null) {
             storyCombo.setDisable(false);
-            availableStories.setAll(newSprint.getSprintStories());
+
+            Sprint temp = null;
+            for (Sprint s : mainApp.getSprints()) {
+              if (s.equals(newSprint)) {
+                temp = s;
+                break;
+              }
+            }
+
+
+            availableStories.setAll(temp.getSprintStories());
+
             availableStories.add(0, nonStory);
+
             storyCombo.setItems(availableStories);
             storyCombo.setValue(nonStory);
             refreshLists();
