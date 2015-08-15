@@ -1,19 +1,16 @@
 package seng302.group5.controller.dialogControllers;
 
-import java.io.File;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.Cursor;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.cell.TextFieldListCell;
-import javafx.scene.image.Image;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
@@ -120,6 +117,10 @@ public class ScrumBoardController {
                                           sprint -> sprint.getSprintBacklog().equals(newBacklog))
                                       .collect(Collectors.toList()));
           sprintCombo.setItems(availableSprints);
+          refreshLists();
+          sprintCombo.setValue(null);
+          storyCombo.setValue(null);
+          storyCombo.setDisable(true);
         }
       }
     );
