@@ -382,14 +382,14 @@ public class TaskDialogController {
       throw new Exception("Task Label is empty.");
     } else {
       String lastTaskLabel;
-      if (lastTask== null) {
+      if (lastTask == null) {
         lastTaskLabel = "";
       } else {
         lastTaskLabel = lastTask.getLabel();
       }
       for (Task task : taskable.getTasks()) {
         String taskLabel = task.getLabel();
-        if (task.getLabel().equalsIgnoreCase(inputTaskLabel) &&
+        if (taskLabel.equalsIgnoreCase(inputTaskLabel) &&
             !taskLabel.equalsIgnoreCase(lastTaskLabel)) {
           throw new Exception("Task Label is not unique within the object.");
         }
