@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.*?>
 <?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
@@ -70,7 +71,10 @@
                                     <Label alignment="CENTER" prefHeight="15.0" text="Not Started" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
                                  </children>
                               </HBox>
-                              <ListView fx:id="notStartedList" prefWidth="150.0" VBox.vgrow="ALWAYS" />
+                              <ListView fx:id="notStartedList" prefWidth="150.0" VBox.vgrow="ALWAYS">
+                                 <cursor>
+                                    <Cursor fx:constant="DEFAULT" />
+                                 </cursor></ListView>
                            </children>
                         </VBox>
                         <VBox HBox.hgrow="ALWAYS">
@@ -80,7 +84,10 @@
                                     <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" text="In Progress" HBox.hgrow="ALWAYS" />
                                  </children>
                               </HBox>
-                              <ListView fx:id="inProgressList" prefWidth="150.0" VBox.vgrow="ALWAYS" />
+                              <ListView fx:id="inProgressList" prefWidth="150.0" VBox.vgrow="ALWAYS">
+                                 <cursor>
+                                    <Cursor fx:constant="DEFAULT" />
+                                 </cursor></ListView>
                            </children>
                         </VBox>
                         <VBox HBox.hgrow="ALWAYS">
@@ -90,7 +97,10 @@
                                     <Label alignment="CENTER" prefHeight="15.0" text="Verify" HBox.hgrow="ALWAYS" />
                                  </children>
                               </HBox>
-                              <ListView fx:id="verifyList" prefWidth="150.0" VBox.vgrow="ALWAYS" />
+                              <ListView fx:id="verifyList" prefWidth="150.0" VBox.vgrow="ALWAYS">
+                                 <cursor>
+                                    <Cursor fx:constant="DEFAULT" />
+                                 </cursor></ListView>
                            </children>
                         </VBox>
                         <VBox HBox.hgrow="ALWAYS">
@@ -100,12 +110,21 @@
                                     <Label alignment="CENTER" prefHeight="15.0" text="Done" HBox.hgrow="ALWAYS" />
                                  </children>
                               </HBox>
-                              <ListView fx:id="doneList" prefWidth="150.0" VBox.vgrow="ALWAYS" />
+                              <ListView fx:id="doneList" prefWidth="150.0" VBox.vgrow="ALWAYS">
+                                 <cursor>
+                                    <Cursor fx:constant="DEFAULT" />
+                                 </cursor></ListView>
                            </children>
                         </VBox>
                      </children>
+                     <cursor>
+                        <Cursor fx:constant="DEFAULT" />
+                     </cursor>
                   </HBox>
                </children>
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
             </AnchorPane>
          </children>
       </VBox>

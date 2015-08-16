@@ -84,6 +84,7 @@ public class ScrumBoardController {
     sprintCombo.setDisable(true);
     storyCombo.setDisable(true);
     btnNewTask.setDisable(true);
+    btnDeleteTask.setDisable(true);
 
     setupListView();
   }
@@ -102,6 +103,7 @@ public class ScrumBoardController {
     sprintCombo.setDisable(true);
     storyCombo.setDisable(true);
     btnNewTask.setDisable(true);
+    btnDeleteTask.setDisable(true);
 
     if (mainApp.getBacklogs().contains(backlog)) {
       backlogCombo.setValue(backlog);
@@ -292,7 +294,6 @@ public class ScrumBoardController {
           inProgressList.setOnDragOver(hover -> state = "progress");
           verifyList.setOnDragOver(hover -> state = "verify");
           doneList.setOnDragOver(hover -> state = "done");
-
         }
         event.consume();
       });
@@ -331,17 +332,21 @@ public class ScrumBoardController {
     doneTasks.clear();
 
     btnNewTask.setDisable(true);
+    btnDeleteTask.setDisable(true);
 
     if (backlogCombo.getSelectionModel().getSelectedItem() != null &&
         sprintCombo.getSelectionModel().getSelectedItem() != null) {
       if (storyCombo.getValue() == nonStory) {
         btnNewTask.setDisable(false);
+        btnDeleteTask.setDisable(false);
         sprintCombo.getValue().getTasks().forEach(this::sortTaskToLists);
       } else if (!storyCombo.getSelectionModel().getSelectedItem().getTasks().isEmpty()) {
         btnNewTask.setDisable(false);
+        btnDeleteTask.setDisable(false);
         storyCombo.getValue().getTasks().forEach(this::sortTaskToLists);
       } else {
         btnNewTask.setDisable(false);
+        btnDeleteTask.setDisable(false);
         Task newTask = new Task();
         notStartedTasks.add(newTask);
         inProgressTasks.add(newTask);
@@ -394,6 +399,7 @@ public class ScrumBoardController {
     backlogCombo.getSelectionModel().clearSelection();
     backlogCombo.setItems(FXCollections.observableArrayList());
     btnNewTask.setDisable(true);
+    btnDeleteTask.setDisable(true);
 
     initialiseLists();
   }
