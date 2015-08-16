@@ -118,6 +118,10 @@ public class ScrumBoardController {
         sprintCombo.setValue(null);
         storyCombo.setValue(null);
       }
+    } else {
+      backlogCombo.setValue(null);
+      sprintCombo.setValue(null);
+      storyCombo.setValue(null);
     }
     refreshLists();
   }
