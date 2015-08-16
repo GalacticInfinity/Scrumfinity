@@ -30,7 +30,7 @@ import seng302.group5.model.undoredo.UndoRedo;
 
 /**
  * The controller class for the scrum board dialog. Tasks can be viewed from this dialog by
- * selecting the backlog->sprint->story accordingly. Also tasks are sorted by their status in four
+ * selecting the backlog-sprint-story accordingly. Also tasks are sorted by their status in four
  * different lists: not started, in progress, verify and done.
  *
  * Version 1: status are to be changed by double click editing.

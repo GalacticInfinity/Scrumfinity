@@ -20,6 +20,8 @@ public class CompositeUndoRedo implements UndoRedo {
 
   /**
    * Constructor
+   *
+   * @param actionString The action of what to take
    */
   public CompositeUndoRedo(String actionString) {
     this.action = Action.COMPOSITE;

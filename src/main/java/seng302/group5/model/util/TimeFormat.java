@@ -43,6 +43,7 @@ public class TimeFormat {
    * Get the time formatted string from an integer number of minutes. For zero it will return
    * 0m and for negative numbers it will be an empty string.
    *
+   * @param totalMinutes total minutes to parse into h/m
    * @return Time formatted string.
    */
   public static String parseTime(int totalMinutes) {

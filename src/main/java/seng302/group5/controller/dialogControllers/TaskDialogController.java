@@ -178,6 +178,8 @@ public class TaskDialogController {
   /**
    * Initialises the models lists including available people, allocated people with their logged
    * effort, available statuses, and sets the custom list cell of the allocated people list view.
+   *
+   * @param team The team for which team is initialized for.
    */
   private void initialiseLists(Team team) {
     availablePeople = FXCollections.observableArrayList();

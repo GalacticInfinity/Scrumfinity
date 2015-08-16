@@ -56,6 +56,8 @@ public interface UndoRedo {
 
   /**
    * Return a string detailing the type of action the UndoRedo was created for.
+   *
+   * @return The string of what action to take.
    */
   String getActionString();
 }

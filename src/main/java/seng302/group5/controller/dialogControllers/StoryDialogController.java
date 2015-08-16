@@ -702,13 +702,16 @@ public class StoryDialogController {
     checkButtonDisabled();
   }
 
+
   /**
+   *
    * Checks if the story meets the criteria to be marked as ready:
    * Has acceptance criteria.
    * Is in a backlog.
    * Has a size estimate.
    *
-   * @return Whether the story meets readiness criteria as boolean.
+   * @param story Story which readiness is checked.
+   * @return sWhether the story meets readiness criteria as boolean.
    */
   private boolean checkReadinessCriteria(Story story) {
     for (Backlog backlog : mainApp.getBacklogs()) {   //Search each backlog
