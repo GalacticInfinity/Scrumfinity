@@ -427,6 +427,10 @@ public class ScrumBoardController {
     }
   }
 
+  /**
+   * Handles deleting tasks within the scrum depending on what task is selected.
+   * @param event button click event.
+   */
   @FXML void deleteTask(ActionEvent event) {
     Story story = storyCombo.getValue();
     if (storyCombo.getSelectionModel().getSelectedItem() != null) {
