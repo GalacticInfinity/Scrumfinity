@@ -446,7 +446,6 @@ public class ScrumBoardController {
         }
       }
       if (undoRedoDelete.getAction().equals(Action.TASK_DELETE)) {
-        System.out.println(undoRedoDelete.getAgileItem());
         mainApp.newAction(undoRedoDelete);
       }
 
