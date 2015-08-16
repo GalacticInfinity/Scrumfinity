@@ -55,8 +55,6 @@ public class ScrumBoardController {
   private Task task;
   private Task lastTask;
   private Task selectedTask;
-  private Sprint undoSprint;
-  private Sprint lastSprint;
 
   private ObservableList<Sprint> availableSprints;
   private ObservableList<Story> availableStories;
@@ -376,6 +374,7 @@ public class ScrumBoardController {
         if (selectedTask != null) {
           undoRedoDelete.setAction(Action.TASK_DELETE);
           sprint.removeTask(selectedTask);
+          nonStory.removeTask(selectedTask);
           undoRedoDelete.setAgileItem(selectedTask);
           undoRedoDelete.addDatum(new Task(selectedTask));
           undoRedoDelete.addDatum(sprint);
