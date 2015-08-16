@@ -47,12 +47,16 @@ public class ScrumBoardController {
   @FXML private ListView<Task> verifyList;
   @FXML private ListView<Task> doneList;
   @FXML private Button btnNewTask;
+  @FXML private Button btnDeleteTask;
 
   private Main mainApp;
   private Stage stage;
 
   private Task task;
   private Task lastTask;
+  private Task selectedTask;
+  private Sprint undoSprint;
+  private Sprint lastSprint;
 
   private ObservableList<Sprint> availableSprints;
   private ObservableList<Story> availableStories;
@@ -208,6 +212,11 @@ public class ScrumBoardController {
         }
       });
 
+      taskListView.setOnMouseClicked(event -> {
+        selectedTask = taskListView.getSelectionModel().getSelectedItem();
+      });
+
+
       taskListView.setCursor(Cursor.OPEN_HAND);
 
 
@@ -330,6 +339,7 @@ public class ScrumBoardController {
     backlogCombo.getSelectionModel().clearSelection();
     backlogCombo.setItems(FXCollections.observableArrayList());
     btnNewTask.setDisable(true);
+
     initialiseLists();
   }
 
@@ -354,5 +364,42 @@ public class ScrumBoardController {
         mainApp.newAction(undoRedoCreate);
       }
     }
+  }
+
+  @FXML void deleteTask(ActionEvent event) {
+    Story story = storyCombo.getValue();
+    if (storyCombo.getSelectionModel().getSelectedItem() != null) {
+      Sprint sprint = sprintCombo.getSelectionModel().getSelectedItem();
+      UndoRedo undoRedoDelete;
+      undoRedoDelete = new UndoRedoObject();
+      if (story == nonStory) {
+        if (selectedTask != null) {
+          undoRedoDelete.setAction(Action.TASK_DELETE);
+          sprint.removeTask(selectedTask);
+          undoRedoDelete.setAgileItem(selectedTask);
+          undoRedoDelete.addDatum(new Task(selectedTask));
+          undoRedoDelete.addDatum(sprint);
+          selectedTask = null;
+          refreshLists();
+        }
+      } else {
+        if (selectedTask != null) {
+          undoRedoDelete.setAction(Action.TASK_DELETE);
+          story.removeTask(selectedTask);
+          undoRedoDelete.setAgileItem(selectedTask);
+          undoRedoDelete.addDatum(new Task(selectedTask));
+          undoRedoDelete.addDatum(story);
+          selectedTask = null;
+          refreshLists();
+        }
+      }
+      if (undoRedoDelete.getAction().equals(Action.TASK_DELETE)) {
+        System.out.println(undoRedoDelete.getAgileItem());
+        mainApp.newAction(undoRedoDelete);
+      }
+
+
+    }
+
   }
 }

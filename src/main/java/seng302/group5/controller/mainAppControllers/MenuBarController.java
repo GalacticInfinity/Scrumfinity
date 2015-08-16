@@ -488,6 +488,7 @@ public class MenuBarController {
           showListMenuItem.setSelected(true);
           deselectList(Settings.currentListType);
           mainApp.setLastSaved(); //for revert
+          mainApp.checkUndoRedoItems();
         }
       } catch (Exception e) {
 //      System.out.println("No file selected");
