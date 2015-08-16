@@ -86,36 +86,39 @@ public class ScrumBoardController {
     setupListView();
   }
 
+  /**
+   * This re populates the combo boxes in the scrum board so that  the proper items are displayed
+   * it then re-selects what ever you had previously selected if it still exists.
+   */
+  public void hardReset() {
+    Backlog backlog = backlogCombo.getValue();
+    Sprint sprint = sprintCombo.getValue();
+    Story story = storyCombo.getValue();
 
-  //todo Make this work lol it should ensure that the combo boxes are reset properly selecting the right items after something is deleted, edited or created.
-//  public void hardReset() {
-//    Backlog backlog = backlogCombo.getValue();
-//    Sprint sprint = sprintCombo.getValue();
-//    Story story = storyCombo.getValue();
-//
-//    initialiseLists();
-//    setupController(mainApp, stage);
+    initialiseLists();
 
-//    if (mainApp.getBacklogs().contains(backlog)) {
-//      backlogCombo.setValue(backlog);
-//
-//      if(availableSprints.contains(sprint)){
-//        sprintCombo.setValue(sprint);
-//
-//        if(availableStories.contains(story)) {
-//          System.out.println("story = " + story);
-//          storyCombo.setValue(story);
-//        } else {
-//          storyCombo.setValue(nonStory);
-//          System.out.println("story = " + story);
-//        }
-//      } else {
-//        sprintCombo.setValue(null);
-//        storyCombo.setValue(null);
-//      }
-//    }
-//    refreshLists();
-//  }
+    sprintCombo.setDisable(true);
+    storyCombo.setDisable(true);
+    btnNewTask.setDisable(true);
+
+    if (mainApp.getBacklogs().contains(backlog)) {
+      backlogCombo.setValue(backlog);
+
+      if(availableSprints.contains(sprint)){
+        sprintCombo.setValue(sprint);
+        //todo make stories in sprints be removed properly at some point.
+        if(availableStories.contains(story) && mainApp.getStories().contains(story)) {
+          storyCombo.setValue(story);
+        } else {
+          storyCombo.setValue(nonStory);
+        }
+      } else {
+        sprintCombo.setValue(null);
+        storyCombo.setValue(null);
+      }
+    }
+    refreshLists();
+  }
 
 
 
@@ -132,11 +135,7 @@ public class ScrumBoardController {
     inProgressTasks = FXCollections.observableArrayList();
     verifyTasks = FXCollections.observableArrayList();
     doneTasks = FXCollections.observableArrayList();
-    availableStories.add(nonStory);
 
-    backlogCombo.setVisibleRowCount(5);
-    sprintCombo.setVisibleRowCount(5);
-    storyCombo.setVisibleRowCount(5);
     backlogCombo.getSelectionModel().clearSelection();
     backlogCombo.setItems(mainApp.getBacklogs());
 
@@ -165,19 +164,17 @@ public class ScrumBoardController {
           if (newSprint != null) {
             storyCombo.setDisable(false);
 
-            Sprint temp = null;
-            for (Sprint s : mainApp.getSprints()) {
-              if (s.equals(newSprint)) {
-                temp = s;
-                break;
+
+            availableStories.clear();
+            for (Story story : newSprint.getSprintStories()) {
+              if (mainApp.getStories().contains(story)) {
+                availableStories.add(story);
               }
             }
 
-
-            availableStories.setAll(temp.getSprintStories());
-
             availableStories.add(0, nonStory);
 
+            storyCombo.setItems(null);
             storyCombo.setItems(availableStories);
             storyCombo.setValue(nonStory);
             refreshLists();

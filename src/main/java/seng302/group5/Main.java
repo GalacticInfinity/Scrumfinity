@@ -654,7 +654,7 @@ public class Main extends Application {
       storyDialogStage.setScene(storyDialogScene);
       storyDialogStage.showAndWait();
 
-      LMPC.getScrumBoardController().refreshLists();
+      LMPC.getScrumBoardController().hardReset();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -765,7 +765,9 @@ public class Main extends Application {
       backlogDialogStage.initModality(Modality.APPLICATION_MODAL);
       backlogDialogStage.initOwner(primaryStage);
       backlogDialogStage.setScene(backlogDialogScene);
-      backlogDialogStage.show();
+      backlogDialogStage.showAndWait();
+
+      LMPC.getScrumBoardController().hardReset();
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -801,7 +803,7 @@ public class Main extends Application {
       sprintDialogStage.setScene(sprintDialogScene);
       sprintDialogStage.showAndWait();
 
-      LMPC.getScrumBoardController().refreshLists();
+      LMPC.getScrumBoardController().hardReset();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -868,7 +870,7 @@ public class Main extends Application {
       undoRedoHandler.undo();
       toggleName();
       checkUndoRedoItems();
-      LMPC.getScrumBoardController().refreshLists();
+      LMPC.getScrumBoardController().hardReset();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -882,7 +884,7 @@ public class Main extends Application {
       undoRedoHandler.redo();
       toggleName();
       checkUndoRedoItems();
-      LMPC.getScrumBoardController().refreshLists();
+      LMPC.getScrumBoardController().hardReset();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -1600,10 +1602,7 @@ public class Main extends Application {
 //        System.err.println("Unhandled case for deleting agile item");
         break;
     }
-    //todo this is where it should be called the hard reset thing for scrumboard
-//    System.out.println("HARD RESET");
-//    LMPC.getScrumBoardController().hardReset();
-//    System.out.println("mainapp stories =  " + stories);
+    LMPC.getScrumBoardController().hardReset();
   }
 
   /**
