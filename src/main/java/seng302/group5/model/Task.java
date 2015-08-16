@@ -17,6 +17,7 @@ public class Task implements AgileItem, Comparable<Task> {
   private String label;
   private String description;
   private int estimation;
+  private String impediments;
   private Status status;
   private List<Person> assignedPeople;
   private Map<Person, Integer> spentEffort;
@@ -30,6 +31,7 @@ public class Task implements AgileItem, Comparable<Task> {
     this.label = "";
     this.description = "";
     this.estimation = 0;
+    this.impediments = "";
     this.status = Status.NOT_STARTED;
     assignedPeople = new ArrayList<>();
     spentEffort = new IdentityHashMap<>();
@@ -41,6 +43,7 @@ public class Task implements AgileItem, Comparable<Task> {
     this.description = description;
     this.status = status;
     this.estimation = estimation;
+    this.impediments = "";
     this.assignedPeople = new ArrayList<>();
     this.spentEffort = new IdentityHashMap<>();
     addAllTaskPeople(persons);
@@ -54,6 +57,7 @@ public class Task implements AgileItem, Comparable<Task> {
     this.label = clone.getLabel();
     this.description = clone.getTaskDescription();
     this.estimation = clone.getTaskEstimation();
+    this.impediments = clone.getImpediments();
     this.status = clone.getStatus();
     assignedPeople = new ArrayList<>();
     assignedPeople.addAll(clone.getTaskPeople());
@@ -85,6 +89,14 @@ public class Task implements AgileItem, Comparable<Task> {
 
   public void setTaskEstimation(Integer estimation) {
     this.estimation = estimation;
+  }
+
+  public String getImpediments() {
+    return impediments;
+  }
+
+  public void setImpediments(String impediments) {
+    this.impediments = impediments;
   }
 
   /**
@@ -160,6 +172,7 @@ public class Task implements AgileItem, Comparable<Task> {
       this.label = clone.getLabel();
       this.description = clone.getTaskDescription();
       this.estimation = clone.getTaskEstimation();
+      this.impediments = clone.getImpediments();
       this.status = clone.getStatus();
       removeAllTaskPeople();
       for (Person person : clone.getTaskPeople()) {
@@ -209,6 +222,9 @@ public class Task implements AgileItem, Comparable<Task> {
     if (status != task.status) {
       return false;
     }
+    if (impediments != null ? !impediments.equals(task.impediments) : task.impediments != null) {
+      return false;
+    }
     if (assignedPeople != null ? !assignedPeople.equals(task.assignedPeople)
                                : task.assignedPeople != null) {
       return false;
@@ -223,6 +239,7 @@ public class Task implements AgileItem, Comparable<Task> {
     int result = label.hashCode();
     result = 31 * result + (description != null ? description.hashCode() : 0);
     result = 31 * result + estimation;
+    result = 31 * result + (impediments != null ? impediments.hashCode() : 0);
     result = 31 * result + status.hashCode();
     result = 31 * result + (assignedPeople != null ? assignedPeople.hashCode() : 0);
     result = 31 * result + (spentEffort != null ? spentEffort.hashCode() : 0);

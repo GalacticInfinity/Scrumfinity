@@ -43,6 +43,7 @@ public class TaskDialogController {
   @FXML private TextField labelField;
   @FXML private TextArea descriptionField;
   @FXML private TextField estimateField;
+  @FXML private TextField impedimentsField;
   @FXML private ComboBox<String> statusComboBox;
   @FXML private ListView<Person> availablePeopleList;
   @FXML private ListView<PersonEffort> allocatedPeopleList;
@@ -108,6 +109,7 @@ public class TaskDialogController {
       labelField.setText(task.getLabel());
       descriptionField.setText(task.getTaskDescription());
       estimateField.setText(TimeFormat.parseTime(task.getTaskEstimation()));
+      impedimentsField.setText(task.getImpediments());
       statusComboBox.setValue(Status.getStatusString(task.getStatus()));
 
       btnConfirm.setDisable(true);
@@ -140,6 +142,12 @@ public class TaskDialogController {
       }
     });
 
+    impedimentsField.textProperty().addListener((observable, oldValue, newValue) -> {
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    });
+
     statusComboBox.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldValue, newValue) -> {
           if (createOrEdit == CreateOrEdit.EDIT) {
@@ -158,6 +166,7 @@ public class TaskDialogController {
     if (labelField.getText().equals(task.getLabel()) &&
         descriptionField.getText().equals(task.getTaskDescription()) &&
         TimeFormat.parseMinutes(estimateField.getText()) == task.getTaskEstimation() &&
+        impedimentsField.getText().equals(task.getImpediments()) &&
         Status.getStatusEnum(statusComboBox.getValue()).equals(task.getStatus()) &&
         allocatedPeopleList.getItems().equals(originalPeople)) {
       btnConfirm.setDisable(true);
@@ -283,6 +292,7 @@ public class TaskDialogController {
     String taskLabel = "";
     String taskDescription = descriptionField.getText().trim();
     int taskEstimateMinutes;
+    String taskImpediments = impedimentsField.getText().trim();
     Status taskStatus = Status.getStatusEnum(statusComboBox.getValue());
 
     try {
@@ -330,12 +340,14 @@ public class TaskDialogController {
       if (createOrEdit == CreateOrEdit.CREATE) {
         task = new Task(taskLabel, taskDescription, taskEstimateMinutes, taskStatus,
                         allocatedPeopleSorted);
+        task.setImpediments(taskImpediments);
         task.updateSpentEffort(peoplesEffort);
         taskable.addTask(task);
       } else if (createOrEdit == CreateOrEdit.EDIT) {
         task.setLabel(taskLabel);
         task.setTaskDescription(taskDescription);
         task.setTaskEstimation(taskEstimateMinutes);
+        task.setImpediments(taskImpediments);
         task.setStatus(taskStatus);
         task.removeAllTaskPeople();
         task.addAllTaskPeople(allocatedPeopleSorted);
@@ -370,14 +382,14 @@ public class TaskDialogController {
       throw new Exception("Task Label is empty.");
     } else {
       String lastTaskLabel;
-      if (lastTask== null) {
+      if (lastTask == null) {
         lastTaskLabel = "";
       } else {
         lastTaskLabel = lastTask.getLabel();
       }
       for (Task task : taskable.getTasks()) {
         String taskLabel = task.getLabel();
-        if (task.getLabel().equalsIgnoreCase(inputTaskLabel) &&
+        if (taskLabel.equalsIgnoreCase(inputTaskLabel) &&
             !taskLabel.equalsIgnoreCase(lastTaskLabel)) {
           throw new Exception("Task Label is not unique within the object.");
         }

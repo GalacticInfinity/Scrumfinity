@@ -1065,6 +1065,11 @@ public class Loading {
             storyLine.replaceAll("(?i)(.*<taskEstimate.*?>)(.+?)(</taskEstimate>)", "$2");
         storyTask.setTaskEstimation(Integer.parseInt(storyData));
       }
+      if (storyLine.startsWith("\t\t\t\t<taskImpediments>")) {
+        storyData =
+            storyLine.replaceAll("(?i)(.*<taskImpediments.*?>)(.+?)(</taskImpediments>)", "$2");
+        storyTask.setImpediments(storyData);
+      }
       if (storyLine.startsWith("\t\t\t\t<TaskPeople>")) {
         while ((!(storyLine = loadedFile.readLine()).endsWith("</TaskPeople>"))) {
           storyData = storyLine.replaceAll("(?i)(.*<person.*?>)(.+?)(</person>)", "$2");

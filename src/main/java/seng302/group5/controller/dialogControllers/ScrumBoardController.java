@@ -1,6 +1,5 @@
 package seng302.group5.controller.dialogControllers;
 
-import java.io.File;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
@@ -12,7 +11,6 @@ import javafx.scene.Cursor;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.cell.TextFieldListCell;
-import javafx.scene.image.Image;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
@@ -25,6 +23,7 @@ import seng302.group5.model.Sprint;
 import seng302.group5.model.Status;
 import seng302.group5.model.Story;
 import seng302.group5.model.Task;
+import seng302.group5.model.Taskable;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoObject;
 import seng302.group5.model.undoredo.UndoRedo;
@@ -90,6 +89,42 @@ public class ScrumBoardController {
   }
 
   /**
+   * This re populates the combo boxes in the scrum board so that  the proper items are displayed
+   * it then re-selects what ever you had previously selected if it still exists.
+   */
+  public void hardReset() {
+    Backlog backlog = backlogCombo.getValue();
+    Sprint sprint = sprintCombo.getValue();
+    Story story = storyCombo.getValue();
+
+    initialiseLists();
+
+    sprintCombo.setDisable(true);
+    storyCombo.setDisable(true);
+    btnNewTask.setDisable(true);
+
+    if (mainApp.getBacklogs().contains(backlog)) {
+      backlogCombo.setValue(backlog);
+
+      if(availableSprints.contains(sprint)){
+        sprintCombo.setValue(sprint);
+        //todo make stories in sprints be removed properly at some point.
+        if(availableStories.contains(story) && mainApp.getStories().contains(story)) {
+          storyCombo.setValue(story);
+        } else {
+          storyCombo.setValue(nonStory);
+        }
+      } else {
+        sprintCombo.setValue(null);
+        storyCombo.setValue(null);
+      }
+    }
+    refreshLists();
+  }
+
+
+
+  /**
    * Initialises the models lists and populates these with values from the main application,
    * such as available backlogs, sprints and stories. These values
    * are then populated into their respective GUI elements. The backlog combo box has a listener
@@ -102,11 +137,7 @@ public class ScrumBoardController {
     inProgressTasks = FXCollections.observableArrayList();
     verifyTasks = FXCollections.observableArrayList();
     doneTasks = FXCollections.observableArrayList();
-    availableStories.add(nonStory);
 
-    backlogCombo.setVisibleRowCount(5);
-    sprintCombo.setVisibleRowCount(5);
-    storyCombo.setVisibleRowCount(5);
     backlogCombo.getSelectionModel().clearSelection();
     backlogCombo.setItems(mainApp.getBacklogs());
 
@@ -120,7 +151,12 @@ public class ScrumBoardController {
                                       .filter(
                                           sprint -> sprint.getSprintBacklog().equals(newBacklog))
                                       .collect(Collectors.toList()));
+          sprintCombo.setItems(null);
           sprintCombo.setItems(availableSprints);
+          refreshLists();
+          sprintCombo.setValue(null);
+          storyCombo.setValue(null);
+          storyCombo.setDisable(true);
         }
       }
     );
@@ -129,8 +165,18 @@ public class ScrumBoardController {
         (observable, oldSprint, newSprint) -> {
           if (newSprint != null) {
             storyCombo.setDisable(false);
-            availableStories.setAll(newSprint.getSprintStories());
+
+
+            availableStories.clear();
+            for (Story story : newSprint.getSprintStories()) {
+              if (mainApp.getStories().contains(story)) {
+                availableStories.add(story);
+              }
+            }
+
             availableStories.add(0, nonStory);
+
+            storyCombo.setItems(null);
             storyCombo.setItems(availableStories);
             storyCombo.setValue(nonStory);
             refreshLists();
@@ -200,7 +246,13 @@ public class ScrumBoardController {
             click.getButton() == MouseButton.PRIMARY &&
             !isEmpty()) {
           Task selectedTask = getItem();
-          UndoRedo taskEdit = mainApp.showTaskDialog(storyCombo.getValue(), selectedTask,
+          Taskable taskable;
+          if (storyCombo.getValue() == nonStory) {
+            taskable = sprintCombo.getValue();
+          } else {
+            taskable = storyCombo.getValue();
+          }
+          UndoRedo taskEdit = mainApp.showTaskDialog(taskable, selectedTask,
                                                      sprintCombo.getValue().getSprintTeam(),
                                                      CreateOrEdit.EDIT, stage);
           if (taskEdit != null) {
@@ -217,29 +269,28 @@ public class ScrumBoardController {
 
       taskListView.setCursor(Cursor.OPEN_HAND);
 
-
       taskListView.setOnDragDetected(event -> {
         if (taskListView.getSelectionModel().getSelectedItem() != null) {
           state = "";
           lastTask = new Task(taskListView.getSelectionModel().getSelectedItem());
           task = taskListView.getSelectionModel().getSelectedItem();
 
-          Dragboard dragBoard = taskListView.startDragAndDrop(TransferMode.MOVE);
+          Dragboard dragBoard = taskListView.startDragAndDrop(TransferMode.ANY);
 
           ClipboardContent content = new ClipboardContent();
-          File dragFileImage = new File("src/main/resources/DragCursor.png");
-          Image dragImage = new Image(dragFileImage.toURI().toString());
-          dragBoard.setDragView(dragImage);
-
           content.putString(taskListView.getSelectionModel().getSelectedItem().getLabel());
 
           dragBoard.setContent(content);
+          dragBoard.setDragViewOffsetX(1.0);
+          dragBoard.setDragViewOffsetY(1.0);
 
           notStartedList.setOnDragOver(hover -> state = "notstarted");
           inProgressList.setOnDragOver(hover -> state = "progress");
           verifyList.setOnDragOver(hover -> state = "verify");
           doneList.setOnDragOver(hover -> state = "done");
+
         }
+        event.consume();
       });
       taskListView.setOnDragDone(
           event -> {
@@ -256,8 +307,10 @@ public class ScrumBoardController {
               if (!task.getStatus().equals(lastTask.getStatus())) {
                 generateUndoRedoObject();
               }
+
               refreshLists();
             }
+            event.consume();
           });
       refreshLists();
     }

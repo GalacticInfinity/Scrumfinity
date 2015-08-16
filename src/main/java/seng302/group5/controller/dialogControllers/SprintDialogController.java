@@ -1,7 +1,5 @@
 package seng302.group5.controller.dialogControllers;
 
-import org.mockito.cglib.core.Local;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -365,7 +363,7 @@ public class SprintDialogController {
             for (Sprint mainSprint : mainApp.getSprints()) {
               if ((sprint == null) ||
                   (!mainSprint.equals(sprint) &&
-                   mainSprint.getSprintBacklog().equals(sprint.getSprintBacklog()))) {
+                   mainSprint.getSprintBacklog().equals(sprintBacklogCombo.getValue()))) {
                 otherSprintsStories.addAll(mainSprint.getSprintStories());
               }
             }
