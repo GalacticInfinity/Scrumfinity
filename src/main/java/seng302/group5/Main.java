@@ -1452,16 +1452,18 @@ public class Main extends Application {
           String message;
           if (storySprint != null) {
             message =
-                String.format("Do you want to delete '%s' and remove it from Backlog: '%s'"
+                String.format("Do you want to delete '%s' and remove it from\n\t Backlog: '%s'\n\t"
                               + " and Sprint: '%s'?",
                               story.getLabel(), storyBacklog.getLabel(), storySprint.getLabel());
+            alert.getDialogPane().setPrefHeight(150);
           } else {
             message =
-                String.format("Do you want to delete '%s' and remove it from Backlog: '%s'?",
+                String.format("Do you want to delete '%s' and remove it from\n\t Backlog: '%s'?",
                               story.getLabel(), storyBacklog.getLabel());
+            alert.getDialogPane().setPrefHeight(125);
           }
-
           alert.setContentText(message);
+
           //checks response
           Optional<ButtonType> result = alert.showAndWait();
           if (result.get() == ButtonType.OK) {
