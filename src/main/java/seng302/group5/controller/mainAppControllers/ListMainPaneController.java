@@ -70,11 +70,8 @@ public class ListMainPaneController {
   private boolean isListShown = true;
   private boolean isTemporal = false;
 
-  private File dSort = new File("src/main/resources/DSortButton.png");
-  Image dSortImage = new Image(dSort.toURI().toString());
-
-  private File aSort = new File("src/main/resources/ASortButton.png");
-  Image aSortImage = new Image(aSort.toURI().toString());
+  private Image aSortImage = new Image("ASortButton.png");
+  private Image dSortImage = new Image("DSortButton.png");
 
   private AgileItem selectedItem;
 
@@ -1192,10 +1189,10 @@ public class ListMainPaneController {
   @FXML
   protected void btnClickTemporalSort(ActionEvent event) {
     if (isTemporal){
-      //sortImage.setImage(aSortImage);
+      sortImage.setImage(aSortImage);
       isTemporal = false;
     } else {
-     // sortImage.setImage(dSortImage);
+      sortImage.setImage(dSortImage);
       isTemporal = true;
     }
     refreshList(selectedItem);
