@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javafx.application.Application;
@@ -100,6 +102,8 @@ public class Main extends Application {
 
   private String mainTitle = "Scrumfinity"; //THIS CAN BE USED FOR ORGANIZATION
 
+  private Map<Class, String> listTypeMap;
+
   public static void main(String[] args) {
     launch(args);
   }
@@ -145,6 +149,8 @@ public class Main extends Application {
 
     revertHandler.setLastSaved();
 
+    initListTypeMap();
+
     this.primaryStage.setOnCloseRequest(event -> {
       event.consume();
       exitScrumfinity();
@@ -183,6 +189,21 @@ public class Main extends Application {
     } else {
       primaryStage.close();
     }
+  }
+
+  /**
+   * Initialise the map between the class and the list type value.
+   */
+  private void initListTypeMap() {
+    listTypeMap = new HashMap<>();
+    listTypeMap.put(Backlog.class, "Backlogs");
+    listTypeMap.put(Person.class, "People");
+    listTypeMap.put(Project.class, "Projects");
+    listTypeMap.put(Release.class, "Releases");
+    listTypeMap.put(Skill.class, "Skills");
+    listTypeMap.put(Sprint.class, "Sprints");
+    listTypeMap.put(Story.class, "Stories");
+    listTypeMap.put(Team.class, "Teams");
   }
 
   /**
@@ -1789,6 +1810,18 @@ public class Main extends Application {
    */
   public void refreshList(AgileItem agileItem) {
     LMPC.refreshList(agileItem);
+  }
+
+  /**
+   * Change the displayed list type to the type of the target and select that target item.
+   * Preconditions: target is displayable in the list.
+   *
+   * @param target AgileItem to select.
+   */
+  public void selectItem(AgileItem target) {
+    String listType = listTypeMap.get(target.getClass());
+    MBC.showListType(listType);
+    LMPC.refreshList(target);
   }
 
   /**
