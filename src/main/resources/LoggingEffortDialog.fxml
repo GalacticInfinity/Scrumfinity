@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="260.0" prefWidth="442.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.SkillsDialogController">
+    <children>
+        <HBox alignment="CENTER_LEFT" prefHeight="39.0" prefWidth="429.0" spacing="10.0">
+            <children>
+                <Label prefWidth="100.0" text="Person:*">
+                    <font>
+                        <Font size="15.0" />
+                    </font>
+                </Label>
+            <ComboBox fx:id="teamMemberCombo" prefWidth="150.0" promptText="Team Member" />
+            </children>
+        </HBox>
+      <HBox prefHeight="23.0" prefWidth="437.0">
+         <children>
+            <Label prefHeight="31.0" prefWidth="110.0" text="Date &amp; Time:*">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <DatePicker fx:id="date" prefHeight="26.0" prefWidth="173.0" />
+            <TextField fx:id="amount" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="95.0" promptText="e.g. 1h30m">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </TextField>
+         </children>
+         <VBox.margin>
+            <Insets bottom="5.0" />
+         </VBox.margin>
+      </HBox>
+        <HBox prefHeight="141.0" prefWidth="437.0" spacing="10.0">
+            <children>
+                <Label prefWidth="100.0" text="Comment:*" wrapText="true">
+                    <font>
+                        <Font size="15.0" />
+                    </font>
+                </Label>
+                <TextArea fx:id="comment" prefHeight="50.0" prefWidth="310.0" promptText="Comment for your logging effort is essential!" wrapText="true" />
+            </children>
+        </HBox>
+        <HBox fx:id="btnContainer" alignment="BOTTOM_RIGHT" prefHeight="25.0" prefWidth="429.0" spacing="10.0">
+            <children>
+                <Label prefHeight="25.0" prefWidth="239.0" text="* Fields cannot be empty.">
+                    <font>
+                        <Font name="System Italic" size="13.0" />
+                    </font>
+                </Label>
+                <Button fx:id="effortCreation" mnemonicParsing="false" onAction="#EffortCreation" prefHeight="25.0" prefWidth="85.0" text="Save" />
+                <Button fx:id="cancelCreation" mnemonicParsing="false" onAction="#CancelCreation" prefHeight="25.0" prefWidth="85.0" text="Cancel" />
+            </children>
+         <VBox.margin>
+            <Insets top="15.0" />
+         </VBox.margin>
+         <padding>
+            <Insets bottom="5.0" right="5.0" />
+         </padding>
+        </HBox>
+    </children>
+    <padding>
+        <Insets left="5.0" />
+    </padding>
+</VBox>
