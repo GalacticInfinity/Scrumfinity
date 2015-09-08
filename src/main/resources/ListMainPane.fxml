@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.chart.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.text.*?>
@@ -63,6 +64,25 @@
                       </AnchorPane>
                   </content>
                 </Tab>
+                  <Tab text="Burndown Chart">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="322.0" prefWidth="546.0">
+                           <children>
+                              <LineChart alternativeColumnFillVisible="true" layoutX="-5.0" layoutY="41.0" prefHeight="299.0" prefWidth="422.0" title="Sprint Name" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-5.0" AnchorPane.rightAnchor="-3.0" AnchorPane.topAnchor="41.0">
+                                <xAxis>
+                                  <CategoryAxis label="Spent Effort" side="BOTTOM" />
+                                </xAxis>
+                                <yAxis>
+                                  <NumberAxis label="Time" side="LEFT" />
+                                </yAxis>
+                              </LineChart>
+                              <ComboBox layoutX="14.0" layoutY="14.0" prefHeight="25.0" prefWidth="125.0" promptText="Project" />
+                              <ComboBox layoutX="147.0" layoutY="14.0" prefHeight="25.0" prefWidth="125.0" promptText="Release" />
+                              <ComboBox layoutX="279.0" layoutY="14.0" prefHeight="25.0" prefWidth="125.0" promptText="Sprint" />
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </Tab>
               </tabs>
             </TabPane>
          </children>
