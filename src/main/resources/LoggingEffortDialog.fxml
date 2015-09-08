@@ -15,7 +15,7 @@
                         <Font size="15.0" />
                     </font>
                 </Label>
-            <ComboBox prefWidth="150.0" promptText="Team Member" />
+            <ComboBox fx:id="teamMemberCombo" prefWidth="150.0" promptText="Team Member" />
             </children>
         </HBox>
       <HBox prefHeight="23.0" prefWidth="437.0">
@@ -25,8 +25,8 @@
                   <Font size="15.0" />
                </font>
             </Label>
-            <DatePicker prefHeight="26.0" prefWidth="173.0" />
-            <TextField alignment="TOP_LEFT" prefHeight="25.0" prefWidth="95.0" promptText="e.g. 1h30m">
+            <DatePicker fx:id="date" prefHeight="26.0" prefWidth="173.0" />
+            <TextField fx:id="amount" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="95.0" promptText="e.g. 1h30m">
                <HBox.margin>
                   <Insets left="10.0" />
                </HBox.margin>
@@ -43,7 +43,7 @@
                         <Font size="15.0" />
                     </font>
                 </Label>
-                <TextArea fx:id="skillDescription" prefHeight="50.0" prefWidth="310.0" promptText="Comment for your logging effort is essential!" wrapText="true" />
+                <TextArea fx:id="comment" prefHeight="50.0" prefWidth="310.0" promptText="Comment for your logging effort is essential!" wrapText="true" />
             </children>
         </HBox>
         <HBox fx:id="btnContainer" alignment="BOTTOM_RIGHT" prefHeight="25.0" prefWidth="429.0" spacing="10.0">
@@ -53,7 +53,7 @@
                         <Font name="System Italic" size="13.0" />
                     </font>
                 </Label>
-                <Button fx:id="skillCreation" mnemonicParsing="false" onAction="#SkillCreation" prefHeight="25.0" prefWidth="85.0" text="Save" />
+                <Button fx:id="effortCreation" mnemonicParsing="false" onAction="#EffortCreation" prefHeight="25.0" prefWidth="85.0" text="Save" />
                 <Button fx:id="cancelCreation" mnemonicParsing="false" onAction="#CancelCreation" prefHeight="25.0" prefWidth="85.0" text="Cancel" />
             </children>
          <VBox.margin>
