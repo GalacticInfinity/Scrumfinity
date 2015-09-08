@@ -23,7 +23,7 @@ public class Task implements AgileItem, Comparable<Task> {
   private Map<Person, Integer> spentEffort;
   private ArrayList<Effort> efforts;
 
-
+//TODO Come back once logging effort is decided and modify the spenteffort to show the result of each effort for each person.
 
   /**
    * Default constructor for task. Sets all String to empty strings, initializes list/maps.
