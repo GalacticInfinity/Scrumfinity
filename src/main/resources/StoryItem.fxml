@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<TitledPane fx:id="storyPane" animated="false" text="untitled 1" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.StoryItemController">
+   <content>
+      <AnchorPane fx:id="storyAnchor" minHeight="337.0" minWidth="600.0">
+         <children>
+            <HBox layoutX="-8.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <VBox HBox.hgrow="ALWAYS">
+                     <children>
+                        <HBox alignment="CENTER" maxHeight="15.0" prefHeight="15.0" VBox.vgrow="NEVER">
+                           <children>
+                              <Label alignment="CENTER" prefHeight="15.0" text="Not Started" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
+                        <ListView fx:id="notStartedList" prefWidth="150.0" VBox.vgrow="ALWAYS">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </ListView>
+                     </children>
+                  </VBox>
+                  <VBox HBox.hgrow="ALWAYS">
+                     <children>
+                        <HBox alignment="CENTER" maxHeight="15.0" prefHeight="15.0">
+                           <children>
+                              <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" text="In Progress" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
+                        <ListView fx:id="inProgressList" prefWidth="150.0" VBox.vgrow="ALWAYS">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </ListView>
+                     </children>
+                  </VBox>
+                  <VBox HBox.hgrow="ALWAYS">
+                     <children>
+                        <HBox alignment="CENTER" maxHeight="15.0" prefHeight="15.0">
+                           <children>
+                              <Label alignment="CENTER" prefHeight="15.0" text="Verify" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
+                        <ListView fx:id="verifyList" prefWidth="150.0" VBox.vgrow="ALWAYS">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </ListView>
+                     </children>
+                  </VBox>
+                  <VBox HBox.hgrow="ALWAYS">
+                     <children>
+                        <HBox alignment="CENTER" maxHeight="15.0" prefHeight="15.0">
+                           <children>
+                              <Label alignment="CENTER" prefHeight="15.0" text="Done" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
+                        <ListView fx:id="doneList" prefWidth="150.0" VBox.vgrow="ALWAYS">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </ListView>
+                     </children>
+                  </VBox>
+               </children>
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+            </HBox>
+         </children>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+      </AnchorPane>
+   </content>
+</TitledPane>

@@ -27,11 +27,6 @@
                               <Insets left="10.0" top="10.0" />
                            </HBox.margin>
                         </ComboBox>
-                        <ComboBox fx:id="storyCombo" prefHeight="30.0" prefWidth="175.0" promptText="Story">
-                           <HBox.margin>
-                              <Insets left="10.0" top="10.0" />
-                           </HBox.margin>
-                        </ComboBox>
                         <Button fx:id="btnNewTask" mnemonicParsing="false" onAction="#addNewTask" prefHeight="30.0" prefWidth="30.0">
                            <HBox.margin>
                               <Insets left="10.0" right="10.0" top="10.0" />
@@ -60,72 +55,7 @@
                   </HBox>
                </children>
             </AnchorPane>
-          <AnchorPane minHeight="337.0" minWidth="600.0" VBox.vgrow="ALWAYS">
-               <children>
-                  <HBox layoutX="-8.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <children>
-                        <VBox HBox.hgrow="ALWAYS">
-                           <children>
-                              <HBox alignment="CENTER" maxHeight="15.0" prefHeight="15.0" VBox.vgrow="NEVER">
-                                 <children>
-                                    <Label alignment="CENTER" prefHeight="15.0" text="Not Started" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
-                                 </children>
-                              </HBox>
-                              <ListView fx:id="notStartedList" prefWidth="150.0" VBox.vgrow="ALWAYS">
-                                 <cursor>
-                                    <Cursor fx:constant="DEFAULT" />
-                                 </cursor></ListView>
-                           </children>
-                        </VBox>
-                        <VBox HBox.hgrow="ALWAYS">
-                           <children>
-                              <HBox alignment="CENTER" maxHeight="15.0" prefHeight="15.0">
-                                 <children>
-                                    <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" text="In Progress" HBox.hgrow="ALWAYS" />
-                                 </children>
-                              </HBox>
-                              <ListView fx:id="inProgressList" prefWidth="150.0" VBox.vgrow="ALWAYS">
-                                 <cursor>
-                                    <Cursor fx:constant="DEFAULT" />
-                                 </cursor></ListView>
-                           </children>
-                        </VBox>
-                        <VBox HBox.hgrow="ALWAYS">
-                           <children>
-                              <HBox alignment="CENTER" maxHeight="15.0" prefHeight="15.0">
-                                 <children>
-                                    <Label alignment="CENTER" prefHeight="15.0" text="Verify" HBox.hgrow="ALWAYS" />
-                                 </children>
-                              </HBox>
-                              <ListView fx:id="verifyList" prefWidth="150.0" VBox.vgrow="ALWAYS">
-                                 <cursor>
-                                    <Cursor fx:constant="DEFAULT" />
-                                 </cursor></ListView>
-                           </children>
-                        </VBox>
-                        <VBox HBox.hgrow="ALWAYS">
-                           <children>
-                              <HBox alignment="CENTER" maxHeight="15.0" prefHeight="15.0">
-                                 <children>
-                                    <Label alignment="CENTER" prefHeight="15.0" text="Done" HBox.hgrow="ALWAYS" />
-                                 </children>
-                              </HBox>
-                              <ListView fx:id="doneList" prefWidth="150.0" VBox.vgrow="ALWAYS">
-                                 <cursor>
-                                    <Cursor fx:constant="DEFAULT" />
-                                 </cursor></ListView>
-                           </children>
-                        </VBox>
-                     </children>
-                     <cursor>
-                        <Cursor fx:constant="DEFAULT" />
-                     </cursor>
-                  </HBox>
-               </children>
-               <cursor>
-                  <Cursor fx:constant="DEFAULT" />
-               </cursor>
-            </AnchorPane>
+            <Accordion fx:id="scrumBoardAccordion" />
          </children>
       </VBox>
    </children>
