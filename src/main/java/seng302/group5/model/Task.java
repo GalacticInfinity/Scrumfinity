@@ -21,6 +21,8 @@ public class Task implements AgileItem, Comparable<Task> {
   private Status status;
   private List<Person> assignedPeople;
   private Map<Person, Integer> spentEffort;
+  private ArrayList<Effort> efforts;
+
 
 
   /**
@@ -35,6 +37,7 @@ public class Task implements AgileItem, Comparable<Task> {
     this.status = Status.NOT_STARTED;
     assignedPeople = new ArrayList<>();
     spentEffort = new IdentityHashMap<>();
+    this.efforts = new ArrayList<>();
   }
 
   public Task(String label, String description, Integer estimation, Status status,
@@ -46,6 +49,7 @@ public class Task implements AgileItem, Comparable<Task> {
     this.impediments = "";
     this.assignedPeople = new ArrayList<>();
     this.spentEffort = new IdentityHashMap<>();
+    this.efforts = new ArrayList<>();
     addAllTaskPeople(persons);
   }
 
@@ -63,6 +67,8 @@ public class Task implements AgileItem, Comparable<Task> {
     assignedPeople.addAll(clone.getTaskPeople());
     spentEffort = new IdentityHashMap<>();
     spentEffort.putAll(clone.getSpentEffort());
+    efforts = new ArrayList<>();
+    efforts = clone.getEfforts();
   }
 
   @Override
@@ -97,6 +103,12 @@ public class Task implements AgileItem, Comparable<Task> {
 
   public void setImpediments(String impediments) {
     this.impediments = impediments;
+  }
+
+  public ArrayList<Effort> getEfforts() { return efforts;}
+
+  public void addEffort(Effort effort) {
+    this.efforts.add(effort);
   }
 
   /**
@@ -181,6 +193,9 @@ public class Task implements AgileItem, Comparable<Task> {
       for (Map.Entry<Person, Integer> entry : clone.getSpentEffort().entrySet()) {
         spentEffort.put(entry.getKey(), entry.getValue());
       }
+      for (Effort effort : clone.getEfforts()) {
+        this.efforts.add(effort);
+      }
     }
   }
 
@@ -229,6 +244,11 @@ public class Task implements AgileItem, Comparable<Task> {
                                : task.assignedPeople != null) {
       return false;
     }
+
+    if (efforts != null ? ! efforts.equals(task.efforts) : task.efforts != null) {
+      return false;
+    }
+
     return !(spentEffort != null ? !spentEffort.equals(task.spentEffort)
                                  : task.spentEffort != null);
 
@@ -243,6 +263,7 @@ public class Task implements AgileItem, Comparable<Task> {
     result = 31 * result + status.hashCode();
     result = 31 * result + (assignedPeople != null ? assignedPeople.hashCode() : 0);
     result = 31 * result + (spentEffort != null ? spentEffort.hashCode() : 0);
+    result = 31 * result + (efforts != null ? efforts.hashCode() : 0);
     return result;
   }
 
