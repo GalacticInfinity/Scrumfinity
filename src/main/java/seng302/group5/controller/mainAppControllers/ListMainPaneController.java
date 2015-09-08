@@ -341,16 +341,10 @@ public class ListMainPaneController {
     text.setFill(Color.BLACK);
     text.setUnderline(true);
     text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
-    text.setOnMouseClicked(event -> {
-      mainApp.selectItem(target);
-    });
+    text.setOnMouseClicked(event -> mainApp.selectItem(target));
     text.setLineSpacing(0);
-    text.setOnMouseEntered(event -> {
-      mainApp.getPrimaryStage().getScene().setCursor(Cursor.HAND);
-    });
-    text.setOnMouseExited(event -> {
-      mainApp.getPrimaryStage().getScene().setCursor(Cursor.DEFAULT);
-    });
+    text.setOnMouseEntered(event -> mainApp.getPrimaryStage().getScene().setCursor(Cursor.HAND));
+    text.setOnMouseExited(event -> mainApp.getPrimaryStage().getScene().setCursor(Cursor.DEFAULT));
     return text;
   }
 
@@ -585,28 +579,29 @@ public class ListMainPaneController {
                                          textDescriptionHeader, textDescriptionBody,
                                          textMembersHeader);
 
-    Text textMembersBody;
-    Text textMemberRole;
+    List<Text> textMembersBody = new ArrayList<>();
     for (Person member : team.getTeamMembers().sorted(Comparator.<Person>naturalOrder())) {
+      textMembersBody.clear();
+      textMembersBody.add(new Text("\n"));
+      textMembersBody.add(generateHyperlink(member));   // get the hyperlink
       if (member.getFirstName().isEmpty() && member.getLastName().isEmpty()) {
-        textMembersBody = new Text("\n" + member.getLabel() + " - Role: ");
+        textMembersBody.add(new Text(" - Role: "));
       } else {
-        textMembersBody = new Text("\n" + member.getLabel() + " - " + member.getFirstName() + " " +
-                                   member.getLastName() + " - Role: ");
-
+        textMembersBody.add(new Text(" - " + member.getFirstName() + " " + member.getLastName() +
+                                     " - Role: "));
       }
       Role role = team.getMembersRole().get(member);
-        if (role != null) {
-          textMemberRole = new Text(role.toString());
-        } else {
-          textMemberRole = new Text("Not assigned to a role yet.");
-        }
-      textMembersBody.setFill(Color.rgb(1, 0, 1));
-      textMembersBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
-      textMemberRole.setFill(Color.rgb(1, 0, 1));
-      textMemberRole.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+      if (role != null) {
+        textMembersBody.add(new Text(role.toString()));
+      } else {
+        textMembersBody.add(new Text("Not assigned to a role yet."));
+      }
+      for (Text text : textMembersBody) {
+        text.setFill(Color.rgb(1, 0, 1));
+        text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+      }
 
-      displayTextFlow.getChildren().addAll(textMembersBody, textMemberRole);
+      displayTextFlow.getChildren().addAll(textMembersBody);
     }
   }
 
