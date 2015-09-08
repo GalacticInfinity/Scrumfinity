@@ -23,15 +23,18 @@ public class Effort implements AgileItem, Comparable<Effort> {
 
   /**
    * Default constructor for an Effort object including all fields.
+   * @param effortLabel The label of the logged effort.
    * @param worker The Person logging the effort.
    * @param time The time they are logging (as a double).
    * @param comments Any comments about the logged Effort.
+   * @param endTime The time the effort was logged.
    */
-  public Effort(Person worker, double time, String comments) {
-    this.effortLabel = "";
+  public Effort(String effortLabel, Person worker, double time, String comments, LocalDate endTime) {
+    this.effortLabel = effortLabel;
     this.worker = worker;
     this.time = time;
     this.comments = comments;
+    this.endTime = endTime;
   }
 
   /**
@@ -130,10 +133,7 @@ public class Effort implements AgileItem, Comparable<Effort> {
     if (!worker.equals(effort.getWorker())) {
       return false;
     }
-    if (!endTime.equals(effort.getEndTime())) {
-      return false;
-    }
-    return true;
+    return endTime.equals(effort.getEndTime());
   }
 
   /**
