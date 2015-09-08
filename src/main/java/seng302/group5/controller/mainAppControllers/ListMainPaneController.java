@@ -16,6 +16,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
@@ -327,6 +328,33 @@ public class ListMainPaneController {
   }
 
   /**
+   * Generate a Hyperlink (or rather pseudo-hyperlink with Text) which changes the displayed
+   * list type and selects the target item.
+   * Note that the Text class is used rather than the Hyperlink class because Hyperlink has
+   * different line spacing to Text.
+   *
+   * @param target The target AgileItem to select.
+   * @return The Text object representing the hyperlink.
+   */
+  private Text generateHyperlink(AgileItem target) {
+    Text text = new Text(target.toString());
+    text.setFill(Color.BLACK);
+    text.setUnderline(true);
+    text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    text.setOnMouseClicked(event -> {
+      mainApp.selectItem(target);
+    });
+    text.setLineSpacing(0);
+    text.setOnMouseEntered(event -> {
+      mainApp.getPrimaryStage().getScene().setCursor(Cursor.HAND);
+    });
+    text.setOnMouseExited(event -> {
+      mainApp.getPrimaryStage().getScene().setCursor(Cursor.DEFAULT);
+    });
+    return text;
+  }
+
+  /**
    * Method that takes the selected skill and displays its information in the main display pane.
    * @param skill the skills who's information will be displayed.
    */
@@ -400,9 +428,7 @@ public class ListMainPaneController {
 
     Text text9;
     if (person.isInTeam()) {
-      text9 = new Text(person.getTeam().toString());
-      text9.setFill(Color.BLACK);
-      text9.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+      text9 = generateHyperlink(person.getTeam());
     } else {
       text9 = new Text("Not Assigned.");
       text9.setFill(Color.BLACK);

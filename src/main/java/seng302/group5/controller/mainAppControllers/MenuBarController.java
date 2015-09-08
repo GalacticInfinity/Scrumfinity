@@ -678,6 +678,17 @@ public class MenuBarController {
   }
 
   /**
+   * Using a list type value, display that type on the displayed list.
+   *
+   * @param listType Type of list to display.
+   */
+  public void showListType(String listType) {
+    Settings.currentListType = listType;
+    deselectList(listType);
+    mainApp.getLMPC().refreshList(null);
+  }
+
+  /**
    * Used to deselect all lists except for the list you want to be showed (selectedList) Show/hide
    * lists uses this to show no lists.
    *
