@@ -541,22 +541,51 @@ public class ListMainPaneController {
       text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
     }
 
-    Text text10 = new Text("\nBacklog: ");
-    text10.setFill(Color.BLACK);
-    text10.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
-    Text text11;
+    Text backlogHeader = new Text("\nBacklog: ");
+    backlogHeader.setFill(Color.BLACK);
+    backlogHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+    Text backlogBody;
     if (project.getBacklog() == null) {
-      text11 = new Text("N/A");
+      backlogBody = new Text("N/A");
     } else {
-      text11 = generateHyperlink(project.getBacklog());
+      backlogBody = generateHyperlink(project.getBacklog());
     }
-    text11.setFill(Color.BLACK);
-    text11.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    backlogBody.setFill(Color.BLACK);
+    backlogBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text releasesHeader = new Text("\nReleases: ");
+    releasesHeader.setFill(Color.BLACK);
+    releasesHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    List<Release> releases = new ArrayList<>();
+    List<Text> releasesBody = new ArrayList<>();
+    for (Release release : mainApp.getReleasesbydate()) {
+      if (release.getProjectRelease().equals(project)) {
+        releases.add(release);
+      }
+    }
+    if (releases.isEmpty()) {
+      releasesBody.add(new Text("No releases for this project."));
+    } else {
+      for (Release release : releases) {
+        releasesBody.add(new Text("\n"));
+        releasesBody.add(generateHyperlink(release));
+        String dateFormat = "dd/MM/yyyy";
+        releasesBody.add(new Text(" - " + release.getReleaseDate().format(
+            DateTimeFormatter.ofPattern(dateFormat))));
+      }
+    }
+    for (Text text : releasesBody) {
+      text.setFill(Color.BLACK);
+      text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    }
 
     displayTextFlow.getChildren().addAll(text1, text2, text3, text4, text5, text6,
                                          text7, text8);
     displayTextFlow.getChildren().addAll(teamsBody);
-    displayTextFlow.getChildren().addAll(text10, text11);
+    displayTextFlow.getChildren().addAll(backlogHeader, backlogBody);
+    displayTextFlow.getChildren().addAll(releasesHeader);
+    displayTextFlow.getChildren().addAll(releasesBody);
   }
 
 
@@ -726,9 +755,7 @@ public class ListMainPaneController {
     textProjectHeader.setFill(Color.rgb(1, 0, 1));
     textProjectHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
-    Text textProjectBody = new Text(release.getProjectRelease().toString());
-    textProjectBody.setFill(Color.rgb(1, 0, 1));
-    textProjectBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    Text textProjectBody = generateHyperlink(release.getProjectRelease());
 
     displayTextFlow.getChildren().addAll(textHeader, textLabelHeader, textLabelBody,
                                          textDescriptionHeader, textDescriptionBody, textDateHeader,
