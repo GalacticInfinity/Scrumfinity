@@ -138,7 +138,7 @@ public class Effort implements AgileItem, Comparable<Effort> {
 
   /**
    * Generates the hashcode for an Effort object.
-   * @return The hashcode.
+   * @return The hashcode generated from the Effort object.
    */
   @Override
   public int hashCode() {
