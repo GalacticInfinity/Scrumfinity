@@ -806,9 +806,7 @@ public class ListMainPaneController {
     textCreatorHeader.setFill(Color.rgb(1, 0, 1));
     textCreatorHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
-    Text textCreatorBody = new Text(story.getCreator().toString());
-    textCreatorBody.setFill(Color.rgb(1, 0, 1));
-    textCreatorBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    Text textCreatorBody = generateHyperlink(story.getCreator());
 
     Text textReadinessHeader = new Text("\nReadiness: ");
     textReadinessHeader.setFill(Color.rgb(1, 0, 1));
@@ -932,9 +930,7 @@ public class ListMainPaneController {
     textPoHeader.setFill(Color.rgb(1, 0, 1));
     textPoHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
-    Text textPoBody = new Text(backlog.getProductOwner().toString());
-    textPoBody.setFill(Color.rgb(1, 0, 1));
-    textPoBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    Text textPoBody = generateHyperlink(backlog.getProductOwner());
 
     Text textEsHeader = new Text("\nBacklog Estimation Scale: ");
     textEsHeader.setFill(Color.rgb(1, 0, 1));
@@ -967,63 +963,58 @@ public class ListMainPaneController {
 
     List<Text> storiesText = new ArrayList<>();
 
-    Text textStoriesBody;
     if (!backlog.getStories().isEmpty()) {
-
       for (Story story : backlog.getStories()) {
         int index = backlog.getSizes().get(story);
-        textStoriesBody = new Text("\n• " + story + " - " +
-                                   backlog.getEstimate().getEstimateNames().get(index));
-        storiesText.add(textStoriesBody);
-        displayTextFlow.getChildren().add(textStoriesBody);
+        storiesText.add(new Text("\n• "));
+        Text hyperlink = generateHyperlink(story);
+        hyperlink.setFont(Font.getDefault());
+        storiesText.add(hyperlink);
+        storiesText.add(new Text(" - " + backlog.getEstimate().getEstimateNames().get(index)));
       }
     } else {
-      textStoriesBody = new Text("\nN/A");
-      storiesText.add(textStoriesBody);
-      displayTextFlow.getChildren().add(textStoriesBody);
+      storiesText.add(new Text("\nN/A"));
     }
+    displayTextFlow.getChildren().addAll(storiesText);
 
     sortToggle.setOnAction(event -> {
       displayTextFlow.getChildren().removeAll(storiesText);
       storiesText.clear();
       if (sortToggle.getText().equals(prioritisedOrder)) {
         // Change to alphabetical order
-        Text tempTextStoriesBody;
         if (!backlog.getStories().isEmpty()) {
           SortedList<Story> sortedStories = new SortedList<>(
               FXCollections.observableArrayList(backlog.getStories()),
               Comparator.<Story>naturalOrder());
-          Map<Story, Integer> sorted = new IdentityHashMap<>(backlog.getSizes());
           for (Story story : sortedStories) {
-            tempTextStoriesBody = new Text("\n• " + story + " - " +
-                                           backlog.getEstimate().getEstimateNames()
-                                               .get(sorted.get(story)));
-            storiesText.add(tempTextStoriesBody);
-            displayTextFlow.getChildren().add(tempTextStoriesBody);
+            int index = backlog.getSizes().get(story);
+            storiesText.add(new Text("\n• "));
+            Text hyperlink = generateHyperlink(story);
+            hyperlink.setFont(Font.getDefault());
+            storiesText.add(hyperlink);
+            storiesText.add(new Text(" - " + backlog.getEstimate().getEstimateNames().get(index)));
           }
         } else {
-          tempTextStoriesBody = new Text("\nN/A");
-          storiesText.add(tempTextStoriesBody);
-          displayTextFlow.getChildren().add(tempTextStoriesBody);
+          storiesText.add(new Text("\nN/A"));
         }
+        displayTextFlow.getChildren().addAll(storiesText);
         // Change the mode
         sortToggle.setText(alphabeticalOrder);
       } else {
         // Change to prioritised order
-        Text tempTextStoriesBody;
         if (!backlog.getStories().isEmpty()) {
           for (Story story : backlog.getStories()) {
             int index = backlog.getSizes().get(story);
-            tempTextStoriesBody = new Text("\n• " + story + " - " +
-                                           backlog.getEstimate().getEstimateNames().get(index));
-            storiesText.add(tempTextStoriesBody);
-            displayTextFlow.getChildren().add(tempTextStoriesBody);
+            storiesText.add(new Text("\n• "));
+            Text hyperlink = generateHyperlink(story);
+            hyperlink.setFont(Font.getDefault());
+            storiesText.add(hyperlink);
+            storiesText.add(new Text(" - " + backlog.getEstimate().getEstimateNames().get(index)));
           }
         } else {
-          tempTextStoriesBody = new Text("\nN/A");
-          storiesText.add(tempTextStoriesBody);
-          displayTextFlow.getChildren().add(tempTextStoriesBody);
+          storiesText.add(new Text("\nN/A"));
         }
+        displayTextFlow.getChildren().addAll(storiesText);
         // Change the mode
         sortToggle.setText(prioritisedOrder);
       }
@@ -1073,33 +1064,25 @@ public class ListMainPaneController {
     textBacklogHeader.setFill(Color.rgb(1, 0, 1));
     textBacklogHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
-    Text textBacklogBody = new Text(sprint.getSprintBacklog().toString());
-    textBacklogBody.setFill(Color.rgb(1, 0, 1));
-    textBacklogBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    Text textBacklogBody = generateHyperlink(sprint.getSprintBacklog());
 
     Text textProjectHeader = new Text("\nSprint Project: ");
     textProjectHeader.setFill(Color.rgb(1, 0, 1));
     textProjectHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
-    Text textProjectBody = new Text(sprint.getSprintProject().toString());
-    textProjectBody.setFill(Color.rgb(1, 0, 1));
-    textProjectBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    Text textProjectBody = generateHyperlink(sprint.getSprintProject());
 
     Text textTeamHeader = new Text("\nAssigned Team: ");
     textTeamHeader.setFill(Color.rgb(1, 0, 1));
     textTeamHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
-    Text textTeamBody = new Text(sprint.getSprintTeam().toString());
-    textTeamBody.setFill(Color.rgb(1, 0, 1));
-    textTeamBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    Text textTeamBody = generateHyperlink(sprint.getSprintTeam());
 
     Text textReleaseHeader = new Text("\nPart of Release: ");
     textReleaseHeader.setFill(Color.rgb(1, 0, 1));
     textReleaseHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
-    Text textReleaseBody = new Text(sprint.getSprintRelease().toString());
-    textReleaseBody.setFill(Color.rgb(1, 0, 1));
-    textReleaseBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    Text textReleaseBody = generateHyperlink(sprint.getSprintRelease());
 
     Text textImpedimentsHeader = new Text("\nImpediments: ");
     textImpedimentsHeader.setFill(Color.rgb(1, 0, 1));
