@@ -1116,24 +1116,23 @@ public class ListMainPaneController {
 
     List<Text> storiesText = new ArrayList<>();
 
-    Text textStoriesBody;
     Backlog sprintBacklog = sprint.getSprintBacklog();
     if (!sprint.getSprintStories().isEmpty()) {
       for (Story story : sprintBacklog.getStories()) {
         // TODO quick diplay fix, model still broke.
         if (sprint.getSprintStories().contains(story)) {
           int index = sprintBacklog.getSizes().get(story);
-          textStoriesBody = new Text("\n• " + story + " - " +
-                                     sprintBacklog.getEstimate().getEstimateNames().get(index));
-          storiesText.add(textStoriesBody);
-          displayTextFlow.getChildren().add(textStoriesBody);
+          storiesText.add(new Text("\n• "));
+          Text hyperlink = generateHyperlink(story);
+          hyperlink.setFont(Font.getDefault());
+          storiesText.add(hyperlink);
+          storiesText.add(new Text(" - " + sprintBacklog.getEstimate().getEstimateNames().get(index)));
         }
       }
     } else {
-      textStoriesBody = new Text("\nN/A");
-      storiesText.add(textStoriesBody);
-      displayTextFlow.getChildren().add(textStoriesBody);
+      storiesText.add(new Text("\nN/A"));
     }
+    displayTextFlow.getChildren().addAll(storiesText);
 
     Text textSprintTasksHeader = new Text("\nTasks");
     textSprintTasksHeader.setFill(Color.rgb(1, 0, 1));
@@ -1175,29 +1174,32 @@ public class ListMainPaneController {
       storiesText.clear();
       if (sortToggle.getText().equals(prioritisedOrder)) {
         // Change to alphabetical order
-        Text tempTextStoriesBody;
         if (!sprint.getSprintStories().isEmpty()) {
           SortedList<Story> sortedStories = new SortedList<>(
               FXCollections.observableArrayList(sprint.getSprintStories()),
               Comparator.<Story>naturalOrder());
-          Map<Story, Integer> sorted = new IdentityHashMap<>(sprintBacklog.getSizes());
           removePostStory(textSprintTasksHeader, sprintTasksText, displayTextFlow);
           displayTextFlow.getChildren().removeAll(textDatesHeader, textDatesBody);
           for (Story story : sortedStories) {
-            tempTextStoriesBody = new Text("\n• " + story + " - " +
-                                           sprintBacklog.getEstimate().getEstimateNames()
-                                               .get(sorted.get(story)));
-            storiesText.add(tempTextStoriesBody);
-            displayTextFlow.getChildren().add(tempTextStoriesBody);
+            // TODO just a display fix, need to fix underlying model
+            if (sprint.getSprintStories().contains(story)) {
+              int index = sprintBacklog.getSizes().get(story);
+              storiesText.add(new Text("\n• "));
+              Text hyperlink = generateHyperlink(story);
+              hyperlink.setFont(Font.getDefault());
+              storiesText.add(hyperlink);
+              storiesText.add(
+                  new Text(" - " + sprintBacklog.getEstimate().getEstimateNames().get(index)));
+            }
           }
+          displayTextFlow.getChildren().addAll(storiesText);
           addPostStory(textSprintTasksHeader, sprintTasksText, displayTextFlow);
           displayTextFlow.getChildren().addAll(textDatesHeader, textDatesBody);
         } else {
-          tempTextStoriesBody = new Text("\nN/A");
-          storiesText.add(tempTextStoriesBody);
+          storiesText.add(new Text("\nN/A"));
           displayTextFlow.getChildren().removeAll(textDatesHeader, textDatesBody);
           removePostStory(textSprintTasksHeader, sprintTasksText, displayTextFlow);
-          displayTextFlow.getChildren().add(tempTextStoriesBody);
+          displayTextFlow.getChildren().addAll(storiesText);
           addPostStory(textSprintTasksHeader, sprintTasksText, displayTextFlow);
           displayTextFlow.getChildren().addAll(textDatesHeader, textDatesBody);
         }
@@ -1205,7 +1207,6 @@ public class ListMainPaneController {
         sortToggle.setText(alphabeticalOrder);
       } else {
         // Change to prioritised order
-        Text tempTextStoriesBody;
         if (!sprint.getSprintStories().isEmpty()) {
           removePostStory(textSprintTasksHeader, sprintTasksText, displayTextFlow);
           displayTextFlow.getChildren().removeAll(textDatesHeader, textDatesBody);
@@ -1213,21 +1214,22 @@ public class ListMainPaneController {
             // TODO just a display fix, need to fix underlying model
             if (sprint.getSprintStories().contains(story)) {
               int index = sprintBacklog.getSizes().get(story);
-              tempTextStoriesBody = new Text("\n• " + story + " - " +
-                                             sprintBacklog.getEstimate().getEstimateNames()
-                                                 .get(index));
-              storiesText.add(tempTextStoriesBody);
-              displayTextFlow.getChildren().add(tempTextStoriesBody);
+              storiesText.add(new Text("\n• "));
+              Text hyperlink = generateHyperlink(story);
+              hyperlink.setFont(Font.getDefault());
+              storiesText.add(hyperlink);
+              storiesText.add(
+                  new Text(" - " + sprintBacklog.getEstimate().getEstimateNames().get(index)));
             }
           }
+          displayTextFlow.getChildren().addAll(storiesText);
           addPostStory(textSprintTasksHeader, sprintTasksText, displayTextFlow);
           displayTextFlow.getChildren().addAll(textDatesHeader, textDatesBody);
         } else {
-          tempTextStoriesBody = new Text("\nN/A");
-          storiesText.add(tempTextStoriesBody);
+          storiesText.add(new Text("\nN/A"));
           removePostStory(textSprintTasksHeader, sprintTasksText, displayTextFlow);
           displayTextFlow.getChildren().removeAll(textDatesHeader, textDatesBody);
-          displayTextFlow.getChildren().add(tempTextStoriesBody);
+          displayTextFlow.getChildren().addAll(storiesText);
           addPostStory(textSprintTasksHeader, sprintTasksText, displayTextFlow);
           displayTextFlow.getChildren().addAll(textDatesHeader, textDatesBody);
         }
@@ -1238,7 +1240,7 @@ public class ListMainPaneController {
   }
 
   /**
-   * Mupltiple places needed this exact code for Sprints display, so moved out to its own function
+   * Multiple places needed this exact code for Sprints display, so moved out to its own function
    * @param header Task object Text header
    * @param bodyList List of Task object's Text bodies
    * @param textFlow Text flow to remove from.
