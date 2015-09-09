@@ -380,7 +380,34 @@ public class ListMainPaneController {
       text5.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
     }
 
-    displayTextFlow.getChildren().addAll(text1, text2, text3, text4, text5);
+    Text text6 = new Text("\nPeople with Skill: ");
+    text6.setFill(Color.BLACK);
+    text6.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    List<Person> peopleWithSkill = new ArrayList<>();
+    List<Text> peopleWithSkillBody = new ArrayList<>();
+    for (Person person : mainApp.getPeople()) {
+      if (person.getSkillSet().contains(skill)) {
+        peopleWithSkill.add(person);
+      }
+    }
+    if (peopleWithSkill.isEmpty()) {
+      peopleWithSkillBody.add(new Text("No people with skill, "
+                                       + "please assign this skill to a person."));
+    } else {
+      for (Person person : peopleWithSkill) {
+        peopleWithSkillBody.add(generateHyperlink(person));
+        peopleWithSkillBody.add(new Text(", "));
+      }
+      peopleWithSkillBody.remove(peopleWithSkillBody.size() - 1); // remove last comma
+    }
+    for (Text text : peopleWithSkillBody) {
+      text.setFill(Color.BLACK);
+      text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    }
+
+    displayTextFlow.getChildren().addAll(text1, text2, text3, text4, text5, text6);
+    displayTextFlow.getChildren().addAll(peopleWithSkillBody);
   }
 
   /**
@@ -428,28 +455,28 @@ public class ListMainPaneController {
       text9.setFill(Color.BLACK);
       text9.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
     }
+
     Text text10 = new Text("\nSkills: ");
     text10.setFill(Color.BLACK);
     text10.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
-
-    StringBuilder listOfSkills = new StringBuilder();
-    for (Skill skill : person.getSkillSet().sorted(Comparator.<Skill>naturalOrder())) {
-      listOfSkills.append(skill.getLabel());
-      listOfSkills.append(", ");
-    }
-    Text text11;
-    if (listOfSkills.length() == 0) {
-      text11 = new Text("No skills, please assign skills.");
-      text11.setFill(Color.BLACK);
-      text11.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    List<Text> skillsBody = new ArrayList<>();
+    if (person.getSkillSet().isEmpty()) {
+      skillsBody.add(new Text("No skills, please assign skills."));
     } else {
-      text11 = new Text(listOfSkills.substring(0, listOfSkills.length() - 2));
-      text11.setFill(Color.BLACK);
-      text11.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+      for (Skill skill : person.getSkillSet().sorted(Comparator.<Skill>naturalOrder())) {
+        skillsBody.add(generateHyperlink(skill));
+        skillsBody.add(new Text(", "));
+      }
+      skillsBody.remove(skillsBody.size() - 1); // remove last comma
+    }
+    for (Text text : skillsBody) {
+      text.setFill(Color.BLACK);
+      text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
     }
     displayTextFlow.getChildren().addAll(text1, text2, text3, text4, text5, text6,
-                                         text7, text8, text9, text10, text11);
+                                         text7, text8, text9, text10);
+    displayTextFlow.getChildren().addAll(skillsBody);
   }
 
   /**
