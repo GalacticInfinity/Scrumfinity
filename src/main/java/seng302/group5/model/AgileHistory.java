@@ -58,7 +58,7 @@ public class AgileHistory implements Comparable<AgileHistory> {
   }
 
   /**
-   * Makes the toString() methord return the date in a readable format
+   * Makes the toString() method return the date in a readable format
    *
    * @return Formatted string
    */
