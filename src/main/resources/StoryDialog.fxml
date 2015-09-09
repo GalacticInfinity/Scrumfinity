@@ -237,12 +237,22 @@
                <children>
                   <Button fx:id="btnAddTask" mnemonicParsing="false" onAction="#addTask" prefHeight="30.0" prefWidth="50.0" text="+">
                      <VBox.margin>
-                        <Insets left="10.0" right="2.0" top="220.0" />
+                        <Insets left="10.0" right="2.0" top="200.0" />
                      </VBox.margin>
                   </Button>
                   <Button fx:id="btnRemoveTask" mnemonicParsing="false" onAction="#removeTask" prefHeight="30.0" prefWidth="50.0" text="-">
                      <VBox.margin>
+                        <Insets left="10.0" top="10.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Button fx:id="upTask" mnemonicParsing="false" onAction="#btnUpTask" prefHeight="30.0" prefWidth="50.0" text="↑">
+                     <VBox.margin>
                         <Insets left="10.0" top="20.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Button fx:id="downTask" mnemonicParsing="false" onAction="#btnDownTask" prefHeight="30.0" prefWidth="50.0" text="↓">
+                     <VBox.margin>
+                        <Insets left="10.0" top="10.0" />
                      </VBox.margin>
                   </Button>
                </children>
