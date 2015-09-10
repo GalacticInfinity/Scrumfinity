@@ -31,6 +31,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng302.group5.controller.dialogControllers.BacklogDialogController;
+import seng302.group5.controller.dialogControllers.EffortDialogController;
 import seng302.group5.controller.dialogControllers.SprintDialogController;
 import seng302.group5.controller.dialogControllers.TaskDialogController;
 import seng302.group5.controller.mainAppControllers.ListMainPaneController;
@@ -866,7 +867,6 @@ public class Main extends Application {
     }
     return taskUndoRedo;
   }
-
 
   /**
    * Sets the cloned lists for revert to be what it is now.
