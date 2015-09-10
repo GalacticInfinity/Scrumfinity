@@ -698,24 +698,28 @@ public class ListMainPaneController {
     textMembersHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
     List<Text> textMembersBody = new ArrayList<>();
-    for (Person member : team.getTeamMembers().sorted(Comparator.<Person>naturalOrder())) {
-      textMembersBody.add(new Text("\n"));
-      textMembersBody.add(generateHyperlink(member));   // get the hyperlink
-      if (member.getFirstName().isEmpty() && member.getLastName().isEmpty()) {
-        textMembersBody.add(new Text(" - Role: "));
-      } else {
-        textMembersBody.add(new Text(" - " + member.getFirstName() + " " + member.getLastName() +
-                                     " - Role: "));
-      }
-      Role role = team.getMembersRole().get(member);
-      if (role != null) {
-        textMembersBody.add(new Text(role.toString()));
-      } else {
-        textMembersBody.add(new Text("Not assigned to a role yet."));
-      }
-      for (Text text : textMembersBody) {
-        text.setFill(Color.rgb(1, 0, 1));
-        text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    if (team.getTeamMembers().isEmpty()) {
+      textMembersBody.add(new Text("None"));
+    } else {
+      for (Person member : team.getTeamMembers().sorted(Comparator.<Person>naturalOrder())) {
+        textMembersBody.add(new Text("\n"));
+        textMembersBody.add(generateHyperlink(member));   // get the hyperlink
+        if (member.getFirstName().isEmpty() && member.getLastName().isEmpty()) {
+          textMembersBody.add(new Text(" - Role: "));
+        } else {
+          textMembersBody.add(new Text(" - " + member.getFirstName() + " " + member.getLastName() +
+                                       " - Role: "));
+        }
+        Role role = team.getMembersRole().get(member);
+        if (role != null) {
+          textMembersBody.add(new Text(role.toString()));
+        } else {
+          textMembersBody.add(new Text("Not assigned to a role yet."));
+        }
+        for (Text text : textMembersBody) {
+          text.setFill(Color.rgb(1, 0, 1));
+          text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+        }
       }
     }
 
@@ -820,10 +824,40 @@ public class ListMainPaneController {
 
     Text textProjectBody = generateHyperlink(release.getProjectRelease());
 
+    Text textSprintsHeader = new Text("\nSprints: ");
+    textSprintsHeader.setFill(Color.rgb(1, 0, 1));
+    textSprintsHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    List<Sprint> releaseSprints = new ArrayList<>();
+    List<Text> textSprintsBody = new ArrayList<>();
+    for (Sprint sprint : mainApp.getSprintsByDate()) {
+      if (release.equals(sprint.getSprintRelease())) {
+        releaseSprints.add(sprint);
+      }
+    }
+    if (releaseSprints.isEmpty()) {
+      textSprintsBody.add(new Text("N/A"));
+    } else {
+      for (Sprint sprint : releaseSprints) {
+        textSprintsBody.add(new Text("\n"));
+        textSprintsBody.add(generateHyperlink(sprint));
+        String dateFormat = "dd/MM/yyyy";
+        textSprintsBody.add(new Text(String.format(
+            ": %s - %s",
+            sprint.getSprintStart().format(DateTimeFormatter.ofPattern(dateFormat)),
+            sprint.getSprintEnd().format(DateTimeFormatter.ofPattern(dateFormat)))));
+      }
+    }
+    for (Text text : textSprintsBody) {
+      text.setFill(Color.BLACK);
+      text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    }
+
     displayTextFlow.getChildren().addAll(textHeader, textLabelHeader, textLabelBody,
                                          textDescriptionHeader, textDescriptionBody, textDateHeader,
                                          textDateBody, textNotesHeader, textNotesBody,
-                                         textProjectHeader, textProjectBody);
+                                         textProjectHeader, textProjectBody, textSprintsHeader);
+    displayTextFlow.getChildren().addAll(textSprintsBody);
   }
 
   /**
