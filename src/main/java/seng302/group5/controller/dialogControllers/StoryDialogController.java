@@ -264,12 +264,17 @@ public class StoryDialogController {
    * Checks if there are any changed fields and disables or enables the button accordingly
    */
   private void checkButtonDisabled() {
+    //Needs to check for null which occurs on creation of new task
+    if (taskList.getItems() != null) {
+      if (taskList.getItems().equals(story.getTasks())) {
+        btnCreateStory.setDisable(true);
+      }
+    }
     if (storyDescriptionField.getText().equals(story.getDescription()) &&
         storyLabelField.getText().equals(story.getLabel()) &&
         storyNameField.getText().equals(story.getStoryName()) &&
         impedimentsTextField.getText().equals(story.getImpediments()) &&
         listAC.getItems().equals(story.getAcceptanceCriteria()) &&
-        taskList.getItems().equals(story.getTasks()) &&
         readyCheckbox.isSelected() == story.getStoryState() &&
         statusCombo.getValue().equals(story.getStatusString()) &&
         (backlogCombo.getValue() == null || backlogCombo.getValue().equals(lastBacklog)) &&
@@ -781,7 +786,7 @@ public class StoryDialogController {
     UndoRedo taskCreate = mainApp.showTaskDialog(story, null, team, CreateOrEdit.CREATE, thisStage);
     if (taskCreate != null) {
       tasksUndoRedo.addUndoRedo(taskCreate);
-      tasks.setAll(story.getTasks());
+      tasks.add(story.getTasks().get(story.getTasks().size() - 1));
       if (createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
       }
@@ -806,7 +811,7 @@ public class StoryDialogController {
       story.removeTask(selectedTask);
       tasksUndoRedo.addUndoRedo(taskDelete);
 
-      tasks.setAll(story.getTasks());
+      tasks.remove(selectedTask);
       if (createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
       }
