@@ -1,5 +1,6 @@
 package seng302.group5.controller.mainAppControllers;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.dialogControllers.BurndownController;
 import seng302.group5.controller.dialogControllers.ScrumBoardController;
@@ -158,7 +160,7 @@ public class ListMainPaneController {
       case "Projects":
         isListShown = true;
         temporal.setVisible(false);
-       // temporal.visibleProperty().setValue(true);
+        // temporal.visibleProperty().setValue(true);
         listView.setItems(mainApp.getProjects().sorted(Comparator.<Project>naturalOrder()));
         break;
       case "People":
@@ -605,10 +607,10 @@ public class ListMainPaneController {
       text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
     }
 
-    Text text10 = new Text("\nBacklog: ");
-    text10.setFill(Color.BLACK);
-    text10.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
-    Text text11;
+    Text backlogHeader = new Text("\nBacklog: ");
+    backlogHeader.setFill(Color.BLACK);
+    backlogHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+    Text backlogBody;
     if (project.getBacklog() == null) {
       backlogBody = new Text("N/A");
     } else {
@@ -1548,15 +1550,8 @@ public class ListMainPaneController {
     scrumBoardController.setupController(mainApp, mainApp.getStage());
   }
 
-  /**
-   * Initialize the burndown when the main application start.
-   */
-  public void initBurndown() {
+  public void initBurnDown() {
     burndownController.setupController(mainApp, mainApp.getStage());
-  }
-
-  public BurndownController getBurndownController() {
-    return burndownController;
   }
 
   public ScrumBoardController getScrumBoardController() {

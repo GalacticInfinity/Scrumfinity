@@ -313,7 +313,7 @@ public class Main extends Application {
 
       // init scrum board within LMPC
       LMPC.initScrumBoard();
-      LMPC.initBurndown();
+      LMPC.initBurnDown();
     } catch (IOException e) {
       e.printStackTrace();
     }
