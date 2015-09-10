@@ -644,12 +644,43 @@ public class ListMainPaneController {
       text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
     }
 
+    Text sprintsHeader = new Text("\nSprints: ");
+    sprintsHeader.setFill(Color.rgb(1, 0, 1));
+    sprintsHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    List<Sprint> projectsSprints = new ArrayList<>();
+    List<Text> sprintsBody = new ArrayList<>();
+    for (Sprint sprint : mainApp.getSprintsByDate()) {
+      if (project.equals(sprint.getSprintProject())) {
+        projectsSprints.add(sprint);
+      }
+    }
+    if (projectsSprints.isEmpty()) {
+      sprintsBody.add(new Text("N/A"));
+    } else {
+      for (Sprint sprint : projectsSprints) {
+        sprintsBody.add(new Text("\n"));
+        sprintsBody.add(generateHyperlink(sprint));
+        String dateFormat = "dd/MM/yyyy";
+        sprintsBody.add(new Text(String.format(
+            ": %s - %s",
+            sprint.getSprintStart().format(DateTimeFormatter.ofPattern(dateFormat)),
+            sprint.getSprintEnd().format(DateTimeFormatter.ofPattern(dateFormat)))));
+      }
+    }
+    for (Text text : sprintsBody) {
+      text.setFill(Color.BLACK);
+      text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    }
+
     displayTextFlow.getChildren().addAll(text1, text2, text3, text4, text5, text6,
                                          text7, text8);
     displayTextFlow.getChildren().addAll(teamsBody);
     displayTextFlow.getChildren().addAll(backlogHeader, backlogBody);
     displayTextFlow.getChildren().addAll(releasesHeader);
     displayTextFlow.getChildren().addAll(releasesBody);
+    displayTextFlow.getChildren().addAll(sprintsHeader);
+    displayTextFlow.getChildren().addAll(sprintsBody);
   }
 
 
@@ -753,12 +784,43 @@ public class ListMainPaneController {
       text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
     }
 
+    Text sprintsHeader = new Text("\nSprints: ");
+    sprintsHeader.setFill(Color.rgb(1, 0, 1));
+    sprintsHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    List<Sprint> teamsSprints = new ArrayList<>();
+    List<Text> sprintsBody = new ArrayList<>();
+    for (Sprint sprint : mainApp.getSprintsByDate()) {
+      if (team.equals(sprint.getSprintTeam())) {
+        teamsSprints.add(sprint);
+      }
+    }
+    if (teamsSprints.isEmpty()) {
+      sprintsBody.add(new Text("N/A"));
+    } else {
+      for (Sprint sprint : teamsSprints) {
+        sprintsBody.add(new Text("\n"));
+        sprintsBody.add(generateHyperlink(sprint));
+        String dateFormat = "dd/MM/yyyy";
+        sprintsBody.add(new Text(String.format(
+            ": %s - %s",
+            sprint.getSprintStart().format(DateTimeFormatter.ofPattern(dateFormat)),
+            sprint.getSprintEnd().format(DateTimeFormatter.ofPattern(dateFormat)))));
+      }
+    }
+    for (Text text : sprintsBody) {
+      text.setFill(Color.BLACK);
+      text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    }
+
     displayTextFlow.getChildren().addAll(textHeader, textLabelHeader, textLabelBody,
                                          textDescriptionHeader, textDescriptionBody,
                                          textMembersHeader);
     displayTextFlow.getChildren().addAll(textMembersBody);
     displayTextFlow.getChildren().addAll(projectsHeader);
     displayTextFlow.getChildren().addAll(projectsWithTeamBody);
+    displayTextFlow.getChildren().addAll(sprintsHeader);
+    displayTextFlow.getChildren().addAll(sprintsBody);
   }
 
   /**
@@ -828,17 +890,17 @@ public class ListMainPaneController {
     textSprintsHeader.setFill(Color.rgb(1, 0, 1));
     textSprintsHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
-    List<Sprint> releaseSprints = new ArrayList<>();
+    List<Sprint> releasesSprints = new ArrayList<>();
     List<Text> textSprintsBody = new ArrayList<>();
     for (Sprint sprint : mainApp.getSprintsByDate()) {
       if (release.equals(sprint.getSprintRelease())) {
-        releaseSprints.add(sprint);
+        releasesSprints.add(sprint);
       }
     }
-    if (releaseSprints.isEmpty()) {
+    if (releasesSprints.isEmpty()) {
       textSprintsBody.add(new Text("N/A"));
     } else {
-      for (Sprint sprint : releaseSprints) {
+      for (Sprint sprint : releasesSprints) {
         textSprintsBody.add(new Text("\n"));
         textSprintsBody.add(generateHyperlink(sprint));
         String dateFormat = "dd/MM/yyyy";
@@ -1102,6 +1164,35 @@ public class ListMainPaneController {
     textEsBody.setFill(Color.rgb(1, 0, 1));
     textEsBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
 
+    Text textSprintsHeader = new Text("\nSprints: ");
+    textSprintsHeader.setFill(Color.rgb(1, 0, 1));
+    textSprintsHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    List<Sprint> backlogsSprints = new ArrayList<>();
+    List<Text> textSprintsBody = new ArrayList<>();
+    for (Sprint sprint : mainApp.getSprintsByDate()) {
+      if (backlog.equals(sprint.getSprintBacklog())) {
+        backlogsSprints.add(sprint);
+      }
+    }
+    if (backlogsSprints.isEmpty()) {
+      textSprintsBody.add(new Text("N/A"));
+    } else {
+      for (Sprint sprint : backlogsSprints) {
+        textSprintsBody.add(new Text("\n"));
+        textSprintsBody.add(generateHyperlink(sprint));
+        String dateFormat = "dd/MM/yyyy";
+        textSprintsBody.add(new Text(String.format(
+            ": %s - %s",
+            sprint.getSprintStart().format(DateTimeFormatter.ofPattern(dateFormat)),
+            sprint.getSprintEnd().format(DateTimeFormatter.ofPattern(dateFormat)))));
+      }
+    }
+    for (Text text : textSprintsBody) {
+      text.setFill(Color.BLACK);
+      text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    }
+
     Text textStoriesHeader = new Text("\nStories:");
     textStoriesHeader.setFill(Color.rgb(1, 0, 1));
     textStoriesHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
@@ -1116,7 +1207,9 @@ public class ListMainPaneController {
                                          textDescriptionBody, textPoHeader, textPoBody,
                                          textProjectHeader, textProjectBody,
                                          textEsHeader, textEsBody,
-                                         textStoriesHeader, sortToggle);
+                                         textSprintsHeader);
+    displayTextFlow.getChildren().addAll(textSprintsBody);
+    displayTextFlow.getChildren().addAll(textStoriesHeader, sortToggle);
 
     List<Text> storiesText = new ArrayList<>();
 
