@@ -8,11 +8,11 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane minHeight="350.0" minWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane minHeight="350.0" minWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.BurndownController">
    <children>
-      <VBox minHeight="389.0" minWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox fx:id="holder" minHeight="389.0" minWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <AnchorPane minHeight="50.0" minWidth="600.0" VBox.vgrow="NEVER">
+            <AnchorPane minHeight="50.0" minWidth="600.0" VBox.vgrow="ALWAYS">
                <children>
                   <HBox minHeight="50.0" minWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
@@ -30,21 +30,14 @@
                   </HBox>
                </children>
             </AnchorPane>
-            <AnchorPane minHeight="337.0" minWidth="600.0" VBox.vgrow="ALWAYS">
-               <children>
-                  <LineChart cacheHint="SCALE" minHeight="335.0" minWidth="615.0" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-15.0" AnchorPane.topAnchor="0.0">
-                     <xAxis>
-                        <CategoryAxis label="Time" side="BOTTOM" />
-                     </xAxis>
-                     <yAxis>
-                        <NumberAxis label="Effort Spent" side="LEFT" />
-                     </yAxis>
-                  </LineChart>
-               </children>
-               <cursor>
-                  <Cursor fx:constant="DEFAULT" />
-               </cursor>
-            </AnchorPane>
+            <LineChart fx:id="burndownChart" cacheHint="SCALE" minHeight="300.0" minWidth="600.0">
+               <xAxis>
+                  <CategoryAxis label="Time" side="BOTTOM" />
+               </xAxis>
+               <yAxis>
+                  <NumberAxis label="Effort Spent" side="LEFT" />
+               </yAxis>
+            </LineChart>
          </children>
       </VBox>
    </children>

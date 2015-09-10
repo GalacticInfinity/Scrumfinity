@@ -68,7 +68,7 @@
                     <content>
                       <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                            <children>
-                              <fx:include fx:id="Burndown" source="Burndown.fxml" />
+                              <fx:include fx:id="burndown" source="Burndown.fxml" />
                            </children>
                         </AnchorPane>
                     </content>

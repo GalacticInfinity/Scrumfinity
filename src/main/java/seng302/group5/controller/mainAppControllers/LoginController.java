@@ -56,6 +56,7 @@ public class LoginController {
         Settings.currentFile = file;
         mainApp.resetAll();
         Loading load = new Loading(mainApp);
+
         successfulLoad = load.loadFile(file);
 
         if (successfulLoad) {
@@ -66,6 +67,7 @@ public class LoginController {
           }
           mainApp.setLastSaved(); //for revert
           mainApp.setMainScene();
+          mainApp.getLMPC().initBurnDown();
         } else {
           mainApp.resetAll();
           mainApp.showLoginScreen(mainApp.getPrimaryStage());
