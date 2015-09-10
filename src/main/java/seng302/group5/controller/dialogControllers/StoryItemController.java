@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.model.Story;
@@ -22,8 +23,7 @@ public class StoryItemController {
   @FXML private AnchorPane storyAnchor;
   @FXML private TitledPane storyPane;
 
-  private Main mainApp;
-  private Stage stage;
+  private Story story;
 
   private ObservableList<Task> notStartedTasks;
   private ObservableList<Task> inProgressTasks;
@@ -32,12 +32,12 @@ public class StoryItemController {
 
   /**
    * This function sets up the story item controller.
-   * @param mainApp     The main application object
-   * @param stage       The stage the application is in.
+   * @param story       The story being displayed in this.
    */
-  public void setupController(Main mainApp, Stage stage) {
-    this.mainApp = mainApp;
-    this.stage = stage;
+  public void setupController(Story story) {
+    this.story = story;
+    storyPane.setText(story.getLabel());
+    storyPane.setGraphic(new Rectangle(10, 10));
   }
 
 }
