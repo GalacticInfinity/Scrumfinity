@@ -472,13 +472,13 @@ public class MenuBarController {
         File file = fileChooser.showOpenDialog(mainApp.getPrimaryStage());
         if (file != null) {
           Settings.currentFile = file;
-          mainApp.getLMPC().getScrumBoardController().clearSelections();
+          mainApp.getLMPC().getScrumBoardController().refreshComboBoxes();
           mainApp.resetAll();
           Loading load = new Loading(mainApp);
           load.loadFile(file);
 
           mainApp.getLMPC().refreshList(null);
-          mainApp.getLMPC().getScrumBoardController().clearSelections();
+          mainApp.getLMPC().getScrumBoardController().refreshComboBoxes();
           if (!(Settings.organizationName.equals(""))) {
             mainApp.setMainTitle("Scrumfinity - " + Settings.organizationName);
           } else {

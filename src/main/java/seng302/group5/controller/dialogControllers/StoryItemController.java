@@ -1,13 +1,14 @@
 package seng302.group5.controller.dialogControllers;
 
+import java.util.List;
+
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
-import seng302.group5.Main;
 import seng302.group5.model.Story;
 import seng302.group5.model.Task;
 
@@ -16,10 +17,11 @@ import seng302.group5.model.Task;
  */
 public class StoryItemController {
 
-  @FXML private ListView<Story> inProgressList;
-  @FXML private ListView<Story> doneList;
-  @FXML private ListView<Story> notStartedList;
-  @FXML private ListView<Story> verifyList;
+  @FXML private ListView<Task> notStartedList;
+  @FXML private ListView<Task> inProgressList;
+  @FXML private ListView<Task> verifyList;
+  @FXML private ListView<Task> doneList;
+
   @FXML private AnchorPane storyAnchor;
   @FXML private TitledPane storyPane;
 
@@ -38,6 +40,41 @@ public class StoryItemController {
     this.story = story;
     storyPane.setText(story.getLabel());
     storyPane.setGraphic(new Rectangle(10, 10));
+    setupLists();
+  }
+
+  /**
+   * Sets the tasks from story into their appropriate lists.
+   */
+  public void setupLists() {
+    notStartedTasks = FXCollections.observableArrayList();
+    inProgressTasks = FXCollections.observableArrayList();
+    verifyTasks = FXCollections.observableArrayList();
+    doneTasks = FXCollections.observableArrayList();
+    for (Task task : story.getTasks()) {
+      switch (task.getStatus()) {
+        case NOT_STARTED:
+          notStartedTasks.add(task);
+          break;
+        case IN_PROGRESS:
+          inProgressTasks.add(task);
+          break;
+        case VERIFY:
+          verifyTasks.add(task);
+          break;
+        case DONE:
+          doneTasks.add(task);
+          break;
+      }
+    }
+    notStartedList.setItems(notStartedTasks);
+    inProgressList.setItems(inProgressTasks);
+    verifyList.setItems(verifyTasks);
+    doneList.setItems(doneTasks);
+  }
+
+  public Story getStory() {
+    return story;
   }
 
 }

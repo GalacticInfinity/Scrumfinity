@@ -14,7 +14,6 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TitledPane;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import seng302.group5.Main;
@@ -37,6 +36,7 @@ public class ScrumBoardController {
 
   private Main mainApp;
   private Stage stage;
+  private Story fakeStory;
 
   private ObservableList<Sprint> availableSprints;
   private ObservableList<Story> availableStories;
@@ -92,15 +92,25 @@ public class ScrumBoardController {
             availableStories.clear();
             storiesBox.getChildren().setAll(FXCollections.observableArrayList());
             storyPanes.clear();
+            // Place the fake story in
+            fakeStory = new Story();
+            fakeStory.setLabel("Non-story Tasks");
+            fakeStory.addAllTasks(newSprint.getTasks());
+            availableStories.add(fakeStory);
+            StoryItemController fakeStoryController = createStoryPane(fakeStory, storiesBox);
+            if (fakeStoryController != null) {
+              storyPanes.add(fakeStoryController);
+            }
+            // ***************************************************************
             for (Story story : newSprint.getSprintStories()) {
               if (mainApp.getStories().contains(story)) {
                 availableStories.add(story);
               }
             }
             for (Story story : availableStories) {
-              StoryItemController paneCoontroller = createStoryPane(story, storiesBox);
-              if (paneCoontroller != null) {
-                storyPanes.add(paneCoontroller);
+              StoryItemController paneController = createStoryPane(story, storiesBox);
+              if (paneController != null) {
+                storyPanes.add(paneController);
               }
             }
           }
@@ -143,19 +153,20 @@ public class ScrumBoardController {
 
   public void refreshLists() {
     // TODO refresh the lists of the StoryItemControllers
+    storyPanes.forEach(StoryItemController::setupLists);
   }
 
   /**
    * Resets everything about the scrum board, everything cleared and disabled apart from
    * Backlog combo box.
    */
-  public void hardReset() {
+  public void refreshComboBoxes() {
     Backlog backlog = backlogCombo.getValue();
     Sprint sprint = sprintCombo.getValue();
     // The pane stuff
     storiesBox.getChildren().setAll(FXCollections.observableArrayList());
     storyPanes.clear();
-    initialiseLists();
+    //initialiseLists();
 
     sprintCombo.setDisable(true);
 
@@ -173,24 +184,32 @@ public class ScrumBoardController {
       backlogCombo.setValue(null);
       sprintCombo.setValue(null);
     }
-    refreshLists();
+    //refreshLists();
   }
 
   /**
-   * TODO after story item completed, do jdoc
+   * Refreshes the selections of the combo boxes
    */
-  public void clearSelections() {
-    // TODO clear all of the story item lists
-    sprintCombo.getSelectionModel().clearSelection();
+  public void hardReset() {
+    //sprintCombo.getSelectionModel().clearSelection();
     sprintCombo.getItems().clear();
     sprintCombo.setDisable(true);
-    backlogCombo.getSelectionModel().clearSelection();
+    availableSprints.clear();
+    //backlogCombo.getSelectionModel().clearSelection();
     backlogCombo.setItems(FXCollections.observableArrayList());
     storiesBox.getChildren().setAll(FXCollections.observableArrayList());
-    // The pane stuff
-    storiesBox.getChildren().setAll(FXCollections.observableArrayList());
+    availableStories.clear();
     storyPanes.clear();
+   // initialiseLists();
+    refreshTaskLists();
+  }
 
-    initialiseLists();
+  /**
+   * Does not refresh the scrum board, just refreshes all the lists of the story items
+   */
+  public void refreshTaskLists() {
+    for (StoryItemController controller : storyPanes) {
+      controller.setupLists();
+    }
   }
 }
