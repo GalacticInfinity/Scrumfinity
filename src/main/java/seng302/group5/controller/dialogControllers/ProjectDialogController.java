@@ -583,29 +583,6 @@ public class ProjectDialogController {
           allocatedTeams.remove(ag);
         }
       });
-
-      ContextMenu contextMenu = new ContextMenu();
-
-      MenuItem addItem = new MenuItem();
-      addItem.textProperty().bind(Bindings.format("Create New"));
-      addItem.setOnAction(event -> System.out.println("create"));
-
-      MenuItem editItem = new MenuItem();
-      editItem.textProperty().bind(Bindings.format("Edit"));
-      editItem.setOnAction(event -> {
-        Team team = this.getItem();
-        // code to edit item...
-      });
-      contextMenu.getItems().addAll(editItem, addItem);
-      //this.textProperty().bind(this.itemProperty());
-
-      this.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
-        if (isNowEmpty) {
-          this.setContextMenu(null);
-        } else {
-          this.setContextMenu(contextMenu);
-        }
-      });
     }
 
     @Override
