@@ -268,11 +268,16 @@ public class SprintDialogController {
    * then confirm button is disabled.
    */
   private void checkButtonDisabled() {
+    //Needs to check for null which occurs on creation of new task
+    if (taskList.getItems() != null) {
+      if (taskList.getItems().equals(sprint.getTasks())) {
+        btnConfirm.setDisable(true);
+      }
+    }
     if (sprintGoalField.getText().equals(sprint.getLabel()) &&
         sprintNameField.getText().equals(sprint.getSprintFullName()) &&
         sprintDescriptionField.getText().equals(sprint.getSprintDescription()) &&
         sprintImpedimentsField.getText().equals(sprint.getSprintImpediments()) &&
-        taskList.getItems().equals(sprint.getTasks()) &&
         sprintBacklogCombo.getValue().equals(sprint.getSprintBacklog()) &&
         (sprintTeamCombo.getValue() == null ||
          sprintTeamCombo.getValue().equals(sprint.getSprintTeam())) &&
@@ -474,7 +479,7 @@ public class SprintDialogController {
     }
     if (taskCreate != null) {
       tasksUndoRedo.addUndoRedo(taskCreate);
-      tasks.setAll(sprint.getTasks());
+      tasks.add(sprint.getTasks().get(sprint.getTasks().size() - 1));
 
       if (createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
@@ -499,8 +504,7 @@ public class SprintDialogController {
 
       sprint.removeTask(selectedTask);
       tasksUndoRedo.addUndoRedo(taskDelete);
-
-      tasks.setAll(sprint.getTasks());
+      tasks.remove(selectedTask);
       if (createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
       }
