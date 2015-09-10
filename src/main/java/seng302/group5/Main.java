@@ -393,7 +393,7 @@ public class Main extends Application {
       teamDialogStage.initModality(Modality.APPLICATION_MODAL);
       teamDialogStage.initOwner(primaryStage);
       teamDialogStage.setScene(teamDialogScene);
-      teamDialogStage.show();
+      teamDialogStage.showAndWait();
 
     } catch (IOException e) {
       e.printStackTrace();
