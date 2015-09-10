@@ -18,11 +18,7 @@
                               <Label alignment="CENTER" prefHeight="15.0" text="Not Started" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
                            </children>
                         </HBox>
-                        <ListView fx:id="notStartedList" prefWidth="150.0" VBox.vgrow="ALWAYS">
-                           <cursor>
-                              <Cursor fx:constant="DEFAULT" />
-                           </cursor>
-                        </ListView>
+                        <VBox fx:id="notStartedList" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS" />
                      </children>
                   </VBox>
                   <VBox HBox.hgrow="ALWAYS">
