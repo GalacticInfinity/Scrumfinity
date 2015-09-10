@@ -6,15 +6,18 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
@@ -578,6 +581,29 @@ public class ProjectDialogController {
           AgileHistory ag = new AgileHistory(new Team(), LocalDate.now(), LocalDate.MAX);
           allocatedTeams.add(ag);
           allocatedTeams.remove(ag);
+        }
+      });
+
+      ContextMenu contextMenu = new ContextMenu();
+
+      MenuItem addItem = new MenuItem();
+      addItem.textProperty().bind(Bindings.format("Create New"));
+      addItem.setOnAction(event -> System.out.println("create"));
+
+      MenuItem editItem = new MenuItem();
+      editItem.textProperty().bind(Bindings.format("Edit"));
+      editItem.setOnAction(event -> {
+        Team team = this.getItem();
+        // code to edit item...
+      });
+      contextMenu.getItems().addAll(editItem, addItem);
+      //this.textProperty().bind(this.itemProperty());
+
+      this.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
+        if (isNowEmpty) {
+          this.setContextMenu(null);
+        } else {
+          this.setContextMenu(contextMenu);
         }
       });
     }
