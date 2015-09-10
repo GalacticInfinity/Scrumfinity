@@ -23,6 +23,7 @@ import seng302.group5.Main;
 import seng302.group5.model.AgileHistory;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Backlog;
+import seng302.group5.model.Effort;
 import seng302.group5.model.Estimate;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
@@ -622,6 +623,7 @@ public class ReportWriter {
         peopleElem.appendChild(personElem);
         personElem.appendChild(report.createTextNode(person.getLabel()));
       }
+      /*
       Element spentEffortElem = report.createElement("spent-effort");
       taskElement.appendChild(spentEffortElem);
       for (Map.Entry<Person, Integer> entry : task.getSpentEffort().entrySet()) {
@@ -630,6 +632,25 @@ public class ReportWriter {
         personsEffortElem.appendChild(report.createTextNode(entry.getKey().getLabel() +
                                                             " -> " + entry.getValue().toString()));
       }
+      */
+      //TODO: Delete above and make sure below works once Task model has been changed.
+
+      Element spentEffortElem = report.createElement("spent-effort");
+      taskElement.appendChild(spentEffortElem);
+      for (Effort effort : task.getEfforts()) {
+        Element effortElem = report.createElement("effort");
+        Element personElem = report.createElement("person");
+        personElem.appendChild(report.createTextNode(effort.getWorker().getLabel()));
+        Element timeElem = report.createElement("logged-time");
+        timeElem.appendChild(report.createTextNode("Enter time here")); //TODO: Enter proper time here
+        Element commentElem = report.createElement("comments");
+        commentElem.appendChild(report.createTextNode(effort.getComments()));
+        Element endTimeElem = report.createElement("time-stamp");
+        endTimeElem.appendChild(report.createTextNode(effort.getEndTime().toString()));
+        spentEffortElem.appendChild(effortElem);
+      }
+
+
       tasksElement.appendChild(taskElement);
       }
       storyElem.appendChild(tasksElement);
@@ -743,6 +764,7 @@ public class ReportWriter {
         peopleElem.appendChild(personElem);
         personElem.appendChild(report.createTextNode(person.getLabel()));
       }
+      /*
       Element spentEffortElem = report.createElement("spent-effort");
       taskElement.appendChild(spentEffortElem);
       for (Map.Entry<Person, Integer> entry : task.getSpentEffort().entrySet()) {
@@ -750,6 +772,23 @@ public class ReportWriter {
         spentEffortElem.appendChild(personsEffortElem);
         personsEffortElem.appendChild(report.createTextNode(entry.getKey().getLabel() +
                                                             " -> " + entry.getValue().toString()));
+      }
+      */
+      //TODO: Remove above and make sure below works once Task model has been changed.
+
+      Element spentEffortElem = report.createElement("spent-effort");
+      taskElement.appendChild(spentEffortElem);
+      for (Effort effort : task.getEfforts()) {
+        Element effortElem = report.createElement("effort");
+        Element personElem = report.createElement("person");
+        personElem.appendChild(report.createTextNode(effort.getWorker().getLabel()));
+        Element timeElem = report.createElement("logged-time");
+        timeElem.appendChild(report.createTextNode("Enter time here")); //TODO: Enter proper time here
+        Element commentElem = report.createElement("comments");
+        commentElem.appendChild(report.createTextNode(effort.getComments()));
+        Element endTimeElem = report.createElement("time-stamp");
+        endTimeElem.appendChild(report.createTextNode(effort.getEndTime().toString()));
+        spentEffortElem.appendChild(effortElem);
       }
       tasksElement.appendChild(taskElement);
     }

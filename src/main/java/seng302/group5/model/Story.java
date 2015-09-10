@@ -421,6 +421,29 @@ public class Story implements AgileItem, Taskable, Comparable<Story> {
   }
 
   /**
+   * Calculates the percentage that this story is completed based on tasks marked as done.
+   * @return a Float which indicates the percentage complete as decimal
+   */
+  public float percentComplete() {
+    float percent = 0;
+    float totalTasks = tasks.size();
+    float completedTasks = 0;
+    for (Task task : tasks) {
+      if (task.getStatus() == Status.DONE) {
+        completedTasks+=1;
+      }
+    }
+
+    System.out.println(completedTasks);
+    if (completedTasks == 0 || totalTasks == 0) {
+      return 0;
+    }
+    percent = completedTasks/totalTasks;
+    return percent;
+  }
+
+
+  /**
    * Copies the story input fields into current object.
    * @param agileItem Story that's fields are to be copied.
    */
