@@ -560,7 +560,7 @@ public class ListMainPaneController {
     List<Release> releases = new ArrayList<>();
     List<Text> releasesBody = new ArrayList<>();
     for (Release release : mainApp.getReleasesbydate()) {
-      if (release.getProjectRelease().equals(project)) {
+      if (project.equals(release.getProjectRelease())) {
         releases.add(release);
       }
     }
@@ -635,7 +635,6 @@ public class ListMainPaneController {
 
     List<Text> textMembersBody = new ArrayList<>();
     for (Person member : team.getTeamMembers().sorted(Comparator.<Person>naturalOrder())) {
-      textMembersBody.clear();
       textMembersBody.add(new Text("\n"));
       textMembersBody.add(generateHyperlink(member));   // get the hyperlink
       if (member.getFirstName().isEmpty() && member.getLastName().isEmpty()) {
@@ -664,7 +663,7 @@ public class ListMainPaneController {
     List<Text> projectsWithTeamBody = new ArrayList<>();
     for (Project project : mainApp.getProjects()) {
       for (AgileHistory agileHistory : project.getAllocatedTeams()) {
-        if (agileHistory.getAgileItem().equals(team)) {
+        if (team.equals(agileHistory.getAgileItem())) {
           projectsWithTeam.add(
               new AgileHistory(project, agileHistory.getStartDate(), agileHistory.getEndDate()));
         }
@@ -932,10 +931,29 @@ public class ListMainPaneController {
 
     Text textPoBody = generateHyperlink(backlog.getProductOwner());
 
+    Text textProjectHeader = new Text("\nAssigned to Project: ");
+    textProjectHeader.setFill(Color.rgb(1, 0, 1));
+    textProjectHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Project backlogProject = null;
+    for (Project project : mainApp.getProjects()) {
+      if (backlog.equals(project.getBacklog())) {
+        backlogProject = project;
+        break;
+      }
+    }
+    Text textProjectBody;
+    if (backlogProject != null) {
+      textProjectBody = generateHyperlink(backlogProject);
+    } else {
+      textProjectBody = new Text("N/A");
+      textProjectBody.setFill(Color.rgb(1, 0, 1));
+      textProjectBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    }
+
     Text textEsHeader = new Text("\nBacklog Estimation Scale: ");
     textEsHeader.setFill(Color.rgb(1, 0, 1));
     textEsHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
-
 
     Text textEsBody;
     if (backlog.getEstimate() == null) {
@@ -958,6 +976,7 @@ public class ListMainPaneController {
     displayTextFlow.getChildren().addAll(textHeader, textLabelHeader, textLabelBody,
                                          textNameHeader, textNameBody, textDescriptionHeader,
                                          textDescriptionBody, textPoHeader, textPoBody,
+                                         textProjectHeader, textProjectBody,
                                          textEsHeader, textEsBody,
                                          textStoriesHeader, sortToggle);
 
