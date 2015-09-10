@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
@@ -82,7 +83,26 @@
          <children>
             <VBox prefHeight="200.0" prefWidth="170.0">
                <children>
-                  <Label text="Available Teams:" />
+                  <HBox prefHeight="11.0" prefWidth="170.0">
+                     <children>
+                        <Label text="Available Teams:" />
+                        <Button fx:id="btnNewTeam" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" onAction="#addNewTeam" prefHeight="20.0" prefWidth="20.0">
+                           <graphic>
+                              <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="ToolbarQuickAdd.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <HBox.margin>
+                              <Insets left="35.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="5.0" />
+                     </VBox.margin>
+                  </HBox>
                   <ListView fx:id="availableTeamsList" prefHeight="183.0" prefWidth="131.0">
                      <VBox.margin>
                         <Insets right="5.0" />

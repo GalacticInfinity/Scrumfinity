@@ -4,20 +4,16 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-
-import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
@@ -54,6 +50,8 @@ public class ProjectDialogController {
   @FXML private HBox btnContainer;
   @FXML private Label backlogContainer;
   @FXML private ComboBox<Backlog> backlogComboBox;
+  @FXML private Button btnNewTeam;
+
 
   private Main mainApp;
   private Stage thisStage;
@@ -593,4 +591,16 @@ public class ProjectDialogController {
       setText(item == null ? "" : item.getLabel());
     }
   }
+
+  /**
+   * A button which when clicked can add a team to the system.
+   * Also adds to undo/redo stack so creation is undoable
+   * @param event Button click
+   */
+  @FXML
+  protected void addNewTeam(ActionEvent event) {
+    mainApp.showTeamDialog(CreateOrEdit.CREATE);
+    availableTeams.setAll(mainApp.getTeams());
+  }
 }
+
