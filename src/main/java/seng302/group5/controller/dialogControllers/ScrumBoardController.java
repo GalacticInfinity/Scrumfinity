@@ -1,73 +1,49 @@
 package seng302.group5.controller.dialogControllers;
 
-import java.util.Objects;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
-import javafx.scene.Cursor;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListView;
-import javafx.scene.control.cell.TextFieldListCell;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.TransferMode;
+import javafx.scene.control.TitledPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import seng302.group5.Main;
-import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Sprint;
-import seng302.group5.model.Status;
 import seng302.group5.model.Story;
-import seng302.group5.model.Task;
-import seng302.group5.model.Taskable;
-import seng302.group5.model.undoredo.Action;
-import seng302.group5.model.undoredo.UndoRedoObject;
-import seng302.group5.model.undoredo.UndoRedo;
 
 /**
- * The controller class for the scrum board dialog. Tasks can be viewed from this dialog by
- * selecting the backlog-sprint-story accordingly. Also tasks are sorted by their status in four
- * different lists: not started, in progress, verify and done.
- *
- * Version 1: status are to be changed by double click editing.
- *
- * @author liangma
+ * Scrum board controller completely redone. Now using accordions to make things prettier.
+ * First controller create which contains a list of other controller objects (a controller for
+ * each story to be displayed in the accordion view).
  */
 public class ScrumBoardController {
-  @FXML private ComboBox<Backlog> backlogCombo;
+
   @FXML private ComboBox<Sprint> sprintCombo;
-  @FXML private ComboBox<Story> storyCombo;
-  @FXML private ListView<Task> notStartedList;
-  @FXML private ListView<Task> inProgressList;
-  @FXML private ListView<Task> verifyList;
-  @FXML private ListView<Task> doneList;
-  @FXML private Button btnNewTask;
+  @FXML private ComboBox<Backlog> backlogCombo;
+  @FXML private VBox storiesBox;
   @FXML private Button btnDeleteTask;
+  @FXML private Button btnNewTask;
 
   private Main mainApp;
   private Stage stage;
-
-  private Task task;
-  private Task lastTask;
-  private Task selectedTask;
+  private Story fakeStory;
 
   private ObservableList<Sprint> availableSprints;
   private ObservableList<Story> availableStories;
-  private ObservableList<Task> notStartedTasks;
-  private ObservableList<Task> inProgressTasks;
-  private ObservableList<Task> verifyTasks;
-  private ObservableList<Task> doneTasks;
-
-  private Story nonStory;
+  private List<StoryItemController> storyPanes;
 
   @FXML
   private void initialize() {
-    nonStory = new Story();
-    nonStory.setLabel("Non-story Tasks");
   }
 
   /**
@@ -78,32 +54,120 @@ public class ScrumBoardController {
   public void setupController(Main mainApp, Stage stage) {
     this.mainApp = mainApp;
     this.stage = stage;
-    task = new Task();
-    lastTask = new Task();
+    storyPanes = new ArrayList<>();
     initialiseLists();
-    sprintCombo.setDisable(true);
-    storyCombo.setDisable(true);
-    btnNewTask.setDisable(true);
-    btnDeleteTask.setDisable(true);
-
-    setupListView();
   }
 
   /**
-   * This re populates the combo boxes in the scrum board so that  the proper items are displayed
-   * it then re-selects what ever you had previously selected if it still exists.
+   * Initializes the controller and sets the listeners to the combo boxes to update and
+   * reload controllers as necessary. Changing backlog combo refreshes sprint combo. Changing
+   * sprint combo refreshes list of controllers.
    */
-  public void hardReset() {
-    Backlog backlog = backlogCombo.getValue();
-    Sprint sprint = sprintCombo.getValue();
-    Story story = storyCombo.getValue();
+  private void initialiseLists() {
+    availableSprints = FXCollections.observableArrayList();
+    availableStories = FXCollections.observableArrayList();
 
-    initialiseLists();
+    backlogCombo.getSelectionModel().clearSelection();
+    backlogCombo.setItems(mainApp.getBacklogs());
+
+    backlogCombo.getSelectionModel().selectedItemProperty().addListener(
+        (observable, oldBacklog, newBacklog) -> {
+          if (newBacklog != null) {
+            sprintCombo.setDisable(false);
+            // get backlog's sprints
+            availableSprints.setAll(mainApp.getSprints().stream()
+                                        .filter(
+                                            sprint -> sprint.getSprintBacklog().equals(newBacklog))
+                                        .collect(Collectors.toList()));
+            sprintCombo.setItems(null);
+            sprintCombo.setItems(availableSprints);
+            sprintCombo.setValue(null);
+          }
+        }
+    );
+
+    sprintCombo.getSelectionModel().selectedItemProperty().addListener(
+        (observable, oldSprint, newSprint) -> {
+          if (newSprint != null) {
+            availableStories.clear();
+            storiesBox.getChildren().setAll(FXCollections.observableArrayList());
+            storyPanes.clear();
+            // Place the fake story in
+            fakeStory = new Story();
+            fakeStory.setLabel("Non-story Tasks");
+            fakeStory.addAllTasks(newSprint.getTasks());
+            availableStories.add(fakeStory);
+            StoryItemController fakeStoryController = createStoryPane(fakeStory, storiesBox);
+            if (fakeStoryController != null) {
+              storyPanes.add(fakeStoryController);
+            }
+            // ***************************************************************
+            for (Story story : newSprint.getSprintStories()) {
+              if (mainApp.getStories().contains(story)) {
+                availableStories.add(story);
+              }
+            }
+            for (Story story : availableStories) {
+              StoryItemController paneController = createStoryPane(story, storiesBox);
+              if (paneController != null) {
+                storyPanes.add(paneController);
+              }
+            }
+          }
+        }
+    );
+  }
+
+  @FXML
+  void addNewTask(ActionEvent event) {
+
+  }
+
+  @FXML
+  void deleteTask(ActionEvent event) {
+
+  }
+
+  /**
+   * TODO write all the stuff it does
+   * @param story Story object which holds the data
+   * @return The created controller
+   */
+  private StoryItemController createStoryPane(Story story, VBox storiesBox) {
+    try {
+      FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(StoryItemController.class.getResource("/StoryItem.fxml"));
+      TitledPane accordionPane = loader.load();
+
+      StoryItemController controller = loader.getController();
+      controller.setupController(story);
+      Accordion storyAccordion = new Accordion();
+      storyAccordion.getPanes().add(accordionPane);
+      storiesBox.getChildren().add(storyAccordion);
+      return controller;
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  /**
+   * Resets everything about the scrum board, everything cleared and disabled apart from
+   * Backlog combo box.
+   * TODO allocate extra memory and a few checks to reduce run time significantly
+   */
+  public void refreshComboBoxes() {
+    Backlog backlog = backlogCombo.getValue();
+    backlogCombo.getSelectionModel().clearSelection();
+    Sprint sprint = sprintCombo.getValue();
+    sprintCombo.getSelectionModel().clearSelection();
+
+    // The pane stuff
+    storiesBox.getChildren().setAll(FXCollections.observableArrayList());
+    storyPanes.clear();
+    //initialiseLists();
 
     sprintCombo.setDisable(true);
-    storyCombo.setDisable(true);
-    btnNewTask.setDisable(true);
-    btnDeleteTask.setDisable(true);
 
     if (mainApp.getBacklogs().contains(backlog)) {
       backlogCombo.setValue(backlog);
@@ -111,360 +175,38 @@ public class ScrumBoardController {
       if(availableSprints.contains(sprint)){
         sprintCombo.setValue(sprint);
         //todo make stories in sprints be removed properly at some point.
-        if(availableStories.contains(story) && mainApp.getStories().contains(story)) {
-          storyCombo.setValue(story);
-        } else {
-          storyCombo.setValue(nonStory);
-        }
+        // Think here it should open the previously expanded tabs
       } else {
         sprintCombo.setValue(null);
-        storyCombo.setValue(null);
       }
     } else {
       backlogCombo.setValue(null);
       sprintCombo.setValue(null);
-      storyCombo.setValue(null);
-    }
-    refreshLists();
-  }
-
-
-
-  /**
-   * Initialises the models lists and populates these with values from the main application,
-   * such as available backlogs, sprints and stories. These values
-   * are then populated into their respective GUI elements. The backlog combo box has a listener
-   * to update other GUI elements which depend on the backlog.
-   */
-  private void initialiseLists() {
-    availableSprints = FXCollections.observableArrayList();
-    availableStories = FXCollections.observableArrayList();
-    notStartedTasks = FXCollections.observableArrayList();
-    inProgressTasks = FXCollections.observableArrayList();
-    verifyTasks = FXCollections.observableArrayList();
-    doneTasks = FXCollections.observableArrayList();
-
-    backlogCombo.getSelectionModel().clearSelection();
-    backlogCombo.setItems(mainApp.getBacklogs());
-
-    backlogCombo.getSelectionModel().selectedItemProperty().addListener(
-      (observable, oldBacklog, newBacklog) -> {
-        if (newBacklog != null) {
-          sprintCombo.setDisable(false);
-
-          // get backlog's sprints
-          availableSprints.setAll(mainApp.getSprints().stream()
-                                      .filter(
-                                          sprint -> sprint.getSprintBacklog().equals(newBacklog))
-                                      .collect(Collectors.toList()));
-          sprintCombo.setItems(null);
-          sprintCombo.setItems(availableSprints);
-          refreshLists();
-          sprintCombo.setValue(null);
-          storyCombo.setValue(null);
-          storyCombo.setDisable(true);
-        }
-      }
-    );
-
-    sprintCombo.getSelectionModel().selectedItemProperty().addListener(
-        (observable, oldSprint, newSprint) -> {
-          if (newSprint != null) {
-            storyCombo.setDisable(false);
-
-
-            availableStories.clear();
-            for (Story story : newSprint.getSprintStories()) {
-              if (mainApp.getStories().contains(story)) {
-                availableStories.add(story);
-              }
-            }
-
-            availableStories.add(0, nonStory);
-
-            storyCombo.setItems(null);
-            storyCombo.setItems(availableStories);
-            storyCombo.setValue(nonStory);
-            refreshLists();
-          }
-        }
-    );
-
-    storyCombo.getSelectionModel().selectedItemProperty().addListener(
-        (observable, oldStory, newStory) -> {
-          if (oldStory != null && newStory != null) {
-            refreshLists();
-          }
-        }
-    );
-  }
-
-  /**
-   * Sets the custom behaviour for all four tasks ListView.
-   */
-  private void setupListView() {
-    //Sets the cell being populated with custom settings defined in the ListViewCell class.
-    this.notStartedList.setCellFactory(listView -> new ListCell(notStartedList));
-    this.inProgressList.setCellFactory(listView -> new ListCell(inProgressList));
-    this.verifyList.setCellFactory(listView -> new ListCell(verifyList));
-    this.doneList.setCellFactory(listView -> new ListCell(doneList));
-  }
-
-  /**
-   * Allows us to override a ListViewCell - a single cell in the ListView.
-   */
-  private class ListCell extends TextFieldListCell<Task> {
-    private String state;
-
-    /**
-     * rate an UndoRedoObject to represent a task edit action and store it globally. This is so
-     * a cancel in a dialog higher in the hierarchy can undo the changes made to the task.
-     */
-    private void generateUndoRedoObject() {
-
-
-      // Store a copy of task to edit in object to avoid reference problems
-      if (task != null) {
-        UndoRedo undoRedoObject = new UndoRedoObject();
-
-        undoRedoObject.setAgileItem(task);
-
-        undoRedoObject = new UndoRedoObject();
-        undoRedoObject.setAction(Action.TASK_EDIT);
-        undoRedoObject.addDatum(lastTask);
-
-        // Store a copy of task to edit in object to avoid reference problems
-        undoRedoObject.setAgileItem(task);
-        Task taskToStore = new Task(task);
-        undoRedoObject.addDatum(taskToStore);
-        mainApp.newAction(undoRedoObject);
-      }
-    }
-
-
-
-    public ListCell(ListView<Task> taskListView) {
-      super();
-
-      // double click for editing
-      this.setOnMouseClicked(click -> {
-        if (click.getClickCount() == 2 &&
-            click.getButton() == MouseButton.PRIMARY &&
-            !isEmpty()) {
-          Task selectedTask = getItem();
-          Taskable taskable;
-          if (storyCombo.getValue() == nonStory) {
-            taskable = sprintCombo.getValue();
-          } else {
-            taskable = storyCombo.getValue();
-          }
-          UndoRedo taskEdit = mainApp.showTaskDialog(taskable, selectedTask,
-                                                     sprintCombo.getValue().getSprintTeam(),
-                                                     CreateOrEdit.EDIT, stage);
-          if (taskEdit != null) {
-            mainApp.newAction(taskEdit);
-            refreshLists();
-          }
-        }
-      });
-
-      taskListView.setOnMouseClicked(event -> {
-        selectedTask = taskListView.getSelectionModel().getSelectedItem();
-      });
-
-
-      taskListView.setCursor(Cursor.OPEN_HAND);
-
-      taskListView.setOnDragDetected(event -> {
-        if (taskListView.getSelectionModel().getSelectedItem() != null) {
-          state = "";
-          lastTask = new Task(taskListView.getSelectionModel().getSelectedItem());
-          task = taskListView.getSelectionModel().getSelectedItem();
-
-          Dragboard dragBoard = taskListView.startDragAndDrop(TransferMode.ANY);
-
-          ClipboardContent content = new ClipboardContent();
-          content.putString(taskListView.getSelectionModel().getSelectedItem().getLabel());
-
-          dragBoard.setContent(content);
-          dragBoard.setDragViewOffsetX(1.0);
-          dragBoard.setDragViewOffsetY(1.0);
-
-          notStartedList.setOnDragOver(hover -> state = "notstarted");
-          inProgressList.setOnDragOver(hover -> state = "progress");
-          verifyList.setOnDragOver(hover -> state = "verify");
-          doneList.setOnDragOver(hover -> state = "done");
-        }
-        event.consume();
-      });
-      taskListView.setOnDragDone(
-          event -> {
-            if (taskListView.getSelectionModel().getSelectedItem() != null) {
-              if (state.equals("notstarted")) {
-                task.setStatus(Status.NOT_STARTED);
-              } else if (Objects.equals(state, "progress")) {
-                task.setStatus(Status.IN_PROGRESS);
-              } else if (Objects.equals(state, "verify")) {
-                task.setStatus(Status.VERIFY);
-              } else if (Objects.equals(state, "done")) {
-                task.setStatus(Status.DONE);
-              }
-              if (!task.getStatus().equals(lastTask.getStatus())) {
-                generateUndoRedoObject();
-              }
-
-              refreshLists();
-            }
-            event.consume();
-          });
-      refreshLists();
-    }
-  }
-
-
-  /**
-   * Refreshes the four list views when any of the tasks within the story is updated.
-   */
-  public void refreshLists() {
-    notStartedTasks.clear();
-    inProgressTasks.clear();
-    verifyTasks.clear();
-    doneTasks.clear();
-
-    btnNewTask.setDisable(true);
-    btnDeleteTask.setDisable(true);
-
-    if (backlogCombo.getSelectionModel().getSelectedItem() != null &&
-        sprintCombo.getSelectionModel().getSelectedItem() != null) {
-      if (storyCombo.getValue() == nonStory) {
-        btnNewTask.setDisable(false);
-        btnDeleteTask.setDisable(false);
-        sprintCombo.getValue().getTasks().forEach(this::sortTaskToLists);
-      } else if (!storyCombo.getSelectionModel().getSelectedItem().getTasks().isEmpty()) {
-        btnNewTask.setDisable(false);
-        btnDeleteTask.setDisable(false);
-        storyCombo.getValue().getTasks().forEach(this::sortTaskToLists);
-      } else {
-        btnNewTask.setDisable(false);
-        btnDeleteTask.setDisable(false);
-        Task newTask = new Task();
-        notStartedTasks.add(newTask);
-        inProgressTasks.add(newTask);
-        verifyTasks.add(newTask);
-        doneTasks.add(newTask);
-        notStartedTasks.clear();
-        inProgressTasks.clear();
-        verifyTasks.clear();
-        doneTasks.clear();
-      }
-    }
-    notStartedList.setItems(notStartedTasks);
-    inProgressList.setItems(inProgressTasks);
-    verifyList.setItems(verifyTasks);
-    doneList.setItems(doneTasks);
-
-  }
-
-  /**
-   * Sorting tasks to the correct list according to their current status.
-   * @param task the task that's within the story or sprint
-   */
-  private void sortTaskToLists(Task task) {
-    if (task.getStatus().equals(Status.NOT_STARTED)) {
-      notStartedTasks.add(task);
-    } else if (task.getStatus().equals(Status.IN_PROGRESS)) {
-      inProgressTasks.add(task);
-    } else if (task.getStatus().equals(Status.VERIFY)) {
-      verifyTasks.add(task);
-    } else if (task.getStatus().equals(Status.DONE)) {
-      doneTasks.add(task);
     }
   }
 
   /**
-   * On loading the scrum board needs to be completely reset. This functions does that, clears all
-   * selections.
+   * Refreshes the selections of the combo boxes
    */
-  public void clearSelections() {
-    notStartedTasks.clear();
-    inProgressTasks.clear();
-    verifyTasks.clear();
-    doneTasks.clear();
-    storyCombo.getSelectionModel().clearSelection();
-    storyCombo.getItems().clear();
-    storyCombo.setDisable(true);
+  public void hardReset() {
     sprintCombo.getSelectionModel().clearSelection();
     sprintCombo.getItems().clear();
     sprintCombo.setDisable(true);
+    availableSprints.clear();
     backlogCombo.getSelectionModel().clearSelection();
-    backlogCombo.setItems(FXCollections.observableArrayList());
-    btnNewTask.setDisable(true);
-    btnDeleteTask.setDisable(true);
-
-    initialiseLists();
-  }
-
-
-  /**
-   * A button which when clicked can add a task to either the selected story, or if the "nonStory"
-   * of sprint tasks, can add into there as well. Also adds to undo/redo stack so creationg is undoable
-   * @param event Button click
-   */
-  @FXML
-  protected void addNewTask(ActionEvent event) {
-    Story story = storyCombo.getSelectionModel().getSelectedItem();
-    if (storyCombo.getSelectionModel().getSelectedItem() != null) {
-      Sprint sprint = sprintCombo.getSelectionModel().getSelectedItem();
-      UndoRedo undoRedoCreate;
-      if (story == nonStory) {
-        undoRedoCreate = mainApp.showTaskDialog(sprint, null, sprint.getSprintTeam(), CreateOrEdit.CREATE, stage);
-      } else {
-        undoRedoCreate = mainApp.showTaskDialog(story, null, sprint.getSprintTeam(), CreateOrEdit.CREATE, stage);
-      }
-      if (undoRedoCreate != null) {
-        mainApp.newAction(undoRedoCreate);
-      }
-    }
+    backlogCombo.setItems(mainApp.getBacklogs());
+    storiesBox.getChildren().setAll(FXCollections.observableArrayList());
+    availableStories.clear();
+    storyPanes.clear();
+    refreshTaskLists();
   }
 
   /**
-   * Handles deleting tasks within the scrum depending on what task is selected.
-   * @param event button click event.
+   * Does not refresh the scrum board, just refreshes all the lists of the story items
    */
-  @FXML void deleteTask(ActionEvent event) {
-    Story story = storyCombo.getValue();
-    if (storyCombo.getSelectionModel().getSelectedItem() != null) {
-      Sprint sprint = sprintCombo.getSelectionModel().getSelectedItem();
-      UndoRedo undoRedoDelete;
-      undoRedoDelete = new UndoRedoObject();
-      if (story == nonStory) {
-        if (selectedTask != null) {
-          undoRedoDelete.setAction(Action.TASK_DELETE);
-          sprint.removeTask(selectedTask);
-          nonStory.removeTask(selectedTask);
-          undoRedoDelete.setAgileItem(selectedTask);
-          undoRedoDelete.addDatum(new Task(selectedTask));
-          undoRedoDelete.addDatum(sprint);
-          selectedTask = null;
-          refreshLists();
-        }
-      } else {
-        if (selectedTask != null) {
-          undoRedoDelete.setAction(Action.TASK_DELETE);
-          story.removeTask(selectedTask);
-          undoRedoDelete.setAgileItem(selectedTask);
-          undoRedoDelete.addDatum(new Task(selectedTask));
-          undoRedoDelete.addDatum(story);
-          selectedTask = null;
-          refreshLists();
-        }
-      }
-      if (undoRedoDelete.getAction().equals(Action.TASK_DELETE)) {
-        mainApp.newAction(undoRedoDelete);
-      }
-
-
+  public void refreshTaskLists() {
+    for (StoryItemController controller : storyPanes) {
+      controller.setupLists();
     }
-
   }
 }

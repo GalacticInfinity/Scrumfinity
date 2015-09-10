@@ -679,6 +679,10 @@ public class BacklogDialogController {
         checkButtonDisabled();
       }
     }
+
+
+    allocatedStoriesList.scrollTo(before - 3);
+
     showStatus();
   }
 
@@ -698,6 +702,9 @@ public class BacklogDialogController {
         checkButtonDisabled();
       }
     }
+
+    allocatedStoriesList.scrollTo(after - 3);
+
     showStatus();
   }
 

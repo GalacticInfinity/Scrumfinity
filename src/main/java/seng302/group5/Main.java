@@ -31,6 +31,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng302.group5.controller.dialogControllers.BacklogDialogController;
+import seng302.group5.controller.dialogControllers.EffortDialogController;
 import seng302.group5.controller.dialogControllers.SprintDialogController;
 import seng302.group5.controller.dialogControllers.TaskDialogController;
 import seng302.group5.controller.mainAppControllers.ListMainPaneController;
@@ -393,7 +394,7 @@ public class Main extends Application {
       teamDialogStage.initModality(Modality.APPLICATION_MODAL);
       teamDialogStage.initOwner(primaryStage);
       teamDialogStage.setScene(teamDialogScene);
-      teamDialogStage.show();
+      teamDialogStage.showAndWait();
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -676,7 +677,7 @@ public class Main extends Application {
       storyDialogStage.setScene(storyDialogScene);
       storyDialogStage.showAndWait();
 
-      LMPC.getScrumBoardController().hardReset();
+      LMPC.getScrumBoardController().refreshComboBoxes();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -716,7 +717,7 @@ public class Main extends Application {
       storyDialogStage.setScene(storyDialogScene);
       storyDialogStage.showAndWait();
 
-      LMPC.getScrumBoardController().refreshLists();
+      LMPC.getScrumBoardController().refreshComboBoxes();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -748,7 +749,7 @@ public class Main extends Application {
       storyDialogStage.setScene(storyDialogScene);
       storyDialogStage.showAndWait();
 
-      LMPC.getScrumBoardController().refreshLists();
+      LMPC.getScrumBoardController().refreshComboBoxes();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -789,7 +790,7 @@ public class Main extends Application {
       backlogDialogStage.setScene(backlogDialogScene);
       backlogDialogStage.showAndWait();
 
-      LMPC.getScrumBoardController().hardReset();
+      LMPC.getScrumBoardController().refreshComboBoxes();
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -825,7 +826,7 @@ public class Main extends Application {
       sprintDialogStage.setScene(sprintDialogScene);
       sprintDialogStage.showAndWait();
 
-      LMPC.getScrumBoardController().hardReset();
+      LMPC.getScrumBoardController().refreshComboBoxes();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -847,7 +848,7 @@ public class Main extends Application {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/TaskDialog.fxml"));
-      Pane taskDialogLayout = loader.load();
+      SplitPane taskDialogLayout = loader.load();
 
       TaskDialogController controller = loader.getController();
       Scene taskDialogScene = new Scene(taskDialogLayout);
@@ -860,15 +861,13 @@ public class Main extends Application {
       taskDialogStage.setScene(taskDialogScene);
       taskDialogStage.showAndWait();
 
-      this.getLMPC().getScrumBoardController().refreshLists();
-     // this.getLMPC().getBurndownDialogController().refreshLists();
+      this.getLMPC().getScrumBoardController().refreshTaskLists();
       taskUndoRedo = controller.getUndoRedoObject();
     } catch (IOException e) {
       e.printStackTrace();
     }
     return taskUndoRedo;
   }
-
 
   /**
    * Sets the cloned lists for revert to be what it is now.
@@ -893,7 +892,7 @@ public class Main extends Application {
       undoRedoHandler.undo();
       toggleName();
       checkUndoRedoItems();
-      LMPC.getScrumBoardController().hardReset();
+      LMPC.getScrumBoardController().refreshComboBoxes();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -907,7 +906,7 @@ public class Main extends Application {
       undoRedoHandler.redo();
       toggleName();
       checkUndoRedoItems();
-      LMPC.getScrumBoardController().hardReset();
+      LMPC.getScrumBoardController().refreshComboBoxes();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -1627,7 +1626,7 @@ public class Main extends Application {
 //        System.err.println("Unhandled case for deleting agile item");
         break;
     }
-    LMPC.getScrumBoardController().hardReset();
+    LMPC.getScrumBoardController().refreshComboBoxes();
   }
 
   /**

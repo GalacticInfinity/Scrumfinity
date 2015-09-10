@@ -456,9 +456,9 @@ public class ListMainPaneController {
       text9.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
     }
 
-    Text text10 = new Text("\nSkills: ");
-    text10.setFill(Color.BLACK);
-    text10.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+    Text skillsHeader = new Text("\nSkills: ");
+    skillsHeader.setFill(Color.BLACK);
+    skillsHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
     List<Text> skillsBody = new ArrayList<>();
     if (person.getSkillSet().isEmpty()) {
@@ -474,9 +474,73 @@ public class ListMainPaneController {
       text.setFill(Color.BLACK);
       text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
     }
+
+    Text createdStoriesHeader = new Text("\nCreated Stories: ");
+    createdStoriesHeader.setFill(Color.BLACK);
+    createdStoriesHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    List<Story> createdStories = new ArrayList<>();
+    List<Text> createdStoriesBody = new ArrayList<>();
+    for (Story story : mainApp.getStories()) {
+      if (person.equals(story.getCreator())) {
+        createdStories.add(story);
+      }
+    }
+    if (createdStories.isEmpty()) {
+      createdStoriesBody.add(new Text("N/A"));
+    } else {
+      for (Story story : createdStories) {
+        createdStoriesBody.add(generateHyperlink(story));
+        createdStoriesBody.add(new Text(", "));
+      }
+      createdStoriesBody.remove(createdStoriesBody.size() - 1); // remove last comma
+    }
+    for (Text text : createdStoriesBody) {
+      text.setFill(Color.BLACK);
+      text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    }
+
     displayTextFlow.getChildren().addAll(text1, text2, text3, text4, text5, text6,
-                                         text7, text8, text9, text10);
+                                         text7, text8, text9, skillsHeader);
     displayTextFlow.getChildren().addAll(skillsBody);
+    displayTextFlow.getChildren().addAll(createdStoriesHeader);
+    displayTextFlow.getChildren().addAll(createdStoriesBody);
+
+    Skill poSkill = null;
+    for (Role role : mainApp.getRoles()) {
+      if (role.getLabel().equals("PO")) {
+        poSkill = role.getRequiredSkill();
+        break;
+      }
+    }
+    if (person.getSkillSet().contains(poSkill)) {
+      Text ownedBacklogsHeader = new Text("\nOwned Backlogs: ");
+      ownedBacklogsHeader.setFill(Color.BLACK);
+      ownedBacklogsHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+      List<Backlog> ownedBacklogs = new ArrayList<>();
+      List<Text> ownedBacklogsBody = new ArrayList<>();
+      for (Backlog backlog : mainApp.getBacklogs()) {
+        if (person.equals(backlog.getProductOwner())) {
+          ownedBacklogs.add(backlog);
+        }
+      }
+      if (ownedBacklogs.isEmpty()) {
+        ownedBacklogsBody.add(new Text("N/A"));
+      } else {
+        for (Backlog backlog : ownedBacklogs) {
+          ownedBacklogsBody.add(generateHyperlink(backlog));
+          ownedBacklogsBody.add(new Text(", "));
+        }
+        ownedBacklogsBody.remove(ownedBacklogsBody.size() - 1); // remove last comma
+      }
+      for (Text text : ownedBacklogsBody) {
+        text.setFill(Color.BLACK);
+        text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+      }
+      displayTextFlow.getChildren().addAll(ownedBacklogsHeader);
+      displayTextFlow.getChildren().addAll(ownedBacklogsBody);
+    }
   }
 
   /**
@@ -543,20 +607,80 @@ public class ListMainPaneController {
 
     Text text10 = new Text("\nBacklog: ");
     text10.setFill(Color.BLACK);
-    text10.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+    text10.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
     Text text11;
     if (project.getBacklog() == null) {
-      text11 = new Text("N/A");
+      backlogBody = new Text("N/A");
     } else {
-      text11 = generateHyperlink(project.getBacklog());
+      backlogBody = generateHyperlink(project.getBacklog());
     }
-    text11.setFill(Color.BLACK);
-    text11.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    backlogBody.setFill(Color.BLACK);
+    backlogBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text releasesHeader = new Text("\nReleases: ");
+    releasesHeader.setFill(Color.BLACK);
+    releasesHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    List<Release> releases = new ArrayList<>();
+    List<Text> releasesBody = new ArrayList<>();
+    for (Release release : mainApp.getReleasesbydate()) {
+      if (project.equals(release.getProjectRelease())) {
+        releases.add(release);
+      }
+    }
+    if (releases.isEmpty()) {
+      releasesBody.add(new Text("No releases for this project."));
+    } else {
+      for (Release release : releases) {
+        releasesBody.add(new Text("\n"));
+        releasesBody.add(generateHyperlink(release));
+        String dateFormat = "dd/MM/yyyy";
+        releasesBody.add(new Text(" - " + release.getReleaseDate().format(
+            DateTimeFormatter.ofPattern(dateFormat))));
+      }
+    }
+    for (Text text : releasesBody) {
+      text.setFill(Color.BLACK);
+      text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    }
+
+    Text sprintsHeader = new Text("\nSprints: ");
+    sprintsHeader.setFill(Color.rgb(1, 0, 1));
+    sprintsHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    List<Sprint> projectsSprints = new ArrayList<>();
+    List<Text> sprintsBody = new ArrayList<>();
+    for (Sprint sprint : mainApp.getSprintsByDate()) {
+      if (project.equals(sprint.getSprintProject())) {
+        projectsSprints.add(sprint);
+      }
+    }
+    if (projectsSprints.isEmpty()) {
+      sprintsBody.add(new Text("N/A"));
+    } else {
+      for (Sprint sprint : projectsSprints) {
+        sprintsBody.add(new Text("\n"));
+        sprintsBody.add(generateHyperlink(sprint));
+        String dateFormat = "dd/MM/yyyy";
+        sprintsBody.add(new Text(String.format(
+            ": %s - %s",
+            sprint.getSprintStart().format(DateTimeFormatter.ofPattern(dateFormat)),
+            sprint.getSprintEnd().format(DateTimeFormatter.ofPattern(dateFormat)))));
+      }
+    }
+    for (Text text : sprintsBody) {
+      text.setFill(Color.BLACK);
+      text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    }
 
     displayTextFlow.getChildren().addAll(text1, text2, text3, text4, text5, text6,
                                          text7, text8);
     displayTextFlow.getChildren().addAll(teamsBody);
-    displayTextFlow.getChildren().addAll(text10, text11);
+    displayTextFlow.getChildren().addAll(backlogHeader, backlogBody);
+    displayTextFlow.getChildren().addAll(releasesHeader);
+    displayTextFlow.getChildren().addAll(releasesBody);
+    displayTextFlow.getChildren().addAll(sprintsHeader);
+    displayTextFlow.getChildren().addAll(sprintsBody);
   }
 
 
@@ -605,25 +729,28 @@ public class ListMainPaneController {
     textMembersHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
     List<Text> textMembersBody = new ArrayList<>();
-    for (Person member : team.getTeamMembers().sorted(Comparator.<Person>naturalOrder())) {
-      textMembersBody.clear();
-      textMembersBody.add(new Text("\n"));
-      textMembersBody.add(generateHyperlink(member));   // get the hyperlink
-      if (member.getFirstName().isEmpty() && member.getLastName().isEmpty()) {
-        textMembersBody.add(new Text(" - Role: "));
-      } else {
-        textMembersBody.add(new Text(" - " + member.getFirstName() + " " + member.getLastName() +
-                                     " - Role: "));
-      }
-      Role role = team.getMembersRole().get(member);
-      if (role != null) {
-        textMembersBody.add(new Text(role.toString()));
-      } else {
-        textMembersBody.add(new Text("Not assigned to a role yet."));
-      }
-      for (Text text : textMembersBody) {
-        text.setFill(Color.rgb(1, 0, 1));
-        text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    if (team.getTeamMembers().isEmpty()) {
+      textMembersBody.add(new Text("None"));
+    } else {
+      for (Person member : team.getTeamMembers().sorted(Comparator.<Person>naturalOrder())) {
+        textMembersBody.add(new Text("\n"));
+        textMembersBody.add(generateHyperlink(member));   // get the hyperlink
+        if (member.getFirstName().isEmpty() && member.getLastName().isEmpty()) {
+          textMembersBody.add(new Text(" - Role: "));
+        } else {
+          textMembersBody.add(new Text(" - " + member.getFirstName() + " " + member.getLastName() +
+                                       " - Role: "));
+        }
+        Role role = team.getMembersRole().get(member);
+        if (role != null) {
+          textMembersBody.add(new Text(role.toString()));
+        } else {
+          textMembersBody.add(new Text("Not assigned to a role yet."));
+        }
+        for (Text text : textMembersBody) {
+          text.setFill(Color.rgb(1, 0, 1));
+          text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+        }
       }
     }
 
@@ -635,7 +762,7 @@ public class ListMainPaneController {
     List<Text> projectsWithTeamBody = new ArrayList<>();
     for (Project project : mainApp.getProjects()) {
       for (AgileHistory agileHistory : project.getAllocatedTeams()) {
-        if (agileHistory.getAgileItem().equals(team)) {
+        if (team.equals(agileHistory.getAgileItem())) {
           projectsWithTeam.add(
               new AgileHistory(project, agileHistory.getStartDate(), agileHistory.getEndDate()));
         }
@@ -657,12 +784,43 @@ public class ListMainPaneController {
       text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
     }
 
+    Text sprintsHeader = new Text("\nSprints: ");
+    sprintsHeader.setFill(Color.rgb(1, 0, 1));
+    sprintsHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    List<Sprint> teamsSprints = new ArrayList<>();
+    List<Text> sprintsBody = new ArrayList<>();
+    for (Sprint sprint : mainApp.getSprintsByDate()) {
+      if (team.equals(sprint.getSprintTeam())) {
+        teamsSprints.add(sprint);
+      }
+    }
+    if (teamsSprints.isEmpty()) {
+      sprintsBody.add(new Text("N/A"));
+    } else {
+      for (Sprint sprint : teamsSprints) {
+        sprintsBody.add(new Text("\n"));
+        sprintsBody.add(generateHyperlink(sprint));
+        String dateFormat = "dd/MM/yyyy";
+        sprintsBody.add(new Text(String.format(
+            ": %s - %s",
+            sprint.getSprintStart().format(DateTimeFormatter.ofPattern(dateFormat)),
+            sprint.getSprintEnd().format(DateTimeFormatter.ofPattern(dateFormat)))));
+      }
+    }
+    for (Text text : sprintsBody) {
+      text.setFill(Color.BLACK);
+      text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    }
+
     displayTextFlow.getChildren().addAll(textHeader, textLabelHeader, textLabelBody,
                                          textDescriptionHeader, textDescriptionBody,
                                          textMembersHeader);
     displayTextFlow.getChildren().addAll(textMembersBody);
     displayTextFlow.getChildren().addAll(projectsHeader);
     displayTextFlow.getChildren().addAll(projectsWithTeamBody);
+    displayTextFlow.getChildren().addAll(sprintsHeader);
+    displayTextFlow.getChildren().addAll(sprintsBody);
   }
 
   /**
@@ -726,14 +884,42 @@ public class ListMainPaneController {
     textProjectHeader.setFill(Color.rgb(1, 0, 1));
     textProjectHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
-    Text textProjectBody = new Text(release.getProjectRelease().toString());
-    textProjectBody.setFill(Color.rgb(1, 0, 1));
-    textProjectBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    Text textProjectBody = generateHyperlink(release.getProjectRelease());
+
+    Text textSprintsHeader = new Text("\nSprints: ");
+    textSprintsHeader.setFill(Color.rgb(1, 0, 1));
+    textSprintsHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    List<Sprint> releasesSprints = new ArrayList<>();
+    List<Text> textSprintsBody = new ArrayList<>();
+    for (Sprint sprint : mainApp.getSprintsByDate()) {
+      if (release.equals(sprint.getSprintRelease())) {
+        releasesSprints.add(sprint);
+      }
+    }
+    if (releasesSprints.isEmpty()) {
+      textSprintsBody.add(new Text("N/A"));
+    } else {
+      for (Sprint sprint : releasesSprints) {
+        textSprintsBody.add(new Text("\n"));
+        textSprintsBody.add(generateHyperlink(sprint));
+        String dateFormat = "dd/MM/yyyy";
+        textSprintsBody.add(new Text(String.format(
+            ": %s - %s",
+            sprint.getSprintStart().format(DateTimeFormatter.ofPattern(dateFormat)),
+            sprint.getSprintEnd().format(DateTimeFormatter.ofPattern(dateFormat)))));
+      }
+    }
+    for (Text text : textSprintsBody) {
+      text.setFill(Color.BLACK);
+      text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    }
 
     displayTextFlow.getChildren().addAll(textHeader, textLabelHeader, textLabelBody,
                                          textDescriptionHeader, textDescriptionBody, textDateHeader,
                                          textDateBody, textNotesHeader, textNotesBody,
-                                         textProjectHeader, textProjectBody);
+                                         textProjectHeader, textProjectBody, textSprintsHeader);
+    displayTextFlow.getChildren().addAll(textSprintsBody);
   }
 
   /**
@@ -779,9 +965,45 @@ public class ListMainPaneController {
     textCreatorHeader.setFill(Color.rgb(1, 0, 1));
     textCreatorHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
-    Text textCreatorBody = new Text(story.getCreator().toString());
-    textCreatorBody.setFill(Color.rgb(1, 0, 1));
-    textCreatorBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    Text textCreatorBody = generateHyperlink(story.getCreator());
+
+    Text textBacklogHeader = new Text("\nBacklog: ");
+    textBacklogHeader.setFill(Color.rgb(1, 0, 1));
+    textBacklogHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Backlog storyBacklog = null;
+    for (Backlog backlog : mainApp.getBacklogs()) {
+      if (backlog.getStories().contains(story)) {
+        storyBacklog = backlog;
+        break;
+      }
+    }
+    Text textBacklogBody;
+    if (storyBacklog != null) {
+      textBacklogBody = generateHyperlink(storyBacklog);
+    } else {
+      textBacklogBody = new Text("N/A");
+      textBacklogBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    }
+
+    Text textSprintHeader = new Text("\nSprint: ");
+    textSprintHeader.setFill(Color.rgb(1, 0, 1));
+    textSprintHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Sprint storySprint = null;
+    for (Sprint sprint : mainApp.getSprints()) {
+      if (sprint.getSprintStories().contains(story)) {
+        storySprint = sprint;
+        break;
+      }
+    }
+    Text textSprintBody;
+    if (storySprint != null) {
+      textSprintBody = generateHyperlink(storySprint);
+    } else {
+      textSprintBody = new Text("N/A");
+      textSprintBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    }
 
     Text textReadinessHeader = new Text("\nReadiness: ");
     textReadinessHeader.setFill(Color.rgb(1, 0, 1));
@@ -825,6 +1047,8 @@ public class ListMainPaneController {
     displayTextFlow.getChildren().addAll(textHeader, textLabelHeader, textLabelBody,
                                          textNameHeader, textNameBody, textDescriptionHeader,
                                          textDescriptionBody, textCreatorHeader, textCreatorBody,
+                                         textBacklogHeader, textBacklogBody,
+                                         textSprintHeader, textSprintBody,
                                          textReadinessHeader, textReadinessBody,
                                          textImpedimentsHeader, textImpedimentsBody,
                                          textStatusHeader,
@@ -905,14 +1129,31 @@ public class ListMainPaneController {
     textPoHeader.setFill(Color.rgb(1, 0, 1));
     textPoHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
-    Text textPoBody = new Text(backlog.getProductOwner().toString());
-    textPoBody.setFill(Color.rgb(1, 0, 1));
-    textPoBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    Text textPoBody = generateHyperlink(backlog.getProductOwner());
+
+    Text textProjectHeader = new Text("\nAssigned to Project: ");
+    textProjectHeader.setFill(Color.rgb(1, 0, 1));
+    textProjectHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Project backlogProject = null;
+    for (Project project : mainApp.getProjects()) {
+      if (backlog.equals(project.getBacklog())) {
+        backlogProject = project;
+        break;
+      }
+    }
+    Text textProjectBody;
+    if (backlogProject != null) {
+      textProjectBody = generateHyperlink(backlogProject);
+    } else {
+      textProjectBody = new Text("N/A");
+      textProjectBody.setFill(Color.rgb(1, 0, 1));
+      textProjectBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    }
 
     Text textEsHeader = new Text("\nBacklog Estimation Scale: ");
     textEsHeader.setFill(Color.rgb(1, 0, 1));
     textEsHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
-
 
     Text textEsBody;
     if (backlog.getEstimate() == null) {
@@ -922,6 +1163,35 @@ public class ListMainPaneController {
     }
     textEsBody.setFill(Color.rgb(1, 0, 1));
     textEsBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text textSprintsHeader = new Text("\nSprints: ");
+    textSprintsHeader.setFill(Color.rgb(1, 0, 1));
+    textSprintsHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    List<Sprint> backlogsSprints = new ArrayList<>();
+    List<Text> textSprintsBody = new ArrayList<>();
+    for (Sprint sprint : mainApp.getSprintsByDate()) {
+      if (backlog.equals(sprint.getSprintBacklog())) {
+        backlogsSprints.add(sprint);
+      }
+    }
+    if (backlogsSprints.isEmpty()) {
+      textSprintsBody.add(new Text("N/A"));
+    } else {
+      for (Sprint sprint : backlogsSprints) {
+        textSprintsBody.add(new Text("\n"));
+        textSprintsBody.add(generateHyperlink(sprint));
+        String dateFormat = "dd/MM/yyyy";
+        textSprintsBody.add(new Text(String.format(
+            ": %s - %s",
+            sprint.getSprintStart().format(DateTimeFormatter.ofPattern(dateFormat)),
+            sprint.getSprintEnd().format(DateTimeFormatter.ofPattern(dateFormat)))));
+      }
+    }
+    for (Text text : textSprintsBody) {
+      text.setFill(Color.BLACK);
+      text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    }
 
     Text textStoriesHeader = new Text("\nStories:");
     textStoriesHeader.setFill(Color.rgb(1, 0, 1));
@@ -935,68 +1205,66 @@ public class ListMainPaneController {
     displayTextFlow.getChildren().addAll(textHeader, textLabelHeader, textLabelBody,
                                          textNameHeader, textNameBody, textDescriptionHeader,
                                          textDescriptionBody, textPoHeader, textPoBody,
+                                         textProjectHeader, textProjectBody,
                                          textEsHeader, textEsBody,
-                                         textStoriesHeader, sortToggle);
+                                         textSprintsHeader);
+    displayTextFlow.getChildren().addAll(textSprintsBody);
+    displayTextFlow.getChildren().addAll(textStoriesHeader, sortToggle);
 
     List<Text> storiesText = new ArrayList<>();
 
-    Text textStoriesBody;
     if (!backlog.getStories().isEmpty()) {
-
       for (Story story : backlog.getStories()) {
         int index = backlog.getSizes().get(story);
-        textStoriesBody = new Text("\n• " + story + " - " +
-                                   backlog.getEstimate().getEstimateNames().get(index));
-        storiesText.add(textStoriesBody);
-        displayTextFlow.getChildren().add(textStoriesBody);
+        storiesText.add(new Text("\n• "));
+        Text hyperlink = generateHyperlink(story);
+        hyperlink.setFont(Font.getDefault());
+        storiesText.add(hyperlink);
+        storiesText.add(new Text(" - " + backlog.getEstimate().getEstimateNames().get(index)));
       }
     } else {
-      textStoriesBody = new Text("\nN/A");
-      storiesText.add(textStoriesBody);
-      displayTextFlow.getChildren().add(textStoriesBody);
+      storiesText.add(new Text("\nN/A"));
     }
+    displayTextFlow.getChildren().addAll(storiesText);
 
     sortToggle.setOnAction(event -> {
       displayTextFlow.getChildren().removeAll(storiesText);
       storiesText.clear();
       if (sortToggle.getText().equals(prioritisedOrder)) {
         // Change to alphabetical order
-        Text tempTextStoriesBody;
         if (!backlog.getStories().isEmpty()) {
           SortedList<Story> sortedStories = new SortedList<>(
               FXCollections.observableArrayList(backlog.getStories()),
               Comparator.<Story>naturalOrder());
-          Map<Story, Integer> sorted = new IdentityHashMap<>(backlog.getSizes());
           for (Story story : sortedStories) {
-            tempTextStoriesBody = new Text("\n• " + story + " - " +
-                                           backlog.getEstimate().getEstimateNames()
-                                               .get(sorted.get(story)));
-            storiesText.add(tempTextStoriesBody);
-            displayTextFlow.getChildren().add(tempTextStoriesBody);
+            int index = backlog.getSizes().get(story);
+            storiesText.add(new Text("\n• "));
+            Text hyperlink = generateHyperlink(story);
+            hyperlink.setFont(Font.getDefault());
+            storiesText.add(hyperlink);
+            storiesText.add(new Text(" - " + backlog.getEstimate().getEstimateNames().get(index)));
           }
         } else {
-          tempTextStoriesBody = new Text("\nN/A");
-          storiesText.add(tempTextStoriesBody);
-          displayTextFlow.getChildren().add(tempTextStoriesBody);
+          storiesText.add(new Text("\nN/A"));
         }
+        displayTextFlow.getChildren().addAll(storiesText);
         // Change the mode
         sortToggle.setText(alphabeticalOrder);
       } else {
         // Change to prioritised order
-        Text tempTextStoriesBody;
         if (!backlog.getStories().isEmpty()) {
           for (Story story : backlog.getStories()) {
             int index = backlog.getSizes().get(story);
-            tempTextStoriesBody = new Text("\n• " + story + " - " +
-                                           backlog.getEstimate().getEstimateNames().get(index));
-            storiesText.add(tempTextStoriesBody);
-            displayTextFlow.getChildren().add(tempTextStoriesBody);
+            storiesText.add(new Text("\n• "));
+            Text hyperlink = generateHyperlink(story);
+            hyperlink.setFont(Font.getDefault());
+            storiesText.add(hyperlink);
+            storiesText.add(new Text(" - " + backlog.getEstimate().getEstimateNames().get(index)));
           }
         } else {
-          tempTextStoriesBody = new Text("\nN/A");
-          storiesText.add(tempTextStoriesBody);
-          displayTextFlow.getChildren().add(tempTextStoriesBody);
+          storiesText.add(new Text("\nN/A"));
         }
+        displayTextFlow.getChildren().addAll(storiesText);
         // Change the mode
         sortToggle.setText(prioritisedOrder);
       }
@@ -1046,33 +1314,25 @@ public class ListMainPaneController {
     textBacklogHeader.setFill(Color.rgb(1, 0, 1));
     textBacklogHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
-    Text textBacklogBody = new Text(sprint.getSprintBacklog().toString());
-    textBacklogBody.setFill(Color.rgb(1, 0, 1));
-    textBacklogBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    Text textBacklogBody = generateHyperlink(sprint.getSprintBacklog());
 
     Text textProjectHeader = new Text("\nSprint Project: ");
     textProjectHeader.setFill(Color.rgb(1, 0, 1));
     textProjectHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
-    Text textProjectBody = new Text(sprint.getSprintProject().toString());
-    textProjectBody.setFill(Color.rgb(1, 0, 1));
-    textProjectBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    Text textProjectBody = generateHyperlink(sprint.getSprintProject());
 
     Text textTeamHeader = new Text("\nAssigned Team: ");
     textTeamHeader.setFill(Color.rgb(1, 0, 1));
     textTeamHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
-    Text textTeamBody = new Text(sprint.getSprintTeam().toString());
-    textTeamBody.setFill(Color.rgb(1, 0, 1));
-    textTeamBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    Text textTeamBody = generateHyperlink(sprint.getSprintTeam());
 
     Text textReleaseHeader = new Text("\nPart of Release: ");
     textReleaseHeader.setFill(Color.rgb(1, 0, 1));
     textReleaseHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
-    Text textReleaseBody = new Text(sprint.getSprintRelease().toString());
-    textReleaseBody.setFill(Color.rgb(1, 0, 1));
-    textReleaseBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    Text textReleaseBody = generateHyperlink(sprint.getSprintRelease());
 
     Text textImpedimentsHeader = new Text("\nImpediments: ");
     textImpedimentsHeader.setFill(Color.rgb(1, 0, 1));
@@ -1106,24 +1366,23 @@ public class ListMainPaneController {
 
     List<Text> storiesText = new ArrayList<>();
 
-    Text textStoriesBody;
     Backlog sprintBacklog = sprint.getSprintBacklog();
     if (!sprint.getSprintStories().isEmpty()) {
       for (Story story : sprintBacklog.getStories()) {
         // TODO quick diplay fix, model still broke.
         if (sprint.getSprintStories().contains(story)) {
           int index = sprintBacklog.getSizes().get(story);
-          textStoriesBody = new Text("\n• " + story + " - " +
-                                     sprintBacklog.getEstimate().getEstimateNames().get(index));
-          storiesText.add(textStoriesBody);
-          displayTextFlow.getChildren().add(textStoriesBody);
+          storiesText.add(new Text("\n• "));
+          Text hyperlink = generateHyperlink(story);
+          hyperlink.setFont(Font.getDefault());
+          storiesText.add(hyperlink);
+          storiesText.add(new Text(" - " + sprintBacklog.getEstimate().getEstimateNames().get(index)));
         }
       }
     } else {
-      textStoriesBody = new Text("\nN/A");
-      storiesText.add(textStoriesBody);
-      displayTextFlow.getChildren().add(textStoriesBody);
+      storiesText.add(new Text("\nN/A"));
     }
+    displayTextFlow.getChildren().addAll(storiesText);
 
     Text textSprintTasksHeader = new Text("\nTasks");
     textSprintTasksHeader.setFill(Color.rgb(1, 0, 1));
@@ -1165,29 +1424,32 @@ public class ListMainPaneController {
       storiesText.clear();
       if (sortToggle.getText().equals(prioritisedOrder)) {
         // Change to alphabetical order
-        Text tempTextStoriesBody;
         if (!sprint.getSprintStories().isEmpty()) {
           SortedList<Story> sortedStories = new SortedList<>(
               FXCollections.observableArrayList(sprint.getSprintStories()),
               Comparator.<Story>naturalOrder());
-          Map<Story, Integer> sorted = new IdentityHashMap<>(sprintBacklog.getSizes());
           removePostStory(textSprintTasksHeader, sprintTasksText, displayTextFlow);
           displayTextFlow.getChildren().removeAll(textDatesHeader, textDatesBody);
           for (Story story : sortedStories) {
-            tempTextStoriesBody = new Text("\n• " + story + " - " +
-                                           sprintBacklog.getEstimate().getEstimateNames()
-                                               .get(sorted.get(story)));
-            storiesText.add(tempTextStoriesBody);
-            displayTextFlow.getChildren().add(tempTextStoriesBody);
+            // TODO just a display fix, need to fix underlying model
+            if (sprint.getSprintStories().contains(story)) {
+              int index = sprintBacklog.getSizes().get(story);
+              storiesText.add(new Text("\n• "));
+              Text hyperlink = generateHyperlink(story);
+              hyperlink.setFont(Font.getDefault());
+              storiesText.add(hyperlink);
+              storiesText.add(
+                  new Text(" - " + sprintBacklog.getEstimate().getEstimateNames().get(index)));
+            }
           }
+          displayTextFlow.getChildren().addAll(storiesText);
           addPostStory(textSprintTasksHeader, sprintTasksText, displayTextFlow);
           displayTextFlow.getChildren().addAll(textDatesHeader, textDatesBody);
         } else {
-          tempTextStoriesBody = new Text("\nN/A");
-          storiesText.add(tempTextStoriesBody);
+          storiesText.add(new Text("\nN/A"));
           displayTextFlow.getChildren().removeAll(textDatesHeader, textDatesBody);
           removePostStory(textSprintTasksHeader, sprintTasksText, displayTextFlow);
-          displayTextFlow.getChildren().add(tempTextStoriesBody);
+          displayTextFlow.getChildren().addAll(storiesText);
           addPostStory(textSprintTasksHeader, sprintTasksText, displayTextFlow);
           displayTextFlow.getChildren().addAll(textDatesHeader, textDatesBody);
         }
@@ -1195,7 +1457,6 @@ public class ListMainPaneController {
         sortToggle.setText(alphabeticalOrder);
       } else {
         // Change to prioritised order
-        Text tempTextStoriesBody;
         if (!sprint.getSprintStories().isEmpty()) {
           removePostStory(textSprintTasksHeader, sprintTasksText, displayTextFlow);
           displayTextFlow.getChildren().removeAll(textDatesHeader, textDatesBody);
@@ -1203,21 +1464,22 @@ public class ListMainPaneController {
             // TODO just a display fix, need to fix underlying model
             if (sprint.getSprintStories().contains(story)) {
               int index = sprintBacklog.getSizes().get(story);
-              tempTextStoriesBody = new Text("\n• " + story + " - " +
-                                             sprintBacklog.getEstimate().getEstimateNames()
-                                                 .get(index));
-              storiesText.add(tempTextStoriesBody);
-              displayTextFlow.getChildren().add(tempTextStoriesBody);
+              storiesText.add(new Text("\n• "));
+              Text hyperlink = generateHyperlink(story);
+              hyperlink.setFont(Font.getDefault());
+              storiesText.add(hyperlink);
+              storiesText.add(
+                  new Text(" - " + sprintBacklog.getEstimate().getEstimateNames().get(index)));
             }
           }
+          displayTextFlow.getChildren().addAll(storiesText);
           addPostStory(textSprintTasksHeader, sprintTasksText, displayTextFlow);
           displayTextFlow.getChildren().addAll(textDatesHeader, textDatesBody);
         } else {
-          tempTextStoriesBody = new Text("\nN/A");
-          storiesText.add(tempTextStoriesBody);
+          storiesText.add(new Text("\nN/A"));
           removePostStory(textSprintTasksHeader, sprintTasksText, displayTextFlow);
           displayTextFlow.getChildren().removeAll(textDatesHeader, textDatesBody);
-          displayTextFlow.getChildren().add(tempTextStoriesBody);
+          displayTextFlow.getChildren().addAll(storiesText);
           addPostStory(textSprintTasksHeader, sprintTasksText, displayTextFlow);
           displayTextFlow.getChildren().addAll(textDatesHeader, textDatesBody);
         }
@@ -1228,7 +1490,7 @@ public class ListMainPaneController {
   }
 
   /**
-   * Mupltiple places needed this exact code for Sprints display, so moved out to its own function
+   * Multiple places needed this exact code for Sprints display, so moved out to its own function
    * @param header Task object Text header
    * @param bodyList List of Task object's Text bodies
    * @param textFlow Text flow to remove from.
@@ -1319,4 +1581,5 @@ public class ListMainPaneController {
       });
     }
   }
+
 }
