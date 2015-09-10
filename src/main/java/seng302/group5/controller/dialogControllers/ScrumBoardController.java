@@ -151,18 +151,17 @@ public class ScrumBoardController {
     return null;
   }
 
-  public void refreshLists() {
-    // TODO refresh the lists of the StoryItemControllers
-    storyPanes.forEach(StoryItemController::setupLists);
-  }
-
   /**
    * Resets everything about the scrum board, everything cleared and disabled apart from
    * Backlog combo box.
+   * TODO allocate extra memory and a few checks to reduce run time significantly
    */
   public void refreshComboBoxes() {
     Backlog backlog = backlogCombo.getValue();
+    backlogCombo.getSelectionModel().clearSelection();
     Sprint sprint = sprintCombo.getValue();
+    sprintCombo.getSelectionModel().clearSelection();
+
     // The pane stuff
     storiesBox.getChildren().setAll(FXCollections.observableArrayList());
     storyPanes.clear();
@@ -184,23 +183,21 @@ public class ScrumBoardController {
       backlogCombo.setValue(null);
       sprintCombo.setValue(null);
     }
-    //refreshLists();
   }
 
   /**
    * Refreshes the selections of the combo boxes
    */
   public void hardReset() {
-    //sprintCombo.getSelectionModel().clearSelection();
+    sprintCombo.getSelectionModel().clearSelection();
     sprintCombo.getItems().clear();
     sprintCombo.setDisable(true);
     availableSprints.clear();
-    //backlogCombo.getSelectionModel().clearSelection();
-    backlogCombo.setItems(FXCollections.observableArrayList());
+    backlogCombo.getSelectionModel().clearSelection();
+    backlogCombo.setItems(mainApp.getBacklogs());
     storiesBox.getChildren().setAll(FXCollections.observableArrayList());
     availableStories.clear();
     storyPanes.clear();
-   // initialiseLists();
     refreshTaskLists();
   }
 
