@@ -456,9 +456,9 @@ public class ListMainPaneController {
       text9.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
     }
 
-    Text text10 = new Text("\nSkills: ");
-    text10.setFill(Color.BLACK);
-    text10.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+    Text skillsHeader = new Text("\nSkills: ");
+    skillsHeader.setFill(Color.BLACK);
+    skillsHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
     List<Text> skillsBody = new ArrayList<>();
     if (person.getSkillSet().isEmpty()) {
@@ -474,9 +474,73 @@ public class ListMainPaneController {
       text.setFill(Color.BLACK);
       text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
     }
+
+    Text createdStoriesHeader = new Text("\nCreated Stories: ");
+    createdStoriesHeader.setFill(Color.BLACK);
+    createdStoriesHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    List<Story> createdStories = new ArrayList<>();
+    List<Text> createdStoriesBody = new ArrayList<>();
+    for (Story story : mainApp.getStories()) {
+      if (person.equals(story.getCreator())) {
+        createdStories.add(story);
+      }
+    }
+    if (createdStories.isEmpty()) {
+      createdStoriesBody.add(new Text("N/A"));
+    } else {
+      for (Story story : createdStories) {
+        createdStoriesBody.add(generateHyperlink(story));
+        createdStoriesBody.add(new Text(", "));
+      }
+      createdStoriesBody.remove(createdStoriesBody.size() - 1); // remove last comma
+    }
+    for (Text text : createdStoriesBody) {
+      text.setFill(Color.BLACK);
+      text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    }
+
     displayTextFlow.getChildren().addAll(text1, text2, text3, text4, text5, text6,
-                                         text7, text8, text9, text10);
+                                         text7, text8, text9, skillsHeader);
     displayTextFlow.getChildren().addAll(skillsBody);
+    displayTextFlow.getChildren().addAll(createdStoriesHeader);
+    displayTextFlow.getChildren().addAll(createdStoriesBody);
+
+    Skill poSkill = null;
+    for (Role role : mainApp.getRoles()) {
+      if (role.getLabel().equals("PO")) {
+        poSkill = role.getRequiredSkill();
+        break;
+      }
+    }
+    if (person.getSkillSet().contains(poSkill)) {
+      Text ownedBacklogsHeader = new Text("\nOwned Backlogs: ");
+      ownedBacklogsHeader.setFill(Color.BLACK);
+      ownedBacklogsHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+      List<Backlog> ownedBacklogs = new ArrayList<>();
+      List<Text> ownedBacklogsBody = new ArrayList<>();
+      for (Backlog backlog : mainApp.getBacklogs()) {
+        if (person.equals(backlog.getProductOwner())) {
+          ownedBacklogs.add(backlog);
+        }
+      }
+      if (ownedBacklogs.isEmpty()) {
+        ownedBacklogsBody.add(new Text("N/A"));
+      } else {
+        for (Backlog backlog : ownedBacklogs) {
+          ownedBacklogsBody.add(generateHyperlink(backlog));
+          ownedBacklogsBody.add(new Text(", "));
+        }
+        ownedBacklogsBody.remove(ownedBacklogsBody.size() - 1); // remove last comma
+      }
+      for (Text text : ownedBacklogsBody) {
+        text.setFill(Color.BLACK);
+        text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+      }
+      displayTextFlow.getChildren().addAll(ownedBacklogsHeader);
+      displayTextFlow.getChildren().addAll(ownedBacklogsBody);
+    }
   }
 
   /**
