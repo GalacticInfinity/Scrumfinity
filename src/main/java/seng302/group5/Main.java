@@ -312,6 +312,7 @@ public class Main extends Application {
 
       // init scrum board within LMPC
       LMPC.initScrumBoard();
+      LMPC.initBurndown();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -860,6 +861,7 @@ public class Main extends Application {
       taskDialogStage.showAndWait();
 
       this.getLMPC().getScrumBoardController().refreshLists();
+     // this.getLMPC().getBurndownDialogController().refreshLists();
       taskUndoRedo = controller.getUndoRedoObject();
     } catch (IOException e) {
       e.printStackTrace();

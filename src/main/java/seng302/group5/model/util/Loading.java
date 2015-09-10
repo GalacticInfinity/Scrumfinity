@@ -81,6 +81,7 @@ public class Loading {
       if (saveVersion >= 0.5) {
         syncTaskPeople();
       }
+      main.getLMPC().initBurndown();
 
     } catch (Exception e) {
       successfulLoad = false;

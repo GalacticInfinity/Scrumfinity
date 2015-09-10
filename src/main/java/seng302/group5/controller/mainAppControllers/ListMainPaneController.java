@@ -1,6 +1,5 @@
 package seng302.group5.controller.mainAppControllers;
 
-import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -34,8 +33,8 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import javafx.stage.Stage;
 import seng302.group5.Main;
+import seng302.group5.controller.dialogControllers.BurndownController;
 import seng302.group5.controller.dialogControllers.ScrumBoardController;
 import seng302.group5.model.AgileHistory;
 import seng302.group5.model.AgileItem;
@@ -66,6 +65,7 @@ public class ListMainPaneController {
   @FXML private Label listViewLabel;
   @FXML private ToggleButton temporal;
   @FXML private ScrumBoardController scrumBoardController;
+  @FXML private BurndownController burndownController;
   @FXML private ImageView sortImage;
   private Main mainApp;
   private boolean isListShown = true;
@@ -543,7 +543,7 @@ public class ListMainPaneController {
 
     Text text10 = new Text("\nBacklog: ");
     text10.setFill(Color.BLACK);
-    text10.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
+    text10.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
     Text text11;
     if (project.getBacklog() == null) {
       text11 = new Text("N/A");
@@ -1284,6 +1284,17 @@ public class ListMainPaneController {
    */
   public void initScrumBoard() {
     scrumBoardController.setupController(mainApp, mainApp.getStage());
+  }
+
+  /**
+   * Initialize the burndown when the main application start.
+   */
+  public void initBurndown() {
+    burndownController.setupController(mainApp, mainApp.getStage());
+  }
+
+  public BurndownController getBurndownController() {
+    return burndownController;
   }
 
   public ScrumBoardController getScrumBoardController() {
