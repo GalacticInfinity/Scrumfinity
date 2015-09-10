@@ -871,6 +871,44 @@ public class ListMainPaneController {
 
     Text textCreatorBody = generateHyperlink(story.getCreator());
 
+    Text textBacklogHeader = new Text("\nBacklog: ");
+    textBacklogHeader.setFill(Color.rgb(1, 0, 1));
+    textBacklogHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Backlog storyBacklog = null;
+    for (Backlog backlog : mainApp.getBacklogs()) {
+      if (backlog.getStories().contains(story)) {
+        storyBacklog = backlog;
+        break;
+      }
+    }
+    Text textBacklogBody;
+    if (storyBacklog != null) {
+      textBacklogBody = generateHyperlink(storyBacklog);
+    } else {
+      textBacklogBody = new Text("N/A");
+      textBacklogBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    }
+
+    Text textSprintHeader = new Text("\nSprint: ");
+    textSprintHeader.setFill(Color.rgb(1, 0, 1));
+    textSprintHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Sprint storySprint = null;
+    for (Sprint sprint : mainApp.getSprints()) {
+      if (sprint.getSprintStories().contains(story)) {
+        storySprint = sprint;
+        break;
+      }
+    }
+    Text textSprintBody;
+    if (storySprint != null) {
+      textSprintBody = generateHyperlink(storySprint);
+    } else {
+      textSprintBody = new Text("N/A");
+      textSprintBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+    }
+
     Text textReadinessHeader = new Text("\nReadiness: ");
     textReadinessHeader.setFill(Color.rgb(1, 0, 1));
     textReadinessHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
@@ -913,6 +951,8 @@ public class ListMainPaneController {
     displayTextFlow.getChildren().addAll(textHeader, textLabelHeader, textLabelBody,
                                          textNameHeader, textNameBody, textDescriptionHeader,
                                          textDescriptionBody, textCreatorHeader, textCreatorBody,
+                                         textBacklogHeader, textBacklogBody,
+                                         textSprintHeader, textSprintBody,
                                          textReadinessHeader, textReadinessBody,
                                          textImpedimentsHeader, textImpedimentsBody,
                                          textStatusHeader,
