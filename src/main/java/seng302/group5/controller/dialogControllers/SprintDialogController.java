@@ -526,7 +526,7 @@ public class SprintDialogController {
         tasks.set(itemIndex, temp);
         taskList.getSelectionModel().select(itemIndex - 1);
       }
-
+      taskList.scrollTo(itemIndex - 8);
     }
   }
 
@@ -545,6 +545,7 @@ public class SprintDialogController {
         tasks.set(itemIndex, temp);
         taskList.getSelectionModel().select(itemIndex + 1);
       }
+      taskList.scrollTo(itemIndex - 6);
     }
   }
 

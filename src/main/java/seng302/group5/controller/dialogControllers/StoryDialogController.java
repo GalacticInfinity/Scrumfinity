@@ -521,7 +521,7 @@ public class StoryDialogController {
         tasks.set(itemIndex, temp);
         taskList.getSelectionModel().select(itemIndex - 1);
       }
-
+    taskList.scrollTo(itemIndex - 8);
     }
   }
 
@@ -540,6 +540,7 @@ public class StoryDialogController {
         tasks.set(itemIndex, temp);
         taskList.getSelectionModel().select(itemIndex + 1);
       }
+      taskList.scrollTo(itemIndex - 6);
     }
   }
 
@@ -559,6 +560,7 @@ public class StoryDialogController {
         acceptanceCriteria.set(itemIndex, temp);
         listAC.getSelectionModel().select(itemIndex - 1);
       }
+      listAC.scrollTo(itemIndex - 4);
     }
   }
 
@@ -578,6 +580,7 @@ public class StoryDialogController {
         acceptanceCriteria.set(itemIndex, temp);
         listAC.getSelectionModel().select(itemIndex + 1);
       }
+      listAC.scrollTo(itemIndex - 2);
     }
   }
 
