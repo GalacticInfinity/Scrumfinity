@@ -433,8 +433,6 @@ public class Story implements AgileItem, Taskable, Comparable<Story> {
         completedTasks+=1;
       }
     }
-
-    System.out.println(completedTasks);
     if (completedTasks == 0 || totalTasks == 0) {
       return 0;
     }
