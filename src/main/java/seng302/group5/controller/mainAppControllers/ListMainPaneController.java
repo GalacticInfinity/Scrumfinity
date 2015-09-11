@@ -36,6 +36,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import seng302.group5.Main;
+import seng302.group5.controller.dialogControllers.BurndownController;
 import seng302.group5.controller.dialogControllers.ScrumBoardController;
 import seng302.group5.model.AgileHistory;
 import seng302.group5.model.AgileItem;
@@ -66,6 +67,7 @@ public class ListMainPaneController {
   @FXML private Label listViewLabel;
   @FXML private ToggleButton temporal;
   @FXML private ScrumBoardController scrumBoardController;
+  @FXML private BurndownController burndownController;
   @FXML private ImageView sortImage;
   private Main mainApp;
   private boolean isListShown = true;
@@ -158,7 +160,7 @@ public class ListMainPaneController {
       case "Projects":
         isListShown = true;
         temporal.setVisible(false);
-       // temporal.visibleProperty().setValue(true);
+        // temporal.visibleProperty().setValue(true);
         listView.setItems(mainApp.getProjects().sorted(Comparator.<Project>naturalOrder()));
         break;
       case "People":
@@ -1546,6 +1548,10 @@ public class ListMainPaneController {
    */
   public void initScrumBoard() {
     scrumBoardController.setupController(mainApp, mainApp.getStage());
+  }
+
+  public void initBurnDown() {
+    burndownController.setupController(mainApp, mainApp.getStage());
   }
 
   public ScrumBoardController getScrumBoardController() {
