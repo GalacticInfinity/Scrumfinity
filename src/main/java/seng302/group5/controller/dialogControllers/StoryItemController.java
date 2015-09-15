@@ -16,6 +16,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import seng302.group5.model.Story;
 import seng302.group5.model.Task;
@@ -33,13 +34,16 @@ public class StoryItemController {
   @FXML private AnchorPane storyAnchor;
   @FXML private TitledPane storyPane;
 
+  @FXML private ImageView SBImage;
+  @FXML private Rectangle doneBar;
+  @FXML private Rectangle inProgBar;
+  @FXML private Rectangle notStartedBar;
+
   private Story story;
 
   private Image inprogress;
   private Image complete;
   private ImageView dinoGif;
-
-  private ProgressBar progressBar;
 
   private ObservableList<Task> notStartedTasks;
   private ObservableList<Task> inProgressTasks;
@@ -64,43 +68,32 @@ public class StoryItemController {
 
     if (this.story.percentComplete() == 1.0) {
       dinoGif.setImage(complete);
+      SBImage.setImage(complete);
+
     } else {
       dinoGif.setImage(inprogress);
+      SBImage.setImage(inprogress);
+
     }
     storyPane.setGraphic(dinoGif);
 
-    //Set up the progress bar and place in the accordion
-    //Can only have 1 graphic so dino or bar?
-
-
-    progressBar = new ProgressBar();
-    progressBar.setStyle("-fx-accent: green;");
-
-    progressBar.setProgress(this.story.percentComplete());
-
-    storyPane.setGraphic(progressBar);
-
-//    storyPane.setContentDisplay(ContentDisplay.RIGHT);
-//
-//    Node titleRegion = storyPane.lookup(".title");
-//
-//    System.out.println("titleRegion = " + titleRegion);
-//
-//    // padding
-//    Insets padding = ((StackPane)titleRegion).getPadding();
-//    // image width
-//    double graphicWidth = dinoGif.getLayoutBounds().getWidth();
-//    // arrow
-//    double arrowWidth = titleRegion.lookup(".arrow-button").getLayoutBounds().getWidth();
-//    // text
-//    double labelWidth = titleRegion.lookup(".text").getLayoutBounds().getWidth();
-//
-//    double nodesWidth = graphicWidth+padding.getLeft()+padding.getRight()+labelWidth+arrowWidth;
-//
-//    storyPane.graphicTextGapProperty().bind(storyPane.widthProperty().subtract(nodesWidth));
-
+    progBar();
 
     setupLists();
+  }
+
+
+  public void progBar() {
+
+    int totalSpace = 180;
+    float doneSpace = totalSpace*story.percentComplete();
+    float inProgSpace = totalSpace*story.percentInProg();
+    float notStartedSpace = totalSpace*(1 - (story.percentComplete() + story.percentInProg()));
+
+    doneBar.setWidth(doneSpace);
+    inProgBar.setWidth(inProgSpace);
+    notStartedBar.setWidth(notStartedSpace);
+
   }
 
   /**
