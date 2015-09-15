@@ -17,6 +17,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldListCell;
@@ -55,6 +57,11 @@ public class TaskDialogController {
   @FXML private Button btnAddPerson;
   @FXML private Button btnRemovePerson;
   @FXML private HBox btnContainer;
+  @FXML private TableView effortTable;
+  @FXML private TableColumn dateTimeColumn;
+  @FXML private TableColumn userColumn;
+  @FXML private TableColumn effortColumn;
+  @FXML private TableColumn commentColumn;
   @FXML private Button btnConfirm;
   @FXML private Button btnCancel;
 

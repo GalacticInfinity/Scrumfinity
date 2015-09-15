@@ -1,6 +1,10 @@
 package seng302.group5.controller.dialogControllers;
 
+import org.mockito.cglib.core.Local;
+
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.stream.Collectors;
 
 import javafx.collections.FXCollections;
@@ -13,8 +17,10 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.model.Backlog;
+import seng302.group5.model.Effort;
 import seng302.group5.model.Sprint;
 import seng302.group5.model.Story;
+import seng302.group5.model.Task;
 
 /**
  * Created by Craig Barnard on 10/09/2015.
@@ -91,11 +97,27 @@ public class BurndownController {
 
     sprintCombo.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldSprint, newSprint) -> {
+
+          ArrayList<Task> tasks = new ArrayList<Task>();
+          tasks.addAll(sprintCombo.getSelectionModel().getSelectedItem().getTasks());
           if (newSprint != null) {
             burndownChart.setTitle(sprintCombo.getSelectionModel().getSelectedItem().toString());
             for (Story story : newSprint.getSprintStories()) {
               if (mainApp.getStories().contains(story)) {
+                tasks.addAll(story.getTasks());
                 //TODO set the sprints burndown chart here
+              }
+            }
+            XYChart.Series<Integer, LocalDate> aSeries = new XYChart.Series<Integer, LocalDate>();
+            XYChart.Series<String, LocalDate> cSeries = new XYChart.Series<String, LocalDate>();
+            aSeries.setName("a");
+            cSeries.setName("C");
+            ObservableList<XYChart.Series<Integer, LocalDate>> x;
+            burndownChart.setData(getChartData());
+
+            for (Task task : tasks) {
+              for (Effort efforts : task.getEfforts()) {
+
               }
             }
 
@@ -105,6 +127,27 @@ public class BurndownController {
 
   }
 
+  private ObservableList<XYChart.Series<Integer, LocalDate>> getChartData() {
+    double aValue = 1.56;
+    double cValue = 1.06;
+
+    ObservableList<XYChart.Series<Integer, LocalDate>> answer = FXCollections.observableArrayList();
+
+    XYChart.Series<Integer, LocalDate> aSeries = new XYChart.Series<Integer, LocalDate>();
+    XYChart.Series<Integer, LocalDate> cSeries = new XYChart.Series<Integer, LocalDate>();
+    aSeries.setName("Burndown");
+    cSeries.setName("Burnup");
+
+    for (Integer i = 2011; i < 2021; i++) {
+      aSeries.getData().add(new XYChart.Data(Integer.toString(i), aValue));
+      aValue = aValue + Math.random() - .8;
+      cSeries.getData().add(new XYChart.Data(Integer.toString(i), cValue));
+      cValue = cValue + Math.random() - .2;
+    }
+    //answer.add(aSeries);
+    answer.addAll(cSeries, aSeries);
+    return answer;
+  }
   /**
    * Refresh the comboboxes whenever objects are modified in the main app
    */
