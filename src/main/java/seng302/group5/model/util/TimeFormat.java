@@ -1,5 +1,7 @@
 package seng302.group5.model.util;
 
+import java.time.LocalTime;
+
 /**
  * Class for managing the time formatting in Scrumfinity, i.e. [x]h[y]m where x and y are integers.
  *
@@ -46,7 +48,7 @@ public class TimeFormat {
    * @param totalMinutes total minutes to parse into h/m
    * @return Time formatted string.
    */
-  public static String parseTime(int totalMinutes) {
+  public static String parseDuration(int totalMinutes) {
     int hours = totalMinutes / 60;
     int minutes = totalMinutes % 60;
     String result = "";
@@ -61,5 +63,13 @@ public class TimeFormat {
       }
     }
     return result;
+  }
+
+  public static LocalTime parseLocalTime(String inputString) {
+    return null;
+  }
+
+  public static String parseTimeString(LocalTime localTime) {
+    return "";
   }
 }
