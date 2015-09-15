@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,6 +19,7 @@ import seng302.group5.controller.mainAppControllers.ListMainPaneController;
 import seng302.group5.model.AgileHistory;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Backlog;
+import seng302.group5.model.Effort;
 import seng302.group5.model.Estimate;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
@@ -138,6 +140,15 @@ public class UndoRedoHandlerTest {
   private List<Person> newTaskPeople;
   private Map<Person, Integer> newTaskEffort;
 
+  private Person worker;
+  private int spentEffort;
+  private String comments;
+  private LocalDateTime dateTime;
+  private Person newWorker;
+  private int newSpentEffort;
+  private String newComments;
+  private LocalDateTime newDateTime;
+
   private Person person;
   private Skill skill;
   private Team team;
@@ -148,6 +159,7 @@ public class UndoRedoHandlerTest {
   private Estimate estimate;
   private Sprint sprint;
   private Task task;
+  private Effort effort;
 
   private Story dependantStory1;
   private Story dependantStory2;
@@ -973,6 +985,23 @@ public class UndoRedoHandlerTest {
     undoRedoObject.setAgileItem(task);
     undoRedoObject.addDatum(lastTask);
     undoRedoObject.addDatum(newTask);
+
+    undoRedoHandler.newAction(undoRedoObject);
+  }
+
+  private void newEffort() {
+    worker = person;
+    spentEffort = 180;
+    comments = "This person spent time doing X";
+    dateTime = LocalDateTime.of(2009, Month.APRIL, 8, 10, 12);
+    effort = new Effort(worker, spentEffort, comments, dateTime);
+    task.addEffort(effort);
+
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+    undoRedoObject.setAction(Action.EFFORT_CREATE);
+    undoRedoObject.setAgileItem(effort);
+    undoRedoObject.addDatum(new Effort(effort));
+    undoRedoObject.addDatum(task);
 
     undoRedoHandler.newAction(undoRedoObject);
   }
@@ -3801,6 +3830,81 @@ public class UndoRedoHandlerTest {
     assertEquals(newTaskStatus, redoneTask.getStatus());
     assertEquals(newTaskPeople, redoneTask.getTaskPeople());
     assertEquals(newTaskEffort, redoneTask.getSpentEffort());
+  }
+
+  @Test
+  public void testEffortCreateUndo() throws Exception {
+    assertTrue(mainApp.getPeople().isEmpty());
+    assertTrue(mainApp.getStories().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+
+    List<Task> tasks;
+    newPerson();
+    newStory();
+    newTask();
+    newEffort();
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(1, mainApp.getStories().size());
+    tasks = mainApp.getStories().get(0).getTasks();
+    assertEquals(1, tasks.size());
+    assertEquals(1, tasks.get(0).getEfforts().size());
+    assertEquals(4, undoRedoHandler.getUndoStack().size());
+
+    undoRedoHandler.undo();
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(1, mainApp.getStories().size());
+    assertTrue(mainApp.getStories().get(0).getTasks().isEmpty());
+
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(1, mainApp.getStories().size());
+    tasks = mainApp.getStories().get(0).getTasks();
+    assertEquals(1, tasks.size());
+    assertTrue(tasks.get(0).getEfforts().isEmpty());
+
+    assertEquals(3, undoRedoHandler.getUndoStack().size());
+  }
+
+  @Test
+  public void testEffortCreateRedo() throws Exception {
+    Effort before;
+    Effort after;
+
+    assertTrue(mainApp.getPeople().isEmpty());
+    assertTrue(mainApp.getStories().isEmpty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    List<Task> tasks;
+    newPerson();
+    newStory();
+    newTask();
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(1, mainApp.getStories().size());
+    tasks = mainApp.getStories().get(0).getTasks();
+    assertEquals(1, tasks.size());
+    assertEquals(1, tasks.get(0).getEfforts().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+    before = tasks.get(0).getEfforts().get(0);
+    assertNotNull(before);
+
+    undoRedoHandler.undo();
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(1, mainApp.getStories().size());
+    tasks = mainApp.getStories().get(0).getTasks();
+    assertEquals(1, tasks.size());
+    assertTrue(tasks.get(0).getEfforts().isEmpty());
+    assertEquals(1, undoRedoHandler.getRedoStack().size());
+
+    undoRedoHandler.redo();
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(1, mainApp.getStories().size());
+    tasks = mainApp.getStories().get(0).getTasks();
+    assertEquals(1, tasks.size());
+    assertEquals(1, tasks.get(0).getEfforts().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+    after = tasks.get(0).getEfforts().get(0);
+    assertNotNull(after);
+
+    assertSame(before, after);
   }
 
   @Test
