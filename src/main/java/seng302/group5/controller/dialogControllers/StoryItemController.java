@@ -43,6 +43,7 @@ public class StoryItemController {
 
   private Image inprogress;
   private Image complete;
+  private Image notStarted;
   private ImageView dinoGif;
 
   private ObservableList<Task> notStartedTasks;
@@ -61,15 +62,18 @@ public class StoryItemController {
     //Set up the dino gif and place it on the accordion
     inprogress = new Image("runningDino.gif");
     complete = new Image("victoryDino.gif");
+    notStarted = new Image("progressDino1.png");
     dinoGif = new ImageView();
 
     dinoGif.setFitHeight(28);
     dinoGif.setFitWidth(28);
 
-    if (this.story.percentComplete() == 1.0) {
+    if (this.story.percentComplete() == 0.0 && this.story.percentInProg() == 0.0) {
+      dinoGif.setImage(notStarted);
+      SBImage.setImage(notStarted);
+    }else if (this.story.percentComplete() == 1.0) {
       dinoGif.setImage(complete);
       SBImage.setImage(complete);
-
     } else {
       dinoGif.setImage(inprogress);
       SBImage.setImage(inprogress);
