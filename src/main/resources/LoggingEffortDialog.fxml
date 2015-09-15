@@ -43,7 +43,7 @@
                   <Font size="15.0" />
                </font>
             </Label>
-            <TextField fx:id="amount1" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="95.0" promptText="e.g. 1h30m">
+            <TextField fx:id="spentEffortField" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="95.0" promptText="e.g. 1h30m">
                <HBox.margin>
                   <Insets />
                </HBox.margin>

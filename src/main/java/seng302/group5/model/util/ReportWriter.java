@@ -646,7 +646,7 @@ public class ReportWriter {
         Element commentElem = report.createElement("comments");
         commentElem.appendChild(report.createTextNode(effort.getComments()));
         Element endTimeElem = report.createElement("time-stamp");
-        endTimeElem.appendChild(report.createTextNode(effort.getEndTime().toString()));
+        endTimeElem.appendChild(report.createTextNode(effort.getDateTime().toString()));
         spentEffortElem.appendChild(effortElem);
       }
 
@@ -787,7 +787,7 @@ public class ReportWriter {
         Element commentElem = report.createElement("comments");
         commentElem.appendChild(report.createTextNode(effort.getComments()));
         Element endTimeElem = report.createElement("time-stamp");
-        endTimeElem.appendChild(report.createTextNode(effort.getEndTime().toString()));
+        endTimeElem.appendChild(report.createTextNode(effort.getDateTime().toString()));
         spentEffortElem.appendChild(effortElem);
       }
       tasksElement.appendChild(taskElement);
