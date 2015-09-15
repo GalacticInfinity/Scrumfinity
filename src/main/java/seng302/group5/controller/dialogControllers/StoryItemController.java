@@ -61,7 +61,6 @@ public class StoryItemController {
       switch (task.getStatus()) {
         case NOT_STARTED:
           notStartedTasks.add(task);
-          // TODO more testing
           addWithDragging(notStartedList, new Label(task.getLabel()));
           // TODO this line specifically
           break;
@@ -78,52 +77,44 @@ public class StoryItemController {
           addWithDragging(doneList, new Label(task.getLabel()));
           break;
       }
-    }/*
-    inProgressList.setItems(inProgressTasks);
-    verifyList.setItems(verifyTasks);
-    doneList.setItems(doneTasks);*/
+    }
 
-    /**
-     * Testing stuff
-     */
     // in case user drops node in blank space in root:
     notStartedList.setOnMouseDragReleased(new EventHandler<MouseDragEvent>() {
       @Override
       public void handle(MouseDragEvent event) {
-        int indexOfDraggingNode = notStartedList.getChildren().indexOf(event.getGestureSource());
-        rotateNodes(notStartedList, indexOfDraggingNode, notStartedList.getChildren().size() - 1);
+        addToBottom(notStartedList, (Node) event.getGestureSource());
       }
     });
 
     inProgressList.setOnMouseDragReleased(new EventHandler<MouseDragEvent>() {
       @Override
       public void handle(MouseDragEvent event) {
-        int indexOfDraggingNode = inProgressList.getChildren().indexOf(event.getGestureSource());
-        rotateNodes(inProgressList, indexOfDraggingNode, inProgressList.getChildren().size() - 1);
+        addToBottom(inProgressList, (Node) event.getGestureSource());
       }
     });
 
     verifyList.setOnMouseDragReleased(new EventHandler<MouseDragEvent>() {
       @Override
       public void handle(MouseDragEvent event) {
-        int indexOfDraggingNode = verifyList.getChildren().indexOf(event.getGestureSource());
-        rotateNodes(verifyList, indexOfDraggingNode, verifyList.getChildren().size() - 1);
+        addToBottom(verifyList, (Node) event.getGestureSource());
       }
     });
 
     doneList.setOnMouseDragReleased(new EventHandler<MouseDragEvent>() {
       @Override
       public void handle(MouseDragEvent event) {
-        int indexOfDraggingNode = doneList.getChildren().indexOf(event.getGestureSource());
-        rotateNodes(doneList, indexOfDraggingNode, doneList.getChildren().size() - 1);
+        addToBottom(doneList, (Node) event.getGestureSource());
       }
     });
   }
 
   /**
-   * More testing stuff
-   * @param root
-   * @param label
+   * Adds the label to a VBox, and assigns mouse event listeners for drag and drop functionality
+   * between the four VBoxes (notStartedList, inProgressList, verifyList, doneList).
+   * Overrides drag detected, mouse drag detected, drag exited, drag released.
+   * @param root VBox root.
+   * @param label Label to be added
    */
   private void addWithDragging(VBox root, Label label) {
     label.setOnDragDetected(new EventHandler<MouseEvent>() {
@@ -150,28 +141,31 @@ public class StoryItemController {
     label.setOnMouseDragReleased(new EventHandler<MouseDragEvent>() {
       @Override
       public void handle(MouseDragEvent event) {
+        // Mouse is dropped;
         label.setStyle("");
         int indexOfDropTarget = -1;
         Label sourceLbl = (Label) event.getGestureSource();
+        VBox newRoot = null;
+        // Removes dragged label from root, saves index of dragged to label;
         if (notStartedList.getChildren().contains(sourceLbl)) {
           notStartedList.getChildren().remove(sourceLbl);
-          indexOfDropTarget = notStartedList.getChildren().indexOf(label);
+          indexOfDropTarget = notStartedList.getChildren().indexOf(sourceLbl);
         } else if (inProgressList.getChildren().contains(sourceLbl)) {
           inProgressList.getChildren().remove(sourceLbl);
-          indexOfDropTarget = inProgressList.getChildren().indexOf(label);
+          indexOfDropTarget = inProgressList.getChildren().indexOf(sourceLbl);
         } else if (verifyList.getChildren().contains(sourceLbl)) {
           verifyList.getChildren().remove(sourceLbl);
-          indexOfDropTarget = verifyList.getChildren().indexOf(label);
+          indexOfDropTarget = verifyList.getChildren().indexOf(sourceLbl);
         } else if (doneList.getChildren().contains(sourceLbl)) {
           doneList.getChildren().remove(sourceLbl);
-          indexOfDropTarget = doneList.getChildren().indexOf(label);
+          indexOfDropTarget = doneList.getChildren().indexOf(sourceLbl);
         }
+        int indexOfDrag = root.getChildren().indexOf(label);
+        // Adds label to root with new listeners
         addWithDragging(root, sourceLbl);
-        // Might need at some point
-        int indexOfDraggingNode = root.getChildren().indexOf(event.getGestureSource());
-        if (indexOfDropTarget != -1) {
-          insertNode(root, indexOfDropTarget);
-        }
+        // Label is now in vbox at bottom
+        // Root=correct Vbox, iODT=index of highlighted node, Lbl=label to be moved up
+        bringUpNode(root, indexOfDrag, sourceLbl);
         event.consume();
       }
     });
@@ -179,27 +173,31 @@ public class StoryItemController {
   }
 
   /**
-   * Please dear got let this work
-   * TODO everything
-   * @param root
-   * @param indexOfDraggingNode
-   * @param indexOfDropTarget
+   * If already exists in root, removes the node then inserts it at the given index.
+   * All parameters must be instantiated.
+   * @param root Where to insert into
+   * @param indexOfDropTarget Index to be inserted at
+   * @param label Node to be inserted
    */
-  private void rotateNodes(VBox root, int indexOfDraggingNode,
-                           int indexOfDropTarget) {
-    if (indexOfDraggingNode >= 0 && indexOfDropTarget >= 0) {
-      final Node node = root.getChildren().remove(indexOfDraggingNode);
-      root.getChildren().add(indexOfDropTarget, node);
+  private void bringUpNode(VBox root, int indexOfDropTarget, Node label) {
+    if (root.getChildren().contains(label)) {
+      root.getChildren().remove(label);
     }
+    root.getChildren().add(indexOfDropTarget, label);
   }
 
   /**
-   * TODO Stuff here
-   * @param root
-   * @param indexOfDropTarget
+   * Adds the node to the bottom of the root, and removes it from it's original parent.
+   * @param root A javafx container with children
+   * @param node Node to be appended
    */
-  private void insertNode(VBox root, int indexOfDropTarget) {
-    root.getChildren().add(indexOfDropTarget, root);
+  private void addToBottom(VBox root, Node node) {
+    //1:Remove from orig location
+    Label draggedLabel = (Label) node;
+    VBox oldVBox = (VBox) draggedLabel.getParent();
+    oldVBox.getChildren().remove(draggedLabel);
+    //2:Add to the new list
+    addWithDragging(root, draggedLabel);
   }
 
   public Story getStory() {
