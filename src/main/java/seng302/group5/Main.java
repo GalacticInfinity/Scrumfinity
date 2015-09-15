@@ -538,7 +538,7 @@ public class Main extends Application {
       personDialogStage.initModality(Modality.APPLICATION_MODAL);
       personDialogStage.initOwner(primaryStage);
       personDialogStage.setScene(personDialogScene);
-      personDialogStage.show();
+      personDialogStage.showAndWait();
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -605,7 +605,7 @@ public class Main extends Application {
       skillDialogStage.initModality(Modality.APPLICATION_MODAL);
       skillDialogStage.initOwner(primaryStage);
       skillDialogStage.setScene(skillDialogScene);
-      skillDialogStage.show();
+      skillDialogStage.showAndWait();
 
     } catch (IOException e) {
       e.printStackTrace();

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
@@ -41,30 +42,34 @@
                 <TextField fx:id="personLastNameField" alignment="TOP_LEFT" prefWidth="210.0" promptText="Last name of person." />
             </children>
         </HBox>
-      <HBox prefHeight="21.0" prefWidth="429.0">
-         <children>
-            <Label prefHeight="25.0" prefWidth="135.0" text="Skills:">
-               <font>
-                  <Font size="15.0" />
-               </font>
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-            </Label>
-         </children>
-         <VBox.margin>
-            <Insets top="2.0" />
-         </VBox.margin>
-      </HBox>
       <HBox prefHeight="204.0" prefWidth="445.0">
          <children>
             <VBox prefHeight="200.0" prefWidth="165.0">
                <children>
-                  <Label prefHeight="25.0" prefWidth="135.0" text="Available Skills:">
-                     <font>
-                        <Font size="12.0" />
-                     </font>
-                  </Label>
+                  <HBox prefHeight="11.0" prefWidth="181.0">
+                     <children>
+                        <Label prefHeight="19.0" prefWidth="141.0" text="Available Skills:">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Button fx:id="btnNewSkill" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" onAction="#addNewSkill" prefHeight="20.0" prefWidth="20.0">
+                           <graphic>
+                              <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="ToolbarQuickAdd.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="2.0" />
+                     </VBox.margin>
+                  </HBox>
                   <ListView fx:id="skillsList" prefHeight="190.0" prefWidth="90.0">
                      <opaqueInsets>
                         <Insets />
@@ -91,12 +96,15 @@
             </VBox>
             <VBox prefHeight="204.0" prefWidth="167.0">
                <children>
-                  <Label prefHeight="25.0" prefWidth="135.0" text="Person's Skills:">
+                  <Label prefHeight="23.0" prefWidth="135.0" text="Person's Skills:">
                      <font>
-                        <Font size="12.0" />
+                        <Font size="15.0" />
                      </font>
+                     <VBox.margin>
+                        <Insets bottom="2.0" />
+                     </VBox.margin>
                   </Label>
-                  <ListView fx:id="personSkillList" prefHeight="200.0" prefWidth="165.0">
+                  <ListView fx:id="personSkillList" prefHeight="189.0" prefWidth="167.0">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
@@ -104,6 +112,9 @@
                </children>
             </VBox>
          </children>
+         <VBox.margin>
+            <Insets top="5.0" />
+         </VBox.margin>
       </HBox>
         <HBox fx:id="btnContainer" alignment="BOTTOM_RIGHT" prefHeight="39.0" prefWidth="434.0" spacing="10.0">
             <children>

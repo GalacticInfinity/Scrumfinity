@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
@@ -36,14 +37,33 @@
         </HBox>
         <HBox alignment="CENTER_LEFT" prefHeight="232.0" prefWidth="487.0" spacing="10.0">
             <children>
-            <VBox prefHeight="232.0" prefWidth="181.0">
+            <VBox prefHeight="220.0" prefWidth="181.0">
                <children>
-                  <Label prefHeight="25.0" prefWidth="173.0" text="Available Members:">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Label>
-                  <ListView fx:id="availableMembersList" prefHeight="208.0" prefWidth="201.0" />
+                  <HBox prefHeight="11.0" prefWidth="181.0">
+                     <children>
+                        <Label prefHeight="19.0" prefWidth="157.0" text="Available Members:">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Button fx:id="btnNewMember" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" onAction="#addNewMember" prefHeight="20.0" prefWidth="20.0">
+                           <graphic>
+                              <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="ToolbarQuickAdd.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="5.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <ListView fx:id="availableMembersList" prefHeight="216.0" prefWidth="181.0" />
                </children>
             </VBox>
             <VBox alignment="CENTER" prefHeight="232.0" prefWidth="61.0">
