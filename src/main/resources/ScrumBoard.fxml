@@ -55,7 +55,7 @@
                   </HBox>
                </children>
             </AnchorPane>
-            <ScrollPane hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+            <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
                <content>
                   <AnchorPane fx:id="anchorage">
                      <children>
