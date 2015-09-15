@@ -3,6 +3,8 @@ package seng302.group5.controller.dialogControllers;
 import org.mockito.cglib.core.Local;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoField;
+import java.time.temporal.TemporalAmount;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.stream.Collectors;
@@ -29,7 +31,7 @@ public class BurndownController {
 
   @FXML private ComboBox<Backlog> backlogCombo;
   @FXML private ComboBox<Sprint> sprintCombo;
-  @FXML private LineChart<Integer, LocalDate> burndownChart;
+  @FXML private LineChart<LocalDate, Integer> burndownChart;
   @FXML private VBox holder;
 
 
@@ -38,6 +40,9 @@ public class BurndownController {
 
   private ObservableList<Sprint> availableSprints;
   private ObservableList<Backlog> availableBacklogs;
+
+  private Sprint sprint;
+  private Integer time;
 
   //TODO Javadoc
 
@@ -62,8 +67,9 @@ public class BurndownController {
     availableSprints = FXCollections.observableArrayList();
     availableBacklogs = FXCollections.observableArrayList();
     availableBacklogs.addAll(this.mainApp.getBacklogs());
-
+    ArrayList<Task> tasks = new ArrayList<Task>();
     backlogCombo.getSelectionModel().clearSelection();
+    sprintCombo.getSelectionModel().clearSelection();
     backlogCombo.setItems(mainApp.getBacklogs());
     burndownChart.setMinWidth(stage.getWidth()-200);
     burndownChart.setMinHeight(stage.getHeight()-200);
@@ -98,54 +104,67 @@ public class BurndownController {
     sprintCombo.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldSprint, newSprint) -> {
 
-          ArrayList<Task> tasks = new ArrayList<Task>();
-          tasks.addAll(sprintCombo.getSelectionModel().getSelectedItem().getTasks());
-          if (newSprint != null) {
-            burndownChart.setTitle(sprintCombo.getSelectionModel().getSelectedItem().toString());
-            for (Story story : newSprint.getSprintStories()) {
-              if (mainApp.getStories().contains(story)) {
-                tasks.addAll(story.getTasks());
-                //TODO set the sprints burndown chart here
+          if (sprintCombo.getSelectionModel().getSelectedItem() != null) {
+            sprint = sprintCombo.getValue();
+            tasks.addAll(sprint.getTasks());
+            if (newSprint != null) {
+              burndownChart.setTitle(sprintCombo.getSelectionModel().getSelectedItem().toString());
+              for (Story story : newSprint.getSprintStories()) {
+                if (mainApp.getStories().contains(story)) {
+                  tasks.addAll(story.getTasks());
+                  //TODO set the sprints burndown chart here
+                }
               }
-            }
-            XYChart.Series<Integer, LocalDate> aSeries = new XYChart.Series<Integer, LocalDate>();
-            XYChart.Series<String, LocalDate> cSeries = new XYChart.Series<String, LocalDate>();
-            aSeries.setName("a");
-            cSeries.setName("C");
-            ObservableList<XYChart.Series<Integer, LocalDate>> x;
-            burndownChart.setData(getChartData());
+              XYChart.Series<LocalDate, Integer> aSeries = new XYChart.Series<LocalDate, Integer>();
+              XYChart.Series<Integer, LocalDate> cSeries = new XYChart.Series<Integer, LocalDate>();
+              cSeries.setName("Burn-Up");
+              aSeries.setName("Burn-Down");
 
-            for (Task task : tasks) {
-              for (Effort efforts : task.getEfforts()) {
+              time = 0;
+              for (Task task : tasks) {
+                time += task.getTaskEstimation();
+                for (Effort efforts : task.getEfforts()) {
 
-              }
+                }
             }
+              burndownChart.setData(getChartData(time));
 
           }
+        }
         }
     );
 
   }
 
-  private ObservableList<XYChart.Series<Integer, LocalDate>> getChartData() {
+  private ObservableList<XYChart.Series<LocalDate, Integer>> getChartData(Integer time) {
     double aValue = 1.56;
     double cValue = 1.06;
 
-    ObservableList<XYChart.Series<Integer, LocalDate>> answer = FXCollections.observableArrayList();
+    ObservableList<XYChart.Series<LocalDate, Integer>> answer = FXCollections.observableArrayList();
 
-    XYChart.Series<Integer, LocalDate> aSeries = new XYChart.Series<Integer, LocalDate>();
-    XYChart.Series<Integer, LocalDate> cSeries = new XYChart.Series<Integer, LocalDate>();
-    aSeries.setName("Burndown");
-    cSeries.setName("Burnup");
-
-    for (Integer i = 2011; i < 2021; i++) {
-      aSeries.getData().add(new XYChart.Data(Integer.toString(i), aValue));
-      aValue = aValue + Math.random() - .8;
-      cSeries.getData().add(new XYChart.Data(Integer.toString(i), cValue));
-      cValue = cValue + Math.random() - .2;
+    XYChart.Series<LocalDate, Integer> aSeries = new XYChart.Series<LocalDate, Integer>();
+    //XYChart.Series<Integer, String> cSeries = new XYChart.Series<Integer, String>();
+    aSeries.setName("Reference Velocity");
+    //cSeries.setName("Burn-Up");
+    LocalDate date = sprint.getSprintStart();
+    LocalDate date1 = sprint.getSprintStart();
+    int diff = 0;
+    while (date1.compareTo(sprint.getSprintEnd()) == -1) {
+      System.out.println(date1 + "  " + sprint.getSprintEnd());
+      date1 = date1.plusDays(1);
+      diff += 1;
+    }
+    System.out.println(diff);
+    int timeDiff = time/diff;
+    System.out.println(timeDiff);
+    for (Integer i = time; i >= 0; i -= timeDiff) {
+      aSeries.getData().add(new XYChart.Data(date.toString(), i));
+      date = date.plusDays(1);
+    //  cSeries.getData().add(new XYChart.Data(Integer.toString(i), cValue));
+    //  cValue = cValue + Math.random() - .2;
     }
     //answer.add(aSeries);
-    answer.addAll(cSeries, aSeries);
+    answer.add(aSeries);
     return answer;
   }
   /**
