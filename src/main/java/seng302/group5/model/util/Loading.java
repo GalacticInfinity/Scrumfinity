@@ -82,6 +82,7 @@ public class Loading {
         syncTaskPeople();
       }
 
+
     } catch (Exception e) {
       successfulLoad = false;
 
