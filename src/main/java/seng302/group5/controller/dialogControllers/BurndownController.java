@@ -134,18 +134,18 @@ public class BurndownController {
     ObservableList<XYChart.Series<Integer, LocalDate>> answer = FXCollections.observableArrayList();
 
     XYChart.Series<Integer, LocalDate> aSeries = new XYChart.Series<Integer, LocalDate>();
-    XYChart.Series<String, LocalDate> cSeries = new XYChart.Series<String, LocalDate>();
-    aSeries.setName("a");
-    cSeries.setName("C");
+    XYChart.Series<Integer, LocalDate> cSeries = new XYChart.Series<Integer, LocalDate>();
+    aSeries.setName("Burndown");
+    cSeries.setName("Burnup");
 
     for (Integer i = 2011; i < 2021; i++) {
       aSeries.getData().add(new XYChart.Data(Integer.toString(i), aValue));
-      aValue = aValue + Math.random() - .5;
-      cSeries.getData().add(new XYChart.Data(Integer.toString(i), LocalDate.now()));
-      cValue = cValue + Math.random() - .5;
+      aValue = aValue + Math.random() - .8;
+      cSeries.getData().add(new XYChart.Data(Integer.toString(i), cValue));
+      cValue = cValue + Math.random() - .2;
     }
-    answer.add(aSeries);
-    //answer.addAll(cSeries, aSeries);
+    //answer.add(aSeries);
+    answer.addAll(cSeries, aSeries);
     return answer;
   }
   /**
