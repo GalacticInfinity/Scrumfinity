@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -51,7 +53,7 @@ public class BurndownController {
     this.mainApp = mainApp;
     this.stage = stage;
     sprintCombo.setDisable(true);
-
+    burndownChart.setPrefWidth(stage.getWidth());
     initialiseLists();
   }
 
@@ -64,8 +66,9 @@ public class BurndownController {
     availableBacklogs.addAll(this.mainApp.getBacklogs());;
 
     backlogCombo.getSelectionModel().clearSelection();
-    backlogCombo.setItems(availableBacklogs);
-
+    backlogCombo.setItems(mainApp.getBacklogs());
+    burndownChart.setMinWidth(stage.getWidth()-200);
+    burndownChart.setMinHeight(stage.getHeight()-200);
 
     backlogCombo.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldBacklog, newBacklog) -> {
@@ -84,6 +87,24 @@ public class BurndownController {
         }
     );
 
+    // Resizes the linecharts height when the main stage is resized.
+    stage.heightProperty().addListener(new ChangeListener<Number>() {
+      @Override
+      public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+                          Number newValue) {
+        burndownChart.setMinHeight(stage.getHeight() - 200);
+      }
+    });
+
+    // Resizes the linecharts width when the main stage is resized.
+    stage.widthProperty().addListener(new ChangeListener<Number>() {
+      @Override
+      public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+                          Number newValue) {
+        burndownChart.setMinWidth(stage.getWidth() - 210);
+      }
+    });
+
     sprintCombo.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldSprint, newSprint) -> {
           if (newSprint != null) {
@@ -98,8 +119,30 @@ public class BurndownController {
         }
     );
     XYChart.Series<Integer, LocalDate> x = new XYChart.Series<>();
+  }
 
+  public void refreshComboBoxes() {
+    Backlog backlog = backlogCombo.getValue();
+    backlogCombo.getSelectionModel().clearSelection();
+    Sprint sprint = sprintCombo.getValue();
+    sprintCombo.getSelectionModel().clearSelection();
 
+    //initialiseLists();
+
+    sprintCombo.setDisable(true);
+
+    if (mainApp.getBacklogs().contains(backlog)) {
+      backlogCombo.setValue(backlog);
+
+      if(availableSprints.contains(sprint)){
+        sprintCombo.setValue(sprint);
+      } else {
+        sprintCombo.setValue(null);
+      }
+    } else {
+      backlogCombo.setValue(null);
+      sprintCombo.setValue(null);
+    }
   }
 
 

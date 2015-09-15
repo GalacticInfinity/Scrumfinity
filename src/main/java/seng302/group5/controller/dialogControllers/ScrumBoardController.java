@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -85,6 +87,24 @@ public class ScrumBoardController {
           }
         }
     );
+
+    // Resizes the linecharts height when the main stage is resized.
+    stage.heightProperty().addListener(new ChangeListener<Number>() {
+      @Override
+      public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+                          Number newValue) {
+        storiesBox.setMinHeight(stage.getHeight() - 200);
+      }
+    });
+
+    // Resizes the linecharts width when the main stage is resized.
+    stage.widthProperty().addListener(new ChangeListener<Number>() {
+      @Override
+      public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+                          Number newValue) {
+        storiesBox.setMinWidth(stage.getWidth() - 210);
+      }
+    });
 
     sprintCombo.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldSprint, newSprint) -> {

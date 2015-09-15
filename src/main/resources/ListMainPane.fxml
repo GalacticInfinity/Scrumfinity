@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.*?>
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.chart.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.image.*?>
@@ -66,11 +68,14 @@
                 </Tab>
                   <Tab text="Burndown Chart">
                     <content>
-                      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                      <AnchorPane minHeight="388" minWidth="600" prefWidth="595.0">
                            <children>
                               <fx:include fx:id="burndown" source="Burndown.fxml" />
                            </children>
-                        </AnchorPane>
+                           <effect>
+                              <Blend />
+                           </effect>
+                      </AnchorPane>
                     </content>
                   </Tab>
               </tabs>
