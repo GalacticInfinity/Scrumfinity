@@ -1006,6 +1006,18 @@ public class UndoRedoHandlerTest {
     undoRedoHandler.newAction(undoRedoObject);
   }
 
+  private void deleteNewestEffort() {
+    task.removeEffort(effort);
+
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+    undoRedoObject.setAction(Action.EFFORT_DELETE);
+    undoRedoObject.setAgileItem(effort);
+    undoRedoObject.addDatum(new Effort(effort));
+    undoRedoObject.addDatum(task);
+
+    undoRedoHandler.newAction(undoRedoObject);
+  }
+
   private void createAndEditStoryDependencies() {
     dependantStory1 = new Story("story1", "story1", "s1desc", new Person());
     dependantStory2 = new Story("story2", "story2", "s2desc", new Person());
@@ -3834,11 +3846,12 @@ public class UndoRedoHandlerTest {
 
   @Test
   public void testEffortCreateUndo() throws Exception {
+    List<Task> tasks;
+
     assertTrue(mainApp.getPeople().isEmpty());
     assertTrue(mainApp.getStories().isEmpty());
     assertTrue(undoRedoHandler.getUndoStack().empty());
 
-    List<Task> tasks;
     newPerson();
     newStory();
     newTask();
@@ -3865,12 +3878,12 @@ public class UndoRedoHandlerTest {
   public void testEffortCreateRedo() throws Exception {
     Effort before;
     Effort after;
+    List<Task> tasks;
 
     assertTrue(mainApp.getPeople().isEmpty());
     assertTrue(mainApp.getStories().isEmpty());
     assertTrue(undoRedoHandler.getRedoStack().empty());
 
-    List<Task> tasks;
     newPerson();
     newStory();
     newTask();
@@ -3903,6 +3916,102 @@ public class UndoRedoHandlerTest {
     assertNotNull(after);
 
     assertSame(before, after);
+  }
+
+  @Test
+  public void testEffortDeleteUndo() throws Exception {
+    Effort before;
+    Effort after;
+    List<Task> tasks;
+
+    assertTrue(mainApp.getPeople().isEmpty());
+    assertTrue(mainApp.getStories().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+
+    newPerson();
+    newStory();
+    newTask();
+    newEffort();
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(1, mainApp.getStories().size());
+    tasks = mainApp.getStories().get(0).getTasks();
+    assertEquals(1, tasks.size());
+    assertEquals(1, tasks.get(0).getEfforts().size());
+    assertEquals(4, undoRedoHandler.getUndoStack().size());
+    before = tasks.get(0).getEfforts().get(0);
+    assertNotNull(before);
+
+    deleteNewestEffort();
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(1, mainApp.getStories().size());
+    tasks = mainApp.getStories().get(0).getTasks();
+    assertEquals(1, tasks.size());
+    assertTrue(tasks.get(0).getEfforts().isEmpty());
+    assertEquals(5, undoRedoHandler.getUndoStack().size());
+
+    undoRedoHandler.undo();
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(1, mainApp.getStories().size());
+    tasks = mainApp.getStories().get(0).getTasks();
+    assertEquals(1, tasks.size());
+    assertEquals(1, tasks.get(0).getEfforts().size());
+    assertEquals(4, undoRedoHandler.getUndoStack().size());
+    after = tasks.get(0).getEfforts().get(0);
+    assertNotNull(after);
+
+    assertSame(before, after);
+  }
+
+  @Test
+  public void testEffortDeleteRedo() throws Exception {
+    Effort before;
+    Effort after;
+    List<Task> tasks;
+
+    assertTrue(mainApp.getPeople().isEmpty());
+    assertTrue(mainApp.getStories().isEmpty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    newPerson();
+    newStory();
+    newTask();
+    newEffort();
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(1, mainApp.getStories().size());
+    tasks = mainApp.getStories().get(0).getTasks();
+    assertEquals(1, tasks.size());
+    assertEquals(1, tasks.get(0).getEfforts().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+    before = tasks.get(0).getEfforts().get(0);
+    assertNotNull(before);
+
+    deleteNewestEffort();
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(1, mainApp.getStories().size());
+    tasks = mainApp.getStories().get(0).getTasks();
+    assertEquals(1, tasks.size());
+    assertTrue(tasks.get(0).getEfforts().isEmpty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    undoRedoHandler.undo();
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(1, mainApp.getStories().size());
+    tasks = mainApp.getStories().get(0).getTasks();
+    assertEquals(1, tasks.size());
+    assertEquals(1, tasks.get(0).getEfforts().size());
+    assertEquals(1, undoRedoHandler.getRedoStack().size());
+    after = tasks.get(0).getEfforts().get(0);
+    assertNotNull(after);
+
+    assertSame(before, after);
+
+    undoRedoHandler.redo();
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(1, mainApp.getStories().size());
+    tasks = mainApp.getStories().get(0).getTasks();
+    assertEquals(1, tasks.size());
+    assertTrue(tasks.get(0).getEfforts().isEmpty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
   }
 
   @Test
