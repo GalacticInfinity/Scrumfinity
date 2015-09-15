@@ -28,11 +28,7 @@
                               <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" text="In Progress" HBox.hgrow="ALWAYS" />
                            </children>
                         </HBox>
-                        <ListView fx:id="inProgressList" prefWidth="150.0" VBox.vgrow="ALWAYS">
-                           <cursor>
-                              <Cursor fx:constant="DEFAULT" />
-                           </cursor>
-                        </ListView>
+                        <VBox fx:id="inProgressList" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS" />
                      </children>
                   </VBox>
                   <VBox HBox.hgrow="ALWAYS">
@@ -42,11 +38,7 @@
                               <Label alignment="CENTER" prefHeight="15.0" text="Verify" HBox.hgrow="ALWAYS" />
                            </children>
                         </HBox>
-                        <ListView fx:id="verifyList" prefWidth="150.0" VBox.vgrow="ALWAYS">
-                           <cursor>
-                              <Cursor fx:constant="DEFAULT" />
-                           </cursor>
-                        </ListView>
+                        <VBox fx:id="verifyList" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS" />
                      </children>
                   </VBox>
                   <VBox HBox.hgrow="ALWAYS">
@@ -56,11 +48,7 @@
                               <Label alignment="CENTER" prefHeight="15.0" text="Done" HBox.hgrow="ALWAYS" />
                            </children>
                         </HBox>
-                        <ListView fx:id="doneList" prefWidth="150.0" VBox.vgrow="ALWAYS">
-                           <cursor>
-                              <Cursor fx:constant="DEFAULT" />
-                           </cursor>
-                        </ListView>
+                        <VBox fx:id="doneList" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS" />
                      </children>
                   </VBox>
                </children>

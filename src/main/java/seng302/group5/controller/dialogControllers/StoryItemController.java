@@ -24,9 +24,9 @@ import seng302.group5.model.Task;
 public class StoryItemController {
 
   @FXML private VBox notStartedList;
-  @FXML private ListView<Task> inProgressList;
-  @FXML private ListView<Task> verifyList;
-  @FXML private ListView<Task> doneList;
+  @FXML private VBox inProgressList;
+  @FXML private VBox verifyList;
+  @FXML private VBox doneList;
 
   @FXML private AnchorPane storyAnchor;
   @FXML private TitledPane storyPane;
@@ -67,18 +67,21 @@ public class StoryItemController {
           break;
         case IN_PROGRESS:
           inProgressTasks.add(task);
+          addWithDragging(inProgressList, new Label(task.getLabel()));
           break;
         case VERIFY:
           verifyTasks.add(task);
+          addWithDragging(verifyList, new Label(task.getLabel()));
           break;
         case DONE:
           doneTasks.add(task);
+          addWithDragging(doneList, new Label(task.getLabel()));
           break;
       }
-    }
+    }/*
     inProgressList.setItems(inProgressTasks);
     verifyList.setItems(verifyTasks);
-    doneList.setItems(doneTasks);
+    doneList.setItems(doneTasks);*/
 
     /**
      * Testing stuff
@@ -89,6 +92,30 @@ public class StoryItemController {
       public void handle(MouseDragEvent event) {
         int indexOfDraggingNode = notStartedList.getChildren().indexOf(event.getGestureSource());
         rotateNodes(notStartedList, indexOfDraggingNode, notStartedList.getChildren().size() - 1);
+      }
+    });
+
+    inProgressList.setOnMouseDragReleased(new EventHandler<MouseDragEvent>() {
+      @Override
+      public void handle(MouseDragEvent event) {
+        int indexOfDraggingNode = inProgressList.getChildren().indexOf(event.getGestureSource());
+        rotateNodes(inProgressList, indexOfDraggingNode, inProgressList.getChildren().size() - 1);
+      }
+    });
+
+    verifyList.setOnMouseDragReleased(new EventHandler<MouseDragEvent>() {
+      @Override
+      public void handle(MouseDragEvent event) {
+        int indexOfDraggingNode = verifyList.getChildren().indexOf(event.getGestureSource());
+        rotateNodes(verifyList, indexOfDraggingNode, verifyList.getChildren().size() - 1);
+      }
+    });
+
+    doneList.setOnMouseDragReleased(new EventHandler<MouseDragEvent>() {
+      @Override
+      public void handle(MouseDragEvent event) {
+        int indexOfDraggingNode = doneList.getChildren().indexOf(event.getGestureSource());
+        rotateNodes(doneList, indexOfDraggingNode, doneList.getChildren().size() - 1);
       }
     });
   }
@@ -124,9 +151,27 @@ public class StoryItemController {
       @Override
       public void handle(MouseDragEvent event) {
         label.setStyle("");
+        int indexOfDropTarget = -1;
+        Label sourceLbl = (Label) event.getGestureSource();
+        if (notStartedList.getChildren().contains(sourceLbl)) {
+          notStartedList.getChildren().remove(sourceLbl);
+          indexOfDropTarget = notStartedList.getChildren().indexOf(label);
+        } else if (inProgressList.getChildren().contains(sourceLbl)) {
+          inProgressList.getChildren().remove(sourceLbl);
+          indexOfDropTarget = inProgressList.getChildren().indexOf(label);
+        } else if (verifyList.getChildren().contains(sourceLbl)) {
+          verifyList.getChildren().remove(sourceLbl);
+          indexOfDropTarget = verifyList.getChildren().indexOf(label);
+        } else if (doneList.getChildren().contains(sourceLbl)) {
+          doneList.getChildren().remove(sourceLbl);
+          indexOfDropTarget = doneList.getChildren().indexOf(label);
+        }
+        addWithDragging(root, sourceLbl);
+        // Might need at some point
         int indexOfDraggingNode = root.getChildren().indexOf(event.getGestureSource());
-        int indexOfDropTarget = root.getChildren().indexOf(label);
-        rotateNodes(root, indexOfDraggingNode, indexOfDropTarget);
+        if (indexOfDropTarget != -1) {
+          insertNode(root, indexOfDropTarget);
+        }
         event.consume();
       }
     });
@@ -140,12 +185,21 @@ public class StoryItemController {
    * @param indexOfDraggingNode
    * @param indexOfDropTarget
    */
-  private void rotateNodes(final VBox root, final int indexOfDraggingNode,
-                           final int indexOfDropTarget) {
+  private void rotateNodes(VBox root, int indexOfDraggingNode,
+                           int indexOfDropTarget) {
     if (indexOfDraggingNode >= 0 && indexOfDropTarget >= 0) {
       final Node node = root.getChildren().remove(indexOfDraggingNode);
       root.getChildren().add(indexOfDropTarget, node);
     }
+  }
+
+  /**
+   * TODO Stuff here
+   * @param root
+   * @param indexOfDropTarget
+   */
+  private void insertNode(VBox root, int indexOfDropTarget) {
+    root.getChildren().add(indexOfDropTarget, root);
   }
 
   public Story getStory() {
