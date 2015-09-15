@@ -1,6 +1,9 @@
 package seng302.group5.controller.dialogControllers;
 
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -38,6 +41,7 @@ public class PersonDialogController {
   @FXML private ListView<Skill> skillsList;
   @FXML private ListView<Skill> personSkillList;
   @FXML private HBox btnContainer;
+  @FXML private Button btnNewSkill;
 
   private Main mainApp;
   private Stage thisStage;
@@ -432,6 +436,25 @@ public class PersonDialogController {
       super.updateItem(item, empty);
 
       setText(item == null ? "" : item.getLabel());
+    }
+  }
+
+  /**
+   * A button which when clicked can add a new skill to the system.
+   * Also adds to undo/redo stack so creation is undoable
+   * @param event Button click
+   */
+  @FXML
+  protected void addNewSkill(ActionEvent event) {
+    mainApp.showSkillDialog(CreateOrEdit.CREATE);
+    Set<Skill> currentSkills = new HashSet<>();
+    for (Skill skill : selectedSkills) {
+      currentSkills.add(skill);
+    }
+    for (Skill skill : mainApp.getSkills()) {
+      if (!availableSkills.contains(skill) && !currentSkills.contains(skill)) {
+        availableSkills.add(skill);
+      }
     }
   }
 }

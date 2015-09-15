@@ -2,6 +2,8 @@ package seng302.group5.controller.dialogControllers;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -58,7 +60,7 @@ public class TeamDialogController {
   @FXML private TextArea teamDescriptionField;
   @FXML private Button btnConfirm;
   @FXML private HBox btnContainer;
-
+  @FXML private Button btnNewMember;
   /**
    * Setup the team dialog controller
    *
@@ -580,6 +582,26 @@ public class TeamDialogController {
       super.updateItem(item, empty);
 
       setText(item == null ? "" : item.getLabel());
+    }
+  }
+
+  /**
+   * A button which when clicked can add a member to the system.
+   * Also adds to undo/redo stack so creation is undoable
+   * @param event Button click
+   */
+  @FXML
+  protected void addNewMember(ActionEvent event) {
+    mainApp.showPersonDialog(CreateOrEdit.CREATE);
+    Set<Person> currentMembers = new HashSet<>();
+    for (PersonRole personRole : selectedMembers) {
+      currentMembers.add(personRole.getPerson());
+    }
+    for (Person person : mainApp.getPeople()) {
+      if (!person.isInTeam() && !currentMembers.contains(person) &&
+          !availableMembers.contains(person)) {
+        availableMembers.add(person);
+      }
     }
   }
 }
