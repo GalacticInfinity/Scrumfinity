@@ -39,6 +39,7 @@ public class EffortDialogController {
   private ObservableList<Person> allocatedPeople;
 
   private Task task;
+  private TaskDialogController taskDC;
   private Stage thisStage;
   private CreateOrEdit createOrEdit;
   private Effort effort;
@@ -58,6 +59,7 @@ public class EffortDialogController {
   public void setupController(Task task, List<Person> allocatedPeople,
                               Stage thisStage, CreateOrEdit createOrEdit, Effort effort) {
     this.task = task;
+    this.taskDC = taskDC;
     this.thisStage = thisStage;
     this.createOrEdit = createOrEdit;
 
@@ -108,12 +110,6 @@ public class EffortDialogController {
    */
   @FXML
   private void btnConfirmClick(ActionEvent event) {
-    System.out.println(teamMemberCombo.getSelectionModel().getSelectedItem());
-    System.out.println(dateField.getValue());
-    System.out.println(timeField.getText());
-    System.out.println(spentEffortField.getText());
-    System.out.println(commentField.getText().trim());
-
     StringBuilder errors = new StringBuilder();
     int noErrors = 0;
 
@@ -171,7 +167,6 @@ public class EffortDialogController {
         // todo
       }
 //      generateUndoRedoObject(); // todo
-      System.out.println(task.getEfforts());
       thisStage.close();
     }
   }

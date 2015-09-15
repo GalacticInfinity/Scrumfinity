@@ -6,6 +6,10 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.bind.SchemaOutputResolver;
+
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,6 +25,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -28,8 +33,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
+import seng302.group5.model.Effort;
 import seng302.group5.model.Person;
 import seng302.group5.model.Status;
 import seng302.group5.model.Task;
@@ -222,6 +229,8 @@ public class TaskDialogController {
     statusComboBox.getSelectionModel().select(0);
 
     allocatedPeopleList.setCellFactory(listView -> new PersonEffortCell());
+
+    effortTable.setItems(task.getEfforts());
   }
 
   /**

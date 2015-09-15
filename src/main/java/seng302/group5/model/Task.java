@@ -6,6 +6,9 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 /**
  * The Task class is a way to log and store effort spent by people on a story.
  * Contains a list of people assigned, and also a map between people assigned and
@@ -21,7 +24,7 @@ public class Task implements AgileItem, Comparable<Task> {
   private Status status;
   private List<Person> assignedPeople;
   private Map<Person, Integer> spentEffort;
-  private ArrayList<Effort> efforts;
+  private ObservableList<Effort> efforts;
 
 //TODO Come back once logging effort is decided and modify the spenteffort to show the result of each effort for each person.
 
@@ -37,7 +40,7 @@ public class Task implements AgileItem, Comparable<Task> {
     this.status = Status.NOT_STARTED;
     assignedPeople = new ArrayList<>();
     spentEffort = new IdentityHashMap<>();
-    this.efforts = new ArrayList<>();
+    this.efforts = FXCollections.observableArrayList();
   }
 
   public Task(String label, String description, Integer estimation, Status status,
@@ -49,7 +52,7 @@ public class Task implements AgileItem, Comparable<Task> {
     this.impediments = "";
     this.assignedPeople = new ArrayList<>();
     this.spentEffort = new IdentityHashMap<>();
-    this.efforts = new ArrayList<>();
+    this.efforts = FXCollections.observableArrayList();
     addAllTaskPeople(persons);
   }
 
@@ -67,7 +70,7 @@ public class Task implements AgileItem, Comparable<Task> {
     assignedPeople.addAll(clone.getTaskPeople());
     spentEffort = new IdentityHashMap<>();
     spentEffort.putAll(clone.getSpentEffort());
-    efforts = new ArrayList<>();
+    efforts = FXCollections.observableArrayList();
     efforts = clone.getEfforts();
   }
 
@@ -105,7 +108,9 @@ public class Task implements AgileItem, Comparable<Task> {
     this.impediments = impediments;
   }
 
-  public ArrayList<Effort> getEfforts() { return efforts;}
+  public ObservableList<Effort> getEfforts() {
+    return efforts;
+  }
 
   public void addEffort(Effort effort) {
     this.efforts.add(effort);
