@@ -3851,9 +3851,6 @@ public class UndoRedoHandlerTest {
     assertEquals(4, undoRedoHandler.getUndoStack().size());
 
     undoRedoHandler.undo();
-    assertEquals(1, mainApp.getPeople().size());
-    assertEquals(1, mainApp.getStories().size());
-    assertTrue(mainApp.getStories().get(0).getTasks().isEmpty());
 
     assertEquals(1, mainApp.getPeople().size());
     assertEquals(1, mainApp.getStories().size());
@@ -3877,6 +3874,7 @@ public class UndoRedoHandlerTest {
     newPerson();
     newStory();
     newTask();
+    newEffort();
     assertEquals(1, mainApp.getPeople().size());
     assertEquals(1, mainApp.getStories().size());
     tasks = mainApp.getStories().get(0).getTasks();
