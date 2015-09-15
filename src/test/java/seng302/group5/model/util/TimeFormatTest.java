@@ -125,7 +125,7 @@ public class TimeFormatTest {
 
   @Test
   public void testTimeFormatValidAM() {
-    String inputString = "1:3";
+    String inputString = "1:03";
     LocalTime result = TimeFormat.parseLocalTime(inputString);
     int hours = result.getHour();
     int minutes = result.getMinute();
@@ -160,6 +160,27 @@ public class TimeFormatTest {
   @Test
   public void testTimeFormatMinutesOnly() {
     String inputString = ":24";
+    LocalTime result = TimeFormat.parseLocalTime(inputString);
+    assertNull(result);
+  }
+
+  @Test
+  public void testTimeFormatSingleMinute() {
+    String inputString = "1:1";
+    LocalTime result = TimeFormat.parseLocalTime(inputString);
+    assertNull(result);
+  }
+
+  @Test
+  public void testTimeFormatInvalidHours() {
+    String inputString = "24:00";
+    LocalTime result = TimeFormat.parseLocalTime(inputString);
+    assertNull(result);
+  }
+
+  @Test
+  public void testTimeFormatNegativeHours() {
+    String inputString = "-2:00";
     LocalTime result = TimeFormat.parseLocalTime(inputString);
     assertNull(result);
   }

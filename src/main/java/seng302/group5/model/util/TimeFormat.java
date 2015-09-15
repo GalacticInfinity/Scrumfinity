@@ -65,11 +65,38 @@ public class TimeFormat {
     return result;
   }
 
+  /**
+   * Parse a string in the format h:mm or hh:mm into a LocalTime object.
+   *
+   * @param inputString Input string representation of time.
+   * @return Converted LocalTime object from the string, or null if the input is invalid.
+   */
   public static LocalTime parseLocalTime(String inputString) {
-    return null;
+    String timeRegex = "[0-9]+:[0-9][0-9]";
+    inputString = inputString.trim();
+    LocalTime result = null;
+    if (inputString.matches(timeRegex)) {
+      String segments[] = inputString.split(":");
+      int hours = Integer.parseInt(segments[0]);
+      int minutes = Integer.parseInt(segments[1]);
+      if (hours < 24) {
+        result = LocalTime.of(hours, minutes);
+      }
+    }
+    return result;
   }
 
+  /**
+   * Parse a LocalTime object into a string in the 24 hour format hh:mm, but h:mm if hours is a
+   * single digit.
+   * Preconditions: The LocalTime object is valid and non-null.
+   *
+   * @param localTime LocalTime object to convert.
+   * @return String representation of time.
+   */
   public static String parseTimeString(LocalTime localTime) {
-    return "";
+    int hours = localTime.getHour();
+    int minutes = localTime.getMinute();
+    return String.format("%d:%02d", hours, minutes);
   }
 }
