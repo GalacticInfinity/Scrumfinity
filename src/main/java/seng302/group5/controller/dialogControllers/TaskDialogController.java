@@ -99,6 +99,7 @@ public class TaskDialogController {
                               Stage thisStage, CreateOrEdit createOrEdit, Task task) {
     this.taskable = taskable;
     this.thisStage = thisStage;
+    this.createOrEdit = createOrEdit;
 
     if (task != null) {
       this.task = task;
@@ -133,7 +134,6 @@ public class TaskDialogController {
 
       btnConfirm.setDisable(true);
     }
-    this.createOrEdit = createOrEdit;
 
     btnConfirm.setDefaultButton(true);
     thisStage.setResizable(false);
@@ -208,6 +208,7 @@ public class TaskDialogController {
     if (team != null) {
       availablePeople.addAll(team.getTeamMembers());
     }
+
     if (task != null && createOrEdit == CreateOrEdit.EDIT) {
       for (Person person : task.getTaskPeople()) {
         int effort = task.getSpentEffort().get(person);
