@@ -6,13 +6,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<SplitPane dividerPositions="0.6339410939691444" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="496.0" prefWidth="715.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.TaskDialogController">
-  <items>
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="494.0" prefWidth="531.0">
+<VBox prefHeight="515.0" prefWidth="705.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.TaskDialogController">
+   <children>
+      <HBox prefHeight="100.0" prefWidth="200.0">
          <children>
-            <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="490.0" prefWidth="440.0" stylesheets="@font.css">
+            <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@font.css">
                <children>
-                  <HBox alignment="CENTER_LEFT" prefHeight="39.0" prefWidth="429.0" spacing="10.0">
+                  <HBox alignment="CENTER_LEFT" spacing="10.0">
                      <children>
                         <Label prefWidth="105.0" text="Task Label:*">
                            <font>
@@ -23,20 +23,26 @@
                            <tooltip>
                               <Tooltip text="Label should be 20 characters or less or application may not behave as expected." />
                            </tooltip>
+                           <HBox.margin>
+                              <Insets top="5.0" />
+                           </HBox.margin>
                         </TextField>
                      </children>
                   </HBox>
-                  <HBox prefHeight="100.0" prefWidth="429.0" spacing="10.0">
+                  <HBox spacing="10.0">
                      <children>
                         <Label prefWidth="105.0" text="Description:" wrapText="true">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <TextArea fx:id="descriptionField" prefWidth="310.0" promptText="Short description of task" wrapText="true" />
+                        <TextArea fx:id="descriptionField" prefHeight="100.0" prefWidth="200.0" promptText="Short description of task" wrapText="true" />
                      </children>
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
                   </HBox>
-                  <HBox alignment="CENTER_LEFT" prefHeight="39.0" prefWidth="429.0" spacing="10.0">
+                  <HBox alignment="CENTER_LEFT" spacing="10.0">
                      <children>
                         <Label prefWidth="105.0" text="Estimate:">
                            <font>
@@ -45,8 +51,11 @@
                         </Label>
                         <TextField fx:id="estimateField" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="95.0" promptText="e.g. 1h30m" />
                      </children>
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
                   </HBox>
-                  <HBox alignment="CENTER_LEFT" prefHeight="39.0" prefWidth="429.0" spacing="10.0">
+                  <HBox alignment="CENTER_LEFT" spacing="10.0">
                      <children>
                         <Label prefWidth="105.0" text="Impediments:">
                            <font>
@@ -55,8 +64,11 @@
                         </Label>
                         <TextField fx:id="impedimentsField" alignment="TOP_LEFT" />
                      </children>
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
                   </HBox>
-                  <HBox alignment="CENTER_LEFT" prefHeight="39.0" prefWidth="429.0" spacing="10.0">
+                  <HBox alignment="CENTER_LEFT" spacing="10.0">
                      <children>
                         <Label prefWidth="105.0" text="Status:*">
                            <font>
@@ -65,70 +77,8 @@
                         </Label>
                         <ComboBox fx:id="statusComboBox" prefHeight="25.0" prefWidth="172.0" promptText="Available Statuses" />
                      </children>
-                  </HBox>
-                  <HBox alignment="CENTER_LEFT" prefHeight="188.0" prefWidth="426.0" spacing="10.0">
-                     <children>
-                        <VBox prefHeight="232.0" prefWidth="165.0">
-                           <children>
-                              <Label prefHeight="25.0" prefWidth="173.0" text="Available People:">
-                                 <font>
-                                    <Font size="15.0" />
-                                 </font>
-                              </Label>
-                              <ListView fx:id="availablePeopleList" prefHeight="160.0" prefWidth="201.0" />
-                           </children>
-                        </VBox>
-                        <VBox alignment="CENTER" prefHeight="232.0" prefWidth="61.0">
-                           <children>
-                              <Button fx:id="btnAddPerson" mnemonicParsing="false" onAction="#btnAddPersonClick" prefWidth="60.0" text="→">
-                                 <VBox.margin>
-                                    <Insets bottom="20.0" />
-                                 </VBox.margin>
-                              </Button>
-                              <Button fx:id="btnRemovePerson" mnemonicParsing="false" onAction="#btnRemovePersonClick" prefWidth="60.0" text="←">
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
-                              </Button>
-                           </children>
-                        </VBox>
-                        <VBox prefHeight="232.0" prefWidth="215.0">
-                           <children>
-                              <Label prefHeight="25.0" text="Allocated People:">
-                                 <font>
-                                    <Font size="15.0" />
-                                 </font>
-                              </Label>
-                              <ListView fx:id="allocatedPeopleList" prefHeight="160.0" prefWidth="179.0">
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
-                              </ListView>
-                           </children>
-                           <padding>
-                              <Insets right="4.0" />
-                           </padding>
-                        </VBox>
-                     </children>
                      <VBox.margin>
-                        <Insets top="4.0" />
-                     </VBox.margin>
-                  </HBox>
-                  <HBox fx:id="btnContainer" alignment="BOTTOM_RIGHT" prefHeight="25.0" prefWidth="429.0" spacing="10.0">
-                     <children>
-                        <Label prefHeight="25.0" prefWidth="249.0" text="* Fields cannot be empty.">
-                           <font>
-                              <Font name="System Italic" size="13.0" />
-                           </font>
-                        </Label>
-                        <Button fx:id="btnConfirm" mnemonicParsing="false" onAction="#btnConfirmClick" prefHeight="25.0" prefWidth="85.0" text="Save" />
-                        <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#btnCancelClick" prefHeight="25.0" prefWidth="85.0" text="Cancel" />
-                     </children>
-                     <padding>
-                        <Insets bottom="5.0" right="5.0" />
-                     </padding>
-                     <VBox.margin>
-                        <Insets top="15.0" />
+                        <Insets top="5.0" />
                      </VBox.margin>
                   </HBox>
                </children>
@@ -136,12 +86,61 @@
                   <Insets left="5.0" />
                </padding>
             </VBox>
-         </children></AnchorPane>
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-         <children>
-            <HBox prefHeight="100.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <HBox alignment="CENTER_LEFT" spacing="10.0">
                <children>
-                  <Label prefHeight="30.0" text="Logged Effort:">
+                  <VBox>
+                     <children>
+                        <Label prefHeight="25.0" text="Available People:">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <ListView fx:id="availablePeopleList" prefWidth="150.0" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER">
+                     <children>
+                        <Button fx:id="btnAddPerson" mnemonicParsing="false" onAction="#btnAddPersonClick" prefWidth="60.0" text="→">
+                           <VBox.margin>
+                              <Insets bottom="20.0" />
+                           </VBox.margin>
+                        </Button>
+                        <Button fx:id="btnRemovePerson" mnemonicParsing="false" onAction="#btnRemovePersonClick" prefWidth="60.0" text="←">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </Button>
+                     </children>
+                  </VBox>
+                  <VBox>
+                     <children>
+                        <Label prefHeight="25.0" text="Allocated People:">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <ListView fx:id="allocatedPeopleList" prefWidth="150.0">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </ListView>
+                     </children>
+                  </VBox>
+               </children>
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </HBox>
+         </children>
+         <VBox.margin>
+            <Insets left="5.0" right="5.0" />
+         </VBox.margin>
+      </HBox>
+      <VBox>
+         <children>
+            <HBox minHeight="30.0" prefHeight="30.0">
+               <children>
+                  <Label prefHeight="30.0" prefWidth="200.0" text="Logged Effort:">
                      <font>
                         <Font size="15.0" />
                      </font>
@@ -150,29 +149,61 @@
                      </HBox.margin>
                   </Label>
                   <Button fx:id="btnAddEffort" mnemonicParsing="false" onAction="#btnAddEffort" prefHeight="30.0" prefWidth="30.0" text="+">
-                     <HBox.margin>
-                        <Insets left="99.0" />
-                     </HBox.margin>
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
+                     <HBox.margin>
+                        <Insets left="438.0" />
+                     </HBox.margin>
                   </Button>
                   <Button fx:id="btnRemoveEffort" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="-">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
                   </Button>
                </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
             </HBox>
-            <Accordion layoutY="-1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="31.0">
-              <panes>
-                <TitledPane animated="false">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="338.0" prefWidth="200.0" />
-                  </content>
-                </TitledPane>
-              </panes>
-            </Accordion>
-         </children></AnchorPane>
-  </items>
-</SplitPane>
+            <TableView fx:id="effortTable" prefHeight="200.0">
+               <columns>
+                  <TableColumn fx:id="dateTimeColumn" prefWidth="121.0" text="Date &amp; Time" />
+                  <TableColumn fx:id="userColumn" prefWidth="172.0" text="User" />
+                  <TableColumn fx:id="spentEffortColumn" prefWidth="74.0" text="Spent Effort" />
+                  <TableColumn fx:id="commentColumn" prefWidth="355.0" text="Comments" />
+               </columns>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </TableView>
+         </children>
+         <VBox.margin>
+            <Insets left="5.0" right="5.0" top="15.0" />
+         </VBox.margin>
+      </VBox>
+      <HBox fx:id="btnContainer" alignment="BOTTOM_RIGHT" prefHeight="25.0" prefWidth="429.0" spacing="10.0">
+         <children>
+            <Label prefHeight="25.0" prefWidth="559.0" text="* Fields cannot be empty.">
+               <font>
+                  <Font name="System Italic" size="13.0" />
+               </font>
+            </Label>
+            <Button fx:id="btnConfirm" mnemonicParsing="false" onAction="#btnConfirmClick" prefHeight="25.0" prefWidth="85.0" text="Save" />
+            <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#btnCancelClick" prefHeight="25.0" prefWidth="85.0" text="Cancel">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin></Button>
+         </children>
+         <padding>
+            <Insets bottom="5.0" right="5.0" />
+         </padding>
+         <VBox.margin>
+            <Insets left="5.0" right="5.0" top="15.0" />
+         </VBox.margin>
+      </HBox>
+   </children>
+</VBox>
