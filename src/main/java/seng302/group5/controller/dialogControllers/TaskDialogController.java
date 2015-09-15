@@ -113,7 +113,7 @@ public class TaskDialogController {
 
       labelField.setText(task.getLabel());
       descriptionField.setText(task.getTaskDescription());
-      estimateField.setText(TimeFormat.parseTime(task.getTaskEstimation()));
+      estimateField.setText(TimeFormat.parseDuration(task.getTaskEstimation()));
       impedimentsField.setText(task.getImpediments());
       statusComboBox.setValue(Status.getStatusString(task.getStatus()));
 
@@ -197,10 +197,10 @@ public class TaskDialogController {
     if (task != null && createOrEdit == CreateOrEdit.EDIT) {
       for (Person person : task.getTaskPeople()) {
         int effort = task.getSpentEffort().get(person);
-        PersonEffort personEffort = new PersonEffort(person, TimeFormat.parseTime(effort));
+        PersonEffort personEffort = new PersonEffort(person, TimeFormat.parseDuration(effort));
         allocatedPeople.add(personEffort);
         availablePeople.remove(person);
-        originalPeople.add(new PersonEffort(person, TimeFormat.parseTime(effort)));
+        originalPeople.add(new PersonEffort(person, TimeFormat.parseDuration(effort)));
       }
     }
 

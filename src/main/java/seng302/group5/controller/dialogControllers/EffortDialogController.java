@@ -84,9 +84,9 @@ public class EffortDialogController {
       btnConfirm.setText("Log");
 
       dateField.setValue(LocalDate.now());
-      timeField.setText(LocalTime.now().toString());
+      timeField.setText(TimeFormat.parseTimeString(LocalTime.now()));
 
-    } else if (createOrEdit == CreateOrEdit.EDIT) {
+    } else if (createOrEdit == CreateOrEdit.EDIT && effort != null) {
       thisStage.setTitle("Edit Logged Effort");
       btnConfirm.setText("Save");
 
@@ -119,7 +119,7 @@ public class EffortDialogController {
 
     Person teamMember = teamMemberCombo.getValue();
     LocalDate date = dateField.getValue();
-    LocalTime time = LocalTime.parse(timeField.getText()); // todo TimeFormat parser for am/pm etc
+    LocalTime time;
     int spentEffort;
     String comments = commentField.getText().trim();
 
@@ -133,9 +133,10 @@ public class EffortDialogController {
       errors.append(String.format("%s\n", "Date is invalid."));
     }
 
+    time = TimeFormat.parseLocalTime(timeField.getText());
     if (time == null) {
       noErrors++;
-      errors.append(String.format("%s\n", "Time is invalid."));
+      errors.append(String.format("%s\n", "Invalid time format (e.g. 13:45)."));
     }
 
     spentEffort = TimeFormat.parseMinutes(spentEffortField.getText());
