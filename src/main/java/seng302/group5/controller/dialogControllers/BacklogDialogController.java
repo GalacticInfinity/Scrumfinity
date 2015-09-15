@@ -27,7 +27,6 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
-import seng302.group5.controller.mainAppControllers.ListMainPaneController;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Estimate;
 import seng302.group5.model.Person;
@@ -75,6 +74,7 @@ public class BacklogDialogController {
   @FXML private ComboBox<Estimate> backlogScaleCombo;
   @FXML private ComboBox<String> storyEstimateCombo;
   @FXML private Button btnToggleState;
+  @FXML private Button btnNewStory;
 
   private boolean showState = false;
 
@@ -917,6 +917,25 @@ public class BacklogDialogController {
       super.updateItem(item, empty);
 
       setText(item == null ? "" : item.getLabel());
+    }
+  }
+
+  /**
+   * A button which when clicked can add a new story to the system.
+   * Also adds to undo/redo stack so creation is undoable
+   * @param event Button click
+   */
+  @FXML
+  protected void addNewStory(ActionEvent event) {
+    mainApp.showStoryDialog(CreateOrEdit.CREATE);
+    Set<Story> currentStories = new HashSet<>();
+    for (StoryEstimate story : allocatedStories) {
+      currentStories.add(story.getStory());
+    }
+    for (Story story : mainApp.getStories()) {
+      if (!availableStories.contains(story) && !currentStories.contains(story)) {
+        availableStories.add(story);
+      }
     }
   }
 }

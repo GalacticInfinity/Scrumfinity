@@ -3,6 +3,7 @@ package seng302.group5.controller.dialogControllers;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +74,7 @@ public class SprintDialogController {
   @FXML private ListView<Task> taskList;
   @FXML private Label releaseDate;
   @FXML private TextField sprintImpedimentsField;
+  @FXML private Button btnNewStory;
 
   private Main mainApp;
   private Stage thisStage;
@@ -977,6 +979,25 @@ public class SprintDialogController {
           }
         }
       });
+    }
+  }
+
+  /**
+   * A button which when clicked can add a new story to the system.
+   * Also adds to undo/redo stack so creation is undoable
+   * @param event Button click
+   */
+  @FXML
+  protected void addNewStory(ActionEvent event) {
+    mainApp.showStoryDialog(CreateOrEdit.CREATE);
+    Set<Story> currentStories = new HashSet<>();
+    for (Story story : allocatedStories) {
+      currentStories.add(story);
+    }
+    for (Story story : mainApp.getStories()) {
+      if (!availableStories.contains(story) && !currentStories.contains(story)) {
+        availableStories.add(story);
+      }
     }
   }
 }
