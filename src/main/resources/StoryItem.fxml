@@ -86,6 +86,12 @@
                            </children>
                         </HBox>
                      </children>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <padding>
+                        <Insets left="8.0" right="8.0" />
+                     </padding>
                   </VBox>
                </children>
                <cursor>
