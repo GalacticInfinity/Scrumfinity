@@ -7,6 +7,7 @@ import java.util.Stack;
 import seng302.group5.Main;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Backlog;
+import seng302.group5.model.Effort;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
@@ -276,6 +277,18 @@ public class UndoRedoHandler {
 
         case TASK_DELETE:
           handleTaskDelete(undoRedoObject, undoOrRedo);
+          break;
+
+        case EFFORT_CREATE:
+          handleEffortCreate(undoRedoObject, undoOrRedo);
+          break;
+
+        case EFFORT_EDIT:
+          handleEffortEdit(undoRedoObject, undoOrRedo);
+          break;
+
+        case EFFORT_DELETE:
+          handleEffortDelete(undoRedoObject, undoOrRedo);
           break;
 
         case UNDEFINED:
@@ -1185,7 +1198,7 @@ public class UndoRedoHandler {
   private void handleTaskEdit(UndoRedoObject undoRedoObject,
                               UndoOrRedo undoOrRedo) throws Exception {
 
-    // Get the data and ensure it has data for the sprint both before and after
+    // Get the data and ensure it has data for the task both before and after
     ArrayList<AgileItem> data = undoRedoObject.getData();
     if (data.size() < 2) {
       throw new Exception("Can't undo/redo task edit - Less than 2 variables");
@@ -1232,6 +1245,98 @@ public class UndoRedoHandler {
       taskable.addTask(taskToChange);
     } else {
       taskable.removeTask(taskToChange);
+    }
+    mainApp.refreshList(null);
+  }
+
+  /**
+   * Undo or redo an effort create
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo     Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handleEffortCreate(UndoRedoObject undoRedoObject,
+                                  UndoOrRedo undoOrRedo) throws Exception {
+
+    // Get the data and ensure it has data for the effort and its container
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 2) {
+      throw new Exception("Can't undo/redo effort create - Less than 2 variables");
+    }
+
+    Effort effortToChange = (Effort) undoRedoObject.getAgileItem();
+    Effort effortData = (Effort) data.get(0);
+    Task task = (Task) data.get(1);
+
+    // Make the changes and refresh the list
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+      // Delete the effort from its container
+      task.removeEffort(effortToChange);
+    } else {
+      effortToChange.copyValues(effortData);
+      task.addEffort(effortToChange);
+    }
+    mainApp.refreshList(null);
+  }
+
+  /**
+   * Undo or redo an effort edit
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo     Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handleEffortEdit(UndoRedoObject undoRedoObject,
+                                UndoOrRedo undoOrRedo) throws Exception {
+
+    // Get the data and ensure it has data for the effort both before and after
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 2) {
+      throw new Exception("Can't undo/redo effort edit - Less than 2 variables");
+    }
+
+    Effort effortToChange = (Effort) undoRedoObject.getAgileItem();
+    Effort effortData;
+
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+      effortData = (Effort) data.get(0);
+    } else {
+      effortData = (Effort) data.get(1);
+    }
+
+    // Make the changes and refresh the list
+    effortToChange.copyValues(effortData);
+    mainApp.refreshList(null);
+  }
+
+  /**
+   * Undo or redo an effort deletion
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo     Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handleEffortDelete(UndoRedoObject undoRedoObject,
+                                  UndoOrRedo undoOrRedo) throws Exception {
+
+    // Get the data and ensure it has data for the effort
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 2) {
+      throw new Exception("Can't undo/redo effort deletion - Less than 2 variables");
+    }
+
+    Effort effortToChange = (Effort) undoRedoObject.getAgileItem();
+    Effort effortData = (Effort) data.get(0);
+    Task task = (Task) data.get(1);
+
+    // Make the changes and refresh the list
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+      // Create the deleted effort again
+      effortToChange.copyValues(effortData);
+      task.addEffort(effortToChange);
+    } else {
+      task.removeEffort(effortToChange);
     }
     mainApp.refreshList(null);
   }

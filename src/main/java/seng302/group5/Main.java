@@ -853,7 +853,7 @@ public class Main extends Application {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/TaskDialog.fxml"));
-      SplitPane taskDialogLayout = loader.load();
+      VBox taskDialogLayout = loader.load();
 
       TaskDialogController controller = loader.getController();
       Scene taskDialogScene = new Scene(taskDialogLayout);

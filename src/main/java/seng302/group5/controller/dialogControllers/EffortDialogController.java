@@ -39,6 +39,7 @@ public class EffortDialogController {
   private ObservableList<Person> allocatedPeople;
 
   private Task task;
+  private TaskDialogController taskDC;
   private Stage thisStage;
   private CreateOrEdit createOrEdit;
   private Effort effort;
@@ -58,6 +59,7 @@ public class EffortDialogController {
   public void setupController(Task task, List<Person> allocatedPeople,
                               Stage thisStage, CreateOrEdit createOrEdit, Effort effort) {
     this.task = task;
+    this.taskDC = taskDC;
     this.thisStage = thisStage;
     this.createOrEdit = createOrEdit;
 
@@ -90,10 +92,13 @@ public class EffortDialogController {
       thisStage.setTitle("Edit Logged Effort");
       btnConfirm.setText("Save");
 
-      //TODO: Populate fields.
+      //todo verify
       LocalDateTime dateTime = effort.getDateTime();
+      teamMemberCombo.setValue(effort.getWorker());
       dateField.setValue(dateTime.toLocalDate());
-      timeField.setText(dateTime.toLocalTime().toString());
+      timeField.setText(TimeFormat.parseTimeString(dateTime.toLocalTime()));
+      spentEffortField.setText(TimeFormat.parseDuration(effort.getSpentEffort()));
+      commentField.setText(effort.getComments());
     }
 
     this.createOrEdit = createOrEdit;
@@ -108,12 +113,6 @@ public class EffortDialogController {
    */
   @FXML
   private void btnConfirmClick(ActionEvent event) {
-    System.out.println(teamMemberCombo.getSelectionModel().getSelectedItem());
-    System.out.println(dateField.getValue());
-    System.out.println(timeField.getText());
-    System.out.println(spentEffortField.getText());
-    System.out.println(commentField.getText().trim());
-
     StringBuilder errors = new StringBuilder();
     int noErrors = 0;
 
@@ -163,15 +162,18 @@ public class EffortDialogController {
       alert.setContentText(errors.toString());
       alert.showAndWait();
     } else {
+      LocalDateTime dateTime = LocalDateTime.of(date, time);
       if (createOrEdit == CreateOrEdit.CREATE) {
-        LocalDateTime dateTime = LocalDateTime.of(date, time);
         effort = new Effort(teamMember, spentEffort, comments, dateTime);
         task.addEffort(effort);
       } else if (createOrEdit == CreateOrEdit.EDIT) {
-        // todo
+        //todo verify
+        effort.setWorker(teamMember);
+        effort.setSpentEffort(spentEffort);
+        effort.setComments(comments);
+        effort.setDateTime(dateTime);
       }
 //      generateUndoRedoObject(); // todo
-      System.out.println(task.getEfforts());
       thisStage.close();
     }
   }

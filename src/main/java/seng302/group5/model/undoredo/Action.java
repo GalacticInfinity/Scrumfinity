@@ -36,6 +36,9 @@ public enum Action {
   TASK_CREATE,    // Task creation - 1 AgileItem plus 1 Taskable
   TASK_EDIT,      // Task edit - 2 AgileItems
   TASK_DELETE,    // Task delete - 1 AgileItem plus 1 Taskable
+  EFFORT_CREATE,  // Effort creation - 1 AgileItem plus 1 Task
+  EFFORT_EDIT,    // Effort edit - 2 AgileItems
+  EFFORT_DELETE,  // Effort delete - 1 AgileItem plus 1 Task
   COMPOSITE,      // Composite undo/redo instances
   UNDEFINED;      // Undefined action - no AgileItems
 
