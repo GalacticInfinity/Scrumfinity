@@ -9,7 +9,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<TitledPane fx:id="storyPane" animated="false" contentDisplay="RIGHT" text="untitled 1" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.StoryItemController">
+<TitledPane fx:id="storyPane" animated="false" text="untitled 1" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.StoryItemController">
    <content>
       <AnchorPane fx:id="storyAnchor" minHeight="337.0" minWidth="600.0">
          <children>
@@ -86,6 +86,12 @@
                            </children>
                         </HBox>
                      </children>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <padding>
+                        <Insets left="8.0" right="8.0" />
+                     </padding>
                   </VBox>
                </children>
                <cursor>
