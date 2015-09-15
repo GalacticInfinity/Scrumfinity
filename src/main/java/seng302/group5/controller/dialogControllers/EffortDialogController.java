@@ -90,10 +90,13 @@ public class EffortDialogController {
       thisStage.setTitle("Edit Logged Effort");
       btnConfirm.setText("Save");
 
-      //TODO: Populate fields.
+      //todo verify
       LocalDateTime dateTime = effort.getDateTime();
+      teamMemberCombo.setValue(effort.getWorker());
       dateField.setValue(dateTime.toLocalDate());
-      timeField.setText(dateTime.toLocalTime().toString());
+      timeField.setText(TimeFormat.parseTimeString(dateTime.toLocalTime()));
+      spentEffortField.setText(TimeFormat.parseDuration(effort.getSpentEffort()));
+      commentField.setText(effort.getComments());
     }
 
     this.createOrEdit = createOrEdit;
@@ -163,12 +166,16 @@ public class EffortDialogController {
       alert.setContentText(errors.toString());
       alert.showAndWait();
     } else {
+      LocalDateTime dateTime = LocalDateTime.of(date, time);
       if (createOrEdit == CreateOrEdit.CREATE) {
-        LocalDateTime dateTime = LocalDateTime.of(date, time);
         effort = new Effort(teamMember, spentEffort, comments, dateTime);
         task.addEffort(effort);
       } else if (createOrEdit == CreateOrEdit.EDIT) {
-        // todo
+        //todo verify
+        effort.setWorker(teamMember);
+        effort.setSpentEffort(spentEffort);
+        effort.setComments(comments);
+        effort.setDateTime(dateTime);
       }
 //      generateUndoRedoObject(); // todo
       System.out.println(task.getEfforts());

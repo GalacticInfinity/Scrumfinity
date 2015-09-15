@@ -21,7 +21,7 @@ public class Task implements AgileItem, Comparable<Task> {
   private Status status;
   private List<Person> assignedPeople;
   private Map<Person, Integer> spentEffort;
-  private ArrayList<Effort> efforts;
+  private List<Effort> efforts;
 
 //TODO Come back once logging effort is decided and modify the spenteffort to show the result of each effort for each person.
 
@@ -105,10 +105,24 @@ public class Task implements AgileItem, Comparable<Task> {
     this.impediments = impediments;
   }
 
-  public ArrayList<Effort> getEfforts() { return efforts;}
+  public List<Effort> getEfforts() {
+    return Collections.unmodifiableList(efforts);
+  }
+
+  public void removeEffort(Effort effort) {
+    efforts.remove(effort);
+  }
 
   public void addEffort(Effort effort) {
-    this.efforts.add(effort);
+    efforts.add(effort);
+  }
+
+  public void removeAllEfforts() {
+    efforts.clear();
+  }
+
+  public void addAllEfforts(List<Effort> effortList) {
+    efforts.addAll(effortList);
   }
 
   /**
