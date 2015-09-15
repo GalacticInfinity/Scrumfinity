@@ -284,7 +284,7 @@ public class UndoRedoHandler {
           break;
 
         case EFFORT_EDIT:
-          //todo handleTaskEdit(undoRedoObject, undoOrRedo);
+          handleEffortEdit(undoRedoObject, undoOrRedo);
           break;
 
         case EFFORT_DELETE:
@@ -1198,7 +1198,7 @@ public class UndoRedoHandler {
   private void handleTaskEdit(UndoRedoObject undoRedoObject,
                               UndoOrRedo undoOrRedo) throws Exception {
 
-    // Get the data and ensure it has data for the sprint both before and after
+    // Get the data and ensure it has data for the task both before and after
     ArrayList<AgileItem> data = undoRedoObject.getData();
     if (data.size() < 2) {
       throw new Exception("Can't undo/redo task edit - Less than 2 variables");
@@ -1277,6 +1277,36 @@ public class UndoRedoHandler {
       effortToChange.copyValues(effortData);
       task.addEffort(effortToChange);
     }
+    mainApp.refreshList(null);
+  }
+
+  /**
+   * Undo or redo an effort edit
+   *
+   * @param undoRedoObject Object containing the action data
+   * @param undoOrRedo     Whether undoing or redoing the action
+   * @throws Exception Error message if data is invalid
+   */
+  private void handleEffortEdit(UndoRedoObject undoRedoObject,
+                                UndoOrRedo undoOrRedo) throws Exception {
+
+    // Get the data and ensure it has data for the effort both before and after
+    ArrayList<AgileItem> data = undoRedoObject.getData();
+    if (data.size() < 2) {
+      throw new Exception("Can't undo/redo effort edit - Less than 2 variables");
+    }
+
+    Effort effortToChange = (Effort) undoRedoObject.getAgileItem();
+    Effort effortData;
+
+    if (undoOrRedo == UndoOrRedo.UNDO) {
+      effortData = (Effort) data.get(0);
+    } else {
+      effortData = (Effort) data.get(1);
+    }
+
+    // Make the changes and refresh the list
+    effortToChange.copyValues(effortData);
     mainApp.refreshList(null);
   }
 

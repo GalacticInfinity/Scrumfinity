@@ -1018,6 +1018,31 @@ public class UndoRedoHandlerTest {
     undoRedoHandler.newAction(undoRedoObject);
   }
 
+  private void editNewestEffort() {
+    Effort lastEffort = new Effort(effort);
+
+    newWorker = new Person("J", "dave", "smith", FXCollections.observableArrayList());
+    newSpentEffort = 9001;
+    newComments = "I changed my mind and did something else instead and assigned this task to a "
+                  + "blank person";
+    newDateTime = LocalDateTime.of(2004, Month.FEBRUARY, 27, 23, 59);
+
+    effort.setWorker(newWorker);
+    effort.setSpentEffort(newSpentEffort);
+    effort.setComments(newComments);
+    effort.setDateTime(newDateTime);
+
+    Effort newEffort = new Effort(effort);
+
+    UndoRedoObject undoRedoObject = new UndoRedoObject();
+    undoRedoObject.setAction(Action.EFFORT_EDIT);
+    undoRedoObject.setAgileItem(effort);
+    undoRedoObject.addDatum(lastEffort);
+    undoRedoObject.addDatum(newEffort);
+
+    undoRedoHandler.newAction(undoRedoObject);
+  }
+
   private void createAndEditStoryDependencies() {
     dependantStory1 = new Story("story1", "story1", "s1desc", new Person());
     dependantStory2 = new Story("story2", "story2", "s2desc", new Person());
@@ -4012,6 +4037,128 @@ public class UndoRedoHandlerTest {
     assertEquals(1, tasks.size());
     assertTrue(tasks.get(0).getEfforts().isEmpty());
     assertTrue(undoRedoHandler.getRedoStack().empty());
+  }
+
+  @Test
+  public void testEffortEditUndo() throws Exception {
+    List<Task> tasks;
+
+    assertTrue(mainApp.getPeople().isEmpty());
+    assertTrue(mainApp.getStories().isEmpty());
+    assertTrue(undoRedoHandler.getUndoStack().empty());
+
+    newPerson();
+    newStory();
+    newTask();
+    newEffort();
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(1, mainApp.getStories().size());
+    tasks = mainApp.getStories().get(0).getTasks();
+    assertEquals(1, tasks.size());
+    assertEquals(1, tasks.get(0).getEfforts().size());
+    assertEquals(4, undoRedoHandler.getUndoStack().size());
+
+    Effort createdEffort = tasks.get(0).getEfforts().get(0);
+    assertEquals(worker, createdEffort.getWorker());
+    assertEquals(spentEffort, createdEffort.getSpentEffort());
+    assertEquals(comments, createdEffort.getComments());
+    assertEquals(dateTime, createdEffort.getDateTime());
+
+    editNewestEffort();
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(1, mainApp.getStories().size());
+    tasks = mainApp.getStories().get(0).getTasks();
+    assertEquals(1, tasks.size());
+    assertEquals(1, tasks.get(0).getEfforts().size());
+    assertEquals(5, undoRedoHandler.getUndoStack().size());
+
+    Effort editedEffort = tasks.get(0).getEfforts().get(0);
+    assertEquals(newWorker, editedEffort.getWorker());
+    assertEquals(newSpentEffort, editedEffort.getSpentEffort());
+    assertEquals(newComments, editedEffort.getComments());
+    assertEquals(newDateTime, editedEffort.getDateTime());
+
+    undoRedoHandler.undo();
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(1, mainApp.getStories().size());
+    tasks = mainApp.getStories().get(0).getTasks();
+    assertEquals(1, tasks.size());
+    assertEquals(1, tasks.get(0).getEfforts().size());
+    assertEquals(4, undoRedoHandler.getUndoStack().size());
+
+    Effort undoneEffort = tasks.get(0).getEfforts().get(0);
+    assertEquals(worker, undoneEffort.getWorker());
+    assertEquals(spentEffort, undoneEffort.getSpentEffort());
+    assertEquals(comments, undoneEffort.getComments());
+    assertEquals(dateTime, undoneEffort.getDateTime());
+  }
+
+  @Test
+  public void testEffortEditRedo() throws Exception {
+    List<Task> tasks;
+
+    assertTrue(mainApp.getPeople().isEmpty());
+    assertTrue(mainApp.getStories().isEmpty());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    newPerson();
+    newStory();
+    newTask();
+    newEffort();
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(1, mainApp.getStories().size());
+    tasks = mainApp.getStories().get(0).getTasks();
+    assertEquals(1, tasks.size());
+    assertEquals(1, tasks.get(0).getEfforts().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    Effort createdEffort = tasks.get(0).getEfforts().get(0);
+    assertEquals(worker, createdEffort.getWorker());
+    assertEquals(spentEffort, createdEffort.getSpentEffort());
+    assertEquals(comments, createdEffort.getComments());
+    assertEquals(dateTime, createdEffort.getDateTime());
+
+    editNewestEffort();
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(1, mainApp.getStories().size());
+    tasks = mainApp.getStories().get(0).getTasks();
+    assertEquals(1, tasks.size());
+    assertEquals(1, tasks.get(0).getEfforts().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    Effort editedEffort = tasks.get(0).getEfforts().get(0);
+    assertEquals(newWorker, editedEffort.getWorker());
+    assertEquals(newSpentEffort, editedEffort.getSpentEffort());
+    assertEquals(newComments, editedEffort.getComments());
+    assertEquals(newDateTime, editedEffort.getDateTime());
+
+    undoRedoHandler.undo();
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(1, mainApp.getStories().size());
+    tasks = mainApp.getStories().get(0).getTasks();
+    assertEquals(1, tasks.size());
+    assertEquals(1, tasks.get(0).getEfforts().size());
+    assertEquals(1, undoRedoHandler.getRedoStack().size());
+
+    Effort undoneEffort = tasks.get(0).getEfforts().get(0);
+    assertEquals(worker, undoneEffort.getWorker());
+    assertEquals(spentEffort, undoneEffort.getSpentEffort());
+    assertEquals(comments, undoneEffort.getComments());
+    assertEquals(dateTime, undoneEffort.getDateTime());
+
+    undoRedoHandler.redo();
+    assertEquals(1, mainApp.getPeople().size());
+    assertEquals(1, mainApp.getStories().size());
+    tasks = mainApp.getStories().get(0).getTasks();
+    assertEquals(1, tasks.size());
+    assertEquals(1, tasks.get(0).getEfforts().size());
+    assertTrue(undoRedoHandler.getRedoStack().empty());
+
+    Effort redoneEffort = tasks.get(0).getEfforts().get(0);
+    assertEquals(newWorker, redoneEffort.getWorker());
+    assertEquals(newSpentEffort, redoneEffort.getSpentEffort());
+    assertEquals(newComments, redoneEffort.getComments());
+    assertEquals(newDateTime, redoneEffort.getDateTime());
   }
 
   @Test
