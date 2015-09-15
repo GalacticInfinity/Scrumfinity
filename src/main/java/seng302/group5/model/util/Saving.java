@@ -11,6 +11,7 @@ import java.util.Map;
 import seng302.group5.Main;
 import seng302.group5.model.AgileHistory;
 import seng302.group5.model.Backlog;
+import seng302.group5.model.Effort;
 import seng302.group5.model.Estimate;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
@@ -358,14 +359,17 @@ public class Saving {
             }
             saveFile.write("\t\t\t\t</TaskPeople>\n");
           }
-          if (!task.getSpentEffort().isEmpty()) {
-            saveFile.write("\t\t\t\t<TaskEffort>\n");
-            for (Map.Entry<Person, Integer> entry : task.getSpentEffort().entrySet()) {
-              saveFile.write("\t\t\t\t\t<person>" + entry.getKey().getLabel() + "</person>\n");
-              saveFile.write("\t\t\t\t\t<effort>" + entry.getValue().toString() + "</effort>\n");
-            }
-            saveFile.write("\t\t\t\t</TaskEffort>\n");
-          }
+
+          saveEffort(task, saveFile);
+
+//          if (!task.getSpentEffort().isEmpty()) {
+//            saveFile.write("\t\t\t\t<TaskEffort>\n");
+//            for (Map.Entry<Person, Integer> entry : task.getSpentEffort().entrySet()) {
+//              saveFile.write("\t\t\t\t\t<person>" + entry.getKey().getLabel() + "</person>\n");
+//              saveFile.write("\t\t\t\t\t<effort>" + entry.getValue().toString() + "</effort>\n");
+//            }
+//            saveFile.write("\t\t\t\t</TaskEffort>\n");
+//          }
           saveFile.write("\t\t\t</Task>\n");
         }
         saveFile.write("\t\t</Tasks>\n");
@@ -373,6 +377,21 @@ public class Saving {
       saveFile.write("\t</Story>\n");
     }
     saveFile.write("</Stories>\n");
+  }
+
+  private void saveEffort(Task task, Writer saveFile) throws Exception{
+    if (!task.getEfforts().isEmpty()) {
+      for (Effort effort : task.getEfforts()) {
+        saveFile.write("\t\t\t\t<Effort>\n");
+
+        saveFile.write("\t\t\t\t\t<effortWorker>" + effort.getWorker() + "</effortWorker>\n");
+        saveFile.write("\t\t\t\t\t<spentEffort>" + effort.getSpentEffort() + "</spentEffort>\n");
+        saveFile.write("\t\t\t\t\t<comments>" + effort.getComments() + "</comments>\n");
+        saveFile.write("\t\t\t\t\t<dateTime>" + effort.getDateTime() + "</dateTime>\n");
+
+        saveFile.write("\t\t\t\t</Effort>\n");
+      }
+    }
   }
 
   /**

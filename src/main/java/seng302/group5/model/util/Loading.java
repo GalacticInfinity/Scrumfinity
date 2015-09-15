@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +17,7 @@ import javafx.scene.control.Alert;
 import seng302.group5.Main;
 import seng302.group5.model.AgileHistory;
 import seng302.group5.model.Backlog;
+import seng302.group5.model.Effort;
 import seng302.group5.model.Estimate;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
@@ -1077,15 +1080,49 @@ public class Loading {
           storyTask.addTaskPerson(taskPersonMap.get(storyData));
         }
       }
-      if (storyLine.startsWith("\t\t\t\t<TaskEffort>")) {
-        String effortData;
-        while ((!(storyLine = loadedFile.readLine()).endsWith("</TaskEffort>"))) {
-          storyData = storyLine.replaceAll("(?i)(.*<person.*?>)(.+?)(</person>)", "$2");
+      //loading effort TODO BACKWARDS COMPATIBILITY
+      if (storyLine.startsWith("\t\t\t\t<Effort>")) {
+        while ((!(storyLine = loadedFile.readLine()).endsWith("</Effort>"))) {
+          String effortWorker = storyLine.replaceAll(
+              "(?i)(.*<effortWorker.*?>)(.+?)(</effortWorker>)",
+              "$2");
+
+          Person worker = null;
+          for (Person man : main.getPeople()) {
+            if (man.getFirstName().equals(effortWorker)) {
+              worker = man;
+            }
+          }
+
           storyLine = loadedFile.readLine();
-          effortData = storyLine.replaceAll("(?i)(.*<effort.*?>)(.+?)(</effort>)",
-                                            "$2");
-          storyTask
-              .updateSpentEffort(taskPersonMap.get(storyData), Integer.parseInt(effortData));
+          int effortSpent = Integer.parseInt(
+              storyLine.replaceAll("(?i)(.*<spentEffort.*?>)(.+?)(</spentEffort>)",
+                                   "$2"));
+
+
+          storyLine = loadedFile.readLine();
+          String comment = storyLine.replaceAll("(?i)(.*<comments.*?>)(.+?)(</comments>)",
+                                                "$2");
+          storyLine = loadedFile.readLine();
+
+
+          String dateTime = storyLine.replaceAll("(?i)(.*<dateTime.*?>)(.+?)(</dateTime>)",
+                                                 "$2");
+
+          LocalDateTime dt = LocalDateTime.of(Integer.parseInt(dateTime.substring(0, 4)),
+                                              Integer.parseInt(dateTime.substring(5, 7)),
+                                              Integer.parseInt(dateTime.substring(8, 10)),
+                                              Integer.parseInt(dateTime.substring(11, 13)),
+                                              Integer.parseInt(dateTime.substring(14, 15)));
+
+          System.out.println("DONE IT");
+
+          if (worker != null) {
+            Effort effortItem = new Effort(worker, effortSpent, comment, dt);
+            storyTask.addEffort(effortItem);
+          }
+//          storyTask
+//              .updateSpentEffort(taskPersonMap.get(storyData), Integer.parseInt(effortData));
         }
       }
     }
