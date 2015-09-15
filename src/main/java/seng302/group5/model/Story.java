@@ -433,12 +433,31 @@ public class Story implements AgileItem, Taskable, Comparable<Story> {
         completedTasks+=1;
       }
     }
-
-    System.out.println(completedTasks);
     if (completedTasks == 0 || totalTasks == 0) {
       return 0;
     }
     percent = completedTasks/totalTasks;
+    return percent;
+  }
+
+  /**
+   * Calculates how many stories are in progress i.e. all stories that are either not done or are not
+   * not started.
+   * @return  a float which indicated the percentage as a decimal.
+   */
+  public float percentInProg() {
+    float percent = 0;
+    float totalTasks = tasks.size();
+    float inProg = 0;
+    for (Task task : tasks) {
+      if (task.getStatus() != Status.DONE && task.getStatus() != Status.NOT_STARTED) {
+        inProg+=1;
+      }
+    }
+    if (inProg == 0 || totalTasks == 0) {
+      return 0;
+    }
+    percent = inProg/totalTasks;
     return percent;
   }
 

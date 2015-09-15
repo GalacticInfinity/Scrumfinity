@@ -5,9 +5,18 @@ import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TitledPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import seng302.group5.model.Story;
 import seng302.group5.model.Task;
@@ -25,7 +34,16 @@ public class StoryItemController {
   @FXML private AnchorPane storyAnchor;
   @FXML private TitledPane storyPane;
 
+  @FXML private ImageView SBImage;
+  @FXML private Rectangle doneBar;
+  @FXML private Rectangle inProgBar;
+  @FXML private Rectangle notStartedBar;
+
   private Story story;
+
+  private Image inprogress;
+  private Image complete;
+  private ImageView dinoGif;
 
   private ObservableList<Task> notStartedTasks;
   private ObservableList<Task> inProgressTasks;
@@ -39,8 +57,43 @@ public class StoryItemController {
   public void setupController(Story story) {
     this.story = story;
     storyPane.setText(story.getLabel());
-    storyPane.setGraphic(new Rectangle(10, 10));
+
+    //Set up the dino gif and place it on the accordion
+    inprogress = new Image("runningDino.gif");
+    complete = new Image("victoryDino.gif");
+    dinoGif = new ImageView();
+
+    dinoGif.setFitHeight(28);
+    dinoGif.setFitWidth(28);
+
+    if (this.story.percentComplete() == 1.0) {
+      dinoGif.setImage(complete);
+      SBImage.setImage(complete);
+
+    } else {
+      dinoGif.setImage(inprogress);
+      SBImage.setImage(inprogress);
+
+    }
+    storyPane.setGraphic(dinoGif);
+
+    progBar();
+
     setupLists();
+  }
+
+
+  public void progBar() {
+
+    int totalSpace = 180;
+    float doneSpace = totalSpace*story.percentComplete();
+    float inProgSpace = totalSpace*story.percentInProg();
+    float notStartedSpace = totalSpace*(1 - (story.percentComplete() + story.percentInProg()));
+
+    doneBar.setWidth(doneSpace);
+    inProgBar.setWidth(inProgSpace);
+    notStartedBar.setWidth(notStartedSpace);
+
   }
 
   /**

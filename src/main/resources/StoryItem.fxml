@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
 <?import java.lang.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<TitledPane fx:id="storyPane" animated="false" text="untitled 1" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.StoryItemController">
+<TitledPane fx:id="storyPane" animated="false" contentDisplay="RIGHT" text="untitled 1" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.StoryItemController">
    <content>
       <AnchorPane fx:id="storyAnchor" minHeight="337.0" minWidth="600.0">
          <children>
@@ -65,6 +69,22 @@
                               <Cursor fx:constant="DEFAULT" />
                            </cursor>
                         </ListView>
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <ImageView fx:id="SBImage" fitHeight="180.0" fitWidth="180.0" pickOnBounds="true" preserveRatio="true">
+                           <VBox.margin>
+                              <Insets bottom="8.0" top="58.0" />
+                           </VBox.margin>
+                        </ImageView>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Rectangle fx:id="doneBar" arcWidth="5.0" fill="#25c916" height="21.0" stroke="BLACK" strokeType="INSIDE" width="60.0" />
+                              <Rectangle fx:id="inProgBar" arcWidth="5.0" fill="#eef223" height="21.0" stroke="BLACK" strokeType="INSIDE" width="60.0" />
+                              <Rectangle fx:id="notStartedBar" arcWidth="5.0" fill="#c71616" height="21.0" stroke="BLACK" strokeType="INSIDE" width="60.0" />
+                           </children>
+                        </HBox>
                      </children>
                   </VBox>
                </children>

@@ -90,7 +90,7 @@ public class TaskDialogController {
       this.task = task;
       this.lastTask = new Task(task);
     } else {
-      this.task = null;
+      this.task = new Task();  // different because efforts
       this.lastTask = null;
     }
 
@@ -194,7 +194,7 @@ public class TaskDialogController {
     if (team != null) {
       availablePeople.addAll(team.getTeamMembers());
     }
-    if (task != null) {
+    if (task != null && createOrEdit == CreateOrEdit.EDIT) {
       for (Person person : task.getTaskPeople()) {
         int effort = task.getSpentEffort().get(person);
         PersonEffort personEffort = new PersonEffort(person, TimeFormat.parseTime(effort));
@@ -429,7 +429,11 @@ public class TaskDialogController {
       Scene effortDialogScene = new Scene(effortDialogLayout);
       Stage effortDialogStage = new Stage();
 
-      controller.setupController(this, effortDialogStage, createOrEdit);
+      List<Person> allocated = new ArrayList<>();
+      for (PersonEffort personEffort : allocatedPeople) {
+        allocated.add(personEffort.getPerson());
+      }
+      controller.setupController(task, allocated, effortDialogStage, createOrEdit, null);
 
       effortDialogStage.initModality(Modality.APPLICATION_MODAL);
       effortDialogStage.initOwner(thisStage);

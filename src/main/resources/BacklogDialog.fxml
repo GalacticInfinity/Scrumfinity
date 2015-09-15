@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
@@ -84,11 +85,30 @@
          <children>
             <VBox prefHeight="232.0" prefWidth="165.0">
                <children>
-                  <Label prefHeight="25.0" prefWidth="173.0" text="Available Stories:">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Label>
+                  <HBox prefHeight="11.0" prefWidth="181.0">
+                     <children>
+                        <Label prefHeight="19.0" prefWidth="141.0" text="Available Stories:">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Button fx:id="btnNewStory" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" onAction="#addNewStory" prefHeight="20.0" prefWidth="20.0">
+                           <graphic>
+                              <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="ToolbarQuickAdd.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="3.0" />
+                     </VBox.margin>
+                  </HBox>
                   <ListView fx:id="availableStoriesList" prefHeight="208.0" prefWidth="201.0" />
                </children>
             </VBox>
@@ -115,12 +135,15 @@
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <ToggleButton fx:id="toggleStateButton" mnemonicParsing="false" onAction="#btnToggleState" prefHeight="25.0" prefWidth="78.0" text="Highlight">
+                        <ToggleButton fx:id="toggleStateButton" mnemonicParsing="false" onAction="#btnToggleState" prefHeight="11.0" prefWidth="77.0" text="Highlight">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
                         </ToggleButton>
                      </children>
+                     <VBox.margin>
+                        <Insets bottom="3.0" />
+                     </VBox.margin>
                   </HBox>
                   <ListView fx:id="allocatedStoriesList" maxHeight="225.0" prefHeight="174.0" prefWidth="215.0" />
                   <ComboBox fx:id="storyEstimateCombo" prefHeight="25.0" prefWidth="209.0" promptText="Estimate" />

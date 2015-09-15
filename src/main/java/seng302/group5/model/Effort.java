@@ -1,14 +1,15 @@
 package seng302.group5.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class Effort implements AgileItem, Comparable<Effort> {
 
   private String effortLabel;
   private Person worker;
-  private double time;
+  private double spentEffort;
   private String comments;
-  private LocalDate endTime;
+  private LocalDateTime dateTime;
 
   /**
    * Empty constructor for an Effort object.
@@ -16,25 +17,25 @@ public class Effort implements AgileItem, Comparable<Effort> {
   public Effort() {
     this.effortLabel = "";
     this.worker = null;
-    this.time = 0.0;
+    this.spentEffort = 0.0;
     this.comments = "";
-    this.endTime = null;
+    this.dateTime = null;
   }
 
   /**
    * Default constructor for an Effort object including all fields.
-   * @param effortLabel The label of the logged effort.
+   *
    * @param worker The Person logging the effort.
-   * @param time The time they are logging (as a double).
+   * @param spentEffort The spentEffort they are logging (as a double).
    * @param comments Any comments about the logged Effort.
-   * @param endTime The time the effort was logged.
+   * @param dateTime The spentEffort the effort was logged.
    */
-  public Effort(String effortLabel, Person worker, double time, String comments, LocalDate endTime) {
-    this.effortLabel = effortLabel;
+  public Effort(Person worker, double spentEffort, String comments, LocalDateTime dateTime) {
+    this.effortLabel = generateLabel(worker, spentEffort, comments, dateTime);
     this.worker = worker;
-    this.time = time;
+    this.spentEffort = spentEffort;
     this.comments = comments;
-    this.endTime = endTime;
+    this.dateTime = dateTime;
   }
 
   /**
@@ -44,9 +45,17 @@ public class Effort implements AgileItem, Comparable<Effort> {
   public Effort(Effort clone) {
     this.effortLabel = clone.getLabel();
     this.worker = clone.getWorker();
-    this.time = clone.getTime();
+    this.spentEffort = clone.getSpentEffort();
     this.comments = clone.getComments();
-    this.endTime = clone.getEndTime();
+    this.dateTime = clone.getDateTime();
+  }
+
+  private String generateLabel(Person worker, double spentEffort,
+                               String comments, LocalDateTime dateTime) {
+    int result = worker.hashCode() + Double.hashCode(spentEffort) + comments.hashCode() +
+                 dateTime.hashCode() + LocalTime.now().hashCode();
+    System.out.println(result);
+    return String.valueOf(result);
   }
 
   public String getLabel() {
@@ -65,12 +74,12 @@ public class Effort implements AgileItem, Comparable<Effort> {
     this.worker = worker;
   }
 
-  public double getTime() {
-    return time;
+  public double getSpentEffort() {
+    return spentEffort;
   }
 
-  public void setTime(double time) {
-    this.time = time;
+  public void setSpentEffort(double spentEffort) {
+    this.spentEffort = spentEffort;
   }
 
   public String getComments() {
@@ -81,12 +90,12 @@ public class Effort implements AgileItem, Comparable<Effort> {
     this.comments = comments;
   }
 
-  public LocalDate getEndTime() {
-    return endTime;
+  public LocalDateTime getDateTime() {
+    return dateTime;
   }
 
-  public void setEndTime(LocalDate endTime) {
-    this.endTime = endTime;
+  public void setDateTime(LocalDateTime dateTime) {
+    this.dateTime = dateTime;
   }
 
   /**
@@ -99,10 +108,26 @@ public class Effort implements AgileItem, Comparable<Effort> {
       Effort clone = (Effort) agileItem;
       this.effortLabel = clone.getLabel();
       this.worker = clone.getWorker();
-      this.time = clone.getTime();
+      this.spentEffort = clone.getSpentEffort();
       this.comments = clone.getComments();
-      this.endTime = clone.getEndTime();
+      this.dateTime = clone.getDateTime();
     }
+  }
+
+  /**
+   * Return the string representation of the effort.
+   *
+   * @return The effort's string representation
+   */
+  @Override
+  public String toString() {
+    // todo adjust for list
+    return "Effort{" +
+           "worker=" + worker +
+           ", spentEffort=" + spentEffort +
+           ", comments='" + comments + '\'' +
+           ", dateTime=" + dateTime +
+           '}';
   }
 
   /**
@@ -127,13 +152,13 @@ public class Effort implements AgileItem, Comparable<Effort> {
     if (!comments.equals(effort.getComments())) {
       return false;
     }
-    if (time != effort.getTime()) {
+    if (spentEffort != effort.getSpentEffort()) {
       return false;
     }
     if (!worker.equals(effort.getWorker())) {
       return false;
     }
-    return endTime.equals(effort.getEndTime());
+    return dateTime.equals(effort.getDateTime());
   }
 
   /**
@@ -144,9 +169,9 @@ public class Effort implements AgileItem, Comparable<Effort> {
   public int hashCode() {
     int result = effortLabel.hashCode();
     result = 31 * result + worker.hashCode();
-    result = 31 * result + Double.valueOf(time).hashCode();
+    result = 31 * result + Double.valueOf(spentEffort).hashCode();
     result = 31 * result + comments.hashCode();
-    result = 31 * result + endTime.hashCode();
+    result = 31 * result + dateTime.hashCode();
     return result;
   }
 
@@ -157,6 +182,6 @@ public class Effort implements AgileItem, Comparable<Effort> {
    */
   @Override
   public int compareTo(Effort o) {
-    return this.endTime.compareTo(o.getEndTime());
+    return this.dateTime.compareTo(o.getDateTime());
   }
 }
