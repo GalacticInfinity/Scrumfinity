@@ -106,7 +106,7 @@ public class Task implements AgileItem, Comparable<Task> {
   }
 
   public List<Effort> getEfforts() {
-    return Collections.unmodifiableList(efforts);
+    return efforts;
   }
 
   public void removeEffort(Effort effort) {

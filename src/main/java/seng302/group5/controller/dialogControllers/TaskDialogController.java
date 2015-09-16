@@ -6,6 +6,10 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.bind.SchemaOutputResolver;
+
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,6 +25,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -28,8 +33,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
+import seng302.group5.model.Effort;
 import seng302.group5.model.Person;
 import seng302.group5.model.Status;
 import seng302.group5.model.Task;
@@ -73,6 +80,7 @@ public class TaskDialogController {
   private ObservableList<Person> availablePeople;
   private ObservableList<PersonEffort> allocatedPeople;
   private ObservableList<PersonEffort> originalPeople;
+  private ObservableList<Effort> efforts = FXCollections.observableArrayList();
 
   private UndoRedoObject undoRedoObject;
 
@@ -92,6 +100,7 @@ public class TaskDialogController {
                               Stage thisStage, CreateOrEdit createOrEdit, Task task) {
     this.taskable = taskable;
     this.thisStage = thisStage;
+    this.createOrEdit = createOrEdit;
 
     if (task != null) {
       this.task = task;
@@ -126,7 +135,6 @@ public class TaskDialogController {
 
       btnConfirm.setDisable(true);
     }
-    this.createOrEdit = createOrEdit;
 
     btnConfirm.setDefaultButton(true);
     thisStage.setResizable(false);
@@ -201,6 +209,7 @@ public class TaskDialogController {
     if (team != null) {
       availablePeople.addAll(team.getTeamMembers());
     }
+
     if (task != null && createOrEdit == CreateOrEdit.EDIT) {
       for (Person person : task.getTaskPeople()) {
         int effort = task.getSpentEffort().get(person);
@@ -222,6 +231,13 @@ public class TaskDialogController {
     statusComboBox.getSelectionModel().select(0);
 
     allocatedPeopleList.setCellFactory(listView -> new PersonEffortCell());
+
+    updateEffort();
+  }
+
+  public void updateEffort() {
+    efforts.setAll(task.getEfforts());
+    effortTable.setItems(efforts);
   }
 
   /**
@@ -440,7 +456,7 @@ public class TaskDialogController {
       for (PersonEffort personEffort : allocatedPeople) {
         allocated.add(personEffort.getPerson());
       }
-      controller.setupController(task, allocated, effortDialogStage, createOrEdit, null);
+      controller.setupController(this, task, allocated, effortDialogStage, createOrEdit, null);
 
       effortDialogStage.initModality(Modality.APPLICATION_MODAL);
       effortDialogStage.initOwner(thisStage);

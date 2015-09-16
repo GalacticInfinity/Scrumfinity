@@ -54,7 +54,6 @@ public class Effort implements AgileItem, Comparable<Effort> {
                                String comments, LocalDateTime dateTime) {
     int result = worker.hashCode() + Integer.hashCode(spentEffort) + comments.hashCode() +
                  dateTime.hashCode() + LocalTime.now().hashCode();
-    System.out.println(result);
     return dateTime.toString() + String.valueOf(result);
   }
 

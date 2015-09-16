@@ -867,7 +867,7 @@ public class Main extends Application {
       taskDialogStage.showAndWait();
 
       this.getLMPC().getScrumBoardController().refreshTaskLists();
-      LMPC.getBurndownController().refreshComboBoxes();
+      this.getLMPC().getBurndownController().refreshComboBoxes();
       taskUndoRedo = controller.getUndoRedoObject();
     } catch (IOException e) {
       e.printStackTrace();

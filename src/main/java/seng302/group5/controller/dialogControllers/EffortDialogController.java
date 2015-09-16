@@ -39,6 +39,7 @@ public class EffortDialogController {
   private ObservableList<Person> allocatedPeople;
 
   private Task task;
+  private TaskDialogController taskDC;
   private Stage thisStage;
   private CreateOrEdit createOrEdit;
   private Effort effort;
@@ -55,9 +56,10 @@ public class EffortDialogController {
    * @param createOrEdit Whether this dialog is for creating or editing.
    * @param effort The object that will be edited (null if creating)
    */
-  public void setupController(Task task, List<Person> allocatedPeople,
+  public void setupController(TaskDialogController taskDC, Task task, List<Person> allocatedPeople,
                               Stage thisStage, CreateOrEdit createOrEdit, Effort effort) {
     this.task = task;
+    this.taskDC = taskDC;
     this.thisStage = thisStage;
     this.createOrEdit = createOrEdit;
 
@@ -111,12 +113,6 @@ public class EffortDialogController {
    */
   @FXML
   private void btnConfirmClick(ActionEvent event) {
-    System.out.println(teamMemberCombo.getSelectionModel().getSelectedItem());
-    System.out.println(dateField.getValue());
-    System.out.println(timeField.getText());
-    System.out.println(spentEffortField.getText());
-    System.out.println(commentField.getText().trim());
-
     StringBuilder errors = new StringBuilder();
     int noErrors = 0;
 
@@ -170,6 +166,7 @@ public class EffortDialogController {
       if (createOrEdit == CreateOrEdit.CREATE) {
         effort = new Effort(teamMember, spentEffort, comments, dateTime);
         task.addEffort(effort);
+        taskDC.updateEffort();
       } else if (createOrEdit == CreateOrEdit.EDIT) {
         //todo verify
         effort.setWorker(teamMember);
@@ -178,7 +175,6 @@ public class EffortDialogController {
         effort.setDateTime(dateTime);
       }
 //      generateUndoRedoObject(); // todo
-      System.out.println(task.getEfforts());
       thisStage.close();
     }
   }
