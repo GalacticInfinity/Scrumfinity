@@ -81,6 +81,7 @@ public class TaskDialogController {
   private ObservableList<PersonEffort> allocatedPeople;
   private ObservableList<PersonEffort> originalPeople;
   private ObservableList<Effort> efforts = FXCollections.observableArrayList();
+  private List<Effort> currentEfforts;
 
   private UndoRedoObject undoRedoObject;
 
@@ -101,10 +102,12 @@ public class TaskDialogController {
     this.taskable = taskable;
     this.thisStage = thisStage;
     this.createOrEdit = createOrEdit;
+    this.currentEfforts = new ArrayList<>();
 
     if (task != null) {
       this.task = task;
       this.lastTask = new Task(task);
+      this.currentEfforts.addAll(task.getEfforts());
     } else {
       this.task = new Task();  // different because efforts
       this.lastTask = null;
@@ -187,6 +190,7 @@ public class TaskDialogController {
         descriptionField.getText().equals(task.getTaskDescription()) &&
         TimeFormat.parseMinutes(estimateField.getText()) == task.getTaskEstimation() &&
         impedimentsField.getText().equals(task.getImpediments()) &&
+        effortTable.getItems().equals(currentEfforts) &&
         Status.getStatusEnum(statusComboBox.getValue()).equals(task.getStatus()) &&
         allocatedPeopleList.getItems().equals(originalPeople)) {
       btnConfirm.setDisable(true);
@@ -238,6 +242,7 @@ public class TaskDialogController {
   public void updateEffort() {
     efforts.setAll(task.getEfforts());
     effortTable.setItems(efforts);
+    checkButtonDisabled();
   }
 
   /**
