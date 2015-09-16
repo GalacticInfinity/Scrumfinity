@@ -1081,13 +1081,6 @@ public class Loading {
         }
       }
 
-
-
-
-
-
-
-
       if (saveVersion == 0.5) {
         if (storyLine.startsWith("\t\t\t\t<TaskEffort>")) {
           String effortData;
@@ -1109,7 +1102,7 @@ public class Loading {
 
             Person worker = null;
             for (Person man : main.getPeople()) {
-              if (man.getFirstName().equals(effortWorker)) {
+              if (man.getLabel().equals(effortWorker)) {
                 worker = man;
               }
             }
@@ -1127,11 +1120,7 @@ public class Loading {
             String dateTime = storyLine.replaceAll("(?i)(.*<dateTime.*?>)(.+?)(</dateTime>)",
                                                    "$2");
 
-            LocalDateTime dt = LocalDateTime.of(Integer.parseInt(dateTime.substring(0, 4)),
-                                                Integer.parseInt(dateTime.substring(5, 7)),
-                                                Integer.parseInt(dateTime.substring(8, 10)),
-                                                Integer.parseInt(dateTime.substring(11, 13)),
-                                                Integer.parseInt(dateTime.substring(14, 15)));
+            LocalDateTime dt = LocalDateTime.parse(dateTime);
 
             if (worker != null) {
               Effort effortItem = new Effort(worker, effortSpent, comment, dt);
