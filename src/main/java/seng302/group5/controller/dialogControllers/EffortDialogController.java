@@ -196,7 +196,7 @@ public class EffortDialogController {
       if (createOrEdit == CreateOrEdit.CREATE) {
         effort = new Effort(teamMember, spentEffort, comments, dateTime);
         task.addEffort(effort);
-        taskDC.updateEffort();
+        taskDC.updateEffortTable();
       } else if (createOrEdit == CreateOrEdit.EDIT) {
         //todo verify
         effort.setWorker(teamMember);
