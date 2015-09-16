@@ -1,15 +1,14 @@
 package seng302.group5.controller.dialogControllers;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.SchemaOutputResolver;
-
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -26,7 +25,6 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.ColumnConstraints;
@@ -35,7 +33,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Effort;
@@ -68,9 +65,9 @@ public class TaskDialogController {
   @FXML private Button btnRemovePerson;
   @FXML private HBox btnContainer;
   @FXML private TableView<Effort> effortTable;
-  @FXML private TableColumn dateTimeColumn;
+  @FXML private TableColumn<Effort, String> dateTimeColumn;
   @FXML private TableColumn userColumn;
-  @FXML private TableColumn effortColumn;
+  @FXML private TableColumn<Effort, String> spentEffortColumn;
   @FXML private TableColumn commentColumn;
   @FXML private Button btnConfirm;
   @FXML private Button btnCancel;
@@ -239,6 +236,19 @@ public class TaskDialogController {
 
     allocatedPeopleList.setCellFactory(listView -> new PersonEffortCell());
     effortTable.setRowFactory(tableView -> new EffortRow());
+
+    dateTimeColumn.setCellValueFactory(row -> {
+      Effort effort = row.getValue();
+      LocalDateTime dateTime = effort.getDateTime();
+      String result = dateTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy H:mm"));
+      return new ReadOnlyObjectWrapper<>(result);
+    });
+    spentEffortColumn.setCellValueFactory(row -> {
+      Effort effort = row.getValue();
+      int spentEffort = effort.getSpentEffort();
+      String result = TimeFormat.parseDuration(spentEffort);
+      return new ReadOnlyObjectWrapper<>(result);
+    });
 
     updateEffortTable();
   }
