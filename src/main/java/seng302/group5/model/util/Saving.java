@@ -529,14 +529,7 @@ public class Saving {
             }
             saveFile.write("\t\t\t\t</TaskPeople>\n");
           }
-          if (!task.getSpentEffort().isEmpty()) {
-            saveFile.write("\t\t\t\t<TaskEffort>\n");
-            for (Map.Entry<Person, Integer> entry : task.getSpentEffort().entrySet()) {
-              saveFile.write("\t\t\t\t\t<person>" + entry.getKey().getLabel() + "</person>\n");
-              saveFile.write("\t\t\t\t\t<effort>" + entry.getValue().toString() + "</effort>\n");
-            }
-            saveFile.write("\t\t\t\t</TaskEffort>\n");
-          }
+          saveEffort(task,saveFile);
           saveFile.write("\t\t\t</Task>\n");
         }
         saveFile.write("\t\t</Tasks>\n");
