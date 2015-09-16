@@ -83,28 +83,36 @@ public class StoryItemController {
     notStartedList.setOnMouseDragReleased(new EventHandler<MouseDragEvent>() {
       @Override
       public void handle(MouseDragEvent event) {
-        addToBottom(notStartedList, (Node) event.getGestureSource());
+        if (checkVBox(event)) {
+          addToBottom(notStartedList, (Node) event.getGestureSource());
+        }
       }
     });
 
     inProgressList.setOnMouseDragReleased(new EventHandler<MouseDragEvent>() {
       @Override
       public void handle(MouseDragEvent event) {
-        addToBottom(inProgressList, (Node) event.getGestureSource());
+        if (checkVBox(event)) {
+          addToBottom(inProgressList, (Node) event.getGestureSource());
+        }
       }
     });
 
     verifyList.setOnMouseDragReleased(new EventHandler<MouseDragEvent>() {
       @Override
       public void handle(MouseDragEvent event) {
-        addToBottom(verifyList, (Node) event.getGestureSource());
+        if (checkVBox(event)) {
+          addToBottom(verifyList, (Node) event.getGestureSource());
+        }
       }
     });
 
     doneList.setOnMouseDragReleased(new EventHandler<MouseDragEvent>() {
       @Override
       public void handle(MouseDragEvent event) {
-        addToBottom(doneList, (Node) event.getGestureSource());
+        if (checkVBox(event)) {
+          addToBottom(doneList, (Node) event.getGestureSource());
+        }
       }
     });
   }
@@ -128,45 +136,51 @@ public class StoryItemController {
     label.setOnMouseDragEntered(new EventHandler<MouseDragEvent>() {
       @Override
       public void handle(MouseDragEvent event) {
-        label.setStyle("-fx-background-color: #ffffa0;");
+        if (checkSource(event) && !checkSameLabel(event)) {
+          label.setStyle("-fx-background-color: #ffffa0;");
+        }
       }
     });
     label.setOnMouseDragExited(new EventHandler<MouseDragEvent>() {
       @Override
       public void handle(MouseDragEvent event) {
-        label.setStyle("");
+        if (checkSource(event) && !checkSameLabel(event)) {
+          label.setStyle("");
+        }
       }
     });
 
     label.setOnMouseDragReleased(new EventHandler<MouseDragEvent>() {
       @Override
       public void handle(MouseDragEvent event) {
-        // Mouse is dropped;
-        label.setStyle("");
-        int indexOfDropTarget = -1;
-        Label sourceLbl = (Label) event.getGestureSource();
-        VBox newRoot = null;
-        // Removes dragged label from root, saves index of dragged to label;
-        if (notStartedList.getChildren().contains(sourceLbl)) {
-          notStartedList.getChildren().remove(sourceLbl);
-          indexOfDropTarget = notStartedList.getChildren().indexOf(sourceLbl);
-        } else if (inProgressList.getChildren().contains(sourceLbl)) {
-          inProgressList.getChildren().remove(sourceLbl);
-          indexOfDropTarget = inProgressList.getChildren().indexOf(sourceLbl);
-        } else if (verifyList.getChildren().contains(sourceLbl)) {
-          verifyList.getChildren().remove(sourceLbl);
-          indexOfDropTarget = verifyList.getChildren().indexOf(sourceLbl);
-        } else if (doneList.getChildren().contains(sourceLbl)) {
-          doneList.getChildren().remove(sourceLbl);
-          indexOfDropTarget = doneList.getChildren().indexOf(sourceLbl);
+        if (checkSource(event) && !checkSameLabel(event)) {
+          // Mouse is dropped;
+          label.setStyle("");
+          int indexOfDropTarget = -1;
+          Label sourceLbl = (Label) event.getGestureSource();
+          VBox newRoot = null;
+          // Removes dragged label from root, saves index of dragged to label;
+          if (notStartedList.getChildren().contains(sourceLbl)) {
+            notStartedList.getChildren().remove(sourceLbl);
+            indexOfDropTarget = notStartedList.getChildren().indexOf(sourceLbl);
+          } else if (inProgressList.getChildren().contains(sourceLbl)) {
+            inProgressList.getChildren().remove(sourceLbl);
+            indexOfDropTarget = inProgressList.getChildren().indexOf(sourceLbl);
+          } else if (verifyList.getChildren().contains(sourceLbl)) {
+            verifyList.getChildren().remove(sourceLbl);
+            indexOfDropTarget = verifyList.getChildren().indexOf(sourceLbl);
+          } else if (doneList.getChildren().contains(sourceLbl)) {
+            doneList.getChildren().remove(sourceLbl);
+            indexOfDropTarget = doneList.getChildren().indexOf(sourceLbl);
+          }
+          int indexOfDrag = root.getChildren().indexOf(label);
+          // Adds label to root with new listeners
+          addWithDragging(root, sourceLbl);
+          // Label is now in vbox at bottom
+          // Root=correct Vbox, iODT=index of highlighted node, Lbl=label to be moved up
+          bringUpNode(root, indexOfDrag, sourceLbl);
+          event.consume();
         }
-        int indexOfDrag = root.getChildren().indexOf(label);
-        // Adds label to root with new listeners
-        addWithDragging(root, sourceLbl);
-        // Label is now in vbox at bottom
-        // Root=correct Vbox, iODT=index of highlighted node, Lbl=label to be moved up
-        bringUpNode(root, indexOfDrag, sourceLbl);
-        event.consume();
       }
     });
     root.getChildren().add(label);
@@ -198,6 +212,54 @@ public class StoryItemController {
     oldVBox.getChildren().remove(draggedLabel);
     //2:Add to the new list
     addWithDragging(root, draggedLabel);
+  }
+
+  /**
+   * Checks to make sure event source and final location of mouse drag event for a label
+   * have the same parent's parent. This make sure it belongs to the same set of four lists
+   * (stops dragging label between stories).
+   * @param event The mouse drag event
+   * @return same? true : false
+   */
+  private boolean checkSource(MouseDragEvent event) {
+    Label sourceLabel = (Label) event.getGestureSource();
+    Label destinationLabel = (Label) event.getSource();
+    // checks to see if both nodes contained within the higher level hbox
+    if (sourceLabel.getParent().getParent().getParent().equals(
+        destinationLabel.getParent().getParent().getParent())) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Checks to make sure destination VBox belongs to the same parent as the label's VBox parent
+   * @param event The mouse drag event
+   * @return same? true : false
+   */
+  private boolean checkVBox(MouseDragEvent event) {
+    Label sourceLabel = (Label) event.getGestureSource();
+    VBox destinationVBox = (VBox) event.getSource();
+    // checks to see if both nodes contained within the higher level hbox
+    if (sourceLabel.getParent().getParent().getParent().equals(
+        destinationVBox.getParent().getParent())) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * A check to see if mouse drag event source and gesture source are the same label.
+   * @param event The mouse drag event
+   * @return same? true : false
+   */
+  private boolean checkSameLabel(MouseDragEvent event) {
+    Label sourceLabel = (Label) event.getGestureSource();
+    Label destinationLabel = (Label) event.getSource();
+    if (sourceLabel == destinationLabel) {
+      return true;
+    }
+    return false;
   }
 
   public Story getStory() {
