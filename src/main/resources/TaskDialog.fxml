@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.cell.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <?import javafx.scene.control.cell.PropertyValueFactory?>
+
 <VBox prefHeight="515.0" prefWidth="705.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.TaskDialogController">
    <children>
       <HBox prefHeight="100.0" prefWidth="200.0">
@@ -149,7 +150,7 @@
                         <Insets left="5.0" />
                      </HBox.margin>
                   </Label>
-                  <Button fx:id="btnAddEffort" mnemonicParsing="false" onAction="#btnAddEffort" prefHeight="30.0" prefWidth="30.0" text="+">
+                  <Button fx:id="btnAddEffort" mnemonicParsing="false" onAction="#btnAddEffortClick" prefHeight="30.0" prefWidth="30.0" text="+">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
@@ -157,7 +158,7 @@
                         <Insets left="438.0" />
                      </HBox.margin>
                   </Button>
-                  <Button fx:id="btnRemoveEffort" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="-">
+                  <Button fx:id="btnRemoveEffort" mnemonicParsing="false" onAction="#btnRemoveEffortClick" prefHeight="30.0" prefWidth="30.0" text="-">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
@@ -173,16 +174,16 @@
             <TableView fx:id="effortTable" prefHeight="200.0">
                <columns>
                   <TableColumn fx:id="dateTimeColumn" prefWidth="121.0" text="Date &amp; Time">
-                      <cellValueFactory><PropertyValueFactory property="dateTime"/></cellValueFactory>
+                      <cellValueFactory><PropertyValueFactory property="dateTime" /></cellValueFactory>
                   </TableColumn>
                   <TableColumn fx:id="userColumn" prefWidth="172.0" text="User">
-                      <cellValueFactory><PropertyValueFactory property="worker"/></cellValueFactory>
+                      <cellValueFactory><PropertyValueFactory property="worker" /></cellValueFactory>
                   </TableColumn>
                   <TableColumn fx:id="spentEffortColumn" prefWidth="74.0" text="Spent Effort">
-                      <cellValueFactory><PropertyValueFactory property="spentEffort"/></cellValueFactory>
+                      <cellValueFactory><PropertyValueFactory property="spentEffort" /></cellValueFactory>
                   </TableColumn>
                   <TableColumn fx:id="commentColumn" prefWidth="355.0" text="Comments">
-                      <cellValueFactory><PropertyValueFactory property="comments"/></cellValueFactory>
+                      <cellValueFactory><PropertyValueFactory property="comments" /></cellValueFactory>
                   </TableColumn>
                </columns>
                <VBox.margin>

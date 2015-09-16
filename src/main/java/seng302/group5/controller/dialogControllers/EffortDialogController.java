@@ -21,6 +21,7 @@ import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Effort;
 import seng302.group5.model.Person;
 import seng302.group5.model.Task;
+import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoObject;
 import seng302.group5.model.util.TimeFormat;
 
@@ -104,6 +105,35 @@ public class EffortDialogController {
     this.createOrEdit = createOrEdit;
     btnConfirm.setDefaultButton(true);
     thisStage.setResizable(false);
+
+    undoRedoObject = null;
+  }
+
+  /**
+   * Generate an UndoRedoObject to represent an effort create or edit action and store it globally.
+   * This is so a cancel in a dialog higher in the hierarchy can undo the changes made to the
+   * effort.
+   */
+  private void generateUndoRedoObject() {
+    if (createOrEdit == CreateOrEdit.CREATE) {
+      undoRedoObject = new UndoRedoObject();
+      undoRedoObject.setAction(Action.EFFORT_CREATE);
+      undoRedoObject.addDatum(new Effort(effort));
+      undoRedoObject.addDatum(task);
+
+      // Store a copy of effort to create in object to avoid reference problems
+      undoRedoObject.setAgileItem(effort);
+
+    } else if (createOrEdit == CreateOrEdit.EDIT) {
+      undoRedoObject = new UndoRedoObject();
+      undoRedoObject.setAction(Action.EFFORT_EDIT);
+      undoRedoObject.addDatum(lastEffort);
+
+      // Store a copy of effort to edit in object to avoid reference problems
+      undoRedoObject.setAgileItem(effort);
+      Effort effortToStore = new Effort(effort);
+      undoRedoObject.addDatum(effortToStore);
+    }
   }
 
   /**
@@ -166,7 +196,7 @@ public class EffortDialogController {
       if (createOrEdit == CreateOrEdit.CREATE) {
         effort = new Effort(teamMember, spentEffort, comments, dateTime);
         task.addEffort(effort);
-        taskDC.updateEffort();
+        taskDC.updateEffortTable();
       } else if (createOrEdit == CreateOrEdit.EDIT) {
         //todo verify
         effort.setWorker(teamMember);
@@ -174,7 +204,7 @@ public class EffortDialogController {
         effort.setComments(comments);
         effort.setDateTime(dateTime);
       }
-//      generateUndoRedoObject(); // todo
+      generateUndoRedoObject(); // todo verify
       thisStage.close();
     }
   }
@@ -187,5 +217,15 @@ public class EffortDialogController {
   @FXML
   private void btnCancelClick(ActionEvent event) {
     thisStage.close();
+  }
+
+  /**
+   * Get the UndoRedoObject representing the creating or editing of the effort. Use this as a
+   * return value of the dialog.
+   *
+   * @return The UndoRedoObject representing the successful effort edit.
+   */
+  public UndoRedoObject getUndoRedoObject() {
+    return undoRedoObject;
   }
 }
