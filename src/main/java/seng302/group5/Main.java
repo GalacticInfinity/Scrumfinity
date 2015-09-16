@@ -678,6 +678,7 @@ public class Main extends Application {
       storyDialogStage.showAndWait();
 
       LMPC.getScrumBoardController().refreshComboBoxes();
+      LMPC.getBurndownController().refreshComboBoxes();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -718,6 +719,7 @@ public class Main extends Application {
       storyDialogStage.showAndWait();
 
       LMPC.getScrumBoardController().refreshComboBoxes();
+      LMPC.getBurndownController().refreshComboBoxes();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -750,6 +752,7 @@ public class Main extends Application {
       storyDialogStage.showAndWait();
 
       LMPC.getScrumBoardController().refreshComboBoxes();
+      LMPC.getBurndownController().refreshComboBoxes();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -791,6 +794,7 @@ public class Main extends Application {
       backlogDialogStage.showAndWait();
 
       LMPC.getScrumBoardController().refreshComboBoxes();
+      LMPC.getBurndownController().refreshComboBoxes();
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -857,6 +861,7 @@ public class Main extends Application {
       sprintDialogStage.showAndWait();
 
       LMPC.getScrumBoardController().refreshComboBoxes();
+      LMPC.getBurndownController().refreshComboBoxes();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -878,7 +883,7 @@ public class Main extends Application {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/TaskDialog.fxml"));
-      SplitPane taskDialogLayout = loader.load();
+      VBox taskDialogLayout = loader.load();
 
       TaskDialogController controller = loader.getController();
       Scene taskDialogScene = new Scene(taskDialogLayout);
@@ -892,6 +897,7 @@ public class Main extends Application {
       taskDialogStage.showAndWait();
 
       this.getLMPC().getScrumBoardController().refreshTaskLists();
+      this.getLMPC().getBurndownController().refreshComboBoxes();
       taskUndoRedo = controller.getUndoRedoObject();
     } catch (IOException e) {
       e.printStackTrace();
@@ -912,6 +918,7 @@ public class Main extends Application {
   public void revert() {
     revertHandler.revert();
     LMPC.getScrumBoardController().setupController(this, primaryStage);
+    LMPC.getBurndownController().setupController(this, primaryStage);
   }
 
   /**
@@ -923,6 +930,7 @@ public class Main extends Application {
       toggleName();
       checkUndoRedoItems();
       LMPC.getScrumBoardController().refreshComboBoxes();
+      LMPC.getBurndownController().refreshComboBoxes();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -937,6 +945,7 @@ public class Main extends Application {
       toggleName();
       checkUndoRedoItems();
       LMPC.getScrumBoardController().refreshComboBoxes();
+      LMPC.getBurndownController().refreshComboBoxes();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -1657,6 +1666,7 @@ public class Main extends Application {
         break;
     }
     LMPC.getScrumBoardController().refreshComboBoxes();
+    LMPC.getBurndownController().refreshComboBoxes();
   }
 
   /**

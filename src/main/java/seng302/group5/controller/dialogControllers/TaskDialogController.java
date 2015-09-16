@@ -6,6 +6,10 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.bind.SchemaOutputResolver;
+
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,23 +21,31 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldListCell;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
+import seng302.group5.model.Effort;
 import seng302.group5.model.Person;
 import seng302.group5.model.Status;
 import seng302.group5.model.Task;
 import seng302.group5.model.Taskable;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
+import seng302.group5.model.undoredo.UndoRedo;
 import seng302.group5.model.undoredo.UndoRedoObject;
 import seng302.group5.model.util.TimeFormat;
 
@@ -55,6 +67,11 @@ public class TaskDialogController {
   @FXML private Button btnAddPerson;
   @FXML private Button btnRemovePerson;
   @FXML private HBox btnContainer;
+  @FXML private TableView<Effort> effortTable;
+  @FXML private TableColumn dateTimeColumn;
+  @FXML private TableColumn userColumn;
+  @FXML private TableColumn effortColumn;
+  @FXML private TableColumn commentColumn;
   @FXML private Button btnConfirm;
   @FXML private Button btnCancel;
 
@@ -66,6 +83,8 @@ public class TaskDialogController {
   private ObservableList<Person> availablePeople;
   private ObservableList<PersonEffort> allocatedPeople;
   private ObservableList<PersonEffort> originalPeople;
+  private ObservableList<Effort> efforts = FXCollections.observableArrayList();
+  private List<Effort> currentEfforts;
 
   private UndoRedoObject undoRedoObject;
 
@@ -85,10 +104,13 @@ public class TaskDialogController {
                               Stage thisStage, CreateOrEdit createOrEdit, Task task) {
     this.taskable = taskable;
     this.thisStage = thisStage;
+    this.createOrEdit = createOrEdit;
+    this.currentEfforts = new ArrayList<>();
 
     if (task != null) {
       this.task = task;
       this.lastTask = new Task(task);
+      this.currentEfforts.addAll(task.getEfforts());
     } else {
       this.task = new Task();  // different because efforts
       this.lastTask = null;
@@ -113,13 +135,12 @@ public class TaskDialogController {
 
       labelField.setText(task.getLabel());
       descriptionField.setText(task.getTaskDescription());
-      estimateField.setText(TimeFormat.parseTime(task.getTaskEstimation()));
+      estimateField.setText(TimeFormat.parseDuration(task.getTaskEstimation()));
       impedimentsField.setText(task.getImpediments());
       statusComboBox.setValue(Status.getStatusString(task.getStatus()));
 
       btnConfirm.setDisable(true);
     }
-    this.createOrEdit = createOrEdit;
 
     btnConfirm.setDefaultButton(true);
     thisStage.setResizable(false);
@@ -172,6 +193,7 @@ public class TaskDialogController {
         descriptionField.getText().equals(task.getTaskDescription()) &&
         TimeFormat.parseMinutes(estimateField.getText()) == task.getTaskEstimation() &&
         impedimentsField.getText().equals(task.getImpediments()) &&
+        effortTable.getItems().equals(currentEfforts) &&
         Status.getStatusEnum(statusComboBox.getValue()).equals(task.getStatus()) &&
         allocatedPeopleList.getItems().equals(originalPeople)) {
       btnConfirm.setDisable(true);
@@ -194,13 +216,14 @@ public class TaskDialogController {
     if (team != null) {
       availablePeople.addAll(team.getTeamMembers());
     }
+
     if (task != null && createOrEdit == CreateOrEdit.EDIT) {
       for (Person person : task.getTaskPeople()) {
         int effort = task.getSpentEffort().get(person);
-        PersonEffort personEffort = new PersonEffort(person, TimeFormat.parseTime(effort));
+        PersonEffort personEffort = new PersonEffort(person, TimeFormat.parseDuration(effort));
         allocatedPeople.add(personEffort);
         availablePeople.remove(person);
-        originalPeople.add(new PersonEffort(person, TimeFormat.parseTime(effort)));
+        originalPeople.add(new PersonEffort(person, TimeFormat.parseDuration(effort)));
       }
     }
 
@@ -215,6 +238,18 @@ public class TaskDialogController {
     statusComboBox.getSelectionModel().select(0);
 
     allocatedPeopleList.setCellFactory(listView -> new PersonEffortCell());
+    effortTable.setRowFactory(tableView -> new EffortRow());
+
+    updateEffortTable();
+  }
+
+  /**
+   * Updates the listview of efforts.
+   */
+  public void updateEffortTable() {
+    efforts.setAll(task.getEfforts());
+    effortTable.setItems(efforts);
+    checkButtonDisabled();
   }
 
   /**
@@ -257,8 +292,8 @@ public class TaskDialogController {
   }
 
   /**
-   * Generate an UndoRedoObject to represent a task edit action and store it globally. This is so
-   * a cancel in a dialog higher in the hierarchy can undo the changes made to the task.
+   * Generate an UndoRedoObject to represent a task create or edit action and store it globally.
+   * This is so a cancel in a dialog higher in the hierarchy can undo the changes made to the task.
    */
   private void generateUndoRedoObject() {
     if (createOrEdit == CreateOrEdit.CREATE) {
@@ -267,7 +302,7 @@ public class TaskDialogController {
       undoRedoObject.addDatum(new Task(task));
       undoRedoObject.addDatum(taskable);
 
-      // Store a copy of task to edit in object to avoid reference problems
+      // Store a copy of task to create in object to avoid reference problems
       undoRedoObject.setAgileItem(task);
 
     } else if (createOrEdit == CreateOrEdit.EDIT) {
@@ -406,8 +441,8 @@ public class TaskDialogController {
   }
 
   /**
-   * Get the UndoRedoObject representing the editing of the task. Use this as a return value of
-   * the dialog.
+   * Get the UndoRedoObject representing the creating or editing of the task. Use this as a return
+   * value of the dialog.
    *
    * @return The UndoRedoObject representing the successful task edit.
    */
@@ -418,8 +453,10 @@ public class TaskDialogController {
   /**
    * Shows the dialog used for logging effort against a task.
    * @param createOrEdit Whether the dialog is for creating or editing effort.
+   * @param effort The effort to edit (null if creating).
    */
-  public void showEffortDialog(CreateOrEdit createOrEdit) {
+  public UndoRedo showEffortDialog(CreateOrEdit createOrEdit, Effort effort) {
+    UndoRedo effortUndoRedo = null;
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/LoggingEffortDialog.fxml"));
@@ -433,15 +470,18 @@ public class TaskDialogController {
       for (PersonEffort personEffort : allocatedPeople) {
         allocated.add(personEffort.getPerson());
       }
-      controller.setupController(task, allocated, effortDialogStage, createOrEdit, null);
+      controller.setupController(this, task, allocated, effortDialogStage, createOrEdit, effort);
 
       effortDialogStage.initModality(Modality.APPLICATION_MODAL);
       effortDialogStage.initOwner(thisStage);
       effortDialogStage.setScene(effortDialogScene);
-      effortDialogStage.show();
+      effortDialogStage.showAndWait();
+
+      effortUndoRedo = controller.getUndoRedoObject();
     } catch (Exception e) {
       e.printStackTrace();
     }
+    return effortUndoRedo;
   }
 
   /**
@@ -449,8 +489,21 @@ public class TaskDialogController {
    * @param event The event generated by the listener.
    */
   @FXML
-  private void btnAddEffort(ActionEvent event) {
-    showEffortDialog(CreateOrEdit.CREATE);
+  private void btnAddEffortClick(ActionEvent event) {
+    showEffortDialog(CreateOrEdit.CREATE, null);
+  }
+
+  /**
+   * Removes the selected effort from the task.
+   * @param event The event generated by the listener.
+   */
+  @FXML
+  private void btnRemoveEffortClick(ActionEvent event) {
+    Effort selectedEffort = effortTable.getSelectionModel().getSelectedItem();
+    if (selectedEffort != null) {
+      task.removeEffort(selectedEffort);
+      updateEffortTable();
+    }
   }
 
   /**
@@ -584,6 +637,32 @@ public class TaskDialogController {
         setText(null);
         setGraphic(pane);
       }
+    }
+  }
+
+  /**
+   * Allow double clicking for editing an Effort.
+   */
+  private class EffortRow extends TableRow<Effort> {
+
+    public EffortRow() {
+      super();
+      this.setOnMouseClicked(click -> {
+        if (click.getClickCount() == 2 &&
+            click.getButton() == MouseButton.PRIMARY &&
+            !isEmpty()) {
+          UndoRedo effortEdit = showEffortDialog(CreateOrEdit.EDIT, getItem());
+          if (effortEdit != null) {
+            //todo manage undo/redo for editing efforts.
+//            tasksUndoRedo.addUndoRedo(effortEdit);
+            updateEffortTable();
+            effortTable.getSelectionModel().select(getItem());
+            if (createOrEdit == CreateOrEdit.EDIT) {
+              checkButtonDisabled();
+            }
+          }
+        }
+      });
     }
   }
 }

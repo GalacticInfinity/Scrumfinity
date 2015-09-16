@@ -21,6 +21,7 @@ import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Effort;
 import seng302.group5.model.Person;
 import seng302.group5.model.Task;
+import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoObject;
 import seng302.group5.model.util.TimeFormat;
 
@@ -39,6 +40,7 @@ public class EffortDialogController {
   private ObservableList<Person> allocatedPeople;
 
   private Task task;
+  private TaskDialogController taskDC;
   private Stage thisStage;
   private CreateOrEdit createOrEdit;
   private Effort effort;
@@ -55,9 +57,10 @@ public class EffortDialogController {
    * @param createOrEdit Whether this dialog is for creating or editing.
    * @param effort The object that will be edited (null if creating)
    */
-  public void setupController(Task task, List<Person> allocatedPeople,
+  public void setupController(TaskDialogController taskDC, Task task, List<Person> allocatedPeople,
                               Stage thisStage, CreateOrEdit createOrEdit, Effort effort) {
     this.task = task;
+    this.taskDC = taskDC;
     this.thisStage = thisStage;
     this.createOrEdit = createOrEdit;
 
@@ -84,21 +87,53 @@ public class EffortDialogController {
       btnConfirm.setText("Log");
 
       dateField.setValue(LocalDate.now());
-      timeField.setText(LocalTime.now().toString());
+      timeField.setText(TimeFormat.parseTimeString(LocalTime.now()));
 
-    } else if (createOrEdit == CreateOrEdit.EDIT) {
+    } else if (createOrEdit == CreateOrEdit.EDIT && effort != null) {
       thisStage.setTitle("Edit Logged Effort");
       btnConfirm.setText("Save");
 
-      //TODO: Populate fields.
+      //todo verify
       LocalDateTime dateTime = effort.getDateTime();
+      teamMemberCombo.setValue(effort.getWorker());
       dateField.setValue(dateTime.toLocalDate());
-      timeField.setText(dateTime.toLocalTime().toString());
+      timeField.setText(TimeFormat.parseTimeString(dateTime.toLocalTime()));
+      spentEffortField.setText(TimeFormat.parseDuration(effort.getSpentEffort()));
+      commentField.setText(effort.getComments());
     }
 
     this.createOrEdit = createOrEdit;
     btnConfirm.setDefaultButton(true);
     thisStage.setResizable(false);
+
+    undoRedoObject = null;
+  }
+
+  /**
+   * Generate an UndoRedoObject to represent an effort create or edit action and store it globally.
+   * This is so a cancel in a dialog higher in the hierarchy can undo the changes made to the
+   * effort.
+   */
+  private void generateUndoRedoObject() {
+    if (createOrEdit == CreateOrEdit.CREATE) {
+      undoRedoObject = new UndoRedoObject();
+      undoRedoObject.setAction(Action.EFFORT_CREATE);
+      undoRedoObject.addDatum(new Effort(effort));
+      undoRedoObject.addDatum(task);
+
+      // Store a copy of effort to create in object to avoid reference problems
+      undoRedoObject.setAgileItem(effort);
+
+    } else if (createOrEdit == CreateOrEdit.EDIT) {
+      undoRedoObject = new UndoRedoObject();
+      undoRedoObject.setAction(Action.EFFORT_EDIT);
+      undoRedoObject.addDatum(lastEffort);
+
+      // Store a copy of effort to edit in object to avoid reference problems
+      undoRedoObject.setAgileItem(effort);
+      Effort effortToStore = new Effort(effort);
+      undoRedoObject.addDatum(effortToStore);
+    }
   }
 
   /**
@@ -108,18 +143,12 @@ public class EffortDialogController {
    */
   @FXML
   private void btnConfirmClick(ActionEvent event) {
-    System.out.println(teamMemberCombo.getSelectionModel().getSelectedItem());
-    System.out.println(dateField.getValue());
-    System.out.println(timeField.getText());
-    System.out.println(spentEffortField.getText());
-    System.out.println(commentField.getText().trim());
-
     StringBuilder errors = new StringBuilder();
     int noErrors = 0;
 
     Person teamMember = teamMemberCombo.getValue();
     LocalDate date = dateField.getValue();
-    LocalTime time = LocalTime.parse(timeField.getText()); // todo TimeFormat parser for am/pm etc
+    LocalTime time;
     int spentEffort;
     String comments = commentField.getText().trim();
 
@@ -133,9 +162,10 @@ public class EffortDialogController {
       errors.append(String.format("%s\n", "Date is invalid."));
     }
 
+    time = TimeFormat.parseLocalTime(timeField.getText());
     if (time == null) {
       noErrors++;
-      errors.append(String.format("%s\n", "Time is invalid."));
+      errors.append(String.format("%s\n", "Invalid time format (e.g. 13:45)."));
     }
 
     spentEffort = TimeFormat.parseMinutes(spentEffortField.getText());
@@ -162,15 +192,19 @@ public class EffortDialogController {
       alert.setContentText(errors.toString());
       alert.showAndWait();
     } else {
+      LocalDateTime dateTime = LocalDateTime.of(date, time);
       if (createOrEdit == CreateOrEdit.CREATE) {
-        LocalDateTime dateTime = LocalDateTime.of(date, time);
         effort = new Effort(teamMember, spentEffort, comments, dateTime);
         task.addEffort(effort);
+        taskDC.updateEffortTable();
       } else if (createOrEdit == CreateOrEdit.EDIT) {
-        // todo
+        //todo verify
+        effort.setWorker(teamMember);
+        effort.setSpentEffort(spentEffort);
+        effort.setComments(comments);
+        effort.setDateTime(dateTime);
       }
-//      generateUndoRedoObject(); // todo
-      System.out.println(task.getEfforts());
+      generateUndoRedoObject(); // todo verify
       thisStage.close();
     }
   }
@@ -183,5 +217,15 @@ public class EffortDialogController {
   @FXML
   private void btnCancelClick(ActionEvent event) {
     thisStage.close();
+  }
+
+  /**
+   * Get the UndoRedoObject representing the creating or editing of the effort. Use this as a
+   * return value of the dialog.
+   *
+   * @return The UndoRedoObject representing the successful effort edit.
+   */
+  public UndoRedoObject getUndoRedoObject() {
+    return undoRedoObject;
   }
 }

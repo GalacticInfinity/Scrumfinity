@@ -7,7 +7,7 @@ public class Effort implements AgileItem, Comparable<Effort> {
 
   private String effortLabel;
   private Person worker;
-  private double spentEffort;
+  private int spentEffort;
   private String comments;
   private LocalDateTime dateTime;
 
@@ -17,7 +17,7 @@ public class Effort implements AgileItem, Comparable<Effort> {
   public Effort() {
     this.effortLabel = "";
     this.worker = null;
-    this.spentEffort = 0.0;
+    this.spentEffort = 0;
     this.comments = "";
     this.dateTime = null;
   }
@@ -30,7 +30,7 @@ public class Effort implements AgileItem, Comparable<Effort> {
    * @param comments Any comments about the logged Effort.
    * @param dateTime The spentEffort the effort was logged.
    */
-  public Effort(Person worker, double spentEffort, String comments, LocalDateTime dateTime) {
+  public Effort(Person worker, int spentEffort, String comments, LocalDateTime dateTime) {
     this.effortLabel = generateLabel(worker, spentEffort, comments, dateTime);
     this.worker = worker;
     this.spentEffort = spentEffort;
@@ -50,12 +50,11 @@ public class Effort implements AgileItem, Comparable<Effort> {
     this.dateTime = clone.getDateTime();
   }
 
-  private String generateLabel(Person worker, double spentEffort,
+  private String generateLabel(Person worker, int spentEffort,
                                String comments, LocalDateTime dateTime) {
-    int result = worker.hashCode() + Double.hashCode(spentEffort) + comments.hashCode() +
+    int result = worker.hashCode() + Integer.hashCode(spentEffort) + comments.hashCode() +
                  dateTime.hashCode() + LocalTime.now().hashCode();
-    System.out.println(result);
-    return String.valueOf(result);
+    return dateTime.toString() + String.valueOf(result);
   }
 
   public String getLabel() {
@@ -74,11 +73,11 @@ public class Effort implements AgileItem, Comparable<Effort> {
     this.worker = worker;
   }
 
-  public double getSpentEffort() {
+  public int getSpentEffort() {
     return spentEffort;
   }
 
-  public void setSpentEffort(double spentEffort) {
+  public void setSpentEffort(int spentEffort) {
     this.spentEffort = spentEffort;
   }
 
@@ -169,7 +168,7 @@ public class Effort implements AgileItem, Comparable<Effort> {
   public int hashCode() {
     int result = effortLabel.hashCode();
     result = 31 * result + worker.hashCode();
-    result = 31 * result + Double.valueOf(spentEffort).hashCode();
+    result = 31 * result + Integer.hashCode(spentEffort);
     result = 31 * result + comments.hashCode();
     result = 31 * result + dateTime.hashCode();
     return result;

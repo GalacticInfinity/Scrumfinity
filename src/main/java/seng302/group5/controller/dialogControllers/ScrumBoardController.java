@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,6 +15,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -33,6 +36,7 @@ public class ScrumBoardController {
   @FXML private VBox storiesBox;
   @FXML private Button btnDeleteTask;
   @FXML private Button btnNewTask;
+  @FXML private ScrollPane scrollPane;
 
   private Main mainApp;
   private Stage stage;
@@ -85,6 +89,11 @@ public class ScrumBoardController {
           }
         }
     );
+
+    // Resizes the scrumboards width when the main stage is resized.
+    stage.widthProperty().addListener((observable, oldValue, newValue) -> {
+      storiesBox.setMinWidth(stage.getWidth() - 200);
+    });
 
     sprintCombo.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldSprint, newSprint) -> {
