@@ -623,17 +623,6 @@ public class ReportWriter {
         peopleElem.appendChild(personElem);
         personElem.appendChild(report.createTextNode(person.getLabel()));
       }
-      /*
-      Element spentEffortElem = report.createElement("spent-effort");
-      taskElement.appendChild(spentEffortElem);
-      for (Map.Entry<Person, Integer> entry : task.getSpentEffort().entrySet()) {
-        Element personsEffortElem = report.createElement("persons-effort");
-        spentEffortElem.appendChild(personsEffortElem);
-        personsEffortElem.appendChild(report.createTextNode(entry.getKey().getLabel() +
-                                                            " -> " + entry.getValue().toString()));
-      }
-      */
-      //TODO: Delete above and make sure below works once Task model has been changed.
 
       Element spentEffortElem = report.createElement("spent-effort");
       taskElement.appendChild(spentEffortElem);
@@ -641,21 +630,21 @@ public class ReportWriter {
         Element effortElem = report.createElement("effort");
         Element personElem = report.createElement("person");
         personElem.appendChild(report.createTextNode(effort.getWorker().getLabel()));
+        effortElem.appendChild(personElem);
         Element timeElem = report.createElement("logged-time");
-        timeElem.appendChild(report.createTextNode("Enter time here")); //TODO: Enter proper time here
+        timeElem.appendChild(report.createTextNode(String.valueOf(effort.getSpentEffort())));
+        effortElem.appendChild(timeElem);
         Element commentElem = report.createElement("comments");
         commentElem.appendChild(report.createTextNode(effort.getComments()));
+        effortElem.appendChild(commentElem);
         Element endTimeElem = report.createElement("time-stamp");
         endTimeElem.appendChild(report.createTextNode(effort.getDateTime().toString()));
+        effortElem.appendChild(endTimeElem);
         spentEffortElem.appendChild(effortElem);
       }
-
-
       tasksElement.appendChild(taskElement);
-      }
-      storyElem.appendChild(tasksElement);
-
-
+    }
+    storyElem.appendChild(tasksElement);
   }
 
   /**
@@ -764,16 +753,6 @@ public class ReportWriter {
         peopleElem.appendChild(personElem);
         personElem.appendChild(report.createTextNode(person.getLabel()));
       }
-      /*
-      Element spentEffortElem = report.createElement("spent-effort");
-      taskElement.appendChild(spentEffortElem);
-      for (Map.Entry<Person, Integer> entry : task.getSpentEffort().entrySet()) {
-        Element personsEffortElem = report.createElement("persons-effort");
-        spentEffortElem.appendChild(personsEffortElem);
-        personsEffortElem.appendChild(report.createTextNode(entry.getKey().getLabel() +
-                                                            " -> " + entry.getValue().toString()));
-      }
-      */
       //TODO: Remove above and make sure below works once Task model has been changed.
 
       Element spentEffortElem = report.createElement("spent-effort");
@@ -782,12 +761,16 @@ public class ReportWriter {
         Element effortElem = report.createElement("effort");
         Element personElem = report.createElement("person");
         personElem.appendChild(report.createTextNode(effort.getWorker().getLabel()));
+        effortElem.appendChild(personElem);
         Element timeElem = report.createElement("logged-time");
-        timeElem.appendChild(report.createTextNode("Enter time here")); //TODO: Enter proper time here
+        timeElem.appendChild(report.createTextNode(String.valueOf(effort.getSpentEffort())));
+        effortElem.appendChild(timeElem);
         Element commentElem = report.createElement("comments");
         commentElem.appendChild(report.createTextNode(effort.getComments()));
+        effortElem.appendChild(commentElem);
         Element endTimeElem = report.createElement("time-stamp");
         endTimeElem.appendChild(report.createTextNode(effort.getDateTime().toString()));
+        effortElem.appendChild(endTimeElem);
         spentEffortElem.appendChild(effortElem);
       }
       tasksElement.appendChild(taskElement);
