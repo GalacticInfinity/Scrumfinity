@@ -1080,7 +1080,7 @@ public class Loading {
           storyTask.addTaskPerson(taskPersonMap.get(storyData));
         }
       }
-
+      //This loads the original "barebones" logging effort that was put in place for a short time
       if (saveVersion == 0.5) {
         if (storyLine.startsWith("\t\t\t\t<TaskEffort>")) {
           String effortData;
@@ -1093,7 +1093,7 @@ public class Loading {
                 .updateSpentEffort(taskPersonMap.get(storyData), Integer.parseInt(effortData));
           }
         }
-      } else if (saveVersion >= 0.6) {
+      } else if (saveVersion >= 0.6) { //This loads the real proper effort that gets logged from V0.6 onwards
         if (storyLine.startsWith("\t\t\t\t<Effort>")) {
           while ((!(storyLine = loadedFile.readLine()).endsWith("</Effort>"))) {
             String effortWorker = storyLine.replaceAll(

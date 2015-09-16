@@ -370,6 +370,12 @@ public class Saving {
     saveFile.write("</Stories>\n");
   }
 
+  /**
+   * This saves the efforts that is logged within a task.
+   * @param task This is the task that contains the efforts to be saved
+   * @param saveFile This is the savefile to be created
+   * @throws Exception This is incase the writing fails somehow.
+   */
   private void saveEffort(Task task, Writer saveFile) throws Exception{
     if (!task.getEfforts().isEmpty()) {
       for (Effort effort : task.getEfforts()) {
