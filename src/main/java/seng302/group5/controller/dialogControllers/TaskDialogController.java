@@ -64,7 +64,7 @@ public class TaskDialogController {
   @FXML private Button btnAddPerson;
   @FXML private Button btnRemovePerson;
   @FXML private HBox btnContainer;
-  @FXML private TableView effortTable;
+  @FXML private TableView<Effort> effortTable;
   @FXML private TableColumn dateTimeColumn;
   @FXML private TableColumn userColumn;
   @FXML private TableColumn effortColumn;
@@ -285,8 +285,8 @@ public class TaskDialogController {
   }
 
   /**
-   * Generate an UndoRedoObject to represent a task edit action and store it globally. This is so
-   * a cancel in a dialog higher in the hierarchy can undo the changes made to the task.
+   * Generate an UndoRedoObject to represent a task create or edit action and store it globally.
+   * This is so a cancel in a dialog higher in the hierarchy can undo the changes made to the task.
    */
   private void generateUndoRedoObject() {
     if (createOrEdit == CreateOrEdit.CREATE) {
@@ -295,7 +295,7 @@ public class TaskDialogController {
       undoRedoObject.addDatum(new Task(task));
       undoRedoObject.addDatum(taskable);
 
-      // Store a copy of task to edit in object to avoid reference problems
+      // Store a copy of task to create in object to avoid reference problems
       undoRedoObject.setAgileItem(task);
 
     } else if (createOrEdit == CreateOrEdit.EDIT) {
@@ -434,8 +434,8 @@ public class TaskDialogController {
   }
 
   /**
-   * Get the UndoRedoObject representing the editing of the task. Use this as a return value of
-   * the dialog.
+   * Get the UndoRedoObject representing the creating or editing of the task. Use this as a return
+   * value of the dialog.
    *
    * @return The UndoRedoObject representing the successful task edit.
    */
