@@ -22,11 +22,13 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldListCell;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -43,6 +45,7 @@ import seng302.group5.model.Task;
 import seng302.group5.model.Taskable;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
+import seng302.group5.model.undoredo.UndoRedo;
 import seng302.group5.model.undoredo.UndoRedoObject;
 import seng302.group5.model.util.TimeFormat;
 
@@ -235,6 +238,7 @@ public class TaskDialogController {
     statusComboBox.getSelectionModel().select(0);
 
     allocatedPeopleList.setCellFactory(listView -> new PersonEffortCell());
+    effortTable.setRowFactory(tableView -> new EffortRow());
 
     updateEffortTable();
   }
@@ -449,8 +453,10 @@ public class TaskDialogController {
   /**
    * Shows the dialog used for logging effort against a task.
    * @param createOrEdit Whether the dialog is for creating or editing effort.
+   * @param effort The effort to edit (null if creating).
    */
-  public void showEffortDialog(CreateOrEdit createOrEdit) {
+  public UndoRedo showEffortDialog(CreateOrEdit createOrEdit, Effort effort) {
+    UndoRedo effortUndoRedo = null;
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/LoggingEffortDialog.fxml"));
@@ -464,15 +470,18 @@ public class TaskDialogController {
       for (PersonEffort personEffort : allocatedPeople) {
         allocated.add(personEffort.getPerson());
       }
-      controller.setupController(this, task, allocated, effortDialogStage, createOrEdit, null);
+      controller.setupController(this, task, allocated, effortDialogStage, createOrEdit, effort);
 
       effortDialogStage.initModality(Modality.APPLICATION_MODAL);
       effortDialogStage.initOwner(thisStage);
       effortDialogStage.setScene(effortDialogScene);
-      effortDialogStage.show();
+      effortDialogStage.showAndWait();
+
+      effortUndoRedo = controller.getUndoRedoObject();
     } catch (Exception e) {
       e.printStackTrace();
     }
+    return effortUndoRedo;
   }
 
   /**
@@ -481,7 +490,7 @@ public class TaskDialogController {
    */
   @FXML
   private void btnAddEffortClick(ActionEvent event) {
-    showEffortDialog(CreateOrEdit.CREATE);
+    showEffortDialog(CreateOrEdit.CREATE, null);
   }
 
   /**
@@ -628,6 +637,32 @@ public class TaskDialogController {
         setText(null);
         setGraphic(pane);
       }
+    }
+  }
+
+  /**
+   * Allow double clicking for editing an Effort.
+   */
+  private class EffortRow extends TableRow<Effort> {
+
+    public EffortRow() {
+      super();
+      this.setOnMouseClicked(click -> {
+        if (click.getClickCount() == 2 &&
+            click.getButton() == MouseButton.PRIMARY &&
+            !isEmpty()) {
+          UndoRedo effortEdit = showEffortDialog(CreateOrEdit.EDIT, getItem());
+          if (effortEdit != null) {
+            //todo manage undo/redo for editing efforts.
+//            tasksUndoRedo.addUndoRedo(effortEdit);
+            updateEffortTable();
+            effortTable.getSelectionModel().select(getItem());
+            if (createOrEdit == CreateOrEdit.EDIT) {
+              checkButtonDisabled();
+            }
+          }
+        }
+      });
     }
   }
 }

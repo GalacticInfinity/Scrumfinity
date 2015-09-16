@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +17,7 @@ import javafx.scene.control.Alert;
 import seng302.group5.Main;
 import seng302.group5.model.AgileHistory;
 import seng302.group5.model.Backlog;
+import seng302.group5.model.Effort;
 import seng302.group5.model.Estimate;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
@@ -1077,15 +1080,53 @@ public class Loading {
           storyTask.addTaskPerson(taskPersonMap.get(storyData));
         }
       }
-      if (storyLine.startsWith("\t\t\t\t<TaskEffort>")) {
-        String effortData;
-        while ((!(storyLine = loadedFile.readLine()).endsWith("</TaskEffort>"))) {
-          storyData = storyLine.replaceAll("(?i)(.*<person.*?>)(.+?)(</person>)", "$2");
-          storyLine = loadedFile.readLine();
-          effortData = storyLine.replaceAll("(?i)(.*<effort.*?>)(.+?)(</effort>)",
-                                            "$2");
-          storyTask
-              .updateSpentEffort(taskPersonMap.get(storyData), Integer.parseInt(effortData));
+      //This loads the original "barebones" logging effort that was put in place for a short time
+      if (saveVersion == 0.5) {
+        if (storyLine.startsWith("\t\t\t\t<TaskEffort>")) {
+          String effortData;
+          while ((!(storyLine = loadedFile.readLine()).endsWith("</TaskEffort>"))) {
+            storyData = storyLine.replaceAll("(?i)(.*<person.*?>)(.+?)(</person>)", "$2");
+            storyLine = loadedFile.readLine();
+            effortData = storyLine.replaceAll("(?i)(.*<effort.*?>)(.+?)(</effort>)",
+                                              "$2");
+            storyTask
+                .updateSpentEffort(taskPersonMap.get(storyData), Integer.parseInt(effortData));
+          }
+        }
+      } else if (saveVersion >= 0.6) { //This loads the real proper effort that gets logged from V0.6 onwards
+        if (storyLine.startsWith("\t\t\t\t<Effort>")) {
+          while ((!(storyLine = loadedFile.readLine()).endsWith("</Effort>"))) {
+            String effortWorker = storyLine.replaceAll(
+                "(?i)(.*<effortWorker.*?>)(.+?)(</effortWorker>)",
+                "$2");
+
+            Person worker = null;
+            for (Person man : main.getPeople()) {
+              if (man.getLabel().equals(effortWorker)) {
+                worker = man;
+              }
+            }
+
+            storyLine = loadedFile.readLine();
+            int effortSpent = Integer.parseInt(
+                storyLine.replaceAll("(?i)(.*<spentEffort.*?>)(.+?)(</spentEffort>)",
+                                     "$2"));
+
+            storyLine = loadedFile.readLine();
+            String comment = storyLine.replaceAll("(?i)(.*<comments.*?>)(.+?)(</comments>)",
+                                                  "$2");
+            storyLine = loadedFile.readLine();
+
+            String dateTime = storyLine.replaceAll("(?i)(.*<dateTime.*?>)(.+?)(</dateTime>)",
+                                                   "$2");
+
+            LocalDateTime dt = LocalDateTime.parse(dateTime);
+
+            if (worker != null) {
+              Effort effortItem = new Effort(worker, effortSpent, comment, dt);
+              storyTask.addEffort(effortItem);
+            }
+          }
         }
       }
     }

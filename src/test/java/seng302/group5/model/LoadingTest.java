@@ -6,7 +6,9 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -52,6 +54,7 @@ public class LoadingTest {
   Story story1;
   Story story2;
   Story story3;
+  Story storyWithLoggedEffort;
   Backlog backlog1;
   Backlog backlog2;
   Backlog backlog3;
@@ -318,6 +321,28 @@ public class LoadingTest {
     story3.setAcceptanceCriteria(acs);
     story3.setStoryState(true);
     savedMain.addStory(story3);
+  }
+
+  public void createStoryWithEffort() {
+
+    createVanillaPeople();
+
+    List<Person> peeps = new ArrayList<>();
+    peeps.add(person2);
+
+    Task task = new Task("Woomandu","what chu think fool?!?!", 1, Status.DONE, peeps);
+
+    storyWithLoggedEffort = new Story();
+    storyWithLoggedEffort.setLabel("WOOMANDU");
+    storyWithLoggedEffort.setDescription("oh my god he is the big boy");
+    storyWithLoggedEffort.setCreator(person1);
+    storyWithLoggedEffort.addTask(task);
+
+    Effort effort = new Effort(person2, 200,"Iwork hard", LocalDateTime.of(2015,1,1,12,10));
+
+    task.addEffort(effort);
+
+    savedMain.addStory(storyWithLoggedEffort);
   }
 
   public void createBacklogs() {
@@ -1028,5 +1053,30 @@ public class LoadingTest {
 
     assertEquals("Impedi1", loadedMain.getStories().get(0).getImpediments());
     assertEquals("Impeedi, dos", loadedMain.getStories().get(1).getImpediments());
+  }
+
+  @Test
+  public void testEffort(){
+    createStoryWithEffort();
+
+
+    saving = new Saving(savedMain);
+    File file = new File(System.getProperty("user.dir")
+                         + File.separator
+                         + "StorySave.xml");
+    saving.saveData(file);
+
+    loading = new Loading(loadedMain);
+    loading.loadFile(file);
+
+
+    Story story = loadedMain.getStories().get(0);
+    Task tTask = story.getTasks().get(0);
+    Effort effy = tTask.getEfforts().get(0);
+
+    assertEquals(200, effy.getSpentEffort());
+    assertEquals("Iwork hard",effy.getComments());
+    assertEquals(LocalDateTime.of(2015,1,1,12,10),effy.getDateTime());
+    assertEquals(person2,effy.getWorker());
   }
 }
