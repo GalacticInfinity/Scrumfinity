@@ -80,6 +80,7 @@ public class TaskDialogController {
   private ObservableList<Person> availablePeople;
   private ObservableList<PersonEffort> allocatedPeople;
   private ObservableList<PersonEffort> originalPeople;
+  private ObservableList<Effort> efforts = FXCollections.observableArrayList();
 
   private UndoRedoObject undoRedoObject;
 
@@ -231,7 +232,12 @@ public class TaskDialogController {
 
     allocatedPeopleList.setCellFactory(listView -> new PersonEffortCell());
 
-    effortTable.setItems(task.getEfforts());
+    updateEffort();
+  }
+
+  public void updateEffort() {
+    efforts.setAll(task.getEfforts());
+    effortTable.setItems(efforts);
   }
 
   /**
@@ -450,7 +456,7 @@ public class TaskDialogController {
       for (PersonEffort personEffort : allocatedPeople) {
         allocated.add(personEffort.getPerson());
       }
-      controller.setupController(task, allocated, effortDialogStage, createOrEdit, null);
+      controller.setupController(this, task, allocated, effortDialogStage, createOrEdit, null);
 
       effortDialogStage.initModality(Modality.APPLICATION_MODAL);
       effortDialogStage.initOwner(thisStage);
