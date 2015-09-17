@@ -301,10 +301,28 @@ public class TaskDialogController {
   protected void btnRemovePersonClick(ActionEvent event) {
     Person selectedPerson = allocatedPeopleList.getSelectionModel().getSelectedItem();
     if (selectedPerson != null) {
-      availablePeople.add(selectedPerson);
-      allocatedPeople.remove(selectedPerson);
+      boolean found = false;
+      for (Effort effort : task.getEfforts()) {
+        if (effort.getWorker().equals(selectedPerson)) {
+         found = true;
+        }
+      }
+      if (found) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Person has logged effort");
+        alert.setHeaderText(null);
+        String message = "You can not remove this person from the task because they have already "
+                         + "logged some effort against it.";
+        alert.getDialogPane().setPrefHeight(120);
+        alert.setContentText(message);
+        //checks response
+        alert.showAndWait();
+      } else {
+        availablePeople.add(selectedPerson);
+        allocatedPeople.remove(selectedPerson);
 
-      availablePeopleList.getSelectionModel().select(selectedPerson);
+        availablePeopleList.getSelectionModel().select(selectedPerson);
+      }
       if (createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
       }
