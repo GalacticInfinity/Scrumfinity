@@ -1074,11 +1074,17 @@ public class ListMainPaneController {
 
     List<Text> storyTasksText = new ArrayList<>();
     Text textStoryTasksBody;
+    Text textTaskEffortsBody;
     if (!story.getTasks().isEmpty()) {
       for (Task task : story.getTasks()) {
         textStoryTasksBody = new Text("\n• " + task + ", STATUS: " + Status.getStatusString(task.getStatus()));
         storyTasksText.add(textStoryTasksBody);
         displayTextFlow.getChildren().add(textStoryTasksBody);
+
+        for (Person person : task.getTaskPeople()) {
+          textTaskEffortsBody = new Text("\n\t" + person + ": " + task.getPersonEffort(person) + "min");
+          displayTextFlow.getChildren().add(textTaskEffortsBody);
+        }
       }
     } else {
       textStoryTasksBody = new Text("\nN/A");
@@ -1393,11 +1399,17 @@ public class ListMainPaneController {
 
     List<Text> sprintTasksText = new ArrayList<>();
     Text textSprintTasksBody;
+    Text textTaskEffortsBody;
     if (!sprint.getTasks().isEmpty()) {
       for (Task task : sprint.getTasks()) {
         textSprintTasksBody = new Text("\n• " + task + ", STATUS: " + Status.getStatusString(task.getStatus()));
         sprintTasksText.add(textSprintTasksBody);
         displayTextFlow.getChildren().add(textSprintTasksBody);
+
+        for (Person person : task.getTaskPeople()) {
+          textTaskEffortsBody = new Text("\n\t" + person + ": " + task.getPersonEffort(person) + "min");
+          displayTextFlow.getChildren().add(textTaskEffortsBody);
+        }
       }
     } else {
       textSprintTasksBody = new Text("\nN/A");
