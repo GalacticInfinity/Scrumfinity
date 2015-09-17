@@ -127,6 +127,7 @@ public class BurndownController {
 
                 }
             }
+              burndownChart.getData().clear();
               burndownChart.setData(getChartData(time));
 
           }
@@ -154,14 +155,22 @@ public class BurndownController {
       date1 = date1.plusDays(1);
       diff += 1;
     }
+    int diffs = (date1.getDayOfYear()+date1.getMonthValue()+date1.getDayOfMonth()) -  (date.getDayOfYear()+date.getMonthValue()+date.getDayOfMonth());
+
+    Integer i = time;
+    int count = 0;
     System.out.println(diff);
-    int timeDiff = time/diff;
-    System.out.println(timeDiff);
-    for (Integer i = time; i >= 0; i -= timeDiff) {
-      aSeries.getData().add(new XYChart.Data(date.toString(), i));
-      date = date.plusDays(1);
-    //  cSeries.getData().add(new XYChart.Data(Integer.toString(i), cValue));
-    //  cValue = cValue + Math.random() - .2;
+    int timeDiff = time/(diffs+diffs+diff)*2;
+    System.out.println(timeDiff + " diffs");
+    if (timeDiff != 0) {
+      for (Integer day = diffs+diffs+diff; day >= 0; day -= 2) {
+        aSeries.getData().add(new XYChart.Data(date.toString(), i));
+        date = date.plusDays(2);
+        i -= timeDiff;
+        count += 1;
+        //  cSeries.getData().add(new XYChart.Data(Integer.toString(i), cValue));
+        //  cValue = cValue + Math.random() - .2;
+      }
     }
     //answer.add(aSeries);
     answer.add(aSeries);
