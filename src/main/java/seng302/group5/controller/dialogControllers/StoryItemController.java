@@ -1,5 +1,6 @@
 package seng302.group5.controller.dialogControllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javafx.collections.FXCollections;
@@ -10,15 +11,21 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import seng302.group5.Main;
+import seng302.group5.controller.enums.CreateOrEdit;
+import seng302.group5.model.Person;
+import seng302.group5.model.Sprint;
 import seng302.group5.model.Status;
 import seng302.group5.model.Story;
 import seng302.group5.model.Task;
+import seng302.group5.model.Taskable;
+import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedo;
 import seng302.group5.model.undoredo.UndoRedoObject;
@@ -64,6 +71,10 @@ public class StoryItemController {
     inProgressTasks = FXCollections.observableArrayList();
     verifyTasks = FXCollections.observableArrayList();
     doneTasks = FXCollections.observableArrayList();
+    notStartedList.getChildren().clear();
+    inProgressList.getChildren().clear();
+    verifyList.getChildren().clear();
+    doneList.getChildren().clear();
     for (Task task : story.getTasks()) {
       switch (task.getStatus()) {
         case NOT_STARTED:
@@ -136,6 +147,37 @@ public class StoryItemController {
    * @param label Label to be added
    */
   private void addWithDragging(VBox root, Label label) {
+    label.setOnMouseClicked(new EventHandler<MouseEvent>() {
+      @Override
+      public void handle(MouseEvent event) {
+        if (event.getClickCount() == 2 && event.getButton() == MouseButton.PRIMARY) {
+          Label taskLabel = (Label) event.getSource();
+          String taskString = taskLabel.getText();
+          Task newTask = null;
+          for (Task task : story.getTasks()) {
+            if (taskString.equals(task.getLabel())) {
+              newTask = task;
+              break;
+            }
+          }
+          if (newTask != null) {
+            Team team = null;
+            for (Sprint sprint : mainApp.getSprints()) {
+              if (sprint.getSprintStories().contains(story)) {
+                team = sprint.getSprintTeam();
+              }
+            }
+            UndoRedo taskEdit = mainApp.showTaskDialog(story, newTask, team,
+                                                       CreateOrEdit.EDIT, mainApp.getStage());
+            if (taskEdit != null) {
+              mainApp.newAction(taskEdit);
+            }
+            mainApp.getLMPC().getScrumBoardController().refreshTaskLists();
+          }
+        }
+      }
+    });
+
     label.setOnDragDetected(new EventHandler<MouseEvent>() {
       @Override
       public void handle(MouseEvent event) {
@@ -198,7 +240,7 @@ public class StoryItemController {
         }
       }
     });
-    root.getChildren().add(label);
+      root.getChildren().add(label);
   }
 
   /**
