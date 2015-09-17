@@ -42,6 +42,7 @@ public class BurndownController {
   private Stage stage;
 
   private ObservableList<Sprint> availableSprints;
+  private ObservableList<Effort> allEffort;
   private ObservableList<Backlog> availableBacklogs;
 
   private Sprint sprint;
@@ -69,6 +70,7 @@ public class BurndownController {
   private void initialiseLists() {
     availableSprints = FXCollections.observableArrayList();
     availableBacklogs = FXCollections.observableArrayList();
+    allEffort = FXCollections.observableArrayList();
     availableBacklogs.addAll(this.mainApp.getBacklogs());
     ArrayList<Task> tasks = new ArrayList<Task>();
     backlogCombo.getSelectionModel().clearSelection();
@@ -106,6 +108,8 @@ public class BurndownController {
 
     sprintCombo.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldSprint, newSprint) -> {
+          allEffort.clear();
+          tasks.clear();
 
           if (sprintCombo.getSelectionModel().getSelectedItem() != null) {
             sprint = sprintCombo.getValue();
@@ -115,7 +119,6 @@ public class BurndownController {
               for (Story story : newSprint.getSprintStories()) {
                 if (mainApp.getStories().contains(story)) {
                   tasks.addAll(story.getTasks());
-                  //TODO set the sprints burndown chart here
                 }
               }
               XYChart.Series<LocalDate, Integer> aSeries = new XYChart.Series<LocalDate, Integer>();
@@ -126,11 +129,12 @@ public class BurndownController {
               time = 0;
               for (Task task : tasks) {
                 time += task.getTaskEstimation();
-                for (Effort efforts : task.getEfforts()) {
-
+                if (task.getEfforts() != null) {
+                  allEffort.addAll(task.getEfforts());
                 }
-            }
+                }
               burndownChart.getData().clear();
+              System.out.println(burndownChart.getYAxis().autoRangingProperty().getValue());
               burndownChart.setData(getChartData(time));
 
           }
@@ -146,16 +150,17 @@ public class BurndownController {
     double timeDiff = 0;
 
     ObservableList<XYChart.Series<LocalDate, Integer>> answer = FXCollections.observableArrayList();
+    answer.clear();
 
     XYChart.Series<LocalDate, Integer> aSeries = new XYChart.Series<LocalDate, Integer>();
-    //XYChart.Series<Integer, String> cSeries = new XYChart.Series<Integer, String>();
+    XYChart.Series<LocalDate, Integer> bSeries = new XYChart.Series<LocalDate, Integer>();
+    XYChart.Series<LocalDate, Integer> cSeries = new XYChart.Series<LocalDate, Integer>();
     aSeries.setName("Reference Velocity");
-    //cSeries.setName("Burn-Up");
+    bSeries.setName("Burn-Down");
+    cSeries.setName("Burn-Up");
     LocalDate date = sprint.getSprintStart();
     LocalDate date1 = sprint.getSprintEnd();
     LocalDate date2 = sprint.getSprintStart();
-
-    System.out.println(date1.getDayOfYear()-date.getDayOfYear());
 
     if (date.getYear() == date1.getYear()) {
       days = date1.getDayOfYear() - date.getDayOfYear();
@@ -171,17 +176,22 @@ public class BurndownController {
       timeDiff = (time+ 0.0) / days;
     }
     if (timeDiff != 0) {
-      for (Integer day = days; day >= 0; day -= 2) {
-        System.out.println(day + "  " + date2);
+      int burnUp = 0;
+      for (Integer day = days; day >= 0; day -= 1) {
         aSeries.getData().add(new XYChart.Data(date2.toString(), i));
-        date2 = date2.plusDays(2);
-        i = i - timeDiff*2;
-        //  cSeries.getData().add(new XYChart.Data(Integer.toString(i), cValue));
-        //  cValue = cValue + Math.random() - .2;
+        date2 = date2.plusDays(1);
+        i = i - timeDiff;
+        for (Effort effort : allEffort) {
+          if (effort.getDateTime().getDayOfYear() == date2.getDayOfYear()) {
+            time -= effort.getSpentEffort();
+            bSeries.getData().add(new XYChart.Data(date2.toString(), time));
+            burnUp += effort.getSpentEffort();
+            cSeries.getData().add(new XYChart.Data(date2.toString(), burnUp));
+          }
+        }
       }
     }
-    //answer.add(aSeries);
-    answer.add(aSeries);
+    answer.addAll(aSeries, bSeries, cSeries);
     return answer;
   }
   /**
