@@ -126,6 +126,20 @@ public class Task implements AgileItem, Comparable<Task> {
   }
 
   /**
+   * Returns the number of hours a given person has spent on a task.
+   * @param person The person you want hours for.
+   */
+  public int getPersonEffort(Person person) {
+    int totalEffort = 0;
+    for (Effort effort : this.efforts) {
+      if (effort.getWorker().equals(person)) {
+        totalEffort += effort.getSpentEffort();
+      }
+    }
+    return totalEffort;
+  }
+
+  /**
    * Return an unmodifiable list of assignedPeople
    * @return people assigned to the task
    */
