@@ -329,7 +329,14 @@ public class StoryDialogController {
     storyAndTaskChanges.addUndoRedo(storyChanges);
     for (UndoRedo taskChange : tasksUndoRedo.getUndoRedos()) {
       // only include edits to avoid doubling tasks
-      if (taskChange.getAction().equals(Action.TASK_EDIT)) {
+      UndoRedo actualTaskChange;
+      if (taskChange instanceof CompositeUndoRedo) {
+        // if it's composite then the actual task edit is the first item of the composite
+        actualTaskChange = ((CompositeUndoRedo) taskChange).getUndoRedos().get(0);
+      } else {
+        actualTaskChange = taskChange;
+      }
+      if (actualTaskChange.getAction().equals(Action.TASK_EDIT)) {
         storyAndTaskChanges.addUndoRedo(taskChange);
       }
     }
