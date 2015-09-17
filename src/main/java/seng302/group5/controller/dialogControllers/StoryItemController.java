@@ -405,6 +405,18 @@ public class StoryItemController {
     }
   }
 
+  public String getPaneName() {
+    return storyPane.getText();
+  }
+
+  public boolean checkIfOpened() {
+    return storyPane.isExpanded();
+  }
+
+  public void expandTab() {
+    storyPane.setExpanded(false);
+  }
+
   public Story getStory() {
     return story;
   }

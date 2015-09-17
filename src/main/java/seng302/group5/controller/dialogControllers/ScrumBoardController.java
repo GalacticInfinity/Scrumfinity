@@ -2,7 +2,9 @@ package seng302.group5.controller.dialogControllers;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javafx.beans.value.ChangeListener;
@@ -45,6 +47,7 @@ public class ScrumBoardController {
   private ObservableList<Sprint> availableSprints;
   private ObservableList<Story> availableStories;
   private List<StoryItemController> storyPanes;
+  private List<String> openedTabs;
 
   @FXML
   private void initialize() {
@@ -163,30 +166,45 @@ public class ScrumBoardController {
    */
   public void refreshComboBoxes() {
     Backlog backlog = backlogCombo.getValue();
-    backlogCombo.getSelectionModel().clearSelection();
     Sprint sprint = sprintCombo.getValue();
-    sprintCombo.getSelectionModel().clearSelection();
+    if (backlog != null &&
+        sprint != null) {
+      backlogCombo.getSelectionModel().clearSelection();
+      sprintCombo.getSelectionModel().clearSelection();
 
-    // The pane stuff
-    storiesBox.getChildren().setAll(FXCollections.observableArrayList());
-    storyPanes.clear();
-    //initialiseLists();
+      // The pane stuff
+      openedTabs = new ArrayList<>();
+      for (StoryItemController titledPane : storyPanes) {
+        if (titledPane.checkIfOpened())
+        openedTabs.add(titledPane.getPaneName());
+      }
 
-    sprintCombo.setDisable(true);
+      storiesBox.getChildren().setAll(FXCollections.observableArrayList());
+      storyPanes.clear();
+      //initialiseLists();
 
-    if (mainApp.getBacklogs().contains(backlog)) {
-      backlogCombo.setValue(backlog);
+      sprintCombo.setDisable(true);
 
-      if(availableSprints.contains(sprint)){
-        sprintCombo.setValue(sprint);
-        //todo make stories in sprints be removed properly at some point.
-        // Think here it should open the previously expanded tabs
+      if (mainApp.getBacklogs().contains(backlog)) {
+        backlogCombo.setValue(backlog);
+
+        if (availableSprints.contains(sprint)) {
+          sprintCombo.setValue(sprint);
+          //todo make stories in sprints be removed properly at some point.
+          System.out.println("Yes im here");
+          for (StoryItemController controller : storyPanes) {
+            System.out.println(controller.getPaneName());
+            if (openedTabs.contains(controller.getPaneName())) {
+              controller.expandTab();
+            }
+          }
+        } else {
+          sprintCombo.setValue(null);
+        }
       } else {
+        backlogCombo.setValue(null);
         sprintCombo.setValue(null);
       }
-    } else {
-      backlogCombo.setValue(null);
-      sprintCombo.setValue(null);
     }
   }
 
@@ -203,7 +221,6 @@ public class ScrumBoardController {
     storiesBox.getChildren().setAll(FXCollections.observableArrayList());
     availableStories.clear();
     storyPanes.clear();
-    refreshTaskLists();
   }
 
   /**
