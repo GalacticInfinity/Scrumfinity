@@ -24,6 +24,7 @@ import seng302.group5.Main;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Effort;
 import seng302.group5.model.Sprint;
+import seng302.group5.model.Status;
 import seng302.group5.model.Story;
 import seng302.group5.model.Task;
 
@@ -44,6 +45,7 @@ public class BurndownController {
   private ObservableList<Sprint> availableSprints;
   private ObservableList<Effort> allEffort;
   private ObservableList<Backlog> availableBacklogs;
+  private  ObservableList<Task> doneTasks;
 
   private Sprint sprint;
   private Integer time;
@@ -71,6 +73,7 @@ public class BurndownController {
     availableSprints = FXCollections.observableArrayList();
     availableBacklogs = FXCollections.observableArrayList();
     allEffort = FXCollections.observableArrayList();
+    doneTasks = FXCollections.observableArrayList();
     availableBacklogs.addAll(this.mainApp.getBacklogs());
     ArrayList<Task> tasks = new ArrayList<Task>();
     backlogCombo.getSelectionModel().clearSelection();
@@ -132,6 +135,10 @@ public class BurndownController {
                 if (task.getEfforts() != null) {
                   allEffort.addAll(task.getEfforts());
                 }
+                if (task.getStatus().equals(Status.DONE)) {
+                  doneTasks.add(task);
+                }
+
                 }
               burndownChart.getData().clear();
               System.out.println(burndownChart.getYAxis().autoRangingProperty().getValue());
@@ -179,16 +186,19 @@ public class BurndownController {
       int burnUp = 0;
       for (Integer day = days; day >= 0; day -= 1) {
         aSeries.getData().add(new XYChart.Data(date2.toString(), i));
-        date2 = date2.plusDays(1);
+
         i = i - timeDiff;
         for (Effort effort : allEffort) {
           if (effort.getDateTime().getDayOfYear() == date2.getDayOfYear()) {
-            time -= effort.getSpentEffort();
-            bSeries.getData().add(new XYChart.Data(date2.toString(), time));
-            burnUp += effort.getSpentEffort();
             cSeries.getData().add(new XYChart.Data(date2.toString(), burnUp));
+            burnUp += effort.getSpentEffort();
           }
         }
+        date2 = date2.plusDays(1);
+      }
+      for (Task doneTask : doneTasks) {
+        bSeries.getData().add(new XYChart.Data(doneTask.getDoneDate().toString(),
+                                               time - doneTask.getTaskEstimation()));
       }
     }
     answer.addAll(aSeries, bSeries, cSeries);
