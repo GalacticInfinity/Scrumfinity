@@ -136,7 +136,7 @@ public class ScrumBoardController {
       TitledPane accordionPane = loader.load();
 
       StoryItemController controller = loader.getController();
-      controller.setupController(story);
+      controller.setupController(story, mainApp);
       Accordion storyAccordion = new Accordion();
       storyAccordion.getPanes().add(accordionPane);
       storiesBox.getChildren().add(storyAccordion);

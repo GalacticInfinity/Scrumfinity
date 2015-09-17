@@ -15,8 +15,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
+import seng302.group5.Main;
+import seng302.group5.model.Status;
 import seng302.group5.model.Story;
 import seng302.group5.model.Task;
+import seng302.group5.model.undoredo.Action;
+import seng302.group5.model.undoredo.UndoRedo;
+import seng302.group5.model.undoredo.UndoRedoObject;
 
 /**
  * Controller class for a single storyPane for the accordion in the scrum board.
@@ -31,6 +36,7 @@ public class StoryItemController {
   @FXML private AnchorPane storyAnchor;
   @FXML private TitledPane storyPane;
 
+  private Main mainApp;
   private Story story;
 
   private ObservableList<Task> notStartedTasks;
@@ -42,8 +48,9 @@ public class StoryItemController {
    * This function sets up the story item controller.
    * @param story       The story being displayed in this.
    */
-  public void setupController(Story story) {
+  public void setupController(Story story, Main mainApp) {
     this.story = story;
+    this.mainApp = mainApp;
     storyPane.setText(story.getLabel());
     storyPane.setGraphic(new Rectangle(10, 10));
     setupLists();
@@ -85,6 +92,7 @@ public class StoryItemController {
       public void handle(MouseDragEvent event) {
         if (checkVBox(event)) {
           addToBottom(notStartedList, (Node) event.getGestureSource());
+          generateUndoRedoObject(event.getGestureSource(), Status.NOT_STARTED);
         }
       }
     });
@@ -94,6 +102,7 @@ public class StoryItemController {
       public void handle(MouseDragEvent event) {
         if (checkVBox(event)) {
           addToBottom(inProgressList, (Node) event.getGestureSource());
+          generateUndoRedoObject(event.getGestureSource(), Status.IN_PROGRESS);
         }
       }
     });
@@ -103,6 +112,7 @@ public class StoryItemController {
       public void handle(MouseDragEvent event) {
         if (checkVBox(event)) {
           addToBottom(verifyList, (Node) event.getGestureSource());
+          generateUndoRedoObject(event.getGestureSource(), Status.VERIFY);
         }
       }
     });
@@ -112,6 +122,7 @@ public class StoryItemController {
       public void handle(MouseDragEvent event) {
         if (checkVBox(event)) {
           addToBottom(doneList, (Node) event.getGestureSource());
+          generateUndoRedoObject(event.getGestureSource(), Status.DONE);
         }
       }
     });
@@ -162,15 +173,19 @@ public class StoryItemController {
           // Removes dragged label from root, saves index of dragged to label;
           if (notStartedList.getChildren().contains(sourceLbl)) {
             notStartedList.getChildren().remove(sourceLbl);
+            generateUndoRedoObject(event.getGestureSource(), Status.NOT_STARTED);
             indexOfDropTarget = notStartedList.getChildren().indexOf(sourceLbl);
           } else if (inProgressList.getChildren().contains(sourceLbl)) {
             inProgressList.getChildren().remove(sourceLbl);
+            generateUndoRedoObject(event.getGestureSource(), Status.IN_PROGRESS);
             indexOfDropTarget = inProgressList.getChildren().indexOf(sourceLbl);
           } else if (verifyList.getChildren().contains(sourceLbl)) {
             verifyList.getChildren().remove(sourceLbl);
+            generateUndoRedoObject(event.getGestureSource(), Status.VERIFY);
             indexOfDropTarget = verifyList.getChildren().indexOf(sourceLbl);
           } else if (doneList.getChildren().contains(sourceLbl)) {
             doneList.getChildren().remove(sourceLbl);
+            generateUndoRedoObject(event.getGestureSource(), Status.DONE);
             indexOfDropTarget = doneList.getChildren().indexOf(sourceLbl);
           }
           int indexOfDrag = root.getChildren().indexOf(label);
@@ -260,6 +275,48 @@ public class StoryItemController {
       return true;
     }
     return false;
+  }
+
+  /**
+   * Generates the undo/redo object for drag/dropping an item between lists.
+   * @param eventObject Javafx object (must have a .getText function which returns the task's label)
+   * @param status Status that the task is changed to.
+   */
+  private void generateUndoRedoObject(Object eventObject, Status status) {
+    // Store a copy of task to edit in object to avoid reference problems
+    //Step1: Change label into string
+    Label taskLabel = (Label) eventObject;
+    String taskString = taskLabel.getText();
+    //Step2: Create new and last task(old pre-drag, new after)
+    Task lastTask = null;
+    Task newTask = null;
+    //Step3: Clone last Task, assign task to newTask
+    for (Task task : story.getTasks()) {
+      if (taskString.equals(task.getLabel())) {
+        lastTask = new Task(task);
+        newTask = task;
+        break;
+      }
+    }
+
+    if (newTask != null) {
+      //Step4: set newTask's status, to wherever it was dragged to.
+      newTask.setStatus(status);
+      //Step5: make the u/r object.
+      UndoRedo undoRedoObject = new UndoRedoObject();
+
+      undoRedoObject.setAgileItem(newTask);
+
+      undoRedoObject = new UndoRedoObject();
+      undoRedoObject.setAction(Action.TASK_EDIT);
+      undoRedoObject.addDatum(lastTask);
+
+      // Store a copy of task to edit in object to avoid reference problems
+      undoRedoObject.setAgileItem(newTask);
+      Task taskToStore = new Task(newTask);
+      undoRedoObject.addDatum(taskToStore);
+      mainApp.newAction(undoRedoObject);
+    }
   }
 
   public Story getStory() {
