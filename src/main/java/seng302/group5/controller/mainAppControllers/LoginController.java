@@ -72,6 +72,7 @@ public class LoginController {
           mainApp.resetAll();
           mainApp.showLoginScreen(mainApp.getPrimaryStage());
         }
+        mainApp.getLMPC().getScrumBoardController().hardReset();
       }
     } catch (Exception e) {
 //      e.printStackTrace();
