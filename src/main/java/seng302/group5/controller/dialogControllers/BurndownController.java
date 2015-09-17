@@ -2,10 +2,13 @@ package seng302.group5.controller.dialogControllers;
 
 import org.mockito.cglib.core.Local;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoField;
 import java.time.temporal.TemporalAmount;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.stream.Collectors;
 
@@ -138,8 +141,9 @@ public class BurndownController {
   }
 
   private ObservableList<XYChart.Series<LocalDate, Integer>> getChartData(Integer time) {
-    double aValue = 1.56;
-    double cValue = 1.06;
+    int diff = 0;
+    int days = 0;
+    double timeDiff = 0;
 
     ObservableList<XYChart.Series<LocalDate, Integer>> answer = FXCollections.observableArrayList();
 
@@ -148,26 +152,30 @@ public class BurndownController {
     aSeries.setName("Reference Velocity");
     //cSeries.setName("Burn-Up");
     LocalDate date = sprint.getSprintStart();
-    LocalDate date1 = sprint.getSprintStart();
-    int diff = 0;
-    while (date1.compareTo(sprint.getSprintEnd()) == -1) {
-      System.out.println(date1 + "  " + sprint.getSprintEnd());
-      date1 = date1.plusDays(1);
-      diff += 1;
-    }
-    int diffs = (date1.getDayOfYear()+date1.getMonthValue()+date1.getDayOfMonth()) -  (date.getDayOfYear()+date.getMonthValue()+date.getDayOfMonth());
+    LocalDate date1 = sprint.getSprintEnd();
+    LocalDate date2 = sprint.getSprintStart();
 
-    Integer i = time;
-    int count = 0;
-    System.out.println(diff);
-    int timeDiff = time/(diffs+diffs+diff)*2;
-    System.out.println(timeDiff + " diffs");
+    System.out.println(date1.getDayOfYear()-date.getDayOfYear());
+
+    if (date.getYear() == date1.getYear()) {
+      days = date1.getDayOfYear() - date.getDayOfYear();
+    } else {
+      days = (365-date.getDayOfYear()) + date1.getDayOfYear();
+    }
+    Double i = time+ 0.0;
+    if (days > 0) {
+      timeDiff = (time+0.0) / days;
+    }
+    else if (days < 0) {
+      days = days* -1;
+      timeDiff = (time+ 0.0) / days;
+    }
     if (timeDiff != 0) {
-      for (Integer day = diffs+diffs+diff; day >= 0; day -= 2) {
-        aSeries.getData().add(new XYChart.Data(date.toString(), i));
-        date = date.plusDays(2);
-        i -= timeDiff;
-        count += 1;
+      for (Integer day = days; day >= 0; day -= 2) {
+        System.out.println(day + "  " + date2);
+        aSeries.getData().add(new XYChart.Data(date2.toString(), i));
+        date2 = date2.plusDays(2);
+        i = i - timeDiff*2;
         //  cSeries.getData().add(new XYChart.Data(Integer.toString(i), cValue));
         //  cValue = cValue + Math.random() - .2;
       }
