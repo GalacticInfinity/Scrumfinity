@@ -250,7 +250,9 @@ public class TaskDialogController {
   public void updateEffortTable() {
     efforts.setAll(task.getEfforts());
     effortTable.setItems(efforts);
-    checkButtonDisabled();
+    if (createOrEdit == CreateOrEdit.EDIT) {
+      checkButtonDisabled();
+    }
   }
 
   /**
