@@ -571,9 +571,8 @@ public class TaskDialogController {
   @FXML
   private void btnRemoveEffortClick(ActionEvent event) {
     Effort selectedEffort = effortTable.getSelectionModel().getSelectedItem();
-    Alert alert;
     if (selectedEffort != null) {
-      alert = new Alert(Alert.AlertType.CONFIRMATION);
+      Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
       alert.setTitle("Are you sure you want to remove effort?");
       alert.setHeaderText(null);
       String message = "You are trying to remove effort that has already been logged against this"
@@ -581,7 +580,7 @@ public class TaskDialogController {
       alert.getDialogPane().setPrefHeight(120);
       alert.setContentText(message);
       alert.showAndWait();
-      if (alert == null || alert.getResult() == ButtonType.OK) {
+      if (alert.getResult() == ButtonType.OK) {
         UndoRedo effortDelete = new UndoRedoObject();
         effortDelete.setAction(Action.EFFORT_DELETE);
         effortDelete.addDatum(new Effort(selectedEffort));
