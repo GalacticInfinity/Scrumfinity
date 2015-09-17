@@ -439,7 +439,6 @@ public class ReleaseDialogController {
   @FXML
   protected void addNewProject(ActionEvent event) {
     List<Project> tempProjectList = new ArrayList<>(availableProjects);
-    System.out.println(tempProjectList);
     mainApp.showProjectDialog(CreateOrEdit.CREATE);
     List<Project> tempNewProjectList = new ArrayList<>(mainApp.getProjects());
     if (!projectComboBox.isDisabled()) {
