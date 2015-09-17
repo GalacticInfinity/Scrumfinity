@@ -422,11 +422,12 @@ public class ReleaseDialogController {
    */
   @FXML
   protected void editProject(ActionEvent event) {
+    List<Project> tempProjectList = new ArrayList<>(availableProjects);
     Project selectedProject = projectComboBox.getSelectionModel().getSelectedItem();
     if (selectedProject != null) {
       mainApp.showProjectDialogWithinRelease(selectedProject, thisStage);
-      //projectComboBox.setValue(null);
-      projectComboBox.setValue(selectedProject);
+      availableProjects.setAll(tempProjectList);
+      projectComboBox.getSelectionModel().select(selectedProject);
     }
   }
 
