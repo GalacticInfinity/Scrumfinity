@@ -632,7 +632,7 @@ public class ReportWriter {
         personElem.appendChild(report.createTextNode(effort.getWorker().getLabel()));
         effortElem.appendChild(personElem);
         Element timeElem = report.createElement("logged-time");
-        timeElem.appendChild(report.createTextNode(String.valueOf(effort.getSpentEffort())));
+        timeElem.appendChild(report.createTextNode(TimeFormat.parseDuration(effort.getSpentEffort())));
         effortElem.appendChild(timeElem);
         Element commentElem = report.createElement("comments");
         commentElem.appendChild(report.createTextNode(effort.getComments()));
@@ -753,7 +753,6 @@ public class ReportWriter {
         peopleElem.appendChild(personElem);
         personElem.appendChild(report.createTextNode(person.getLabel()));
       }
-      //TODO: Remove above and make sure below works once Task model has been changed.
 
       Element spentEffortElem = report.createElement("spent-effort");
       taskElement.appendChild(spentEffortElem);
@@ -763,7 +762,7 @@ public class ReportWriter {
         personElem.appendChild(report.createTextNode(effort.getWorker().getLabel()));
         effortElem.appendChild(personElem);
         Element timeElem = report.createElement("logged-time");
-        timeElem.appendChild(report.createTextNode(String.valueOf(effort.getSpentEffort())));
+        timeElem.appendChild(report.createTextNode(TimeFormat.parseDuration(effort.getSpentEffort())));
         effortElem.appendChild(timeElem);
         Element commentElem = report.createElement("comments");
         commentElem.appendChild(report.createTextNode(effort.getComments()));
