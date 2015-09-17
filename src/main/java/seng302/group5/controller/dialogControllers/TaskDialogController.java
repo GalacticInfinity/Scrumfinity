@@ -18,6 +18,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -500,9 +501,20 @@ public class TaskDialogController {
   @FXML
   private void btnRemoveEffortClick(ActionEvent event) {
     Effort selectedEffort = effortTable.getSelectionModel().getSelectedItem();
+    Alert alert;
     if (selectedEffort != null) {
-      task.removeEffort(selectedEffort);
-      updateEffortTable();
+      alert = new Alert(Alert.AlertType.CONFIRMATION);
+      alert.setTitle("Are you sure you want to remove effort?");
+      alert.setHeaderText(null);
+      String message = "You are trying to remove effort that has already been logged against this"
+                       + " task. Are you sure you want to do this?";
+      alert.getDialogPane().setPrefHeight(120);
+      alert.setContentText(message);
+      alert.showAndWait();
+      if (alert == null || alert.getResult() == ButtonType.OK) {
+        task.removeEffort(selectedEffort);
+        updateEffortTable();
+      }
     }
   }
 
