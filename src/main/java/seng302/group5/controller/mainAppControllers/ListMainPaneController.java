@@ -52,6 +52,7 @@ import seng302.group5.model.Person;
 import seng302.group5.model.Project;
 import seng302.group5.model.Team;
 import seng302.group5.model.Skill;
+import seng302.group5.model.util.TimeFormat;
 
 /**
  * Created by Michael on 3/15/2015.
@@ -1082,7 +1083,7 @@ public class ListMainPaneController {
         displayTextFlow.getChildren().add(textStoryTasksBody);
 
         for (Person person : task.getTaskPeople()) {
-          textTaskEffortsBody = new Text("\n\t" + person + ": " + task.getPersonEffort(person) + "min");
+          textTaskEffortsBody = new Text("\n\t" + person + ": " + TimeFormat.parseDuration(task.getPersonEffort(person)));
           displayTextFlow.getChildren().add(textTaskEffortsBody);
         }
       }
@@ -1407,7 +1408,7 @@ public class ListMainPaneController {
         displayTextFlow.getChildren().add(textSprintTasksBody);
 
         for (Person person : task.getTaskPeople()) {
-          textTaskEffortsBody = new Text("\n\t" + person + ": " + task.getPersonEffort(person) + "min");
+          textTaskEffortsBody = new Text("\n\t" + person + ": " + TimeFormat.parseDuration(task.getPersonEffort(person)));
           displayTextFlow.getChildren().add(textTaskEffortsBody);
         }
       }

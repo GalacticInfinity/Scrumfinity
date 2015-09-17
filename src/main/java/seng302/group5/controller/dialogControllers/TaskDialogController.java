@@ -642,7 +642,7 @@ public class TaskDialogController {
         setGraphic(null);
       } else {
         cellText.setText(person.toString());
-        effortField.setText(String.valueOf(task.getPersonEffort(person) + "min"));
+        effortField.setText(TimeFormat.parseDuration(task.getPersonEffort(person)));
         setText(null);
         setGraphic(pane);
       }
