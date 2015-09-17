@@ -608,7 +608,9 @@ public class BacklogDialogController {
 
           backlog.addStory(storyEstimate.getStory(), storyEstimate.getEstimateIndex());
         }
-        mainApp.refreshList(backlog);
+        if (Settings.correctList(backlog)) {
+          mainApp.refreshList(backlog);
+        }
       }
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
       for (Story story : undoRedoStoryList) {
@@ -626,7 +628,7 @@ public class BacklogDialogController {
    */
   @FXML
   protected void btnCancelClick(ActionEvent event) {
-    if (createOrEdit == createOrEdit.EDIT || Settings.correctList(backlog)) {
+    if (createOrEdit == createOrEdit.EDIT && Settings.correctList(backlog)) {
       mainApp.refreshList(backlog);
     }
     thisStage.close();

@@ -268,7 +268,9 @@ public class TaskDialogController {
   public void updateEffortTable() {
     efforts.setAll(task.getEfforts());
     effortTable.setItems(efforts);
-    checkButtonDisabled();
+    if (createOrEdit == CreateOrEdit.EDIT) {
+      checkButtonDisabled();
+    }
   }
 
   /**
@@ -569,21 +571,32 @@ public class TaskDialogController {
   @FXML
   private void btnRemoveEffortClick(ActionEvent event) {
     Effort selectedEffort = effortTable.getSelectionModel().getSelectedItem();
+    Alert alert;
     if (selectedEffort != null) {
-      UndoRedo effortDelete = new UndoRedoObject();
-      effortDelete.setAction(Action.EFFORT_DELETE);
-      effortDelete.addDatum(new Effort(selectedEffort));
-      effortDelete.addDatum(task);
-      // Store a copy of deleted effort in object to avoid reference problems
-      effortDelete.setAgileItem(selectedEffort);
+      alert = new Alert(Alert.AlertType.CONFIRMATION);
+      alert.setTitle("Are you sure you want to remove effort?");
+      alert.setHeaderText(null);
+      String message = "You are trying to remove effort that has already been logged against this"
+                       + " task. Are you sure you want to do this?";
+      alert.getDialogPane().setPrefHeight(120);
+      alert.setContentText(message);
+      alert.showAndWait();
+      if (alert == null || alert.getResult() == ButtonType.OK) {
+        UndoRedo effortDelete = new UndoRedoObject();
+        effortDelete.setAction(Action.EFFORT_DELETE);
+        effortDelete.addDatum(new Effort(selectedEffort));
+        effortDelete.addDatum(task);
+        // Store a copy of deleted effort in object to avoid reference problems
+        effortDelete.setAgileItem(selectedEffort);
 
-      effortsUndoRedo.addUndoRedo(effortDelete);
+        effortsUndoRedo.addUndoRedo(effortDelete);
 
-      task.removeEffort(selectedEffort);
-      updateEffortTable();
+        task.removeEffort(selectedEffort);
+        updateEffortTable();
 
-      if (createOrEdit == CreateOrEdit.EDIT) {
-        checkButtonDisabled();
+        if (createOrEdit == CreateOrEdit.EDIT) {
+          checkButtonDisabled();
+        }
       }
     }
   }

@@ -1,9 +1,14 @@
 package seng302.group5.controller.dialogControllers;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import javax.crypto.AEADBadTagException;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -51,6 +56,8 @@ public class ProjectDialogController {
   @FXML private Label backlogContainer;
   @FXML private ComboBox<Backlog> backlogComboBox;
   @FXML private Button btnNewTeam;
+  @FXML private Button btnNewBacklog;
+  @FXML private Button btnEditBacklog;
 
 
   private Main mainApp;
@@ -93,6 +100,7 @@ public class ProjectDialogController {
       Project p = new Project();
       p.setLabel("");
       p.setProjectName("");
+      btnEditBacklog.setDisable(true);
 
 
       initialiseLists(CreateOrEdit.CREATE, project);
@@ -106,6 +114,11 @@ public class ProjectDialogController {
       projectNameField.setText(project.getProjectName());
       projectDescriptionField.setText(project.getProjectDescription());
       backlogComboBox.setValue(project.getBacklog());
+      if (project.getBacklog() != null) {
+        btnEditBacklog.setDisable(false);
+      } else {
+        btnEditBacklog.setDisable(true);
+      }
 
       for (Sprint sprint : mainApp.getSprints()) {
         if (sprint.getSprintProject().equals(project)) {
@@ -159,6 +172,13 @@ public class ProjectDialogController {
       //For disabling the button
       if (createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
+      }
+      if (newValue != null) {
+        if (!newValue.getLabel().equals("No Backlog")) {
+          btnEditBacklog.setDisable(false);
+        } else {
+          btnEditBacklog.setDisable(true);
+        }
       }
     });
   }
@@ -594,13 +614,55 @@ public class ProjectDialogController {
 
   /**
    * A button which when clicked can add a team to the system.
-   * Also adds to undo/redo stack so creation is undoable
+   * Also adds to undo/redo stack so creation is undoable.
    * @param event Button click
    */
   @FXML
   protected void addNewTeam(ActionEvent event) {
     mainApp.showTeamDialog(CreateOrEdit.CREATE);
     availableTeams.setAll(mainApp.getTeams());
+  }
+
+  /**
+   * A button which when clicked can edit the selected backlog in the backlog combo box.
+   * Also adds to undo/redo stack so the edit is undoable.
+   * @param event Button click
+   */
+  @FXML
+  protected void editBacklog(ActionEvent event) {
+    Backlog selectedBacklog = backlogComboBox.getSelectionModel().getSelectedItem();
+    if (selectedBacklog != null) {
+      mainApp.showBacklogDialogWithinProject(selectedBacklog, thisStage);
+      backlogComboBox.setValue(null);
+      backlogComboBox.setValue(selectedBacklog);
+    }
+  }
+
+  /**
+   * A button which when clicked can add a backlog to the system.
+   * Also adds to undo/redo stack so creation is undoable.
+   * @param event Button click
+   */
+  @FXML
+  protected void addNewBacklog(ActionEvent event) {
+    List<Backlog> tempBacklogList = new ArrayList<>(availableBacklogs);
+    mainApp.showBacklogDialog(CreateOrEdit.CREATE);
+    if (!backlogComboBox.isDisabled()) {
+      availableBacklogs.setAll(mainApp.getBacklogs());
+      for (Project pro : mainApp.getProjects()) {
+        if (pro.getBacklog() != null && pro != project) {
+          availableBacklogs.remove(pro.getBacklog());
+        }
+      }
+      availableBacklogs.add(0, noBacklog);
+      System.out.println(tempBacklogList);
+      System.out.println(availableBacklogs);
+      for (Backlog backlog : availableBacklogs) {
+        if (!tempBacklogList.contains(backlog)) {
+          backlogComboBox.setValue(backlog);
+        }
+      }
+    }
   }
 }
 

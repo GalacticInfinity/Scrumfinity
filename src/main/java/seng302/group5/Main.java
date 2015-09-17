@@ -801,6 +801,36 @@ public class Main extends Application {
     }
   }
 
+  /**
+   * Sets up a dialog box for editing a backlog within the project dialog.
+   *
+   * @param backlog the selected backlog that to be edited form the backlog combo box.
+   * @param stage   the stage it is currently on to void unusual behaviour.
+   */
+  public void showBacklogDialogWithinProject(Backlog backlog, Stage stage) {
+    try {
+      FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(Main.class.getResource("/BacklogDialog.fxml"));
+      VBox backlogDialogLayout = loader.load();
+
+      BacklogDialogController controller = loader.getController();
+      Scene backlogDialogScene = new Scene(backlogDialogLayout);
+      Stage backlogDialogStage = new Stage();
+
+      controller.setupController(this, backlogDialogStage, CreateOrEdit.EDIT, backlog);
+
+      backlogDialogStage.initModality(Modality.APPLICATION_MODAL);
+      backlogDialogStage.initOwner(stage);
+      backlogDialogStage.setScene(backlogDialogScene);
+      backlogDialogStage.showAndWait();
+
+      LMPC.getScrumBoardController().refreshComboBoxes();
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
   public void showSprintDialog(CreateOrEdit createOrEdit) {
     try {
       FXMLLoader loader = new FXMLLoader();

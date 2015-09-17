@@ -23,7 +23,7 @@ public class Settings {
   public static File currentFile;
   public static String currentListType;
   public static String organizationName = "";
-  public static double progVersion = 0.5;
+  public static double progVersion = 0.6;
 
 
   /**

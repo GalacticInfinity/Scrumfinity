@@ -66,6 +66,27 @@
                   <ComboBox fx:id="backlogComboBox" prefHeight="26.0" prefWidth="185.0" promptText="Available Backlogs" />
                </graphic>
             </Label>
+            <Button fx:id="btnNewBacklog" maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" onAction="#addNewBacklog" prefHeight="25.0" prefWidth="25.0">
+               <graphic>
+                  <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="ToolbarQuickAdd.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button fx:id="btnEditBacklog" maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" onAction="#editBacklog" prefHeight="25.0" prefWidth="25.0">
+               <graphic>
+                  <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="toolbar_edit.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <tooltip>
+                  <Tooltip text="Edit Item" />
+               </tooltip>
+            </Button>
          </children>
          <opaqueInsets>
             <Insets />
