@@ -630,11 +630,12 @@ public class ProjectDialogController {
    */
   @FXML
   protected void editBacklog(ActionEvent event) {
+    List<Backlog> tempBacklogList = new ArrayList<>(availableBacklogs);
     Backlog selectedBacklog = backlogComboBox.getSelectionModel().getSelectedItem();
     if (selectedBacklog != null) {
       mainApp.showBacklogDialogWithinProject(selectedBacklog, thisStage);
-      backlogComboBox.setValue(null);
-      backlogComboBox.setValue(selectedBacklog);
+      availableBacklogs.setAll(tempBacklogList);
+      backlogComboBox.getSelectionModel().select(selectedBacklog);
     }
   }
 

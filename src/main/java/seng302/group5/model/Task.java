@@ -68,7 +68,7 @@ public class Task implements AgileItem, Comparable<Task> {
     spentEffort = new IdentityHashMap<>();
     spentEffort.putAll(clone.getSpentEffort());
     efforts = new ArrayList<>();
-    efforts = clone.getEfforts();
+    efforts.addAll(clone.getEfforts());
   }
 
   @Override
@@ -106,7 +106,7 @@ public class Task implements AgileItem, Comparable<Task> {
   }
 
   public List<Effort> getEfforts() {
-    return efforts;
+    return Collections.unmodifiableList(efforts);
   }
 
   public void removeEffort(Effort effort) {

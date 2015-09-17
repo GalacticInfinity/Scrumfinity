@@ -424,9 +424,12 @@ public class TaskDialogController {
         allocatedPeopleSorted.add(person);
       }
       if (createOrEdit == CreateOrEdit.CREATE) {
-        task = new Task(taskLabel, taskDescription, taskEstimateMinutes, taskStatus,
-                        allocatedPeopleSorted);
+        task.setLabel(taskLabel);
+        task.setTaskDescription(taskDescription);
+        task.setTaskEstimation(taskEstimateMinutes);
         task.setImpediments(taskImpediments);
+        task.setStatus(taskStatus);
+        task.addAllTaskPeople(allocatedPeopleSorted);
         taskable.addTask(task);
       } else if (createOrEdit == CreateOrEdit.EDIT) {
         task.setLabel(taskLabel);

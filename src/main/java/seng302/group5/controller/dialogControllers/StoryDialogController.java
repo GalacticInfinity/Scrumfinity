@@ -72,6 +72,8 @@ public class StoryDialogController {
   @FXML private TextField impedimentsTextField;
   @FXML private ComboBox<String> statusCombo;
   @FXML private ListView<Task> taskList;
+  @FXML private Button btnNewBacklog;
+  @FXML private Button btnEditBacklog;
 
   private Main mainApp;
   private Stage thisStage;
@@ -116,6 +118,7 @@ public class StoryDialogController {
 
       initialiseLists();
       readyCheckbox.setDisable(true);
+      btnEditBacklog.setDisable(true);
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       thisStage.setTitle("Edit Story");
       btnCreateStory.setText("Save");
@@ -176,6 +179,11 @@ public class StoryDialogController {
           }
           break;
         }
+      }
+      if (backlogCombo.getValue() != null) {
+        btnEditBacklog.setDisable(false);
+      } else {
+        btnEditBacklog.setDisable(true);
       }
       for (Sprint sprint : mainApp.getSprints()) {
         if (sprint.getSprintStories().contains(story)) {
@@ -256,6 +264,13 @@ public class StoryDialogController {
           if(createOrEdit == CreateOrEdit.EDIT) {
             checkButtonDisabled();
           }
+          if (newValue != null) {
+            if (!newValue.getLabel().equals("No Backlog")) {
+              btnEditBacklog.setDisable(false);
+            } else {
+              btnEditBacklog.setDisable(true);
+            }
+          }
         }
     );
   }
@@ -314,7 +329,14 @@ public class StoryDialogController {
     storyAndTaskChanges.addUndoRedo(storyChanges);
     for (UndoRedo taskChange : tasksUndoRedo.getUndoRedos()) {
       // only include edits to avoid doubling tasks
-      if (taskChange.getAction().equals(Action.TASK_EDIT)) {
+      UndoRedo actualTaskChange;
+      if (taskChange instanceof CompositeUndoRedo) {
+        // if it's composite then the actual task edit is the first item of the composite
+        actualTaskChange = ((CompositeUndoRedo) taskChange).getUndoRedos().get(0);
+      } else {
+        actualTaskChange = taskChange;
+      }
+      if (actualTaskChange.getAction().equals(Action.TASK_EDIT)) {
         storyAndTaskChanges.addUndoRedo(taskChange);
       }
     }
@@ -913,6 +935,43 @@ public class StoryDialogController {
           }
         }
       });
+    }
+  }
+
+  /**
+   * A button which when clicked can edit the selected backlog in the backlog combo box.
+   * Also adds to undo/redo stack so the edit is undoable.
+   * @param event Button click
+   */
+  @FXML
+  protected void editBacklog(ActionEvent event) {
+    List<Backlog> tempBacklogList = new ArrayList<>(backlogs);
+    Backlog selectedBacklog = backlogCombo.getSelectionModel().getSelectedItem();
+    if (selectedBacklog != null) {
+      mainApp.showBacklogDialogWithinProject(selectedBacklog, thisStage);
+      backlogs.setAll(tempBacklogList);
+      backlogCombo.getSelectionModel().select(selectedBacklog);
+    }
+  }
+
+  /**
+   * A button which when clicked can add a backlog to the system.
+   * Also adds to undo/redo stack so creation is undoable.
+   * @param event Button click
+   */
+  @FXML
+  protected void addNewBacklog(ActionEvent event) {
+    List<Backlog> tempBacklogList = new ArrayList<>(backlogs);
+    mainApp.showBacklogDialog(CreateOrEdit.CREATE);
+    if (!backlogCombo.isDisabled()) {
+      List<Backlog> tempNewBacklogList = new ArrayList<>(mainApp.getBacklogs());
+      for (Backlog backlog : tempNewBacklogList) {
+        if (!tempBacklogList.contains(backlog)) {
+          backlogs.setAll(tempNewBacklogList);
+          backlogCombo.getSelectionModel().select(backlog);
+          break;
+        }
+      }
     }
   }
 }
