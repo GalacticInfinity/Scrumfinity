@@ -3,6 +3,8 @@ package seng302.group5.controller.dialogControllers;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
@@ -20,6 +22,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
+import seng302.group5.model.Backlog;
 import seng302.group5.model.Release;
 import seng302.group5.model.Project;
 import seng302.group5.model.Sprint;
@@ -41,6 +44,8 @@ public class ReleaseDialogController {
   @FXML private Button btnConfirm;
   @FXML private ComboBox<Project> projectComboBox;
   @FXML private HBox btnContainer;
+  @FXML private Button btnNewProject;
+  @FXML private Button btnEditProject;
 
   private Main mainApp;
   private Stage thisStage;
@@ -191,6 +196,7 @@ public class ReleaseDialogController {
     if (createOrEdit == CreateOrEdit.CREATE) {
       thisStage.setTitle("Create New Release");
       btnConfirm.setText("Create");
+      btnEditProject.setDisable(true);
 
       initialiseLists();
     } else if (createOrEdit == CreateOrEdit.EDIT) {
@@ -202,6 +208,11 @@ public class ReleaseDialogController {
       releaseNotesField.setText(release.getReleaseNotes());
       projectComboBox.setValue(release.getProjectRelease());
       releaseDateField.setValue(release.getReleaseDate());
+      if (release.getProjectRelease() != null) {
+        btnEditProject.setDisable(false);
+      } else {
+        btnEditProject.setDisable(true);
+      }
 
       initialiseLists();
     }
@@ -248,6 +259,11 @@ public class ReleaseDialogController {
       //For disabling the button
       if (createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
+      }
+      if (newValue != null) {
+        btnEditProject.setDisable(false);
+      } else {
+        btnEditProject.setDisable(true);
       }
     });
 
@@ -399,4 +415,40 @@ public class ReleaseDialogController {
     thisStage.close();
   }
 
+  /**
+   * A button which when clicked can edit the selected project in the project combo box.
+   * Also adds to undo/redo stack so the edit is undoable.
+   * @param event Button click
+   */
+  @FXML
+  protected void editProject(ActionEvent event) {
+    Project selectedProject = projectComboBox.getSelectionModel().getSelectedItem();
+    if (selectedProject != null) {
+      mainApp.showProjectDialogWithinRelease(selectedProject, thisStage);
+      //projectComboBox.setValue(null);
+      projectComboBox.setValue(selectedProject);
+    }
+  }
+
+  /**
+   * A button which when clicked can add a backlog to the system.
+   * Also adds to undo/redo stack so creation is undoable.
+   * @param event Button click
+   */
+  @FXML
+  protected void addNewProject(ActionEvent event) {
+    List<Project> tempProjectList = new ArrayList<>(availableProjects);
+    System.out.println(tempProjectList);
+    mainApp.showProjectDialog(CreateOrEdit.CREATE);
+    List<Project> tempNewProjectList = new ArrayList<>(mainApp.getProjects());
+    if (!projectComboBox.isDisabled()) {
+      for (Project project : tempNewProjectList) {
+        if (!tempProjectList.contains(project)) {
+          availableProjects.setAll(tempNewProjectList);
+          projectComboBox.getSelectionModel().select(project);
+          break;
+        }
+      }
+    }
+  }
 }

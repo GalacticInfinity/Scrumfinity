@@ -472,7 +472,7 @@ public class MenuBarController {
         File file = fileChooser.showOpenDialog(mainApp.getPrimaryStage());
         if (file != null) {
           Settings.currentFile = file;
-          mainApp.getLMPC().getScrumBoardController().refreshComboBoxes();
+          mainApp.getLMPC().getScrumBoardController().hardReset();
           mainApp.resetAll();
           Loading load = new Loading(mainApp);
           load.loadFile(file);

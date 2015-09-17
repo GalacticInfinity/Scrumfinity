@@ -174,13 +174,11 @@
             <TableView fx:id="effortTable" prefHeight="200.0">
                <columns>
                   <TableColumn fx:id="dateTimeColumn" prefWidth="121.0" text="Date &amp; Time">
-                      <cellValueFactory><PropertyValueFactory property="dateTime" /></cellValueFactory>
                   </TableColumn>
                   <TableColumn fx:id="userColumn" prefWidth="172.0" text="User">
                       <cellValueFactory><PropertyValueFactory property="worker" /></cellValueFactory>
                   </TableColumn>
                   <TableColumn fx:id="spentEffortColumn" prefWidth="74.0" text="Spent Effort">
-                      <cellValueFactory><PropertyValueFactory property="spentEffort" /></cellValueFactory>
                   </TableColumn>
                   <TableColumn fx:id="commentColumn" prefWidth="355.0" text="Comments">
                       <cellValueFactory><PropertyValueFactory property="comments" /></cellValueFactory>

@@ -221,9 +221,8 @@ public class Task implements AgileItem, Comparable<Task> {
       for (Map.Entry<Person, Integer> entry : clone.getSpentEffort().entrySet()) {
         spentEffort.put(entry.getKey(), entry.getValue());
       }
-      for (Effort effort : clone.getEfforts()) {
-        this.efforts.add(effort);
-      }
+      this.efforts.clear();
+      this.efforts.addAll(clone.getEfforts());
     }
   }
 

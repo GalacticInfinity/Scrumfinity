@@ -361,6 +361,35 @@ public class Main extends Application {
   }
 
   /**
+   * sets up the dialog box for creating/editing a project
+   *
+   * @param project the selected project that to be edited form the project combo box.
+   * @param stage   the stage it is currently on to void unusual behaviour.
+   */
+  public void showProjectDialogWithinRelease(Project project, Stage stage) {
+    try {
+      FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(Main.class.getResource("/ProjectDialog.fxml"));
+      VBox projectDialogLayout = loader.load();
+
+      ProjectDialogController controller = loader.getController();
+      Scene projectDialogScene = new Scene(projectDialogLayout);
+      Stage projectDialogStage = new Stage();
+
+      controller.setupController(this, projectDialogStage, CreateOrEdit.EDIT, project);
+
+      projectDialogStage.initModality(Modality.APPLICATION_MODAL);
+      projectDialogStage.initOwner(stage);
+      projectDialogStage.setScene(projectDialogScene);
+      projectDialogStage.showAndWait();
+
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
    * sets up the dialog box for creating/editing a Team
    *
    * @param createOrEdit the createOrEdit object that decides if you are creating or editing
@@ -889,7 +918,7 @@ public class Main extends Application {
       Scene taskDialogScene = new Scene(taskDialogLayout);
       Stage taskDialogStage = new Stage();
 
-      controller.setupController(taskable, team, taskDialogStage, createOrEdit, task);
+      controller.setupController(this, taskable, team, taskDialogStage, createOrEdit, task);
 
       taskDialogStage.initModality(Modality.APPLICATION_MODAL);
       taskDialogStage.initOwner(stage);

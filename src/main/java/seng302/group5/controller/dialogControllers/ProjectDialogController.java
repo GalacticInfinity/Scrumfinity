@@ -646,20 +646,21 @@ public class ProjectDialogController {
   @FXML
   protected void addNewBacklog(ActionEvent event) {
     List<Backlog> tempBacklogList = new ArrayList<>(availableBacklogs);
+    tempBacklogList.remove(noBacklog);
     mainApp.showBacklogDialog(CreateOrEdit.CREATE);
     if (!backlogComboBox.isDisabled()) {
-      availableBacklogs.setAll(mainApp.getBacklogs());
+      List<Backlog> tempNewBacklogList = new ArrayList<>(mainApp.getBacklogs());
       for (Project pro : mainApp.getProjects()) {
         if (pro.getBacklog() != null && pro != project) {
-          availableBacklogs.remove(pro.getBacklog());
+          tempNewBacklogList.remove(pro.getBacklog());
         }
       }
-      availableBacklogs.add(0, noBacklog);
-      System.out.println(tempBacklogList);
-      System.out.println(availableBacklogs);
-      for (Backlog backlog : availableBacklogs) {
+      for (Backlog backlog : tempNewBacklogList) {
         if (!tempBacklogList.contains(backlog)) {
-          backlogComboBox.setValue(backlog);
+          availableBacklogs.setAll(tempNewBacklogList);
+          availableBacklogs.add(0, noBacklog);
+          backlogComboBox.getSelectionModel().select(backlog);
+          break;
         }
       }
     }
