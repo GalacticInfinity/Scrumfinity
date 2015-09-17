@@ -106,10 +106,6 @@ public class ScrumBoardController {
             fakeStory.setLabel("Non-story Tasks");
             fakeStory.addAllTasks(newSprint.getTasks());
             availableStories.add(fakeStory);
-            StoryItemController fakeStoryController = createStoryPane(fakeStory, storiesBox);
-            if (fakeStoryController != null) {
-              storyPanes.add(fakeStoryController);
-            }
             // ***************************************************************
             for (Story story : newSprint.getSprintStories()) {
               if (mainApp.getStories().contains(story)) {
@@ -149,7 +145,7 @@ public class ScrumBoardController {
       TitledPane accordionPane = loader.load();
 
       StoryItemController controller = loader.getController();
-      controller.setupController(story);
+      controller.setupController(story, mainApp);
       Accordion storyAccordion = new Accordion();
       storyAccordion.getPanes().add(accordionPane);
       storiesBox.getChildren().add(storyAccordion);

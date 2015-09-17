@@ -59,6 +59,7 @@ public enum Action {
     String backlogStr = "Backlog";
     String sprintStr = "Sprint";
     String taskStr = "Task";
+    String effortStr = "Effort";
 
     String actionStr;
     String typeStr;
@@ -93,6 +94,8 @@ public enum Action {
         typeStr = sprintStr;
       } else if (action.name().contains("TASK")) {
         typeStr = taskStr;
+      } else if (action.name().contains("EFFORT")) {
+        typeStr = effortStr;
       } else {
         typeStr = null;
       }

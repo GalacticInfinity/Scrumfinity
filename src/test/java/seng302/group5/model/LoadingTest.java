@@ -983,7 +983,7 @@ public class LoadingTest {
     task1.setTaskDescription("Descriptioso");
     task1.setStatus(Status.NOT_STARTED);
     task1.addAllTaskPeople(Arrays.asList(person1, person2));
-    task1.updateSpentEffort(person2, 34);
+//    task1.updateSpentEffort(person2, 34);
     task1.setTaskEstimation(250);
 
     task2 = new Task();
@@ -991,7 +991,7 @@ public class LoadingTest {
     task2.setTaskDescription("Descriptiosossss");
     task2.setStatus(Status.DONE);
     task2.addAllTaskPeople(Arrays.asList(person2, person3));
-    task2.updateSpentEffort(person2, 44);
+//    task2.updateSpentEffort(person2, 44);
     task2.setTaskEstimation(251);
 
     task3 = new Task();
@@ -999,7 +999,7 @@ public class LoadingTest {
     task3.setTaskDescription("Nope");
     task3.setStatus(Status.IN_PROGRESS);
     task3.addAllTaskPeople(Arrays.asList(person3, person1));
-    task3.updateSpentEffort(person2, 60);
+//    task3.updateSpentEffort(person2, 60);
     task3.setTaskEstimation(253);
 
     story1.addAllTasks(Arrays.asList(task1, task2));

@@ -415,16 +415,12 @@ public class RevertHandler {
     for (Story story : stories) {
       for (Task task : story.getTasks()) {
         ArrayList<Person> peopleList = new ArrayList<>();
-        Map<Person, Integer> peoplesEffort = new IdentityHashMap<>();
         for (Person person : task.getTaskPeople()) {
           Person mainPerson = personMap.get(person.getLabel());
-          int effort = task.getSpentEffort().get(person);
           peopleList.add(mainPerson);
-          peoplesEffort.put(mainPerson, effort);
         }
         task.removeAllTaskPeople();
         task.addAllTaskPeople(peopleList);
-        task.updateSpentEffort(peoplesEffort);
       }
     }
   }
@@ -444,16 +440,12 @@ public class RevertHandler {
     for (Sprint sprint : sprints) {
       for (Task task : sprint.getTasks()) {
         ArrayList<Person> peopleList = new ArrayList<>();
-        Map<Person, Integer> peoplesEffort = new IdentityHashMap<>();
         for (Person person : task.getTaskPeople()) {
           Person mainPerson = personMap.get(person.getLabel());
-          int effort = task.getSpentEffort().get(person);
           peopleList.add(mainPerson);
-          peoplesEffort.put(mainPerson, effort);
         }
         task.removeAllTaskPeople();
         task.addAllTaskPeople(peopleList);
-        task.updateSpentEffort(peoplesEffort);
       }
     }
 
