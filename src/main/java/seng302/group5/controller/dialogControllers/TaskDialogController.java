@@ -17,6 +17,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -42,6 +43,7 @@ import seng302.group5.model.Task;
 import seng302.group5.model.Taskable;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
+import seng302.group5.model.undoredo.CompositeUndoRedo;
 import seng302.group5.model.undoredo.UndoRedo;
 import seng302.group5.model.undoredo.UndoRedoObject;
 import seng302.group5.model.util.TimeFormat;
@@ -72,6 +74,7 @@ public class TaskDialogController {
   @FXML private Button btnConfirm;
   @FXML private Button btnCancel;
 
+  private Main mainApp;
   private Taskable taskable;
   private Stage thisStage;
   private CreateOrEdit createOrEdit;
@@ -83,7 +86,8 @@ public class TaskDialogController {
   private ObservableList<Effort> efforts = FXCollections.observableArrayList();
   private List<Effort> currentEfforts;
 
-  private UndoRedoObject undoRedoObject;
+  private CompositeUndoRedo effortsUndoRedo;
+  private UndoRedo undoRedoObject;
 
   /**
    * Sets up the controller on start up. Is called currently from sprints, stories and scrum board
@@ -91,14 +95,16 @@ public class TaskDialogController {
    * other dialogs because Tasks cannot exist on their own, i.e. taskable.addTask() rather than
    * mainApp.addStory().
    *
+   * @param mainApp The main class of the program. For managing undo/redo.
    * @param taskable The collection which will contain the task
    * @param team The team of the sprint which will contain the task
    * @param thisStage This is the window that will be displayed
    * @param createOrEdit This is an ENUM object to determine if creating or editing
    * @param task The object that will be edited (null if creating)
    */
-  public void setupController(Taskable taskable, Team team,
+  public void setupController(Main mainApp, Taskable taskable, Team team,
                               Stage thisStage, CreateOrEdit createOrEdit, Task task) {
+    this.mainApp = mainApp;
     this.taskable = taskable;
     this.thisStage = thisStage;
     this.createOrEdit = createOrEdit;
@@ -141,6 +147,8 @@ public class TaskDialogController {
 
     btnConfirm.setDefaultButton(true);
     thisStage.setResizable(false);
+
+    effortsUndoRedo = new CompositeUndoRedo("Edit Multiple Efforts");
 
     labelField.textProperty().addListener((observable, oldValue, newValue) -> {
       if (newValue.trim().length() > 20) {
@@ -192,7 +200,8 @@ public class TaskDialogController {
         impedimentsField.getText().equals(task.getImpediments()) &&
         effortTable.getItems().equals(currentEfforts) &&
         Status.getStatusEnum(statusComboBox.getValue()).equals(task.getStatus()) &&
-        allocatedPeopleList.getItems().equals(originalPeople)) {
+        allocatedPeopleList.getItems().equals(originalPeople) &&
+        effortsUndoRedo.getUndoRedos().isEmpty()) {
       btnConfirm.setDisable(true);
     } else {
       btnConfirm.setDisable(false);
@@ -306,25 +315,43 @@ public class TaskDialogController {
    * This is so a cancel in a dialog higher in the hierarchy can undo the changes made to the task.
    */
   private void generateUndoRedoObject() {
+    Action action = Action.UNDEFINED;
+    UndoRedoObject taskChanges = new UndoRedoObject();
+
     if (createOrEdit == CreateOrEdit.CREATE) {
-      undoRedoObject = new UndoRedoObject();
-      undoRedoObject.setAction(Action.TASK_CREATE);
-      undoRedoObject.addDatum(new Task(task));
-      undoRedoObject.addDatum(taskable);
+      action = Action.TASK_CREATE;
+      taskChanges = new UndoRedoObject();
+      taskChanges.setAction(action);
+      taskChanges.addDatum(new Task(task));
+      taskChanges.addDatum(taskable);
 
       // Store a copy of task to create in object to avoid reference problems
-      undoRedoObject.setAgileItem(task);
+      taskChanges.setAgileItem(task);
 
     } else if (createOrEdit == CreateOrEdit.EDIT) {
-      undoRedoObject = new UndoRedoObject();
-      undoRedoObject.setAction(Action.TASK_EDIT);
-      undoRedoObject.addDatum(lastTask);
+      action = Action.TASK_EDIT;
+      taskChanges = new UndoRedoObject();
+      taskChanges.setAction(action);
+      taskChanges.addDatum(lastTask);
 
       // Store a copy of task to edit in object to avoid reference problems
-      undoRedoObject.setAgileItem(task);
+      taskChanges.setAgileItem(task);
       Task taskToStore = new Task(task);
-      undoRedoObject.addDatum(taskToStore);
+      taskChanges.addDatum(taskToStore);
     }
+
+    // Create composite undo/redo with original action string to handle task and effort changes
+    CompositeUndoRedo taskAndEffortChanges = new CompositeUndoRedo(Action.getActionString(action));
+    taskAndEffortChanges.addUndoRedo(taskChanges);
+    for (UndoRedo effortChange : effortsUndoRedo.getUndoRedos()) {
+      // only include edits to avoid doubling efforts
+      if (effortChange.getAction().equals(Action.EFFORT_EDIT)) {
+        taskAndEffortChanges.addUndoRedo(effortChange);
+      }
+    }
+
+    // Set the global value to be the generated composite undo/redo object
+    undoRedoObject = taskAndEffortChanges;
   }
 
   /**
@@ -417,7 +444,31 @@ public class TaskDialogController {
    */
   @FXML
   protected void btnCancelClick(ActionEvent event) {
-    thisStage.close();
+    Alert alert = null;
+
+    if ((createOrEdit == CreateOrEdit.CREATE && !efforts.isEmpty()) ||
+        (createOrEdit == CreateOrEdit.EDIT && (!efforts.equals(task.getEfforts()) ||
+                                               !effortsUndoRedo.getUndoRedos().isEmpty()))) {
+
+      alert = new Alert(Alert.AlertType.CONFIRMATION);
+      alert.setTitle("Changes have been made to the task's efforts");
+      alert.setHeaderText(null);
+      String message = "By cancelling this dialog you will lose all changes you have made "
+                       + "to efforts since this task dialog was opened. Are you sure you wish "
+                       + "to continue?";
+      alert.getDialogPane().setPrefHeight(120);
+      alert.setContentText(message);
+      //checks response
+      alert.showAndWait();
+    }
+    if (alert == null || alert.getResult() == ButtonType.OK) {
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        mainApp.refreshList(null);
+      }
+      // undo all editing of existing efforts made within this dialog
+      mainApp.quickUndo(effortsUndoRedo);
+      thisStage.close();
+    }
   }
 
   /**
@@ -454,9 +505,9 @@ public class TaskDialogController {
    * Get the UndoRedoObject representing the creating or editing of the task. Use this as a return
    * value of the dialog.
    *
-   * @return The UndoRedoObject representing the successful task edit.
+   * @return The UndoRedo representing the successful task edit.
    */
-  public UndoRedoObject getUndoRedoObject() {
+  public UndoRedo getUndoRedoObject() {
     return undoRedoObject;
   }
 
@@ -500,7 +551,15 @@ public class TaskDialogController {
    */
   @FXML
   private void btnAddEffortClick(ActionEvent event) {
-    showEffortDialog(CreateOrEdit.CREATE, null);
+    UndoRedo effortCreate = showEffortDialog(CreateOrEdit.CREATE, null);
+    if (effortCreate != null) {
+      effortsUndoRedo.addUndoRedo(effortCreate);
+      updateEffortTable();
+
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
+    }
   }
 
   /**
@@ -511,8 +570,21 @@ public class TaskDialogController {
   private void btnRemoveEffortClick(ActionEvent event) {
     Effort selectedEffort = effortTable.getSelectionModel().getSelectedItem();
     if (selectedEffort != null) {
+      UndoRedo effortDelete = new UndoRedoObject();
+      effortDelete.setAction(Action.EFFORT_DELETE);
+      effortDelete.addDatum(new Effort(selectedEffort));
+      effortDelete.addDatum(task);
+      // Store a copy of deleted effort in object to avoid reference problems
+      effortDelete.setAgileItem(selectedEffort);
+
+      effortsUndoRedo.addUndoRedo(effortDelete);
+
       task.removeEffort(selectedEffort);
       updateEffortTable();
+
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
     }
   }
 
@@ -663,8 +735,7 @@ public class TaskDialogController {
             !isEmpty()) {
           UndoRedo effortEdit = showEffortDialog(CreateOrEdit.EDIT, getItem());
           if (effortEdit != null) {
-            //todo manage undo/redo for editing efforts.
-//            tasksUndoRedo.addUndoRedo(effortEdit);
+            effortsUndoRedo.addUndoRedo(effortEdit);
             updateEffortTable();
             effortTable.getSelectionModel().select(getItem());
             if (createOrEdit == CreateOrEdit.EDIT) {

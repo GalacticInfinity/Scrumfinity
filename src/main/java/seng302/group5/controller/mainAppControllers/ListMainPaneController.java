@@ -136,7 +136,7 @@ public class ListMainPaneController {
   /**
    * Refreshes listView and text area text for when edits occur.
    *
-   * @param agileItem agile item being editted/created.
+   * @param agileItem agile item being edited/created.
    */
   public void refreshList(AgileItem agileItem) {
     listView.setItems(null);
