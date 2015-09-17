@@ -1089,8 +1089,11 @@ public class Loading {
             storyLine = loadedFile.readLine();
             effortData = storyLine.replaceAll("(?i)(.*<effort.*?>)(.+?)(</effort>)",
                                               "$2");
-            storyTask
-                .updateSpentEffort(taskPersonMap.get(storyData), Integer.parseInt(effortData));
+
+            Effort tempE = new Effort(taskPersonMap.get(storyData), Integer.parseInt(effortData),
+                                      "out of date effort", LocalDateTime.now());
+
+            storyTask.addEffort(tempE);
           }
         }
       } else if (saveVersion >= 0.6) { //This loads the real proper effort that gets logged from V0.6 onwards
@@ -1192,16 +1195,11 @@ public class Loading {
         for (Task task : story.getTasks()) {
           if (!task.getTaskPeople().isEmpty()) {
             List<Person> newPersList = new ArrayList<>();
-            Map<Person, Integer> newPersMap = new HashMap<>();
             for (Person person : task.getTaskPeople()) {
               newPersList.add(personMap.get(person.getLabel()));
             }
-            for (Map.Entry<Person, Integer> entry : task.getSpentEffort().entrySet()) {
-              newPersMap.put(entry.getKey(), entry.getValue());
-            }
             task.removeAllTaskPeople();
             task.addAllTaskPeople(newPersList);
-            task.updateSpentEffort(newPersMap);
           }
         }
       }
@@ -1212,16 +1210,11 @@ public class Loading {
         for (Task task : sprint.getTasks()) {
           if (!task.getTaskPeople().isEmpty()) {
             List<Person> newPersList = new ArrayList<>();
-            Map<Person, Integer> newPersMap = new HashMap<>();
             for (Person person : task.getTaskPeople()) {
               newPersList.add(personMap.get(person.getLabel()));
             }
-            for (Map.Entry<Person, Integer> entry : task.getSpentEffort().entrySet()) {
-              newPersMap.put(entry.getKey(), entry.getValue());
-            }
             task.removeAllTaskPeople();
             task.addAllTaskPeople(newPersList);
-            task.updateSpentEffort(newPersMap);
           }
         }
       }
