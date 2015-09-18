@@ -1131,6 +1131,13 @@ public class Loading {
             }
           }
         }
+        if (storyLine.startsWith("\t\t\t\t<DoneDate>")) {
+          String doneDate = storyLine.replaceAll(
+              "(?i)(.*<DoneDate.*?>)(.+?)(</DoneDate>)",
+              "$2");
+          storyTask.setDoneDate(LocalDate.parse(doneDate));
+          System.out.println(storyTask.getDoneDate());
+        }
       }
     }
     return storyTask;
