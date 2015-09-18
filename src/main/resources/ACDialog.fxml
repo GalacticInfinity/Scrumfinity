@@ -6,7 +6,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox prefHeight="315.0" prefWidth="398.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.ACDialogController">
+<VBox prefHeight="315.0" prefWidth="398.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.ACDialogController">
    <children>
       <HBox prefHeight="273.0" prefWidth="388.0">
          <children>

@@ -9,7 +9,7 @@
 
 <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="788.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.SprintDialogController">
    <children>
-      <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="482.0" stylesheets="@font.css">
+      <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="482.0" stylesheets="@style.css">
          <children>
             <HBox alignment="BOTTOM_LEFT" prefHeight="32.0" prefWidth="434.0" spacing="10.0">
                <children>

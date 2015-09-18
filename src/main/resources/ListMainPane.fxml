@@ -10,7 +10,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<SplitPane fx:id="splitPane" dividerPositions="0.30094043887147337" minHeight="375.0" minWidth="600.0" prefHeight="375.0" prefWidth="600.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.mainAppControllers.ListMainPaneController">
+<SplitPane fx:id="splitPane" dividerPositions="0.30094043887147337" minHeight="375.0" minWidth="600.0" prefHeight="375.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.mainAppControllers.ListMainPaneController">
    <items>
       <AnchorPane fx:id="listViewPane" maxHeight="1.7976931348623157E308" maxWidth="200.0" minHeight="373.0" minWidth="150.0" prefHeight="373.0" prefWidth="150.0" SplitPane.resizableWithParent="false">
          <children>

@@ -12,7 +12,7 @@
    <children>
       <HBox prefHeight="100.0" prefWidth="200.0">
          <children>
-            <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@font.css">
+            <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@style.css">
                <children>
                   <HBox alignment="CENTER_LEFT" spacing="10.0">
                      <children>
