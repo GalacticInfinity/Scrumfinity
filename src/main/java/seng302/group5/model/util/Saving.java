@@ -530,7 +530,11 @@ public class Saving {
             saveFile.write("\t\t\t\t</TaskPeople>\n");
           }
           saveEffort(task,saveFile);
+          if (task.getDoneDate() != null){
+            saveFile.write("\t\t\t\t<DoneDate>" + task.getDoneDate() + "</DoneDate>\n");
+          }
           saveFile.write("\t\t\t</Task>\n");
+
         }
         saveFile.write("\t\t</Tasks>\n");
       }

@@ -1,5 +1,6 @@
 package seng302.group5.model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.IdentityHashMap;
@@ -21,6 +22,7 @@ public class Task implements AgileItem, Comparable<Task> {
   private Status status;
   private List<Person> assignedPeople;
   private List<Effort> efforts;
+  private LocalDate doneDate;
 
   /**
    * Default constructor for task. Sets all String to empty strings, initializes list/maps.
@@ -160,10 +162,19 @@ public class Task implements AgileItem, Comparable<Task> {
 
   public void setStatus(Status status) {
     this.status = status;
+    if (status == Status.DONE) {
+      this.doneDate = LocalDate.now();
+    }
   }
 
   public Status getStatus() {
     return this.status;
+  }
+
+  public LocalDate getDoneDate() {return doneDate;}
+
+  public void setDoneDate(LocalDate date) {
+    this.doneDate = date;
   }
 
   /**
