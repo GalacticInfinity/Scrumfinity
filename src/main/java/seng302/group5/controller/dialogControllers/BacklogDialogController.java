@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javafx.application.Platform;
@@ -74,6 +75,8 @@ public class BacklogDialogController {
   @FXML private ComboBox<Estimate> backlogScaleCombo;
   @FXML private ComboBox<String> storyEstimateCombo;
   @FXML private Button btnToggleState;
+  @FXML private Button btnNewProductOwner;
+  @FXML private Button btnEditProductOwner;
   @FXML private Button btnNewStory;
 
   private boolean showState = false;
@@ -126,9 +129,11 @@ public class BacklogDialogController {
     if (backlog != null) {
       this.backlog = backlog;
       this.lastBacklog = new Backlog(backlog);
+      this.btnEditProductOwner.setDisable(false);
     } else {
       this.backlog = null;
       this.lastBacklog = null;
+      this.btnEditProductOwner.setDisable(true);
     }
 
     btnConfirm.setDefaultButton(true);
@@ -163,6 +168,11 @@ public class BacklogDialogController {
 
     backlogProductOwnerCombo.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldValue, newValue) -> {
+          if (newValue == null) {
+            btnEditProductOwner.setDisable(true);
+          } else {
+            btnEditProductOwner.setDisable(false);
+          }
           if (createOrEdit == CreateOrEdit.EDIT) {
             checkButtonDisabled();
           }
@@ -628,7 +638,7 @@ public class BacklogDialogController {
    */
   @FXML
   protected void btnCancelClick(ActionEvent event) {
-    if (createOrEdit == createOrEdit.EDIT && Settings.correctList(backlog)) {
+    if (createOrEdit == CreateOrEdit.EDIT && Settings.correctList(backlog)) {
       mainApp.refreshList(backlog);
     }
     thisStage.close();
@@ -893,6 +903,74 @@ public class BacklogDialogController {
   }
 
   /**
+   * A button which when clicked can add a new product owner to the system.
+   * Also adds to undo/redo stack so creation is undoable.
+   * @param event Button click
+   */
+  @FXML
+  protected void addNewProductOwner(ActionEvent event) {
+    List<Person> tempProductOwners = new ArrayList<>(productOwners);
+    mainApp.showPersonDialogWithinBacklog(CreateOrEdit.CREATE, null, thisStage);
+    List<Person> tempNewProductOwners = new ArrayList<>();
+
+    Skill productOwnerSkill = null;
+    for (Role role : mainApp.getRoles()) {
+      if (role.getLabel().equals("PO")) {
+        productOwnerSkill = role.getRequiredSkill();
+        break;
+      }
+    }
+    for (Person person : mainApp.getPeople()) {
+      if (person.getSkillSet().contains(productOwnerSkill)) {
+        tempNewProductOwners.add(person);
+      }
+    }
+
+    for (Person productOwner : tempNewProductOwners) {
+      if (!tempProductOwners.contains(productOwner)) {
+        productOwners.setAll(tempNewProductOwners);
+        backlogProductOwnerCombo.getSelectionModel().select(productOwner);
+        break;
+      }
+    }
+  }
+
+  /**
+   * A button which when clicked can edit the selected product owner in the product owner combo box.
+   * Also adds to undo/redo stack so the edit is undoable.
+   * @param event Button click
+   */
+  @FXML
+  protected void editProductOwner(ActionEvent event) {
+    List<Person> tempProductOwners = new ArrayList<>(productOwners);
+    Person selectedPerson = backlogProductOwnerCombo.getSelectionModel().getSelectedItem();
+    if (selectedPerson != null) {
+      mainApp.showPersonDialogWithinBacklog(CreateOrEdit.EDIT, selectedPerson, thisStage);
+      productOwners.setAll(tempProductOwners);
+      backlogProductOwnerCombo.getSelectionModel().select(selectedPerson);
+    }
+  }
+
+  /**
+   * A button which when clicked can add a new story to the system.
+   * Also adds to undo/redo stack so creation is undoable
+   * @param event Button click
+   */
+  @FXML
+  protected void addNewStory(ActionEvent event) {
+    mainApp.showStoryDialog(CreateOrEdit.CREATE);
+    Set<Story> currentStories = new HashSet<>();
+    for (StoryEstimate story : allocatedStories) {
+      currentStories.add(story.getStory());
+    }
+    for (Story story : mainApp.getStories()) {
+      if (!availableStories.contains(story) && !currentStories.contains(story)) {
+        availableStories.add(story);
+      }
+    }
+  }
+
+  /**
    * Allows us to override a ListViewCell - a single cell in a ListView.
    */
   private class AvailableStoriesListViewCell extends TextFieldListCell<Story> {
@@ -919,25 +997,6 @@ public class BacklogDialogController {
       super.updateItem(item, empty);
 
       setText(item == null ? "" : item.getLabel());
-    }
-  }
-
-  /**
-   * A button which when clicked can add a new story to the system.
-   * Also adds to undo/redo stack so creation is undoable
-   * @param event Button click
-   */
-  @FXML
-  protected void addNewStory(ActionEvent event) {
-    mainApp.showStoryDialog(CreateOrEdit.CREATE);
-    Set<Story> currentStories = new HashSet<>();
-    for (StoryEstimate story : allocatedStories) {
-      currentStories.add(story.getStory());
-    }
-    for (Story story : mainApp.getStories()) {
-      if (!availableStories.contains(story) && !currentStories.contains(story)) {
-        availableStories.add(story);
-      }
     }
   }
 }

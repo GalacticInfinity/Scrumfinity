@@ -605,6 +605,36 @@ public class Main extends Application {
   }
 
   /**
+   * sets up the dialog box for editing a person when opened from the backlog dialog
+   *
+   * @param createOrEdit whether the person is being created or edited
+   * @param person the person that you wanted to view or edit information with, null if creating
+   * @param stage the stage it is currently on to void unusual behaviour
+   */
+  public void showPersonDialogWithinBacklog(CreateOrEdit createOrEdit, Person person, Stage stage) {
+    try {
+      FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(Main.class.getResource("/PersonDialog.fxml"));
+      VBox personDialogLayout = loader.load();
+
+      PersonDialogController controller = loader.getController();
+      Scene personDialogScene = new Scene(personDialogLayout);
+      Stage personDialogStage = new Stage();
+
+      controller.setupController(this, personDialogStage, createOrEdit, person);
+      controller.setupBacklogMode();
+
+      personDialogStage.initModality(Modality.APPLICATION_MODAL);
+      personDialogStage.initOwner(stage);
+      personDialogStage.setScene(personDialogScene);
+      personDialogStage.showAndWait();
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
    * sets up the dialog box for creating/editing a skill
    *
    * @param createOrEdit the createOrEdit object that decides if you are creating or editing
