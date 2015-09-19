@@ -224,18 +224,9 @@ public class BacklogDialogController {
           }
         });
 
-//    allocatedStoriesList.setCellFactory(listView -> new StoryFormatCellFalse());
     allocatedStoriesList.setCellFactory((param -> new StoryFormatCell()));
   }
 
-//  /**
-//   * Checks the current state and calls the correct cell factory for the current state.
-//   * If true, it calls StoryFormatCell and shows highlights else it calls StoryFormatCellFalse
-//   * and just shows labels.
-//   */
-//  private void showStatus(){
-//    allocatedStoriesList.setCellFactory((param -> new StoryFormatCell()));
-//  }
   /**
    * Check if any of the fields has been changed. If nothing changed, then confirm button is disabled.
    */
@@ -405,7 +396,6 @@ public class BacklogDialogController {
 
         this.allocatedStoriesList.getSelectionModel().select(storyEstimate);
         this.storyEstimateCombo.getSelectionModel().select(0);
-//        showStatus();
         if (createOrEdit == CreateOrEdit.EDIT) {
           checkButtonDisabled();
         }
@@ -433,7 +423,6 @@ public class BacklogDialogController {
         if (createOrEdit == CreateOrEdit.EDIT) {
           checkButtonDisabled();
         }
-//        showStatus();
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -674,8 +663,6 @@ public class BacklogDialogController {
 
 
     allocatedStoriesList.scrollTo(before - 3);
-
-//    showStatus();
   }
 
   /**
@@ -696,8 +683,6 @@ public class BacklogDialogController {
     }
 
     allocatedStoriesList.scrollTo(after - 3);
-
-//    showStatus();
   }
 
   /**
@@ -718,10 +703,8 @@ public class BacklogDialogController {
           //Use ListView's getSelected Item
           StoryEstimate selectedItem = allocatedStoriesList.getSelectionModel().getSelectedItem();
 
-//          showStatus();
           mainApp.showStoryDialogWithinBacklog(CreateOrEdit.EDIT, selectedItem.getStory(),
                                                thisStage);
-//          showStatus();
           //use this to do whatever you want to. Open Link etc.
         }
       });
@@ -766,47 +749,9 @@ public class BacklogDialogController {
           circle.setFill(Color.rgb(0, 0, 0, 0));
           setGraphic(circle);
         }
-//        showStatus();
 
       }}
   }
-
-//  /**
-//   * Cell format class that handles the displaying of plain text cells within the allocated
-//   * stories list within the backlog controller.
-//   *
-//   * Created by Craig Alan Barnard + Ma Liang 23/07/2015
-//   */
-//  private class StoryFormatCellFalse extends ListCell<StoryEstimate> {
-//
-//    public StoryFormatCellFalse() {
-//      super();
-//      // double click for editing story
-//      this.setOnMouseClicked(click -> {
-//        if (click.getClickCount() == 2 &&
-//            click.getButton() == MouseButton.PRIMARY &&
-//            !isEmpty()) {
-//          //Use ListView's getSelected Item
-//          StoryEstimate selectedItem = allocatedStoriesList.getSelectionModel().getSelectedItem();
-//
-////          showStatus();
-//          mainApp.showStoryDialogWithinBacklog(CreateOrEdit.EDIT, selectedItem.getStory(),
-//                                               thisStage);
-////          showStatus();
-//          //use this to do whatever you want to. Open Link etc.
-//        }
-//      });
-//    }
-//
-//    @Override
-//    protected void updateItem(StoryEstimate item, boolean empty) {
-//      // calling super here is very important - don't skip this!
-//      super.updateItem(item, empty);
-//      if (item != null) {
-//        setText(item.toString());
-//      }
-//    }
-//  }
 
   /**
    * Inner class for storing/displaying allocated stories with their respective estimates
