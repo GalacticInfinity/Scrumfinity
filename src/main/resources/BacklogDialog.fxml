@@ -156,11 +156,6 @@
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <ToggleButton fx:id="toggleStateButton" mnemonicParsing="false" onAction="#btnToggleState" prefHeight="11.0" prefWidth="77.0" text="Highlight">
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                        </ToggleButton>
                      </children>
                      <VBox.margin>
                         <Insets bottom="3.0" />

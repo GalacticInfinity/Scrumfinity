@@ -117,10 +117,11 @@ public class BurndownController {
 
     sprintCombo.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldSprint, newSprint) -> {
-          allEffort.clear();
-          tasks.clear();
+
 
           if (sprintCombo.getSelectionModel().getSelectedItem() != null) {
+            allEffort.clear();
+            tasks.clear();
             sprint = sprintCombo.getValue();
             tasks.addAll(sprint.getTasks());
             if (newSprint != null) {
@@ -142,7 +143,7 @@ public class BurndownController {
 
                 }
           }
-        }
+          }
 
           burndownChart.setData(null);
           burndownChart.setData(getChartData(time));
@@ -154,6 +155,7 @@ public class BurndownController {
     int diff = 0;
     int days = 0;
     double timeDiff = 0;
+    System.out.println(tasks);
 
     ObservableList<XYChart.Series<LocalDate, Integer>> answer = FXCollections.observableArrayList();
     answer.clear();
