@@ -884,6 +884,7 @@ public class Main extends Application {
       backlogDialogStage.showAndWait();
 
       LMPC.getScrumBoardController().refreshComboBoxes();
+      LMPC.getBurndownController().refreshComboBoxes();
 
     } catch (IOException e) {
       e.printStackTrace();

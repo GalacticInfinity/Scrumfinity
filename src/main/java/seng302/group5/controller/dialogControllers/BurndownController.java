@@ -118,31 +118,28 @@ public class BurndownController {
     sprintCombo.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldSprint, newSprint) -> {
 
-
-          if (sprintCombo.getSelectionModel().getSelectedItem() != null) {
+          if (newSprint != null) {
             allEffort.clear();
             tasks.clear();
+            doneTasks.clear();
             sprint = sprintCombo.getValue();
             tasks.addAll(sprint.getTasks());
-            if (newSprint != null) {
-              burndownChart.setTitle(sprintCombo.getSelectionModel().getSelectedItem().toString());
-              for (Story story : newSprint.getSprintStories()) {
-                if (mainApp.getStories().contains(story)) {
-                  tasks.addAll(story.getTasks());
-                }
+            burndownChart.setTitle(newSprint.toString());
+            for (Story story : newSprint.getSprintStories()) {
+              if (mainApp.getStories().contains(story)) {
+                tasks.addAll(story.getTasks());
               }
-              time = 0;
-              for (Task task : tasks) {
-                time += task.getTaskEstimation();
-                if (task.getEfforts() != null) {
-                  allEffort.addAll(task.getEfforts());
-                }
-                if (task.getStatus().equals(Status.DONE)) {
-                  doneTasks.add(task);
-                }
-
-                }
-          }
+            }
+            time = 0;
+            for (Task task : tasks) {
+              time += task.getTaskEstimation();
+              if (task.getEfforts() != null) {
+                allEffort.addAll(task.getEfforts());
+              }
+              if (task.getStatus().equals(Status.DONE)) {
+                doneTasks.add(task);
+              }
+            }
           }
 
           burndownChart.setData(null);
