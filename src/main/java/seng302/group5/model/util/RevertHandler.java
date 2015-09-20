@@ -10,8 +10,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seng302.group5.Main;
 import seng302.group5.model.AgileHistory;
-import seng302.group5.model.AgileItem;
 import seng302.group5.model.Backlog;
+import seng302.group5.model.Effort;
 import seng302.group5.model.Estimate;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
@@ -40,7 +40,6 @@ public class RevertHandler {
   private ObservableList<Backlog> backlogsLastSaved;
   private ObservableList<Estimate> estimatesLastSaved;
   private ObservableList<Sprint> sprintsLastSaved;
-  private ObservableList<Task> tasksLastSaved;
 
   /**
    * Constructor. Set the main app to communicate with and initialise lists
@@ -95,9 +94,17 @@ public class RevertHandler {
 
     for (Story story : storiesLastSaved) {
       Story storyClone = new Story(story);
-      ArrayList<Task> taskClones = new ArrayList<>();
+      List<Task> taskClones = new ArrayList<>();
       for (Task task : story.getTasks()) {
-        taskClones.add(new Task(task));
+        Task taskClone = new Task(task);
+        List<Effort> effortClones = new ArrayList<>();
+        for (Effort effort : task.getEfforts()) {
+          Effort effortClone = new Effort(effort);
+          effortClones.add(effortClone);
+        }
+        taskClone.removeAllEfforts();
+        taskClone.addAllEfforts(effortClones);
+        taskClones.add(taskClone);
       }
       storyClone.removeAllTasks();
       storyClone.addAllTasks(taskClones);
@@ -114,9 +121,17 @@ public class RevertHandler {
 
     for (Sprint sprint : sprintsLastSaved) {
       Sprint sprintClone = new Sprint(sprint);
-      ArrayList<Task> taskClones = new ArrayList<>();
+      List<Task> taskClones = new ArrayList<>();
       for (Task task : sprint.getTasks()) {
-        taskClones.add(new Task(task));
+        Task taskClone = new Task(task);
+        List<Effort> effortClones = new ArrayList<>();
+        for (Effort effort : task.getEfforts()) {
+          Effort effortClone = new Effort(effort);
+          effortClones.add(effortClone);
+        }
+        taskClone.removeAllEfforts();
+        taskClone.addAllEfforts(effortClones);
+        taskClones.add(taskClone);
       }
       sprintClone.removeAllTasks();
       sprintClone.addAllTasks(taskClones);
@@ -187,9 +202,17 @@ public class RevertHandler {
     storiesLastSaved.clear();
     for (Story story : mainApp.getStories()) {
       Story storyClone = new Story(story);
-      ArrayList<Task> taskClones = new ArrayList<>();
+      List<Task> taskClones = new ArrayList<>();
       for (Task task : story.getTasks()) {
-        taskClones.add(new Task(task));
+        Task taskClone = new Task(task);
+        List<Effort> effortClones = new ArrayList<>();
+        for (Effort effort : task.getEfforts()) {
+          Effort effortClone = new Effort(effort);
+          effortClones.add(effortClone);
+        }
+        taskClone.removeAllEfforts();
+        taskClone.addAllEfforts(effortClones);
+        taskClones.add(taskClone);
       }
       storyClone.removeAllTasks();
       storyClone.addAllTasks(taskClones);
@@ -209,9 +232,17 @@ public class RevertHandler {
     sprintsLastSaved.clear();
     for (Sprint sprint : mainApp.getSprints()) {
       Sprint sprintClone = new Sprint(sprint);
-      ArrayList<Task> taskClones = new ArrayList<>();
+      List<Task> taskClones = new ArrayList<>();
       for (Task task : sprint.getTasks()) {
-        taskClones.add(new Task(task));
+        Task taskClone = new Task(task);
+        List<Effort> effortClones = new ArrayList<>();
+        for (Effort effort : task.getEfforts()) {
+          Effort effortClone = new Effort(effort);
+          effortClones.add(effortClone);
+        }
+        taskClone.removeAllEfforts();
+        taskClone.addAllEfforts(effortClones);
+        taskClones.add(taskClone);
       }
       sprintClone.removeAllTasks();
       sprintClone.addAllTasks(taskClones);
@@ -419,6 +450,10 @@ public class RevertHandler {
           Person mainPerson = personMap.get(person.getLabel());
           peopleList.add(mainPerson);
         }
+        // sync the efforts
+        for (Effort effort : task.getEfforts()) {
+          effort.setWorker(personMap.get(effort.getWorker().getLabel()));
+        }
         task.removeAllTaskPeople();
         task.addAllTaskPeople(peopleList);
       }
@@ -444,12 +479,16 @@ public class RevertHandler {
           Person mainPerson = personMap.get(person.getLabel());
           peopleList.add(mainPerson);
         }
+        // sync the efforts
+        for (Effort effort : task.getEfforts()) {
+          effort.setWorker(personMap.get(effort.getWorker().getLabel()));
+        }
         task.removeAllTaskPeople();
         task.addAllTaskPeople(peopleList);
       }
     }
-
   }
+
   /**
    * Creates the proper reference to the Story objects related to the backlog
    *
