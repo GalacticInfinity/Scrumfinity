@@ -150,7 +150,6 @@ public class BurndownController {
     int diff = 0;
     int days = 0;
     double timeDiff = 0;
-    System.out.println(tasks);
 
     ObservableList<XYChart.Series<LocalDate, Integer>> answer = FXCollections.observableArrayList();
     answer.clear();
