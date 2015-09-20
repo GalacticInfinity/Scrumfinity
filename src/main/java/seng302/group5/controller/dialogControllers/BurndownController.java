@@ -1,15 +1,6 @@
 package seng302.group5.controller.dialogControllers;
 
-import org.mockito.cglib.core.Local;
-
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoField;
-import java.time.temporal.TemporalAmount;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.InputMismatchException;
 import java.util.stream.Collectors;
 
 import javafx.collections.FXCollections;
@@ -142,12 +133,19 @@ public class BurndownController {
             }
           }
 
+          burndownChart.setAnimated(false);
+          burndownChart.getData().clear();
           burndownChart.setData(null);
           burndownChart.setData(getChartData(time));
         }
     );
   }
 
+  /**
+   * Plots the data for the burndown chart, takes in the total time estimate and returns an
+   * array of series charts.
+   * @param time the total time estimated for the sprint.
+   */
   private ObservableList<XYChart.Series<LocalDate, Integer>> getChartData(Integer time) {
     int diff = 0;
     int days = 0;
