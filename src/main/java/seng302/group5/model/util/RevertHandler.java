@@ -452,7 +452,8 @@ public class RevertHandler {
         }
         // sync the efforts
         for (Effort effort : task.getEfforts()) {
-          effort.setWorker(personMap.get(effort.getWorker().getLabel()));
+          Person mainPerson = personMap.get(effort.getWorker().getLabel());
+          effort.setWorker(mainPerson);
         }
         task.removeAllTaskPeople();
         task.addAllTaskPeople(peopleList);
@@ -481,7 +482,8 @@ public class RevertHandler {
         }
         // sync the efforts
         for (Effort effort : task.getEfforts()) {
-          effort.setWorker(personMap.get(effort.getWorker().getLabel()));
+          Person mainPerson = personMap.get(effort.getWorker().getLabel());
+          effort.setWorker(mainPerson);
         }
         task.removeAllTaskPeople();
         task.addAllTaskPeople(peopleList);
