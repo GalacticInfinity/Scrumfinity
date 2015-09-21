@@ -36,6 +36,7 @@ public class Task implements AgileItem, Comparable<Task> {
     this.status = Status.NOT_STARTED;
     assignedPeople = new ArrayList<>();
     this.efforts = new ArrayList<>();
+    this.doneDate = null;
   }
 
   public Task(String label, String description, Integer estimation, Status status,
@@ -48,6 +49,7 @@ public class Task implements AgileItem, Comparable<Task> {
     this.assignedPeople = new ArrayList<>();
     this.efforts = new ArrayList<>();
     addAllTaskPeople(persons);
+    this.doneDate = null;
   }
 
   /**
@@ -64,6 +66,7 @@ public class Task implements AgileItem, Comparable<Task> {
     assignedPeople.addAll(clone.getTaskPeople());
     efforts = new ArrayList<>();
     efforts.addAll(clone.getEfforts());
+    this.doneDate = clone.getDoneDate();
   }
 
   @Override
@@ -162,7 +165,7 @@ public class Task implements AgileItem, Comparable<Task> {
 
   public void setStatus(Status status) {
     this.status = status;
-    if (status == Status.DONE) {
+    if (status == Status.DONE && doneDate == null) {
       this.doneDate = LocalDate.now();
     }
   }
@@ -196,6 +199,7 @@ public class Task implements AgileItem, Comparable<Task> {
       }
       this.efforts.clear();
       this.efforts.addAll(clone.getEfforts());
+      this.doneDate = clone.getDoneDate();
     }
   }
 
@@ -244,6 +248,9 @@ public class Task implements AgileItem, Comparable<Task> {
                                : task.assignedPeople != null) {
       return false;
     }
+    if (doneDate != null ? !doneDate.equals(task.doneDate) : task.doneDate != null) {
+      return false;
+    }
 
     return !(efforts != null ? ! efforts.equals(task.efforts) : task.efforts != null);
 
@@ -257,6 +264,7 @@ public class Task implements AgileItem, Comparable<Task> {
     result = 31 * result + (impediments != null ? impediments.hashCode() : 0);
     result = 31 * result + status.hashCode();
     result = 31 * result + (assignedPeople != null ? assignedPeople.hashCode() : 0);
+    result = 31 * result + (doneDate != null ? doneDate.hashCode() : 0);
     result = 31 * result + (efforts != null ? efforts.hashCode() : 0);
     return result;
   }

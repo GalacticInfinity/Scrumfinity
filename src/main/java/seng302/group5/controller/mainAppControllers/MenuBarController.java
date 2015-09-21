@@ -479,6 +479,7 @@ public class MenuBarController {
 
           mainApp.getLMPC().refreshList(null);
           mainApp.getLMPC().getScrumBoardController().refreshComboBoxes();
+          mainApp.getLMPC().getBurndownController().refreshComboBoxes();
           if (!(Settings.organizationName.equals(""))) {
             mainApp.setMainTitle("Scrumfinity - " + Settings.organizationName);
           } else {

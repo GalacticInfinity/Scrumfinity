@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javafx.application.Platform;
@@ -74,9 +75,10 @@ public class BacklogDialogController {
   @FXML private ComboBox<Estimate> backlogScaleCombo;
   @FXML private ComboBox<String> storyEstimateCombo;
   @FXML private Button btnToggleState;
+  @FXML private Button btnNewProductOwner;
+  @FXML private Button btnEditProductOwner;
   @FXML private Button btnNewStory;
 
-  private boolean showState = false;
 
   /**
    * Setup the backlog dialog controller
@@ -126,9 +128,11 @@ public class BacklogDialogController {
     if (backlog != null) {
       this.backlog = backlog;
       this.lastBacklog = new Backlog(backlog);
+      this.btnEditProductOwner.setDisable(false);
     } else {
       this.backlog = null;
       this.lastBacklog = null;
+      this.btnEditProductOwner.setDisable(true);
     }
 
     btnConfirm.setDefaultButton(true);
@@ -163,6 +167,11 @@ public class BacklogDialogController {
 
     backlogProductOwnerCombo.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldValue, newValue) -> {
+          if (newValue == null) {
+            btnEditProductOwner.setDisable(true);
+          } else {
+            btnEditProductOwner.setDisable(false);
+          }
           if (createOrEdit == CreateOrEdit.EDIT) {
             checkButtonDisabled();
           }
@@ -215,23 +224,9 @@ public class BacklogDialogController {
           }
         });
 
-    allocatedStoriesList.setCellFactory(listView -> new StoryFormatCellFalse());
+    allocatedStoriesList.setCellFactory((param -> new StoryFormatCell()));
   }
 
-  /**
-   * Checks the current state and calls the correct cell factory for the current state.
-   * If true, it calls StoryFormatCell and shows highlights else it calls StoryFormatCellFalse
-   * and just shows labels.
-   */
-  private void showStatus(){
-    if (showState) {
-      allocatedStoriesList.setCellFactory(
-          (param -> new StoryFormatCell()));
-    } else {
-      allocatedStoriesList.setCellFactory(
-          (param -> new StoryFormatCellFalse()));
-    }
-  }
   /**
    * Check if any of the fields has been changed. If nothing changed, then confirm button is disabled.
    */
@@ -261,7 +256,7 @@ public class BacklogDialogController {
     productOwners = FXCollections.observableArrayList();
     estimates = FXCollections.observableArrayList();
 
-    showStatus();
+//    showStatus();
     try {
       Set<Story> storiesInUse = new HashSet<>();
       for (Backlog mainBacklog : mainApp.getBacklogs()) {
@@ -401,7 +396,6 @@ public class BacklogDialogController {
 
         this.allocatedStoriesList.getSelectionModel().select(storyEstimate);
         this.storyEstimateCombo.getSelectionModel().select(0);
-       showStatus();
         if (createOrEdit == CreateOrEdit.EDIT) {
           checkButtonDisabled();
         }
@@ -411,20 +405,6 @@ public class BacklogDialogController {
     }
   }
 
-  /**
-   * Handles when the show story state highlight is being toggled to show or hide.
-   *
-   *@param event the action of clicking the button.
-   */
-  @FXML
-  private void btnToggleState(ActionEvent event) {
-    if (showState) {
-      showState = false;
-    } else
-      showState = true;
-
-    showStatus();
-  }
   /**
    * Handles when the remove button is clicked for removing a story from a backlog.
    *
@@ -443,7 +423,6 @@ public class BacklogDialogController {
         if (createOrEdit == CreateOrEdit.EDIT) {
           checkButtonDisabled();
         }
-        showStatus();
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -628,7 +607,7 @@ public class BacklogDialogController {
    */
   @FXML
   protected void btnCancelClick(ActionEvent event) {
-    if (createOrEdit == createOrEdit.EDIT && Settings.correctList(backlog)) {
+    if (createOrEdit == CreateOrEdit.EDIT && Settings.correctList(backlog)) {
       mainApp.refreshList(backlog);
     }
     thisStage.close();
@@ -684,8 +663,6 @@ public class BacklogDialogController {
 
 
     allocatedStoriesList.scrollTo(before - 3);
-
-    showStatus();
   }
 
   /**
@@ -706,8 +683,6 @@ public class BacklogDialogController {
     }
 
     allocatedStoriesList.scrollTo(after - 3);
-
-    showStatus();
   }
 
   /**
@@ -728,10 +703,8 @@ public class BacklogDialogController {
           //Use ListView's getSelected Item
           StoryEstimate selectedItem = allocatedStoriesList.getSelectionModel().getSelectedItem();
 
-          showStatus();
           mainApp.showStoryDialogWithinBacklog(CreateOrEdit.EDIT, selectedItem.getStory(),
                                                thisStage);
-          showStatus();
           //use this to do whatever you want to. Open Link etc.
         }
       });
@@ -776,46 +749,8 @@ public class BacklogDialogController {
           circle.setFill(Color.rgb(0, 0, 0, 0));
           setGraphic(circle);
         }
-        showStatus();
 
       }}
-  }
-
-  /**
-   * Cell format class that handles the displaying of plain text cells within the allocated
-   * stories list within the backlog controller.
-   *
-   * Created by Craig Alan Barnard + Ma Liang 23/07/2015
-   */
-  private class StoryFormatCellFalse extends ListCell<StoryEstimate> {
-
-    public StoryFormatCellFalse() {
-      super();
-      // double click for editing story
-      this.setOnMouseClicked(click -> {
-        if (click.getClickCount() == 2 &&
-            click.getButton() == MouseButton.PRIMARY &&
-            !isEmpty()) {
-          //Use ListView's getSelected Item
-          StoryEstimate selectedItem = allocatedStoriesList.getSelectionModel().getSelectedItem();
-
-          showStatus();
-          mainApp.showStoryDialogWithinBacklog(CreateOrEdit.EDIT, selectedItem.getStory(),
-                                               thisStage);
-          showStatus();
-          //use this to do whatever you want to. Open Link etc.
-        }
-      });
-    }
-
-    @Override
-    protected void updateItem(StoryEstimate item, boolean empty) {
-      // calling super here is very important - don't skip this!
-      super.updateItem(item, empty);
-      if (item != null) {
-        setText(item.toString());
-      }
-    }
   }
 
   /**
@@ -893,6 +828,74 @@ public class BacklogDialogController {
   }
 
   /**
+   * A button which when clicked can add a new product owner to the system.
+   * Also adds to undo/redo stack so creation is undoable.
+   * @param event Button click
+   */
+  @FXML
+  protected void addNewProductOwner(ActionEvent event) {
+    List<Person> tempProductOwners = new ArrayList<>(productOwners);
+    mainApp.showPersonDialogWithinBacklog(CreateOrEdit.CREATE, null, thisStage);
+    List<Person> tempNewProductOwners = new ArrayList<>();
+
+    Skill productOwnerSkill = null;
+    for (Role role : mainApp.getRoles()) {
+      if (role.getLabel().equals("PO")) {
+        productOwnerSkill = role.getRequiredSkill();
+        break;
+      }
+    }
+    for (Person person : mainApp.getPeople()) {
+      if (person.getSkillSet().contains(productOwnerSkill)) {
+        tempNewProductOwners.add(person);
+      }
+    }
+
+    for (Person productOwner : tempNewProductOwners) {
+      if (!tempProductOwners.contains(productOwner)) {
+        productOwners.setAll(tempNewProductOwners);
+        backlogProductOwnerCombo.getSelectionModel().select(productOwner);
+        break;
+      }
+    }
+  }
+
+  /**
+   * A button which when clicked can edit the selected product owner in the product owner combo box.
+   * Also adds to undo/redo stack so the edit is undoable.
+   * @param event Button click
+   */
+  @FXML
+  protected void editProductOwner(ActionEvent event) {
+    List<Person> tempProductOwners = new ArrayList<>(productOwners);
+    Person selectedPerson = backlogProductOwnerCombo.getSelectionModel().getSelectedItem();
+    if (selectedPerson != null) {
+      mainApp.showPersonDialogWithinBacklog(CreateOrEdit.EDIT, selectedPerson, thisStage);
+      productOwners.setAll(tempProductOwners);
+      backlogProductOwnerCombo.getSelectionModel().select(selectedPerson);
+    }
+  }
+
+  /**
+   * A button which when clicked can add a new story to the system.
+   * Also adds to undo/redo stack so creation is undoable
+   * @param event Button click
+   */
+  @FXML
+  protected void addNewStory(ActionEvent event) {
+    mainApp.showStoryDialog(CreateOrEdit.CREATE);
+    Set<Story> currentStories = new HashSet<>();
+    for (StoryEstimate story : allocatedStories) {
+      currentStories.add(story.getStory());
+    }
+    for (Story story : mainApp.getStories()) {
+      if (!availableStories.contains(story) && !currentStories.contains(story)) {
+        availableStories.add(story);
+      }
+    }
+  }
+
+  /**
    * Allows us to override a ListViewCell - a single cell in a ListView.
    */
   private class AvailableStoriesListViewCell extends TextFieldListCell<Story> {
@@ -919,25 +922,6 @@ public class BacklogDialogController {
       super.updateItem(item, empty);
 
       setText(item == null ? "" : item.getLabel());
-    }
-  }
-
-  /**
-   * A button which when clicked can add a new story to the system.
-   * Also adds to undo/redo stack so creation is undoable
-   * @param event Button click
-   */
-  @FXML
-  protected void addNewStory(ActionEvent event) {
-    mainApp.showStoryDialog(CreateOrEdit.CREATE);
-    Set<Story> currentStories = new HashSet<>();
-    for (StoryEstimate story : allocatedStories) {
-      currentStories.add(story.getStory());
-    }
-    for (Story story : mainApp.getStories()) {
-      if (!availableStories.contains(story) && !currentStories.contains(story)) {
-        availableStories.add(story);
-      }
     }
   }
 }
