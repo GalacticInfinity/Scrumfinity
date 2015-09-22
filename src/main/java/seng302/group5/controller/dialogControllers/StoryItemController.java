@@ -390,19 +390,29 @@ public class StoryItemController {
     Label taskLabel = (Label) event.getGestureSource();
     String taskString = taskLabel.getText();
     String newPosString = null;
+    int newPosition = -1;
+
     if (event.getSource() instanceof Label) {
       Label taskNewPos = (Label) event.getSource();
       newPosString = taskNewPos.getText();
+      System.out.println("Dragging onto a Label at Pos:" + newPosString);
     } else if (event.getSource() instanceof VBox) {
       // For when dropped into empty space
       VBox droppedBox = (VBox) event.getSource();
-      Label taskNewPos = (Label) droppedBox.getChildren().get(droppedBox.getChildren().size() - 1);
-      newPosString = taskNewPos.getText();
+      if (droppedBox.getChildren().size() != 0) {
+        Label taskNewPos =
+            (Label) droppedBox.getChildren().get(droppedBox.getChildren().size() - 1);
+        newPosString = taskNewPos.getText();
+      } else {
+
+      }
+      System.out.println("Dragging onto a VBox at Pos:" + newPosString);
     }
+
     //Step2: Create new and last task(old pre-drag, new after)
     Task lastTask = null;
     Task newTask = null;
-    int newPosition = -1;
+
     //Step3: Clone last Task, assign task to newTask
     for (Task task : story.getTasks()) {
       if (taskString.equals(task.getLabel())) {
@@ -413,18 +423,11 @@ public class StoryItemController {
         newPosition = story.getTasks().indexOf(task);
       }
     }
-    // Adjust for dragged in bottom of VBox
-    if (!(event.getSource() instanceof VBox)) {
-      newPosition -= 1;
-    }
-
     if (newTask != null && newPosition != -1) {
       //Step4: set newTask's status, to wherever it was dragged to.
-
       // If fake story, create sprint undo/redo, else story.
       UndoRedo containerUndoRedoObject = new UndoRedoObject();
       if (story.getLabel().equals("Non-story Tasks")) {
-        System.out.println(sprint.getLabel());
         Sprint before = new Sprint(sprint);
         sprint.removeTask(newTask);
         sprint.addTask(newPosition, newTask);
@@ -437,7 +440,6 @@ public class StoryItemController {
         containerUndoRedoObject.setAction(Action.SPRINT_EDIT);
         containerUndoRedoObject.addDatum(before);
         containerUndoRedoObject.addDatum(after);
-
       } else {
         Story before = new Story(story);
         story.removeTask(newTask);
