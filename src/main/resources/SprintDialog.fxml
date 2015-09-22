@@ -119,7 +119,7 @@
                   </Label>
                   <Label fx:id="sprintProjectLabel" prefHeight="25.0" prefWidth="192.0" text="No Project Found">
                      <font>
-                        <Font size="15.0" />
+                        <Font size="14.0" />
                      </font>
                      <tooltip>
                         <Tooltip text="The project is found via the backlog." />
@@ -210,14 +210,45 @@
                         <Insets left="10.0" />
                      </HBox.margin>
                   </ComboBox>
-                  <Label prefHeight="27.0" prefWidth="41.0" text="Date:">
+                  <Button fx:id="btnNewRelease" maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" onAction="#addNewRelease" prefHeight="25.0" prefWidth="25.0">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="ToolbarQuickAdd.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                      <HBox.margin>
-                        <Insets left="2.0" />
+                        <Insets left="10.0" right="10.0" />
                      </HBox.margin>
+                  </Button>
+                  <Button fx:id="btnEditRelease" maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" onAction="#editRelease" prefHeight="25.0" prefWidth="25.0">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="toolbar_edit.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox prefHeight="25.0" prefWidth="483.0">
+               <children>
+                  <Label prefHeight="25.0" text="Release Date:">
+                     <HBox.margin>
+                        <Insets left="153.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
                   </Label>
                   <Label fx:id="releaseDate" prefHeight="26.0" prefWidth="82.0">
                      <HBox.margin>
-                        <Insets left="5.0" />
+                        <Insets left="10.0" />
                      </HBox.margin>
                   </Label>
                </children>

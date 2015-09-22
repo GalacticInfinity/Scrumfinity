@@ -79,6 +79,8 @@ public class SprintDialogController {
   @FXML private Button btnNewProject;
   @FXML private Button btnEditProject;
   @FXML private Button btnEditTeam;
+  @FXML private Button btnNewRelease;
+  @FXML private Button btnEditRelease;
 
   private Main mainApp;
   private Stage thisStage;
@@ -146,6 +148,8 @@ public class SprintDialogController {
       btnNewProject.setDisable(true);
       btnEditProject.setDisable(true);
       btnEditTeam.setDisable(true);
+      btnEditRelease.setDisable(true);
+      btnNewRelease.setDisable(true);
 
 
     } else if (createOrEdit == CreateOrEdit.EDIT) {
@@ -259,6 +263,11 @@ public class SprintDialogController {
       if (createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
       }
+      if (newValue != null) {
+        btnEditRelease.setDisable(false);
+      } else {
+        btnEditRelease.setDisable(true);
+      }
     });
     sprintStartDate.valueProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
@@ -297,7 +306,8 @@ public class SprintDialogController {
         sprintNameField.getText().equals(sprint.getSprintFullName()) &&
         sprintDescriptionField.getText().equals(sprint.getSprintDescription()) &&
         sprintImpedimentsField.getText().equals(sprint.getSprintImpediments()) &&
-        sprintBacklogCombo.getValue().equals(sprint.getSprintBacklog()) &&
+        (sprintBacklogCombo.getValue() == null ||
+         sprintBacklogCombo.getValue().equals(sprint.getSprintBacklog())) &&
         (sprintTeamCombo.getValue() == null ||
          sprintTeamCombo.getValue().equals(sprint.getSprintTeam())) &&
         (sprintReleaseCombo.getValue() == null ||
@@ -365,6 +375,7 @@ public class SprintDialogController {
 
             btnNewProject.setDisable(true);
             btnEditProject.setDisable(false);
+            btnNewRelease.setDisable(false);
 
             sprintTeamCombo.setDisable(false);
             sprintReleaseCombo.setDisable(false);
@@ -402,6 +413,9 @@ public class SprintDialogController {
 
             btnNewProject.setDisable(false);
             btnEditProject.setDisable(true);
+            btnEditTeam.setDisable(true);
+            btnNewRelease.setDisable(true);
+            btnEditRelease.setDisable(true);
 
             sprintTeamCombo.setValue(null);
             sprintReleaseCombo.setValue(null);
@@ -1091,6 +1105,41 @@ public class SprintDialogController {
       mainApp.showTeamDialogWithinNested(selectedTeam, thisStage);
       teams.setAll(tempTeamList);
       sprintTeamCombo.getSelectionModel().select(selectedTeam);
+    }
+  }
+
+  /**
+   * A button which when clicked can edit the displayed release.
+   * Also adds to undo/redo stack so the edit is undoable.
+   * @param event Button click
+   */
+  @FXML
+  protected void editRelease(ActionEvent event) {
+    List<Release> tempReleaseList = new ArrayList<>(releases);
+    Release selectedRelease = sprintReleaseCombo.getSelectionModel().getSelectedItem();
+    if (selectedRelease != null) {
+      mainApp.showReleaseDialogWithinSprint(CreateOrEdit.EDIT, selectedRelease, project, thisStage);
+      releases.setAll(tempReleaseList);
+      sprintReleaseCombo.getSelectionModel().select(selectedRelease);
+    }
+  }
+
+  /**
+   * A button which when clicked can add a release to the project.
+   * Also adds to undo/redo stack so creation is undoable.
+   * @param event Button click
+   */
+  @FXML
+  protected void addNewRelease(ActionEvent event) {
+    List<Release> tempReleaseList = new ArrayList<>(releases);
+    mainApp.showReleaseDialogWithinSprint(CreateOrEdit.CREATE, null, project, thisStage);
+    List<Release> tempNewReleaseList = new ArrayList<>(mainApp.getReleases());
+    for (Release release : tempNewReleaseList) {
+      if (!tempReleaseList.contains(release)) {
+        releases.setAll(tempNewReleaseList);
+        sprintReleaseCombo.getSelectionModel().select(release);
+        break;
+      }
     }
   }
 }

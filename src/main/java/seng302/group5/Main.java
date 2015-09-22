@@ -572,6 +572,38 @@ public class Main extends Application {
   }
 
   /**
+   * sets up the dialog box for creating/editing a release
+   *
+   * @param createOrEdit either create a new release or edit existing release.
+   * @param release the selected release that to be edited form the release combo box.
+   * @param project the project that were linked with the backlog from the backlog combo in sprint dialog.
+   * @param stage   the stage it is currently on to void unusual behaviour.
+   */
+  public void showReleaseDialogWithinSprint(CreateOrEdit createOrEdit, Release release,
+                                            Project project, Stage stage) {
+    try {
+      FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(Main.class.getResource("/ReleaseDialog.fxml"));
+      VBox releaseDialogLayout = loader.load();
+
+      ReleaseDialogController controller = loader.getController();
+      Scene releaseDialogScene = new Scene(releaseDialogLayout);
+      Stage releaseDialogStage = new Stage();
+
+      controller.setupController(this, releaseDialogStage, createOrEdit, release);
+      controller.setupSprintMode(project);
+
+      releaseDialogStage.initModality(Modality.APPLICATION_MODAL);
+      releaseDialogStage.initOwner(stage);
+      releaseDialogStage.setScene(releaseDialogScene);
+      releaseDialogStage.showAndWait();
+
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+  /**
    * sets up the dialog box for creating/editing a person
    *
    * @param createOrEdit the createOrEdit object that decides if you are creating or editing
