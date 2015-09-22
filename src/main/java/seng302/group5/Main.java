@@ -390,6 +390,39 @@ public class Main extends Application {
   }
 
   /**
+   * sets up the dialog box for creating/editing a project
+   *
+   * @param createOrEdit either create a new project or edit existing project.
+   * @param project the selected project that to be edited form the project combo box.
+   * @param backlog the backlog that were selected from the backlog combo in sprint dialog
+   * @param stage   the stage it is currently on to void unusual behaviour.
+   */
+  public void showProjectDialogWithinSprint(CreateOrEdit createOrEdit, Project project,
+                                            Backlog backlog, Stage stage) {
+    try {
+      FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(Main.class.getResource("/ProjectDialog.fxml"));
+      VBox projectDialogLayout = loader.load();
+
+      ProjectDialogController controller = loader.getController();
+      Scene projectDialogScene = new Scene(projectDialogLayout);
+      Stage projectDialogStage = new Stage();
+
+      controller.setupController(this, projectDialogStage, createOrEdit, project);
+      controller.setupSprintMode(backlog);
+
+      projectDialogStage.initModality(Modality.APPLICATION_MODAL);
+      projectDialogStage.initOwner(stage);
+      projectDialogStage.setScene(projectDialogScene);
+      projectDialogStage.showAndWait();
+
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
    * sets up the dialog box for creating/editing a Team
    *
    * @param createOrEdit the createOrEdit object that decides if you are creating or editing

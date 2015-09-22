@@ -26,6 +26,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
+import seng302.group5.controller.enums.DialogMode;
 import seng302.group5.model.AgileHistory;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Project;
@@ -61,6 +62,7 @@ public class ProjectDialogController {
   private Main mainApp;
   private Stage thisStage;
   private CreateOrEdit createOrEdit;
+  private DialogMode dialogMode;
   private Project project = new Project();
   private Project lastProject;
   private ObservableList<AgileHistory> allocatedTeams = FXCollections.observableArrayList();
@@ -83,6 +85,7 @@ public class ProjectDialogController {
                               Project project) {
     this.mainApp = mainApp;
     this.thisStage = thisStage;
+    this.dialogMode = DialogMode.DEFAULT_MODE;
     teamStartDate.setValue(LocalDate.now());
 
     String os = System.getProperty("os.name");
@@ -179,6 +182,17 @@ public class ProjectDialogController {
         }
       }
     });
+  }
+
+  /**
+   * Set up the dialog to be in sprint mode.
+   * @param backlog the backlog to automatically select.
+   */
+  public void setupSprintMode(Backlog backlog) {
+    dialogMode = DialogMode.SPRINT_MODE;
+    backlogComboBox.getSelectionModel().select(backlog);
+    backlogComboBox.setDisable(true);
+    btnNewBacklog.setDisable(true);
   }
 
   private void checkButtonDisabled() {

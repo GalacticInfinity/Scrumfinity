@@ -77,6 +77,8 @@ public class SprintDialogController {
   @FXML private Button btnNewStory;
   @FXML private Button btnNewBacklog;
   @FXML private Button btnEditBacklog;
+  @FXML private Button btnNewProject;
+  @FXML private Button btnEditProject;
 
   private Main mainApp;
   private Stage thisStage;
@@ -141,6 +143,8 @@ public class SprintDialogController {
       sprintTeamCombo.setDisable(true);
       sprintReleaseCombo.setDisable(true);
       btnEditBacklog.setDisable(true);
+      btnNewProject.setDisable(true);
+      btnEditProject.setDisable(true);
 
 
     } else if (createOrEdit == CreateOrEdit.EDIT) {
@@ -148,11 +152,7 @@ public class SprintDialogController {
       btnConfirm.setText("Save");
       btnConfirm.setDisable(true);
       initialiseLists();
-      if (sprint.getSprintBacklog() != null) {
-        btnEditBacklog.setDisable(false);
-      } else {
-        btnEditBacklog.setDisable(true);
-      }
+      btnNewProject.setDisable(true);
 
       sprintGoalField.setText(sprint.getLabel());
       sprintNameField.setText(sprint.getSprintFullName());
@@ -357,6 +357,9 @@ public class SprintDialogController {
             project = projectMap.get(newBacklog);
             sprintProjectLabel.setText(project.toString());
 
+            btnNewProject.setDisable(true);
+            btnEditProject.setDisable(false);
+
             sprintTeamCombo.setDisable(false);
             sprintReleaseCombo.setDisable(false);
 
@@ -390,6 +393,10 @@ public class SprintDialogController {
           } else {
             project = null;
             sprintProjectLabel.setText("No Project Found");
+
+            btnNewProject.setDisable(false);
+            btnEditProject.setDisable(true);
+
             sprintTeamCombo.setValue(null);
             sprintReleaseCombo.setValue(null);
             sprintTeamCombo.setDisable(true);
@@ -1028,4 +1035,39 @@ public class SprintDialogController {
     }
   }
 
+  /**
+   * A button which when clicked can edit the displayed project.
+   * Also adds to undo/redo stack so the edit is undoable.
+   * @param event Button click
+   */
+  @FXML
+  protected void editProject(ActionEvent event) {
+    Backlog backlog = sprintBacklogCombo.getSelectionModel().getSelectedItem();
+    mainApp.showProjectDialogWithinSprint(CreateOrEdit.EDIT, project, backlog, thisStage);
+    sprintProjectLabel.setText(project.getLabel());
+  }
+
+  /**
+   * A button which when clicked can add a project to the system.
+   * Also adds to undo/redo stack so creation is undoable.
+   * @param event Button click
+   */
+  @FXML
+  protected void addNewProject(ActionEvent event) {
+    Backlog backlog = sprintBacklogCombo.getSelectionModel().getSelectedItem();
+    mainApp.showProjectDialogWithinSprint(CreateOrEdit.CREATE, null, backlog, thisStage);
+
+    // set up map from backlog to project again
+    projectMap.clear();
+    for (Project project : mainApp.getProjects()) {
+      Backlog projectBacklog = project.getBacklog();
+      if (projectBacklog != null) {
+        projectMap.put(projectBacklog, project);
+      }
+    }
+
+    // fire the listener to update the dialog
+    sprintBacklogCombo.getSelectionModel().select(null);
+    sprintBacklogCombo.getSelectionModel().select(backlog);
+  }
 }
