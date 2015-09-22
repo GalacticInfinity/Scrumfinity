@@ -810,7 +810,7 @@ public class Main extends Application {
   }
 
   /**
-   * sets up the dialog box for editing a story when opened from the backlog dialog
+   * sets up the dialog box for creating or editing a story when opened from the backlog dialog
    *
    * @param createOrEdit it should be edit since it is opened existing from backlog dialog
    * @param story the person that you wanted to view or edit information with
@@ -837,6 +837,7 @@ public class Main extends Application {
         }
       }
       controller.setupController(this, storyDialogStage, createOrEdit, story);
+      controller.setupBacklogMode();
 
       storyDialogStage.initModality(Modality.APPLICATION_MODAL);
       storyDialogStage.initOwner(owner);

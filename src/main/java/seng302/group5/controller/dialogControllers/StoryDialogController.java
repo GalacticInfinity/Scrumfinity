@@ -107,6 +107,7 @@ public class StoryDialogController {
   public void setupController(Main mainApp, Stage thisStage, CreateOrEdit createOrEdit, Story story) {
     this.mainApp = mainApp;
     this.thisStage = thisStage;
+    this.dialogMode = DialogMode.DEFAULT_MODE;
 
     String os = System.getProperty("os.name");
 
@@ -285,6 +286,16 @@ public class StoryDialogController {
           }
         }
     );
+  }
+
+  /**
+   * Set up the dialog to be in backlog mode
+   */
+  public void setupBacklogMode() {
+    dialogMode = DialogMode.BACKLOG_MODE;
+    backlogCombo.setDisable(true);
+    btnNewBacklog.setDisable(true);
+    btnEditBacklog.setDisable(true);
   }
 
   /**
