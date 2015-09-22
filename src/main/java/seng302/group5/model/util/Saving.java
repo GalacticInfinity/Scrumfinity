@@ -544,7 +544,6 @@ public class Saving {
             saveFile.write("\t\t\t\t<DoneDate>" + task.getDoneDate() + "</DoneDate>\n");
           }
           saveFile.write("\t\t\t</Task>\n");
-
         }
         saveFile.write("\t\t</Tasks>\n");
       }
