@@ -33,7 +33,7 @@
         </HBox>
         <HBox prefHeight="100.0" prefWidth="434.0">
             <children>
-                <Label prefHeight="25.0" prefWidth="125.0" text="Description:*">
+                <Label prefHeight="25.0" prefWidth="125.0" text="Description:">
                     <font>
                         <Font size="15.0" />
                     </font>

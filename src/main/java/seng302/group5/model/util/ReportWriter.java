@@ -318,7 +318,9 @@ public class ReportWriter {
     releaseElem.setAttribute("label", release.getLabel());
 
     Element releaseDesc = report.createElement("Description");
-    releaseDesc.appendChild(report.createTextNode(release.getReleaseDescription()));
+    if (release.getReleaseDescription() != null && !release.getReleaseDescription().isEmpty()) {
+      releaseDesc.appendChild(report.createTextNode(release.getReleaseDescription()));
+    }
     releaseElem.appendChild(releaseDesc);
 
     Element releaseNotes = report.createElement("Notes");

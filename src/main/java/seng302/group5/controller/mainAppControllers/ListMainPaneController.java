@@ -851,7 +851,7 @@ public class ListMainPaneController {
     textDescriptionHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
     Text textDescriptionBody;
-    if (release.getReleaseDescription().length() != 0) {
+    if (!release.getReleaseDescription().isEmpty()) {
       textDescriptionBody = new Text(release.getReleaseDescription());
     } else {
       textDescriptionBody = new Text("N/A");
@@ -877,7 +877,7 @@ public class ListMainPaneController {
     textNotesHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
     Text textNotesBody;
-    if (release.getReleaseDescription().length() != 0) {
+    if (!release.getReleaseNotes().isEmpty()) {
       textNotesBody = new Text(release.getReleaseNotes());
     } else {
       textNotesBody = new Text("N/A");

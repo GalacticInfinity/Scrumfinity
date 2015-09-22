@@ -485,20 +485,20 @@ public class Loading {
         newRelease.setLabel(releaseData);
         releaseLine = loadedFile.readLine();
         String descBuilder;
-        if (!releaseLine.endsWith("</releaseDescription>")) {
-          descBuilder = releaseLine
-                            .replaceAll("(?i)(.*<releaseDescription.*?>)(.+?)", "$2") + "\n";
-          while ((!(releaseLine = loadedFile.readLine()).endsWith("</releaseDescription>"))) {
-            descBuilder += releaseLine + "\n";
-          }
-          descBuilder += releaseLine.replaceAll("(.+?)(</releaseDescription>)", "$1");
-        } else {
-          descBuilder =
-              releaseLine
-                  .replaceAll("(?i)(.*<releaseDescription.*?>)(.+?)(</releaseDescription>)", "$2");
-        }
-        newRelease.setReleaseDescription(descBuilder);
-        releaseLine = loadedFile.readLine();
+//        if (!releaseLine.endsWith("</releaseDescription>")) {
+//          descBuilder = releaseLine
+//                            .replaceAll("(?i)(.*<releaseDescription.*?>)(.+?)", "$2") + "\n";
+//          while ((!(releaseLine = loadedFile.readLine()).endsWith("</releaseDescription>"))) {
+//            descBuilder += releaseLine + "\n";
+//          }
+//          descBuilder += releaseLine.replaceAll("(.+?)(</releaseDescription>)", "$1");
+//        } else {
+//          descBuilder =
+//              releaseLine
+//                  .replaceAll("(?i)(.*<releaseDescription.*?>)(.+?)(</releaseDescription>)", "$2");
+//        }
+//        newRelease.setReleaseDescription(descBuilder);
+//        releaseLine = loadedFile.readLine();
         if (!releaseLine.endsWith("</releaseNotes>")) {
           descBuilder = releaseLine
                             .replaceAll("(?i)(.*<releaseNotes.*?>)(.+?)", "$2") + "\n";
@@ -527,6 +527,23 @@ public class Loading {
                                    Integer.parseInt(releaseData.substring(5, 7)),
                                    Integer.parseInt(releaseData.substring(8, 10)));
         newRelease.setReleaseDate(releaseDate);
+
+        //Optional Fields
+        while ((!(releaseLine = loadedFile.readLine()).matches(".*</Release>"))) {
+          if (!releaseLine.endsWith("</releaseDescription>")) {
+            descBuilder = releaseLine
+                              .replaceAll("(?i)(.*<releaseDescription.*?>)(.+?)", "$2") + "\n";
+            while ((!(releaseLine = loadedFile.readLine()).endsWith("</releaseDescription>"))) {
+              descBuilder += releaseLine + "\n";
+            }
+            descBuilder += releaseLine.replaceAll("(.+?)(</releaseDescription>)", "$1");
+          } else {
+            descBuilder =
+                releaseLine
+                    .replaceAll("(?i)(.*<releaseDescription.*?>)(.+?)(</releaseDescription>)", "$2");
+          }
+          newRelease.setReleaseDescription(descBuilder);
+        }
 
         main.addRelease(newRelease);
       }

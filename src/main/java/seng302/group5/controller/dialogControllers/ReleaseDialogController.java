@@ -80,13 +80,13 @@ public class ReleaseDialogController {
       noErrors++;
       errors.append(String.format("%s\n", e.getMessage()));
     }
-
-    try {
-      releaseDescription = parseReleaseDescription(releaseDescription);
-    } catch (Exception e) {
-      noErrors++;
-      errors.append(String.format("%s\n", e.getMessage()));
-    }
+//#Changed
+//    try {
+//      releaseDescription = parseReleaseDescription(releaseDescription);
+//    } catch (Exception e) {
+//      noErrors++;
+//      errors.append(String.format("%s\n", e.getMessage()));
+//    }
 
     try {
       releaseDate = parseReleaseDate(releaseDate);
@@ -273,10 +273,6 @@ public class ReleaseDialogController {
         checkButtonDisabled();
       }
     });
-
-
-
-
   }
 
 
@@ -340,19 +336,19 @@ public class ReleaseDialogController {
     }
     return inputReleaseLabel;
   }
-
+//#Changed
   /**
    * @param inputReleaseDescription The description that the user wants for this release
    * @return String returns the description if its allowed
    * @throws Exception Throws this if the description is empty
    */
-  private String parseReleaseDescription(String inputReleaseDescription) throws Exception {
-
-    if (inputReleaseDescription.isEmpty()) {
-      throw new Exception("Release Description is empty.");
-    }
-    return inputReleaseDescription;
-  }
+//  private String parseReleaseDescription(String inputReleaseDescription) throws Exception {
+//
+//    if (inputReleaseDescription.isEmpty()) {
+//      throw new Exception("Release Description is empty.");
+//    }
+//    return inputReleaseDescription;
+//  }
 
   /**
    * @param inputReleaseNotes The release notes that the user wants
