@@ -24,6 +24,7 @@ import seng302.group5.model.Story;
 import seng302.group5.model.Task;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
+import seng302.group5.model.undoredo.CompositeUndoRedo;
 import seng302.group5.model.undoredo.UndoRedo;
 import seng302.group5.model.undoredo.UndoRedoObject;
 
@@ -47,6 +48,7 @@ public class StoryItemController {
 
   private Main mainApp;
   private Story story;
+  private Sprint sprint;
   private Accordion accordion;
 
   private Image inprogress;
@@ -63,10 +65,11 @@ public class StoryItemController {
    * This function sets up the story item controller.
    * @param story       The story being displayed in this.
    */
-  public void setupController(Story story, Main mainApp, Accordion accordion) {
+  public void setupController(Story story, Main mainApp, Accordion accordion, Sprint sprint) {
     this.story = story;
     this.mainApp = mainApp;
     this.accordion = accordion;
+    this.sprint = sprint;
     storyPane.setText(story.getLabel());
 
     //Set up the dino gif and place it on the accordion
@@ -383,8 +386,7 @@ public class StoryItemController {
    * @param status Status that the task is changed to.
    */
   private void generateUndoRedoObject(MouseDragEvent event, Status status) {
-    // Store a copy of task to edit in object to avoid reference problems
-    //Step1: Change label into string
+    // Step 1:Gesture source will always be label, item dragged.
     Label taskLabel = (Label) event.getGestureSource();
     String taskString = taskLabel.getText();
     String newPosString = null;
@@ -411,27 +413,56 @@ public class StoryItemController {
         newPosition = story.getTasks().indexOf(task);
       }
     }
-    newPosition = story.getTasks().indexOf(newTask);
+    // Adjust for dragged in bottom of VBox
+    if (!(event.getSource() instanceof VBox)) {
+      newPosition -= 1;
+    }
 
     if (newTask != null && newPosition != -1) {
       //Step4: set newTask's status, to wherever it was dragged to.
-      story.getTasks().remove(newTask);
-      story.getTasks().add(newPosition, newTask);
-      newTask.setStatus(status);
-      //Step5: make the u/r object.
-      UndoRedo undoRedoObject = new UndoRedoObject();
 
-      undoRedoObject.setAgileItem(newTask);
+      // If fake story, create sprint undo/redo, else story.
+      UndoRedo containerUndoRedoObject = new UndoRedoObject();
+      if (story.getLabel().equals("Non-story Tasks")) {
+        System.out.println(sprint.getLabel());
+        Sprint before = new Sprint(sprint);
+        sprint.removeTask(newTask);
+        sprint.addTask(newPosition, newTask);
+        story.removeTask(newTask);
+        story.addTask(newPosition, newTask);
+        newTask.setStatus(status);
+        Sprint after = new Sprint(sprint);
 
-      undoRedoObject = new UndoRedoObject();
-      undoRedoObject.setAction(Action.TASK_EDIT);
-      undoRedoObject.addDatum(lastTask);
+        containerUndoRedoObject.setAgileItem(sprint);
+        containerUndoRedoObject.setAction(Action.SPRINT_EDIT);
+        containerUndoRedoObject.addDatum(before);
+        containerUndoRedoObject.addDatum(after);
 
-      // Store a copy of task to edit in object to avoid reference problems
-      undoRedoObject.setAgileItem(newTask);
-      Task taskToStore = new Task(newTask);
-      undoRedoObject.addDatum(taskToStore);
-      mainApp.newAction(undoRedoObject);
+      } else {
+        Story before = new Story(story);
+        story.removeTask(newTask);
+        story.addTask(newPosition, newTask);
+        newTask.setStatus(status);
+        Story after = new Story(story);
+
+        //Step5: Create Story undo/redo Object
+        containerUndoRedoObject.setAgileItem(story);
+        containerUndoRedoObject.setAction(Action.STORY_EDIT);
+        containerUndoRedoObject.addDatum(before);
+        containerUndoRedoObject.addDatum(after);
+      }
+
+      UndoRedoObject taskUndoRedoObject = new UndoRedoObject();
+      taskUndoRedoObject.setAgileItem(newTask);
+      taskUndoRedoObject.setAction(Action.TASK_EDIT);
+      taskUndoRedoObject.addDatum(lastTask);
+      taskUndoRedoObject.addDatum(new Task(newTask));
+
+      CompositeUndoRedo compUndoRedoObject = new CompositeUndoRedo("Undo Task Move");
+      compUndoRedoObject.addUndoRedo(containerUndoRedoObject);
+      compUndoRedoObject.addUndoRedo(taskUndoRedoObject);
+
+      mainApp.newAction(compUndoRedoObject);
     }
   }
 

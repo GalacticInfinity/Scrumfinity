@@ -116,14 +116,11 @@ public class ScrumBoardController {
                 availableStories.add(story);
               }
             }
-            System.out.println(openedTabs);
             for (Story story : availableStories) {
               StoryItemController paneController = createStoryPane(story, storiesBox);
               if (paneController != null) {
                 storyPanes.add(paneController);
               }
-              System.out.println(paneController.getPaneName());
-              System.out.println(openedTabs.contains(paneController.getPaneName()));
               if (openedTabs.contains(paneController.getPaneName())) {
                 paneController.expandTab();
               }
@@ -158,7 +155,7 @@ public class ScrumBoardController {
       Accordion storyAccordion = new Accordion();
       storyAccordion.getPanes().add(accordionPane);
       storiesBox.getChildren().add(storyAccordion);
-      controller.setupController(story, mainApp, storyAccordion);
+      controller.setupController(story, mainApp, storyAccordion, sprintCombo.getValue());
       return controller;
     } catch (IOException e) {
       e.printStackTrace();

@@ -256,6 +256,10 @@ public class Sprint implements AgileItem, Taskable, Comparable<Sprint> {
     this.tasks.add(task);
   }
 
+  public void addTask(int pos, Task task) {
+    this.tasks.add(pos, task);
+  }
+
   /**
    * Add a collection of tasks to the sprint.
    *
