@@ -1028,11 +1028,18 @@ public class SprintDialogController {
   @FXML
   protected void editBacklog(ActionEvent event) {
     List<Backlog> tempBacklogList = new ArrayList<>(backlogs);
+    Team tempTeam = sprintTeamCombo.getSelectionModel().getSelectedItem();
+    Release tempRelease = sprintReleaseCombo.getSelectionModel().getSelectedItem();
+    List<Story> tempAllocatedStories = new ArrayList<>(allocatedStoriesPrioritised);
     Backlog selectedBacklog = sprintBacklogCombo.getSelectionModel().getSelectedItem();
     if (selectedBacklog != null) {
       mainApp.showBacklogDialogNested(selectedBacklog, thisStage);
-      backlogs.setAll(tempBacklogList);
+      backlogs.setAll(tempBacklogList); // this line deselects everything due to the listener
       sprintBacklogCombo.getSelectionModel().select(selectedBacklog);
+      sprintTeamCombo.getSelectionModel().select(tempTeam);
+      sprintReleaseCombo.getSelectionModel().select(tempRelease);
+      allocatedStoriesPrioritised.addAll(tempAllocatedStories);
+      availableStories.removeAll(tempAllocatedStories);
     }
   }
 

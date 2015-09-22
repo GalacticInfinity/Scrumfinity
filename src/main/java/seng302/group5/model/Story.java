@@ -381,6 +381,16 @@ public class Story implements AgileItem, Taskable, Comparable<Story> {
   }
 
   /**
+   * Inserts a task into the tasks list using the supplied index.
+   *
+   * @param pos Position to insert
+   * @param task Task to insert
+   */
+  public void addTask(int pos, Task task) {
+    tasks.add(pos, task);
+  }
+
+  /**
    * Add a collection of tasks to the story.
    *
    * @param tasks Collection of tasks to add.
