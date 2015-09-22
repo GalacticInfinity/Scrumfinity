@@ -72,7 +72,7 @@
                   </HBox>
                   <HBox alignment="CENTER_LEFT" spacing="10.0">
                      <children>
-                        <Label prefWidth="105.0" text="Status:*">
+                        <Label prefWidth="105.0" text="Status:">
                            <font>
                               <Font size="15.0" />
                            </font>
