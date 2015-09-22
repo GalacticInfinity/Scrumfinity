@@ -30,9 +30,9 @@ public class BurndownController {
   @FXML private VBox holder;
 
 
-  private XYChart.Series<LocalDate, Integer> aSeries = new XYChart.Series<LocalDate, Integer>();
-  private XYChart.Series<LocalDate, Integer> bSeries = new XYChart.Series<LocalDate, Integer>();
-  private XYChart.Series<LocalDate, Integer> cSeries = new XYChart.Series<LocalDate, Integer>();
+  private XYChart.Series<LocalDate, Integer> aSeries;
+  private XYChart.Series<LocalDate, Integer> bSeries;
+  private XYChart.Series<LocalDate, Integer> cSeries;
 
   private Main mainApp;
   private Stage stage;
@@ -59,6 +59,7 @@ public class BurndownController {
     this.stage = stage;
     sprintCombo.setDisable(true);
     burndownChart.setPrefWidth(stage.getWidth());
+    burndownChart.setAnimated(false);
     initialiseLists();
   }
 
@@ -66,6 +67,10 @@ public class BurndownController {
    * initialise the lists with the available backlogs and sprints.
    */
   private void initialiseLists() {
+    aSeries = new XYChart.Series<LocalDate, Integer>();
+    bSeries = new XYChart.Series<LocalDate, Integer>();
+    cSeries = new XYChart.Series<LocalDate, Integer>();
+
     availableSprints = FXCollections.observableArrayList();
     availableBacklogs = FXCollections.observableArrayList();
     allEffort = FXCollections.observableArrayList();
@@ -76,8 +81,8 @@ public class BurndownController {
     backlogCombo.getSelectionModel().clearSelection();
     sprintCombo.getSelectionModel().clearSelection();
     backlogCombo.setItems(mainApp.getBacklogs());
-    burndownChart.setMinWidth(stage.getWidth()-200);
-    burndownChart.setMinHeight(stage.getHeight()-200);
+    burndownChart.setMinWidth(stage.getWidth() - 200);
+    burndownChart.setMinHeight(stage.getHeight() - 200);
 
     backlogCombo.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldBacklog, newBacklog) -> {
@@ -122,7 +127,7 @@ public class BurndownController {
               }
             }
             time = 0;
-            for (Task task : tasks) {
+            for (Task task : tasks.sorted()) {
               time += task.getTaskEstimation();
               if (task.getEfforts() != null) {
                 allEffort.addAll(task.getEfforts());
@@ -132,10 +137,8 @@ public class BurndownController {
               }
             }
           }
-
-          burndownChart.setAnimated(false);
+          burndownChart.autosize();
           burndownChart.getData().clear();
-          burndownChart.setData(null);
           burndownChart.setData(getChartData(time));
         }
     );
@@ -179,7 +182,6 @@ public class BurndownController {
       timeDiff = (time+ 0.0) / days;
     }
 
-    bSeries.getData().add(new XYChart.Data(date2.toString(), time));
     if (timeDiff != 0) {
       int burnUp = 0;
       for (Integer day = days; day >= 0; --day) {
@@ -216,10 +218,12 @@ public class BurndownController {
     sprintCombo.getSelectionModel().clearSelection();
     tasks.clear();
     allEffort.clear();
+    doneTasks.clear();
     burndownChart.getData().clear();
     initialiseLists();
-
+    burndownChart.setTitle(null);
     sprintCombo.setDisable(true);
+    initialiseLists();
 
     if (mainApp.getBacklogs().contains(backlog)) {
       backlogCombo.setValue(backlog);
@@ -227,6 +231,7 @@ public class BurndownController {
       if(availableSprints.contains(sprint)){
         sprintCombo.setValue(sprint);
         sprintCombo.setDisable(false);
+        burndownChart.setTitle(sprint.getLabel());
       } else {
         sprintCombo.setValue(null);
       }
@@ -234,5 +239,6 @@ public class BurndownController {
       backlogCombo.setValue(null);
       sprintCombo.setValue(null);
     }
+
   }
 }
