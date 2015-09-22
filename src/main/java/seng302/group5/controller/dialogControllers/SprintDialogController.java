@@ -7,11 +7,9 @@ import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -79,6 +77,7 @@ public class SprintDialogController {
   @FXML private Button btnEditBacklog;
   @FXML private Button btnNewProject;
   @FXML private Button btnEditProject;
+  @FXML private Button btnEditTeam;
 
   private Main mainApp;
   private Stage thisStage;
@@ -145,6 +144,7 @@ public class SprintDialogController {
       btnEditBacklog.setDisable(true);
       btnNewProject.setDisable(true);
       btnEditProject.setDisable(true);
+      btnEditTeam.setDisable(true);
 
 
     } else if (createOrEdit == CreateOrEdit.EDIT) {
@@ -234,6 +234,11 @@ public class SprintDialogController {
       //For disabling the button
       if (createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
+      }
+      if (newValue != null) {
+        btnEditTeam.setDisable(false);
+      } else {
+        btnEditTeam.setDisable(true);
       }
     });
     sprintReleaseCombo.getSelectionModel().selectedItemProperty()
@@ -1045,6 +1050,7 @@ public class SprintDialogController {
     Backlog backlog = sprintBacklogCombo.getSelectionModel().getSelectedItem();
     mainApp.showProjectDialogWithinSprint(CreateOrEdit.EDIT, project, backlog, thisStage);
     sprintProjectLabel.setText(project.getLabel());
+    teams.setAll(project.getCurrentlyAllocatedTeams());
   }
 
   /**
@@ -1069,5 +1075,21 @@ public class SprintDialogController {
     // fire the listener to update the dialog
     sprintBacklogCombo.getSelectionModel().select(null);
     sprintBacklogCombo.getSelectionModel().select(backlog);
+  }
+
+  /**
+   * A button which when clicked can edit the selected team in the team combo box.
+   * Also adds to undo/redo stack so the edit is undoable.
+   * @param event Button click
+   */
+  @FXML
+  protected void editTeam(ActionEvent event) {
+    List<Team> tempTeamList = new ArrayList<>(teams);
+    Team selectedTeam = sprintTeamCombo.getSelectionModel().getSelectedItem();
+    if (selectedTeam != null) {
+      mainApp.showTeamDialogWithinNested(selectedTeam, thisStage);
+      teams.setAll(tempTeamList);
+      sprintTeamCombo.getSelectionModel().select(selectedTeam);
+    }
   }
 }

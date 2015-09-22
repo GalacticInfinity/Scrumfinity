@@ -464,12 +464,12 @@ public class Main extends Application {
   }
 
   /**
-   * sets up the dialog box for creating/editing a Team withing the project dialog
+   * sets up the dialog box for creating/editing a Team withing a parent dialog
    *
    * @param team the team that you wanted to view or edit information with
    * @param stage the stage it is currently on to void unusual behaviour
    */
-  public void showTeamDialogWithinProject(Team team, Stage stage) {
+  public void showTeamDialogWithinNested(Team team, Stage stage) {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/TeamDialog.fxml"));
@@ -894,7 +894,7 @@ public class Main extends Application {
   }
 
   /**
-   * Sets up a dialog box for editing a backlog within the project dialog.
+   * Sets up a dialog box for editing a backlog within a parent dialog.
    *
    * @param backlog the selected backlog that to be edited form the backlog combo box.
    * @param stage   the stage it is currently on to void unusual behaviour.

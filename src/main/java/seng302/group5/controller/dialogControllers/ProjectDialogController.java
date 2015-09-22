@@ -604,7 +604,7 @@ public class ProjectDialogController {
             click.getButton() == MouseButton.PRIMARY &&
             !isEmpty()) {
           Team selectedTeam = availableTeamsList.getSelectionModel().getSelectedItem();
-          mainApp.showTeamDialogWithinProject(selectedTeam, thisStage);
+          mainApp.showTeamDialogWithinNested(selectedTeam, thisStage);
           availableTeams.remove(selectedTeam);
           availableTeams.add(selectedTeam);
           //This is a hella shitty fix to get the list to update when nested editing coz fml.
