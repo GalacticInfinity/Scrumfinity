@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import javax.crypto.AEADBadTagException;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -28,6 +26,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
+import seng302.group5.controller.enums.DialogMode;
 import seng302.group5.model.AgileHistory;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Project;
@@ -58,11 +57,14 @@ public class ProjectDialogController {
   @FXML private Button btnNewTeam;
   @FXML private Button btnNewBacklog;
   @FXML private Button btnEditBacklog;
+  @FXML private Button btnAddTeam;
+  @FXML private Button btnRemoveTeam;
 
 
   private Main mainApp;
   private Stage thisStage;
   private CreateOrEdit createOrEdit;
+  private DialogMode dialogMode;
   private Project project = new Project();
   private Project lastProject;
   private ObservableList<AgileHistory> allocatedTeams = FXCollections.observableArrayList();
@@ -85,6 +87,7 @@ public class ProjectDialogController {
                               Project project) {
     this.mainApp = mainApp;
     this.thisStage = thisStage;
+    this.dialogMode = DialogMode.DEFAULT_MODE;
     teamStartDate.setValue(LocalDate.now());
 
     String os = System.getProperty("os.name");
@@ -181,6 +184,17 @@ public class ProjectDialogController {
         }
       }
     });
+  }
+
+  /**
+   * Set up the dialog to be in sprint mode.
+   * @param backlog the backlog to automatically select.
+   */
+  public void setupSprintMode(Backlog backlog) {
+    dialogMode = DialogMode.SPRINT_MODE;
+    backlogComboBox.getSelectionModel().select(backlog);
+    backlogComboBox.setDisable(true);
+    btnNewBacklog.setDisable(true);
   }
 
   private void checkButtonDisabled() {
@@ -568,7 +582,7 @@ public class ProjectDialogController {
             click.getButton() == MouseButton.PRIMARY &&
             !isEmpty()) {
           Team selectedTeam = availableTeamsList.getSelectionModel().getSelectedItem();
-          mainApp.showTeamDialogWithinProject(selectedTeam, thisStage);
+          mainApp.showTeamDialogWithinNested(selectedTeam, thisStage);
           availableTeams.remove(selectedTeam);
           availableTeams.add(selectedTeam);
           //This is a hella shitty fix to get the list to update when nested editing coz fml.
@@ -609,7 +623,7 @@ public class ProjectDialogController {
     List<Backlog> tempBacklogList = new ArrayList<>(availableBacklogs);
     Backlog selectedBacklog = backlogComboBox.getSelectionModel().getSelectedItem();
     if (selectedBacklog != null) {
-      mainApp.showBacklogDialogWithinProject(selectedBacklog, thisStage);
+      mainApp.showBacklogDialogNested(selectedBacklog, thisStage);
       availableBacklogs.setAll(tempBacklogList);
       backlogComboBox.getSelectionModel().select(selectedBacklog);
     }

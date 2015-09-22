@@ -26,6 +26,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -1226,8 +1227,12 @@ public class ListMainPaneController {
 
     if (!backlog.getStories().isEmpty()) {
       for (Story story : backlog.getStories()) {
+
+        Text t = new Text("\n\uD83C\uDF11 "); //Need to create an object so i can color it depending on the readiness of the story. The "\uD83C\uDF11" is a BIG bullet
+        t.setFill(getColor(story)); //Set the color
+
         int index = backlog.getSizes().get(story);
-        storiesText.add(new Text("\n• "));
+        storiesText.add(t);
         Text hyperlink = generateHyperlink(story);
         hyperlink.setFont(Font.getDefault());
         storiesText.add(hyperlink);
@@ -1247,9 +1252,14 @@ public class ListMainPaneController {
           SortedList<Story> sortedStories = new SortedList<>(
               FXCollections.observableArrayList(backlog.getStories()),
               Comparator.<Story>naturalOrder());
+
           for (Story story : sortedStories) {
+
+            Text t = new Text("\n\uD83C\uDF11 "); //Need to create an object so i can color it depending on the readiness of the story
+            t.setFill(getColor(story)); //set color
+
             int index = backlog.getSizes().get(story);
-            storiesText.add(new Text("\n• "));
+            storiesText.add(t);
             Text hyperlink = generateHyperlink(story);
             hyperlink.setFont(Font.getDefault());
             storiesText.add(hyperlink);
@@ -1265,8 +1275,12 @@ public class ListMainPaneController {
         // Change to prioritised order
         if (!backlog.getStories().isEmpty()) {
           for (Story story : backlog.getStories()) {
+
+            Text t = new Text("\n\uD83C\uDF11 "); //Need to create an object so i can color it depending on the readiness of the story
+            t.setFill(getColor(story)); //set color
+
             int index = backlog.getSizes().get(story);
-            storiesText.add(new Text("\n• "));
+            storiesText.add(t);
             Text hyperlink = generateHyperlink(story);
             hyperlink.setFont(Font.getDefault());
             storiesText.add(hyperlink);
@@ -1281,6 +1295,39 @@ public class ListMainPaneController {
       }
     });
   }
+
+  /**
+   * This takes in a story and returns its appropriate color depending on whether it is properly ready or not.
+   * Based on dependencies.
+   * @param story The story to be evaluated
+   * @return The corresponding color
+   */
+  private Color getColor(Story story) {
+
+    boolean dependent = false;
+
+    for (Story stories : mainApp.getStories()) {
+      if (story.getDependencies().contains(stories)) {
+        if (mainApp.getStories().indexOf(stories) >
+            mainApp.getStories().indexOf(story)) {
+          dependent = true;
+        }
+      }
+    }
+
+    if (dependent) {
+      return Color.RED;
+    } else if (story.getStoryState()) {
+      return Color.rgb(0, 191, 0);
+    } else if (story.getAcceptanceCriteria().size() > 0) {
+      return Color.rgb(255, 135, 0);
+    }
+    else {
+      return Color.rgb(0, 0, 0, 0);
+    }
+  }
+
+
 
   /**
    * Displays the information about a given sprint in the text pane.

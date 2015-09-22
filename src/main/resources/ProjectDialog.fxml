@@ -141,21 +141,35 @@
                         <Insets bottom="5.0" />
                      </VBox.margin>
                   </DatePicker>
-                  <Button fx:id="btnAddTeam" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#btnAddTeam" prefWidth="60.0" text="→" textAlignment="CENTER">
+                  <Button fx:id="btnAddTeam" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#btnAddTeam" prefHeight="25.0" prefWidth="60.0" textAlignment="CENTER">
                      <VBox.margin>
                         <Insets bottom="10.0" left="30.0" />
                      </VBox.margin>
                      <tooltip>
                         <Tooltip text="Allocate selected team to this project" />
                      </tooltip>
+                     <graphic>
+                        <ImageView fitHeight="17.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="RightArrow.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                   </Button>
-                  <Button fx:id="btnRemoveTeam" mnemonicParsing="false" onAction="#btnRemoveTeam" prefWidth="60.0" text="←">
+                  <Button fx:id="btnRemoveTeam" mnemonicParsing="false" onAction="#btnRemoveTeam" prefWidth="60.0">
                      <VBox.margin>
                         <Insets left="30.0" />
                      </VBox.margin>
                      <tooltip>
                         <Tooltip text="Remove selected team from this project" />
                      </tooltip>
+                     <graphic>
+                        <ImageView fitHeight="17.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="LeftArrow.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                   </Button>
                </children>
             </VBox>
