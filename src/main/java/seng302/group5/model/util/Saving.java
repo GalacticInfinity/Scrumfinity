@@ -134,7 +134,10 @@ public class Saving {
     for (Project project : this.projects) {
       saveFile.write("\t<Project>\n");
       saveFile.write("\t\t<projectLabel>" + project.getLabel() + "</projectLabel>\n");
-      saveFile.write("\t\t<projectName>" + project.getProjectName() + "</projectName>\n");
+
+      if (project.getProjectName() != null && !project.getProjectName().isEmpty()) {
+        saveFile.write("\t\t<projectName>" + project.getProjectName() + "</projectName>\n");
+      }
       if (project.getProjectDescription() != null && !project.getProjectDescription().isEmpty()) {
         saveFile.write("\t\t<projectDescription>" + project.getProjectDescription()
                        + "</projectDescription>\n");
@@ -261,11 +264,15 @@ public class Saving {
       saveFile.write("\t<Release>\n");
       saveFile.write("\t\t<releaseLabel>" + release.getLabel() + "</releaseLabel>\n");
       saveFile.write(
-          "\t\t<releaseDescription>" + release.getReleaseDescription() + "</releaseDescription>\n");
-      saveFile.write("\t\t<releaseNotes>" + release.getReleaseNotes() + "</releaseNotes>\n");
-      saveFile.write(
           "\t\t<releaseProject>" + release.getProjectRelease().getLabel() + "</releaseProject>\n");
       saveFile.write("\t\t<releaseDate>" + release.getReleaseDate() + "</releaseDate>\n");
+      if (!release.getReleaseDescription().isEmpty()) {
+        saveFile.write(
+            "\t\t<releaseDescription>" + release.getReleaseDescription() + "</releaseDescription>\n");
+      }
+      if (!release.getReleaseNotes().isEmpty()) {
+        saveFile.write("\t\t<releaseNotes>" + release.getReleaseNotes() + "</releaseNotes>\n");
+      }
       saveFile.write("\t</Release>\n");
     }
     saveFile.write("</Releases>\n");
@@ -537,7 +544,6 @@ public class Saving {
             saveFile.write("\t\t\t\t<DoneDate>" + task.getDoneDate() + "</DoneDate>\n");
           }
           saveFile.write("\t\t\t</Task>\n");
-
         }
         saveFile.write("\t\t</Tasks>\n");
       }

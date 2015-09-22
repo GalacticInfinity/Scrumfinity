@@ -168,12 +168,13 @@ public class Loading {
         projectData =
             projectLine.replaceAll("(?i)(.*<projectLabel.*?>)(.+?)(</projectLabel>)", "$2");
         newProject.setLabel(projectData);
-        projectLine = loadedFile.readLine();
-        projectData = projectLine.replaceAll("(?i)(.*<projectName.*?>)(.+?)(</projectName>)", "$2");
-        newProject.setProjectName(projectData);
 
         // Non mandatory fields.
         while ((!(projectLine = loadedFile.readLine()).equals("\t</Project>"))) {
+          if (projectLine.startsWith("\t\t<projectName>")) {
+            projectData = projectLine.replaceAll("(?i)(.*<projectName.*?>)(.+?)(</projectName>)", "$2");
+            newProject.setProjectName(projectData);
+          }
           if (projectLine.startsWith("\t\t<projectDescription>")) {
             String descBuilder;
             if (!projectLine.endsWith("</projectDescription>")) {
@@ -463,6 +464,9 @@ public class Loading {
 
   /**
    * Loads releases from xml files into main app
+   * Note: As of version 0.6, required fields and their load orders have changed, code within
+   * the if branch is for loading older releases, else for newer one. May cause problems with
+   * people forgetting to edit both on some important hard-coded additions later.
    *
    * @throws Exception Problem with loading
    */
@@ -474,60 +478,129 @@ public class Loading {
 
     // Untill Releases end tag
     while (!(releaseLine = loadedFile.readLine()).startsWith("</Releases>")) {
-      // For each new release
-      if (releaseLine.matches(".*<Release>")) {
-        newRelease = new Release();
+      if (saveVersion <= 0.5) {
+        // For each new release
+        if (releaseLine.matches(".*<Release>")) {
+          newRelease = new Release();
 
-        releaseLine = loadedFile.readLine();
-        releaseData =
-            releaseLine.replaceAll("(?i)(.*<releaseLabel.*?>)(.+?)(</releaseLabel>)", "$2");
-        newRelease.setLabel(releaseData);
-        releaseLine = loadedFile.readLine();
-        String descBuilder;
-        if (!releaseLine.endsWith("</releaseDescription>")) {
-          descBuilder = releaseLine
-                            .replaceAll("(?i)(.*<releaseDescription.*?>)(.+?)", "$2") + "\n";
-          while ((!(releaseLine = loadedFile.readLine()).endsWith("</releaseDescription>"))) {
-            descBuilder += releaseLine + "\n";
+          releaseLine = loadedFile.readLine();
+          releaseData =
+              releaseLine.replaceAll("(?i)(.*<releaseLabel.*?>)(.+?)(</releaseLabel>)", "$2");
+          newRelease.setLabel(releaseData);
+          releaseLine = loadedFile.readLine();
+          String descBuilder;
+          if (!releaseLine.endsWith("</releaseDescription>")) {
+            descBuilder = releaseLine
+                              .replaceAll("(?i)(.*<releaseDescription.*?>)(.+?)", "$2") + "\n";
+            while ((!(releaseLine = loadedFile.readLine()).endsWith("</releaseDescription>"))) {
+              descBuilder += releaseLine + "\n";
+            }
+            descBuilder += releaseLine.replaceAll("(.+?)(</releaseDescription>)", "$1");
+          } else {
+            descBuilder =
+                releaseLine
+                    .replaceAll("(?i)(.*<releaseDescription.*?>)(.+?)(</releaseDescription>)",
+                                "$2");
           }
-          descBuilder += releaseLine.replaceAll("(.+?)(</releaseDescription>)", "$1");
-        } else {
-          descBuilder =
-              releaseLine
-                  .replaceAll("(?i)(.*<releaseDescription.*?>)(.+?)(</releaseDescription>)", "$2");
-        }
-        newRelease.setReleaseDescription(descBuilder);
-        releaseLine = loadedFile.readLine();
-        if (!releaseLine.endsWith("</releaseNotes>")) {
-          descBuilder = releaseLine
-                            .replaceAll("(?i)(.*<releaseNotes.*?>)(.+?)", "$2") + "\n";
-          while ((!(releaseLine = loadedFile.readLine()).endsWith("</releaseNotes>"))) {
-            descBuilder += releaseLine + "\n";
+          newRelease.setReleaseDescription(descBuilder);
+          releaseLine = loadedFile.readLine();
+          if (!releaseLine.endsWith("</releaseNotes>")) {
+            descBuilder = releaseLine
+                              .replaceAll("(?i)(.*<releaseNotes.*?>)(.+?)", "$2") + "\n";
+            while ((!(releaseLine = loadedFile.readLine()).endsWith("</releaseNotes>"))) {
+              descBuilder += releaseLine + "\n";
+            }
+            descBuilder += releaseLine.replaceAll("(.+?)(</releaseNotes>)", "$1");
+          } else {
+            descBuilder =
+                releaseLine
+                    .replaceAll("(?i)(.*<releaseNotes.*?>)(.+?)(</releaseNotes>)", "$2");
           }
-          descBuilder += releaseLine.replaceAll("(.+?)(</releaseNotes>)", "$1");
-        } else {
-          descBuilder =
-              releaseLine
-                  .replaceAll("(?i)(.*<releaseNotes.*?>)(.+?)(</releaseNotes>)", "$2");
-        }
-        newRelease.setReleaseNotes(descBuilder);
-        releaseLine = loadedFile.readLine();
-        releaseData = releaseLine.replaceAll("(?i)(.*<releaseProject>)(.+?)(</releaseProject>)",
-                                             "$2");
-        // Get correct project from main for concurrency
-        for (Project project : main.getProjects()) {
-          if (project.getLabel().equals(releaseData)) {
-            newRelease.setProjectRelease(project);
+          newRelease.setReleaseNotes(descBuilder);
+          releaseLine = loadedFile.readLine();
+          releaseData = releaseLine.replaceAll("(?i)(.*<releaseProject>)(.+?)(</releaseProject>)",
+                                               "$2");
+          // Get correct project from main for concurrency
+          for (Project project : main.getProjects()) {
+            if (project.getLabel().equals(releaseData)) {
+              newRelease.setProjectRelease(project);
+            }
           }
-        }
-        releaseLine = loadedFile.readLine();
-        releaseData = releaseLine.replaceAll("(?i)(.*<releaseDate>)(.+?)(</releaseDate>)", "$2");
-        releaseDate = LocalDate.of(Integer.parseInt(releaseData.substring(0, 4)),
-                                   Integer.parseInt(releaseData.substring(5, 7)),
-                                   Integer.parseInt(releaseData.substring(8, 10)));
-        newRelease.setReleaseDate(releaseDate);
+          releaseLine = loadedFile.readLine();
+          releaseData = releaseLine.replaceAll("(?i)(.*<releaseDate>)(.+?)(</releaseDate>)", "$2");
+          releaseDate = LocalDate.of(Integer.parseInt(releaseData.substring(0, 4)),
+                                     Integer.parseInt(releaseData.substring(5, 7)),
+                                     Integer.parseInt(releaseData.substring(8, 10)));
+          newRelease.setReleaseDate(releaseDate);
 
-        main.addRelease(newRelease);
+          main.addRelease(newRelease);
+        }
+      } else {
+        // ###############################################################
+        // For each new release
+        if (releaseLine.matches(".*<Release>")) {
+          newRelease = new Release();
+
+          releaseLine = loadedFile.readLine();
+          releaseData =
+              releaseLine.replaceAll("(?i)(.*<releaseLabel.*?>)(.+?)(</releaseLabel>)", "$2");
+          newRelease.setLabel(releaseData);
+          releaseLine = loadedFile.readLine();
+          releaseData = releaseLine.replaceAll("(?i)(.*<releaseProject>)(.+?)(</releaseProject>)",
+                                               "$2");
+          // Get correct project from main for concurrency
+          for (Project project : main.getProjects()) {
+            if (project.getLabel().equals(releaseData)) {
+              newRelease.setProjectRelease(project);
+            }
+          }
+          releaseLine = loadedFile.readLine();
+          releaseData = releaseLine.replaceAll("(?i)(.*<releaseDate>)(.+?)(</releaseDate>)", "$2");
+          releaseDate = LocalDate.of(Integer.parseInt(releaseData.substring(0, 4)),
+                                     Integer.parseInt(releaseData.substring(5, 7)),
+                                     Integer.parseInt(releaseData.substring(8, 10)));
+          newRelease.setReleaseDate(releaseDate);
+
+          //Optional Fields
+          while ((!(releaseLine = loadedFile.readLine()).matches(".*</Release>"))) {
+            if (releaseLine.startsWith("\t\t<releaseDescription>")) {
+              String descBuilder;
+              if (!releaseLine.endsWith("</releaseDescription>")) {
+                descBuilder = releaseLine
+                                  .replaceAll("(?i)(.*<releaseDescription.*?>)(.+?)", "$2") + "\n";
+                while ((!(releaseLine = loadedFile.readLine()).endsWith("</releaseDescription>"))) {
+                  descBuilder += releaseLine + "\n";
+                }
+                descBuilder += releaseLine.replaceAll("(.+?)(</releaseDescription>)", "$1");
+              } else {
+                descBuilder =
+                    releaseLine
+                        .replaceAll("(?i)(.*<releaseDescription.*?>)(.+?)(</releaseDescription>)",
+                                    "$2");
+              }
+              newRelease.setReleaseDescription(descBuilder);
+            }
+
+            if (releaseLine.startsWith("\t\t<releaseNotes>")) {
+              String descBuilder;
+              if (!releaseLine.endsWith("</releaseNotes>")) {
+                descBuilder = releaseLine
+                                  .replaceAll("(?i)(.*<releaseNotes.*?>)(.+?)", "$2") + "\n";
+                while ((!(releaseLine = loadedFile.readLine()).endsWith("</releaseNotes>"))) {
+                  descBuilder += releaseLine + "\n";
+                }
+                descBuilder += releaseLine.replaceAll("(.+?)(</releaseNotes>)", "$1");
+              } else {
+                descBuilder =
+                    releaseLine
+                        .replaceAll("(?i)(.*<releaseNotes.*?>)(.+?)(</releaseNotes>)", "$2");
+              }
+              newRelease.setReleaseNotes(descBuilder);
+            }
+          }
+
+          main.addRelease(newRelease);
+        }
       }
     }
   }

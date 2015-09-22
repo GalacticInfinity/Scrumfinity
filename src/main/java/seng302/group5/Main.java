@@ -30,6 +30,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
 import seng302.group5.controller.dialogControllers.BacklogDialogController;
 import seng302.group5.controller.dialogControllers.EffortDialogController;
 import seng302.group5.controller.dialogControllers.SprintDialogController;
@@ -1257,7 +1258,7 @@ public class Main extends Application {
           alert.setTitle("Releases still exist for this project");
           alert.setHeaderText(null);
           String contentText = String.format("Do you want to delete project '%s' and its "
-                                         + "associated items?", project.getProjectName());
+                                         + "associated items?", project.getLabel());
           alert.setResizable(true);
           alert.setContentText(contentText);
 

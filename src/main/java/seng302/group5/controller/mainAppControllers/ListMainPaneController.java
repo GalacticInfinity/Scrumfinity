@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
@@ -39,7 +38,7 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import javafx.stage.Stage;
+
 import seng302.group5.Main;
 import seng302.group5.controller.dialogControllers.BurndownController;
 import seng302.group5.controller.dialogControllers.ScrumBoardController;
@@ -573,7 +572,12 @@ public class ListMainPaneController {
     text4.setFill(Color.BLACK);
     text4.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
 
-    Text text5 = new Text(project.getProjectName());
+    Text text5;
+    if (project.getProjectName().isEmpty()) {
+      text5 = new Text("N/A");
+    } else {
+      text5 = new Text(project.getProjectName());
+    }
     text5.setFill(Color.BLACK);
     text5.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
 
@@ -918,7 +922,7 @@ public class ListMainPaneController {
     textDescriptionHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
     Text textDescriptionBody;
-    if (release.getReleaseDescription().length() != 0) {
+    if (!release.getReleaseDescription().isEmpty()) {
       textDescriptionBody = new Text(release.getReleaseDescription());
     } else {
       textDescriptionBody = new Text("N/A");
@@ -944,7 +948,7 @@ public class ListMainPaneController {
     textNotesHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
     Text textNotesBody;
-    if (release.getReleaseDescription().length() != 0) {
+    if (!release.getReleaseNotes().isEmpty()) {
       textNotesBody = new Text(release.getReleaseNotes());
     } else {
       textNotesBody = new Text("N/A");
