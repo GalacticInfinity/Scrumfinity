@@ -1225,7 +1225,7 @@ public class Main extends Application {
           alert.setTitle("Releases still exist for this project");
           alert.setHeaderText(null);
           String contentText = String.format("Do you want to delete project '%s' and its "
-                                         + "associated items?", project.getProjectName());
+                                         + "associated items?", project.getLabel());
           alert.setResizable(true);
           alert.setContentText(contentText);
 

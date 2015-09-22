@@ -27,7 +27,7 @@
       </HBox>
       <HBox alignment="CENTER_LEFT" prefHeight="38.0" prefWidth="369.0" spacing="10.0">
          <children>
-            <Label prefHeight="25.0" prefWidth="120.0" text="Project Name:*">
+            <Label prefHeight="25.0" prefWidth="120.0" text="Project Name:">
                <font>
                   <Font size="15.0" />
                </font>

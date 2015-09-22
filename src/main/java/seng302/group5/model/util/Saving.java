@@ -134,7 +134,10 @@ public class Saving {
     for (Project project : this.projects) {
       saveFile.write("\t<Project>\n");
       saveFile.write("\t\t<projectLabel>" + project.getLabel() + "</projectLabel>\n");
-      saveFile.write("\t\t<projectName>" + project.getProjectName() + "</projectName>\n");
+
+      if (project.getProjectName() != null && !project.getProjectName().isEmpty()) {
+        saveFile.write("\t\t<projectName>" + project.getProjectName() + "</projectName>\n");
+      }
       if (project.getProjectDescription() != null && !project.getProjectDescription().isEmpty()) {
         saveFile.write("\t\t<projectDescription>" + project.getProjectDescription()
                        + "</projectDescription>\n");

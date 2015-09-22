@@ -168,12 +168,13 @@ public class Loading {
         projectData =
             projectLine.replaceAll("(?i)(.*<projectLabel.*?>)(.+?)(</projectLabel>)", "$2");
         newProject.setLabel(projectData);
-        projectLine = loadedFile.readLine();
-        projectData = projectLine.replaceAll("(?i)(.*<projectName.*?>)(.+?)(</projectName>)", "$2");
-        newProject.setProjectName(projectData);
 
         // Non mandatory fields.
         while ((!(projectLine = loadedFile.readLine()).equals("\t</Project>"))) {
+          if (projectLine.startsWith("\t\t<projectName>")) {
+            projectData = projectLine.replaceAll("(?i)(.*<projectName.*?>)(.+?)(</projectName>)", "$2");
+            newProject.setProjectName(projectData);
+          }
           if (projectLine.startsWith("\t\t<projectDescription>")) {
             String descBuilder;
             if (!projectLine.endsWith("</projectDescription>")) {

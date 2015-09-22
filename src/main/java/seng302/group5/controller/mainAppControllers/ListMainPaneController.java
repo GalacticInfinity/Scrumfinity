@@ -564,7 +564,12 @@ public class ListMainPaneController {
     text4.setFill(Color.BLACK);
     text4.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
 
-    Text text5 = new Text(project.getProjectName());
+    Text text5;
+    if (project.getProjectName().isEmpty()) {
+      text5 = new Text("N/A");
+    } else {
+      text5 = new Text(project.getProjectName());
+    }
     text5.setFill(Color.BLACK);
     text5.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
 

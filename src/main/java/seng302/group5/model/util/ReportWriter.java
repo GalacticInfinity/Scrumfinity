@@ -267,7 +267,9 @@ public class ReportWriter {
     projElem.setAttribute("label", project.getLabel());
 
     Element projName = report.createElement("Name");
-    projName.appendChild(report.createTextNode(project.getProjectName()));
+    if (project.getProjectName() != null && !project.getProjectName().isEmpty()) {
+      projName.appendChild(report.createTextNode(project.getProjectName()));
+    }
     projElem.appendChild(projName);
 
     Element projDesc = report.createElement("Description");

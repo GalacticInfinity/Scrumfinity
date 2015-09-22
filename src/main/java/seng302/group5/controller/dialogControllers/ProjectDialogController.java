@@ -512,13 +512,7 @@ public class ProjectDialogController {
       noErrors++;
       errors.append(String.format("%s\n", e.getMessage()));
     }
-
-    try {
-      projectName = parseProjectName(projectNameField.getText());
-    } catch (Exception e) {
-      noErrors++;
-      errors.append(String.format("%s\n", e.getMessage()));
-    }
+    projectName = projectNameField.getText().trim();
 
     // Display all errors if they exist
     if (noErrors > 0) {
