@@ -8,7 +8,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="788.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.SprintDialogController">
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="667.0" prefWidth="773.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.SprintDialogController">
    <children>
       <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="482.0" stylesheets="@style.css">
          <children>
@@ -119,7 +119,7 @@
                   </Label>
                   <Label fx:id="sprintProjectLabel" prefHeight="25.0" prefWidth="192.0" text="No Project Found">
                      <font>
-                        <Font size="15.0" />
+                        <Font size="14.0" />
                      </font>
                      <tooltip>
                         <Tooltip text="The project is found via the backlog." />
@@ -210,14 +210,45 @@
                         <Insets left="10.0" />
                      </HBox.margin>
                   </ComboBox>
-                  <Label prefHeight="27.0" prefWidth="41.0" text="Date:">
+                  <Button fx:id="btnNewRelease" maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" onAction="#addNewRelease" prefHeight="25.0" prefWidth="25.0">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="ToolbarQuickAdd.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                      <HBox.margin>
-                        <Insets left="2.0" />
+                        <Insets left="10.0" right="10.0" />
                      </HBox.margin>
+                  </Button>
+                  <Button fx:id="btnEditRelease" maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" onAction="#editRelease" prefHeight="25.0" prefWidth="25.0">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="toolbar_edit.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox prefHeight="25.0" prefWidth="483.0">
+               <children>
+                  <Label prefHeight="25.0" text="Release Date:">
+                     <HBox.margin>
+                        <Insets left="153.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
                   </Label>
                   <Label fx:id="releaseDate" prefHeight="26.0" prefWidth="82.0">
                      <HBox.margin>
-                        <Insets left="5.0" />
+                        <Insets left="10.0" />
                      </HBox.margin>
                   </Label>
                </children>
@@ -296,15 +327,29 @@
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="232.0" prefWidth="61.0">
                      <children>
-                        <Button fx:id="btnAddStory" mnemonicParsing="false" onAction="#btnAddStoryClick" prefWidth="60.0" text="→">
+                        <Button fx:id="btnAddStory" maxHeight="25.0" maxWidth="60.0" minHeight="25.0" minWidth="60.0" mnemonicParsing="false" onAction="#btnAddStoryClick" prefHeight="25.0" prefWidth="60.0">
                            <VBox.margin>
                               <Insets bottom="20.0" />
                            </VBox.margin>
+                           <graphic>
+                              <ImageView fitHeight="20.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="RightArrow.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
                         </Button>
-                        <Button fx:id="btnRemoveStory" mnemonicParsing="false" onAction="#btnRemoveStoryClick" prefWidth="60.0" text="←">
+                        <Button fx:id="btnRemoveStory" maxHeight="25.0" maxWidth="60.0" minHeight="25.0" minWidth="60.0" mnemonicParsing="false" onAction="#btnRemoveStoryClick" prefHeight="25.0" prefWidth="60.0">
                            <VBox.margin>
                               <Insets />
                            </VBox.margin>
+                           <graphic>
+                              <ImageView fitHeight="20.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="LeftArrow.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
                         </Button>
                      </children>
                   </VBox>
@@ -374,27 +419,55 @@
                   <Insets left="5.0" />
                </HBox.margin>
             </VBox>
-            <VBox prefHeight="540.0" prefWidth="70.0">
+            <VBox prefHeight="667.0" prefWidth="53.0">
                <children>
-                  <Button fx:id="addTask" mnemonicParsing="false" onAction="#addTask" prefHeight="30.0" prefWidth="50.0" text="+">
+                  <Button fx:id="addTask" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#addTask" prefHeight="30.0" prefWidth="30.0">
                      <VBox.margin>
                         <Insets left="10.0" right="2.0" top="130.0" />
                      </VBox.margin>
+                     <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="ToolbarQuickAdd.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                   </Button>
-                  <Button fx:id="removeTask" mnemonicParsing="false" onAction="#removeTask" prefHeight="30.0" prefWidth="50.0" text="-">
+                  <Button fx:id="removeTask" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#removeTask" prefHeight="30.0" prefWidth="30.0">
                      <VBox.margin>
                         <Insets left="10.0" top="10.0" />
                      </VBox.margin>
+                     <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="ToolbarQuickRemove.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                   </Button>
-                  <Button fx:id="upTask" mnemonicParsing="false" onAction="#btnUpTask" prefHeight="30.0" prefWidth="50.0" text="↑">
+                  <Button fx:id="upTask" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#btnUpTask" prefHeight="30.0" prefWidth="30.0">
                      <VBox.margin>
                         <Insets left="10.0" top="20.0" />
                      </VBox.margin>
+                     <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="UpArrow.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                   </Button>
-                  <Button fx:id="downTask" mnemonicParsing="false" onAction="#btnDownTask" prefHeight="30.0" prefWidth="50.0" text="↓">
+                  <Button fx:id="downTask" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#btnDownTask" prefHeight="30.0" prefWidth="30.0">
                      <VBox.margin>
                         <Insets left="10.0" top="10.0" />
                      </VBox.margin>
+                     <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="DownArrow.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                   </Button>
                </children>
             </VBox>
