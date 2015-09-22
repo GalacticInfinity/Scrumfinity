@@ -165,10 +165,6 @@ public class StoryDialogController {
       this.lastBacklog = null;    // Stays null if not found
       this.team = null;
 
-      Backlog back = new Backlog();
-      if (Settings.correctList(back)) {
-        backlogCombo.setDisable(true);
-      }
       for (Backlog backlog : mainApp.getBacklogs()) {
         if (backlog.getStories().contains(story)) {
           this.lastBacklog = backlog;
@@ -178,6 +174,7 @@ public class StoryDialogController {
               "to avoid problems with priority and estimates.");
           this.backlogContainer.setTooltip(tooltip);
           this.backlogCombo.setDisable(true);
+          this.btnNewBacklog.setDisable(true);
           if (backlog.getEstimate().getEstimateNames().get(backlog.getSizes().get(story))!=null) {
             this.shownEstimate.setText(backlog.getEstimate().getEstimateNames() //This gets the estimate name to be shown on the story dialog
                                            .get(backlog.getSizes().get(story)));

@@ -63,6 +63,10 @@ public class BurndownController {
     initialiseLists();
   }
 
+  public void initialise() {
+    initialiseLists();
+  }
+
   /**
    * initialise the lists with the available backlogs and sprints.
    */
@@ -83,17 +87,20 @@ public class BurndownController {
     backlogCombo.setItems(mainApp.getBacklogs());
     burndownChart.setMinWidth(stage.getWidth() - 200);
     burndownChart.setMinHeight(stage.getHeight() - 200);
+    burndownChart.setTitle("");
 
     backlogCombo.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldBacklog, newBacklog) -> {
           if (backlogCombo.getSelectionModel().getSelectedItem() != null) {
             sprintCombo.setDisable(false);
-
             // get backlog's sprints
-            availableSprints.setAll(mainApp.getSprints().stream()
-                                        .filter(
-                                            sprint -> sprint.getSprintBacklog().equals(newBacklog))
-                                        .collect(Collectors.toList()));
+            for (Sprint sprint : mainApp.getSprints()) {
+              if (backlogCombo.getValue().equals(sprint.getSprintBacklog())) {
+                if (!availableSprints.contains(sprint)) {
+                  availableSprints.add(sprint);
+                }
+              }
+            }
             sprintCombo.setItems(null);
             sprintCombo.setItems(availableSprints);
             //sprintCombo.setDisable(true);
@@ -120,7 +127,8 @@ public class BurndownController {
             doneTasks.clear();
             sprint = sprintCombo.getValue();
             tasks.addAll(sprint.getTasks());
-            burndownChart.setTitle(newSprint.toString());
+            burndownChart.setTitle(newSprint.toString() + " - Velocity: " +
+            mainApp.getLMPC().sprintVelocity(newSprint));
             for (Story story : newSprint.getSprintStories()) {
               if (mainApp.getStories().contains(story)) {
                 tasks.addAll(story.getTasks());
@@ -150,7 +158,6 @@ public class BurndownController {
    * @param time the total time estimated for the sprint.
    */
   private ObservableList<XYChart.Series<LocalDate, Integer>> getChartData(Integer time) {
-    int diff = 0;
     int days = 0;
     double timeDiff = 0;
 
@@ -231,7 +238,8 @@ public class BurndownController {
       if(availableSprints.contains(sprint)){
         sprintCombo.setValue(sprint);
         sprintCombo.setDisable(false);
-        burndownChart.setTitle(sprint.getLabel());
+        burndownChart.setTitle(sprint.getLabel() + " - Velocity " +
+        mainApp.getLMPC().sprintVelocity(sprint));
       } else {
         sprintCombo.setValue(null);
       }
@@ -240,5 +248,18 @@ public class BurndownController {
       sprintCombo.setValue(null);
     }
 
+  }
+
+  /**
+   * Refreshes the selections of the combo boxes
+   */
+  public void hardReset() {
+    sprintCombo.getSelectionModel().clearSelection();
+    sprintCombo.getItems().clear();
+    sprintCombo.setDisable(true);
+    availableSprints.clear();
+    backlogCombo.getSelectionModel().clearSelection();
+    backlogCombo.setItems(mainApp.getBacklogs());
+    initialiseLists();
   }
 }

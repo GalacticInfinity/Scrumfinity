@@ -71,7 +71,7 @@ public class ProjectDialogController {
   private ObservableList<Team> availableTeams = FXCollections.observableArrayList();
   private AgileHistory projectHistory = new AgileHistory();
   private ObservableList<Backlog> availableBacklogs;
-  private Backlog noBacklog;    // Signal for unassigning a backlog
+  private Backlog noBacklog;    // Signal for unassigned a backlog
 
   /**
    * Setup the project dialog controller
