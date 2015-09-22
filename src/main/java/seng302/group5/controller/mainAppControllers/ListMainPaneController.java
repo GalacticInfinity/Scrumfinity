@@ -1418,7 +1418,7 @@ public class ListMainPaneController {
    * @param sprint the sprint which's velocity will be calculated
    * @return the velocity as a double.
    */
-  private double sprintVelocity(Sprint sprint){
+  public double sprintVelocity(Sprint sprint){
     int days = 0;
     if (sprint.getSprintStart().getYear() == sprint.getSprintEnd().getYear()) {
       days = sprint.getSprintEnd().getDayOfYear() - sprint.getSprintStart().getDayOfYear();
@@ -1433,7 +1433,7 @@ public class ListMainPaneController {
         points += entry.getValue();
       }
     }
-    double velocity = (points+0.0)/(days/7.0);
+    double velocity = round((points+0.0)/(days/7.0), 2);
     return velocity;
   }
 
