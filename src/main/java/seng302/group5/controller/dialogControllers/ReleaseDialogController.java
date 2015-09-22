@@ -84,13 +84,6 @@ public class ReleaseDialogController {
     }
 
     try {
-      releaseDescription = parseReleaseDescription(releaseDescription);
-    } catch (Exception e) {
-      noErrors++;
-      errors.append(String.format("%s\n", e.getMessage()));
-    }
-
-    try {
       releaseDate = parseReleaseDate(releaseDate);
     } catch (Exception e) {
       noErrors++;
@@ -104,12 +97,12 @@ public class ReleaseDialogController {
       errors.append(String.format("%s\n", e.getMessage()));
     }
 
-    try {
-      releaseNotes = parseReleaseNotes(releaseNotes);
-    } catch (Exception e) {
-      noErrors++;
-      errors.append(String.format("%s\n", e.getMessage()));
-    }
+//    try {
+//      releaseNotes = parseReleaseNotes(releaseNotes);
+//    } catch (Exception e) {
+//      noErrors++;
+//      errors.append(String.format("%s\n", e.getMessage()));
+//    }
 
     // Display all errors if they exist
     if (noErrors > 0) {
@@ -351,32 +344,6 @@ public class ReleaseDialogController {
       }
     }
     return inputReleaseLabel;
-  }
-
-  /**
-   * @param inputReleaseDescription The description that the user wants for this release
-   * @return String returns the description if its allowed
-   * @throws Exception Throws this if the description is empty
-   */
-  private String parseReleaseDescription(String inputReleaseDescription) throws Exception {
-
-    if (inputReleaseDescription.isEmpty()) {
-      throw new Exception("Release Description is empty.");
-    }
-    return inputReleaseDescription;
-  }
-
-  /**
-   * @param inputReleaseNotes The release notes that the user wants
-   * @return String returns the notes if it is allowed
-   * @throws Exception throws notes is empty
-   */
-  private String parseReleaseNotes(String inputReleaseNotes) throws Exception {
-
-    if (inputReleaseNotes.isEmpty()) {
-      throw new Exception("Release Notes is empty.");
-    }
-    return inputReleaseNotes;
   }
 
   /**

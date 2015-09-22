@@ -71,7 +71,7 @@ public class ProjectDialogController {
   private ObservableList<Team> availableTeams = FXCollections.observableArrayList();
   private AgileHistory projectHistory = new AgileHistory();
   private ObservableList<Backlog> availableBacklogs;
-  private Backlog noBacklog;    // Signal for unassigning a backlog
+  private Backlog noBacklog;    // Signal for unassigned a backlog
 
   /**
    * Setup the project dialog controller
@@ -296,23 +296,6 @@ public class ProjectDialogController {
   }
 
   /**
-   * Parse a string containing a project name. Throws exceptions if input is not valid.
-   *
-   * @param inputProjectName String of project name
-   * @return Inputted project name if it is valid.
-   * @throws Exception Exception with message explaining why input is invalid.
-   */
-  private String parseProjectName(String inputProjectName) throws Exception {
-    inputProjectName = inputProjectName.trim();
-
-    if (inputProjectName.isEmpty()) {
-      throw new Exception("Project Name is empty.");
-    } else {
-      return inputProjectName;
-    }
-  }
-
-  /**
    * Parses the selected dates and checks that all inputs are valid, that the selected team is not
    * currently assigned during the chosen dates to any projects.
    *
@@ -513,7 +496,7 @@ public class ProjectDialogController {
     int noErrors = 0;
 
     String projectLabel = "";
-    String projectName = "";
+    String projectName = projectNameField.getText().trim();
     String projectDescription = projectDescriptionField.getText().trim();
     Backlog selectedBacklog = backlogComboBox.getValue();
     if (selectedBacklog == noBacklog) {   // Unassign a backlog
@@ -522,13 +505,6 @@ public class ProjectDialogController {
 
     try {
       projectLabel = parseProjectLabel(projectLabelField.getText());
-    } catch (Exception e) {
-      noErrors++;
-      errors.append(String.format("%s\n", e.getMessage()));
-    }
-
-    try {
-      projectName = parseProjectName(projectNameField.getText());
     } catch (Exception e) {
       noErrors++;
       errors.append(String.format("%s\n", e.getMessage()));

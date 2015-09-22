@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.scene.control.cell.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
@@ -8,11 +9,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 
-<VBox prefHeight="515.0" prefWidth="705.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.TaskDialogController">
+<VBox prefHeight="515.0" prefWidth="705.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.TaskDialogController">
    <children>
       <HBox prefHeight="100.0" prefWidth="200.0">
          <children>
-            <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@font.css">
+            <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
                <children>
                   <HBox alignment="CENTER_LEFT" spacing="10.0">
                      <children>
@@ -72,7 +73,7 @@
                   </HBox>
                   <HBox alignment="CENTER_LEFT" spacing="10.0">
                      <children>
-                        <Label prefWidth="105.0" text="Status:*">
+                        <Label prefWidth="105.0" text="Status:">
                            <font>
                               <Font size="15.0" />
                            </font>
@@ -102,15 +103,29 @@
                   </VBox>
                   <VBox alignment="CENTER">
                      <children>
-                        <Button fx:id="btnAddPerson" mnemonicParsing="false" onAction="#btnAddPersonClick" prefWidth="60.0" text="→">
+                        <Button fx:id="btnAddPerson" maxHeight="25.0" maxWidth="55.0" minHeight="25.0" minWidth="55.0" mnemonicParsing="false" onAction="#btnAddPersonClick" prefHeight="25.0" prefWidth="55.0">
                            <VBox.margin>
                               <Insets bottom="20.0" />
                            </VBox.margin>
+                           <graphic>
+                              <ImageView fitHeight="20.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="RightArrow.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
                         </Button>
-                        <Button fx:id="btnRemovePerson" mnemonicParsing="false" onAction="#btnRemovePersonClick" prefWidth="60.0" text="←">
+                        <Button fx:id="btnRemovePerson" maxHeight="25.0" maxWidth="55.0" minHeight="25.0" minWidth="55.0" mnemonicParsing="false" onAction="#btnRemovePersonClick" prefHeight="25.0" prefWidth="55.0">
                            <VBox.margin>
                               <Insets />
                            </VBox.margin>
+                           <graphic>
+                              <ImageView fitHeight="20.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="LeftArrow.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
                         </Button>
                      </children>
                   </VBox>
@@ -150,21 +165,35 @@
                         <Insets left="5.0" />
                      </HBox.margin>
                   </Label>
-                  <Button fx:id="btnAddEffort" mnemonicParsing="false" onAction="#btnAddEffortClick" prefHeight="30.0" prefWidth="30.0" text="+">
+                  <Button fx:id="btnAddEffort" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#btnAddEffortClick" prefHeight="30.0" prefWidth="30.0">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                      <HBox.margin>
                         <Insets left="438.0" />
                      </HBox.margin>
+                     <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="ToolbarQuickAdd.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                   </Button>
-                  <Button fx:id="btnRemoveEffort" mnemonicParsing="false" onAction="#btnRemoveEffortClick" prefHeight="30.0" prefWidth="30.0" text="-">
+                  <Button fx:id="btnRemoveEffort" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#btnRemoveEffortClick" prefHeight="30.0" prefWidth="30.0">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
+                     <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="ToolbarQuickRemove.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                   </Button>
                </children>
                <VBox.margin>

@@ -10,7 +10,7 @@
 
 <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="788.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.SprintDialogController">
    <children>
-      <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="482.0" stylesheets="@font.css">
+      <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="482.0" stylesheets="@style.css">
          <children>
             <HBox alignment="BOTTOM_LEFT" prefHeight="32.0" prefWidth="434.0" spacing="10.0">
                <children>
@@ -327,15 +327,29 @@
                   </VBox>
                   <VBox alignment="CENTER" prefHeight="232.0" prefWidth="61.0">
                      <children>
-                        <Button fx:id="btnAddStory" mnemonicParsing="false" onAction="#btnAddStoryClick" prefWidth="60.0" text="→">
+                        <Button fx:id="btnAddStory" maxHeight="25.0" maxWidth="60.0" minHeight="25.0" minWidth="60.0" mnemonicParsing="false" onAction="#btnAddStoryClick" prefHeight="25.0" prefWidth="60.0">
                            <VBox.margin>
                               <Insets bottom="20.0" />
                            </VBox.margin>
+                           <graphic>
+                              <ImageView fitHeight="20.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="RightArrow.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
                         </Button>
-                        <Button fx:id="btnRemoveStory" mnemonicParsing="false" onAction="#btnRemoveStoryClick" prefWidth="60.0" text="←">
+                        <Button fx:id="btnRemoveStory" maxHeight="25.0" maxWidth="60.0" minHeight="25.0" minWidth="60.0" mnemonicParsing="false" onAction="#btnRemoveStoryClick" prefHeight="25.0" prefWidth="60.0">
                            <VBox.margin>
                               <Insets />
                            </VBox.margin>
+                           <graphic>
+                              <ImageView fitHeight="20.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="LeftArrow.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
                         </Button>
                      </children>
                   </VBox>
@@ -407,25 +421,53 @@
             </VBox>
             <VBox prefHeight="540.0" prefWidth="70.0">
                <children>
-                  <Button fx:id="addTask" mnemonicParsing="false" onAction="#addTask" prefHeight="30.0" prefWidth="50.0" text="+">
+                  <Button fx:id="addTask" maxHeight="30.0" maxWidth="50.0" minHeight="30.0" minWidth="50.0" mnemonicParsing="false" onAction="#addTask" prefHeight="30.0" prefWidth="50.0">
                      <VBox.margin>
                         <Insets left="10.0" right="2.0" top="130.0" />
                      </VBox.margin>
+                     <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="ToolbarQuickAdd.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                   </Button>
-                  <Button fx:id="removeTask" mnemonicParsing="false" onAction="#removeTask" prefHeight="30.0" prefWidth="50.0" text="-">
+                  <Button fx:id="removeTask" maxHeight="30.0" maxWidth="50.0" minHeight="30.0" minWidth="50.0" mnemonicParsing="false" onAction="#removeTask" prefHeight="30.0" prefWidth="50.0">
                      <VBox.margin>
                         <Insets left="10.0" top="10.0" />
                      </VBox.margin>
+                     <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="ToolbarQuickRemove.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                   </Button>
-                  <Button fx:id="upTask" mnemonicParsing="false" onAction="#btnUpTask" prefHeight="30.0" prefWidth="50.0" text="↑">
+                  <Button fx:id="upTask" maxHeight="30.0" maxWidth="50.0" minHeight="30.0" minWidth="50.0" mnemonicParsing="false" onAction="#btnUpTask" prefHeight="30.0" prefWidth="50.0">
                      <VBox.margin>
                         <Insets left="10.0" top="20.0" />
                      </VBox.margin>
+                     <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="UpArrow.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                   </Button>
-                  <Button fx:id="downTask" mnemonicParsing="false" onAction="#btnDownTask" prefHeight="30.0" prefWidth="50.0" text="↓">
+                  <Button fx:id="downTask" maxHeight="30.0" maxWidth="50.0" minHeight="30.0" minWidth="50.0" mnemonicParsing="false" onAction="#btnDownTask" prefHeight="30.0" prefWidth="50.0">
                      <VBox.margin>
                         <Insets left="10.0" top="10.0" />
                      </VBox.margin>
+                     <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="DownArrow.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                   </Button>
                </children>
             </VBox>
