@@ -1,6 +1,8 @@
 package seng302.group5.controller.mainAppControllers;
 
 import java.io.File;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -42,6 +44,7 @@ import seng302.group5.controller.dialogControllers.ScrumBoardController;
 import seng302.group5.model.AgileHistory;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Backlog;
+import seng302.group5.model.Estimate;
 import seng302.group5.model.Release;
 import seng302.group5.model.Role;
 import seng302.group5.model.Sprint;
@@ -1325,7 +1328,47 @@ public class ListMainPaneController {
     }
   }
 
+  /**
+   * Rounds velocity when it has a large amount of decimal places
+   * pulled from stack overflow
+   * https://stackoverflow.com/questions/2808535/round-a-double-to-2-decimal-places
+   * @param value the number to be rounded
+   * @param places the number of decimal places
+   * @return the rounded number.
+   */
+  public static double round(double value, int places) {
+    if (places < 0) throw new IllegalArgumentException();
 
+    BigDecimal bd = new BigDecimal(value);
+    bd = bd.setScale(places, RoundingMode.HALF_UP);
+    return bd.doubleValue();
+  }
+
+  /**Function that calculates the velocity of a team working on a sprint.
+   * @param sprint the sprint which's velocity will be calculated
+   * @return the velocity as a double.
+   */
+  private double sprintVelocity(Sprint sprint){
+    int days = 0;
+    if (sprint.getSprintStart().getYear() == sprint.getSprintEnd().getYear()) {
+      System.out.println(sprint.getLabel() + " " + sprint.getSprintEnd().getDayOfYear() + " " +
+                         sprint.getSprintStart().getDayOfYear());
+      days = sprint.getSprintEnd().getDayOfYear() - sprint.getSprintStart().getDayOfYear();
+    } else {
+      days = (365- sprint.getSprintStart().getDayOfYear()) + sprint.getSprintEnd().getDayOfYear();
+    }
+    int points = 0;
+    Map<Story, Integer> estimates = sprint.getSprintBacklog().getSizes();
+    for (Map.Entry<Story, Integer> entry : estimates.entrySet())
+    {
+      if (sprint.getSprintStories().contains(entry.getKey())) {
+        points += entry.getValue();
+      }
+    }
+    double velocity = (points+0.0)/(days/7.0);
+    System.out.println("points " + points + " days " + days);
+    return velocity;
+  }
 
   /**
    * Displays the information about a given sprint in the text pane.
@@ -1342,6 +1385,16 @@ public class ListMainPaneController {
     textLabelHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
     Text textLabelBody = new Text(sprint.getLabel());
+    textLabelBody.setFill(Color.rgb(1, 0, 1));
+    textLabelBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text textVelocityHeader = new Text("\nSprint Velocity: ");
+    textLabelHeader.setFill(Color.rgb(1, 0, 1));
+    textLabelHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    double velocity = sprintVelocity(sprint);
+
+    Text textVelocityBody = new Text(String.valueOf(round(velocity, 2)) + " Story points per week.");
     textLabelBody.setFill(Color.rgb(1, 0, 1));
     textLabelBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
 
@@ -1413,6 +1466,7 @@ public class ListMainPaneController {
     Hyperlink sortToggle = new Hyperlink(prioritisedOrder);
 
     displayTextFlow.getChildren().addAll(textHeader, textLabelHeader, textLabelBody,
+                                         textVelocityHeader, textVelocityBody,
                                          textNameHeader, textNameBody, textDescriptionHeader,
                                          textDescriptionBody, textBacklogHeader, textBacklogBody,
                                          textProjectHeader, textProjectBody, textTeamHeader,
