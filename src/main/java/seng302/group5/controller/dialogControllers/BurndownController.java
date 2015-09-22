@@ -178,11 +178,13 @@ public class BurndownController {
       days = days* -1;
       timeDiff = (time+ 0.0) / days;
     }
+
+    bSeries.getData().add(new XYChart.Data(date2.toString(), time));
     if (timeDiff != 0) {
       int burnUp = 0;
-      for (Integer day = days; day >= 0; day -= 1) {
-        aSeries.getData().add(new XYChart.Data(date2.toString(), i));
+      for (Integer day = days; day >= 0; --day) {
 
+        aSeries.getData().add(new XYChart.Data(date2.toString(), i));
         i = i - timeDiff;
         for (Effort effort : allEffort) {
           if (effort.getDateTime().getDayOfYear() == date2.getDayOfYear()) {
@@ -190,12 +192,13 @@ public class BurndownController {
             burnUp += effort.getSpentEffort();
           }
         }
-        for (Task doneTask : doneTasks) {
+        for (Task doneTask : doneTasks.sorted()) {
           if (doneTask.getDoneDate().getDayOfYear() == date2.getDayOfYear()) {
             time -= doneTask.getTaskEstimation();
             bSeries.getData().add(new XYChart.Data(date2.toString(), time));
           }
         }
+
         date2 = date2.plusDays(1);
       }
 
@@ -223,6 +226,7 @@ public class BurndownController {
 
       if(availableSprints.contains(sprint)){
         sprintCombo.setValue(sprint);
+        sprintCombo.setDisable(false);
       } else {
         sprintCombo.setValue(null);
       }
