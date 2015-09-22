@@ -62,6 +62,7 @@ public class ScrumBoardController {
     this.mainApp = mainApp;
     this.stage = stage;
     storyPanes = new ArrayList<>();
+    openedTabs = new ArrayList<>();
     initialiseLists();
   }
 
@@ -115,10 +116,16 @@ public class ScrumBoardController {
                 availableStories.add(story);
               }
             }
+            System.out.println(openedTabs);
             for (Story story : availableStories) {
               StoryItemController paneController = createStoryPane(story, storiesBox);
               if (paneController != null) {
                 storyPanes.add(paneController);
+              }
+              System.out.println(paneController.getPaneName());
+              System.out.println(openedTabs.contains(paneController.getPaneName()));
+              if (openedTabs.contains(paneController.getPaneName())) {
+                paneController.expandTab();
               }
             }
           }
@@ -148,10 +155,10 @@ public class ScrumBoardController {
       TitledPane accordionPane = loader.load();
 
       StoryItemController controller = loader.getController();
-      controller.setupController(story, mainApp);
       Accordion storyAccordion = new Accordion();
       storyAccordion.getPanes().add(accordionPane);
       storiesBox.getChildren().add(storyAccordion);
+      controller.setupController(story, mainApp, storyAccordion);
       return controller;
     } catch (IOException e) {
       e.printStackTrace();
@@ -175,8 +182,9 @@ public class ScrumBoardController {
       // The pane stuff
       openedTabs = new ArrayList<>();
       for (StoryItemController titledPane : storyPanes) {
-        if (titledPane.checkIfOpened())
-        openedTabs.add(titledPane.getPaneName());
+        if (titledPane.checkIfOpened()) {
+          openedTabs.add(titledPane.getPaneName());
+        }
       }
 
       storiesBox.getChildren().setAll(FXCollections.observableArrayList());
@@ -191,13 +199,6 @@ public class ScrumBoardController {
         if (availableSprints.contains(sprint)) {
           sprintCombo.setValue(sprint);
           //todo make stories in sprints be removed properly at some point.
-          System.out.println("Yes im here");
-          for (StoryItemController controller : storyPanes) {
-            System.out.println(controller.getPaneName());
-            if (openedTabs.contains(controller.getPaneName())) {
-              controller.expandTab();
-            }
-          }
         } else {
           sprintCombo.setValue(null);
         }

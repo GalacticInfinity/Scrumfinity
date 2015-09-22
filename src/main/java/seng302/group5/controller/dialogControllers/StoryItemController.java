@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
@@ -46,6 +47,7 @@ public class StoryItemController {
 
   private Main mainApp;
   private Story story;
+  private Accordion accordion;
 
   private Image inprogress;
   private Image complete;
@@ -61,9 +63,10 @@ public class StoryItemController {
    * This function sets up the story item controller.
    * @param story       The story being displayed in this.
    */
-  public void setupController(Story story, Main mainApp) {
+  public void setupController(Story story, Main mainApp, Accordion accordion) {
     this.story = story;
     this.mainApp = mainApp;
+    this.accordion = accordion;
     storyPane.setText(story.getLabel());
 
     //Set up the dino gif and place it on the accordion
@@ -425,7 +428,7 @@ public class StoryItemController {
   }
 
   public void expandTab() {
-    storyPane.setExpanded(false);
+    accordion.setExpandedPane(storyPane);
   }
 
   public Story getStory() {
