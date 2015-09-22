@@ -1136,7 +1136,6 @@ public class Loading {
               "(?i)(.*<DoneDate.*?>)(.+?)(</DoneDate>)",
               "$2");
           storyTask.setDoneDate(LocalDate.parse(doneDate));
-          System.out.println(storyTask.getDoneDate());
         }
       }
     }
