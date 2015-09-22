@@ -324,7 +324,9 @@ public class ReportWriter {
     releaseElem.appendChild(releaseDesc);
 
     Element releaseNotes = report.createElement("Notes");
-    releaseNotes.appendChild(report.createTextNode(release.getReleaseNotes()));
+    if (release.getReleaseNotes() != null && !release.getReleaseNotes().isEmpty()) {
+      releaseNotes.appendChild(report.createTextNode(release.getReleaseNotes()));
+    }
     releaseElem.appendChild(releaseNotes);
 
     String releaseDateString = release.getReleaseDate().format(
@@ -332,7 +334,6 @@ public class ReportWriter {
     Element releaseDate = report.createElement("ReleaseDate");
     releaseDate.appendChild(report.createTextNode(releaseDateString));
     releaseElem.appendChild(releaseDate);
-
   }
 
 

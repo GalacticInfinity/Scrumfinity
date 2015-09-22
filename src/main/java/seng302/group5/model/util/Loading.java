@@ -484,7 +484,6 @@ public class Loading {
             releaseLine.replaceAll("(?i)(.*<releaseLabel.*?>)(.+?)(</releaseLabel>)", "$2");
         newRelease.setLabel(releaseData);
         releaseLine = loadedFile.readLine();
-        String descBuilder;
 //        if (!releaseLine.endsWith("</releaseDescription>")) {
 //          descBuilder = releaseLine
 //                            .replaceAll("(?i)(.*<releaseDescription.*?>)(.+?)", "$2") + "\n";
@@ -499,20 +498,20 @@ public class Loading {
 //        }
 //        newRelease.setReleaseDescription(descBuilder);
 //        releaseLine = loadedFile.readLine();
-        if (!releaseLine.endsWith("</releaseNotes>")) {
-          descBuilder = releaseLine
-                            .replaceAll("(?i)(.*<releaseNotes.*?>)(.+?)", "$2") + "\n";
-          while ((!(releaseLine = loadedFile.readLine()).endsWith("</releaseNotes>"))) {
-            descBuilder += releaseLine + "\n";
-          }
-          descBuilder += releaseLine.replaceAll("(.+?)(</releaseNotes>)", "$1");
-        } else {
-          descBuilder =
-              releaseLine
-                  .replaceAll("(?i)(.*<releaseNotes.*?>)(.+?)(</releaseNotes>)", "$2");
-        }
-        newRelease.setReleaseNotes(descBuilder);
-        releaseLine = loadedFile.readLine();
+//        if (!releaseLine.endsWith("</releaseNotes>")) {
+//          descBuilder = releaseLine
+//                            .replaceAll("(?i)(.*<releaseNotes.*?>)(.+?)", "$2") + "\n";
+//          while ((!(releaseLine = loadedFile.readLine()).endsWith("</releaseNotes>"))) {
+//            descBuilder += releaseLine + "\n";
+//          }
+//          descBuilder += releaseLine.replaceAll("(.+?)(</releaseNotes>)", "$1");
+//        } else {
+//          descBuilder =
+//              releaseLine
+//                  .replaceAll("(?i)(.*<releaseNotes.*?>)(.+?)(</releaseNotes>)", "$2");
+//        }
+//        newRelease.setReleaseNotes(descBuilder);
+//        releaseLine = loadedFile.readLine();
         releaseData = releaseLine.replaceAll("(?i)(.*<releaseProject>)(.+?)(</releaseProject>)",
                                              "$2");
         // Get correct project from main for concurrency
@@ -530,19 +529,40 @@ public class Loading {
 
         //Optional Fields
         while ((!(releaseLine = loadedFile.readLine()).matches(".*</Release>"))) {
-          if (!releaseLine.endsWith("</releaseDescription>")) {
-            descBuilder = releaseLine
-                              .replaceAll("(?i)(.*<releaseDescription.*?>)(.+?)", "$2") + "\n";
-            while ((!(releaseLine = loadedFile.readLine()).endsWith("</releaseDescription>"))) {
-              descBuilder += releaseLine + "\n";
+          if (releaseLine.startsWith("\t\t<releaseDescription>")) {
+            String descBuilder;
+            if (!releaseLine.endsWith("</releaseDescription>")) {
+              descBuilder = releaseLine
+                                .replaceAll("(?i)(.*<releaseDescription.*?>)(.+?)", "$2") + "\n";
+              while ((!(releaseLine = loadedFile.readLine()).endsWith("</releaseDescription>"))) {
+                descBuilder += releaseLine + "\n";
+              }
+              descBuilder += releaseLine.replaceAll("(.+?)(</releaseDescription>)", "$1");
+            } else {
+              descBuilder =
+                  releaseLine
+                      .replaceAll("(?i)(.*<releaseDescription.*?>)(.+?)(</releaseDescription>)",
+                                  "$2");
             }
-            descBuilder += releaseLine.replaceAll("(.+?)(</releaseDescription>)", "$1");
-          } else {
-            descBuilder =
-                releaseLine
-                    .replaceAll("(?i)(.*<releaseDescription.*?>)(.+?)(</releaseDescription>)", "$2");
+            newRelease.setReleaseDescription(descBuilder);
           }
-          newRelease.setReleaseDescription(descBuilder);
+
+          if (releaseLine.startsWith("\t\t<releaseNotes>")) {
+            String descBuilder;
+            if (!releaseLine.endsWith("</releaseNotes>")) {
+              descBuilder = releaseLine
+                                .replaceAll("(?i)(.*<releaseNotes.*?>)(.+?)", "$2") + "\n";
+              while ((!(releaseLine = loadedFile.readLine()).endsWith("</releaseNotes>"))) {
+                descBuilder += releaseLine + "\n";
+              }
+              descBuilder += releaseLine.replaceAll("(.+?)(</releaseNotes>)", "$1");
+            } else {
+              descBuilder =
+                  releaseLine
+                      .replaceAll("(?i)(.*<releaseNotes.*?>)(.+?)(</releaseNotes>)", "$2");
+            }
+            newRelease.setReleaseNotes(descBuilder);
+          }
         }
 
         main.addRelease(newRelease);

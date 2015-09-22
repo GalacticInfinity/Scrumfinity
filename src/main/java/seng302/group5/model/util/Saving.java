@@ -263,16 +263,15 @@ public class Saving {
     for (Release release : this.releases) {
       saveFile.write("\t<Release>\n");
       saveFile.write("\t\t<releaseLabel>" + release.getLabel() + "</releaseLabel>\n");
-      //#Changed
-//      saveFile.write(
-//          "\t\t<releaseDescription>" + release.getReleaseDescription() + "</releaseDescription>\n");
-      saveFile.write("\t\t<releaseNotes>" + release.getReleaseNotes() + "</releaseNotes>\n");
       saveFile.write(
           "\t\t<releaseProject>" + release.getProjectRelease().getLabel() + "</releaseProject>\n");
       saveFile.write("\t\t<releaseDate>" + release.getReleaseDate() + "</releaseDate>\n");
       if (!release.getReleaseDescription().isEmpty()) {
         saveFile.write(
             "\t\t<releaseDescription>" + release.getReleaseDescription() + "</releaseDescription>\n");
+      }
+      if (!release.getReleaseNotes().isEmpty()) {
+        saveFile.write("\t\t<releaseNotes>" + release.getReleaseNotes() + "</releaseNotes>\n");
       }
       saveFile.write("\t</Release>\n");
     }
