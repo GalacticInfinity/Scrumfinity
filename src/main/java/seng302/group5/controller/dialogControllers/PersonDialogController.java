@@ -171,6 +171,9 @@ public class PersonDialogController {
     });
   }
 
+  /**
+   * Set up the dialog to be in backlog mode.
+   */
   public void setupBacklogMode() {
     dialogMode = DialogMode.BACKLOG_MODE;
     if (createOrEdit == CreateOrEdit.CREATE) {

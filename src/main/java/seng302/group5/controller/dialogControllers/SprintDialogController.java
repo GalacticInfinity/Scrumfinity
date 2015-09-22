@@ -7,11 +7,9 @@ import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -75,6 +73,11 @@ public class SprintDialogController {
   @FXML private Label releaseDate;
   @FXML private TextField sprintImpedimentsField;
   @FXML private Button btnNewStory;
+  @FXML private Button btnNewBacklog;
+  @FXML private Button btnEditBacklog;
+  @FXML private Button btnNewProject;
+  @FXML private Button btnEditProject;
+  @FXML private Button btnEditTeam;
 
   private Main mainApp;
   private Stage thisStage;
@@ -98,9 +101,6 @@ public class SprintDialogController {
   private Set<Story> otherSprintsStories;
 
   private CompositeUndoRedo tasksUndoRedo;
-
-
-  private boolean comboListenerFlag;
 
   /**
    * Sets up the controller on start up.
@@ -141,12 +141,18 @@ public class SprintDialogController {
 
       sprintTeamCombo.setDisable(true);
       sprintReleaseCombo.setDisable(true);
+      btnEditBacklog.setDisable(true);
+      btnNewProject.setDisable(true);
+      btnEditProject.setDisable(true);
+      btnEditTeam.setDisable(true);
+
 
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       thisStage.setTitle("Edit Sprint");
       btnConfirm.setText("Save");
       btnConfirm.setDisable(true);
       initialiseLists();
+      btnNewProject.setDisable(true);
 
       sprintGoalField.setText(sprint.getLabel());
       sprintNameField.setText(sprint.getSprintFullName());
@@ -217,12 +223,22 @@ public class SprintDialogController {
       if (createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
       }
+      if (newValue != null) {
+        btnEditBacklog.setDisable(false);
+      } else {
+        btnEditBacklog.setDisable(true);
+      }
     });
 
     sprintTeamCombo.valueProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
       if (createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
+      }
+      if (newValue != null) {
+        btnEditTeam.setDisable(false);
+      } else {
+        btnEditTeam.setDisable(true);
       }
     });
     sprintReleaseCombo.getSelectionModel().selectedItemProperty()
@@ -338,21 +354,16 @@ public class SprintDialogController {
     allocatedStoriesList.setItems(allocatedStoriesPrioritised);
     taskList.setItems(tasks);
 
-    comboListenerFlag = false;
-
     sprintBacklogCombo.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldBacklog, newBacklog) -> {
-
-          if (comboListenerFlag) {
-            // Get out instantly after resetting flag to false
-            comboListenerFlag = false;
-            return;
-          }
 
           // if the backlog is assigned to a project
           if (projectMap.containsKey(newBacklog)) {
             project = projectMap.get(newBacklog);
             sprintProjectLabel.setText(project.toString());
+
+            btnNewProject.setDisable(true);
+            btnEditProject.setDisable(false);
 
             sprintTeamCombo.setDisable(false);
             sprintReleaseCombo.setDisable(false);
@@ -385,33 +396,19 @@ public class SprintDialogController {
 
             refreshLists();
           } else {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Chosen backlog is not complete");
-            alert.setHeaderText(null);
-            String message = "The backlog you have selected does not contain all the required "
-                             + "information to be able to create a sprint.\n"
-                             + "Do you want to continue?";
-            alert.getDialogPane().setPrefHeight(120);
-            alert.setContentText(message);
-            //checks response
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.get() == ButtonType.OK) {
-              project = null;
-              sprintProjectLabel.setText("No Project Found");
-              sprintTeamCombo.setValue(null);
-              sprintReleaseCombo.setValue(null);
-              sprintTeamCombo.setDisable(true);
-              sprintReleaseCombo.setDisable(true);
-              availableStories.clear();
-              allocatedStoriesPrioritised.clear();
-              allocatedStories.clear();
-            } else {
-              comboListenerFlag = true;
-              Platform.runLater(() -> {
-                // to avoid firing the listener from within itself
-                sprintBacklogCombo.setValue(oldBacklog);
-              });
-            }
+            project = null;
+            sprintProjectLabel.setText("No Project Found");
+
+            btnNewProject.setDisable(false);
+            btnEditProject.setDisable(true);
+
+            sprintTeamCombo.setValue(null);
+            sprintReleaseCombo.setValue(null);
+            sprintTeamCombo.setDisable(true);
+            sprintReleaseCombo.setDisable(true);
+            availableStories.clear();
+            allocatedStoriesPrioritised.clear();
+            allocatedStories.clear();
           }
         });
     setupListView();
@@ -1005,6 +1002,94 @@ public class SprintDialogController {
       if (!availableStories.contains(story) && !currentStories.contains(story)) {
         availableStories.add(story);
       }
+    }
+  }
+
+  /**
+   * A button which when clicked can edit the selected backlog in the backlog combo box.
+   * Also adds to undo/redo stack so the edit is undoable.
+   * @param event Button click
+   */
+  @FXML
+  protected void editBacklog(ActionEvent event) {
+    List<Backlog> tempBacklogList = new ArrayList<>(backlogs);
+    Backlog selectedBacklog = sprintBacklogCombo.getSelectionModel().getSelectedItem();
+    if (selectedBacklog != null) {
+      mainApp.showBacklogDialogNested(selectedBacklog, thisStage);
+      backlogs.setAll(tempBacklogList);
+      sprintBacklogCombo.getSelectionModel().select(selectedBacklog);
+    }
+  }
+
+  /**
+   * A button which when clicked can add a backlog to the system.
+   * Also adds to undo/redo stack so creation is undoable.
+   * @param event Button click
+   */
+  @FXML
+  protected void addNewBacklog(ActionEvent event) {
+    List<Backlog> tempBacklogList = new ArrayList<>(backlogs);
+    mainApp.showBacklogDialog(CreateOrEdit.CREATE);
+    List<Backlog> tempNewBacklogList = new ArrayList<>(mainApp.getBacklogs());
+    for (Backlog backlog : tempNewBacklogList) {
+      if (!tempBacklogList.contains(backlog)) {
+        backlogs.setAll(tempNewBacklogList);
+        sprintBacklogCombo.getSelectionModel().select(backlog);
+        break;
+      }
+    }
+  }
+
+  /**
+   * A button which when clicked can edit the displayed project.
+   * Also adds to undo/redo stack so the edit is undoable.
+   * @param event Button click
+   */
+  @FXML
+  protected void editProject(ActionEvent event) {
+    Backlog backlog = sprintBacklogCombo.getSelectionModel().getSelectedItem();
+    mainApp.showProjectDialogWithinSprint(CreateOrEdit.EDIT, project, backlog, thisStage);
+    sprintProjectLabel.setText(project.getLabel());
+    teams.setAll(project.getCurrentlyAllocatedTeams());
+  }
+
+  /**
+   * A button which when clicked can add a project to the system.
+   * Also adds to undo/redo stack so creation is undoable.
+   * @param event Button click
+   */
+  @FXML
+  protected void addNewProject(ActionEvent event) {
+    Backlog backlog = sprintBacklogCombo.getSelectionModel().getSelectedItem();
+    mainApp.showProjectDialogWithinSprint(CreateOrEdit.CREATE, null, backlog, thisStage);
+
+    // set up map from backlog to project again
+    projectMap.clear();
+    for (Project project : mainApp.getProjects()) {
+      Backlog projectBacklog = project.getBacklog();
+      if (projectBacklog != null) {
+        projectMap.put(projectBacklog, project);
+      }
+    }
+
+    // fire the listener to update the dialog
+    sprintBacklogCombo.getSelectionModel().select(null);
+    sprintBacklogCombo.getSelectionModel().select(backlog);
+  }
+
+  /**
+   * A button which when clicked can edit the selected team in the team combo box.
+   * Also adds to undo/redo stack so the edit is undoable.
+   * @param event Button click
+   */
+  @FXML
+  protected void editTeam(ActionEvent event) {
+    List<Team> tempTeamList = new ArrayList<>(teams);
+    Team selectedTeam = sprintTeamCombo.getSelectionModel().getSelectedItem();
+    if (selectedTeam != null) {
+      mainApp.showTeamDialogWithinNested(selectedTeam, thisStage);
+      teams.setAll(tempTeamList);
+      sprintTeamCombo.getSelectionModel().select(selectedTeam);
     }
   }
 }

@@ -390,6 +390,39 @@ public class Main extends Application {
   }
 
   /**
+   * sets up the dialog box for creating/editing a project
+   *
+   * @param createOrEdit either create a new project or edit existing project.
+   * @param project the selected project that to be edited form the project combo box.
+   * @param backlog the backlog that were selected from the backlog combo in sprint dialog
+   * @param stage   the stage it is currently on to void unusual behaviour.
+   */
+  public void showProjectDialogWithinSprint(CreateOrEdit createOrEdit, Project project,
+                                            Backlog backlog, Stage stage) {
+    try {
+      FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(Main.class.getResource("/ProjectDialog.fxml"));
+      VBox projectDialogLayout = loader.load();
+
+      ProjectDialogController controller = loader.getController();
+      Scene projectDialogScene = new Scene(projectDialogLayout);
+      Stage projectDialogStage = new Stage();
+
+      controller.setupController(this, projectDialogStage, createOrEdit, project);
+      controller.setupSprintMode(backlog);
+
+      projectDialogStage.initModality(Modality.APPLICATION_MODAL);
+      projectDialogStage.initOwner(stage);
+      projectDialogStage.setScene(projectDialogScene);
+      projectDialogStage.showAndWait();
+
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
    * sets up the dialog box for creating/editing a Team
    *
    * @param createOrEdit the createOrEdit object that decides if you are creating or editing
@@ -431,12 +464,12 @@ public class Main extends Application {
   }
 
   /**
-   * sets up the dialog box for creating/editing a Team withing the project dialog
+   * sets up the dialog box for creating/editing a Team withing a parent dialog
    *
    * @param team the team that you wanted to view or edit information with
    * @param stage the stage it is currently on to void unusual behaviour
    */
-  public void showTeamDialogWithinProject(Team team, Stage stage) {
+  public void showTeamDialogWithinNested(Team team, Stage stage) {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/TeamDialog.fxml"));
@@ -861,12 +894,12 @@ public class Main extends Application {
   }
 
   /**
-   * Sets up a dialog box for editing a backlog within the project dialog.
+   * Sets up a dialog box for editing a backlog within a parent dialog.
    *
    * @param backlog the selected backlog that to be edited form the backlog combo box.
    * @param stage   the stage it is currently on to void unusual behaviour.
    */
-  public void showBacklogDialogWithinProject(Backlog backlog, Stage stage) {
+  public void showBacklogDialogNested(Backlog backlog, Stage stage) {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/BacklogDialog.fxml"));
