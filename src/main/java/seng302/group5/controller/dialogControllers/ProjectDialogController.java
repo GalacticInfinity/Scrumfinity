@@ -58,6 +58,8 @@ public class ProjectDialogController {
   @FXML private Button btnNewTeam;
   @FXML private Button btnNewBacklog;
   @FXML private Button btnEditBacklog;
+  @FXML private Button btnAddTeam;
+  @FXML private Button btnRemoveTeam;
 
 
   private Main mainApp;
