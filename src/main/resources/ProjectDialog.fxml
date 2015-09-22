@@ -7,7 +7,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="465.0" prefWidth="537.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.ProjectDialogController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="465.0" prefWidth="537.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.ProjectDialogController">
    <children>
       <HBox alignment="BOTTOM_LEFT" prefHeight="32.0" prefWidth="434.0" spacing="10.0">
          <children>
@@ -27,7 +27,7 @@
       </HBox>
       <HBox alignment="CENTER_LEFT" prefHeight="38.0" prefWidth="369.0" spacing="10.0">
          <children>
-            <Label prefHeight="25.0" prefWidth="120.0" text="Project Name:*">
+            <Label prefHeight="25.0" prefWidth="120.0" text="Project Name:">
                <font>
                   <Font size="15.0" />
                </font>
@@ -141,21 +141,35 @@
                         <Insets bottom="5.0" />
                      </VBox.margin>
                   </DatePicker>
-                  <Button fx:id="btnAddTeam" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#btnAddTeam" prefWidth="60.0" text="→" textAlignment="CENTER">
+                  <Button fx:id="btnAddTeam" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#btnAddTeam" prefHeight="25.0" prefWidth="60.0" textAlignment="CENTER">
                      <VBox.margin>
                         <Insets bottom="10.0" left="30.0" />
                      </VBox.margin>
                      <tooltip>
                         <Tooltip text="Allocate selected team to this project" />
                      </tooltip>
+                     <graphic>
+                        <ImageView fitHeight="17.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="RightArrow.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                   </Button>
-                  <Button fx:id="btnRemoveTeam" mnemonicParsing="false" onAction="#btnRemoveTeam" prefWidth="60.0" text="←">
+                  <Button fx:id="btnRemoveTeam" mnemonicParsing="false" onAction="#btnRemoveTeam" prefWidth="60.0">
                      <VBox.margin>
                         <Insets left="30.0" />
                      </VBox.margin>
                      <tooltip>
                         <Tooltip text="Remove selected team from this project" />
                      </tooltip>
+                     <graphic>
+                        <ImageView fitHeight="17.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="LeftArrow.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                   </Button>
                </children>
             </VBox>

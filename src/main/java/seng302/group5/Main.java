@@ -30,6 +30,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
 import seng302.group5.controller.dialogControllers.BacklogDialogController;
 import seng302.group5.controller.dialogControllers.EffortDialogController;
 import seng302.group5.controller.dialogControllers.SprintDialogController;
@@ -390,6 +391,39 @@ public class Main extends Application {
   }
 
   /**
+   * sets up the dialog box for creating/editing a project
+   *
+   * @param createOrEdit either create a new project or edit existing project.
+   * @param project the selected project that to be edited form the project combo box.
+   * @param backlog the backlog that were selected from the backlog combo in sprint dialog
+   * @param stage   the stage it is currently on to void unusual behaviour.
+   */
+  public void showProjectDialogWithinSprint(CreateOrEdit createOrEdit, Project project,
+                                            Backlog backlog, Stage stage) {
+    try {
+      FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(Main.class.getResource("/ProjectDialog.fxml"));
+      VBox projectDialogLayout = loader.load();
+
+      ProjectDialogController controller = loader.getController();
+      Scene projectDialogScene = new Scene(projectDialogLayout);
+      Stage projectDialogStage = new Stage();
+
+      controller.setupController(this, projectDialogStage, createOrEdit, project);
+      controller.setupSprintMode(backlog);
+
+      projectDialogStage.initModality(Modality.APPLICATION_MODAL);
+      projectDialogStage.initOwner(stage);
+      projectDialogStage.setScene(projectDialogScene);
+      projectDialogStage.showAndWait();
+
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
    * sets up the dialog box for creating/editing a Team
    *
    * @param createOrEdit the createOrEdit object that decides if you are creating or editing
@@ -431,12 +465,12 @@ public class Main extends Application {
   }
 
   /**
-   * sets up the dialog box for creating/editing a Team withing the project dialog
+   * sets up the dialog box for creating/editing a Team withing a parent dialog
    *
    * @param team the team that you wanted to view or edit information with
    * @param stage the stage it is currently on to void unusual behaviour
    */
-  public void showTeamDialogWithinProject(Team team, Stage stage) {
+  public void showTeamDialogWithinNested(Team team, Stage stage) {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/TeamDialog.fxml"));
@@ -593,6 +627,36 @@ public class Main extends Application {
       Stage personDialogStage = new Stage();
 
       controller.setupController(this, personDialogStage, CreateOrEdit.EDIT, person);
+
+      personDialogStage.initModality(Modality.APPLICATION_MODAL);
+      personDialogStage.initOwner(stage);
+      personDialogStage.setScene(personDialogScene);
+      personDialogStage.showAndWait();
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * sets up the dialog box for editing a person when opened from the backlog dialog
+   *
+   * @param createOrEdit whether the person is being created or edited
+   * @param person the person that you wanted to view or edit information with, null if creating
+   * @param stage the stage it is currently on to void unusual behaviour
+   */
+  public void showPersonDialogWithinBacklog(CreateOrEdit createOrEdit, Person person, Stage stage) {
+    try {
+      FXMLLoader loader = new FXMLLoader();
+      loader.setLocation(Main.class.getResource("/PersonDialog.fxml"));
+      VBox personDialogLayout = loader.load();
+
+      PersonDialogController controller = loader.getController();
+      Scene personDialogScene = new Scene(personDialogLayout);
+      Stage personDialogStage = new Stage();
+
+      controller.setupController(this, personDialogStage, createOrEdit, person);
+      controller.setupBacklogMode();
 
       personDialogStage.initModality(Modality.APPLICATION_MODAL);
       personDialogStage.initOwner(stage);
@@ -831,12 +895,12 @@ public class Main extends Application {
   }
 
   /**
-   * Sets up a dialog box for editing a backlog within the project dialog.
+   * Sets up a dialog box for editing a backlog within a parent dialog.
    *
    * @param backlog the selected backlog that to be edited form the backlog combo box.
    * @param stage   the stage it is currently on to void unusual behaviour.
    */
-  public void showBacklogDialogWithinProject(Backlog backlog, Stage stage) {
+  public void showBacklogDialogNested(Backlog backlog, Stage stage) {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/BacklogDialog.fxml"));
@@ -854,6 +918,7 @@ public class Main extends Application {
       backlogDialogStage.showAndWait();
 
       LMPC.getScrumBoardController().refreshComboBoxes();
+      LMPC.getBurndownController().refreshComboBoxes();
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -1193,7 +1258,7 @@ public class Main extends Application {
           alert.setTitle("Releases still exist for this project");
           alert.setHeaderText(null);
           String contentText = String.format("Do you want to delete project '%s' and its "
-                                         + "associated items?", project.getProjectName());
+                                         + "associated items?", project.getLabel());
           alert.setResizable(true);
           alert.setContentText(contentText);
 

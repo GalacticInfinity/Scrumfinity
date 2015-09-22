@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,6 +18,7 @@ import seng302.group5.controller.mainAppControllers.ListMainPaneController;
 import seng302.group5.controller.mainAppControllers.MenuBarController;
 import seng302.group5.controller.mainAppControllers.ToolBarController;
 import seng302.group5.model.Backlog;
+import seng302.group5.model.Effort;
 import seng302.group5.model.Estimate;
 import seng302.group5.model.Person;
 import seng302.group5.model.Project;
@@ -829,9 +831,9 @@ public class RevertHandlerTest {
     List<Person> allocatedPeople = new ArrayList<>();
     allocatedPeople.add(pers1);
     Task task1 = new Task("Task Label", "descr", 20, null, allocatedPeople);
-    task1.updateSpentEffort(pers1, 67);
+//    task1.updateSpentEffort(pers1, 67);
     Task task2 = new Task("Task sprint", "descr", 20, null, allocatedPeople);
-    task2.updateSpentEffort(pers1, 9001);
+//    task2.updateSpentEffort(pers1, 9001);
     s1.addTask(task1);
     sprint.addTask(task2);
 
@@ -864,7 +866,86 @@ public class RevertHandlerTest {
 
     assertSame(revPerson, revTask1.getTaskPeople().get(0));
     assertSame(revPerson, revTask2.getTaskPeople().get(0));
-    assertEquals((long) 67, (long) revTask1.getSpentEffort().get(revPerson));
-    assertEquals((long) 9001, (long) revTask2.getSpentEffort().get(revPerson));
+//    assertEquals((long) 67, (long) revTask1.getSpentEffort().get(revPerson));
+//    assertEquals((long) 9001, (long) revTask2.getSpentEffort().get(revPerson));
+  }
+
+  @Test
+  public void testEffortRevert() {
+    Project proj1 = new Project("p1", "proj1", "its a project");
+    Person pers1 = new Person();
+    pers1.setLabel("pers1");
+    Estimate e1 = new Estimate("test est", Arrays.asList("0", "1", "2", "3"));
+    Backlog b1 = new Backlog("b1", "back1", "Its a backlog", pers1, e1);
+    proj1.setBacklog(b1);
+
+    Story s1 = new Story("s1", "story1", "its a story", pers1);
+    Story s2 = new Story("s2", "story2", "its a story", pers1);
+
+    b1.addStory(s1, 3);
+    b1.addStory(s2, 2);
+
+    Team team1 = new Team("t1", "its a team");
+    team1.addTeamMember(pers1);
+    Release r1 = new Release("r1", "its a release", "to be released", LocalDate.now(), proj1);
+    Sprint sprint =
+        new Sprint("s1", "sprint1", "its a sprint", b1, proj1, team1, r1, LocalDate.of(1994, 3, 20),
+                   LocalDate.now(), Arrays.asList(s1, s2));
+
+    List<Person> allocatedPeople = new ArrayList<>();
+    allocatedPeople.add(pers1);
+    Task task1 = new Task("Task Label", "descr", 20, null, allocatedPeople);
+    Task task2 = new Task("Task sprint", "descr", 20, null, allocatedPeople);
+    Effort effort1 = new Effort(pers1, 120, "session 1",
+                                LocalDateTime.of(2015, 10, 1, 1, 1));
+    Effort effort2 = new Effort(pers1, 130, "session 2",
+                                LocalDateTime.of(2014, 4, 4, 4, 4));
+    task1.addEffort(effort1);
+    task2.addEffort(effort2);
+    s1.addTask(task1);
+    sprint.addTask(task2);
+
+    mainApp.addProject(proj1);
+    mainApp.addPerson(pers1);
+    mainApp.addEstimate(e1);
+    mainApp.addBacklog(b1);
+    mainApp.addStory(s1); mainApp.addStory(s2);
+    mainApp.addTeam(team1);
+    mainApp.addRelease(r1);
+    mainApp.addSprint(sprint);
+
+    revertHandler.setLastSaved();
+
+    effort1.setWorker(new Person());  // note: not even a valid action
+    effort1.setSpentEffort(9001);
+    effort1.setComments("session 1 updated");
+    effort1.setDateTime(LocalDateTime.of(1, 1, 1, 1, 1));
+    effort2.setWorker(new Person());
+    effort2.setSpentEffort(9002);
+    effort2.setComments("session 2 updated");
+    effort2.setDateTime(LocalDateTime.of(2, 2, 2, 2, 2));
+
+    revertHandler.revert();
+
+    Person revPerson = mainApp.getPeople().get(0);
+    Story revStory = mainApp.getStories().get(0);
+    Sprint revSprint = mainApp.getSprints().get(0);
+    Task revTask1 = revStory.getTasks().get(0);
+    Task revTask2 = revSprint.getTasks().get(0);
+    Effort revEffort1 = revTask1.getEfforts().get(0);
+    Effort revEffort2 = revTask2.getEfforts().get(0);
+
+    assertSame(revPerson, revTask1.getTaskPeople().get(0));
+    assertSame(revPerson, revTask2.getTaskPeople().get(0));
+
+    assertSame(revPerson, revEffort1.getWorker());
+    assertEquals(120, revEffort1.getSpentEffort());
+    assertEquals("session 1", revEffort1.getComments());
+    assertEquals(LocalDateTime.of(2015, 10, 1, 1, 1), revEffort1.getDateTime());
+
+    assertSame(revPerson, revEffort2.getWorker());
+    assertEquals(130, revEffort2.getSpentEffort());
+    assertEquals("session 2", revEffort2.getComments());
+    assertEquals(LocalDateTime.of(2014, 4, 4, 4, 4), revEffort2.getDateTime());
   }
 }

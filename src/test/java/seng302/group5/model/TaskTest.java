@@ -24,7 +24,6 @@ public class TaskTest {
   private int estimation;
   private Status status;
   private List<Person> assignedPeople;
-  private Map<Person, Integer> spentEffort;
 
   private Task task1;
   private Task task2;
@@ -46,7 +45,7 @@ public class TaskTest {
     assignedPeople.addAll(Arrays.asList(person1, person2, person3));
 
     task1 = new Task(label, description, estimation, status, assignedPeople);
-    task1.updateSpentEffort(person1, 50);
+//    task1.updateSpentEffort(person1, 50);
     task2 = new Task(task1);
     task3 =
         new Task("AnotherTask", "DESCRIPSTIONING", 400, Status.DONE, Arrays.asList(person3, person2));
@@ -75,15 +74,15 @@ public class TaskTest {
   public void testEquals() {
     assertEquals(task1, task1);
     assertEquals(task1, task2);
-    task1.updateSpentEffort(person2, 10);
-    task2.updateSpentEffort(person2, 10);
-    assertEquals(task1, task2);
+//    task1.updateSpentEffort(person2, 10);
+//    task2.updateSpentEffort(person2, 10);
+//    assertEquals(task1, task2);
   }
 
   @Test
   public void testClearing() {
     task1.removeAllTaskPeople();
-    assertTrue(task1.getSpentEffort().isEmpty());
+//    assertTrue(task1.getSpentEffort().isEmpty());
     assertTrue(task1.getTaskPeople().isEmpty());
   }
 
@@ -91,15 +90,15 @@ public class TaskTest {
   public void testAddingPeople() {
     task1.removeAllTaskPeople();
     task1.addTaskPerson(person1);
-    task1.updateSpentEffort(person1, 20);
+//    task1.updateSpentEffort(person1, 20);
     assertTrue(task1.getTaskPeople().contains(person1));
-    assertTrue(task1.getSpentEffort().get(person1) == 20);
+//    assertTrue(task1.getSpentEffort().get(person1) == 20);
   }
 
   @Test
   public void testRemovingPeople() {
     task1.removeTaskPerson(person2);
     assertFalse(task1.getTaskPeople().contains(person2));
-    assertFalse(task1.getSpentEffort().containsKey(person2));
+//    assertFalse(task1.getSpentEffort().containsKey(person2));
   }
 }

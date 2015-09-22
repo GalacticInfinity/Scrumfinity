@@ -1,11 +1,12 @@
 package seng302.group5.controller.mainAppControllers;
 
 import java.io.File;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,18 +30,20 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import javafx.stage.Stage;
+
 import seng302.group5.Main;
 import seng302.group5.controller.dialogControllers.BurndownController;
 import seng302.group5.controller.dialogControllers.ScrumBoardController;
 import seng302.group5.model.AgileHistory;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Backlog;
+import seng302.group5.model.Estimate;
 import seng302.group5.model.Release;
 import seng302.group5.model.Role;
 import seng302.group5.model.Sprint;
@@ -52,6 +55,7 @@ import seng302.group5.model.Person;
 import seng302.group5.model.Project;
 import seng302.group5.model.Team;
 import seng302.group5.model.Skill;
+import seng302.group5.model.util.TimeFormat;
 
 /**
  * Created by Michael on 3/15/2015.
@@ -566,7 +570,12 @@ public class ListMainPaneController {
     text4.setFill(Color.BLACK);
     text4.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
 
-    Text text5 = new Text(project.getProjectName());
+    Text text5;
+    if (project.getProjectName().isEmpty()) {
+      text5 = new Text("N/A");
+    } else {
+      text5 = new Text(project.getProjectName());
+    }
     text5.setFill(Color.BLACK);
     text5.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
 
@@ -848,7 +857,7 @@ public class ListMainPaneController {
     textDescriptionHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
     Text textDescriptionBody;
-    if (release.getReleaseDescription().length() != 0) {
+    if (!release.getReleaseDescription().isEmpty()) {
       textDescriptionBody = new Text(release.getReleaseDescription());
     } else {
       textDescriptionBody = new Text("N/A");
@@ -874,7 +883,7 @@ public class ListMainPaneController {
     textNotesHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
     Text textNotesBody;
-    if (release.getReleaseDescription().length() != 0) {
+    if (!release.getReleaseNotes().isEmpty()) {
       textNotesBody = new Text(release.getReleaseNotes());
     } else {
       textNotesBody = new Text("N/A");
@@ -1082,7 +1091,7 @@ public class ListMainPaneController {
         displayTextFlow.getChildren().add(textStoryTasksBody);
 
         for (Person person : task.getTaskPeople()) {
-          textTaskEffortsBody = new Text("\n\t" + person + ": " + task.getPersonEffort(person) + "min");
+          textTaskEffortsBody = new Text("\n\t" + person + ": " + TimeFormat.parseDuration(task.getPersonEffort(person)));
           displayTextFlow.getChildren().add(textTaskEffortsBody);
         }
       }
@@ -1223,8 +1232,12 @@ public class ListMainPaneController {
 
     if (!backlog.getStories().isEmpty()) {
       for (Story story : backlog.getStories()) {
+
+        Text t = new Text("\n\uD83C\uDF11 "); //Need to create an object so i can color it depending on the readiness of the story. The "\uD83C\uDF11" is a BIG bullet
+        t.setFill(getColor(story)); //Set the color
+
         int index = backlog.getSizes().get(story);
-        storiesText.add(new Text("\n• "));
+        storiesText.add(t);
         Text hyperlink = generateHyperlink(story);
         hyperlink.setFont(Font.getDefault());
         storiesText.add(hyperlink);
@@ -1244,9 +1257,14 @@ public class ListMainPaneController {
           SortedList<Story> sortedStories = new SortedList<>(
               FXCollections.observableArrayList(backlog.getStories()),
               Comparator.<Story>naturalOrder());
+
           for (Story story : sortedStories) {
+
+            Text t = new Text("\n\uD83C\uDF11 "); //Need to create an object so i can color it depending on the readiness of the story
+            t.setFill(getColor(story)); //set color
+
             int index = backlog.getSizes().get(story);
-            storiesText.add(new Text("\n• "));
+            storiesText.add(t);
             Text hyperlink = generateHyperlink(story);
             hyperlink.setFont(Font.getDefault());
             storiesText.add(hyperlink);
@@ -1262,8 +1280,12 @@ public class ListMainPaneController {
         // Change to prioritised order
         if (!backlog.getStories().isEmpty()) {
           for (Story story : backlog.getStories()) {
+
+            Text t = new Text("\n\uD83C\uDF11 "); //Need to create an object so i can color it depending on the readiness of the story
+            t.setFill(getColor(story)); //set color
+
             int index = backlog.getSizes().get(story);
-            storiesText.add(new Text("\n• "));
+            storiesText.add(t);
             Text hyperlink = generateHyperlink(story);
             hyperlink.setFont(Font.getDefault());
             storiesText.add(hyperlink);
@@ -1277,6 +1299,79 @@ public class ListMainPaneController {
         sortToggle.setText(prioritisedOrder);
       }
     });
+  }
+
+  /**
+   * This takes in a story and returns its appropriate color depending on whether it is properly ready or not.
+   * Based on dependencies.
+   * @param story The story to be evaluated
+   * @return The corresponding color
+   */
+  private Color getColor(Story story) {
+
+    boolean dependent = false;
+
+    for (Story stories : mainApp.getStories()) {
+      if (story.getDependencies().contains(stories)) {
+        if (mainApp.getStories().indexOf(stories) >
+            mainApp.getStories().indexOf(story)) {
+          dependent = true;
+        }
+      }
+    }
+
+    if (dependent) {
+      return Color.RED;
+    } else if (story.getStoryState()) {
+      return Color.rgb(0, 191, 0);
+    } else if (story.getAcceptanceCriteria().size() > 0) {
+      return Color.rgb(255, 135, 0);
+    }
+    else {
+      return Color.rgb(0, 0, 0, 0);
+    }
+  }
+
+  /**
+   * Rounds velocity when it has a large amount of decimal places
+   * pulled from stack overflow
+   * https://stackoverflow.com/questions/2808535/round-a-double-to-2-decimal-places
+   * @param value the number to be rounded
+   * @param places the number of decimal places
+   * @return the rounded number.
+   */
+  public static double round(double value, int places) {
+    if (places < 0) throw new IllegalArgumentException();
+
+    BigDecimal bd = new BigDecimal(value);
+    bd = bd.setScale(places, RoundingMode.HALF_UP);
+    return bd.doubleValue();
+  }
+
+  /**Function that calculates the velocity of a team working on a sprint.
+   * @param sprint the sprint which's velocity will be calculated
+   * @return the velocity as a double.
+   */
+  private double sprintVelocity(Sprint sprint){
+    int days = 0;
+    if (sprint.getSprintStart().getYear() == sprint.getSprintEnd().getYear()) {
+      System.out.println(sprint.getLabel() + " " + sprint.getSprintEnd().getDayOfYear() + " " +
+                         sprint.getSprintStart().getDayOfYear());
+      days = sprint.getSprintEnd().getDayOfYear() - sprint.getSprintStart().getDayOfYear();
+    } else {
+      days = (365- sprint.getSprintStart().getDayOfYear()) + sprint.getSprintEnd().getDayOfYear();
+    }
+    int points = 0;
+    Map<Story, Integer> estimates = sprint.getSprintBacklog().getSizes();
+    for (Map.Entry<Story, Integer> entry : estimates.entrySet())
+    {
+      if (sprint.getSprintStories().contains(entry.getKey())) {
+        points += entry.getValue();
+      }
+    }
+    double velocity = (points+0.0)/(days/7.0);
+    System.out.println("points " + points + " days " + days);
+    return velocity;
   }
 
   /**
@@ -1294,6 +1389,16 @@ public class ListMainPaneController {
     textLabelHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
     Text textLabelBody = new Text(sprint.getLabel());
+    textLabelBody.setFill(Color.rgb(1, 0, 1));
+    textLabelBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text textVelocityHeader = new Text("\nSprint Velocity: ");
+    textLabelHeader.setFill(Color.rgb(1, 0, 1));
+    textLabelHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    double velocity = sprintVelocity(sprint);
+
+    Text textVelocityBody = new Text(String.valueOf(round(velocity, 2)) + " Story points per week.");
     textLabelBody.setFill(Color.rgb(1, 0, 1));
     textLabelBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
 
@@ -1365,6 +1470,7 @@ public class ListMainPaneController {
     Hyperlink sortToggle = new Hyperlink(prioritisedOrder);
 
     displayTextFlow.getChildren().addAll(textHeader, textLabelHeader, textLabelBody,
+                                         textVelocityHeader, textVelocityBody,
                                          textNameHeader, textNameBody, textDescriptionHeader,
                                          textDescriptionBody, textBacklogHeader, textBacklogBody,
                                          textProjectHeader, textProjectBody, textTeamHeader,
@@ -1407,7 +1513,7 @@ public class ListMainPaneController {
         displayTextFlow.getChildren().add(textSprintTasksBody);
 
         for (Person person : task.getTaskPeople()) {
-          textTaskEffortsBody = new Text("\n\t" + person + ": " + task.getPersonEffort(person) + "min");
+          textTaskEffortsBody = new Text("\n\t" + person + ": " + TimeFormat.parseDuration(task.getPersonEffort(person)));
           displayTextFlow.getChildren().add(textTaskEffortsBody);
         }
       }

@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
@@ -15,10 +14,9 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
 import seng302.group5.Main;
 import seng302.group5.model.AgileHistory;
 import seng302.group5.model.AgileItem;
@@ -269,7 +267,9 @@ public class ReportWriter {
     projElem.setAttribute("label", project.getLabel());
 
     Element projName = report.createElement("Name");
-    projName.appendChild(report.createTextNode(project.getProjectName()));
+    if (project.getProjectName() != null && !project.getProjectName().isEmpty()) {
+      projName.appendChild(report.createTextNode(project.getProjectName()));
+    }
     projElem.appendChild(projName);
 
     Element projDesc = report.createElement("Description");
@@ -318,11 +318,15 @@ public class ReportWriter {
     releaseElem.setAttribute("label", release.getLabel());
 
     Element releaseDesc = report.createElement("Description");
-    releaseDesc.appendChild(report.createTextNode(release.getReleaseDescription()));
+    if (release.getReleaseDescription() != null && !release.getReleaseDescription().isEmpty()) {
+      releaseDesc.appendChild(report.createTextNode(release.getReleaseDescription()));
+    }
     releaseElem.appendChild(releaseDesc);
 
     Element releaseNotes = report.createElement("Notes");
-    releaseNotes.appendChild(report.createTextNode(release.getReleaseNotes()));
+    if (release.getReleaseNotes() != null && !release.getReleaseNotes().isEmpty()) {
+      releaseNotes.appendChild(report.createTextNode(release.getReleaseNotes()));
+    }
     releaseElem.appendChild(releaseNotes);
 
     String releaseDateString = release.getReleaseDate().format(
@@ -330,7 +334,6 @@ public class ReportWriter {
     Element releaseDate = report.createElement("ReleaseDate");
     releaseDate.appendChild(report.createTextNode(releaseDateString));
     releaseElem.appendChild(releaseDate);
-
   }
 
 
@@ -632,7 +635,7 @@ public class ReportWriter {
         personElem.appendChild(report.createTextNode(effort.getWorker().getLabel()));
         effortElem.appendChild(personElem);
         Element timeElem = report.createElement("logged-time");
-        timeElem.appendChild(report.createTextNode(String.valueOf(effort.getSpentEffort())));
+        timeElem.appendChild(report.createTextNode(TimeFormat.parseDuration(effort.getSpentEffort())));
         effortElem.appendChild(timeElem);
         Element commentElem = report.createElement("comments");
         commentElem.appendChild(report.createTextNode(effort.getComments()));
@@ -753,7 +756,6 @@ public class ReportWriter {
         peopleElem.appendChild(personElem);
         personElem.appendChild(report.createTextNode(person.getLabel()));
       }
-      //TODO: Remove above and make sure below works once Task model has been changed.
 
       Element spentEffortElem = report.createElement("spent-effort");
       taskElement.appendChild(spentEffortElem);
@@ -763,7 +765,7 @@ public class ReportWriter {
         personElem.appendChild(report.createTextNode(effort.getWorker().getLabel()));
         effortElem.appendChild(personElem);
         Element timeElem = report.createElement("logged-time");
-        timeElem.appendChild(report.createTextNode(String.valueOf(effort.getSpentEffort())));
+        timeElem.appendChild(report.createTextNode(TimeFormat.parseDuration(effort.getSpentEffort())));
         effortElem.appendChild(timeElem);
         Element commentElem = report.createElement("comments");
         commentElem.appendChild(report.createTextNode(effort.getComments()));

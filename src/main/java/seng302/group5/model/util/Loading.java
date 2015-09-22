@@ -168,12 +168,13 @@ public class Loading {
         projectData =
             projectLine.replaceAll("(?i)(.*<projectLabel.*?>)(.+?)(</projectLabel>)", "$2");
         newProject.setLabel(projectData);
-        projectLine = loadedFile.readLine();
-        projectData = projectLine.replaceAll("(?i)(.*<projectName.*?>)(.+?)(</projectName>)", "$2");
-        newProject.setProjectName(projectData);
 
         // Non mandatory fields.
         while ((!(projectLine = loadedFile.readLine()).equals("\t</Project>"))) {
+          if (projectLine.startsWith("\t\t<projectName>")) {
+            projectData = projectLine.replaceAll("(?i)(.*<projectName.*?>)(.+?)(</projectName>)", "$2");
+            newProject.setProjectName(projectData);
+          }
           if (projectLine.startsWith("\t\t<projectDescription>")) {
             String descBuilder;
             if (!projectLine.endsWith("</projectDescription>")) {
@@ -483,35 +484,34 @@ public class Loading {
             releaseLine.replaceAll("(?i)(.*<releaseLabel.*?>)(.+?)(</releaseLabel>)", "$2");
         newRelease.setLabel(releaseData);
         releaseLine = loadedFile.readLine();
-        String descBuilder;
-        if (!releaseLine.endsWith("</releaseDescription>")) {
-          descBuilder = releaseLine
-                            .replaceAll("(?i)(.*<releaseDescription.*?>)(.+?)", "$2") + "\n";
-          while ((!(releaseLine = loadedFile.readLine()).endsWith("</releaseDescription>"))) {
-            descBuilder += releaseLine + "\n";
-          }
-          descBuilder += releaseLine.replaceAll("(.+?)(</releaseDescription>)", "$1");
-        } else {
-          descBuilder =
-              releaseLine
-                  .replaceAll("(?i)(.*<releaseDescription.*?>)(.+?)(</releaseDescription>)", "$2");
-        }
-        newRelease.setReleaseDescription(descBuilder);
-        releaseLine = loadedFile.readLine();
-        if (!releaseLine.endsWith("</releaseNotes>")) {
-          descBuilder = releaseLine
-                            .replaceAll("(?i)(.*<releaseNotes.*?>)(.+?)", "$2") + "\n";
-          while ((!(releaseLine = loadedFile.readLine()).endsWith("</releaseNotes>"))) {
-            descBuilder += releaseLine + "\n";
-          }
-          descBuilder += releaseLine.replaceAll("(.+?)(</releaseNotes>)", "$1");
-        } else {
-          descBuilder =
-              releaseLine
-                  .replaceAll("(?i)(.*<releaseNotes.*?>)(.+?)(</releaseNotes>)", "$2");
-        }
-        newRelease.setReleaseNotes(descBuilder);
-        releaseLine = loadedFile.readLine();
+//        if (!releaseLine.endsWith("</releaseDescription>")) {
+//          descBuilder = releaseLine
+//                            .replaceAll("(?i)(.*<releaseDescription.*?>)(.+?)", "$2") + "\n";
+//          while ((!(releaseLine = loadedFile.readLine()).endsWith("</releaseDescription>"))) {
+//            descBuilder += releaseLine + "\n";
+//          }
+//          descBuilder += releaseLine.replaceAll("(.+?)(</releaseDescription>)", "$1");
+//        } else {
+//          descBuilder =
+//              releaseLine
+//                  .replaceAll("(?i)(.*<releaseDescription.*?>)(.+?)(</releaseDescription>)", "$2");
+//        }
+//        newRelease.setReleaseDescription(descBuilder);
+//        releaseLine = loadedFile.readLine();
+//        if (!releaseLine.endsWith("</releaseNotes>")) {
+//          descBuilder = releaseLine
+//                            .replaceAll("(?i)(.*<releaseNotes.*?>)(.+?)", "$2") + "\n";
+//          while ((!(releaseLine = loadedFile.readLine()).endsWith("</releaseNotes>"))) {
+//            descBuilder += releaseLine + "\n";
+//          }
+//          descBuilder += releaseLine.replaceAll("(.+?)(</releaseNotes>)", "$1");
+//        } else {
+//          descBuilder =
+//              releaseLine
+//                  .replaceAll("(?i)(.*<releaseNotes.*?>)(.+?)(</releaseNotes>)", "$2");
+//        }
+//        newRelease.setReleaseNotes(descBuilder);
+//        releaseLine = loadedFile.readLine();
         releaseData = releaseLine.replaceAll("(?i)(.*<releaseProject>)(.+?)(</releaseProject>)",
                                              "$2");
         // Get correct project from main for concurrency
@@ -526,6 +526,44 @@ public class Loading {
                                    Integer.parseInt(releaseData.substring(5, 7)),
                                    Integer.parseInt(releaseData.substring(8, 10)));
         newRelease.setReleaseDate(releaseDate);
+
+        //Optional Fields
+        while ((!(releaseLine = loadedFile.readLine()).matches(".*</Release>"))) {
+          if (releaseLine.startsWith("\t\t<releaseDescription>")) {
+            String descBuilder;
+            if (!releaseLine.endsWith("</releaseDescription>")) {
+              descBuilder = releaseLine
+                                .replaceAll("(?i)(.*<releaseDescription.*?>)(.+?)", "$2") + "\n";
+              while ((!(releaseLine = loadedFile.readLine()).endsWith("</releaseDescription>"))) {
+                descBuilder += releaseLine + "\n";
+              }
+              descBuilder += releaseLine.replaceAll("(.+?)(</releaseDescription>)", "$1");
+            } else {
+              descBuilder =
+                  releaseLine
+                      .replaceAll("(?i)(.*<releaseDescription.*?>)(.+?)(</releaseDescription>)",
+                                  "$2");
+            }
+            newRelease.setReleaseDescription(descBuilder);
+          }
+
+          if (releaseLine.startsWith("\t\t<releaseNotes>")) {
+            String descBuilder;
+            if (!releaseLine.endsWith("</releaseNotes>")) {
+              descBuilder = releaseLine
+                                .replaceAll("(?i)(.*<releaseNotes.*?>)(.+?)", "$2") + "\n";
+              while ((!(releaseLine = loadedFile.readLine()).endsWith("</releaseNotes>"))) {
+                descBuilder += releaseLine + "\n";
+              }
+              descBuilder += releaseLine.replaceAll("(.+?)(</releaseNotes>)", "$1");
+            } else {
+              descBuilder =
+                  releaseLine
+                      .replaceAll("(?i)(.*<releaseNotes.*?>)(.+?)(</releaseNotes>)", "$2");
+            }
+            newRelease.setReleaseNotes(descBuilder);
+          }
+        }
 
         main.addRelease(newRelease);
       }
@@ -1089,8 +1127,11 @@ public class Loading {
             storyLine = loadedFile.readLine();
             effortData = storyLine.replaceAll("(?i)(.*<effort.*?>)(.+?)(</effort>)",
                                               "$2");
-            storyTask
-                .updateSpentEffort(taskPersonMap.get(storyData), Integer.parseInt(effortData));
+
+            Effort tempE = new Effort(taskPersonMap.get(storyData), Integer.parseInt(effortData),
+                                      "out of date effort", LocalDateTime.now());
+
+            storyTask.addEffort(tempE);
           }
         }
       } else if (saveVersion >= 0.6) { //This loads the real proper effort that gets logged from V0.6 onwards
@@ -1127,6 +1168,12 @@ public class Loading {
               storyTask.addEffort(effortItem);
             }
           }
+        }
+        if (storyLine.startsWith("\t\t\t\t<DoneDate>")) {
+          String doneDate = storyLine.replaceAll(
+              "(?i)(.*<DoneDate.*?>)(.+?)(</DoneDate>)",
+              "$2");
+          storyTask.setDoneDate(LocalDate.parse(doneDate));
         }
       }
     }
@@ -1192,16 +1239,11 @@ public class Loading {
         for (Task task : story.getTasks()) {
           if (!task.getTaskPeople().isEmpty()) {
             List<Person> newPersList = new ArrayList<>();
-            Map<Person, Integer> newPersMap = new HashMap<>();
             for (Person person : task.getTaskPeople()) {
               newPersList.add(personMap.get(person.getLabel()));
             }
-            for (Map.Entry<Person, Integer> entry : task.getSpentEffort().entrySet()) {
-              newPersMap.put(entry.getKey(), entry.getValue());
-            }
             task.removeAllTaskPeople();
             task.addAllTaskPeople(newPersList);
-            task.updateSpentEffort(newPersMap);
           }
         }
       }
@@ -1212,16 +1254,11 @@ public class Loading {
         for (Task task : sprint.getTasks()) {
           if (!task.getTaskPeople().isEmpty()) {
             List<Person> newPersList = new ArrayList<>();
-            Map<Person, Integer> newPersMap = new HashMap<>();
             for (Person person : task.getTaskPeople()) {
               newPersList.add(personMap.get(person.getLabel()));
             }
-            for (Map.Entry<Person, Integer> entry : task.getSpentEffort().entrySet()) {
-              newPersMap.put(entry.getKey(), entry.getValue());
-            }
             task.removeAllTaskPeople();
             task.addAllTaskPeople(newPersList);
-            task.updateSpentEffort(newPersMap);
           }
         }
       }

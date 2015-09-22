@@ -4,9 +4,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.IdentityHashMap;
 import java.util.List;
-import java.util.Map;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -34,6 +32,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.Effort;
@@ -645,7 +644,7 @@ public class TaskDialogController {
         setGraphic(null);
       } else {
         cellText.setText(person.toString());
-        effortField.setText(String.valueOf(task.getPersonEffort(person) + "min"));
+        effortField.setText(TimeFormat.parseDuration(task.getPersonEffort(person)));
         setText(null);
         setGraphic(pane);
       }

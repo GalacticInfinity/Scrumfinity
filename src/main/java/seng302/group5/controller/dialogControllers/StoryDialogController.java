@@ -32,6 +32,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
+import seng302.group5.controller.enums.DialogMode;
 import seng302.group5.model.Status;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Person;
@@ -74,10 +75,13 @@ public class StoryDialogController {
   @FXML private ListView<Task> taskList;
   @FXML private Button btnNewBacklog;
   @FXML private Button btnEditBacklog;
+  @FXML private Button btnNewCreator;
+  @FXML private Button btnEditCreator;
 
   private Main mainApp;
   private Stage thisStage;
   private CreateOrEdit createOrEdit;
+  private DialogMode dialogMode;
   private Story story;
   private Story lastStory;
   private Backlog lastBacklog;
@@ -119,6 +123,7 @@ public class StoryDialogController {
       initialiseLists();
       readyCheckbox.setDisable(true);
       btnEditBacklog.setDisable(true);
+      btnEditCreator.setDisable(true);
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       thisStage.setTitle("Edit Story");
       btnCreateStory.setText("Save");
@@ -270,6 +275,16 @@ public class StoryDialogController {
             } else {
               btnEditBacklog.setDisable(true);
             }
+          }
+        }
+    );
+
+    storyCreatorList.getSelectionModel().selectedItemProperty().addListener(
+        (observable, oldValue, newValue) -> {
+          if (newValue != null) {
+            btnEditCreator.setDisable(false);
+          } else {
+            btnEditCreator.setDisable(true);
           }
         }
     );
@@ -948,7 +963,7 @@ public class StoryDialogController {
     List<Backlog> tempBacklogList = new ArrayList<>(backlogs);
     Backlog selectedBacklog = backlogCombo.getSelectionModel().getSelectedItem();
     if (selectedBacklog != null) {
-      mainApp.showBacklogDialogWithinProject(selectedBacklog, thisStage);
+      mainApp.showBacklogDialogNested(selectedBacklog, thisStage);
       backlogs.setAll(tempBacklogList);
       backlogCombo.getSelectionModel().select(selectedBacklog);
     }
@@ -969,6 +984,43 @@ public class StoryDialogController {
         if (!tempBacklogList.contains(backlog)) {
           backlogs.setAll(tempNewBacklogList);
           backlogCombo.getSelectionModel().select(backlog);
+          break;
+        }
+      }
+    }
+  }
+
+  /**
+   * A button which when clicked can edit the selected backlog in the backlog combo box.
+   * Also adds to undo/redo stack so the edit is undoable.
+   * @param event Button click
+   */
+  @FXML
+  protected void editCreator(ActionEvent event) {
+    List<Person> tempCreatorList = new ArrayList<>(availablePeople);
+    Person selectedPerson = storyCreatorList.getSelectionModel().getSelectedItem();
+    if (selectedPerson != null) {
+      mainApp.showPersonDialogWithinTeam(selectedPerson, thisStage);
+      availablePeople.setAll(tempCreatorList);
+      storyCreatorList.getSelectionModel().select(selectedPerson);
+    }
+  }
+
+  /**
+   * A button which when clicked can add a backlog to the system.
+   * Also adds to undo/redo stack so creation is undoable.
+   * @param event Button click
+   */
+  @FXML
+  protected void addNewCreator(ActionEvent event) {
+    List<Person> tempCreatorList = new ArrayList<>(availablePeople);
+    mainApp.showPersonDialog(CreateOrEdit.CREATE);
+    if (!storyCreatorList.isDisabled()) {
+      List<Person> tempNewCreatorList = new ArrayList<>(mainApp.getPeople());
+      for (Person creator : tempNewCreatorList) {
+        if (!tempCreatorList.contains(creator)) {
+          availablePeople.setAll(tempNewCreatorList);
+          storyCreatorList.getSelectionModel().select(creator);
           break;
         }
       }

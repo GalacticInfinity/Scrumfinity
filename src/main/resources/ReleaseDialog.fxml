@@ -7,7 +7,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="371.0" prefWidth="451.0" stylesheets="@font.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.ReleaseDialogController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="371.0" prefWidth="451.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.ReleaseDialogController">
     <children>
         <HBox alignment="BOTTOM_LEFT" prefWidth="520.0">
             <children>
@@ -33,7 +33,7 @@
         </HBox>
         <HBox prefHeight="100.0" prefWidth="434.0">
             <children>
-                <Label prefHeight="25.0" prefWidth="125.0" text="Description:*">
+                <Label prefHeight="25.0" prefWidth="125.0" text="Description:">
                     <font>
                         <Font size="15.0" />
                     </font>
@@ -46,7 +46,7 @@
         </HBox>
       <HBox prefHeight="100.0" prefWidth="200.0">
          <children>
-            <Label prefHeight="28.0" prefWidth="125.0" text="Release Notes:*">
+            <Label prefHeight="28.0" prefWidth="125.0" text="Release Notes:">
                <font>
                   <Font size="15.0" />
                </font>

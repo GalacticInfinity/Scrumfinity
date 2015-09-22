@@ -18,6 +18,8 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
+import seng302.group5.controller.enums.DialogMode;
+import seng302.group5.model.Backlog;
 import seng302.group5.model.Person;
 import seng302.group5.model.Role;
 import seng302.group5.model.Skill;
@@ -46,8 +48,11 @@ public class PersonDialogController {
   private Main mainApp;
   private Stage thisStage;
   private CreateOrEdit createOrEdit;
+  private DialogMode dialogMode;
   private Person person;
   private Person lastPerson;
+  private Skill poSkill;        // the product owner skill
+  private boolean ownsBacklog;  // person owns a backlog
 
   private ObservableList<Skill> availableSkills = FXCollections.observableArrayList();
   private ObservableList<Skill> selectedSkills = FXCollections.observableArrayList();
@@ -67,6 +72,7 @@ public class PersonDialogController {
                               Person person) {
     this.mainApp = mainApp;
     this.thisStage = thisStage;
+    this.dialogMode = DialogMode.DEFAULT_MODE;
 
     String os = System.getProperty("os.name");
 
@@ -104,6 +110,23 @@ public class PersonDialogController {
 
     btnCreatePerson.setDefaultButton(true);
     thisStage.setResizable(false);
+
+    poSkill = null;
+    for (Role role : mainApp.getRoles()) {
+      if (role.getLabel().equals("PO")) {
+        poSkill = role.getRequiredSkill();
+        break;
+      }
+    }
+    ownsBacklog = false;
+    if (createOrEdit == CreateOrEdit.EDIT) {
+      for (Backlog backlog : mainApp.getBacklogs()) {
+        if (backlog.getProductOwner().equals(person)) {
+          ownsBacklog = true;
+          break;
+        }
+      }
+    }
 
     // Handle TextField text changes.
     personLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -146,6 +169,17 @@ public class PersonDialogController {
         checkButtonDisabled();
       }
     });
+  }
+
+  /**
+   * Set up the dialog to be in backlog mode.
+   */
+  public void setupBacklogMode() {
+    dialogMode = DialogMode.BACKLOG_MODE;
+    if (createOrEdit == CreateOrEdit.CREATE) {
+      this.selectedSkills.add(poSkill);
+      this.availableSkills.remove(poSkill);
+    }
   }
 
   /**
@@ -249,7 +283,7 @@ public class PersonDialogController {
    */
   @FXML
   protected void btnCancelClick(ActionEvent event) {
-    if (createOrEdit == createOrEdit.EDIT && Settings.correctList(person)) {
+    if (createOrEdit == CreateOrEdit.EDIT && Settings.correctList(person)) {
       mainApp.refreshList(person);
     }
     thisStage.close();
@@ -355,6 +389,16 @@ public class PersonDialogController {
             alert.setContentText(String.format(
                 "%s already has the role %s in the team %s with the required skill %s",
                 person, role, team, roleSkill));
+            alert.showAndWait();
+            return;
+          }
+        }
+        if (dialogMode == DialogMode.BACKLOG_MODE || ownsBacklog) {
+          if (selectedSkill.equals(poSkill)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Cannot Remove Product Owner Skill");
+            alert.setHeaderText(null);
+            alert.setContentText("This person is or will be the product owner of a backlog.");
             alert.showAndWait();
             return;
           }

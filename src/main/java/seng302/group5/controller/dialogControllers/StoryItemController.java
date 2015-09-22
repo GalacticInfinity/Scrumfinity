@@ -75,6 +75,14 @@ public class StoryItemController {
     dinoGif.setFitHeight(28);
     dinoGif.setFitWidth(28);
 
+    updateDino();
+
+    updateProgBar();
+
+    setupLists();
+  }
+
+  public void updateDino() {
     if (this.story.percentComplete() == 0.0 && this.story.percentInProg() == 0.0) {
       dinoGif.setImage(notStarted);
       SBImage.setImage(notStarted);
@@ -87,15 +95,10 @@ public class StoryItemController {
 
     }
     storyPane.setGraphic(dinoGif);
-
-    progBar();
-
-    setupLists();
   }
 
 
-  public void progBar() {
-
+  public void updateProgBar() {
     int totalSpace = 180;
     float doneSpace = totalSpace*story.percentComplete();
     float inProgSpace = totalSpace*story.percentInProg();
@@ -104,7 +107,6 @@ public class StoryItemController {
     doneBar.setWidth(doneSpace);
     inProgBar.setWidth(inProgSpace);
     notStartedBar.setWidth(notStartedSpace);
-
   }
 
   /**
@@ -148,6 +150,8 @@ public class StoryItemController {
         if (checkVBox(event)) {
           addToBottom(notStartedList, (Node) event.getGestureSource());
           generateUndoRedoObject(event.getGestureSource(), Status.NOT_STARTED);
+          updateDino();
+          updateProgBar();
         }
       }
     });
@@ -158,6 +162,9 @@ public class StoryItemController {
         if (checkVBox(event)) {
           addToBottom(inProgressList, (Node) event.getGestureSource());
           generateUndoRedoObject(event.getGestureSource(), Status.IN_PROGRESS);
+          updateDino();
+          updateProgBar();
+
         }
       }
     });
@@ -168,6 +175,8 @@ public class StoryItemController {
         if (checkVBox(event)) {
           addToBottom(verifyList, (Node) event.getGestureSource());
           generateUndoRedoObject(event.getGestureSource(), Status.VERIFY);
+          updateDino();
+          updateProgBar();
         }
       }
     });
@@ -178,6 +187,8 @@ public class StoryItemController {
         if (checkVBox(event)) {
           addToBottom(doneList, (Node) event.getGestureSource());
           generateUndoRedoObject(event.getGestureSource(), Status.DONE);
+          updateDino();
+          updateProgBar();
         }
       }
     });

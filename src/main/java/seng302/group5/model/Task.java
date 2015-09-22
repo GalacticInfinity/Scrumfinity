@@ -1,5 +1,6 @@
 package seng302.group5.model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.IdentityHashMap;
@@ -20,10 +21,8 @@ public class Task implements AgileItem, Comparable<Task> {
   private String impediments;
   private Status status;
   private List<Person> assignedPeople;
-  private Map<Person, Integer> spentEffort;
   private List<Effort> efforts;
-
-//TODO Come back once logging effort is decided and modify the spenteffort to show the result of each effort for each person.
+  private LocalDate doneDate;
 
   /**
    * Default constructor for task. Sets all String to empty strings, initializes list/maps.
@@ -36,8 +35,8 @@ public class Task implements AgileItem, Comparable<Task> {
     this.impediments = "";
     this.status = Status.NOT_STARTED;
     assignedPeople = new ArrayList<>();
-    spentEffort = new IdentityHashMap<>();
     this.efforts = new ArrayList<>();
+    this.doneDate = null;
   }
 
   public Task(String label, String description, Integer estimation, Status status,
@@ -48,9 +47,9 @@ public class Task implements AgileItem, Comparable<Task> {
     this.estimation = estimation;
     this.impediments = "";
     this.assignedPeople = new ArrayList<>();
-    this.spentEffort = new IdentityHashMap<>();
     this.efforts = new ArrayList<>();
     addAllTaskPeople(persons);
+    this.doneDate = null;
   }
 
   /**
@@ -65,10 +64,9 @@ public class Task implements AgileItem, Comparable<Task> {
     this.status = clone.getStatus();
     assignedPeople = new ArrayList<>();
     assignedPeople.addAll(clone.getTaskPeople());
-    spentEffort = new IdentityHashMap<>();
-    spentEffort.putAll(clone.getSpentEffort());
     efforts = new ArrayList<>();
     efforts.addAll(clone.getEfforts());
+    this.doneDate = clone.getDoneDate();
   }
 
   @Override
@@ -149,17 +147,14 @@ public class Task implements AgileItem, Comparable<Task> {
 
   public void removeTaskPerson(Person person) {
     assignedPeople.remove(person);
-    spentEffort.remove(person);
   }
 
   public void addTaskPerson(Person person) {
     assignedPeople.add(person);
-    spentEffort.put(person, 0);
   }
 
   public void removeAllTaskPeople() {
     assignedPeople.clear();
-    spentEffort.clear();
   }
 
   public void addAllTaskPeople(List<Person> peopleList) {
@@ -170,35 +165,19 @@ public class Task implements AgileItem, Comparable<Task> {
 
   public void setStatus(Status status) {
     this.status = status;
+    if (status == Status.DONE && doneDate == null) {
+      this.doneDate = LocalDate.now();
+    }
   }
 
   public Status getStatus() {
     return this.status;
   }
 
-  public Map<Person, Integer> getSpentEffort() {
-    return Collections.unmodifiableMap(spentEffort);
-  }
+  public LocalDate getDoneDate() {return doneDate;}
 
-  /**
-   * Adding effort one person at a time
-   * @param person who did their effort
-   * @param effort their effort (in hours)
-   */
-  public void updateSpentEffort(Person person, Integer effort) {
-    if (spentEffort.containsKey(person)) {
-      spentEffort.remove(person);
-    }
-    spentEffort.put(person, effort);
-  }
-
-  /**
-   * Adds all spent effort for a map. Deletes the previous map.
-   * @param effortMap effortMap to be copied in
-   */
-  public void updateSpentEffort(Map<Person, Integer> effortMap) {
-    spentEffort.clear();
-    spentEffort.putAll(effortMap);
+  public void setDoneDate(LocalDate date) {
+    this.doneDate = date;
   }
 
   /**
@@ -218,11 +197,9 @@ public class Task implements AgileItem, Comparable<Task> {
       for (Person person : clone.getTaskPeople()) {
         this.assignedPeople.add(person);
       }
-      for (Map.Entry<Person, Integer> entry : clone.getSpentEffort().entrySet()) {
-        spentEffort.put(entry.getKey(), entry.getValue());
-      }
       this.efforts.clear();
       this.efforts.addAll(clone.getEfforts());
+      this.doneDate = clone.getDoneDate();
     }
   }
 
@@ -271,13 +248,11 @@ public class Task implements AgileItem, Comparable<Task> {
                                : task.assignedPeople != null) {
       return false;
     }
-
-    if (efforts != null ? ! efforts.equals(task.efforts) : task.efforts != null) {
+    if (doneDate != null ? !doneDate.equals(task.doneDate) : task.doneDate != null) {
       return false;
     }
 
-    return !(spentEffort != null ? !spentEffort.equals(task.spentEffort)
-                                 : task.spentEffort != null);
+    return !(efforts != null ? ! efforts.equals(task.efforts) : task.efforts != null);
 
   }
 
@@ -289,7 +264,7 @@ public class Task implements AgileItem, Comparable<Task> {
     result = 31 * result + (impediments != null ? impediments.hashCode() : 0);
     result = 31 * result + status.hashCode();
     result = 31 * result + (assignedPeople != null ? assignedPeople.hashCode() : 0);
-    result = 31 * result + (spentEffort != null ? spentEffort.hashCode() : 0);
+    result = 31 * result + (doneDate != null ? doneDate.hashCode() : 0);
     result = 31 * result + (efforts != null ? efforts.hashCode() : 0);
     return result;
   }
