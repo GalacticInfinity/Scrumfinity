@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import javax.crypto.AEADBadTagException;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -28,6 +26,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
+import seng302.group5.controller.enums.DialogMode;
 import seng302.group5.model.AgileHistory;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Project;
@@ -65,6 +64,7 @@ public class ProjectDialogController {
   private Main mainApp;
   private Stage thisStage;
   private CreateOrEdit createOrEdit;
+  private DialogMode dialogMode;
   private Project project = new Project();
   private Project lastProject;
   private ObservableList<AgileHistory> allocatedTeams = FXCollections.observableArrayList();
@@ -87,6 +87,7 @@ public class ProjectDialogController {
                               Project project) {
     this.mainApp = mainApp;
     this.thisStage = thisStage;
+    this.dialogMode = DialogMode.DEFAULT_MODE;
     teamStartDate.setValue(LocalDate.now());
 
     String os = System.getProperty("os.name");
@@ -185,6 +186,17 @@ public class ProjectDialogController {
     });
   }
 
+  /**
+   * Set up the dialog to be in sprint mode.
+   * @param backlog the backlog to automatically select.
+   */
+  public void setupSprintMode(Backlog backlog) {
+    dialogMode = DialogMode.SPRINT_MODE;
+    backlogComboBox.getSelectionModel().select(backlog);
+    backlogComboBox.setDisable(true);
+    btnNewBacklog.setDisable(true);
+  }
+
   private void checkButtonDisabled() {
     Backlog selectedBacklog = backlogComboBox.getSelectionModel().getSelectedItem();
     Backlog projectBacklog = project.getBacklog();
@@ -281,23 +293,6 @@ public class ProjectDialogController {
       }
     }
     return inputProjectLabel;
-  }
-
-  /**
-   * Parse a string containing a project name. Throws exceptions if input is not valid.
-   *
-   * @param inputProjectName String of project name
-   * @return Inputted project name if it is valid.
-   * @throws Exception Exception with message explaining why input is invalid.
-   */
-  private String parseProjectName(String inputProjectName) throws Exception {
-    inputProjectName = inputProjectName.trim();
-
-    if (inputProjectName.isEmpty()) {
-      throw new Exception("Project Name is empty.");
-    } else {
-      return inputProjectName;
-    }
   }
 
   /**
@@ -501,7 +496,7 @@ public class ProjectDialogController {
     int noErrors = 0;
 
     String projectLabel = "";
-    String projectName = "";
+    String projectName = projectNameField.getText().trim();
     String projectDescription = projectDescriptionField.getText().trim();
     Backlog selectedBacklog = backlogComboBox.getValue();
     if (selectedBacklog == noBacklog) {   // Unassign a backlog
@@ -510,13 +505,6 @@ public class ProjectDialogController {
 
     try {
       projectLabel = parseProjectLabel(projectLabelField.getText());
-    } catch (Exception e) {
-      noErrors++;
-      errors.append(String.format("%s\n", e.getMessage()));
-    }
-
-    try {
-      projectName = parseProjectName(projectNameField.getText());
     } catch (Exception e) {
       noErrors++;
       errors.append(String.format("%s\n", e.getMessage()));
@@ -594,7 +582,7 @@ public class ProjectDialogController {
             click.getButton() == MouseButton.PRIMARY &&
             !isEmpty()) {
           Team selectedTeam = availableTeamsList.getSelectionModel().getSelectedItem();
-          mainApp.showTeamDialogWithinProject(selectedTeam, thisStage);
+          mainApp.showTeamDialogWithinNested(selectedTeam, thisStage);
           availableTeams.remove(selectedTeam);
           availableTeams.add(selectedTeam);
           //This is a hella shitty fix to get the list to update when nested editing coz fml.
@@ -635,7 +623,7 @@ public class ProjectDialogController {
     List<Backlog> tempBacklogList = new ArrayList<>(availableBacklogs);
     Backlog selectedBacklog = backlogComboBox.getSelectionModel().getSelectedItem();
     if (selectedBacklog != null) {
-      mainApp.showBacklogDialogWithinProject(selectedBacklog, thisStage);
+      mainApp.showBacklogDialogNested(selectedBacklog, thisStage);
       availableBacklogs.setAll(tempBacklogList);
       backlogComboBox.getSelectionModel().select(selectedBacklog);
     }

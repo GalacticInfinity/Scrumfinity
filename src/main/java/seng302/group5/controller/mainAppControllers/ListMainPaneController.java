@@ -1,13 +1,16 @@
 package seng302.group5.controller.mainAppControllers;
 
 import java.io.File;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -35,13 +38,14 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import javafx.stage.Stage;
+
 import seng302.group5.Main;
 import seng302.group5.controller.dialogControllers.BurndownController;
 import seng302.group5.controller.dialogControllers.ScrumBoardController;
 import seng302.group5.model.AgileHistory;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Backlog;
+import seng302.group5.model.Estimate;
 import seng302.group5.model.Release;
 import seng302.group5.model.Role;
 import seng302.group5.model.Sprint;
@@ -568,7 +572,12 @@ public class ListMainPaneController {
     text4.setFill(Color.BLACK);
     text4.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
 
-    Text text5 = new Text(project.getProjectName());
+    Text text5;
+    if (project.getProjectName().isEmpty()) {
+      text5 = new Text("N/A");
+    } else {
+      text5 = new Text(project.getProjectName());
+    }
     text5.setFill(Color.BLACK);
     text5.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
 
@@ -698,6 +707,31 @@ public class ListMainPaneController {
   }
 
   /**
+   * Calculates the median velocity of a team by getting all the teams sprints and getting the
+   * median.
+   * @param team the team to calcualte the median velocity for.
+   * @return the median velocity of the team.
+   */
+  private double teamVelocity(Team team) {
+    SortedSet velocities = new TreeSet<>();
+    double velocity = 0.0;
+    for (Sprint sprint : mainApp.getSprints()) {
+      if (sprint.getSprintTeam().equals(team)) {
+        velocities.add(sprintVelocity(sprint));
+      }
+    }
+    int size = velocities.size();
+    int median = size / 2;
+    for (Object v : velocities) {
+      if (median == 0) {
+        velocity = (double) v;
+      }
+      median -= 1;
+    }
+    return velocity;
+  }
+
+  /**
    * Displays the information about a given team in the text pane.
    *
    * @param team The team to display in the text pane.
@@ -714,6 +748,16 @@ public class ListMainPaneController {
     Text textLabelBody = new Text(team.getLabel());
     textLabelBody.setFill(Color.rgb(1, 0, 1));
     textLabelBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text textVelocityHeader = new Text("\nMedian Team Velocity: ");
+    textVelocityHeader.setFill(Color.rgb(1, 0, 1));
+    textVelocityHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    double velocity = teamVelocity(team);
+
+    Text textVelocityBody = new Text(String.valueOf(round(velocity, 2)) + " Story points per week.");
+    textVelocityBody.setFill(Color.rgb(1, 0, 1));
+    textVelocityBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
 
     Text textDescriptionHeader = new Text("\nTeam Description:\n");
     textDescriptionHeader.setFill(Color.rgb(1, 0, 1));
@@ -818,6 +862,7 @@ public class ListMainPaneController {
     }
 
     displayTextFlow.getChildren().addAll(textHeader, textLabelHeader, textLabelBody,
+                                         textVelocityHeader, textVelocityBody,
                                          textDescriptionHeader, textDescriptionBody,
                                          textMembersHeader);
     displayTextFlow.getChildren().addAll(textMembersBody);
@@ -825,6 +870,25 @@ public class ListMainPaneController {
     displayTextFlow.getChildren().addAll(projectsWithTeamBody);
     displayTextFlow.getChildren().addAll(sprintsHeader);
     displayTextFlow.getChildren().addAll(sprintsBody);
+  }
+
+  /**
+   * Returns the release velocity by calculating the all the releases sprint velocities and
+   * averaging them.
+   * @param release the release who's velocity is to be calculated.
+   * @return the releases velocity.
+   */
+  private double releaseVelocity(Release release){
+    int days = 0;
+    double points = 0.0;
+    Map<Story, Integer> estimates = release.getProjectRelease().getBacklog().getSizes() ;
+    for (Sprint sprint : mainApp.getSprints()) {
+      if (sprint.getSprintRelease() == release) {
+        days += 1;
+        points += sprintVelocity(sprint);
+      }
+    }
+    return points/days;
   }
 
   /**
@@ -845,12 +909,20 @@ public class ListMainPaneController {
     textLabelBody.setFill(Color.rgb(1, 0, 1));
     textLabelBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
 
+    Text textVelocityHeader = new Text("\nRelease Velocity: ");
+    textVelocityHeader.setFill(Color.rgb(1, 0, 1));
+    textVelocityHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    Text textVelocityBody = new Text(String.valueOf(round(releaseVelocity(release), 2)) + " story points per week.");
+    textVelocityBody.setFill(Color.rgb(1, 0, 1));
+    textVelocityBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
     Text textDescriptionHeader = new Text("\nRelease Description:\n");
     textDescriptionHeader.setFill(Color.rgb(1, 0, 1));
     textDescriptionHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
     Text textDescriptionBody;
-    if (release.getReleaseDescription().length() != 0) {
+    if (!release.getReleaseDescription().isEmpty()) {
       textDescriptionBody = new Text(release.getReleaseDescription());
     } else {
       textDescriptionBody = new Text("N/A");
@@ -876,7 +948,7 @@ public class ListMainPaneController {
     textNotesHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
     Text textNotesBody;
-    if (release.getReleaseDescription().length() != 0) {
+    if (!release.getReleaseNotes().isEmpty()) {
       textNotesBody = new Text(release.getReleaseNotes());
     } else {
       textNotesBody = new Text("N/A");
@@ -920,6 +992,7 @@ public class ListMainPaneController {
     }
 
     displayTextFlow.getChildren().addAll(textHeader, textLabelHeader, textLabelBody,
+                                         textVelocityHeader, textVelocityBody,
                                          textDescriptionHeader, textDescriptionBody, textDateHeader,
                                          textDateBody, textNotesHeader, textNotesBody,
                                          textProjectHeader, textProjectBody, textSprintsHeader);
@@ -1325,7 +1398,44 @@ public class ListMainPaneController {
     }
   }
 
+  /**
+   * Rounds velocity when it has a large amount of decimal places
+   * pulled from stack overflow
+   * https://stackoverflow.com/questions/2808535/round-a-double-to-2-decimal-places
+   * @param value the number to be rounded
+   * @param places the number of decimal places
+   * @return the rounded number.
+   */
+  public static double round(double value, int places) {
+    if (places < 0) throw new IllegalArgumentException();
 
+    BigDecimal bd = new BigDecimal(value);
+    bd = bd.setScale(places, RoundingMode.HALF_UP);
+    return bd.doubleValue();
+  }
+
+  /**Function that calculates the velocity of a team working on a sprint.
+   * @param sprint the sprint which's velocity will be calculated
+   * @return the velocity as a double.
+   */
+  private double sprintVelocity(Sprint sprint){
+    int days = 0;
+    if (sprint.getSprintStart().getYear() == sprint.getSprintEnd().getYear()) {
+      days = sprint.getSprintEnd().getDayOfYear() - sprint.getSprintStart().getDayOfYear();
+    } else {
+      days = (365- sprint.getSprintStart().getDayOfYear()) + sprint.getSprintEnd().getDayOfYear();
+    }
+    int points = 0;
+    Map<Story, Integer> estimates = sprint.getSprintBacklog().getSizes();
+    for (Map.Entry<Story, Integer> entry : estimates.entrySet())
+    {
+      if (sprint.getSprintStories().contains(entry.getKey())) {
+        points += entry.getValue();
+      }
+    }
+    double velocity = (points+0.0)/(days/7.0);
+    return velocity;
+  }
 
   /**
    * Displays the information about a given sprint in the text pane.
@@ -1344,6 +1454,16 @@ public class ListMainPaneController {
     Text textLabelBody = new Text(sprint.getLabel());
     textLabelBody.setFill(Color.rgb(1, 0, 1));
     textLabelBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+
+    Text textVelocityHeader = new Text("\nSprint Velocity: ");
+    textVelocityHeader.setFill(Color.rgb(1, 0, 1));
+    textVelocityHeader.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
+
+    double velocity = sprintVelocity(sprint);
+
+    Text textVelocityBody = new Text(String.valueOf(round(velocity, 2)) + " Story points per week.");
+    textVelocityBody.setFill(Color.rgb(1, 0, 1));
+    textVelocityBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
 
     Text textNameHeader = new Text("\nSprint Full Name: ");
     textNameHeader.setFill(Color.rgb(1, 0, 1));
@@ -1413,6 +1533,7 @@ public class ListMainPaneController {
     Hyperlink sortToggle = new Hyperlink(prioritisedOrder);
 
     displayTextFlow.getChildren().addAll(textHeader, textLabelHeader, textLabelBody,
+                                         textVelocityHeader, textVelocityBody,
                                          textNameHeader, textNameBody, textDescriptionHeader,
                                          textDescriptionBody, textBacklogHeader, textBacklogBody,
                                          textProjectHeader, textProjectBody, textTeamHeader,

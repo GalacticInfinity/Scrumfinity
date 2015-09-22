@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.shape.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
@@ -9,7 +10,7 @@
 
 <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="788.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.SprintDialogController">
    <children>
-      <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="482.0" stylesheets="@font.css">
+      <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="482.0" stylesheets="@style.css">
          <children>
             <HBox alignment="BOTTOM_LEFT" prefHeight="32.0" prefWidth="434.0" spacing="10.0">
                <children>
@@ -38,7 +39,7 @@
                         <Font size="15.0" />
                      </font>
                      <HBox.margin>
-                        <Insets left="2.0" />
+                        <Insets />
                      </HBox.margin>
                   </Label>
                   <TextField fx:id="sprintNameField" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="293.0" promptText="Full name of sprint">
@@ -55,7 +56,7 @@
                         <Font size="15.0" />
                      </font>
                      <HBox.margin>
-                        <Insets left="2.0" />
+                        <Insets />
                      </HBox.margin>
                   </Label>
                   <TextArea fx:id="sprintDescriptionField" minHeight="130.0" prefHeight="130.0" prefWidth="299.0" promptText="Description of sprint" wrapText="true">
@@ -65,37 +66,58 @@
                   </TextArea>
                </children>
             </HBox>
-            <HBox prefHeight="21.0" prefWidth="429.0">
+            <HBox prefHeight="25.0" prefWidth="429.0">
                <children>
                   <Label prefHeight="25.0" prefWidth="135.0" text="Backlog:*">
                      <font>
                         <Font size="15.0" />
                      </font>
                      <HBox.margin>
-                        <Insets left="2.0" />
+                        <Insets />
                      </HBox.margin>
                   </Label>
                   <ComboBox fx:id="sprintBacklogCombo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" promptText="Available Backlogs" visibleRowCount="5">
                      <HBox.margin>
-                        <Insets left="10.0" top="2.0" />
+                        <Insets left="10.0" />
                      </HBox.margin>
                   </ComboBox>
+                  <Button fx:id="btnNewBacklog" maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" onAction="#addNewBacklog" prefHeight="25.0" prefWidth="25.0">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="ToolbarQuickAdd.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <HBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="btnEditBacklog" maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" onAction="#editBacklog" prefHeight="25.0" prefWidth="25.0">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="toolbar_edit.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
                </children>
                <VBox.margin>
-                  <Insets top="4.0" />
+                  <Insets top="5.0" />
                </VBox.margin>
             </HBox>
-            <HBox prefHeight="21.0" prefWidth="429.0">
+            <HBox prefHeight="25.0" prefWidth="429.0">
                <children>
-                  <Label prefHeight="21.0" prefWidth="164.0" text="Project:*">
+                  <Label prefHeight="25.0" prefWidth="153.0" text="Project:*">
                      <font>
                         <Font size="15.0" />
                      </font>
                      <HBox.margin>
-                        <Insets left="2.0" />
+                        <Insets />
                      </HBox.margin>
                   </Label>
-                  <Label fx:id="sprintProjectLabel" prefHeight="21.0" prefWidth="335.0" text="No Project Found">
+                  <Label fx:id="sprintProjectLabel" prefHeight="25.0" prefWidth="192.0" text="No Project Found">
                      <font>
                         <Font size="15.0" />
                      </font>
@@ -103,19 +125,40 @@
                         <Tooltip text="The project is found via the backlog." />
                      </tooltip>
                   </Label>
+                  <Button fx:id="btnNewProject" maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" onAction="#addNewProject" prefHeight="25.0" prefWidth="25.0">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="ToolbarQuickAdd.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <HBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="btnEditProject" maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" onAction="#editProject" prefHeight="25.0" prefWidth="25.0">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="toolbar_edit.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
                </children>
                <VBox.margin>
-                  <Insets top="4.0" />
+                  <Insets top="5.0" />
                </VBox.margin>
             </HBox>
-            <HBox prefHeight="28.0" prefWidth="463.0">
+            <HBox prefHeight="25.0" prefWidth="463.0">
                <children>
                   <Label prefHeight="25.0" prefWidth="135.0" text="Team:*">
                      <font>
                         <Font size="15.0" />
                      </font>
                      <HBox.margin>
-                        <Insets left="2.0" />
+                        <Insets />
                      </HBox.margin>
                   </Label>
                   <ComboBox fx:id="sprintTeamCombo" prefHeight="25.0" prefWidth="200.0" promptText="Avaliable Teams" visibleRowCount="5">
@@ -123,19 +166,43 @@
                         <Insets left="10.0" />
                      </HBox.margin>
                   </ComboBox>
+                  <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" prefHeight="25.0" prefWidth="25.0" textAlignment="CENTER">
+                     <HBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </HBox.margin>
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="question_mark.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <tooltip>
+                        <Tooltip text="Edit the project to allocate teams" />
+                     </tooltip>
+                  </Label>
+                  <Button fx:id="btnEditTeam" maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" onAction="#editTeam" prefHeight="25.0" prefWidth="25.0">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="toolbar_edit.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
                </children>
                <VBox.margin>
-                  <Insets top="4.0" />
+                  <Insets top="5.0" />
                </VBox.margin>
             </HBox>
-            <HBox prefHeight="28.0" prefWidth="483.0">
+            <HBox prefHeight="25.0" prefWidth="483.0">
                <children>
                   <Label prefHeight="25.0" prefWidth="135.0" text="Release:*">
                      <font>
                         <Font size="15.0" />
                      </font>
                      <HBox.margin>
-                        <Insets left="2.0" />
+                        <Insets />
                      </HBox.margin>
                   </Label>
                   <ComboBox fx:id="sprintReleaseCombo" prefHeight="25.0" prefWidth="200.0" promptText="Avaliable Releases" visibleRowCount="5">
@@ -155,12 +222,12 @@
                   </Label>
                </children>
                <VBox.margin>
-                  <Insets top="4.0" />
+                  <Insets top="5.0" />
                </VBox.margin>
             </HBox>
             <HBox prefHeight="25.0" prefWidth="200.0">
                <children>
-                  <Label prefWidth="147.0" text="Impediments:">
+                  <Label prefHeight="20.0" prefWidth="145.0" text="Impediments:">
                      <font>
                         <Font size="15.0" />
                      </font>
@@ -178,7 +245,7 @@
                         <Font size="15.0" />
                      </font>
                      <HBox.margin>
-                        <Insets left="2.0" />
+                        <Insets />
                      </HBox.margin>
                   </Label>
                   <DatePicker fx:id="sprintStartDate" prefHeight="25.0" prefWidth="140.0" />

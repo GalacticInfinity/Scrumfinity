@@ -963,7 +963,7 @@ public class StoryDialogController {
     List<Backlog> tempBacklogList = new ArrayList<>(backlogs);
     Backlog selectedBacklog = backlogCombo.getSelectionModel().getSelectedItem();
     if (selectedBacklog != null) {
-      mainApp.showBacklogDialogWithinProject(selectedBacklog, thisStage);
+      mainApp.showBacklogDialogNested(selectedBacklog, thisStage);
       backlogs.setAll(tempBacklogList);
       backlogCombo.getSelectionModel().select(selectedBacklog);
     }
