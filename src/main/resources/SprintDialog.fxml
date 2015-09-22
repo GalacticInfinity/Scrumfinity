@@ -77,9 +77,33 @@
                   </Label>
                   <ComboBox fx:id="sprintBacklogCombo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" promptText="Available Backlogs" visibleRowCount="5">
                      <HBox.margin>
-                        <Insets left="10.0" top="2.0" />
+                        <Insets left="10.0" />
                      </HBox.margin>
                   </ComboBox>
+                  <Button fx:id="btnNewBacklog" maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" onAction="#addNewBacklog" prefHeight="25.0" prefWidth="25.0">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="ToolbarQuickAdd.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <HBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="btnEditBacklog" maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" onAction="#editBacklog" prefHeight="25.0" prefWidth="25.0">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="toolbar_edit.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <tooltip>
+                        <Tooltip text="Edit Item" />
+                     </tooltip>
+                  </Button>
                </children>
                <VBox.margin>
                   <Insets top="4.0" />
@@ -125,7 +149,7 @@
                   </ComboBox>
                </children>
                <VBox.margin>
-                  <Insets top="4.0" />
+                  <Insets />
                </VBox.margin>
             </HBox>
             <HBox prefHeight="28.0" prefWidth="483.0">

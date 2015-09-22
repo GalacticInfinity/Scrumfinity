@@ -75,6 +75,8 @@ public class SprintDialogController {
   @FXML private Label releaseDate;
   @FXML private TextField sprintImpedimentsField;
   @FXML private Button btnNewStory;
+  @FXML private Button btnNewBacklog;
+  @FXML private Button btnEditBacklog;
 
   private Main mainApp;
   private Stage thisStage;
@@ -98,9 +100,6 @@ public class SprintDialogController {
   private Set<Story> otherSprintsStories;
 
   private CompositeUndoRedo tasksUndoRedo;
-
-
-  private boolean comboListenerFlag;
 
   /**
    * Sets up the controller on start up.
@@ -141,12 +140,19 @@ public class SprintDialogController {
 
       sprintTeamCombo.setDisable(true);
       sprintReleaseCombo.setDisable(true);
+      btnEditBacklog.setDisable(true);
+
 
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       thisStage.setTitle("Edit Sprint");
       btnConfirm.setText("Save");
       btnConfirm.setDisable(true);
       initialiseLists();
+      if (sprint.getSprintBacklog() != null) {
+        btnEditBacklog.setDisable(false);
+      } else {
+        btnEditBacklog.setDisable(true);
+      }
 
       sprintGoalField.setText(sprint.getLabel());
       sprintNameField.setText(sprint.getSprintFullName());
@@ -216,6 +222,11 @@ public class SprintDialogController {
       //For disabling the button
       if (createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
+      }
+      if (newValue != null) {
+        btnEditBacklog.setDisable(false);
+      } else {
+        btnEditBacklog.setDisable(true);
       }
     });
 
@@ -338,16 +349,8 @@ public class SprintDialogController {
     allocatedStoriesList.setItems(allocatedStoriesPrioritised);
     taskList.setItems(tasks);
 
-    comboListenerFlag = false;
-
     sprintBacklogCombo.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldBacklog, newBacklog) -> {
-
-          if (comboListenerFlag) {
-            // Get out instantly after resetting flag to false
-            comboListenerFlag = false;
-            return;
-          }
 
           // if the backlog is assigned to a project
           if (projectMap.containsKey(newBacklog)) {
@@ -385,33 +388,15 @@ public class SprintDialogController {
 
             refreshLists();
           } else {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Chosen backlog is not complete");
-            alert.setHeaderText(null);
-            String message = "The backlog you have selected does not contain all the required "
-                             + "information to be able to create a sprint.\n"
-                             + "Do you want to continue?";
-            alert.getDialogPane().setPrefHeight(120);
-            alert.setContentText(message);
-            //checks response
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.get() == ButtonType.OK) {
-              project = null;
-              sprintProjectLabel.setText("No Project Found");
-              sprintTeamCombo.setValue(null);
-              sprintReleaseCombo.setValue(null);
-              sprintTeamCombo.setDisable(true);
-              sprintReleaseCombo.setDisable(true);
-              availableStories.clear();
-              allocatedStoriesPrioritised.clear();
-              allocatedStories.clear();
-            } else {
-              comboListenerFlag = true;
-              Platform.runLater(() -> {
-                // to avoid firing the listener from within itself
-                sprintBacklogCombo.setValue(oldBacklog);
-              });
-            }
+            project = null;
+            sprintProjectLabel.setText("No Project Found");
+            sprintTeamCombo.setValue(null);
+            sprintReleaseCombo.setValue(null);
+            sprintTeamCombo.setDisable(true);
+            sprintReleaseCombo.setDisable(true);
+            availableStories.clear();
+            allocatedStoriesPrioritised.clear();
+            allocatedStories.clear();
           }
         });
     setupListView();
@@ -1007,4 +992,40 @@ public class SprintDialogController {
       }
     }
   }
+
+  /**
+   * A button which when clicked can edit the selected backlog in the backlog combo box.
+   * Also adds to undo/redo stack so the edit is undoable.
+   * @param event Button click
+   */
+  @FXML
+  protected void editBacklog(ActionEvent event) {
+    List<Backlog> tempBacklogList = new ArrayList<>(backlogs);
+    Backlog selectedBacklog = sprintBacklogCombo.getSelectionModel().getSelectedItem();
+    if (selectedBacklog != null) {
+      mainApp.showBacklogDialogNested(selectedBacklog, thisStage);
+      backlogs.setAll(tempBacklogList);
+      sprintBacklogCombo.getSelectionModel().select(selectedBacklog);
+    }
+  }
+
+  /**
+   * A button which when clicked can add a backlog to the system.
+   * Also adds to undo/redo stack so creation is undoable.
+   * @param event Button click
+   */
+  @FXML
+  protected void addNewBacklog(ActionEvent event) {
+    List<Backlog> tempBacklogList = new ArrayList<>(backlogs);
+    mainApp.showBacklogDialog(CreateOrEdit.CREATE);
+    List<Backlog> tempNewBacklogList = new ArrayList<>(mainApp.getBacklogs());
+    for (Backlog backlog : tempNewBacklogList) {
+      if (!tempBacklogList.contains(backlog)) {
+        backlogs.setAll(tempNewBacklogList);
+        sprintBacklogCombo.getSelectionModel().select(backlog);
+        break;
+      }
+    }
+  }
+
 }

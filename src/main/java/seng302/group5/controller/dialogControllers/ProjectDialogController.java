@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import javax.crypto.AEADBadTagException;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -633,7 +631,7 @@ public class ProjectDialogController {
     List<Backlog> tempBacklogList = new ArrayList<>(availableBacklogs);
     Backlog selectedBacklog = backlogComboBox.getSelectionModel().getSelectedItem();
     if (selectedBacklog != null) {
-      mainApp.showBacklogDialogWithinProject(selectedBacklog, thisStage);
+      mainApp.showBacklogDialogNested(selectedBacklog, thisStage);
       availableBacklogs.setAll(tempBacklogList);
       backlogComboBox.getSelectionModel().select(selectedBacklog);
     }

@@ -866,7 +866,7 @@ public class Main extends Application {
    * @param backlog the selected backlog that to be edited form the backlog combo box.
    * @param stage   the stage it is currently on to void unusual behaviour.
    */
-  public void showBacklogDialogWithinProject(Backlog backlog, Stage stage) {
+  public void showBacklogDialogNested(Backlog backlog, Stage stage) {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/BacklogDialog.fxml"));
