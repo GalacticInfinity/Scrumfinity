@@ -1577,6 +1577,7 @@ public class ListMainPaneController {
 
         for (Person person : task.getTaskPeople()) {
           textTaskEffortsBody = new Text("\n\t" + person + ": " + TimeFormat.parseDuration(task.getPersonEffort(person)));
+          sprintTasksText.add(textTaskEffortsBody);
           displayTextFlow.getChildren().add(textTaskEffortsBody);
         }
       }

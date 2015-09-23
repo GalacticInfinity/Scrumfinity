@@ -1102,13 +1102,16 @@ public class Main extends Application {
       Scene backlogDialogScene = new Scene(backlogDialogLayout);
       Stage backlogDialogStage = new Stage();
 
-      if (isInControllerStack(controller, backlog)) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Dialog already open");
-        alert.setHeaderText(null);
-        alert.setContentText("The window you are trying to open is already open in the background.");
-        alert.showAndWait();
-        return;
+      if (backlog != null) {
+        if (isInControllerStack(controller, backlog)) {
+          Alert alert = new Alert(Alert.AlertType.INFORMATION);
+          alert.setTitle("Dialog already open");
+          alert.setHeaderText(null);
+          alert.setContentText(
+              "The window you are trying to open is already open in the background.");
+          alert.showAndWait();
+          return;
+        }
       }
 
       controller.setupController(this, backlogDialogStage, CreateOrEdit.EDIT, backlog);
