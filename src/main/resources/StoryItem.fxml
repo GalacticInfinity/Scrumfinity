@@ -17,7 +17,7 @@
                <children>
                   <VBox HBox.hgrow="ALWAYS">
                      <children>
-                        <HBox alignment="CENTER" maxHeight="15.0" prefHeight="15.0" VBox.vgrow="NEVER">
+                        <HBox alignment="CENTER" maxHeight="15.0" prefHeight="15.0" style="-fx-background-color: #d8d8d8;" VBox.vgrow="NEVER">
                            <children>
                               <Label alignment="CENTER" prefHeight="15.0" text="Not Started" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
                            </children>
@@ -27,7 +27,7 @@
                   </VBox>
                   <VBox HBox.hgrow="ALWAYS">
                      <children>
-                        <HBox alignment="CENTER" maxHeight="15.0" prefHeight="15.0">
+                        <HBox alignment="CENTER" maxHeight="15.0" prefHeight="15.0" style="-fx-background-color: #e8e8e8;">
                            <children>
                               <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" text="In Progress" HBox.hgrow="ALWAYS" />
                            </children>
@@ -37,7 +37,7 @@
                   </VBox>
                   <VBox HBox.hgrow="ALWAYS">
                      <children>
-                        <HBox alignment="CENTER" maxHeight="15.0" prefHeight="15.0">
+                        <HBox alignment="CENTER" maxHeight="15.0" prefHeight="15.0" style="-fx-background-color: #d8d8d8;">
                            <children>
                               <Label alignment="CENTER" prefHeight="15.0" text="Verify" HBox.hgrow="ALWAYS" />
                            </children>

@@ -90,6 +90,8 @@ public class StoryItemController {
 
     setupLists();
 
+
+
   }
 
   public void updateDino() {
