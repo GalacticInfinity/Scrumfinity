@@ -271,37 +271,39 @@ public class StoryItemController {
           // Mouse is dropped;
           label.setStyle("");
           int indexOfDropTarget = -1;
-          Label sourceLbl = (Label) event.getGestureSource();
+          Label sourceLbl = (Label) event.getSource();
           VBox newRoot = null;
           // Removes dragged label from root, saves index of dragged to label;
           if (notStartedList.getChildren().contains(sourceLbl)) {
+            generateUndoRedoObject(event, Status.NOT_STARTED);
             notStartedList.getChildren().remove(sourceLbl);
             indexOfDropTarget = notStartedList.getChildren().indexOf(sourceLbl);
-            generateUndoRedoObject(event, Status.NOT_STARTED);
           } else if (inProgressList.getChildren().contains(sourceLbl)) {
+            generateUndoRedoObject(event, Status.IN_PROGRESS);
             inProgressList.getChildren().remove(sourceLbl);
             indexOfDropTarget = inProgressList.getChildren().indexOf(sourceLbl);
-            generateUndoRedoObject(event, Status.IN_PROGRESS);
           } else if (verifyList.getChildren().contains(sourceLbl)) {
+            generateUndoRedoObject(event, Status.VERIFY);
             verifyList.getChildren().remove(sourceLbl);
             indexOfDropTarget = verifyList.getChildren().indexOf(sourceLbl);
-            generateUndoRedoObject(event, Status.VERIFY);
           } else if (doneList.getChildren().contains(sourceLbl)) {
+            generateUndoRedoObject(event, Status.DONE);
             doneList.getChildren().remove(sourceLbl);
             indexOfDropTarget = doneList.getChildren().indexOf(sourceLbl);
-            generateUndoRedoObject(event, Status.DONE);
           }
-          int indexOfDrag = root.getChildren().indexOf(label);
+
           // Adds label to root with new listeners
           addWithDragging(root, sourceLbl);
+          int indexOfDrag = root.getChildren().indexOf(event.getSource());
           // Label is now in vbox at bottom
           // Root=correct Vbox, iODT=index of highlighted node, Lbl=label to be moved up
           bringUpNode(root, indexOfDrag, sourceLbl);
+          mainApp.getLMPC().getScrumBoardController().refreshTaskLists();
           event.consume();
         }
       }
     });
-      root.getChildren().add(label);
+    root.getChildren().add(label);
   }
 
   /**
@@ -386,27 +388,27 @@ public class StoryItemController {
    * @param status Status that the task is changed to.
    */
   private void generateUndoRedoObject(MouseDragEvent event, Status status) {
+    int posToInsert = -1;
+    int initialPosition = -1;
+    UndoRedoObject ssUR = new UndoRedoObject();
     // Step 1:Gesture source will always be label, item dragged.
     Label taskLabel = (Label) event.getGestureSource();
-    String taskString = taskLabel.getText();
-    String newPosString = null;
-    int newPosition = -1;
+    String sourceTaskString = taskLabel.getText();
 
+    // Step 2:Get source task string
+    String destinationTaskString = "None";
     if (event.getSource() instanceof Label) {
       Label taskNewPos = (Label) event.getSource();
-      newPosString = taskNewPos.getText();
-      System.out.println("Dragging onto a Label at Pos:" + newPosString);
+      destinationTaskString = taskNewPos.getText();
     } else if (event.getSource() instanceof VBox) {
-      // For when dropped into empty space
       VBox droppedBox = (VBox) event.getSource();
       if (droppedBox.getChildren().size() != 0) {
         Label taskNewPos =
             (Label) droppedBox.getChildren().get(droppedBox.getChildren().size() - 1);
-        newPosString = taskNewPos.getText();
+        destinationTaskString = taskNewPos.getText();
       } else {
-
+        destinationTaskString = sourceTaskString;
       }
-      System.out.println("Dragging onto a VBox at Pos:" + newPosString);
     }
 
     //Step2: Create new and last task(old pre-drag, new after)
@@ -415,57 +417,78 @@ public class StoryItemController {
 
     //Step3: Clone last Task, assign task to newTask
     for (Task task : story.getTasks()) {
-      if (taskString.equals(task.getLabel())) {
+      if (sourceTaskString.equals(task.getLabel())) {
         lastTask = new Task(task);
         newTask = task;
-      }
-      if (task.getLabel().equals(newPosString)) {
-        newPosition = story.getTasks().indexOf(task);
+        break;
       }
     }
-    if (newTask != null && newPosition != -1) {
-      //Step4: set newTask's status, to wherever it was dragged to.
-      // If fake story, create sprint undo/redo, else story.
-      UndoRedo containerUndoRedoObject = new UndoRedoObject();
-      if (story.getLabel().equals("Non-story Tasks")) {
-        Sprint before = new Sprint(sprint);
-        sprint.removeTask(newTask);
-        sprint.addTask(newPosition, newTask);
-        story.removeTask(newTask);
-        story.addTask(newPosition, newTask);
-        newTask.setStatus(status);
-        Sprint after = new Sprint(sprint);
 
-        containerUndoRedoObject.setAgileItem(sprint);
-        containerUndoRedoObject.setAction(Action.SPRINT_EDIT);
-        containerUndoRedoObject.addDatum(before);
-        containerUndoRedoObject.addDatum(after);
+    if (story.getLabel().equals("Non-story Tasks")) {
+      Sprint before = new Sprint(sprint);
+      for (Task task : sprint.getTasks()) {
+        if (task.getLabel().equals(destinationTaskString)) {
+          posToInsert = sprint.getTasks().indexOf(task);
+        }
+        if (task.getLabel().equals(sourceTaskString)) {
+          initialPosition = sprint.getTasks().indexOf(task);
+        }
+      }
+      sprint.removeTask(newTask);
+      story.removeTask(newTask);
+      if (posToInsert <= initialPosition && posToInsert != -1 && initialPosition != -1) {
+        sprint.addTask(posToInsert, newTask);
+        story.addTask(posToInsert, newTask);
+      } else if (posToInsert > initialPosition && posToInsert != -1 && initialPosition != -1) {
+        sprint.addTask(posToInsert - 1, newTask);
+        story.addTask(posToInsert - 1, newTask);
       } else {
-        Story before = new Story(story);
-        story.removeTask(newTask);
-        story.addTask(newPosition, newTask);
-        newTask.setStatus(status);
-        Story after = new Story(story);
-
-        //Step5: Create Story undo/redo Object
-        containerUndoRedoObject.setAgileItem(story);
-        containerUndoRedoObject.setAction(Action.STORY_EDIT);
-        containerUndoRedoObject.addDatum(before);
-        containerUndoRedoObject.addDatum(after);
+        System.out.println("Bad things happened");
       }
-
-      UndoRedoObject taskUndoRedoObject = new UndoRedoObject();
-      taskUndoRedoObject.setAgileItem(newTask);
-      taskUndoRedoObject.setAction(Action.TASK_EDIT);
-      taskUndoRedoObject.addDatum(lastTask);
-      taskUndoRedoObject.addDatum(new Task(newTask));
-
-      CompositeUndoRedo compUndoRedoObject = new CompositeUndoRedo("Undo Task Move");
-      compUndoRedoObject.addUndoRedo(containerUndoRedoObject);
-      compUndoRedoObject.addUndoRedo(taskUndoRedoObject);
-
-      mainApp.newAction(compUndoRedoObject);
+      Sprint after = new Sprint(sprint);
+      ssUR.setAgileItem(sprint);
+      ssUR.setAction(Action.SPRINT_EDIT);
+      ssUR.addDatum(before);
+      ssUR.addDatum(after);
+    } else {
+      Story before = new Story(story);
+      for (Task task : story.getTasks()) {
+        if (task.getLabel().equals(destinationTaskString)) {
+          posToInsert = story.getTasks().indexOf(task);
+        }
+        if (task.getLabel().equals(sourceTaskString)) {
+          initialPosition = story.getTasks().indexOf(task);
+        }
+      }
+      story.removeTask(newTask);
+      if (posToInsert <= initialPosition && posToInsert != -1 && initialPosition != -1) {
+        story.addTask(posToInsert, newTask);
+      } else if (posToInsert > initialPosition && posToInsert != -1 && initialPosition != -1) {
+        story.addTask(posToInsert - 1, newTask);
+      } else {
+        System.out.println("Bad things happened");
+      }
+      Story after = new Story(story);
+      ssUR.setAgileItem(story);
+      ssUR.setAction(Action.STORY_EDIT);
+      ssUR.addDatum(before);
+      ssUR.addDatum(after);
     }
+
+    Task before = new Task(newTask);
+    newTask.setStatus(status);
+    Task after = new Task(newTask);
+    UndoRedoObject taskUR = new UndoRedoObject();
+    taskUR.setAgileItem(newTask);
+    taskUR.setAction(Action.TASK_EDIT);
+    taskUR.addDatum(before);
+    taskUR.addDatum(after);
+
+    CompositeUndoRedo comp = new CompositeUndoRedo("Scrumboard Drag Action");
+    comp.addUndoRedo(ssUR);
+    comp.addUndoRedo(taskUR);
+
+    mainApp.newAction(comp);
   }
 
   public String getPaneName() {
