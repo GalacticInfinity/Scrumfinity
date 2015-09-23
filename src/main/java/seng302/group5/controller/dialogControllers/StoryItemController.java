@@ -123,6 +123,8 @@ public class StoryItemController {
    * Sets the tasks from story into their appropriate lists.
    */
   public void setupLists() {
+
+    selectedLabel = null; //set this to null to avoid funny behaviour after an action.
     notStartedTasks = FXCollections.observableArrayList();
     inProgressTasks = FXCollections.observableArrayList();
     verifyTasks = FXCollections.observableArrayList();
@@ -225,7 +227,6 @@ public class StoryItemController {
    * @param label Label to be added
    */
   private void addWithDragging(VBox root, Label label) {
-
     //Changes the colour of the clicked on/selected item.
     label.setOnMousePressed(new EventHandler<MouseEvent>() {
       @Override
@@ -235,7 +236,8 @@ public class StoryItemController {
         }
         selectedLabel = (Label) event.getSource();
         selectedLabel.setStyle("-fx-background-color: #ffffa0;");
-      }});
+      }
+    });
 
     label.setOnMouseClicked(new EventHandler<MouseEvent>() {
       @Override
@@ -429,13 +431,9 @@ public class StoryItemController {
    */
   @FXML
   protected void btnAddTask(ActionEvent event) {
-
     //Show the task creation dialog and make the undoredo object
-
     UndoRedo taskCreate;
-
     taskCreate = mainApp.showTaskDialog(story, null, null, CreateOrEdit.CREATE, mainApp.getStage());
-
     if (taskCreate != null) {
       mainApp.newAction(taskCreate);
     }
@@ -445,7 +443,66 @@ public class StoryItemController {
     updateDino();
     updateProgBar();
   }
+//
+//  //TODO Figure out how to do this. It may be faster with su-shing coz he knows the composite undo stuff
+//  @FXML
+//  protected void btnRemoveTask(ActionEvent event) {
+//
+//    Task deleteTask = null;
+//
+//    for (Task task : story.getTasks()) {
+//      if (task.getLabel() == selectedLabel.getText()) {
+//        deleteTask = task;
+//        break;
+//      }
+//    }
+//
+//    if (deleteTask != null) {
+//      mainApp.delete(deleteTask);
+//    }
+//
+//    mainApp.getLMPC().getScrumBoardController().refreshTaskLists();
+//
+//    //Gotta update the dino and the prog bar to reflect changes
+//    updateDino();
+//    updateProgBar();
+//  }
 
+  /**
+   * This handles when the edit button is pushed for a task.
+   * This will take the selected item and edit it accordingly.
+   * @param event the event of pushing the button.
+   */
+  @FXML
+  protected void btnEditTask(ActionEvent event) {
+    if (selectedLabel != null) {
+      Task newTask = null;
+      for (Task task : story.getTasks()) {
+        if (selectedLabel.getText().equals(task.getLabel())) {
+          newTask = task;
+          break;
+        }
+      }
+      if (newTask != null) {
+        Team team = null;
+        for (Sprint sprint : mainApp.getSprints()) {
+          if (sprint.getSprintStories().contains(story)) {
+            team = sprint.getSprintTeam();
+          }
+        }
+        UndoRedo taskEdit = mainApp.showTaskDialog(story, newTask, team,
+                                                   CreateOrEdit.EDIT, mainApp.getStage());
+        if (taskEdit != null) {
+          mainApp.newAction(taskEdit);
+        }
+        mainApp.getLMPC().getScrumBoardController().refreshTaskLists();
+
+        //Gotta update the dino and the prog bar to reflect changes
+        updateDino();
+        updateProgBar();
+      }
+    }
+  }
 
 
   /**
