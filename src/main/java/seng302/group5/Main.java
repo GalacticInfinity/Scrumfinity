@@ -1019,9 +1019,7 @@ public class Main extends Application {
       
       controller.setupController(this, storyDialogStage, createOrEdit, story);
       controller.setCheckboxState(state);
-      if (story == null) {
-        controller.setupSprintMode(backlog);
-      }
+      controller.setupSprintMode(backlog);
       pushControllerStack(controller);
 
       storyDialogStage.initModality(Modality.APPLICATION_MODAL);
@@ -1106,13 +1104,16 @@ public class Main extends Application {
       Scene backlogDialogScene = new Scene(backlogDialogLayout);
       Stage backlogDialogStage = new Stage();
 
-      if (isInControllerStack(controller, backlog)) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Dialog already open");
-        alert.setHeaderText(null);
-        alert.setContentText("The window you are trying to open is already open in the background.");
-        alert.showAndWait();
-        return;
+      if (backlog != null) {
+        if (isInControllerStack(controller, backlog)) {
+          Alert alert = new Alert(Alert.AlertType.INFORMATION);
+          alert.setTitle("Dialog already open");
+          alert.setHeaderText(null);
+          alert.setContentText(
+              "The window you are trying to open is already open in the background.");
+          alert.showAndWait();
+          return;
+        }
       }
 
       controller.setupController(this, backlogDialogStage, CreateOrEdit.EDIT, backlog);
@@ -2158,7 +2159,6 @@ public class Main extends Application {
    */
   public void pushControllerStack(AgileController agileController) {
     openControllers.add(agileController);
-    System.out.println(openControllers.size());
   }
 
   /**
@@ -2179,6 +2179,7 @@ public class Main extends Application {
   public boolean isInControllerStack(AgileController agileController, AgileItem agileItem) {
     for (AgileController controller : openControllers) {
       if (controller.getClass().equals(agileController.getClass()) &&
+          agileItem != null &&
           controller.getLabel().equals(agileItem.getLabel())) {
         return true;
       }

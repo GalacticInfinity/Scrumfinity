@@ -935,7 +935,8 @@ public class SprintDialogController implements AgileController {
             !isEmpty()) {
           Story selectedStory = availableStoriesList.getSelectionModel().getSelectedItem();
           //Tells the controller not to disable the readiness checkbox.
-          mainApp.showStoryDialogWithinSprint(CreateOrEdit.EDIT, selectedStory, null, thisStage,
+          Backlog backlog = sprintBacklogCombo.getSelectionModel().getSelectedItem();
+          mainApp.showStoryDialogWithinSprint(CreateOrEdit.EDIT, selectedStory, backlog, thisStage,
                                               false);
           refreshLists();
         }
@@ -966,7 +967,8 @@ public class SprintDialogController implements AgileController {
             !isEmpty()) {
           Story selectedStory = allocatedStoriesList.getSelectionModel().getSelectedItem();
           //Tells the controller to disable the readiness checkbox.
-          mainApp.showStoryDialogWithinSprint(CreateOrEdit.EDIT, selectedStory, null, thisStage,
+          Backlog backlog = sprintBacklogCombo.getSelectionModel().getSelectedItem();
+          mainApp.showStoryDialogWithinSprint(CreateOrEdit.EDIT, selectedStory, backlog, thisStage,
                                               true);
           refreshLists();
         }
@@ -1054,7 +1056,7 @@ public class SprintDialogController implements AgileController {
       sprintBacklogCombo.getSelectionModel().select(selectedBacklog);
       sprintTeamCombo.getSelectionModel().select(tempTeam);
       sprintReleaseCombo.getSelectionModel().select(tempRelease);
-      allocatedStoriesPrioritised.addAll(tempAllocatedStories);
+      allocatedStoriesPrioritised.setAll(tempAllocatedStories);
       availableStories.removeAll(tempAllocatedStories);
     }
   }

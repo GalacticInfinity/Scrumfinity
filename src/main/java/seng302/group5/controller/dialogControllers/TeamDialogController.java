@@ -104,7 +104,7 @@ public class TeamDialogController implements AgileController {
       this.lastTeam = null;
     }
 
-    comboListenerFlag = false;  // if true, assign the selected role in combo box
+    comboListenerFlag = true;  // if true, assign the selected role in combo box
     lastSelectedPersonRole = new PersonRole(new Person(), new Role());
 
     btnConfirm.setDefaultButton(true);

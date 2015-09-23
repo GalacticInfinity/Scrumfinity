@@ -201,6 +201,7 @@ public class ProjectDialogController implements AgileController {
     backlogComboBox.getSelectionModel().select(backlog);
     backlogComboBox.setDisable(true);
     btnNewBacklog.setDisable(true);
+    btnEditBacklog.setDisable(true);
   }
 
   private void checkButtonDisabled() {
@@ -249,7 +250,7 @@ public class ProjectDialogController implements AgileController {
 
       this.backlogComboBox.setVisibleRowCount(5);
       this.backlogComboBox.setItems(availableBacklogs);
-      this.availableTeamsList.setItems(availableTeams);
+      this.availableTeamsList.setItems(availableTeams.sorted(Comparator.<Team>naturalOrder()));
       this.allocatedTeamsList.setItems(
           allocatedTeams.sorted(Comparator.<AgileHistory>naturalOrder()));
 
@@ -604,6 +605,7 @@ public class ProjectDialogController implements AgileController {
           mainApp.showTeamDialogWithinNested(selectedTeam, thisStage);
           availableTeams.remove(selectedTeam);
           availableTeams.add(selectedTeam);
+          availableTeamsList.getSelectionModel().select(selectedTeam);
           //This is a hella shitty fix to get the list to update when nested editing coz fml.
           AgileHistory ag = new AgileHistory(new Team(), LocalDate.now(), LocalDate.MAX);
           allocatedTeams.add(ag);

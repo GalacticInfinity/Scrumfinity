@@ -144,6 +144,7 @@ public class StoryDialogController implements AgileController {
       statusCombo.getSelectionModel().select(Status.getStatusString(story.getStatus()));
 
       storyCreatorList.setDisable(true);
+      btnNewCreator.setDisable(true);
       btnCreateStory.setDisable(true);
 
       if (checkReadinessCriteria(story)) {
@@ -314,10 +315,12 @@ public class StoryDialogController implements AgileController {
     backlogCombo.setDisable(true);
     btnNewBacklog.setDisable(true);
     btnEditBacklog.setDisable(true);
-    acceptanceCriteria.add("Empty AC, please double click here to edit your AC.");
-    shownEstimate.setText(backlog.getEstimate().getEstimateNames().get(1));
-    readyCheckbox.setSelected(true);
-    readyCheckbox.setDisable(true);
+    if (createOrEdit == CreateOrEdit.CREATE) {
+      acceptanceCriteria.add("Empty AC, please double click here to edit your AC.");
+      shownEstimate.setText(backlog.getEstimate().getEstimateNames().get(1));
+      readyCheckbox.setSelected(true);
+      readyCheckbox.setDisable(true);
+    }
   }
   /**
    * Checks if there are any changed fields and disables or enables the button accordingly
