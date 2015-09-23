@@ -1019,7 +1019,9 @@ public class Main extends Application {
       
       controller.setupController(this, storyDialogStage, createOrEdit, story);
       controller.setCheckboxState(state);
-      controller.setupSprintMode(backlog);
+      if (story == null) {
+        controller.setupSprintMode(backlog);
+      }
       pushControllerStack(controller);
 
       storyDialogStage.initModality(Modality.APPLICATION_MODAL);
