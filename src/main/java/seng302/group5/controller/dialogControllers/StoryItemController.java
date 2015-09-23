@@ -526,13 +526,11 @@ public class StoryItemController {
     }
 
     //Step2: Create new and last task(old pre-drag, new after)
-    Task lastTask = null;
     Task newTask = null;
 
     //Step3: Clone last Task, assign task to newTask
     for (Task task : story.getTasks()) {
       if (sourceTaskString.equals(task.getLabel())) {
-        lastTask = new Task(task);
         newTask = task;
         break;
       }

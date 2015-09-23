@@ -44,6 +44,8 @@ public class ScrumBoardController {
   private Stage stage;
   private Story fakeStory;
 
+  private Sprint oldSprint;
+
   private ObservableList<Sprint> availableSprints;
   private ObservableList<Story> availableStories;
   private List<StoryItemController> storyPanes;
@@ -163,10 +165,20 @@ public class ScrumBoardController {
     return null;
   }
 
+
+  /**
+   * Checks if the controller already exists, if so, returns it instead of recreating it
+   * @param story
+   * @return
+   */
+  private StoryItemController checkController(Story story) {
+
+    return null;
+  }
+
   /**
    * Resets everything about the scrum board, everything cleared and disabled apart from
    * Backlog combo box.
-   * TODO allocate extra memory and a few checks to reduce run time significantly
    */
   public void refreshComboBoxes() {
     Backlog backlog = backlogCombo.getValue();
@@ -195,13 +207,16 @@ public class ScrumBoardController {
 
         if (availableSprints.contains(sprint)) {
           sprintCombo.setValue(sprint);
+          oldSprint = new Sprint(sprint);
           //todo make stories in sprints be removed properly at some point.
         } else {
           sprintCombo.setValue(null);
+          oldSprint = null;
         }
       } else {
         backlogCombo.setValue(null);
         sprintCombo.setValue(null);
+        oldSprint = null;
       }
     }
   }
@@ -219,6 +234,7 @@ public class ScrumBoardController {
     storiesBox.getChildren().setAll(FXCollections.observableArrayList());
     availableStories.clear();
     storyPanes.clear();
+    oldSprint = null;
   }
 
   /**
