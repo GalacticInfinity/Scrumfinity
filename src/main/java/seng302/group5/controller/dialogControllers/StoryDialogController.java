@@ -299,6 +299,22 @@ public class StoryDialogController {
   }
 
   /**
+   * Set up the dialog to be in sprint mode.
+   *
+   * @param backlog The backlog to be auto selected.
+   */
+  public void setupSprintMode(Backlog backlog) {
+    dialogMode = DialogMode.SPRINT_MODE;
+    backlogCombo.getSelectionModel().select(backlog);
+    backlogCombo.setDisable(true);
+    btnNewBacklog.setDisable(true);
+    btnEditBacklog.setDisable(true);
+    acceptanceCriteria.add("Empty AC, please double click here to edit your AC.");
+    shownEstimate.setText(backlog.getEstimate().getEstimateNames().get(1));
+    readyCheckbox.setSelected(true);
+    readyCheckbox.setDisable(true);
+  }
+  /**
    * Checks if there are any changed fields and disables or enables the button accordingly
    */
   private void checkButtonDisabled() {
@@ -419,10 +435,15 @@ public class StoryDialogController {
         story.setAcceptanceCriteria(acceptanceCriteria);
         story.setStatus(status);
         story.setImpediments(impediments);
+        story.setStoryState(readyCheckbox.isSelected());
         // tasks are already in story
         mainApp.addStory(story);
         if (backlog != null) {
-          backlog.addStory(story);
+          if (dialogMode == DialogMode.SPRINT_MODE) {
+            backlog.addStory(story, 1);
+          } else {
+            backlog.addStory(story);
+          }
         }
         if (Settings.correctList(backlog)) {
           mainApp.refreshList(backlog);

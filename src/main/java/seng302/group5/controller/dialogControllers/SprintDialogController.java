@@ -150,7 +150,7 @@ public class SprintDialogController {
       btnEditTeam.setDisable(true);
       btnEditRelease.setDisable(true);
       btnNewRelease.setDisable(true);
-
+      btnNewStory.setDisable(true);
 
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       thisStage.setTitle("Edit Sprint");
@@ -230,8 +230,10 @@ public class SprintDialogController {
       }
       if (newValue != null) {
         btnEditBacklog.setDisable(false);
+        btnNewStory.setDisable(false);
       } else {
         btnEditBacklog.setDisable(true);
+        btnNewStory.setDisable(true);
       }
     });
 
@@ -927,7 +929,8 @@ public class SprintDialogController {
             !isEmpty()) {
           Story selectedStory = availableStoriesList.getSelectionModel().getSelectedItem();
           //Tells the controller not to disable the readiness checkbox.
-          mainApp.showStoryDialogWithinSprint(selectedStory, thisStage, false);
+          mainApp.showStoryDialogWithinSprint(CreateOrEdit.EDIT, selectedStory, null, thisStage,
+                                              false);
           refreshLists();
         }
       });
@@ -957,7 +960,8 @@ public class SprintDialogController {
             !isEmpty()) {
           Story selectedStory = allocatedStoriesList.getSelectionModel().getSelectedItem();
           //Tells the controller to disable the readiness checkbox.
-          mainApp.showStoryDialogWithinSprint(selectedStory, thisStage, true);
+          mainApp.showStoryDialogWithinSprint(CreateOrEdit.EDIT, selectedStory, null, thisStage,
+                                              true);
           refreshLists();
         }
       });
@@ -1008,13 +1012,19 @@ public class SprintDialogController {
    */
   @FXML
   protected void addNewStory(ActionEvent event) {
-    mainApp.showStoryDialog(CreateOrEdit.CREATE);
-    Set<Story> currentStories = new HashSet<>();
+    Backlog selectedBacklog = sprintBacklogCombo.getSelectionModel().getSelectedItem();
+    mainApp.showStoryDialogWithinSprint(CreateOrEdit.CREATE, null, selectedBacklog, thisStage,
+                                        false);
+    Set<Story> storiesInUse = new HashSet<>();
     for (Story story : allocatedStories) {
-      currentStories.add(story);
+      storiesInUse.add(story);
     }
+    for (Sprint sprint : mainApp.getSprints()) {
+      storiesInUse.addAll(sprint.getSprintStories());
+    }
+    availableStories.clear();
     for (Story story : mainApp.getStories()) {
-      if (!availableStories.contains(story) && !currentStories.contains(story)) {
+      if (!storiesInUse.contains(story) && story.getStoryState()) {
         availableStories.add(story);
       }
     }
