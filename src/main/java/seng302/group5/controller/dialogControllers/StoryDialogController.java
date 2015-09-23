@@ -371,6 +371,12 @@ public class StoryDialogController implements AgileController {
     Story storyToStore = new Story(story);
     storyChanges.addDatum(storyToStore);
 
+    Backlog backlog = backlogCombo.getValue();
+    if (backlog != null && createOrEdit == CreateOrEdit.CREATE) {
+      storyChanges.addDatum(backlog);
+      storyChanges.addDatum(new Backlog(backlog));
+    }
+
     // Create composite undo/redo with original action string to handle story and task changes
     CompositeUndoRedo storyAndTaskChanges = new CompositeUndoRedo(Action.getActionString(action));
     storyAndTaskChanges.addUndoRedo(storyChanges);
@@ -480,11 +486,6 @@ public class StoryDialogController implements AgileController {
         }
       }
       UndoRedo undoRedoObject = generateUndoRedoObject();
-      if (backlog != null && createOrEdit == CreateOrEdit.CREATE) {
-        undoRedoObject.addDatum(backlog);
-      } else {
-        undoRedoObject.addDatum(null);
-      }
       mainApp.newAction(undoRedoObject);
       mainApp.popControllerStack();
       thisStage.close();
