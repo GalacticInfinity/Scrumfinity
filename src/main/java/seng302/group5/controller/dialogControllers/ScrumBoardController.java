@@ -189,6 +189,7 @@ public class ScrumBoardController {
           Accordion storyAccordion = new Accordion();
           storyAccordion.getPanes().add(pane.getTitledPane());
           storiesBox.getChildren().add(storyAccordion);
+          pane.setAccordion(storyAccordion);
           pane.setupLists();
           return pane;
         }

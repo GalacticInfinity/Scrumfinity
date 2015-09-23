@@ -623,4 +623,8 @@ public class StoryItemController {
     return storyPane;
   }
 
+  public void setAccordion(Accordion accordion) {
+    this.accordion = accordion;
+  }
+
 }
