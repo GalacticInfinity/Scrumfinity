@@ -571,7 +571,6 @@ public class Main extends Application {
           return;
         }
       }
-
       controller.setupController(this, releaseDialogStage);
 
       releaseDialogStage.initModality(Modality.APPLICATION_MODAL);
@@ -990,14 +989,16 @@ public class Main extends Application {
   }
 
   /**
-   * sets up the dialog box for editing a story when opened from the sprint dialog
+   * sets up the dialog box for creating or editing a story when opened from the sprint dialog.
    *
-   * @param story the story that you wanted to view or edit information with
+   * @param createOrEdit either it is editing the current story in the lists or create a new one.
+   * @param story the story that you wanted to view or edit information with. Null for creation.
    * @param stage the stage it is currently on to void unusual behaviour
-   * @param fromAllocated whether or not the stage is called from the allocated stories list
+   * @param state whether or not the stage is called from the allocated stories list
    *                      or the available stories list. (Affects the readiness checkbox).
    */
-  public void showStoryDialogWithinSprint(Story story, Stage stage, boolean fromAllocated) {
+  public void showStoryDialogWithinSprint(CreateOrEdit createOrEdit, Story story, Backlog backlog,
+                                          Stage stage, boolean state) {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/StoryDialog.fxml"));
@@ -1015,9 +1016,12 @@ public class Main extends Application {
         alert.showAndWait();
         return;
       }
-
-      controller.setupController(this, storyDialogStage, CreateOrEdit.EDIT, story);
-      controller.setCheckboxState(fromAllocated);
+      
+      controller.setupController(this, storyDialogStage, createOrEdit, story);
+      controller.setCheckboxState(state);
+      if (story == null) {
+        controller.setupSprintMode(backlog);
+      }
       pushControllerStack(controller);
 
       storyDialogStage.initModality(Modality.APPLICATION_MODAL);

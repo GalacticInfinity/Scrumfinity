@@ -87,6 +87,7 @@ public class StoryItemController {
     updateProgBar();
 
     setupLists();
+
   }
 
   public void updateDino() {
@@ -128,24 +129,36 @@ public class StoryItemController {
     inProgressList.getChildren().clear();
     verifyList.getChildren().clear();
     doneList.getChildren().clear();
+
     for (Task task : story.getTasks()) {
+
+      Label tempLabel = new Label(task.getLabel());
+
       switch (task.getStatus()) {
         case NOT_STARTED:
           notStartedTasks.add(task);
-          addWithDragging(notStartedList, new Label(task.getLabel()));
+          //Makes the task extend all the way across the container
+          tempLabel.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
+          addWithDragging(notStartedList, tempLabel);
           // TODO this line specifically
           break;
         case IN_PROGRESS:
           inProgressTasks.add(task);
-          addWithDragging(inProgressList, new Label(task.getLabel()));
+          //Makes the task extend all the way across the container
+          tempLabel.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
+          addWithDragging(inProgressList, tempLabel);
           break;
         case VERIFY:
           verifyTasks.add(task);
-          addWithDragging(verifyList, new Label(task.getLabel()));
+          //Makes the task extend all the way across the container
+          tempLabel.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
+          addWithDragging(verifyList, tempLabel);
           break;
         case DONE:
           doneTasks.add(task);
-          addWithDragging(doneList, new Label(task.getLabel()));
+          //Makes the task extend all the way across the container
+          tempLabel.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
+          addWithDragging(doneList, tempLabel);
           break;
       }
     }

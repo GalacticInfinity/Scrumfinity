@@ -127,6 +127,7 @@ public class ProjectDialogController implements AgileController {
       for (Sprint sprint : mainApp.getSprints()) {
         if (sprint.getSprintProject().equals(project)) {
           backlogComboBox.setDisable(true);
+          btnNewBacklog.setDisable(true);
           backlogContainer.setTooltip(new Tooltip("Backlog cannot be changed if it is assigned to a sprint."));
         }
       }
