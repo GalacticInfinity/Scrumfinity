@@ -223,7 +223,7 @@
                         <Font size="15.0" />
                      </font>
                      <tooltip>
-                        <Tooltip text="The estimate can only be changed in the backlog it is assigned too" />
+                        <Tooltip text="The estimate can only be changed in the backlog it is assigned to." />
                      </tooltip>
                   </Label>
                </children>

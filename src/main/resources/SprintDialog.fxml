@@ -300,7 +300,7 @@
                      <children>
                         <HBox prefHeight="11.0" prefWidth="181.0">
                            <children>
-                              <Label prefHeight="19.0" prefWidth="141.0" text="Available Stories:">
+                              <Label prefHeight="19.0" prefWidth="132.0" text="Available Stories:">
                                  <font>
                                     <Font size="15.0" />
                                  </font>
@@ -314,9 +314,21 @@
                                     </ImageView>
                                  </graphic>
                                  <HBox.margin>
-                                    <Insets />
+                                    <Insets right="5.0" />
                                  </HBox.margin>
                               </Button>
+                              <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" prefHeight="20.0" prefWidth="20.0" textAlignment="CENTER">
+                                 <graphic>
+                                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="question_mark.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                                 <tooltip>
+                                    <Tooltip text="Story estimate can be adjusted through backlog dialog." />
+                                 </tooltip>
+                              </Label>
                            </children>
                            <VBox.margin>
                               <Insets bottom="3.0" />
