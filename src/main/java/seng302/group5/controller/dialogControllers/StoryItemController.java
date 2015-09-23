@@ -286,24 +286,37 @@ public class StoryItemController {
           label.setStyle("");
           int indexOfDropTarget = -1;
           Label sourceLbl = (Label) event.getGestureSource();
+          Label destination = (Label) event.getSource();
+          Status newStat;
+
+          if (notStartedList.getChildren().contains(destination)) {
+            newStat = Status.NOT_STARTED;
+          } else if (verifyList.getChildren().contains(destination)) {
+            newStat = Status.VERIFY;
+          } else if (doneList.getChildren().contains(destination)) {
+            newStat = Status.DONE;
+          } else {
+            newStat = Status.IN_PROGRESS;
+          }
+
           VBox newRoot = null;
           // Removes dragged label from root, saves index of dragged to label;
           if (notStartedList.getChildren().contains(sourceLbl)) {
             notStartedList.getChildren().remove(sourceLbl);
             indexOfDropTarget = notStartedList.getChildren().indexOf(sourceLbl);
-            generateUndoRedoObject(event, Status.NOT_STARTED);
+            generateUndoRedoObject(event, newStat);
           } else if (inProgressList.getChildren().contains(sourceLbl)) {
             inProgressList.getChildren().remove(sourceLbl);
             indexOfDropTarget = inProgressList.getChildren().indexOf(sourceLbl);
-            generateUndoRedoObject(event, Status.IN_PROGRESS);
+            generateUndoRedoObject(event, newStat);
           } else if (verifyList.getChildren().contains(sourceLbl)) {
             verifyList.getChildren().remove(sourceLbl);
             indexOfDropTarget = verifyList.getChildren().indexOf(sourceLbl);
-            generateUndoRedoObject(event, Status.VERIFY);
+            generateUndoRedoObject(event, newStat);
           } else if (doneList.getChildren().contains(sourceLbl)) {
             doneList.getChildren().remove(sourceLbl);
             indexOfDropTarget = doneList.getChildren().indexOf(sourceLbl);
-            generateUndoRedoObject(event, Status.DONE);
+            generateUndoRedoObject(event, newStat);
           }
           int indexOfDrag = root.getChildren().indexOf(label);
           // Adds label to root with new listeners
