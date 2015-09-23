@@ -35,6 +35,7 @@ import javafx.stage.Stage;
 
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
+import seng302.group5.model.AgileController;
 import seng302.group5.model.Effort;
 import seng302.group5.model.Person;
 import seng302.group5.model.Status;
@@ -53,7 +54,7 @@ import seng302.group5.model.util.TimeFormat;
  *
  * @author Su-Shing Chen
  */
-public class TaskDialogController {
+public class TaskDialogController implements AgileController {
 
   @FXML private TextField labelField;
   @FXML private TextArea descriptionField;
@@ -148,6 +149,10 @@ public class TaskDialogController {
     thisStage.setResizable(false);
 
     effortsUndoRedo = new CompositeUndoRedo("Edit Multiple Efforts");
+
+    thisStage.setOnCloseRequest(event -> {
+      mainApp.popControllerStack();
+    });
 
     labelField.textProperty().addListener((observable, oldValue, newValue) -> {
       if (newValue.trim().length() > 20) {
@@ -440,6 +445,7 @@ public class TaskDialogController {
         task.addAllTaskPeople(allocatedPeopleSorted);
       }
       generateUndoRedoObject();
+      mainApp.popControllerStack();
       thisStage.close();
     }
   }
@@ -474,6 +480,7 @@ public class TaskDialogController {
       }
       // undo all editing of existing efforts made within this dialog
       mainApp.quickUndo(effortsUndoRedo);
+      mainApp.popControllerStack();
       thisStage.close();
     }
   }
@@ -603,6 +610,18 @@ public class TaskDialogController {
         }
       }
     }
+  }
+
+  /**
+   * Returns the label of the backlog if a backlog is being edited.
+   *
+   * @return The label of the backlog as a string.
+   */
+  public String getLabel() {
+    if (createOrEdit == CreateOrEdit.EDIT) {
+      return task.getLabel();
+    }
+    return "";
   }
 
   /**

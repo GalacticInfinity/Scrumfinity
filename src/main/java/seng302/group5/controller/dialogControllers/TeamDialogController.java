@@ -21,6 +21,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
+import seng302.group5.model.AgileController;
 import seng302.group5.model.Person;
 import seng302.group5.model.Role;
 import seng302.group5.model.Team;
@@ -33,7 +34,7 @@ import seng302.group5.model.util.Settings;
  * Team Dialog Controller, manages the usage of Dialogs involved in the creating and editing of
  * teams.
  */
-public class TeamDialogController {
+public class TeamDialogController implements AgileController {
 
   private Main mainApp;  //Testing if Jenkins is working.
   private Stage thisStage;
@@ -103,11 +104,15 @@ public class TeamDialogController {
       this.lastTeam = null;
     }
 
-    comboListenerFlag = false;  // if true, assign the selected role in combo box
+    comboListenerFlag = true;  // if true, assign the selected role in combo box
     lastSelectedPersonRole = new PersonRole(new Person(), new Role());
 
     btnConfirm.setDefaultButton(true);
     thisStage.setResizable(false);
+
+    thisStage.setOnCloseRequest(event -> {
+      mainApp.popControllerStack();
+    });
 
     // Handle TextField text changes.
     teamLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -401,6 +406,7 @@ public class TeamDialogController {
       }
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
       mainApp.newAction(undoRedoObject);
+      mainApp.popControllerStack();
       thisStage.close();
     }
   }
@@ -415,6 +421,7 @@ public class TeamDialogController {
     if (createOrEdit == CreateOrEdit.EDIT && Settings.correctList(team)) {
       mainApp.refreshList(team);
     }
+    mainApp.popControllerStack();
     thisStage.close();
   }
 
@@ -603,5 +610,17 @@ public class TeamDialogController {
         availableMembers.add(person);
       }
     }
+  }
+
+  /**
+   * Returns the label of the backlog if a backlog is being edited.
+   *
+   * @return The label of the backlog as a string.
+   */
+  public String getLabel() {
+    if (createOrEdit == CreateOrEdit.EDIT) {
+      return team.getLabel();
+    }
+    return "";
   }
 }

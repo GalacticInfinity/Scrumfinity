@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.controller.enums.DialogMode;
+import seng302.group5.model.AgileController;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Person;
 import seng302.group5.model.Role;
@@ -33,7 +34,7 @@ import seng302.group5.model.util.Settings;
  *
  * Created by Zander on 18/03/2015.
  */
-public class PersonDialogController {
+public class PersonDialogController implements AgileController {
 
   @FXML private TextField personLabelField;
   @FXML private TextField personFirstNameField;
@@ -127,6 +128,10 @@ public class PersonDialogController {
         }
       }
     }
+
+    thisStage.setOnCloseRequest(event -> {
+      mainApp.popControllerStack();
+    });
 
     // Handle TextField text changes.
     personLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -271,7 +276,7 @@ public class PersonDialogController {
       }
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
       mainApp.newAction(undoRedoObject);
-
+      mainApp.popControllerStack();
       thisStage.close();
     }
   }
@@ -286,6 +291,7 @@ public class PersonDialogController {
     if (createOrEdit == CreateOrEdit.EDIT && Settings.correctList(person)) {
       mainApp.refreshList(person);
     }
+    mainApp.popControllerStack();
     thisStage.close();
   }
 
@@ -423,6 +429,19 @@ public class PersonDialogController {
     this.skillsList.setCellFactory(listView -> new AvailableSkillsListViewCell());
     this.personSkillList.setCellFactory(listView -> new PersonSkillsListViewCell());
   }
+
+  /**
+   * Returns the label of the backlog if a backlog is being edited.
+   *
+   * @return The label of the backlog as a string.
+   */
+  public String getLabel() {
+    if (createOrEdit == CreateOrEdit.EDIT) {
+      return person.getLabel();
+    }
+    return "";
+  }
+
   /**
    * Allows us to override a ListViewCell - a single cell in a ListView.
    */
@@ -470,6 +489,9 @@ public class PersonDialogController {
           mainApp.showSkillDialogWithinPerson(selectedSkill, thisStage);
           selectedSkills.remove(selectedSkill);
           selectedSkills.add(selectedSkill);
+          if (createOrEdit == CreateOrEdit.EDIT) {
+            checkButtonDisabled();
+          }
         }
       });
     }

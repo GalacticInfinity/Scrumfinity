@@ -28,6 +28,7 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
+import seng302.group5.model.AgileController;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Estimate;
 import seng302.group5.model.Person;
@@ -43,7 +44,7 @@ import seng302.group5.model.util.Settings;
  * @author Liang Ma Backlog Dialog Controller, manages the usage of Dialogs involved in the creating
  *         and editing of backlog and maintain stories within the backlog.
  */
-public class BacklogDialogController {
+public class BacklogDialogController implements AgileController {
 
   private Main mainApp;  //Testing if Jenkins is working.
   private Stage thisStage;
@@ -137,6 +138,10 @@ public class BacklogDialogController {
 
     btnConfirm.setDefaultButton(true);
     thisStage.setResizable(false);
+
+    thisStage.setOnCloseRequest(event -> {
+      mainApp.popControllerStack();
+    });
 
     // Handle TextField text changes.
     backlogLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -596,6 +601,7 @@ public class BacklogDialogController {
         undoRedoObject.addDatum(story);
       }
       mainApp.newAction(undoRedoObject);
+      mainApp.popControllerStack();
       thisStage.close();
     }
   }
@@ -610,6 +616,7 @@ public class BacklogDialogController {
     if (createOrEdit == CreateOrEdit.EDIT && Settings.correctList(backlog)) {
       mainApp.refreshList(backlog);
     }
+    mainApp.popControllerStack();
     thisStage.close();
   }
 
@@ -683,6 +690,18 @@ public class BacklogDialogController {
     }
 
     allocatedStoriesList.scrollTo(after - 3);
+  }
+
+  /**
+   * Returns the label of the backlog if a backlog is being edited.
+   *
+   * @return The label of the backlog as a string.
+   */
+  public String getLabel() {
+    if (createOrEdit == CreateOrEdit.EDIT) {
+      return backlog.getLabel();
+    }
+    return "";
   }
 
   /**
@@ -883,13 +902,18 @@ public class BacklogDialogController {
    */
   @FXML
   protected void addNewStory(ActionEvent event) {
-    mainApp.showStoryDialog(CreateOrEdit.CREATE);
-    Set<Story> currentStories = new HashSet<>();
-    for (StoryEstimate story : allocatedStories) {
-      currentStories.add(story.getStory());
+    mainApp.showStoryDialogWithinBacklog(CreateOrEdit.CREATE, null, thisStage);
+
+    Set<Story> storiesInUse = new HashSet<>();
+    for (StoryEstimate storyEstimate : allocatedStories) {
+      storiesInUse.add(storyEstimate.getStory());
     }
+    for (Backlog mainBacklog : mainApp.getBacklogs()) {
+      storiesInUse.addAll(mainBacklog.getStories());
+    }
+    availableStories.clear();
     for (Story story : mainApp.getStories()) {
-      if (!availableStories.contains(story) && !currentStories.contains(story)) {
+      if (!storiesInUse.contains(story)) {
         availableStories.add(story);
       }
     }

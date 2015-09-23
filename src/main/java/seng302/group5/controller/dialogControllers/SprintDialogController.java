@@ -30,6 +30,7 @@ import javafx.stage.Stage;
 
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
+import seng302.group5.model.AgileController;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
@@ -50,7 +51,7 @@ import seng302.group5.model.util.Settings;
  *
  * Created by Michael Roman and Su-Shing Chen on 24/7/2015.
  */
-public class SprintDialogController {
+public class SprintDialogController implements AgileController {
 
   @FXML private TextField sprintGoalField;
   @FXML private TextField sprintNameField;
@@ -150,7 +151,7 @@ public class SprintDialogController {
       btnEditTeam.setDisable(true);
       btnEditRelease.setDisable(true);
       btnNewRelease.setDisable(true);
-
+      btnNewStory.setDisable(true);
 
     } else if (createOrEdit == CreateOrEdit.EDIT) {
       thisStage.setTitle("Edit Sprint");
@@ -193,6 +194,10 @@ public class SprintDialogController {
 
     this.tasksUndoRedo = new CompositeUndoRedo("Edit Multiple Tasks");
 
+    thisStage.setOnCloseRequest(event -> {
+      mainApp.popControllerStack();
+    });
+
     sprintGoalField.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
       if (createOrEdit == CreateOrEdit.EDIT) {
@@ -230,8 +235,10 @@ public class SprintDialogController {
       }
       if (newValue != null) {
         btnEditBacklog.setDisable(false);
+        btnNewStory.setDisable(false);
       } else {
         btnEditBacklog.setDisable(true);
+        btnNewStory.setDisable(true);
       }
     });
 
@@ -708,7 +715,7 @@ public class SprintDialogController {
         undoRedoObject.addDatum(null);
       }
       mainApp.newAction(undoRedoObject);
-
+      mainApp.popControllerStack();
       thisStage.close();
     }
   }
@@ -742,6 +749,7 @@ public class SprintDialogController {
       }
       // undo all editing of existing tasks made within this dialog
       mainApp.quickUndo(tasksUndoRedo);
+      mainApp.popControllerStack();
       thisStage.close();
     }
   }
@@ -927,7 +935,9 @@ public class SprintDialogController {
             !isEmpty()) {
           Story selectedStory = availableStoriesList.getSelectionModel().getSelectedItem();
           //Tells the controller not to disable the readiness checkbox.
-          mainApp.showStoryDialogWithinSprint(selectedStory, thisStage, false);
+          Backlog backlog = sprintBacklogCombo.getSelectionModel().getSelectedItem();
+          mainApp.showStoryDialogWithinSprint(CreateOrEdit.EDIT, selectedStory, backlog, thisStage,
+                                              false);
           refreshLists();
         }
       });
@@ -957,7 +967,9 @@ public class SprintDialogController {
             !isEmpty()) {
           Story selectedStory = allocatedStoriesList.getSelectionModel().getSelectedItem();
           //Tells the controller to disable the readiness checkbox.
-          mainApp.showStoryDialogWithinSprint(selectedStory, thisStage, true);
+          Backlog backlog = sprintBacklogCombo.getSelectionModel().getSelectedItem();
+          mainApp.showStoryDialogWithinSprint(CreateOrEdit.EDIT, selectedStory, backlog, thisStage,
+                                              true);
           refreshLists();
         }
       });
@@ -1008,13 +1020,19 @@ public class SprintDialogController {
    */
   @FXML
   protected void addNewStory(ActionEvent event) {
-    mainApp.showStoryDialog(CreateOrEdit.CREATE);
-    Set<Story> currentStories = new HashSet<>();
+    Backlog selectedBacklog = sprintBacklogCombo.getSelectionModel().getSelectedItem();
+    mainApp.showStoryDialogWithinSprint(CreateOrEdit.CREATE, null, selectedBacklog, thisStage,
+                                        false);
+    Set<Story> storiesInUse = new HashSet<>();
     for (Story story : allocatedStories) {
-      currentStories.add(story);
+      storiesInUse.add(story);
     }
+    for (Sprint sprint : mainApp.getSprints()) {
+      storiesInUse.addAll(sprint.getSprintStories());
+    }
+    availableStories.clear();
     for (Story story : mainApp.getStories()) {
-      if (!availableStories.contains(story) && !currentStories.contains(story)) {
+      if (!storiesInUse.contains(story) && story.getStoryState()) {
         availableStories.add(story);
       }
     }
@@ -1038,7 +1056,7 @@ public class SprintDialogController {
       sprintBacklogCombo.getSelectionModel().select(selectedBacklog);
       sprintTeamCombo.getSelectionModel().select(tempTeam);
       sprintReleaseCombo.getSelectionModel().select(tempRelease);
-      allocatedStoriesPrioritised.addAll(tempAllocatedStories);
+      allocatedStoriesPrioritised.setAll(tempAllocatedStories);
       availableStories.removeAll(tempAllocatedStories);
     }
   }
@@ -1148,5 +1166,17 @@ public class SprintDialogController {
         break;
       }
     }
+  }
+
+  /**
+   * Returns the label of the backlog if a backlog is being edited.
+   *
+   * @return The label of the backlog as a string.
+   */
+  public String getLabel() {
+    if (createOrEdit == CreateOrEdit.EDIT) {
+      return sprint.getLabel();
+    }
+    return "";
   }
 }

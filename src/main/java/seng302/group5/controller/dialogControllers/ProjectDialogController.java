@@ -27,6 +27,7 @@ import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.controller.enums.DialogMode;
+import seng302.group5.model.AgileController;
 import seng302.group5.model.AgileHistory;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Project;
@@ -41,7 +42,7 @@ import seng302.group5.model.util.Settings;
  *
  * @author Alex Woo
  */
-public class ProjectDialogController {
+public class ProjectDialogController implements AgileController {
 
   @FXML private TextField projectLabelField;
   @FXML private TextField projectNameField;
@@ -126,6 +127,7 @@ public class ProjectDialogController {
       for (Sprint sprint : mainApp.getSprints()) {
         if (sprint.getSprintProject().equals(project)) {
           backlogComboBox.setDisable(true);
+          btnNewBacklog.setDisable(true);
           backlogContainer.setTooltip(new Tooltip("Backlog cannot be changed if it is assigned to a sprint."));
         }
       }
@@ -143,6 +145,10 @@ public class ProjectDialogController {
 
     btnConfirm.setDefaultButton(true);
     thisStage.setResizable(false);
+
+    thisStage.setOnCloseRequest(event -> {
+      mainApp.popControllerStack();
+    });
 
     // Handle TextField text changes.
     projectLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -195,6 +201,7 @@ public class ProjectDialogController {
     backlogComboBox.getSelectionModel().select(backlog);
     backlogComboBox.setDisable(true);
     btnNewBacklog.setDisable(true);
+    btnEditBacklog.setDisable(true);
   }
 
   private void checkButtonDisabled() {
@@ -243,7 +250,7 @@ public class ProjectDialogController {
 
       this.backlogComboBox.setVisibleRowCount(5);
       this.backlogComboBox.setItems(availableBacklogs);
-      this.availableTeamsList.setItems(availableTeams);
+      this.availableTeamsList.setItems(availableTeams.sorted(Comparator.<Team>naturalOrder()));
       this.allocatedTeamsList.setItems(
           allocatedTeams.sorted(Comparator.<AgileHistory>naturalOrder()));
 
@@ -552,7 +559,7 @@ public class ProjectDialogController {
       }
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
       mainApp.newAction(undoRedoObject);
-
+      mainApp.popControllerStack();
       thisStage.close();
     }
   }
@@ -565,7 +572,20 @@ public class ProjectDialogController {
     if (createOrEdit == createOrEdit.EDIT && Settings.correctList(project)) {
       mainApp.refreshList(project);
     }
+    mainApp.popControllerStack();
     thisStage.close();
+  }
+
+  /**
+   * Returns the label of the backlog if a backlog is being edited.
+   *
+   * @return The label of the backlog as a string.
+   */
+  public String getLabel() {
+    if (createOrEdit == CreateOrEdit.EDIT) {
+      return project.getLabel();
+    }
+    return "";
   }
 
   /**
@@ -585,6 +605,7 @@ public class ProjectDialogController {
           mainApp.showTeamDialogWithinNested(selectedTeam, thisStage);
           availableTeams.remove(selectedTeam);
           availableTeams.add(selectedTeam);
+          availableTeamsList.getSelectionModel().select(selectedTeam);
           //This is a hella shitty fix to get the list to update when nested editing coz fml.
           AgileHistory ag = new AgileHistory(new Team(), LocalDate.now(), LocalDate.MAX);
           allocatedTeams.add(ag);
