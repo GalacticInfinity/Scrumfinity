@@ -860,7 +860,7 @@ public class UndoRedoHandler {
       storyToChange.copyValues(storyData);
       mainApp.addStory(storyToChange);
       if (storyBacklog != null) {
-        storyBacklog.addStory(storyToChange,  storyEstimate);
+        storyBacklog.addStory(storyToChange, storyEstimate);
       }
     }
     mainApp.refreshList(null);
@@ -874,7 +874,7 @@ public class UndoRedoHandler {
    * @throws Exception Error message if data is invalid
    */
   private void handleStoryEdit(UndoRedoObject undoRedoObject,
-                                 UndoOrRedo undoOrRedo) throws Exception {
+                               UndoOrRedo undoOrRedo) throws Exception {
 
     // Get the data and ensure it has data for the releases both before and after
     ArrayList<AgileItem> data = undoRedoObject.getData();
@@ -884,16 +884,41 @@ public class UndoRedoHandler {
 
     Story storyToChange = (Story) undoRedoObject.getAgileItem();
     Story storyData;
+    Backlog storyBacklog = null;
+    if (data.size() > 2) {
+      storyBacklog = (Backlog) data.get(2);
+    }
 
     if (undoOrRedo == UndoOrRedo.UNDO) {
-//      currentStory = (Story) data.get(1);
       storyData = (Story) data.get(0);
     } else {
-//      currentStory = (Story) data.get(0);
       storyData = (Story) data.get(1);
     }
 
     storyToChange.copyValues(storyData);
+
+    // handle allocation to backlog
+    if (storyBacklog != null) {
+      int storyEstimate;
+      Backlog before = (Backlog) data.get(3);
+      Backlog after = (Backlog) data.get(4);
+      if (before == null) {
+        // it wasn't in a backlog before
+        if (undoOrRedo == UndoOrRedo.UNDO) {
+          storyBacklog.removeStory(storyToChange);              // remove from backlog
+        } else {
+          storyEstimate = after.getSizes().get(storyToChange);
+          storyBacklog.addStory(storyToChange, storyEstimate);  // add to backlog with estimate
+        }
+      } else {
+        if (undoOrRedo == UndoOrRedo.UNDO) {
+          storyEstimate = before.getSizes().get(storyToChange);
+        } else {
+          storyEstimate = after.getSizes().get(storyToChange);
+        }
+        storyBacklog.updateStory(storyToChange, storyEstimate); // simply update estimate
+      }
+    }
     mainApp.refreshList(null);
   }
 

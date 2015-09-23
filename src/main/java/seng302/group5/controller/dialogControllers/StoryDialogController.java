@@ -172,7 +172,7 @@ public class StoryDialogController implements AgileController {
 
       for (Backlog backlog : mainApp.getBacklogs()) {
         if (backlog.getStories().contains(story)) {
-          this.lastBacklog = backlog;
+          this.lastBacklog = new Backlog(backlog);
           this.backlogCombo.setValue(backlog);
           Tooltip tooltip = new Tooltip(
               "Backlog already assigned. Please edit in backlog dialogs " +
@@ -398,8 +398,11 @@ public class StoryDialogController implements AgileController {
     storyChanges.addDatum(storyToStore);
 
     Backlog backlog = backlogCombo.getValue();
-    if (backlog != null && createOrEdit == CreateOrEdit.CREATE) {
+    if (backlog != null) {
       storyChanges.addDatum(backlog);
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        storyChanges.addDatum(lastBacklog);
+      }
       storyChanges.addDatum(new Backlog(backlog));
     }
 
