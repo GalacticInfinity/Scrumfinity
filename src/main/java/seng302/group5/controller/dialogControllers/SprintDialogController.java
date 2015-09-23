@@ -30,6 +30,7 @@ import javafx.stage.Stage;
 
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
+import seng302.group5.model.AgileController;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
@@ -50,7 +51,7 @@ import seng302.group5.model.util.Settings;
  *
  * Created by Michael Roman and Su-Shing Chen on 24/7/2015.
  */
-public class SprintDialogController {
+public class SprintDialogController implements AgileController {
 
   @FXML private TextField sprintGoalField;
   @FXML private TextField sprintNameField;
@@ -192,6 +193,10 @@ public class SprintDialogController {
     thisStage.setResizable(false);
 
     this.tasksUndoRedo = new CompositeUndoRedo("Edit Multiple Tasks");
+
+    thisStage.setOnCloseRequest(event -> {
+      mainApp.popControllerStack();
+    });
 
     sprintGoalField.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
@@ -710,7 +715,7 @@ public class SprintDialogController {
         undoRedoObject.addDatum(null);
       }
       mainApp.newAction(undoRedoObject);
-
+      mainApp.popControllerStack();
       thisStage.close();
     }
   }
@@ -744,6 +749,7 @@ public class SprintDialogController {
       }
       // undo all editing of existing tasks made within this dialog
       mainApp.quickUndo(tasksUndoRedo);
+      mainApp.popControllerStack();
       thisStage.close();
     }
   }
@@ -1158,5 +1164,17 @@ public class SprintDialogController {
         break;
       }
     }
+  }
+
+  /**
+   * Returns the label of the backlog if a backlog is being edited.
+   *
+   * @return The label of the backlog as a string.
+   */
+  public String getLabel() {
+    if (createOrEdit == CreateOrEdit.EDIT) {
+      return sprint.getLabel();
+    }
+    return "";
   }
 }

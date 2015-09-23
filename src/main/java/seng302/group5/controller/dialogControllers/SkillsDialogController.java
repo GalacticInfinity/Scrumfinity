@@ -11,6 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
+import seng302.group5.model.AgileController;
 import seng302.group5.model.Skill;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.UndoRedoObject;
@@ -21,7 +22,7 @@ import seng302.group5.model.util.Settings;
  *
  * @author Liang Ma
  */
-public class SkillsDialogController {
+public class SkillsDialogController implements AgileController {
 
   @FXML private TextField skillLabel;
   @FXML private TextArea skillDescription;
@@ -80,6 +81,10 @@ public class SkillsDialogController {
 
     skillCreation.setDefaultButton(true);
     thisStage.setResizable(false);
+
+    thisStage.setOnCloseRequest(event -> {
+      mainApp.popControllerStack();
+    });
 
     // Handle TextField text changes.
     skillLabel.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -201,7 +206,7 @@ public class SkillsDialogController {
     }
     UndoRedoObject undoRedoObject = generateUndoRedoObject();
     mainApp.newAction(undoRedoObject);
-
+    mainApp.popControllerStack();
     thisStage.close();
   }
 
@@ -212,7 +217,20 @@ public class SkillsDialogController {
    */
   @FXML
   protected void CancelCreation(ActionEvent event) {
+    mainApp.popControllerStack();
     thisStage.close();
+  }
+
+  /**
+   * Returns the label of the backlog if a backlog is being edited.
+   *
+   * @return The label of the backlog as a string.
+   */
+  public String getLabel() {
+    if (createOrEdit == CreateOrEdit.EDIT) {
+      return skill.getLabel();
+    }
+    return "";
   }
 
 }

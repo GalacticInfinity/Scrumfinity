@@ -27,6 +27,7 @@ import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.controller.enums.DialogMode;
+import seng302.group5.model.AgileController;
 import seng302.group5.model.AgileHistory;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Project;
@@ -41,7 +42,7 @@ import seng302.group5.model.util.Settings;
  *
  * @author Alex Woo
  */
-public class ProjectDialogController {
+public class ProjectDialogController implements AgileController {
 
   @FXML private TextField projectLabelField;
   @FXML private TextField projectNameField;
@@ -144,6 +145,10 @@ public class ProjectDialogController {
 
     btnConfirm.setDefaultButton(true);
     thisStage.setResizable(false);
+
+    thisStage.setOnCloseRequest(event -> {
+      mainApp.popControllerStack();
+    });
 
     // Handle TextField text changes.
     projectLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -553,7 +558,7 @@ public class ProjectDialogController {
       }
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
       mainApp.newAction(undoRedoObject);
-
+      mainApp.popControllerStack();
       thisStage.close();
     }
   }
@@ -566,7 +571,20 @@ public class ProjectDialogController {
     if (createOrEdit == createOrEdit.EDIT && Settings.correctList(project)) {
       mainApp.refreshList(project);
     }
+    mainApp.popControllerStack();
     thisStage.close();
+  }
+
+  /**
+   * Returns the label of the backlog if a backlog is being edited.
+   *
+   * @return The label of the backlog as a string.
+   */
+  public String getLabel() {
+    if (createOrEdit == CreateOrEdit.EDIT) {
+      return project.getLabel();
+    }
+    return "";
   }
 
   /**
