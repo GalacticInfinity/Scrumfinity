@@ -334,7 +334,9 @@ public class StoryItemController {
         }
       }
     });
-      root.getChildren().add(label);
+    root.getChildren().add(label);
+    updateDino();
+    updateProgBar();
   }
 
   /**
