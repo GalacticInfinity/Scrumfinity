@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Stack;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -47,6 +48,7 @@ import seng302.group5.controller.dialogControllers.TeamDialogController;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.controller.dialogControllers.SkillsDialogController;
 import seng302.group5.controller.mainAppControllers.ToolBarController;
+import seng302.group5.model.AgileController;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Estimate;
@@ -95,6 +97,7 @@ public class Main extends Application {
   private ObservableList<Sprint> sprints = FXCollections.observableArrayList();
 
   private ArrayList<AgileItem> nonRemovable = new ArrayList<>();
+  private ArrayList<AgileController> openControllers = new ArrayList<>();
 
   private UndoRedoHandler undoRedoHandler = new UndoRedoHandler(this);
 
@@ -348,7 +351,17 @@ public class Main extends Application {
         }
       }
 
+      if (isInControllerStack(controller, project)) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Dialog already open");
+        alert.setHeaderText(null);
+        alert.setContentText("This dialog is already open.");
+        alert.showAndWait();
+        return;
+      }
+
       controller.setupController(this, projectDialogStage, createOrEdit, project);
+      pushControllerStack(controller);
 
       projectDialogStage.initModality(Modality.APPLICATION_MODAL);
       projectDialogStage.initOwner(primaryStage);
@@ -377,7 +390,17 @@ public class Main extends Application {
       Scene projectDialogScene = new Scene(projectDialogLayout);
       Stage projectDialogStage = new Stage();
 
+      if (isInControllerStack(controller, project)) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Dialog already open");
+        alert.setHeaderText(null);
+        alert.setContentText("This dialog is already open.");
+        alert.showAndWait();
+        return;
+      }
+
       controller.setupController(this, projectDialogStage, CreateOrEdit.EDIT, project);
+      pushControllerStack(controller);
 
       projectDialogStage.initModality(Modality.APPLICATION_MODAL);
       projectDialogStage.initOwner(stage);
@@ -409,8 +432,18 @@ public class Main extends Application {
       Scene projectDialogScene = new Scene(projectDialogLayout);
       Stage projectDialogStage = new Stage();
 
+      if (isInControllerStack(controller, project)) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Dialog already open");
+        alert.setHeaderText(null);
+        alert.setContentText("This dialog is already open.");
+        alert.showAndWait();
+        return;
+      }
+
       controller.setupController(this, projectDialogStage, createOrEdit, project);
       controller.setupSprintMode(backlog);
+      pushControllerStack(controller);
 
       projectDialogStage.initModality(Modality.APPLICATION_MODAL);
       projectDialogStage.initOwner(stage);
@@ -452,7 +485,17 @@ public class Main extends Application {
         }
       }
 
+      if (isInControllerStack(controller, team)) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Dialog already open");
+        alert.setHeaderText(null);
+        alert.setContentText("This dialog is already open.");
+        alert.showAndWait();
+        return;
+      }
+
       controller.setupController(this, teamDialogStage, createOrEdit, team);
+      pushControllerStack(controller);
 
       teamDialogStage.initModality(Modality.APPLICATION_MODAL);
       teamDialogStage.initOwner(primaryStage);
@@ -481,7 +524,17 @@ public class Main extends Application {
       Scene teamDialogScene = new Scene(teamDialogLayout);
       Stage teamDialogStage = new Stage();
 
+      if (isInControllerStack(controller, team)) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Dialog already open");
+        alert.setHeaderText(null);
+        alert.setContentText("This dialog is already open.");
+        alert.showAndWait();
+        return;
+      }
+
       controller.setupController(this, teamDialogStage, CreateOrEdit.EDIT, team);
+      pushControllerStack(controller);
 
       teamDialogStage.initModality(Modality.APPLICATION_MODAL);
       teamDialogStage.initOwner(stage);
@@ -519,6 +572,7 @@ public class Main extends Application {
           return;
         }
       }
+
       controller.setupController(this, releaseDialogStage);
 
       releaseDialogStage.initModality(Modality.APPLICATION_MODAL);
@@ -559,7 +613,18 @@ public class Main extends Application {
           return;
         }
       }
+
+      if (isInControllerStack(controller, release)) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Dialog already open");
+        alert.setHeaderText(null);
+        alert.setContentText("This dialog is already open.");
+        alert.showAndWait();
+        return;
+      }
+
       controller.setupController(this, releaseDialogStage, createOrEdit, release);
+      pushControllerStack(controller);
 
       releaseDialogStage.initModality(Modality.APPLICATION_MODAL);
       releaseDialogStage.initOwner(primaryStage);
@@ -598,7 +663,18 @@ public class Main extends Application {
           return;
         }
       }
+
+      if (isInControllerStack(controller, person)) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Dialog already open");
+        alert.setHeaderText(null);
+        alert.setContentText("This dialog is already open.");
+        alert.showAndWait();
+        return;
+      }
+
       controller.setupController(this, personDialogStage, createOrEdit, person);
+      pushControllerStack(controller);
 
       personDialogStage.initModality(Modality.APPLICATION_MODAL);
       personDialogStage.initOwner(primaryStage);
@@ -626,7 +702,17 @@ public class Main extends Application {
       Scene personDialogScene = new Scene(personDialogLayout);
       Stage personDialogStage = new Stage();
 
+      if (isInControllerStack(controller, person)) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Dialog already open");
+        alert.setHeaderText(null);
+        alert.setContentText("This dialog is already open.");
+        alert.showAndWait();
+        return;
+      }
+
       controller.setupController(this, personDialogStage, CreateOrEdit.EDIT, person);
+      pushControllerStack(controller);
 
       personDialogStage.initModality(Modality.APPLICATION_MODAL);
       personDialogStage.initOwner(stage);
@@ -655,8 +741,18 @@ public class Main extends Application {
       Scene personDialogScene = new Scene(personDialogLayout);
       Stage personDialogStage = new Stage();
 
+      if (isInControllerStack(controller, person)) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Dialog already open");
+        alert.setHeaderText(null);
+        alert.setContentText("This dialog is already open.");
+        alert.showAndWait();
+        return;
+      }
+
       controller.setupController(this, personDialogStage, createOrEdit, person);
       controller.setupBacklogMode();
+      pushControllerStack(controller);
 
       personDialogStage.initModality(Modality.APPLICATION_MODAL);
       personDialogStage.initOwner(stage);
@@ -695,7 +791,18 @@ public class Main extends Application {
           return;
         }
       }
+
+      if (isInControllerStack(controller, skill)) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Dialog already open");
+        alert.setHeaderText(null);
+        alert.setContentText("This dialog is already open.");
+        alert.showAndWait();
+        return;
+      }
+
       controller.setupController(this, skillDialogStage, createOrEdit, skill);
+      pushControllerStack(controller);
 
       skillDialogStage.initModality(Modality.APPLICATION_MODAL);
       skillDialogStage.initOwner(primaryStage);
@@ -723,7 +830,17 @@ public class Main extends Application {
       Scene skillDialogScene = new Scene(skillDialogLayout);
       Stage skillDialogStage = new Stage();
 
+      if (isInControllerStack(controller, skill)) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Dialog already open");
+        alert.setHeaderText(null);
+        alert.setContentText("This dialog is already open.");
+        alert.showAndWait();
+        return;
+      }
+
       controller.setupController(this, skillDialogStage, CreateOrEdit.EDIT, skill);
+      pushControllerStack(controller);
 
       skillDialogStage.initModality(Modality.APPLICATION_MODAL);
       skillDialogStage.initOwner(stage);
@@ -763,7 +880,18 @@ public class Main extends Application {
           return;
         }
       }
+
+      if (isInControllerStack(controller, story)) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Dialog already open");
+        alert.setHeaderText(null);
+        alert.setContentText("This dialog is already open.");
+        alert.showAndWait();
+        return;
+      }
+
       controller.setupController(this, storyDialogStage, createOrEdit, story);
+      pushControllerStack(controller);
 
       storyDialogStage.initModality(Modality.APPLICATION_MODAL);
       storyDialogStage.initOwner(primaryStage);
@@ -804,7 +932,18 @@ public class Main extends Application {
           return;
         }
       }
+
+      if (isInControllerStack(controller, story)) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Dialog already open");
+        alert.setHeaderText(null);
+        alert.setContentText("This dialog is already open.");
+        alert.showAndWait();
+        return;
+      }
+
       controller.setupController(this, storyDialogStage, createOrEdit, story);
+      pushControllerStack(controller);
 
       storyDialogStage.initModality(Modality.APPLICATION_MODAL);
       storyDialogStage.initOwner(owner);
@@ -836,8 +975,18 @@ public class Main extends Application {
       Scene storyDialogScene = new Scene(StoryDialogLayout);
       Stage storyDialogStage = new Stage();
 
+      if (isInControllerStack(controller, story)) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Dialog already open");
+        alert.setHeaderText(null);
+        alert.setContentText("This dialog is already open.");
+        alert.showAndWait();
+        return;
+      }
+
       controller.setupController(this, storyDialogStage, CreateOrEdit.EDIT, story);
       controller.setCheckboxState(fromAllocated);
+      pushControllerStack(controller);
 
       storyDialogStage.initModality(Modality.APPLICATION_MODAL);
       storyDialogStage.initOwner(stage);
@@ -879,7 +1028,18 @@ public class Main extends Application {
           return;
         }
       }
+
+      if (isInControllerStack(controller, backlog)) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Dialog already open");
+        alert.setHeaderText(null);
+        alert.setContentText("This dialog is already open.");
+        alert.showAndWait();
+        return;
+      }
+
       controller.setupController(this, backlogDialogStage, createOrEdit, backlog);
+      pushControllerStack(controller);
 
       backlogDialogStage.initModality(Modality.APPLICATION_MODAL);
       backlogDialogStage.initOwner(primaryStage);
@@ -910,7 +1070,17 @@ public class Main extends Application {
       Scene backlogDialogScene = new Scene(backlogDialogLayout);
       Stage backlogDialogStage = new Stage();
 
+      if (isInControllerStack(controller, backlog)) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Dialog already open");
+        alert.setHeaderText(null);
+        alert.setContentText("This dialog is already open.");
+        alert.showAndWait();
+        return;
+      }
+
       controller.setupController(this, backlogDialogStage, CreateOrEdit.EDIT, backlog);
+      pushControllerStack(controller);
 
       backlogDialogStage.initModality(Modality.APPLICATION_MODAL);
       backlogDialogStage.initOwner(stage);
@@ -947,7 +1117,18 @@ public class Main extends Application {
           return;
         }
       }
+
+      if (isInControllerStack(controller, sprint)) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Dialog already open");
+        alert.setHeaderText(null);
+        alert.setContentText("This dialog is already open.");
+        alert.showAndWait();
+        return;
+      }
+
       controller.setupController(this, sprintDialogStage, createOrEdit, sprint);
+      pushControllerStack(controller);
 
       sprintDialogStage.initModality(Modality.APPLICATION_MODAL);
       sprintDialogStage.initOwner(primaryStage);
@@ -983,7 +1164,17 @@ public class Main extends Application {
       Scene taskDialogScene = new Scene(taskDialogLayout);
       Stage taskDialogStage = new Stage();
 
+      if (isInControllerStack(controller, task)) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Dialog already open");
+        alert.setHeaderText(null);
+        alert.setContentText("This dialog is already open.");
+        alert.showAndWait();
+        return taskUndoRedo;
+      }
+
       controller.setupController(this, taskable, team, taskDialogStage, createOrEdit, task);
+      pushControllerStack(controller);
 
       taskDialogStage.initModality(Modality.APPLICATION_MODAL);
       taskDialogStage.initOwner(stage);
@@ -1922,6 +2113,41 @@ public class Main extends Application {
 
   public void addSprint(Sprint sprint) {
     sprints.add(sprint);
+  }
+
+  /**
+   * Pushes a controller onto the openControllers stack.
+   *
+   * @param agileController The controller to push.
+   */
+  public void pushControllerStack(AgileController agileController) {
+    openControllers.add(agileController);
+    System.out.println(openControllers.size());
+  }
+
+  /**
+   * Pops the first controller of the openControllers stack.
+   */
+  public void popControllerStack() {
+    openControllers.remove(openControllers.size() - 1);
+    System.out.println(openControllers.size());
+  }
+
+  /**
+   * Returns whether a given AgileController is already in openControllers.
+   *
+   * @param agileController The controller to check.
+   * @param agileItem The item that the controller is being opened for.
+   * @return Returns true if the controller already exists in openControllers.
+   */
+  public boolean isInControllerStack(AgileController agileController, AgileItem agileItem) {
+    for (AgileController controller : openControllers) {
+      if (controller.getClass().equals(agileController.getClass()) &&
+          controller.getLabel().equals(agileItem.getLabel())) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public UndoRedoHandler getUndoRedoHandler() {

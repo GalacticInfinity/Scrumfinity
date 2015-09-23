@@ -33,6 +33,7 @@ import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.controller.enums.DialogMode;
+import seng302.group5.model.AgileController;
 import seng302.group5.model.Status;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Person;
@@ -51,7 +52,7 @@ import seng302.group5.model.util.Settings;
  *
  * Created by Zander on 5/05/2015.
  */
-public class StoryDialogController {
+public class StoryDialogController implements AgileController {
 
   @FXML private TextField storyLabelField;
   @FXML private TextField storyNameField;
@@ -206,6 +207,10 @@ public class StoryDialogController {
 
     btnCreateStory.setDefaultButton(true);
     thisStage.setResizable(false);
+
+    thisStage.setOnCloseRequest(event -> {
+      mainApp.popControllerStack();
+    });
 
     storyLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
@@ -449,7 +454,7 @@ public class StoryDialogController {
         undoRedoObject.addDatum(null);
       }
       mainApp.newAction(undoRedoObject);
-
+      mainApp.popControllerStack();
       thisStage.close();
     }
   }
@@ -483,6 +488,7 @@ public class StoryDialogController {
       }
       // undo all editing of existing tasks made within this dialog
       mainApp.quickUndo(tasksUndoRedo);
+      mainApp.popControllerStack();
       thisStage.close();
     }
   }
@@ -1025,5 +1031,17 @@ public class StoryDialogController {
         }
       }
     }
+  }
+
+  /**
+   * Returns the label of the backlog if a backlog is being edited.
+   *
+   * @return The label of the backlog as a string.
+   */
+  public String getLabel() {
+    if (createOrEdit == CreateOrEdit.EDIT) {
+      return story.getLabel();
+    }
+    return "";
   }
 }

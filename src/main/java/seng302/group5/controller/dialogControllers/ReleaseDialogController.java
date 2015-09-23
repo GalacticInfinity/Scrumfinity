@@ -22,6 +22,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
+import seng302.group5.model.AgileController;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Release;
 import seng302.group5.model.Project;
@@ -34,7 +35,7 @@ import seng302.group5.model.util.Settings;
  * Created by Craig Barnard on 7/04/2015.
  * Release Dialog Controller, manages the usage of Dialogs involved in the creating and editing of releases.
  */
-public class ReleaseDialogController {
+public class ReleaseDialogController implements AgileController {
 
   @FXML private TextField releaseLabelField;
   @FXML private TextArea releaseDescriptionField;
@@ -135,7 +136,7 @@ public class ReleaseDialogController {
       }
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
       mainApp.newAction(undoRedoObject);
-
+      mainApp.popControllerStack();
       thisStage.close();
     }
   }
@@ -221,6 +222,10 @@ public class ReleaseDialogController {
 
     btnConfirm.setDefaultButton(true);
     thisStage.setResizable(false);
+
+    thisStage.setOnCloseRequest(event -> {
+      mainApp.popControllerStack();
+    });
 
     // Handle TextField text changes.
     releaseLabelField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -375,6 +380,7 @@ public class ReleaseDialogController {
    */
   @FXML
   protected void btnCancelClick(ActionEvent event) {
+    mainApp.popControllerStack();
     thisStage.close();
   }
 
@@ -413,5 +419,17 @@ public class ReleaseDialogController {
         }
       }
     }
+  }
+
+  /**
+   * Returns the label of the backlog if a backlog is being edited.
+   *
+   * @return The label of the backlog as a string.
+   */
+  public String getLabel() {
+    if (createOrEdit == CreateOrEdit.EDIT) {
+      return release.getLabel();
+    }
+    return "";
   }
 }
