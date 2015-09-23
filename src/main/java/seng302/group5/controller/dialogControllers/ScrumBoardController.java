@@ -36,8 +36,6 @@ public class ScrumBoardController {
   @FXML private ComboBox<Sprint> sprintCombo;
   @FXML private ComboBox<Backlog> backlogCombo;
   @FXML private VBox storiesBox;
-  @FXML private Button btnDeleteTask;
-  @FXML private Button btnNewTask;
   @FXML private ScrollPane scrollPane;
 
   private Main mainApp;

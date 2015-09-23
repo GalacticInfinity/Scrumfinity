@@ -843,8 +843,11 @@ public class UndoRedoHandler {
     Story storyToChange = (Story) undoRedoObject.getAgileItem();
     Story storyData = (Story) data.get(0);
     Backlog storyBacklog = null;
+    int storyEstimate = 0;
     if (data.size() > 1) {
       storyBacklog = (Backlog) data.get(1);
+      Backlog storyBacklogWithEstimate = (Backlog) data.get(2);
+      storyEstimate = storyBacklogWithEstimate.getSizes().get(storyToChange);
     }
 
     // Make the changes and refresh the list
@@ -857,7 +860,7 @@ public class UndoRedoHandler {
       storyToChange.copyValues(storyData);
       mainApp.addStory(storyToChange);
       if (storyBacklog != null) {
-        storyBacklog.addStory(storyToChange);
+        storyBacklog.addStory(storyToChange,  storyEstimate);
       }
     }
     mainApp.refreshList(null);

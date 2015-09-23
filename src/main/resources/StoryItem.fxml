@@ -68,7 +68,7 @@
                                     </ImageView>
                                  </graphic>
                               </Button>
-                              <Button maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0">
+                              <Button maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#btnRemoveTask" prefHeight="30.0" prefWidth="30.0">
                                  <HBox.margin>
                                     <Insets left="8.0" right="8.0" />
                                  </HBox.margin>
