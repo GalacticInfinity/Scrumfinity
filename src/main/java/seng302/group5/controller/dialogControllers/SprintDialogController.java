@@ -80,6 +80,8 @@ public class SprintDialogController implements AgileController {
   @FXML private Button btnNewProject;
   @FXML private Button btnEditProject;
   @FXML private Button btnEditTeam;
+  @FXML private Button btnNewRelease;
+  @FXML private Button btnEditRelease;
 
   private Main mainApp;
   private Stage thisStage;
@@ -147,6 +149,8 @@ public class SprintDialogController implements AgileController {
       btnNewProject.setDisable(true);
       btnEditProject.setDisable(true);
       btnEditTeam.setDisable(true);
+      btnEditRelease.setDisable(true);
+      btnNewRelease.setDisable(true);
 
 
     } else if (createOrEdit == CreateOrEdit.EDIT) {
@@ -264,6 +268,11 @@ public class SprintDialogController implements AgileController {
       if (createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
       }
+      if (newValue != null) {
+        btnEditRelease.setDisable(false);
+      } else {
+        btnEditRelease.setDisable(true);
+      }
     });
     sprintStartDate.valueProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
@@ -302,7 +311,8 @@ public class SprintDialogController implements AgileController {
         sprintNameField.getText().equals(sprint.getSprintFullName()) &&
         sprintDescriptionField.getText().equals(sprint.getSprintDescription()) &&
         sprintImpedimentsField.getText().equals(sprint.getSprintImpediments()) &&
-        sprintBacklogCombo.getValue().equals(sprint.getSprintBacklog()) &&
+        (sprintBacklogCombo.getValue() == null ||
+         sprintBacklogCombo.getValue().equals(sprint.getSprintBacklog())) &&
         (sprintTeamCombo.getValue() == null ||
          sprintTeamCombo.getValue().equals(sprint.getSprintTeam())) &&
         (sprintReleaseCombo.getValue() == null ||
@@ -370,6 +380,7 @@ public class SprintDialogController implements AgileController {
 
             btnNewProject.setDisable(true);
             btnEditProject.setDisable(false);
+            btnNewRelease.setDisable(false);
 
             sprintTeamCombo.setDisable(false);
             sprintReleaseCombo.setDisable(false);
@@ -407,6 +418,9 @@ public class SprintDialogController implements AgileController {
 
             btnNewProject.setDisable(false);
             btnEditProject.setDisable(true);
+            btnEditTeam.setDisable(true);
+            btnNewRelease.setDisable(true);
+            btnEditRelease.setDisable(true);
 
             sprintTeamCombo.setValue(null);
             sprintReleaseCombo.setValue(null);
@@ -1020,11 +1034,18 @@ public class SprintDialogController implements AgileController {
   @FXML
   protected void editBacklog(ActionEvent event) {
     List<Backlog> tempBacklogList = new ArrayList<>(backlogs);
+    Team tempTeam = sprintTeamCombo.getSelectionModel().getSelectedItem();
+    Release tempRelease = sprintReleaseCombo.getSelectionModel().getSelectedItem();
+    List<Story> tempAllocatedStories = new ArrayList<>(allocatedStoriesPrioritised);
     Backlog selectedBacklog = sprintBacklogCombo.getSelectionModel().getSelectedItem();
     if (selectedBacklog != null) {
       mainApp.showBacklogDialogNested(selectedBacklog, thisStage);
-      backlogs.setAll(tempBacklogList);
+      backlogs.setAll(tempBacklogList); // this line deselects everything due to the listener
       sprintBacklogCombo.getSelectionModel().select(selectedBacklog);
+      sprintTeamCombo.getSelectionModel().select(tempTeam);
+      sprintReleaseCombo.getSelectionModel().select(tempRelease);
+      allocatedStoriesPrioritised.addAll(tempAllocatedStories);
+      availableStories.removeAll(tempAllocatedStories);
     }
   }
 
@@ -1097,6 +1118,41 @@ public class SprintDialogController implements AgileController {
       mainApp.showTeamDialogWithinNested(selectedTeam, thisStage);
       teams.setAll(tempTeamList);
       sprintTeamCombo.getSelectionModel().select(selectedTeam);
+    }
+  }
+
+  /**
+   * A button which when clicked can edit the displayed release.
+   * Also adds to undo/redo stack so the edit is undoable.
+   * @param event Button click
+   */
+  @FXML
+  protected void editRelease(ActionEvent event) {
+    List<Release> tempReleaseList = new ArrayList<>(releases);
+    Release selectedRelease = sprintReleaseCombo.getSelectionModel().getSelectedItem();
+    if (selectedRelease != null) {
+      mainApp.showReleaseDialogWithinSprint(CreateOrEdit.EDIT, selectedRelease, project, thisStage);
+      releases.setAll(tempReleaseList);
+      sprintReleaseCombo.getSelectionModel().select(selectedRelease);
+    }
+  }
+
+  /**
+   * A button which when clicked can add a release to the project.
+   * Also adds to undo/redo stack so creation is undoable.
+   * @param event Button click
+   */
+  @FXML
+  protected void addNewRelease(ActionEvent event) {
+    List<Release> tempReleaseList = new ArrayList<>(releases);
+    mainApp.showReleaseDialogWithinSprint(CreateOrEdit.CREATE, null, project, thisStage);
+    List<Release> tempNewReleaseList = new ArrayList<>(mainApp.getReleases());
+    for (Release release : tempNewReleaseList) {
+      if (!tempReleaseList.contains(release)) {
+        releases.setAll(tempNewReleaseList);
+        sprintReleaseCombo.getSelectionModel().select(release);
+        break;
+      }
     }
   }
 

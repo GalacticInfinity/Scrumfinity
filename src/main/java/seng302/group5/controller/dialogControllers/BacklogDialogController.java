@@ -902,13 +902,18 @@ public class BacklogDialogController implements AgileController {
    */
   @FXML
   protected void addNewStory(ActionEvent event) {
-    mainApp.showStoryDialog(CreateOrEdit.CREATE);
-    Set<Story> currentStories = new HashSet<>();
-    for (StoryEstimate story : allocatedStories) {
-      currentStories.add(story.getStory());
+    mainApp.showStoryDialogWithinBacklog(CreateOrEdit.CREATE, null, thisStage);
+
+    Set<Story> storiesInUse = new HashSet<>();
+    for (StoryEstimate storyEstimate : allocatedStories) {
+      storiesInUse.add(storyEstimate.getStory());
     }
+    for (Backlog mainBacklog : mainApp.getBacklogs()) {
+      storiesInUse.addAll(mainBacklog.getStories());
+    }
+    availableStories.clear();
     for (Story story : mainApp.getStories()) {
-      if (!availableStories.contains(story) && !currentStories.contains(story)) {
+      if (!storiesInUse.contains(story)) {
         availableStories.add(story);
       }
     }

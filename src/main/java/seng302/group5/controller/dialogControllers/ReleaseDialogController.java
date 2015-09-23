@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.AgileController;
+import seng302.group5.controller.enums.DialogMode;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Release;
 import seng302.group5.model.Project;
@@ -51,6 +52,7 @@ public class ReleaseDialogController implements AgileController {
   private Main mainApp;
   private Stage thisStage;
   private CreateOrEdit createOrEdit;
+  private DialogMode dialogMode;
   private Release release = new Release();
   private Release lastRelease;
 
@@ -132,7 +134,9 @@ public class ReleaseDialogController implements AgileController {
 
         releaseDateField.setValue(release.getReleaseDate());
         projectComboBox.setValue(release.getProjectRelease());
-        mainApp.refreshList(release);
+        if (Settings.correctList(release)) {
+          mainApp.refreshList(release);
+        }
       }
       UndoRedoObject undoRedoObject = generateUndoRedoObject();
       mainApp.newAction(undoRedoObject);
@@ -178,6 +182,7 @@ public class ReleaseDialogController implements AgileController {
                               Release release) {
     this.mainApp = mainApp;
     this.thisStage = thisStage;
+    this.dialogMode = DialogMode.DEFAULT_MODE;
     releaseDateField.setValue(LocalDate.now());
 
     String os = System.getProperty("os.name");
@@ -273,6 +278,17 @@ public class ReleaseDialogController implements AgileController {
     });
   }
 
+  /**
+   * Set up the dialog to be in sprint mode.
+   *
+   * @param project The project to be auto selected.
+   */
+  public void setupSprintMode(Project project) {
+    dialogMode = DialogMode.SPRINT_MODE;
+    projectComboBox.getSelectionModel().select(project);
+    projectComboBox.setDisable(true);
+    btnNewProject.setDisable(true);
+  }
 
   /**
    * checks if there are any changed fields and disables or enables the button accordingly

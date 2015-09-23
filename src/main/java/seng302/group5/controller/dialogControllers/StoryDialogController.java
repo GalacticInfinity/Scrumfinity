@@ -108,6 +108,7 @@ public class StoryDialogController implements AgileController {
   public void setupController(Main mainApp, Stage thisStage, CreateOrEdit createOrEdit, Story story) {
     this.mainApp = mainApp;
     this.thisStage = thisStage;
+    this.dialogMode = DialogMode.DEFAULT_MODE;
 
     String os = System.getProperty("os.name");
 
@@ -166,10 +167,6 @@ public class StoryDialogController implements AgileController {
       this.lastBacklog = null;    // Stays null if not found
       this.team = null;
 
-      Backlog back = new Backlog();
-      if (Settings.correctList(back)) {
-        backlogCombo.setDisable(true);
-      }
       for (Backlog backlog : mainApp.getBacklogs()) {
         if (backlog.getStories().contains(story)) {
           this.lastBacklog = backlog;
@@ -179,6 +176,7 @@ public class StoryDialogController implements AgileController {
               "to avoid problems with priority and estimates.");
           this.backlogContainer.setTooltip(tooltip);
           this.backlogCombo.setDisable(true);
+          this.btnNewBacklog.setDisable(true);
           if (backlog.getEstimate().getEstimateNames().get(backlog.getSizes().get(story))!=null) {
             this.shownEstimate.setText(backlog.getEstimate().getEstimateNames() //This gets the estimate name to be shown on the story dialog
                                            .get(backlog.getSizes().get(story)));
@@ -293,6 +291,16 @@ public class StoryDialogController implements AgileController {
           }
         }
     );
+  }
+
+  /**
+   * Set up the dialog to be in backlog mode
+   */
+  public void setupBacklogMode() {
+    dialogMode = DialogMode.BACKLOG_MODE;
+    backlogCombo.setDisable(true);
+    btnNewBacklog.setDisable(true);
+    btnEditBacklog.setDisable(true);
   }
 
   /**
