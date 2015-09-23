@@ -354,7 +354,7 @@ public class Main extends Application {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Dialog already open");
         alert.setHeaderText(null);
-        alert.setContentText("This dialog is already open.");
+        alert.setContentText("The window you are trying to open is already open in the background.");
         alert.showAndWait();
         return;
       }
@@ -393,7 +393,7 @@ public class Main extends Application {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Dialog already open");
         alert.setHeaderText(null);
-        alert.setContentText("This dialog is already open.");
+        alert.setContentText("The window you are trying to open is already open in the background.");
         alert.showAndWait();
         return;
       }
@@ -435,7 +435,7 @@ public class Main extends Application {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Dialog already open");
         alert.setHeaderText(null);
-        alert.setContentText("This dialog is already open.");
+        alert.setContentText("The window you are trying to open is already open in the background.");
         alert.showAndWait();
         return;
       }
@@ -488,7 +488,7 @@ public class Main extends Application {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Dialog already open");
         alert.setHeaderText(null);
-        alert.setContentText("This dialog is already open.");
+        alert.setContentText("The window you are trying to open is already open in the background.");
         alert.showAndWait();
         return;
       }
@@ -527,7 +527,7 @@ public class Main extends Application {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Dialog already open");
         alert.setHeaderText(null);
-        alert.setContentText("This dialog is already open.");
+        alert.setContentText("The window you are trying to open is already open in the background.");
         alert.showAndWait();
         return;
       }
@@ -617,7 +617,7 @@ public class Main extends Application {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Dialog already open");
         alert.setHeaderText(null);
-        alert.setContentText("This dialog is already open.");
+        alert.setContentText("The window you are trying to open is already open in the background.");
         alert.showAndWait();
         return;
       }
@@ -699,7 +699,7 @@ public class Main extends Application {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Dialog already open");
         alert.setHeaderText(null);
-        alert.setContentText("This dialog is already open.");
+        alert.setContentText("The window you are trying to open is already open in the background.");
         alert.showAndWait();
         return;
       }
@@ -737,7 +737,7 @@ public class Main extends Application {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Dialog already open");
         alert.setHeaderText(null);
-        alert.setContentText("This dialog is already open.");
+        alert.setContentText("The window you are trying to open is already open in the background.");
         alert.showAndWait();
         return;
       }
@@ -776,7 +776,7 @@ public class Main extends Application {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Dialog already open");
         alert.setHeaderText(null);
-        alert.setContentText("This dialog is already open.");
+        alert.setContentText("The window you are trying to open is already open in the background.");
         alert.showAndWait();
         return;
       }
@@ -827,7 +827,7 @@ public class Main extends Application {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Dialog already open");
         alert.setHeaderText(null);
-        alert.setContentText("This dialog is already open.");
+        alert.setContentText("The window you are trying to open is already open in the background.");
         alert.showAndWait();
         return;
       }
@@ -865,7 +865,7 @@ public class Main extends Application {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Dialog already open");
         alert.setHeaderText(null);
-        alert.setContentText("This dialog is already open.");
+        alert.setContentText("The window you are trying to open is already open in the background.");
         alert.showAndWait();
         return;
       }
@@ -916,7 +916,7 @@ public class Main extends Application {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Dialog already open");
         alert.setHeaderText(null);
-        alert.setContentText("This dialog is already open.");
+        alert.setContentText("The window you are trying to open is already open in the background.");
         alert.showAndWait();
         return;
       }
@@ -968,7 +968,7 @@ public class Main extends Application {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Dialog already open");
         alert.setHeaderText(null);
-        alert.setContentText("This dialog is already open.");
+        alert.setContentText("The window you are trying to open is already open in the background.");
         alert.showAndWait();
         return;
       }
@@ -1011,7 +1011,7 @@ public class Main extends Application {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Dialog already open");
         alert.setHeaderText(null);
-        alert.setContentText("This dialog is already open.");
+        alert.setContentText("The window you are trying to open is already open in the background.");
         alert.showAndWait();
         return;
       }
@@ -1065,7 +1065,7 @@ public class Main extends Application {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Dialog already open");
         alert.setHeaderText(null);
-        alert.setContentText("This dialog is already open.");
+        alert.setContentText("The window you are trying to open is already open in the background.");
         alert.showAndWait();
         return;
       }
@@ -1106,7 +1106,7 @@ public class Main extends Application {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Dialog already open");
         alert.setHeaderText(null);
-        alert.setContentText("This dialog is already open.");
+        alert.setContentText("The window you are trying to open is already open in the background.");
         alert.showAndWait();
         return;
       }
@@ -1154,7 +1154,7 @@ public class Main extends Application {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Dialog already open");
         alert.setHeaderText(null);
-        alert.setContentText("This dialog is already open.");
+        alert.setContentText("The window you are trying to open is already open in the background.");
         alert.showAndWait();
         return;
       }
@@ -1200,7 +1200,7 @@ public class Main extends Application {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Dialog already open");
         alert.setHeaderText(null);
-        alert.setContentText("This dialog is already open.");
+        alert.setContentText("The window you are trying to open is already open in the background.");
         alert.showAndWait();
         return taskUndoRedo;
       }
