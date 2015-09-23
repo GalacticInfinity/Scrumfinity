@@ -453,7 +453,7 @@ public class ListMainPaneController {
 
     Text text8 = new Text("\nTeam: ");
     text8.setFill(Color.BLACK);
-    text8.setFont(Font.font("Helvetica",FontWeight.BOLD, FontPosture.ITALIC, 15));
+    text8.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.ITALIC, 15));
 
     Text text9;
     if (person.isInTeam()) {
@@ -888,7 +888,11 @@ public class ListMainPaneController {
         points += sprintVelocity(sprint);
       }
     }
-    return points/days;
+    if (points > 0) {
+      return points / days;
+    } else {
+      return 0;
+    }
   }
 
   /**

@@ -2159,7 +2159,6 @@ public class Main extends Application {
    */
   public void pushControllerStack(AgileController agileController) {
     openControllers.add(agileController);
-    System.out.println(openControllers.size());
   }
 
   /**
