@@ -401,7 +401,7 @@ public class StoryDialogController implements AgileController {
     if (backlog != null) {
       storyChanges.addDatum(backlog);
       if (createOrEdit == CreateOrEdit.EDIT) {
-        storyChanges.addDatum(lastBacklog);
+        storyChanges.addDatum(lastBacklog); // before
       }
       storyChanges.addDatum(new Backlog(backlog));
     }
