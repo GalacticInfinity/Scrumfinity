@@ -68,24 +68,24 @@
             </VBox>
             <VBox alignment="CENTER" prefHeight="232.0" prefWidth="61.0">
                <children>
-                  <Button fx:id="btnAddMember" mnemonicParsing="false" onAction="#btnAddMemberClick" prefWidth="60.0">
+                  <Button fx:id="btnAddMember" maxHeight="25.0" maxWidth="60.0" minHeight="25.0" minWidth="60.0" mnemonicParsing="false" onAction="#btnAddMemberClick" prefHeight="25.0" prefWidth="60.0">
                      <VBox.margin>
-                        <Insets bottom="20.0" />
+                        <Insets bottom="10.0" />
                      </VBox.margin>
                      <graphic>
-                        <ImageView fitHeight="20.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="20.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="RightArrow.png" />
                            </image>
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button fx:id="btnRemoveMember" mnemonicParsing="false" onAction="#btnRemoveMemberClick" prefWidth="60.0">
+                  <Button fx:id="btnRemoveMember" maxHeight="25.0" maxWidth="60.0" minHeight="25.0" minWidth="60.0" mnemonicParsing="false" onAction="#btnRemoveMemberClick" prefHeight="25.0" prefWidth="60.0">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
                      <graphic>
-                        <ImageView fitHeight="20.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="20.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="LeftArrow.png" />
                            </image>

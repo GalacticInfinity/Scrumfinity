@@ -79,27 +79,27 @@
             </VBox>
             <VBox prefHeight="204.0" prefWidth="70.0">
                <children>
-                  <Button fx:id="btnAddSkill" mnemonicParsing="false" onAction="#btnAddSkillClick" prefWidth="60.0">
+                  <Button fx:id="btnAddSkill" maxHeight="25.0" maxWidth="60.0" minHeight="25.0" minWidth="60.0" mnemonicParsing="false" onAction="#btnAddSkillClick" prefHeight="25.0" prefWidth="60.0">
                      <VBox.margin>
-                        <Insets left="5.0" top="70.0" />
+                        <Insets bottom="10.0" left="5.0" top="70.0" />
                      </VBox.margin>
                      <graphic>
-                        <ImageView fitHeight="18.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="20.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="RightArrow.png" />
                            </image>
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button fx:id="btnRemoveSkill" mnemonicParsing="false" onAction="#btnRemoveSkillClick" prefWidth="60.0">
+                  <Button fx:id="btnRemoveSkill" maxHeight="25.0" maxWidth="60.0" minHeight="25.0" minWidth="60.0" mnemonicParsing="false" onAction="#btnRemoveSkillClick" prefHeight="25.0" prefWidth="60.0">
                      <VBox.margin>
-                        <Insets left="5.0" top="10.0" />
+                        <Insets left="5.0" />
                      </VBox.margin>
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                      <graphic>
-                        <ImageView fitHeight="18.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="20.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="LeftArrow.png" />
                            </image>
@@ -137,7 +137,7 @@
                   <Font name="System Italic" size="13.0" />
                </font>
             </Label>
-                <Button fx:id="btnCreatePerson" mnemonicParsing="false" onAction="#btnCreatePersonClick" prefHeight="25.0" prefWidth="84.0" text="Save">
+                <Button fx:id="btnCreatePerson" mnemonicParsing="false" onAction="#btnCreatePersonClick" prefHeight="25.0" prefWidth="85.0" text="Save">
                <HBox.margin>
                   <Insets />
                </HBox.margin></Button>

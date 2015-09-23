@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -52,15 +53,29 @@
             </VBox>
             <VBox alignment="CENTER" prefHeight="232.0" prefWidth="60.0">
                <children>
-                  <Button fx:id="btnAddStory" mnemonicParsing="false" onAction="#btnAddStoryClick" prefWidth="60.0" text="→">
+                  <Button fx:id="btnAddStory" maxHeight="25.0" maxWidth="60.0" minHeight="25.0" minWidth="60.0" mnemonicParsing="false" onAction="#btnAddStoryClick" prefHeight="25.0" prefWidth="60.0">
                      <VBox.margin>
-                        <Insets bottom="20.0" left="5.0" />
+                        <Insets bottom="10.0" left="5.0" />
                      </VBox.margin>
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="RightArrow.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                   </Button>
-                  <Button fx:id="btnRemoveStory" mnemonicParsing="false" onAction="#btnRemoveStoryClick" prefWidth="60.0" text="←">
+                  <Button fx:id="btnRemoveStory" maxHeight="25.0" maxWidth="60.0" minHeight="25.0" minWidth="60.0" mnemonicParsing="false" onAction="#btnRemoveStoryClick" prefHeight="25.0" prefWidth="60.0">
                      <VBox.margin>
                         <Insets left="5.0" />
                      </VBox.margin>
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="LeftArrow.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                   </Button>
                </children>
             </VBox>

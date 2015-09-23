@@ -2166,7 +2166,6 @@ public class Main extends Application {
    */
   public void popControllerStack() {
     openControllers.remove(openControllers.size() - 1);
-    System.out.println(openControllers.size());
   }
 
   /**
