@@ -434,30 +434,85 @@ public class StoryItemController {
     updateDino();
     updateProgBar();
   }
+
+  /**
+   * This handles the remove button being pressed
+   * It will take the selected task and delete it.
+   * @param event The event of the minus button being pressed.
+   */
+  @FXML
+  protected void btnRemoveTask(ActionEvent event) {
+
+    if (selectedLabel != null) {
+
+      int initialPosition = -1;
+      UndoRedo ssUR = new UndoRedoObject();
+
+      Task deleteTask = null;
+
+      for (Task task : story.getTasks()) {
+        if (task.getLabel() == selectedLabel.getText()) {
+          deleteTask = task;
+          break;
+        }
+      }
+
+      if (story.getLabel().equals("Non-story Tasks")) {
+        Sprint before = new Sprint(sprint);
+        for (Task task : sprint.getTasks()) {
+          if (task.getLabel().equals(deleteTask.getLabel())) {
+            initialPosition = sprint.getTasks().indexOf(task);
+            break;
+          }
+        }
+        sprint.removeTask(deleteTask);
+        story.removeTask(deleteTask);
+        Sprint after = new Sprint(sprint);
+        ssUR.setAgileItem(sprint);
+        ssUR.setAction(Action.SPRINT_EDIT);
+        ssUR.addDatum(before);
+        ssUR.addDatum(after);
+      } else {
+        Story before = new Story(story);
+        for (Task task : story.getTasks()) {
+          if (task.getLabel().equals(deleteTask.getLabel())) {
+            initialPosition = story.getTasks().indexOf(task);
+          }
+        }
+        story.removeTask(deleteTask);
+        Story after = new Story(story);
+        ssUR.setAgileItem(story);
+        ssUR.setAction(Action.STORY_EDIT);
+        ssUR.addDatum(before);
+        ssUR.addDatum(after);
+      }
+
+      CompositeUndoRedo comp = new CompositeUndoRedo("Scrumboard Drag Action");
+      comp.addUndoRedo(ssUR);
+
+      mainApp.newAction(comp);
+
+//      UndoRedo taskDelete = new UndoRedoObject();
+//      taskDelete.setAction(Action.TASK_DELETE);
+//      taskDelete.addDatum(new Task(deleteTask));
+//      taskDelete.addDatum(story);
+
+      // Store a copy of task to edit in object to avoid reference problems
+//      taskDelete.setAgileItem(deleteTask);
 //
-//  //TODO Figure out how to do this. It may be faster with su-shing coz he knows the composite undo stuff
-//  @FXML
-//  protected void btnRemoveTask(ActionEvent event) {
-//
-//    Task deleteTask = null;
-//
-//    for (Task task : story.getTasks()) {
-//      if (task.getLabel() == selectedLabel.getText()) {
-//        deleteTask = task;
-//        break;
+//      if (deleteTask != null) {
+//        story.removeTask(deleteTask);
 //      }
-//    }
-//
-//    if (deleteTask != null) {
-//      mainApp.delete(deleteTask);
-//    }
-//
-//    mainApp.getLMPC().getScrumBoardController().refreshTaskLists();
-//
-//    //Gotta update the dino and the prog bar to reflect changes
-//    updateDino();
-//    updateProgBar();
-//  }
+
+//      mainApp.newAction(taskDelete);
+
+      mainApp.getLMPC().getScrumBoardController().refreshTaskLists();
+
+      //Gotta update the dino and the prog bar to reflect changes
+      updateDino();
+      updateProgBar();
+    }
+  }
 
   /**
    * This handles when the edit button is pushed for a task.
