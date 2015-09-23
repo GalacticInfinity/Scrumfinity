@@ -445,6 +445,9 @@ public class StoryItemController {
 
     if (selectedLabel != null) {
 
+      int initialPosition = -1;
+      UndoRedo ssUR = new UndoRedoObject();
+
       Task deleteTask = null;
 
       for (Task task : story.getTasks()) {
@@ -454,19 +457,54 @@ public class StoryItemController {
         }
       }
 
-      UndoRedo taskDelete = new UndoRedoObject();
-      taskDelete.setAction(Action.TASK_DELETE);
-      taskDelete.addDatum(new Task(deleteTask));
-      taskDelete.addDatum(story);
-
-      // Store a copy of task to edit in object to avoid reference problems
-      taskDelete.setAgileItem(deleteTask);
-
-      if (deleteTask != null) {
+      if (story.getLabel().equals("Non-story Tasks")) {
+        Sprint before = new Sprint(sprint);
+        for (Task task : sprint.getTasks()) {
+          if (task.getLabel().equals(deleteTask.getLabel())) {
+            initialPosition = sprint.getTasks().indexOf(task);
+            break;
+          }
+        }
+        sprint.removeTask(deleteTask);
         story.removeTask(deleteTask);
+        Sprint after = new Sprint(sprint);
+        ssUR.setAgileItem(sprint);
+        ssUR.setAction(Action.SPRINT_EDIT);
+        ssUR.addDatum(before);
+        ssUR.addDatum(after);
+      } else {
+        Story before = new Story(story);
+        for (Task task : story.getTasks()) {
+          if (task.getLabel().equals(deleteTask.getLabel())) {
+            initialPosition = story.getTasks().indexOf(task);
+          }
+        }
+        story.removeTask(deleteTask);
+        Story after = new Story(story);
+        ssUR.setAgileItem(story);
+        ssUR.setAction(Action.STORY_EDIT);
+        ssUR.addDatum(before);
+        ssUR.addDatum(after);
       }
 
-      mainApp.newAction(taskDelete);
+      CompositeUndoRedo comp = new CompositeUndoRedo("Scrumboard Drag Action");
+      comp.addUndoRedo(ssUR);
+
+      mainApp.newAction(comp);
+
+//      UndoRedo taskDelete = new UndoRedoObject();
+//      taskDelete.setAction(Action.TASK_DELETE);
+//      taskDelete.addDatum(new Task(deleteTask));
+//      taskDelete.addDatum(story);
+
+      // Store a copy of task to edit in object to avoid reference problems
+//      taskDelete.setAgileItem(deleteTask);
+//
+//      if (deleteTask != null) {
+//        story.removeTask(deleteTask);
+//      }
+
+//      mainApp.newAction(taskDelete);
 
       mainApp.getLMPC().getScrumBoardController().refreshTaskLists();
 
