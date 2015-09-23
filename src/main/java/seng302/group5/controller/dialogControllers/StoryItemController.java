@@ -62,6 +62,8 @@ public class StoryItemController {
   private ObservableList<Task> verifyTasks;
   private ObservableList<Task> doneTasks;
 
+  private Label selectedLabel;
+
   /**
    * This function sets up the story item controller.
    * @param story       The story being displayed in this.
@@ -214,6 +216,7 @@ public class StoryItemController {
     });
   }
 
+
   /**
    * Adds the label to a VBox, and assigns mouse event listeners for drag and drop functionality
    * between the four VBoxes (notStartedList, inProgressList, verifyList, doneList).
@@ -222,6 +225,18 @@ public class StoryItemController {
    * @param label Label to be added
    */
   private void addWithDragging(VBox root, Label label) {
+
+    //Changes the colour of the clicked on/selected item.
+    label.setOnMousePressed(new EventHandler<MouseEvent>() {
+      @Override
+      public void handle(MouseEvent event) {
+        if (selectedLabel != null) {
+          selectedLabel.setStyle("-fx-background-color: transparent;");
+        }
+        selectedLabel = (Label) event.getSource();
+        selectedLabel.setStyle("-fx-background-color: #ffffa0;");
+      }});
+
     label.setOnMouseClicked(new EventHandler<MouseEvent>() {
       @Override
       public void handle(MouseEvent event) {
@@ -265,7 +280,7 @@ public class StoryItemController {
       @Override
       public void handle(MouseDragEvent event) {
         if (checkSource(event) && !checkSameLabel(event)) {
-          label.setStyle("-fx-background-color: #ffffa0;");
+          label.setStyle("-fx-background-color: #72f995;");
         }
       }
     });
