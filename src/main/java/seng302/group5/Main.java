@@ -1019,9 +1019,7 @@ public class Main extends Application {
       
       controller.setupController(this, storyDialogStage, createOrEdit, story);
       controller.setCheckboxState(state);
-      if (story == null) {
-        controller.setupSprintMode(backlog);
-      }
+      controller.setupSprintMode(backlog);
       pushControllerStack(controller);
 
       storyDialogStage.initModality(Modality.APPLICATION_MODAL);
@@ -2179,6 +2177,7 @@ public class Main extends Application {
   public boolean isInControllerStack(AgileController agileController, AgileItem agileItem) {
     for (AgileController controller : openControllers) {
       if (controller.getClass().equals(agileController.getClass()) &&
+          agileItem != null &&
           controller.getLabel().equals(agileItem.getLabel())) {
         return true;
       }

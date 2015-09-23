@@ -489,6 +489,9 @@ public class PersonDialogController implements AgileController {
           mainApp.showSkillDialogWithinPerson(selectedSkill, thisStage);
           selectedSkills.remove(selectedSkill);
           selectedSkills.add(selectedSkill);
+          if (createOrEdit == CreateOrEdit.EDIT) {
+            checkButtonDisabled();
+          }
         }
       });
     }

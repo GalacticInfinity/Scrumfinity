@@ -288,6 +288,7 @@ public class ReleaseDialogController implements AgileController {
     projectComboBox.getSelectionModel().select(project);
     projectComboBox.setDisable(true);
     btnNewProject.setDisable(true);
+    btnEditProject.setDisable(true);
   }
 
   /**
