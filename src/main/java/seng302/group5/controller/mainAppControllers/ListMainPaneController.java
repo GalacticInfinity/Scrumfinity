@@ -1059,12 +1059,17 @@ public class ListMainPaneController {
         break;
       }
     }
-    Text textBacklogBody;
+    List<Text> textBacklogBody = new ArrayList<>();
     if (storyBacklog != null) {
-      textBacklogBody = generateHyperlink(storyBacklog);
+      textBacklogBody.add(generateHyperlink(storyBacklog));
+      int estimateIndex = storyBacklog.getSizes().get(story);
+      String estimate = storyBacklog.getEstimate().getEstimateNames().get(estimateIndex);
+      textBacklogBody.add(new Text(", Estimate: " + estimate));
     } else {
-      textBacklogBody = new Text("N/A");
-      textBacklogBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+      textBacklogBody.add(new Text("N/A"));
+    }
+    for (Text text : textBacklogBody) {
+      text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
     }
 
     Text textSprintHeader = new Text("\nSprint: ");
@@ -1128,8 +1133,9 @@ public class ListMainPaneController {
     displayTextFlow.getChildren().addAll(textHeader, textLabelHeader, textLabelBody,
                                          textNameHeader, textNameBody, textDescriptionHeader,
                                          textDescriptionBody, textCreatorHeader, textCreatorBody,
-                                         textBacklogHeader, textBacklogBody,
-                                         textSprintHeader, textSprintBody,
+                                         textBacklogHeader);
+    displayTextFlow.getChildren().addAll(textBacklogBody);
+    displayTextFlow.getChildren().addAll(textSprintHeader, textSprintBody,
                                          textReadinessHeader, textReadinessBody,
                                          textImpedimentsHeader, textImpedimentsBody,
                                          textStatusHeader,
