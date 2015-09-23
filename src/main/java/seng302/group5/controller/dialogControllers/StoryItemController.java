@@ -619,4 +619,8 @@ public class StoryItemController {
     return story;
   }
 
+  public TitledPane getTitledPane() {
+    return storyPane;
+  }
+
 }
