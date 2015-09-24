@@ -7,7 +7,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.TeamDialogController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="410.0" prefWidth="469.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.TeamDialogController">
     <children>
         <HBox alignment="BOTTOM_LEFT">
             <children>
@@ -66,7 +66,7 @@
                         </Button>
                      </children>
                      <VBox.margin>
-                        <Insets />
+                        <Insets bottom="2.0" />
                      </VBox.margin>
                   </HBox>
                   <ListView fx:id="availableMembersList" prefHeight="200.0" prefWidth="185.0" />
@@ -111,7 +111,10 @@
                           </font>
                       </Label>
                   <ListView fx:id="teamMembersList" maxHeight="225.0" prefHeight="175.0" prefWidth="185.0" />
-                  <ComboBox fx:id="teamMemberRoleCombo" prefHeight="25.0" prefWidth="185.0" promptText="Persons role." />
+                  <ComboBox fx:id="teamMemberRoleCombo" prefHeight="25.0" prefWidth="185.0" promptText="Persons role.">
+                     <VBox.margin>
+                        <Insets top="2.0" />
+                     </VBox.margin></ComboBox>
                </children>
             </VBox>
             </children>
@@ -121,7 +124,7 @@
         </HBox>
       <HBox fx:id="btnContainer">
          <children>
-            <Label prefWidth="270.0" text="* Fields cannot be empty.">
+            <Label prefHeight="26.0" prefWidth="270.0" text="* Fields cannot be empty.">
                <font>
                   <Font name="System Italic" size="13.0" />
                </font>

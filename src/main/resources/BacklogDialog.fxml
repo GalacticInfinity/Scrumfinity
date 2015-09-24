@@ -54,7 +54,7 @@
                 </Label>
                 <ComboBox fx:id="backlogProductOwnerCombo" maxHeight="1.8" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" promptText="Available POs">
                <HBox.margin>
-                  <Insets top="2.0" />
+                  <Insets />
                </HBox.margin></ComboBox>
                 <Button fx:id="btnNewProductOwner" maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" onAction="#addNewProductOwner" prefHeight="25.0" prefWidth="25.0">
                     <graphic>
@@ -94,7 +94,7 @@
             </Label>
             <ComboBox fx:id="backlogScaleCombo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" promptText="Available Scales">
                <HBox.margin>
-                  <Insets top="2.0" />
+                  <Insets />
                </HBox.margin>
             </ComboBox>
          </children>
@@ -175,8 +175,11 @@
                         <Insets bottom="3.0" />
                      </VBox.margin>
                   </HBox>
-                  <ListView fx:id="allocatedStoriesList" maxHeight="225.0" prefHeight="174.0" prefWidth="215.0" stylesheets="@ListStyle.css" />
-                  <ComboBox fx:id="storyEstimateCombo" prefHeight="25.0" prefWidth="209.0" promptText="Estimate" />
+                  <ListView fx:id="allocatedStoriesList" maxHeight="225.0" prefHeight="177.0" prefWidth="215.0" stylesheets="@ListStyle.css" />
+                  <ComboBox fx:id="storyEstimateCombo" prefHeight="26.0" prefWidth="220.0" promptText="Estimate">
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin></ComboBox>
                </children>
             </VBox>
             <VBox alignment="CENTER" prefHeight="222.0" prefWidth="64.0">
@@ -215,9 +218,9 @@
             <Insets top="4.0" />
          </VBox.margin>
       </HBox>
-        <HBox fx:id="btnContainer" alignment="BOTTOM_RIGHT" prefHeight="39.0" prefWidth="434.0" spacing="10.0">
+        <HBox fx:id="btnContainer" alignment="CENTER_RIGHT" prefHeight="39.0" prefWidth="585.0" spacing="10.0">
             <children>
-                <Label prefHeight="25.0" prefWidth="313.0" text="* Fields cannot be empty.">
+                <Label prefHeight="25.0" prefWidth="335.0" text="* Fields cannot be empty.">
                     <font>
                         <Font name="System Italic" size="13.0" />
                     </font>

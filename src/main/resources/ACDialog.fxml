@@ -6,11 +6,11 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.ACDialogController">
+<VBox prefHeight="255.0" prefWidth="380.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.ACDialogController">
    <children>
       <HBox>
          <children>
-            <Label fx:id="labelAC" prefWidth="125.0" text="Acceptance &#10;    Criterion:">
+            <Label fx:id="labelAC" prefWidth="125.0" text="Acceptance &#10;Criterion:">
                <font>
                   <Font size="15.0" />
                </font>
@@ -18,7 +18,7 @@
                   <Insets />
                </HBox.margin>
             </Label>
-            <TextArea fx:id="textAC" prefHeight="200.0" prefWidth="250.0" wrapText="true">
+            <TextArea fx:id="textAC" prefHeight="200.0" prefWidth="241.0" wrapText="true">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
@@ -28,9 +28,9 @@
             <Insets bottom="5.0" top="5.0" />
          </VBox.margin>
       </HBox>
-      <HBox fx:id="btnContainer">
+      <HBox fx:id="btnContainer" prefHeight="26.0" prefWidth="389.0">
          <children>
-            <HBox prefWidth="195.0" />
+            <HBox prefHeight="26.0" prefWidth="185.0" />
             <Button fx:id="btnConfirm" mnemonicParsing="false" onAction="#btnAddClick" prefHeight="25.0" prefWidth="85.0" text="Save">
                <HBox.margin>
                   <Insets right="10.0" />

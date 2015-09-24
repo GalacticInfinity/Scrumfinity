@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.EffortDialogController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="249.0" prefWidth="458.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.EffortDialogController">
     <children>
         <HBox alignment="CENTER_LEFT">
             <children>
@@ -71,7 +71,7 @@
         </HBox>
       <HBox fx:id="btnContainer">
          <children>
-            <Label prefWidth="255.0" text="*Fields cannot be empty.">
+            <Label prefHeight="25.0" prefWidth="255.0" text="*Fields cannot be empty.">
                <font>
                   <Font name="System Italic" size="13.0" />
                </font>

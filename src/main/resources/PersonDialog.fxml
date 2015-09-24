@@ -7,7 +7,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.PersonDialogController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="344.0" prefWidth="391.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.PersonDialogController">
     <children>
         <HBox alignment="BOTTOM_LEFT">
             <children>
@@ -76,7 +76,7 @@
                         </Button>
                      </children>
                      <VBox.margin>
-                        <Insets />
+                        <Insets bottom="2.0" />
                      </VBox.margin>
                   </HBox>
                   <ListView fx:id="skillsList" prefHeight="175.0" prefWidth="150.0">
@@ -144,7 +144,7 @@
       </HBox>
       <HBox fx:id="btnContainer">
          <children>
-            <Label prefWidth="190.0" text="* Fields cannot be empty.">
+            <Label prefHeight="26.0" prefWidth="190.0" text="* Fields cannot be empty.">
                <font>
                   <Font name="System Italic" size="13.0" />
                </font>

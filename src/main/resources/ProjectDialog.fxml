@@ -7,7 +7,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.ProjectDialogController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="472.0" prefWidth="565.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.ProjectDialogController">
    <children>
       <HBox alignment="BOTTOM_LEFT">
          <children>
@@ -112,7 +112,7 @@
             <Font size="15.0" />
          </font>
          <VBox.margin>
-            <Insets bottom="5.0" />
+            <Insets />
          </VBox.margin>
       </Label>
       <HBox>
@@ -141,7 +141,7 @@
                   </HBox>
                   <ListView fx:id="availableTeamsList" prefHeight="175.0" prefWidth="150.0">
                      <VBox.margin>
-                        <Insets />
+                        <Insets top="2.0" />
                      </VBox.margin>
                   </ListView>
                </children>
@@ -204,7 +204,7 @@
       </HBox>
       <HBox fx:id="btnContainer">
          <children>
-            <Label prefHeight="19.0" prefWidth="365.0" text="* Fields cannot be empty.">
+            <Label prefHeight="25.0" prefWidth="365.0" text="* Fields cannot be empty.">
                <font>
                   <Font name="System Italic" size="13.0" />
                </font>

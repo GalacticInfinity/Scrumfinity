@@ -7,9 +7,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="516.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.mainAppControllers.ReportDialogController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="378.0" prefWidth="516.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.mainAppControllers.ReportDialogController">
    <children>
-      <HBox prefHeight="61.0" prefWidth="501.0">
+      <HBox prefHeight="62.0" prefWidth="501.0">
          <children>
             <Label prefHeight="21.0" prefWidth="118.0" text="Report Level: ">
                <HBox.margin>
@@ -98,19 +98,22 @@
             <Insets left="15.0" />
          </VBox.margin>
       </HBox>
-      <HBox fx:id="btnContainer" prefHeight="66.0" prefWidth="499.0">
+      <HBox fx:id="btnContainer" prefHeight="34.0" prefWidth="516.0">
          <children>
             <Button fx:id="saveBtn" mnemonicParsing="false" onAction="#saveBtnClick" prefHeight="25.0" prefWidth="85.0" text="Save">
                <HBox.margin>
-                  <Insets left="300.0" top="25.0" />
+                  <Insets left="305.0" />
                </HBox.margin>
             </Button>
             <Button fx:id="cancelBtn" mnemonicParsing="false" onAction="#cancelBtnClick" prefHeight="25.0" prefWidth="85.0" text="Cancel">
                <HBox.margin>
-                  <Insets left="10.0" top="25.0" />
+                  <Insets left="10.0" />
                </HBox.margin>
             </Button>
          </children>
+         <VBox.margin>
+            <Insets top="5.0" />
+         </VBox.margin>
       </HBox>
    </children>
 </VBox>

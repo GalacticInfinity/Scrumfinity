@@ -7,13 +7,13 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER_LEFT" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.DependantsDialogController">
+<VBox alignment="CENTER_LEFT" prefHeight="337.0" prefWidth="636.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.DependantsDialogController">
    <children>
       <HBox alignment="CENTER_LEFT">
          <children>
             <VBox>
                <children>
-                  <Label prefHeight="25.0" text="Choose Story:">
+                  <Label prefHeight="25.0" prefWidth="127.0" text="Choose Story:">
                      <font>
                         <Font size="15.0" />
                      </font>
@@ -33,7 +33,7 @@
             </VBox>
             <VBox>
                <children>
-                  <Label prefHeight="25.0" text="Free Stories:">
+                  <Label prefHeight="25.0" prefWidth="104.0" text="Free Stories:">
                      <font>
                         <Font size="15.0" />
                      </font>
@@ -84,7 +84,7 @@
             </VBox>
             <VBox>
                <children>
-                  <Label prefHeight="25.0" text="Depends Upon:">
+                  <Label prefHeight="25.0" prefWidth="130.0" text="Depends Upon:">
                      <font>
                         <Font size="15.0" />
                      </font>
