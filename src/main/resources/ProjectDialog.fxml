@@ -139,7 +139,7 @@
                         <Insets />
                      </VBox.margin>
                   </HBox>
-                  <ListView fx:id="availableTeamsList" prefHeight="175.0" prefWidth="150.0">
+                  <ListView fx:id="availableTeamsList" prefHeight="175.0" prefWidth="150.0" stylesheets="@ListStyle.css">
                      <VBox.margin>
                         <Insets top="2.0" />
                      </VBox.margin>
@@ -194,7 +194,7 @@
             <VBox>
                <children>
                   <Label prefHeight="20.0" text="Allocated Teams:" />
-                  <ListView fx:id="allocatedTeamsList" prefHeight="175.0" prefWidth="250.0" />
+                  <ListView fx:id="allocatedTeamsList" prefHeight="175.0" prefWidth="250.0" stylesheets="@ListStyle.css"/>
                </children>
             </VBox>
          </children>

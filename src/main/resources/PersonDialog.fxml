@@ -79,7 +79,7 @@
                         <Insets bottom="2.0" />
                      </VBox.margin>
                   </HBox>
-                  <ListView fx:id="skillsList" prefHeight="175.0" prefWidth="150.0">
+                  <ListView fx:id="skillsList" prefHeight="175.0" prefWidth="150.0" stylesheets="@ListStyle.css">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
@@ -130,7 +130,7 @@
                         <Insets />
                      </VBox.margin>
                   </Label>
-                  <ListView fx:id="personSkillList" prefHeight="175.0" prefWidth="150.0">
+                  <ListView fx:id="personSkillList" prefHeight="175.0" prefWidth="150.0" stylesheets="@ListStyle.css">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
