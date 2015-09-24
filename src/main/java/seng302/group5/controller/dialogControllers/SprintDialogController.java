@@ -940,8 +940,7 @@ public class SprintDialogController implements AgileController {
           Story selectedStory = availableStoriesList.getSelectionModel().getSelectedItem();
           //Tells the controller not to disable the readiness checkbox.
           Backlog backlog = sprintBacklogCombo.getSelectionModel().getSelectedItem();
-          mainApp.showStoryDialogWithinSprint(CreateOrEdit.EDIT, selectedStory, backlog, thisStage,
-                                              false);
+          mainApp.showStoryDialogWithinSprint(CreateOrEdit.EDIT, selectedStory, backlog, thisStage);
           Story selectedAllocated = allocatedStoriesList.getSelectionModel().getSelectedItem();
           refreshLists();
           allocatedStoriesList.getSelectionModel().select(selectedAllocated);
@@ -975,8 +974,7 @@ public class SprintDialogController implements AgileController {
           Story selectedStory = allocatedStoriesList.getSelectionModel().getSelectedItem();
           //Tells the controller to disable the readiness checkbox.
           Backlog backlog = sprintBacklogCombo.getSelectionModel().getSelectedItem();
-          mainApp.showStoryDialogWithinSprint(CreateOrEdit.EDIT, selectedStory, backlog, thisStage,
-                                              true);
+          mainApp.showStoryDialogWithinSprint(CreateOrEdit.EDIT, selectedStory, backlog, thisStage);
           Story selectedAvailable = availableStoriesList.getSelectionModel().getSelectedItem();
           refreshLists();
           availableStoriesList.getSelectionModel().select(selectedAvailable);
@@ -1031,8 +1029,7 @@ public class SprintDialogController implements AgileController {
   @FXML
   protected void addNewStory(ActionEvent event) {
     Backlog selectedBacklog = sprintBacklogCombo.getSelectionModel().getSelectedItem();
-    mainApp.showStoryDialogWithinSprint(CreateOrEdit.CREATE, null, selectedBacklog, thisStage,
-                                        false);
+    mainApp.showStoryDialogWithinSprint(CreateOrEdit.CREATE, null, selectedBacklog, thisStage);
     refreshLists();
   }
 

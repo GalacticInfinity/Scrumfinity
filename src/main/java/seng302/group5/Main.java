@@ -996,11 +996,9 @@ public class Main extends Application {
    * @param createOrEdit either it is editing the current story in the lists or create a new one.
    * @param story the story that you wanted to view or edit information with. Null for creation.
    * @param stage the stage it is currently on to void unusual behaviour
-   * @param state whether or not the stage is called from the allocated stories list
-   *                      or the available stories list. (Affects the readiness checkbox).
    */
   public void showStoryDialogWithinSprint(CreateOrEdit createOrEdit, Story story, Backlog backlog,
-                                          Stage stage, boolean state) {
+                                          Stage stage) {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/StoryDialog.fxml"));
@@ -1020,7 +1018,6 @@ public class Main extends Application {
       }
 
       controller.setupController(this, storyDialogStage, createOrEdit, story);
-      controller.setCheckboxState(state);
       controller.setupSprintMode(backlog);
       pushControllerStack(controller);
 

@@ -375,13 +375,6 @@ public class StoryDialogController implements AgileController {
     backlogCombo.setDisable(true);
     btnNewBacklog.setDisable(true);
     btnEditBacklog.setDisable(true);
-    if (createOrEdit == CreateOrEdit.CREATE) {
-      acceptanceCriteria.add("Empty AC, please double click here to edit your AC.");
-      //todo manage sprint mode properly in confirm button
-      estimateCombo.setValue(backlog.getEstimate().getEstimateNames().get(1));
-      readyCheckbox.setSelected(true);
-      readyCheckbox.setDisable(true);
-    }
   }
   /**
    * Checks if there are any changed fields and disables or enables the button accordingly
@@ -529,6 +522,15 @@ public class StoryDialogController implements AgileController {
       alert.setContentText(errors.toString());
       alert.showAndWait();
     } else {
+      if (dialogMode == DialogMode.SPRINT_MODE && !readyCheckbox.isSelected()) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Story is Not Ready");
+        alert.setHeaderText(null);
+        alert.setContentText("This story must be ready for this story to appear in the list of "
+                             + "available stories in the sprint dialog.");
+        alert.showAndWait();
+        return;
+      }
       if (createOrEdit == CreateOrEdit.CREATE) {
         story.setLabel(label);
         story.setStoryName(storyName);
@@ -849,10 +851,6 @@ public class StoryDialogController implements AgileController {
     } else {
       return newAC;
     }
-  }
-
-  public void setCheckboxState(boolean state) {
-    readyCheckbox.setDisable(state);
   }
 
   /**
