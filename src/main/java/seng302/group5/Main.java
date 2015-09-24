@@ -50,6 +50,7 @@ import seng302.group5.controller.mainAppControllers.ToolBarController;
 import seng302.group5.model.AgileController;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Backlog;
+import seng302.group5.model.Effort;
 import seng302.group5.model.Estimate;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
@@ -1558,6 +1559,7 @@ public class Main extends Application {
         Boolean inBacklog = false;
         Boolean inStory = false;
         Boolean inTask = false;
+        Boolean inEffort = false;
         List<Task> taskList = new ArrayList<>();
 
         for (Story story : getStories()) {
@@ -1570,6 +1572,14 @@ public class Main extends Application {
               inTask = true;
               taskList.add(task);
             }
+            if (!inEffort) {
+              for (Effort effort : task.getEfforts()) {
+                if (effort.getWorker().equals(person)) {
+                  inEffort = true;
+                  break;
+                }
+              }
+            }
           }
         }
         for (Sprint sprint : getSprints()) {
@@ -1578,12 +1588,32 @@ public class Main extends Application {
               inTask = true;
               taskList.add(task);
             }
+            if (!inEffort) {
+              for (Effort effort : task.getEfforts()) {
+                if (effort.getWorker().equals(person)) {
+                  inEffort = true;
+                  break;
+                }
+              }
+            }
           }
+        }
+
+        if (inEffort) {
+          String message =
+              "This person has contributed effort to the organisation and therefore cannot be "
+              + "removed from the system.";
+          Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setTitle("Person has logged effort");
+          alert.setHeaderText(null);
+          alert.setContentText(message);
+          alert.showAndWait();
+          break;
         }
 
         if(inStory) {
           String message =
-              "This person is a creator of a story! You cannot delete him until you delete the "
+              "This person is a creator of a story! You cannot delete them until you delete the "
               + "story created by this person";
           Alert alert = new Alert(Alert.AlertType.ERROR);
           alert.setTitle("Person is a Story creator");
