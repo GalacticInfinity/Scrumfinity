@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import seng302.group5.controller.enums.CreateOrEdit;
@@ -62,10 +63,11 @@ public class ACDialogController {
 
     textAC.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
-      if(createOrEdit == CreateOrEdit.EDIT) {
+      if (createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
       }
     });
+    thisStage.getIcons().add(new Image("Thumbnail.png"));
   }
 
   /**

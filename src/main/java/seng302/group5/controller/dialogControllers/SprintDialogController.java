@@ -24,6 +24,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldListCell;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -295,7 +296,7 @@ public class SprintDialogController implements AgileController {
         checkButtonDisabled();
       }
     });
-
+    thisStage.getIcons().add(new Image("Thumbnail.png"));
   }
 
   /**
