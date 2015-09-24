@@ -153,6 +153,22 @@ public class ListMainPaneController {
   }
 
   /**
+   * This refreshes the backlogs display and reselects the selected item
+   * only used in the dependencies dialog controller
+   */
+  public void refreshBacklogDisplay() {
+    Backlog bl = (Backlog) listView.getSelectionModel().getSelectedItem();
+    listView.setItems(null);
+    checkListType();
+    listView.getSelectionModel().clearSelection();
+    displayTextFlow.getChildren().clear();
+    if (bl != null) {
+      listView.getSelectionModel().select(bl);
+    }
+  }
+
+
+  /**
    * Checks list type currently set as viewed list by user.
    */
   public void checkListType() {

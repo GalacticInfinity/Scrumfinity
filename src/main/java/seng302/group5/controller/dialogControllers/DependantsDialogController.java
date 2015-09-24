@@ -18,6 +18,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import seng302.group5.Main;
+import seng302.group5.model.Backlog;
 import seng302.group5.model.Story;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.CompositeUndoRedo;
@@ -273,6 +274,11 @@ public class DependantsDialogController {
     }
     UndoRedo undoRedo = generateUndoRedoObject();
     mainApp.newAction(undoRedo);
+
+    if (mainApp.getLMPC().getCurrentListType() == "Backlogs") {
+      mainApp.getLMPC().refreshBacklogDisplay();
+    }
+
     thisStage.close();
   }
 
