@@ -472,7 +472,7 @@ public class TaskDialogController implements AgileController {
       String message = "By cancelling this dialog you will lose all changes you have made "
                        + "to efforts since this task dialog was opened. Are you sure you wish "
                        + "to continue?";
-      alert.getDialogPane().setPrefHeight(120);
+      alert.getDialogPane().setPrefHeight(170);
       alert.setContentText(message);
       //checks response
       alert.showAndWait();

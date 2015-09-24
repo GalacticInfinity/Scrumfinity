@@ -7,7 +7,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.StoryDialogController">
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="590.0" prefWidth="737.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.StoryDialogController">
    <children>
       <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@style.css">
          <children>
@@ -105,7 +105,7 @@
                         <Insets right="10.0" top="5.0" />
                      </HBox.margin>
                   </Label>
-                  <ListView fx:id="listAC" prefHeight="140.0" prefWidth="265.0">
+                  <ListView fx:id="listAC" prefHeight="140.0" prefWidth="265.0" stylesheets="@ListStyle.css">
                      <HBox.margin>
                         <Insets right="10.0" />
                      </HBox.margin>
@@ -301,7 +301,7 @@
                         <Font size="15.0" />
                      </font>
                   </Label>
-                  <ListView fx:id="taskList" prefHeight="510.0" prefWidth="225.0" />
+                  <ListView fx:id="taskList" prefHeight="510.0" prefWidth="225.0" stylesheets="@ListStyle.css"/>
                </children>
                <HBox.margin>
                   <Insets />

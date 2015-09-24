@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.SkillsDialogController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="180.0" prefWidth="395.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.SkillsDialogController">
     <children>
         <HBox alignment="CENTER_LEFT">
             <children>
@@ -37,16 +37,16 @@
             <Insets bottom="5.0" />
          </VBox.margin>
         </HBox>
-      <HBox fx:id="btnContainer">
+      <HBox fx:id="btnContainer" spacing="10.0">
          <children>
-            <Label prefWidth="195.0" text="* Fields cannot be empty.">
+            <Label prefHeight="25.0" prefWidth="185.0" text="* Fields cannot be empty.">
                <font>
                   <Font name="System Italic" size="13.0" />
                </font>
             </Label>
             <Button fx:id="skillCreation" mnemonicParsing="false" onAction="#SkillCreation" prefHeight="25.0" prefWidth="85.0" text="Save">
                <HBox.margin>
-                  <Insets right="10.0" />
+                  <Insets />
                </HBox.margin>
             </Button>
             <Button fx:id="cancelCreation" mnemonicParsing="false" onAction="#CancelCreation" prefHeight="25.0" prefWidth="85.0" text="Cancel" />

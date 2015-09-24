@@ -18,22 +18,22 @@
                   <Insets />
                </HBox.margin>
             </Label>
-            <TextArea fx:id="textAC" prefHeight="200.0" prefWidth="250.0" wrapText="true">
+            <TextArea fx:id="textAC" prefHeight="200.0" prefWidth="240.0" wrapText="true">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
             </TextArea>
          </children>
          <VBox.margin>
-            <Insets bottom="5.0" top="5.0" />
+            <Insets bottom="5.0" />
          </VBox.margin>
       </HBox>
-      <HBox fx:id="btnContainer">
+      <HBox fx:id="btnContainer" spacing="10.0">
          <children>
-            <HBox prefWidth="195.0" />
+            <HBox prefWidth="175.0" />
             <Button fx:id="btnConfirm" mnemonicParsing="false" onAction="#btnAddClick" prefHeight="25.0" prefWidth="85.0" text="Save">
                <HBox.margin>
-                  <Insets right="10.0" />
+                  <Insets />
                </HBox.margin>
             </Button>
             <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#btnCancelClick" prefHeight="25.0" prefWidth="85.0" text="Cancel">
@@ -48,6 +48,6 @@
       </HBox>
    </children>
    <padding>
-      <Insets left="5.0" top="5.0" />
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
    </padding>
 </VBox>
