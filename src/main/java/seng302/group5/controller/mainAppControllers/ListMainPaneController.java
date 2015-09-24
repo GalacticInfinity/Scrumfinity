@@ -790,11 +790,11 @@ public class ListMainPaneController {
         } else {
           textMembersBody.add(new Text("Not assigned to a role yet."));
         }
-        for (Text text : textMembersBody) {
-          text.setFill(Color.rgb(1, 0, 1));
-          text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
-        }
       }
+    }
+    for (Text text : textMembersBody) {
+      text.setFill(Color.rgb(1, 0, 1));
+      text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
     }
 
     Text projectsHeader = new Text("\nAssigned Projects: ");
