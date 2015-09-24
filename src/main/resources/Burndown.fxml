@@ -12,10 +12,10 @@
    <children>
       <LineChart fx:id="burndownChart" cacheHint="SCALE" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" snapToPixel="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
          <xAxis>
-            <CategoryAxis label="Time" side="BOTTOM" />
+            <CategoryAxis label="Time (Days)" side="BOTTOM" />
          </xAxis>
          <yAxis>
-            <NumberAxis label="Effort Spent" side="LEFT" />
+            <NumberAxis label="Effort Spent (Hours)" side="LEFT" />
          </yAxis>
       </LineChart>
       <HBox fillHeight="false" minHeight="50.0" minWidth="600.0" prefHeight="449.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
