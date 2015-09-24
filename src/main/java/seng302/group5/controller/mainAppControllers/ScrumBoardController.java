@@ -271,17 +271,20 @@ public class ScrumBoardController {
    * Refreshes the selections of the combo boxes
    */
   public void hardReset() {
-    availableSprints.clear();
     storiesBox.getChildren().setAll(FXCollections.observableArrayList());
+    availableSprints.clear();
     availableStories.clear();
     storyPanes.clear();
     openedTabs.clear();
+    oldPanes.clear();
+    prevSprint = new Sprint();
+
     backlogCombo.getSelectionModel().clearSelection();
     backlogCombo.setValue(null);
-    System.out.println(backlogCombo.getValue());
     backlogCombo.setItems(mainApp.getBacklogs());
     sprintCombo.getSelectionModel().clearSelection();
     sprintCombo.getItems().clear();
+    sprintCombo.setValue(null);
     sprintCombo.setDisable(true);
   }
 
