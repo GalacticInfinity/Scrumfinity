@@ -15,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import seng302.group5.Main;
@@ -180,6 +181,7 @@ public class ScrumBoardController {
 
       StoryItemController controller = loader.getController();
       Accordion storyAccordion = new Accordion();
+      storyAccordion.setPrefHeight(Region.USE_COMPUTED_SIZE);
       storyAccordion.getPanes().add(accordionPane);
       storiesBox.getChildren().add(storyAccordion);
       controller.setupController(story, mainApp, storyAccordion, sprintCombo.getValue());

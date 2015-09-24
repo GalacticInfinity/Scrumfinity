@@ -105,7 +105,7 @@
                         <Insets right="10.0" top="5.0" />
                      </HBox.margin>
                   </Label>
-                  <ListView fx:id="listAC" prefHeight="140.0" prefWidth="265.0">
+                  <ListView fx:id="listAC" prefHeight="140.0" prefWidth="265.0" stylesheets="@ListStyle.css">
                      <HBox.margin>
                         <Insets right="10.0" />
                      </HBox.margin>
@@ -301,7 +301,7 @@
                         <Font size="15.0" />
                      </font>
                   </Label>
-                  <ListView fx:id="taskList" prefHeight="510.0" prefWidth="225.0" />
+                  <ListView fx:id="taskList" prefHeight="510.0" prefWidth="225.0" stylesheets="@ListStyle.css"/>
                </children>
                <HBox.margin>
                   <Insets />

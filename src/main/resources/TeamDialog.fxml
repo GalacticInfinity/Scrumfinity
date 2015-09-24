@@ -69,7 +69,7 @@
                         <Insets bottom="2.0" />
                      </VBox.margin>
                   </HBox>
-                  <ListView fx:id="availableMembersList" prefHeight="200.0" prefWidth="185.0" />
+                  <ListView fx:id="availableMembersList" prefHeight="200.0" prefWidth="185.0" stylesheets="@ListStyle.css"/>
                </children>
             </VBox>
             <VBox alignment="CENTER">
@@ -110,7 +110,7 @@
                               <Font size="15.0" />
                           </font>
                       </Label>
-                  <ListView fx:id="teamMembersList" maxHeight="225.0" prefHeight="175.0" prefWidth="185.0" />
+                  <ListView fx:id="teamMembersList" maxHeight="225.0" prefHeight="175.0" prefWidth="185.0" stylesheets="@ListStyle.css"/>
                   <ComboBox fx:id="teamMemberRoleCombo" prefHeight="25.0" prefWidth="185.0" promptText="Persons role.">
                      <VBox.margin>
                         <Insets top="2.0" />

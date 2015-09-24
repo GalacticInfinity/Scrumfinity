@@ -349,7 +349,7 @@
                               <Insets bottom="2.0" />
                            </VBox.margin>
                         </HBox>
-                        <ListView fx:id="availableStoriesList" prefHeight="200.0" prefWidth="195.0" />
+                        <ListView fx:id="availableStoriesList" prefHeight="200.0" prefWidth="195.0" stylesheets="@ListStyle.css"/>
                      </children>
                   </VBox>
                   <VBox alignment="CENTER">
@@ -393,7 +393,7 @@
                               <Insets bottom="2.0" />
                            </VBox.margin>
                         </Label>
-                        <ListView fx:id="allocatedStoriesList" prefHeight="200.0" prefWidth="195.0" />
+                        <ListView fx:id="allocatedStoriesList" prefHeight="200.0" prefWidth="195.0" stylesheets="@ListStyle.css"/>
                      </children>
                   </VBox>
                </children>
@@ -441,7 +441,7 @@
                         <Insets />
                      </VBox.margin>
                   </Label>
-                  <ListView fx:id="taskList" prefHeight="380.0" prefWidth="235.0" />
+                  <ListView fx:id="taskList" prefHeight="380.0" prefWidth="235.0" stylesheets="@ListStyle.css"/>
                   <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                       <image>
                           <Image url="Thumbnail.png" />

@@ -101,7 +101,7 @@
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <ListView fx:id="availablePeopleList" prefHeight="200.0" prefWidth="150.0" />
+                        <ListView fx:id="availablePeopleList" prefHeight="200.0" prefWidth="150.0" stylesheets="@ListStyle.css"/>
                      </children>
                   </VBox>
                   <VBox alignment="CENTER">
@@ -142,7 +142,7 @@
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <ListView fx:id="allocatedPeopleList" prefHeight="200.0" prefWidth="150.0">
+                        <ListView fx:id="allocatedPeopleList" prefHeight="200.0" prefWidth="150.0" stylesheets="@ListStyle.css">
                            <VBox.margin>
                               <Insets />
                            </VBox.margin>
