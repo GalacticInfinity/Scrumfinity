@@ -456,8 +456,6 @@ public class StoryItemController {
         } else if (pos > story.getTasks().indexOf(tempT)) {
           story.removeTask(tempT);
           story.addTask(pos - 1, tempT);
-        } else {
-          System.out.println("Very Bad things happened");
         }
       }
     }
