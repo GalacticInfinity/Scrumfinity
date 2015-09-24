@@ -363,8 +363,45 @@ public class StoryItemController {
     Label draggedLabel = (Label) node;
     VBox oldVBox = (VBox) draggedLabel.getParent();
     oldVBox.getChildren().remove(draggedLabel);
-    //2:Add to the new list
-    addWithDragging(root, draggedLabel);
+    if (root.getChildren().size() == 0) {
+      System.out.println("in here ");
+      addWithDragging(root, draggedLabel);
+    } else {
+      System.out.println("In there");
+      Label lowermostLabel = (Label) root.getChildren().get(root.getChildren().size() - 1);
+      System.out.println("lowermostLabel = " + lowermostLabel);
+      addWithDragging(root, draggedLabel);
+
+      Task tempT = null;
+      Task tempT2 = null;
+      System.out.println("root = " + root);
+
+      for (Task task : story.getTasks()) {
+        if (task.getLabel().equals(lowermostLabel.getText()))
+          tempT = task;
+        if (task.getLabel().equals(draggedLabel.getText())) {
+          tempT2 = task;
+        }
+      }
+
+      int pos = story.getTasks().indexOf(tempT2);
+
+      System.out.println("tempT = " + tempT);
+
+      if (tempT != null) {
+        System.out.println(tempT);
+        if (pos <= story.getTasks().indexOf(tempT)) {
+          story.removeTask(tempT);
+          story.addTask(pos, tempT);
+        } else if (pos > story.getTasks().indexOf(tempT)) {
+          story.removeTask(tempT);
+          story.addTask(pos - 1, tempT);
+        } else {
+          System.out.println("Very Bad things happened");
+        }
+      }
+    }
+    System.out.println("");
   }
 
   /**
