@@ -65,7 +65,7 @@
                         </ImageView>
                     </graphic>
                     <HBox.margin>
-                        <Insets left="10.0" right="10.0" />
+                        <Insets left="10.0" right="5.0" />
                     </HBox.margin>
                 </Button>
                 <Button fx:id="btnEditProductOwner" maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" onAction="#editProductOwner" prefHeight="25.0" prefWidth="25.0">
@@ -137,7 +137,7 @@
                <children>
                   <Button fx:id="btnAddStory" maxHeight="25.0" maxWidth="60.0" minHeight="25.0" minWidth="60.0" mnemonicParsing="false" onAction="#btnAddStoryClick" prefHeight="25.0" prefWidth="60.0">
                      <VBox.margin>
-                        <Insets bottom="20.0" />
+                        <Insets bottom="10.0" />
                      </VBox.margin>
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
@@ -181,24 +181,24 @@
             </VBox>
             <VBox alignment="CENTER" prefHeight="222.0" prefWidth="64.0">
                <children>
-                  <Button fx:id="btnIncreasePriority" maxHeight="25.0" maxWidth="30.0" minHeight="25.0" minWidth="30.0" mnemonicParsing="false" onAction="#btnIncreasePriorityClick" prefHeight="25.0" prefWidth="30.0">
+                  <Button fx:id="btnIncreasePriority" maxHeight="35.0" maxWidth="30.0" minHeight="35.0" minWidth="30.0" mnemonicParsing="false" onAction="#btnIncreasePriorityClick" prefHeight="35.0" prefWidth="30.0">
                      <VBox.margin>
-                        <Insets bottom="20.0" />
+                        <Insets bottom="10.0" />
                      </VBox.margin>
                      <graphic>
-                        <ImageView fitHeight="20.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="30.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="UpArrow.png" />
                            </image>
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button fx:id="btnDecreasePriority" maxHeight="25.0" maxWidth="30.0" minHeight="25.0" minWidth="30.0" mnemonicParsing="false" onAction="#btnDecreasePriorityClick" prefHeight="25.0" prefWidth="30.0">
+                  <Button fx:id="btnDecreasePriority" maxHeight="35.0" maxWidth="30.0" minHeight="35.0" minWidth="30.0" mnemonicParsing="false" onAction="#btnDecreasePriorityClick" prefHeight="35.0" prefWidth="30.0">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
                      <graphic>
-                        <ImageView fitHeight="20.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="30.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="DownArrow.png" />
                            </image>
@@ -222,8 +222,8 @@
                         <Font name="System Italic" size="13.0" />
                     </font>
                 </Label>
-                <Button fx:id="btnConfirm" mnemonicParsing="false" onAction="#btnConfirmClick" prefHeight="25.0" prefWidth="90.0" text="Save" />
-                <Button fx:id="btnCancel" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#btnCancelClick" prefHeight="25.0" prefWidth="83.0" text="Cancel" />
+                <Button fx:id="btnConfirm" mnemonicParsing="false" onAction="#btnConfirmClick" prefHeight="25.0" prefWidth="85.0" text="Save" />
+                <Button fx:id="btnCancel" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#btnCancelClick" prefHeight="25.0" prefWidth="85.0" text="Cancel" />
             </children>
             <opaqueInsets>
                 <Insets />
