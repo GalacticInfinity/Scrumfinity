@@ -748,12 +748,25 @@ public class BacklogDialogController implements AgileController {
           StoryEstimate selectedStoryEstimate = allocatedStoriesList.getSelectionModel().getSelectedItem();
 
           mainApp.showStoryDialogWithinBacklog(CreateOrEdit.EDIT, selectedStoryEstimate.getStory(),
-                                               thisStage);
+                                               backlog, thisStage);
           //use this to do whatever you want to. Open Link etc.
-          allocatedStories.remove(selectedStoryEstimate);
-          selectedStoryEstimate.setEstimate(backlog.getSizes().get(selectedStoryEstimate.getStory()));
-          allocatedStories.add(selectedIndex, selectedStoryEstimate);
-          allocatedStoriesList.getSelectionModel().select(selectedIndex);
+          Story selectedStory = selectedStoryEstimate.getStory();
+          if (backlog.getSizes().get(selectedStory) != null) {
+            // this means you pressed OK on the story dialog
+            allocatedStories.remove(selectedStoryEstimate);
+
+            // update estimate index
+            selectedStoryEstimate.setEstimate(backlog.getSizes().get(selectedStory));
+
+            // change lastBacklog so that undo keeps the edited story in the backlog
+            if (!lastBacklog.getStories().contains(selectedStoryEstimate.getStory())) {
+              lastBacklog.addStory(selectedStory, selectedStoryEstimate.getEstimateIndex());
+            } else {
+              lastBacklog.updateStory(selectedStory, selectedStoryEstimate.getEstimateIndex());
+            }
+            allocatedStories.add(selectedIndex, selectedStoryEstimate);
+            allocatedStoriesList.getSelectionModel().select(selectedIndex);
+          }
         }
       });
     }
@@ -931,7 +944,7 @@ public class BacklogDialogController implements AgileController {
    */
   @FXML
   protected void addNewStory(ActionEvent event) {
-    mainApp.showStoryDialogWithinBacklog(CreateOrEdit.CREATE, null, thisStage);
+    mainApp.showStoryDialogWithinBacklog(CreateOrEdit.CREATE, null, null, thisStage);
 
     Set<Story> storiesInUse = new HashSet<>();
     for (StoryEstimate storyEstimate : allocatedStories) {
@@ -962,7 +975,7 @@ public class BacklogDialogController implements AgileController {
             click.getButton() == MouseButton.PRIMARY &&
             !isEmpty()) {
           Story selectedStory = availableStoriesList.getSelectionModel().getSelectedItem();
-          mainApp.showStoryDialogWithinBacklog(CreateOrEdit.EDIT, selectedStory, thisStage);
+          mainApp.showStoryDialogWithinBacklog(CreateOrEdit.EDIT, selectedStory, null, thisStage);
           availableStories.remove(selectedStory);
           availableStories.add(selectedStory);
         }

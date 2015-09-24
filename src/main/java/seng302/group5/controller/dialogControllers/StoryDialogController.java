@@ -357,8 +357,9 @@ public class StoryDialogController implements AgileController {
   /**
    * Set up the dialog to be in backlog mode
    */
-  public void setupBacklogMode() {
+  public void setupBacklogMode(Backlog backlog) {
     dialogMode = DialogMode.BACKLOG_MODE;
+    backlogCombo.setValue(backlog);
     backlogCombo.setDisable(true);
     btnNewBacklog.setDisable(true);
     btnEditBacklog.setDisable(true);
