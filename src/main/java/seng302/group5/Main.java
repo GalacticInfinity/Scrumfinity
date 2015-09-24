@@ -1017,7 +1017,7 @@ public class Main extends Application {
         alert.showAndWait();
         return;
       }
-      
+
       controller.setupController(this, storyDialogStage, createOrEdit, story);
       controller.setCheckboxState(state);
       controller.setupSprintMode(backlog);
@@ -2232,7 +2232,11 @@ public class Main extends Application {
   }
 
   public void setMainScene() {
-    this.primaryStage.setScene(mainScene);
+    double height = primaryStage.getHeight();
+    double width = primaryStage.getWidth();
+    primaryStage.setScene(mainScene);
+    primaryStage.setHeight(height);
+    primaryStage.setWidth(width);
   }
 
   public Stage getStage() {
