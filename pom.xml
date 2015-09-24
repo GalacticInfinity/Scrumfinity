@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>seng302.group5</groupId>
     <artifactId>galactic_infinity</artifactId>
-    <version>5.0-ANGER</version>
+    <version>6.0-ACCEPTANCE</version>
 
     <dependencies>
         <dependency>

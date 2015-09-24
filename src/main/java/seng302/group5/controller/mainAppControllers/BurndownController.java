@@ -144,6 +144,8 @@ public class BurndownController {
                 doneTasks.add(task);
               }
             }
+            //hours
+            time = time / 60;
           }
           burndownChart.autosize();
           burndownChart.getData().clear();
@@ -198,12 +200,12 @@ public class BurndownController {
         for (Effort effort : allEffort) {
           if (effort.getDateTime().getDayOfYear() == date2.getDayOfYear()) {
             cSeries.getData().add(new XYChart.Data(date2.toString(), burnUp));
-            burnUp += effort.getSpentEffort();
+            burnUp += (effort.getSpentEffort() / 60);
           }
         }
         for (Task doneTask : doneTasks.sorted()) {
           if (doneTask.getDoneDate().getDayOfYear() == date2.getDayOfYear()) {
-            time -= doneTask.getTaskEstimation();
+            time -= (doneTask.getTaskEstimation() / 60);
             bSeries.getData().add(new XYChart.Data(date2.toString(), time));
           }
         }
@@ -257,6 +259,9 @@ public class BurndownController {
     availableSprints.clear();
     backlogCombo.getSelectionModel().clearSelection();
     backlogCombo.setItems(mainApp.getBacklogs());
+    burndownChart.setTitle("");
+    burndownChart.getData().clear();
     initialiseLists();
+    sprintCombo.setDisable(true);
   }
 }
