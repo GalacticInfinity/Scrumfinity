@@ -1,4 +1,4 @@
-package seng302.group5.controller.dialogControllers;
+package seng302.group5.controller.mainAppControllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -581,13 +581,11 @@ public class StoryItemController {
     }
 
     //Step2: Create new and last task(old pre-drag, new after)
-    Task lastTask = null;
     Task newTask = null;
 
     //Step3: Clone last Task, assign task to newTask
     for (Task task : story.getTasks()) {
       if (sourceTaskString.equals(task.getLabel())) {
-        lastTask = new Task(task);
         newTask = task;
         break;
       }
@@ -674,6 +672,14 @@ public class StoryItemController {
 
   public Story getStory() {
     return story;
+  }
+
+  public TitledPane getTitledPane() {
+    return storyPane;
+  }
+
+  public void setAccordion(Accordion accordion) {
+    this.accordion = accordion;
   }
 
 }

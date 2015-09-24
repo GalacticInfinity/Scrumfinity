@@ -1,14 +1,10 @@
-package seng302.group5.controller.dialogControllers;
+package seng302.group5.controller.mainAppControllers;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.IdentityHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -27,20 +23,31 @@ import seng302.group5.model.Sprint;
 import seng302.group5.model.Story;
 
 /**
- * Scrum board controller completely redone. Now using accordions to make things prettier.
- * First controller create which contains a list of other controller objects (a controller for
- * each story to be displayed in the accordion view).
+ * Scrum board controller completely redone. Now using accordions to make things prettier. First
+ * controller create which contains a list of other controller objects (a controller for each story
+ * to be displayed in the accordion view).
  */
 public class ScrumBoardController {
 
-  @FXML private ComboBox<Sprint> sprintCombo;
-  @FXML private ComboBox<Backlog> backlogCombo;
-  @FXML private VBox storiesBox;
-  @FXML private ScrollPane scrollPane;
+  @FXML
+  private ComboBox<Sprint> sprintCombo;
+  @FXML
+  private ComboBox<Backlog> backlogCombo;
+  @FXML
+  private VBox storiesBox;
+  @FXML
+  private Button btnDeleteTask;
+  @FXML
+  private Button btnNewTask;
+  @FXML
+  private ScrollPane scrollPane;
 
   private Main mainApp;
   private Stage stage;
   private Story fakeStory;
+
+  private Sprint prevSprint;
+  private List<StoryItemController> oldPanes;
 
   private ObservableList<Sprint> availableSprints;
   private ObservableList<Story> availableStories;
@@ -53,21 +60,23 @@ public class ScrumBoardController {
 
   /**
    * This function sets up the scrum board dialog controller.
-   * @param mainApp     The main application object
-   * @param stage       The stage the application is in.
+   *
+   * @param mainApp The main application object
+   * @param stage   The stage the application is in.
    */
   public void setupController(Main mainApp, Stage stage) {
     this.mainApp = mainApp;
     this.stage = stage;
     storyPanes = new ArrayList<>();
     openedTabs = new ArrayList<>();
+    oldPanes = new ArrayList<>();
     initialiseLists();
   }
 
   /**
-   * Initializes the controller and sets the listeners to the combo boxes to update and
-   * reload controllers as necessary. Changing backlog combo refreshes sprint combo. Changing
-   * sprint combo refreshes list of controllers.
+   * Initializes the controller and sets the listeners to the combo boxes to update and reload
+   * controllers as necessary. Changing backlog combo refreshes sprint combo. Changing sprint combo
+   * refreshes list of controllers.
    */
   private void initialiseLists() {
     availableSprints = FXCollections.observableArrayList();
@@ -115,14 +124,16 @@ public class ScrumBoardController {
               }
             }
             for (Story story : availableStories) {
-              StoryItemController paneController = createStoryPane(story, storiesBox);
+              StoryItemController paneController = checkController(story);
               if (paneController != null) {
                 storyPanes.add(paneController);
-              }
-              if (openedTabs.contains(paneController.getPaneName())) {
-                paneController.expandTab();
+                if (openedTabs.contains(paneController.getPaneName())) {
+                  paneController.expandTab();
+                }
               }
             }
+            oldPanes.clear();
+            oldPanes.addAll(storyPanes);
           }
         }
     );
@@ -140,6 +151,7 @@ public class ScrumBoardController {
 
   /**
    * TODO write all the stuff it does
+   *
    * @param story Story object which holds the data
    * @return The created controller
    */
@@ -161,10 +173,32 @@ public class ScrumBoardController {
     return null;
   }
 
+
   /**
-   * Resets everything about the scrum board, everything cleared and disabled apart from
-   * Backlog combo box.
-   * TODO allocate extra memory and a few checks to reduce run time significantly
+   * Checks if the controller already exists, if so, returns it instead of recreating it
+   */
+  private StoryItemController checkController(Story story) {
+    // Check if story inside sprint clone. If not make a controller.
+    if (prevSprint.getSprintStories().contains(story)) {
+      for (StoryItemController pane : oldPanes) {
+        if (pane.getStory().equals(story)) {
+          Accordion storyAccordion = new Accordion();
+          storyAccordion.getPanes().add(pane.getTitledPane());
+          storiesBox.getChildren().add(storyAccordion);
+          pane.setAccordion(storyAccordion);
+          pane.setupLists();
+          return pane;
+        }
+      }
+    } else {
+      return createStoryPane(story, storiesBox);
+    }
+    return null;
+  }
+
+  /**
+   * Resets everything about the scrum board, everything cleared and disabled apart from Backlog
+   * combo box.
    */
   public void refreshComboBoxes() {
     Backlog backlog = backlogCombo.getValue();
@@ -192,12 +226,15 @@ public class ScrumBoardController {
         backlogCombo.setValue(backlog);
 
         if (availableSprints.contains(sprint)) {
+          prevSprint = new Sprint(sprint);
           sprintCombo.setValue(sprint);
           //todo make stories in sprints be removed properly at some point.
         } else {
+          prevSprint = new Sprint();
           sprintCombo.setValue(null);
         }
       } else {
+        prevSprint = new Sprint();
         backlogCombo.setValue(null);
         sprintCombo.setValue(null);
       }
@@ -217,6 +254,8 @@ public class ScrumBoardController {
     storiesBox.getChildren().setAll(FXCollections.observableArrayList());
     availableStories.clear();
     storyPanes.clear();
+    prevSprint = new Sprint();
+    oldPanes.clear();
   }
 
   /**

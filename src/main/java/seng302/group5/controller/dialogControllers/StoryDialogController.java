@@ -24,6 +24,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.TextFieldListCell;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -350,6 +351,7 @@ public class StoryDialogController implements AgileController {
           }
         }
     );
+    thisStage.getIcons().add(new Image("Thumbnail.png"));
   }
 
   /**

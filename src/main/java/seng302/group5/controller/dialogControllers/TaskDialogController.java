@@ -25,6 +25,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldListCell;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -192,6 +193,7 @@ public class TaskDialogController implements AgileController {
     );
 
     undoRedoObject = null;
+    thisStage.getIcons().add(new Image("Thumbnail.png"));
   }
 
   /**

@@ -6,6 +6,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -105,6 +106,7 @@ public class SkillsDialogController implements AgileController {
         checkButtonDisabled();
       }
     });
+    thisStage.getIcons().add(new Image("Thumbnail.png"));
   }
 
   /**
