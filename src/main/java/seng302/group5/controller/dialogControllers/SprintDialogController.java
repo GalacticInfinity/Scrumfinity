@@ -1051,7 +1051,13 @@ public class SprintDialogController implements AgileController {
       sprintBacklogCombo.getSelectionModel().select(selectedBacklog);
       sprintTeamCombo.getSelectionModel().select(tempTeam);
       sprintReleaseCombo.getSelectionModel().select(tempRelease);
-      allocatedStoriesPrioritised.setAll(tempAllocatedStories);
+      allocatedStoriesPrioritised.clear();
+      for (Story story : selectedBacklog.getStories()) {
+        // add story to either available or allocated stories in priority order
+        if (tempAllocatedStories.contains(story)) {
+          allocatedStoriesPrioritised.add(story);
+        }
+      }
       availableStories.removeAll(tempAllocatedStories);
     }
   }

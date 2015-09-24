@@ -165,7 +165,7 @@ public class Task implements AgileItem, Comparable<Task> {
 
   public void setStatus(Status status) {
     this.status = status;
-    if (status == Status.DONE && doneDate == null) {
+    if (status == Status.DONE) {
       this.doneDate = LocalDate.now();
     }
   }

@@ -15,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import seng302.group5.Main;
@@ -180,6 +181,7 @@ public class ScrumBoardController {
 
       StoryItemController controller = loader.getController();
       Accordion storyAccordion = new Accordion();
+      storyAccordion.setPrefHeight(Region.USE_COMPUTED_SIZE);
       storyAccordion.getPanes().add(accordionPane);
       storiesBox.getChildren().add(storyAccordion);
       controller.setupController(story, mainApp, storyAccordion, sprintCombo.getValue());
@@ -269,17 +271,21 @@ public class ScrumBoardController {
    * Refreshes the selections of the combo boxes
    */
   public void hardReset() {
+    storiesBox.getChildren().setAll(FXCollections.observableArrayList());
+    availableSprints.clear();
+    availableStories.clear();
+    storyPanes.clear();
+    openedTabs.clear();
+    oldPanes.clear();
+    prevSprint = new Sprint();
+
     backlogCombo.getSelectionModel().clearSelection();
     backlogCombo.setValue(null);
     backlogCombo.setItems(mainApp.getBacklogs());
     sprintCombo.getSelectionModel().clearSelection();
     sprintCombo.getItems().clear();
+    sprintCombo.setValue(null);
     sprintCombo.setDisable(true);
-    availableSprints.clear();
-    storiesBox.getChildren().setAll(FXCollections.observableArrayList());
-    availableStories.clear();
-    storyPanes.clear();
-    openedTabs.clear();
   }
 
   /**

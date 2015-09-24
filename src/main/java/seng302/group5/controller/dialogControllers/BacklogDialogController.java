@@ -201,6 +201,7 @@ public class BacklogDialogController implements AgileController {
             alert.setContentText("Changing scales may result in unexpected "
                                  + "side effects to existing story estimates. "
                                  + "Are you sure you want to continue?");
+            alert.getDialogPane().setPrefHeight(150);
             alert.showAndWait();
           }
           if (alert == null || alert.getResult().equals(ButtonType.OK)) {
