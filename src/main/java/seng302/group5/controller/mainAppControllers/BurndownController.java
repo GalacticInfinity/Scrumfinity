@@ -257,6 +257,9 @@ public class BurndownController {
     availableSprints.clear();
     backlogCombo.getSelectionModel().clearSelection();
     backlogCombo.setItems(mainApp.getBacklogs());
+    burndownChart.setTitle("");
+    burndownChart.getData().clear();
     initialiseLists();
+    sprintCombo.setDisable(true);
   }
 }
