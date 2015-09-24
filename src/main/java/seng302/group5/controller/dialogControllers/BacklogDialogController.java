@@ -64,6 +64,7 @@ public class BacklogDialogController implements AgileController {
   private ObservableList<StoryEstimate> originalStories;
   private ObservableList<Person> productOwners;
   private ObservableList<Estimate> estimates;
+  List<Story> storiesInSprints;
   private ArrayList<Story> undoRedoStoryList = new ArrayList<>();
 
   @FXML private TextField backlogLabelField;
@@ -262,6 +263,7 @@ public class BacklogDialogController implements AgileController {
     originalStories = FXCollections.observableArrayList();
     productOwners = FXCollections.observableArrayList();
     estimates = FXCollections.observableArrayList();
+    storiesInSprints = new ArrayList<>();
 
 //    showStatus();
     try {
@@ -312,6 +314,12 @@ public class BacklogDialogController implements AgileController {
           allocatedStories.add(new StoryEstimate(story, estimateIndex));
           originalStories.add(new StoryEstimate(story, estimateIndex));
         }
+
+        for (Sprint sprint : mainApp.getSprints()) {
+          if (sprint.getSprintBacklog().equals(backlog)) {
+            storiesInSprints.addAll(sprint.getSprintStories());
+          }
+        }
       }
       this.availableStoriesList.setItems(availableStories.sorted(Comparator.<Story>naturalOrder()));
       this.allocatedStoriesList.setItems(allocatedStories);
@@ -328,6 +336,7 @@ public class BacklogDialogController implements AgileController {
             if (selectedEstimate == null) {
               return;
             }
+            int selectedEstimateIndex = storyEstimateCombo.getItems().indexOf(selectedEstimate);
             StoryEstimate selected = allocatedStoriesList.getSelectionModel().getSelectedItem();
             if (selected == null) {
               Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -336,7 +345,7 @@ public class BacklogDialogController implements AgileController {
               alert.setContentText("Please select a story to give an estimate to.");
               alert.showAndWait();
             } else if (selected.getStory().getAcceptanceCriteria().isEmpty() &&
-                storyEstimateCombo.getSelectionModel().getSelectedIndex() != 0) {
+                       storyEstimateCombo.getSelectionModel().getSelectedIndex() != 0) {
               Alert alert = new Alert(Alert.AlertType.ERROR);
               alert.setTitle("No Acceptance Criteria");
               alert.setHeaderText(null);
@@ -347,6 +356,19 @@ public class BacklogDialogController implements AgileController {
               Platform.runLater(() -> {
                 // reselect old value and avoid firing listener from within itself
                 storyEstimateCombo.getSelectionModel().select(0);
+              });
+            } else if (selectedEstimateIndex == 0 &&
+                       storiesInSprints.contains(selected.getStory())) {
+              Alert alert = new Alert(Alert.AlertType.ERROR);
+              alert.setTitle("Story In Sprint");
+              alert.setHeaderText(null);
+              alert.setContentText("The selected story is in a sprint. The estimate cannot be "
+                                   + "removed or it will violate the readiness criteria.");
+              alert.showAndWait();
+              comboListenerFlag = true;
+              Platform.runLater(() -> {
+                // reselect old value and avoid firing listener from within itself
+                storyEstimateCombo.getSelectionModel().select(oldEstimate);
               });
             } else {
               selected.setEstimate(storyEstimateCombo.getSelectionModel().getSelectedIndex());
