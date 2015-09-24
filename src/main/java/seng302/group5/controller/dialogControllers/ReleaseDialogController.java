@@ -15,9 +15,11 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -45,6 +47,7 @@ public class ReleaseDialogController implements AgileController {
   @FXML private TextArea releaseNotesField;
 
   @FXML private Button btnConfirm;
+  @FXML private Label projectContainer; // Dirty container but works
   @FXML private ComboBox<Project> projectComboBox;
   @FXML private HBox btnContainer;
   @FXML private Button btnNewProject;
@@ -210,6 +213,17 @@ public class ReleaseDialogController implements AgileController {
       releaseDateField.setValue(release.getReleaseDate());
       if (release.getProjectRelease() != null) {
         btnEditProject.setDisable(false);
+        for (Sprint sprint : mainApp.getSprints()) {
+          if (release.getProjectRelease().equals(sprint.getSprintProject())) {
+            // release is in sprint, do not allow changing project
+            btnNewProject.setDisable(true);
+            projectComboBox.setDisable(true);
+            Tooltip tooltip = new Tooltip("This cannot be changed because the release is currently "
+                                          + "in a sprint");
+            projectContainer.setTooltip(tooltip);
+            break;
+          }
+        }
       } else {
         btnEditProject.setDisable(true);
       }
@@ -289,6 +303,9 @@ public class ReleaseDialogController implements AgileController {
     dialogMode = DialogMode.SPRINT_MODE;
     projectComboBox.getSelectionModel().select(project);
     projectComboBox.setDisable(true);
+    Tooltip tooltip = new Tooltip("This cannot be changed because the project has already been "
+                                  + "specified in the sprint dialog");
+    projectContainer.setTooltip(tooltip);
     btnNewProject.setDisable(true);
     btnEditProject.setDisable(true);
   }

@@ -67,10 +67,14 @@
                         <Font size="15.0" />
                     </font>
                 </Label>
-                <ComboBox fx:id="projectComboBox" prefWidth="200.0" promptText="Available projects.">
+                <Label fx:id="projectContainer">
+                    <graphic>
+                        <ComboBox fx:id="projectComboBox" prefWidth="200.0" promptText="Available projects.">
                     <HBox.margin>
                         <Insets />
                     </HBox.margin></ComboBox>
+                    </graphic>
+                </Label>
             <Button fx:id="btnNewProject" maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" onAction="#addNewProject" prefHeight="25.0" prefWidth="25.0">
                <graphic>
                   <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">

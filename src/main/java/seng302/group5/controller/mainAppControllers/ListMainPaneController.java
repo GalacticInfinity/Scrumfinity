@@ -876,7 +876,6 @@ public class ListMainPaneController {
   private double releaseVelocity(Release release){
     int days = 0;
     double points = 0.0;
-    Map<Story, Integer> estimates = release.getProjectRelease().getBacklog().getSizes() ;
     for (Sprint sprint : mainApp.getSprints()) {
       if (sprint.getSprintRelease() == release) {
         days += 1;
