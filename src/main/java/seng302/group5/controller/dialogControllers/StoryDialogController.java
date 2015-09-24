@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -60,6 +62,7 @@ public class StoryDialogController implements AgileController {
   @FXML private ComboBox<Person> storyCreatorList;
   @FXML private ListView<String> listAC;
   @FXML private Label backlogContainer; // Dirty container but works
+  @FXML private Label estimateContainer; // Dirty container but works
   @FXML private ComboBox<Backlog> backlogCombo;
   @FXML private CheckBox readyCheckbox;
   @FXML private Button addAC;
@@ -88,6 +91,7 @@ public class StoryDialogController implements AgileController {
   private Backlog lastBacklog;
   private Team team;
   private Backlog noBacklog;
+  private boolean inSprint;
 
   private ObservableList<Person> availablePeople = FXCollections.observableArrayList();
   private ObservableList<String> acceptanceCriteria = FXCollections.observableArrayList();
@@ -110,6 +114,7 @@ public class StoryDialogController implements AgileController {
     this.mainApp = mainApp;
     this.thisStage = thisStage;
     this.dialogMode = DialogMode.DEFAULT_MODE;
+    this.inSprint = false;
 
     String os = System.getProperty("os.name");
 
@@ -149,7 +154,7 @@ public class StoryDialogController implements AgileController {
       btnNewCreator.setDisable(true);
       btnCreateStory.setDisable(true);
 
-      if (checkReadinessCriteria(story)) {
+      if (checkReadinessCriteriaInit(story)) {
         readyCheckbox.setDisable(false);
         readyCheckbox.setSelected(story.getStoryState());
       } else {
@@ -158,7 +163,9 @@ public class StoryDialogController implements AgileController {
 
       for (Sprint sprint : mainApp.getSprints()) {
         if (sprint.getSprintStories().contains(story)) {
+          inSprint = true;
           readyCheckbox.setDisable(true);
+          break;
         }
       }
     }
@@ -194,6 +201,9 @@ public class StoryDialogController implements AgileController {
 
         // select current estimate
         estimateCombo.getSelectionModel().select(backlog.getSizes().get(story));
+        if (acceptanceCriteria.isEmpty()) {
+          estimateCombo.setDisable(true);
+        }
       } else {
         btnEditBacklog.setDisable(true);
         estimateCombo.setDisable(true);
@@ -283,7 +293,11 @@ public class StoryDialogController implements AgileController {
           }
           if (newBacklog != null && newBacklog != noBacklog) {
             btnEditBacklog.setDisable(false);
-            estimateCombo.setDisable(false);
+            if (!acceptanceCriteria.isEmpty()) {
+              estimateCombo.setDisable(false);
+            } else {
+              estimateCombo.setDisable(true);
+            }
             ObservableList<String> estimateNames = FXCollections.observableArrayList();
             estimateNames.setAll(newBacklog.getEstimate().getEstimateNames());
             estimateCombo.setItems(estimateNames);
@@ -305,10 +319,34 @@ public class StoryDialogController implements AgileController {
         }
     );
 
-    estimateCombo.getSelectionModel().selectedItemProperty().addListener(
+    acceptanceCriteria.addListener((ListChangeListener<String>) c -> {
+      Backlog backlog = backlogCombo.getSelectionModel().getSelectedItem();
+      if (backlog != null && backlog != noBacklog && !acceptanceCriteria.isEmpty()) {
+        estimateCombo.setDisable(false);
+      } else {
+        estimateCombo.getSelectionModel().clearSelection();
+        estimateCombo.setDisable(true);
+      }
+      checkReadinessCriteriaLocal();
+    });
+
+    estimateCombo.getSelectionModel().selectedIndexProperty().addListener(
         (observable, oldValue, newValue) -> {
-          if (createOrEdit == CreateOrEdit.EDIT) {
-            checkButtonDisabled();
+          if (inSprint && newValue.equals(0)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Cannot Remove Estimate");
+            alert.setHeaderText(null);
+            alert.setContentText("This story is currently in a sprint. The estimate can not be "
+                                 + "removed or it will violate the readiness criteria.");
+            alert.showAndWait();
+            Platform.runLater(() -> {
+              estimateCombo.getSelectionModel().select((int) oldValue);
+            });
+          } else {
+            if (createOrEdit == CreateOrEdit.EDIT) {
+              checkButtonDisabled();
+            }
+            checkReadinessCriteriaLocal();
           }
         }
     );
@@ -371,6 +409,25 @@ public class StoryDialogController implements AgileController {
       btnCreateStory.setDisable(true);
     } else {
       btnCreateStory.setDisable(false);
+    }
+  }
+
+  /**
+   * Check the state of the dialog to verify if readiness can be ticked and disable/enable the
+   * checkbox depending on the state.
+   */
+  private void checkReadinessCriteriaLocal() {
+    if (inSprint) {
+      return;
+    }
+    Backlog backlog = backlogCombo.getSelectionModel().getSelectedItem();
+    if (backlog != null && backlog != noBacklog &&
+        !acceptanceCriteria.isEmpty() &&
+        estimateCombo.getSelectionModel().getSelectedIndex() > 0) {
+      readyCheckbox.setDisable(false);
+    } else {
+      readyCheckbox.setSelected(false);
+      readyCheckbox.setDisable(true);
     }
   }
 
@@ -571,11 +628,8 @@ public class StoryDialogController implements AgileController {
    * @param event Event generated by the event listener.
    */
   private void btnRemoveAC(ActionEvent event) {
-    if (checkStoryEstimated(story)) {
-      acceptanceCriteria.remove(listAC.getSelectionModel().getSelectedItem());
-      listAC.setItems(acceptanceCriteria);
-    }
-    else {
+    if (estimateCombo.getSelectionModel().getSelectedIndex() > 0 &&
+        acceptanceCriteria.size() == 1) {
       Alert alert = new Alert(Alert.AlertType.ERROR);
       alert.setTitle("Acceptance Criteria Required!");
       alert.setHeaderText(null);
@@ -586,28 +640,10 @@ public class StoryDialogController implements AgileController {
       alert.setResizable(true);
       alert.getDialogPane().setPrefSize(400, 150);
       alert.showAndWait();
+    } else {
+      acceptanceCriteria.remove(listAC.getSelectionModel().getSelectedItem());
+      listAC.setItems(acceptanceCriteria);
     }
-  }
-
-  @FXML
-  /**
-   * Checks whether or not the story is assigned to a backlog and given an estimate
-   * so that, removing an ac from a story does not break the requirement of having
-   * Acceptance criteria for estimations.
-   */
-  private Boolean checkStoryEstimated(Story story) {
-    for (Backlog backlog : mainApp.getBacklogs()) {
-      for (Map.Entry<Story, Integer> entry : backlog.getSizes().entrySet()) {
-        if (entry.getKey() == story && entry.getValue() != 0) {
-          if (listAC.getItems().size() == 1) {
-            return false;
-          } else
-            return true;
-        }
-      }
-    }
-    return true;
-
   }
 
   /**
@@ -625,7 +661,7 @@ public class StoryDialogController implements AgileController {
         tasks.set(itemIndex, temp);
         taskList.getSelectionModel().select(itemIndex - 1);
       }
-    taskList.scrollTo(itemIndex - 8);
+      taskList.scrollTo(itemIndex - 8);
     }
   }
 
@@ -868,8 +904,7 @@ public class StoryDialogController implements AgileController {
 
 
   /**
-   *
-   * Checks if the story meets the criteria to be marked as ready:
+   * Checks if the story meets the criteria to be marked as ready on startup:
    * Has acceptance criteria.
    * Is in a backlog.
    * Has a size estimate.
@@ -877,7 +912,7 @@ public class StoryDialogController implements AgileController {
    * @param story Story which readiness is checked.
    * @return sWhether the story meets readiness criteria as boolean.
    */
-  private boolean checkReadinessCriteria(Story story) {
+  private boolean checkReadinessCriteriaInit(Story story) {
     for (Backlog backlog : mainApp.getBacklogs()) {   //Search each backlog
       if (backlog.getStories().contains(story)) {     //If backlog contains story
         if (backlog.getSizes().get(story) > 0) {      //If story is estimated (and therefore has AC)
