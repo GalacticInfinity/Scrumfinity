@@ -358,6 +358,10 @@ public class StoryDialogController implements AgileController {
    */
   public void setupBacklogMode(Backlog backlog) {
     dialogMode = DialogMode.BACKLOG_MODE;
+    if (backlog != null && backlog.getStories().contains(story)) {
+      lastBacklog = new Backlog(backlog);
+      estimateCombo.getSelectionModel().select(backlog.getSizes().get(story));
+    }
     backlogCombo.setValue(backlog);
     backlogCombo.setDisable(true);
     btnNewBacklog.setDisable(true);
