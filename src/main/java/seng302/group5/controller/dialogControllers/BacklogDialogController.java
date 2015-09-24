@@ -722,11 +722,16 @@ public class BacklogDialogController implements AgileController {
             click.getButton() == MouseButton.PRIMARY &&
             !isEmpty()) {
           //Use ListView's getSelected Item
-          StoryEstimate selectedItem = allocatedStoriesList.getSelectionModel().getSelectedItem();
+          int selectedIndex = allocatedStoriesList.getSelectionModel().getSelectedIndex();
+          StoryEstimate selectedStoryEstimate = allocatedStoriesList.getSelectionModel().getSelectedItem();
 
-          mainApp.showStoryDialogWithinBacklog(CreateOrEdit.EDIT, selectedItem.getStory(),
+          mainApp.showStoryDialogWithinBacklog(CreateOrEdit.EDIT, selectedStoryEstimate.getStory(),
                                                thisStage);
           //use this to do whatever you want to. Open Link etc.
+          allocatedStories.remove(selectedStoryEstimate);
+          selectedStoryEstimate.setEstimate(backlog.getSizes().get(selectedStoryEstimate.getStory()));
+          allocatedStories.add(selectedIndex, selectedStoryEstimate);
+          allocatedStoriesList.getSelectionModel().select(selectedIndex);
         }
       });
     }
