@@ -291,4 +291,8 @@ public class ScrumBoardController {
       controller.setupLists();
     }
   }
+
+  public Stage getStage() {
+    return stage;
+  }
 }

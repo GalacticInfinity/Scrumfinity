@@ -149,7 +149,6 @@ public class StoryItemController {
           //Makes the task extend all the way across the container
           tempLabel.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
           addWithDragging(notStartedList, tempLabel);
-          // TODO this line specifically
           break;
         case IN_PROGRESS:
           inProgressTasks.add(task);
@@ -190,7 +189,7 @@ public class StoryItemController {
       @Override
       public void handle(MouseDragEvent event) {
         if (checkVBox(event)) {
-          notStartedList.setStyle("-fx-border-color: #ffffa0");
+          notStartedList.setStyle("-fx-border-color: #72f995");
         }
       }
     });
@@ -198,7 +197,7 @@ public class StoryItemController {
     notStartedList.setOnMouseDragExited(new EventHandler<MouseDragEvent>() {
       @Override
       public void handle(MouseDragEvent event) {
-          notStartedList.setStyle("");
+        notStartedList.setStyle("");
       }
     });
 
@@ -220,14 +219,14 @@ public class StoryItemController {
       public void handle(MouseDragEvent event) {
         if (checkVBox(event)) {
           disableVBoxStyles();
-          inProgressList.setStyle("-fx-border-color: #ffffa0");
+          inProgressList.setStyle("-fx-border-color: #72f995");
         }
       }
     });
     inProgressList.setOnMouseDragExited(new EventHandler<MouseDragEvent>() {
       @Override
       public void handle(MouseDragEvent event) {
-          inProgressList.setStyle("");
+        inProgressList.setStyle("");
       }
     });
 
@@ -248,14 +247,14 @@ public class StoryItemController {
       public void handle(MouseDragEvent event) {
         if (checkVBox(event)) {
           disableVBoxStyles();
-          verifyList.setStyle("-fx-border-color: #ffffa0");
+          verifyList.setStyle("-fx-border-color: #72f995");
         }
       }
     });
     verifyList.setOnMouseDragExited(new EventHandler<MouseDragEvent>() {
       @Override
       public void handle(MouseDragEvent event) {
-          verifyList.setStyle("");
+        verifyList.setStyle("");
       }
     });
 
@@ -276,14 +275,14 @@ public class StoryItemController {
       public void handle(MouseDragEvent event) {
         if (checkVBox(event)) {
           disableVBoxStyles();
-          doneList.setStyle("-fx-border-color: #ffffa0");
+          doneList.setStyle("-fx-border-color: #72f995");
         }
       }
     });
     doneList.setOnMouseDragExited(new EventHandler<MouseDragEvent>() {
       @Override
       public void handle(MouseDragEvent event) {
-          doneList.setStyle("");
+        doneList.setStyle("");
       }
     });
   }
