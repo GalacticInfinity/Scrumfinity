@@ -567,11 +567,13 @@ public class StoryDialogController implements AgileController {
           backlog.updateStory(story, selectedEstimateIndex);
         }
       }
-      if (Settings.correctList(backlog)) {
-        mainApp.refreshList(backlog);
-      }
-      if (Settings.correctList(story)) {
-        mainApp.refreshList(story);
+      if (dialogMode == DialogMode.DEFAULT_MODE) {
+        if (Settings.correctList(backlog)) {
+          mainApp.refreshList(backlog);
+        }
+        if (Settings.correctList(story)) {
+          mainApp.refreshList(story);
+        }
       }
       UndoRedo undoRedoObject = generateUndoRedoObject();
       mainApp.newAction(undoRedoObject);
