@@ -70,6 +70,7 @@ public class ScrumBoardController {
     storyPanes = new ArrayList<>();
     openedTabs = new ArrayList<>();
     oldPanes = new ArrayList<>();
+    prevSprint = new Sprint();
     initialiseLists();
   }
 
@@ -109,10 +110,17 @@ public class ScrumBoardController {
     sprintCombo.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldSprint, newSprint) -> {
           if (newSprint != null) {
+            // Quick check if old label is same to clear opened tabs
+            if (newSprint.getLabel() != prevSprint.getLabel()) {
+              openedTabs.clear();
+            }
+
+            // Clear old values
             availableStories.clear();
             storiesBox.getChildren().setAll(FXCollections.observableArrayList());
             storyPanes.clear();
-            // Place the fake story in
+
+            // Repopulate available stories
             fakeStory = new Story();
             fakeStory.setLabel("Non-story Tasks");
             fakeStory.addAllTasks(newSprint.getTasks());
@@ -123,6 +131,8 @@ public class ScrumBoardController {
                 availableStories.add(story);
               }
             }
+
+            // Generate controllers for stories
             for (Story story : availableStories) {
               StoryItemController paneController = checkController(story);
               if (paneController != null) {
@@ -132,8 +142,11 @@ public class ScrumBoardController {
                 }
               }
             }
+
+            // Update the copy of available panes
             oldPanes.clear();
             oldPanes.addAll(storyPanes);
+            prevSprint = newSprint;
           }
         }
     );
@@ -226,17 +239,24 @@ public class ScrumBoardController {
         backlogCombo.setValue(backlog);
 
         if (availableSprints.contains(sprint)) {
-          prevSprint = new Sprint(sprint);
           sprintCombo.setValue(sprint);
           //todo make stories in sprints be removed properly at some point.
         } else {
-          prevSprint = new Sprint();
           sprintCombo.setValue(null);
+          availableSprints.clear();
+          storiesBox.getChildren().setAll(FXCollections.observableArrayList());
+          availableStories.clear();
+          storyPanes.clear();
+          openedTabs.clear();
         }
       } else {
-        prevSprint = new Sprint();
         backlogCombo.setValue(null);
         sprintCombo.setValue(null);
+        availableSprints.clear();
+        storiesBox.getChildren().setAll(FXCollections.observableArrayList());
+        availableStories.clear();
+        storyPanes.clear();
+        openedTabs.clear();
       }
     }
   }
@@ -256,8 +276,7 @@ public class ScrumBoardController {
     storiesBox.getChildren().setAll(FXCollections.observableArrayList());
     availableStories.clear();
     storyPanes.clear();
-    prevSprint = new Sprint();
-    oldPanes.clear();
+    openedTabs.clear();
   }
 
   /**

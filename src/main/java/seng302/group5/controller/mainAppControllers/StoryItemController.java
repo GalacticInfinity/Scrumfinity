@@ -383,7 +383,6 @@ public class StoryItemController {
       int pos = story.getTasks().indexOf(tempT2);
 
       if (tempT != null) {
-        System.out.println(tempT);
         if (pos <= story.getTasks().indexOf(tempT)) {
           story.removeTask(tempT);
           story.addTask(pos, tempT);
