@@ -7,11 +7,11 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.BacklogDialogController">
+<VBox stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.BacklogDialogController">
     <children>
-        <HBox alignment="BOTTOM_LEFT" prefHeight="32.0" prefWidth="434.0" spacing="10.0">
+        <HBox alignment="BOTTOM_LEFT">
             <children>
-                <Label prefHeight="25.0" prefWidth="125.0" text="Backlog Label:*">
+                <Label prefWidth="125.0" text="Backlog Label:*">
                     <font>
                         <Font size="15.0" />
                     </font>
@@ -21,8 +21,11 @@
                   <Tooltip text="Label should be 20 characters or less or application may not behave as expected." />
                </tooltip></TextField>
             </children>
+         <VBox.margin>
+            <Insets bottom="5.0" />
+         </VBox.margin>
         </HBox>
-        <HBox alignment="CENTER_LEFT" prefHeight="38.0" prefWidth="369.0" spacing="10.0">
+        <HBox alignment="CENTER_LEFT">
             <children>
                 <Label prefHeight="25.0" prefWidth="125.0" text="Backlog Name:">
                     <font>
@@ -31,20 +34,26 @@
                 </Label>
                 <TextField fx:id="backlogNameField" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="200.0" promptText="Name of backlog" />
             </children>
+         <VBox.margin>
+            <Insets bottom="5.0" />
+         </VBox.margin>
         </HBox>
-        <HBox prefHeight="30.0" prefWidth="429.0" spacing="10.0">
+        <HBox>
             <children>
                 <Label prefHeight="25.0" prefWidth="125.0" text="Description:">
                     <font>
                         <Font size="15.0" />
                     </font>
                 </Label>
-            <TextArea fx:id="backlogDescriptionField" minHeight="130.0" prefHeight="140.0" prefWidth="285.0" promptText="Description of backlog" wrapText="true" />
+            <TextArea fx:id="backlogDescriptionField" prefHeight="125.0" prefWidth="300.0" promptText="Description of backlog" wrapText="true" />
             </children>
+         <VBox.margin>
+            <Insets bottom="5.0" />
+         </VBox.margin>
         </HBox>
-        <HBox prefHeight="21.0" prefWidth="429.0">
+        <HBox>
             <children>
-                <Label prefHeight="25.0" prefWidth="135.0" text="Product Owner:*">
+                <Label prefWidth="125.0" text="Product Owner:*">
                     <font>
                         <Font size="15.0" />
                     </font>
@@ -79,12 +88,12 @@
                 </Button>
             </children>
             <VBox.margin>
-                <Insets top="4.0" />
+                <Insets bottom="5.0" />
             </VBox.margin>
         </HBox>
-      <HBox prefHeight="21.0" prefWidth="429.0">
+      <HBox>
          <children>
-            <Label prefHeight="25.0" prefWidth="135.0" text="Estimate Scale:*">
+            <Label prefWidth="125.0" text="Estimate Scale:*">
                <font>
                   <Font size="15.0" />
                </font>
@@ -99,19 +108,22 @@
             </ComboBox>
          </children>
          <VBox.margin>
-            <Insets top="4.0" />
+            <Insets bottom="5.0" />
          </VBox.margin>
       </HBox>
-      <HBox alignment="CENTER_LEFT" prefHeight="232.0" prefWidth="487.0" spacing="10.0">
+      <HBox alignment="CENTER_LEFT">
          <children>
-            <VBox prefHeight="232.0" prefWidth="165.0">
+            <VBox>
                <children>
-                  <HBox prefHeight="11.0" prefWidth="181.0">
+                  <HBox>
                      <children>
-                        <Label prefHeight="19.0" prefWidth="141.0" text="Available Stories:">
+                        <Label text="Available Stories:">
                            <font>
                               <Font size="15.0" />
                            </font>
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
                         </Label>
                         <Button fx:id="btnNewStory" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" onAction="#addNewStory" prefHeight="20.0" prefWidth="20.0">
                            <graphic>
@@ -127,13 +139,13 @@
                         </Button>
                      </children>
                      <VBox.margin>
-                        <Insets bottom="3.0" />
+                        <Insets bottom="2.0" />
                      </VBox.margin>
                   </HBox>
-                  <ListView fx:id="availableStoriesList" prefHeight="208.0" prefWidth="201.0" stylesheets="@ListStyle.css" />
+                  <ListView fx:id="availableStoriesList" prefHeight="200.0" prefWidth="200.0" stylesheets="@ListStyle.css" />
                </children>
             </VBox>
-            <VBox alignment="CENTER" prefHeight="232.0" prefWidth="61.0">
+            <VBox alignment="CENTER">
                <children>
                   <Button fx:id="btnAddStory" maxHeight="25.0" maxWidth="60.0" minHeight="25.0" minWidth="60.0" mnemonicParsing="false" onAction="#btnAddStoryClick" prefHeight="25.0" prefWidth="60.0">
                      <VBox.margin>
@@ -160,29 +172,35 @@
                      </graphic>
                   </Button>
                </children>
+               <HBox.margin>
+                  <Insets left="10.0" right="10.0" />
+               </HBox.margin>
             </VBox>
-            <VBox prefHeight="232.0" prefWidth="215.0">
+            <VBox>
                <children>
-                  <HBox prefHeight="7.0" prefWidth="215.0">
+                  <HBox>
                      <children>
-                        <Label prefHeight="25.0" prefWidth="130.0" text="In Backlog:">
+                        <Label text="In Backlog:">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Label>
                      </children>
                      <VBox.margin>
-                        <Insets bottom="3.0" />
+                        <Insets bottom="2.0" />
                      </VBox.margin>
                   </HBox>
-                  <ListView fx:id="allocatedStoriesList" maxHeight="225.0" prefHeight="177.0" prefWidth="215.0" stylesheets="@ListStyle.css" />
-                  <ComboBox fx:id="storyEstimateCombo" prefHeight="26.0" prefWidth="220.0" promptText="Estimate">
+                  <ListView fx:id="allocatedStoriesList" prefHeight="170.0" prefWidth="200.0" stylesheets="@ListStyle.css">
                      <VBox.margin>
-                        <Insets top="5.0" />
+                        <Insets bottom="5.0" />
+                     </VBox.margin></ListView>
+                  <ComboBox fx:id="storyEstimateCombo" prefHeight="26.0" prefWidth="200.0" promptText="Estimate">
+                     <VBox.margin>
+                        <Insets />
                      </VBox.margin></ComboBox>
                </children>
             </VBox>
-            <VBox alignment="CENTER" prefHeight="222.0" prefWidth="64.0">
+            <VBox alignment="CENTER">
                <children>
                   <Button fx:id="btnIncreasePriority" maxHeight="35.0" maxWidth="30.0" minHeight="35.0" minWidth="30.0" mnemonicParsing="false" onAction="#btnIncreasePriorityClick" prefHeight="35.0" prefWidth="30.0">
                      <VBox.margin>
@@ -209,13 +227,13 @@
                      </graphic>
                   </Button>
                </children>
-               <padding>
-                  <Insets right="10.0" />
-               </padding>
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
             </VBox>
          </children>
          <VBox.margin>
-            <Insets top="4.0" />
+            <Insets bottom="5.0" />
          </VBox.margin>
       </HBox>
         <HBox fx:id="btnContainer" alignment="CENTER_LEFT" spacing="10.0">
@@ -237,6 +255,6 @@
         </HBox>
     </children>
     <padding>
-        <Insets bottom="10.0" left="10.0" right="10.0" />
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
     </padding>
 </VBox>
