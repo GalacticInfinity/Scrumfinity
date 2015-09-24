@@ -190,7 +190,7 @@ public class StoryItemController {
       @Override
       public void handle(MouseDragEvent event) {
         if (checkVBox(event)) {
-          notStartedList.setStyle("-fx-border-color: #2e8b57");
+          notStartedList.setStyle("-fx-border-color: #ffffa0");
         }
       }
     });
@@ -198,9 +198,7 @@ public class StoryItemController {
     notStartedList.setOnMouseDragExited(new EventHandler<MouseDragEvent>() {
       @Override
       public void handle(MouseDragEvent event) {
-        if (checkVBox(event)) {
           notStartedList.setStyle("");
-        }
       }
     });
 
@@ -222,16 +220,14 @@ public class StoryItemController {
       public void handle(MouseDragEvent event) {
         if (checkVBox(event)) {
           disableVBoxStyles();
-          inProgressList.setStyle("-fx-border-color: #2e8b57");
+          inProgressList.setStyle("-fx-border-color: #ffffa0");
         }
       }
     });
     inProgressList.setOnMouseDragExited(new EventHandler<MouseDragEvent>() {
       @Override
       public void handle(MouseDragEvent event) {
-        if (checkVBox(event)) {
           inProgressList.setStyle("");
-        }
       }
     });
 
@@ -252,16 +248,14 @@ public class StoryItemController {
       public void handle(MouseDragEvent event) {
         if (checkVBox(event)) {
           disableVBoxStyles();
-          verifyList.setStyle("-fx-border-color: #2e8b57");
+          verifyList.setStyle("-fx-border-color: #ffffa0");
         }
       }
     });
     verifyList.setOnMouseDragExited(new EventHandler<MouseDragEvent>() {
       @Override
       public void handle(MouseDragEvent event) {
-        if (checkVBox(event)) {
           verifyList.setStyle("");
-        }
       }
     });
 
@@ -282,16 +276,14 @@ public class StoryItemController {
       public void handle(MouseDragEvent event) {
         if (checkVBox(event)) {
           disableVBoxStyles();
-          doneList.setStyle("-fx-border-color: #2e8b57");
+          doneList.setStyle("-fx-border-color: #ffffa0");
         }
       }
     });
     doneList.setOnMouseDragExited(new EventHandler<MouseDragEvent>() {
       @Override
       public void handle(MouseDragEvent event) {
-        if (checkVBox(event)) {
           doneList.setStyle("");
-        }
       }
     });
   }

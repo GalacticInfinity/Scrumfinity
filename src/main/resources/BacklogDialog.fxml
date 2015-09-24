@@ -130,7 +130,7 @@
                         <Insets bottom="3.0" />
                      </VBox.margin>
                   </HBox>
-                  <ListView fx:id="availableStoriesList" prefHeight="208.0" prefWidth="201.0" />
+                  <ListView fx:id="availableStoriesList" prefHeight="208.0" prefWidth="201.0" stylesheets="@ListStyle.css" />
                </children>
             </VBox>
             <VBox alignment="CENTER" prefHeight="232.0" prefWidth="61.0">
@@ -175,7 +175,7 @@
                         <Insets bottom="3.0" />
                      </VBox.margin>
                   </HBox>
-                  <ListView fx:id="allocatedStoriesList" maxHeight="225.0" prefHeight="174.0" prefWidth="215.0" />
+                  <ListView fx:id="allocatedStoriesList" maxHeight="225.0" prefHeight="174.0" prefWidth="215.0" stylesheets="@ListStyle.css" />
                   <ComboBox fx:id="storyEstimateCombo" prefHeight="25.0" prefWidth="209.0" promptText="Estimate" />
                </children>
             </VBox>
