@@ -98,6 +98,10 @@ public class ScrumBoardController {
             sprintCombo.setItems(null);
             sprintCombo.setItems(availableSprints);
             sprintCombo.setValue(null);
+
+            availableStories.clear();
+            storiesBox.getChildren().setAll(FXCollections.observableArrayList());
+            storyPanes.clear();
           }
         }
     );
@@ -231,7 +235,7 @@ public class ScrumBoardController {
 
       storiesBox.getChildren().setAll(FXCollections.observableArrayList());
       storyPanes.clear();
-      //initialiseLists();
+//      initialiseLists();
 
       sprintCombo.setDisable(true);
 

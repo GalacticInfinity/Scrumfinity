@@ -40,7 +40,7 @@ public class BurndownController {
   private ObservableList<Sprint> availableSprints;
   private ObservableList<Effort> allEffort;
   private ObservableList<Backlog> availableBacklogs;
-  private  ObservableList<Task> doneTasks;
+  private ObservableList<Task> doneTasks;
   private ObservableList<Task> tasks;
 
   private Sprint sprint;
@@ -207,10 +207,8 @@ public class BurndownController {
             bSeries.getData().add(new XYChart.Data(date2.toString(), time));
           }
         }
-
         date2 = date2.plusDays(1);
       }
-
     }
     answer.addAll(aSeries, bSeries, cSeries);
     return answer;
@@ -247,7 +245,6 @@ public class BurndownController {
       backlogCombo.setValue(null);
       sprintCombo.setValue(null);
     }
-
   }
 
   /**
