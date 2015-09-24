@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 
-<VBox prefHeight="525.0" prefWidth="784.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.TaskDialogController">
+<VBox prefHeight="525.0" prefWidth="784.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.TaskDialogController">
    <children>
       <HBox>
          <children>
@@ -228,16 +228,16 @@
             <Insets bottom="5.0" top="10.0" />
          </VBox.margin>
       </VBox>
-      <HBox fx:id="btnContainer">
+      <HBox fx:id="btnContainer" spacing="10.0">
          <children>
-            <Label prefHeight="26.0" prefWidth="585.0" text="* Fields cannot be empty.">
+            <Label prefHeight="26.0" prefWidth="0.0" text="* Fields cannot be empty.">
                <font>
                   <Font name="System Italic" size="13.0" />
                </font>
             </Label>
             <Button fx:id="btnConfirm" mnemonicParsing="false" onAction="#btnConfirmClick" prefHeight="25.0" prefWidth="85.0" text="Save">
                <HBox.margin>
-                  <Insets right="10.0" />
+                  <Insets />
                </HBox.margin>
             </Button>
             <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#btnCancelClick" prefHeight="25.0" prefWidth="85.0" text="Cancel" />
