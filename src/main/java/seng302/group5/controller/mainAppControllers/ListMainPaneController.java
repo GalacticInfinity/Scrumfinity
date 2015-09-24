@@ -1,6 +1,5 @@
 package seng302.group5.controller.mainAppControllers;
 
-import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -32,7 +31,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -40,12 +38,9 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
 import seng302.group5.Main;
-import seng302.group5.controller.dialogControllers.BurndownController;
-import seng302.group5.controller.dialogControllers.ScrumBoardController;
 import seng302.group5.model.AgileHistory;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Backlog;
-import seng302.group5.model.Estimate;
 import seng302.group5.model.Release;
 import seng302.group5.model.Role;
 import seng302.group5.model.Sprint;
@@ -795,11 +790,11 @@ public class ListMainPaneController {
         } else {
           textMembersBody.add(new Text("Not assigned to a role yet."));
         }
-        for (Text text : textMembersBody) {
-          text.setFill(Color.rgb(1, 0, 1));
-          text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
-        }
       }
+    }
+    for (Text text : textMembersBody) {
+      text.setFill(Color.rgb(1, 0, 1));
+      text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
     }
 
     Text projectsHeader = new Text("\nAssigned Projects: ");
@@ -1059,12 +1054,17 @@ public class ListMainPaneController {
         break;
       }
     }
-    Text textBacklogBody;
+    List<Text> textBacklogBody = new ArrayList<>();
     if (storyBacklog != null) {
-      textBacklogBody = generateHyperlink(storyBacklog);
+      textBacklogBody.add(generateHyperlink(storyBacklog));
+      int estimateIndex = storyBacklog.getSizes().get(story);
+      String estimate = storyBacklog.getEstimate().getEstimateNames().get(estimateIndex);
+      textBacklogBody.add(new Text(", Estimate: " + estimate));
     } else {
-      textBacklogBody = new Text("N/A");
-      textBacklogBody.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
+      textBacklogBody.add(new Text("N/A"));
+    }
+    for (Text text : textBacklogBody) {
+      text.setFont(Font.font("Helvetica", FontPosture.ITALIC, 15));
     }
 
     Text textSprintHeader = new Text("\nSprint: ");
@@ -1128,8 +1128,9 @@ public class ListMainPaneController {
     displayTextFlow.getChildren().addAll(textHeader, textLabelHeader, textLabelBody,
                                          textNameHeader, textNameBody, textDescriptionHeader,
                                          textDescriptionBody, textCreatorHeader, textCreatorBody,
-                                         textBacklogHeader, textBacklogBody,
-                                         textSprintHeader, textSprintBody,
+                                         textBacklogHeader);
+    displayTextFlow.getChildren().addAll(textBacklogBody);
+    displayTextFlow.getChildren().addAll(textSprintHeader, textSprintBody,
                                          textReadinessHeader, textReadinessBody,
                                          textImpedimentsHeader, textImpedimentsBody,
                                          textStatusHeader,

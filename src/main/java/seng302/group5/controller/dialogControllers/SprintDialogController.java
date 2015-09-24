@@ -24,6 +24,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldListCell;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -101,8 +102,8 @@ public class SprintDialogController implements AgileController {
   private List<Task> originalTasks;
 
   private Map<Backlog, Project> projectMap;
-  private Set<Story> allocatedStories;   // use to maintain priority order
-  private Set<Story> otherSprintsStories;
+  private List<Story> allocatedStories;   // use to maintain priority order
+  private List<Story> otherSprintsStories;
 
   private CompositeUndoRedo tasksUndoRedo;
 
@@ -295,7 +296,7 @@ public class SprintDialogController implements AgileController {
         checkButtonDisabled();
       }
     });
-
+    thisStage.getIcons().add(new Image("Thumbnail.png"));
   }
 
   /**
@@ -355,8 +356,8 @@ public class SprintDialogController implements AgileController {
       }
     }
 
-    allocatedStories = new TreeSet<>();
-    otherSprintsStories = new TreeSet<>();
+    allocatedStories = new ArrayList<>();
+    otherSprintsStories = new ArrayList<>();
 
     backlogs.setAll(mainApp.getBacklogs());
 
@@ -749,6 +750,9 @@ public class SprintDialogController implements AgileController {
       }
       // undo all editing of existing tasks made within this dialog
       mainApp.quickUndo(tasksUndoRedo);
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        sprint.copyValues(lastSprint);
+      }
       mainApp.popControllerStack();
       thisStage.close();
     }
@@ -938,7 +942,10 @@ public class SprintDialogController implements AgileController {
           Backlog backlog = sprintBacklogCombo.getSelectionModel().getSelectedItem();
           mainApp.showStoryDialogWithinSprint(CreateOrEdit.EDIT, selectedStory, backlog, thisStage,
                                               false);
+          Story selectedAllocated = allocatedStoriesList.getSelectionModel().getSelectedItem();
           refreshLists();
+          allocatedStoriesList.getSelectionModel().select(selectedAllocated);
+          availableStoriesList.getSelectionModel().select(selectedStory);
         }
       });
     }
@@ -970,7 +977,10 @@ public class SprintDialogController implements AgileController {
           Backlog backlog = sprintBacklogCombo.getSelectionModel().getSelectedItem();
           mainApp.showStoryDialogWithinSprint(CreateOrEdit.EDIT, selectedStory, backlog, thisStage,
                                               true);
+          Story selectedAvailable = availableStoriesList.getSelectionModel().getSelectedItem();
           refreshLists();
+          availableStoriesList.getSelectionModel().select(selectedAvailable);
+          allocatedStoriesList.getSelectionModel().select(selectedStory);
         }
       });
     }
@@ -1023,19 +1033,7 @@ public class SprintDialogController implements AgileController {
     Backlog selectedBacklog = sprintBacklogCombo.getSelectionModel().getSelectedItem();
     mainApp.showStoryDialogWithinSprint(CreateOrEdit.CREATE, null, selectedBacklog, thisStage,
                                         false);
-    Set<Story> storiesInUse = new HashSet<>();
-    for (Story story : allocatedStories) {
-      storiesInUse.add(story);
-    }
-    for (Sprint sprint : mainApp.getSprints()) {
-      storiesInUse.addAll(sprint.getSprintStories());
-    }
-    availableStories.clear();
-    for (Story story : mainApp.getStories()) {
-      if (!storiesInUse.contains(story) && story.getStoryState()) {
-        availableStories.add(story);
-      }
-    }
+    refreshLists();
   }
 
   /**

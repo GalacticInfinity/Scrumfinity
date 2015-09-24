@@ -1,4 +1,4 @@
-package seng302.group5.controller.dialogControllers;
+package seng302.group5.controller.mainAppControllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,6 +23,7 @@ import seng302.group5.model.Sprint;
 import seng302.group5.model.Status;
 import seng302.group5.model.Story;
 import seng302.group5.model.Task;
+import seng302.group5.model.Taskable;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.CompositeUndoRedo;
@@ -132,6 +133,11 @@ public class StoryItemController {
     inProgressList.getChildren().clear();
     verifyList.getChildren().clear();
     doneList.getChildren().clear();
+
+    if (story.getLabel().equals("Non-story Tasks")) {
+      story.removeAllTasks();
+      story.addAllTasks(sprint.getTasks());
+    }
 
     for (Task task : story.getTasks()) {
 
@@ -363,8 +369,37 @@ public class StoryItemController {
     Label draggedLabel = (Label) node;
     VBox oldVBox = (VBox) draggedLabel.getParent();
     oldVBox.getChildren().remove(draggedLabel);
-    //2:Add to the new list
-    addWithDragging(root, draggedLabel);
+    if (root.getChildren().size() == 0) {
+      addWithDragging(root, draggedLabel);
+    } else {
+      Label lowermostLabel = (Label) root.getChildren().get(root.getChildren().size() - 1);
+      addWithDragging(root, draggedLabel);
+
+      Task tempT = null;
+      Task tempT2 = null;
+
+      for (Task task : story.getTasks()) {
+        if (task.getLabel().equals(lowermostLabel.getText()))
+          tempT = task;
+        if (task.getLabel().equals(draggedLabel.getText())) {
+          tempT2 = task;
+        }
+      }
+
+      int pos = story.getTasks().indexOf(tempT2);
+
+      if (tempT != null) {
+        if (pos <= story.getTasks().indexOf(tempT)) {
+          story.removeTask(tempT);
+          story.addTask(pos, tempT);
+        } else if (pos > story.getTasks().indexOf(tempT)) {
+          story.removeTask(tempT);
+          story.addTask(pos - 1, tempT);
+        } else {
+          System.out.println("Very Bad things happened");
+        }
+      }
+    }
   }
 
   /**
@@ -424,7 +459,13 @@ public class StoryItemController {
   protected void btnAddTask(ActionEvent event) {
     //Show the task creation dialog and make the undoredo object
     UndoRedo taskCreate;
-    taskCreate = mainApp.showTaskDialog(story, null, null, CreateOrEdit.CREATE, mainApp.getStage());
+    Taskable taskable;
+    if (story.getLabel().equals("Non-story Tasks")) {
+      taskable = sprint;
+    } else {
+      taskable = story;
+    }
+    taskCreate = mainApp.showTaskDialog(taskable, null, null, CreateOrEdit.CREATE, mainApp.getStage());
     if (taskCreate != null) {
       mainApp.newAction(taskCreate);
     }
@@ -490,21 +531,7 @@ public class StoryItemController {
       CompositeUndoRedo comp = new CompositeUndoRedo("Scrumboard Drag Action");
       comp.addUndoRedo(ssUR);
 
-      mainApp.newAction(comp);
-
-//      UndoRedo taskDelete = new UndoRedoObject();
-//      taskDelete.setAction(Action.TASK_DELETE);
-//      taskDelete.addDatum(new Task(deleteTask));
-//      taskDelete.addDatum(story);
-
-      // Store a copy of task to edit in object to avoid reference problems
-//      taskDelete.setAgileItem(deleteTask);
-//
-//      if (deleteTask != null) {
-//        story.removeTask(deleteTask);
-//      }
-
-//      mainApp.newAction(taskDelete);
+      mainApp.newAction(ssUR);
 
       mainApp.getLMPC().getScrumBoardController().refreshTaskLists();
 
@@ -581,13 +608,11 @@ public class StoryItemController {
     }
 
     //Step2: Create new and last task(old pre-drag, new after)
-    Task lastTask = null;
     Task newTask = null;
 
     //Step3: Clone last Task, assign task to newTask
     for (Task task : story.getTasks()) {
       if (sourceTaskString.equals(task.getLabel())) {
-        lastTask = new Task(task);
         newTask = task;
         break;
       }
@@ -674,6 +699,14 @@ public class StoryItemController {
 
   public Story getStory() {
     return story;
+  }
+
+  public TitledPane getTitledPane() {
+    return storyPane;
+  }
+
+  public void setAccordion(Accordion accordion) {
+    this.accordion = accordion;
   }
 
 }

@@ -15,6 +15,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import seng302.group5.controller.enums.CreateOrEdit;
@@ -107,6 +108,7 @@ public class EffortDialogController {
     thisStage.setResizable(false);
 
     undoRedoObject = null;
+    thisStage.getIcons().add(new Image("Thumbnail.png"));
   }
 
   /**

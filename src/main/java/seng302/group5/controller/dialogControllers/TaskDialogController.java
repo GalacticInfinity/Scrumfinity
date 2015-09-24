@@ -25,6 +25,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldListCell;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -192,6 +193,7 @@ public class TaskDialogController implements AgileController {
     );
 
     undoRedoObject = null;
+    thisStage.getIcons().add(new Image("Thumbnail.png"));
   }
 
   /**
@@ -246,6 +248,7 @@ public class TaskDialogController implements AgileController {
     statusComboBox.setItems(availableStatuses);
     statusComboBox.getSelectionModel().select(0);
 
+    availablePeopleList.setCellFactory(listView -> new AvailablePersonCell());
     allocatedPeopleList.setCellFactory(listView -> new PersonEffortCell());
     effortTable.setRowFactory(tableView -> new EffortRow());
 
@@ -625,7 +628,30 @@ public class TaskDialogController implements AgileController {
   }
 
   /**
-   * List cell to combine a person with their logged effort.
+   * List cell in the available person list.
+   */
+  private class AvailablePersonCell extends TextFieldListCell<Person> {
+
+    public AvailablePersonCell() {
+      super();
+
+      // double click for editing
+      this.setOnMouseClicked(click -> {
+        if (click.getClickCount() == 2 &&
+            click.getButton() == MouseButton.PRIMARY &&
+            !isEmpty()) {
+          Person selectedPerson = getItem();
+          mainApp.showPersonDialogNested(selectedPerson, thisStage);
+          availablePeople.remove(selectedPerson);
+          availablePeople.add(selectedPerson);
+          availablePeopleList.getSelectionModel().select(selectedPerson);
+        }
+      });
+    }
+  }
+
+  /**
+   * List cell to combine a person with their logged effort in the allocated person list.
    */
   private class PersonEffortCell extends TextFieldListCell<Person> {
 
@@ -646,6 +672,19 @@ public class TaskDialogController implements AgileController {
       pane.setHgap(5);
       pane.add(cellText, 0, 0);
       pane.add(effortField, 1, 0);
+
+      // double click for editing
+      this.setOnMouseClicked(click -> {
+        if (click.getClickCount() == 2 &&
+            click.getButton() == MouseButton.PRIMARY &&
+            !isEmpty()) {
+          Person selectedPerson = getItem();
+          mainApp.showPersonDialogNested(selectedPerson, thisStage);
+          allocatedPeople.remove(selectedPerson);
+          allocatedPeople.add(selectedPerson);
+          allocatedPeopleList.getSelectionModel().select(selectedPerson);
+        }
+      });
     }
 
     /**

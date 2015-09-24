@@ -218,8 +218,10 @@
                </VBox.margin>
             </HBox>
             <HBox spacing="10.0">
+            <HBox prefHeight="25.0" prefWidth="425.0">
                <children>
                   <Label fx:id="estimateLabel" prefWidth="125.0" text="Estimate:">
+                  <Label prefHeight="39.0" prefWidth="135.0" text="Estimate:">
                      <font>
                         <Font size="15.0" />
                      </font>
@@ -228,8 +230,12 @@
                      <font>
                         <Font size="15.0" />
                      </font>
+                  <Label fx:id="estimateContainer">
+                     <graphic>
+                        <ComboBox fx:id="estimateCombo" prefHeight="25.0" prefWidth="200.0" promptText="Set estimate" />
+                     </graphic>
                      <tooltip>
-                        <Tooltip text="The estimate can only be changed in the backlog it is assigned to." />
+                        <Tooltip text="Acceptance criteria must exist to set an estimate." />
                      </tooltip>
                   </Label>
                </children>

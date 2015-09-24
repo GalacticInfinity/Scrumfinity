@@ -24,9 +24,9 @@ public enum Action {
   RELEASE_CREATE, // Release creation - 1 AgileItem
   RELEASE_EDIT,   // Release edit - 2 AgileItems
   RELEASE_DELETE, // Release delete - 1 AgileItem
-  STORY_CREATE,   // Story creation - 1 AgileItem
+  STORY_CREATE,   // Story creation - 1 AgileItem [plus 2 backlogs: orig ref, clone after create]
   STORY_EDIT,     // Story edit - 2 AgileItems
-  STORY_DELETE,   // Story delete - 1 AgileItem plus associated backlog.
+  STORY_DELETE,   // Story delete - 1 AgileItem [plus 3 backlogs: orig ref, clone before or null, clone after]
   BACKLOG_CREATE, // Backlog creation - 1 AgileItem
   BACKLOG_EDIT,   // Backlog edit - 2 AgileItems
   BACKLOG_DELETE, // Backlog delete - 1 AgileItem

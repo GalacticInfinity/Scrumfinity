@@ -16,6 +16,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.TextFieldListCell;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -133,6 +134,7 @@ public class TeamDialogController implements AgileController {
         checkButtonDisabled();
       }
     });
+    thisStage.getIcons().add(new Image("Thumbnail.png"));
   }
 
   /**
@@ -547,9 +549,10 @@ public class TeamDialogController implements AgileController {
             click.getButton() == MouseButton.PRIMARY &&
             !isEmpty()) {
           PersonRole selectedPerson = teamMembersList.getSelectionModel().getSelectedItem();
-          mainApp.showPersonDialogWithinTeam(selectedPerson.getPerson(), thisStage);
+          mainApp.showPersonDialogNested(selectedPerson.getPerson(), thisStage);
           selectedMembers.remove(selectedPerson);
           selectedMembers.add(selectedPerson);
+          teamMembersList.getSelectionModel().select(selectedPerson);
         }
       });
     }
@@ -576,9 +579,10 @@ public class TeamDialogController implements AgileController {
             click.getButton() == MouseButton.PRIMARY &&
             !isEmpty()) {
           Person selectedPerson = availableMembersList.getSelectionModel().getSelectedItem();
-          mainApp.showPersonDialogWithinTeam(selectedPerson, thisStage);
+          mainApp.showPersonDialogNested(selectedPerson, thisStage);
           availableMembers.remove(selectedPerson);
           availableMembers.add(selectedPerson);
+          availableMembersList.getSelectionModel().select(selectedPerson);
         }
       });
     }

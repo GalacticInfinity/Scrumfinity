@@ -50,6 +50,7 @@ import seng302.group5.controller.mainAppControllers.ToolBarController;
 import seng302.group5.model.AgileController;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Backlog;
+import seng302.group5.model.Effort;
 import seng302.group5.model.Estimate;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
@@ -727,12 +728,12 @@ public class Main extends Application {
   }
 
   /**
-   * sets up the dialog box for editing a person when opened from the team dialog
+   * sets up the dialog box for editing a person when opened from a parent dialog
    *
    * @param person the person that you wanted to view or edit information with
    * @param stage the stage it is currently on to void unusual behaviour
    */
-  public void showPersonDialogWithinTeam(Person person, Stage stage) {
+  public void showPersonDialogNested(Person person, Stage stage) {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/PersonDialog.fxml"));
@@ -952,7 +953,8 @@ public class Main extends Application {
    * @param story the person that you wanted to view or edit information with
    * @param owner the stage it is currently on to void unusual behaviour
    */
-  public void showStoryDialogWithinBacklog(CreateOrEdit createOrEdit, Story story, Stage owner) {
+  public void showStoryDialogWithinBacklog(CreateOrEdit createOrEdit, Story story,
+                                           Backlog backlog, Stage owner) {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/StoryDialog.fxml"));
@@ -983,7 +985,7 @@ public class Main extends Application {
       }
 
       controller.setupController(this, storyDialogStage, createOrEdit, story);
-      controller.setupBacklogMode();
+      controller.setupBacklogMode(backlog);
       pushControllerStack(controller);
 
       storyDialogStage.initModality(Modality.APPLICATION_MODAL);
@@ -1026,7 +1028,7 @@ public class Main extends Application {
         alert.showAndWait();
         return;
       }
-      
+
       controller.setupController(this, storyDialogStage, createOrEdit, story);
       controller.setCheckboxState(state);
       controller.setupSprintMode(backlog);
@@ -1567,6 +1569,7 @@ public class Main extends Application {
         Boolean inBacklog = false;
         Boolean inStory = false;
         Boolean inTask = false;
+        Boolean inEffort = false;
         List<Task> taskList = new ArrayList<>();
 
         for (Story story : getStories()) {
@@ -1579,6 +1582,14 @@ public class Main extends Application {
               inTask = true;
               taskList.add(task);
             }
+            if (!inEffort) {
+              for (Effort effort : task.getEfforts()) {
+                if (effort.getWorker().equals(person)) {
+                  inEffort = true;
+                  break;
+                }
+              }
+            }
           }
         }
         for (Sprint sprint : getSprints()) {
@@ -1587,12 +1598,32 @@ public class Main extends Application {
               inTask = true;
               taskList.add(task);
             }
+            if (!inEffort) {
+              for (Effort effort : task.getEfforts()) {
+                if (effort.getWorker().equals(person)) {
+                  inEffort = true;
+                  break;
+                }
+              }
+            }
           }
+        }
+
+        if (inEffort) {
+          String message =
+              "This person has contributed effort to the organisation and therefore cannot be "
+              + "removed from the system.";
+          Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setTitle("Person has logged effort");
+          alert.setHeaderText(null);
+          alert.setContentText(message);
+          alert.showAndWait();
+          break;
         }
 
         if(inStory) {
           String message =
-              "This person is a creator of a story! You cannot delete him until you delete the "
+              "This person is a creator of a story! You cannot delete them until you delete the "
               + "story created by this person";
           Alert alert = new Alert(Alert.AlertType.ERROR);
           alert.setTitle("Person is a Story creator");
@@ -2240,7 +2271,16 @@ public class Main extends Application {
   }
 
   public void setMainScene() {
-    this.primaryStage.setScene(mainScene);
+    double height = primaryStage.getHeight();
+    double width = primaryStage.getWidth();
+    boolean maximised = primaryStage.isMaximized();
+    primaryStage.setScene(mainScene);
+    if (maximised) {
+      primaryStage.setMaximized(true);
+    } else {
+      primaryStage.setHeight(height);
+      primaryStage.setWidth(width);
+    }
   }
 
   public Stage getStage() {
