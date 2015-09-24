@@ -1248,8 +1248,8 @@ public class Main extends Application {
    */
   public void revert() {
     revertHandler.revert();
-    LMPC.getScrumBoardController().setupController(this, primaryStage);
-    LMPC.getBurndownController().setupController(this, primaryStage);
+    LMPC.getScrumBoardController().hardReset();
+    LMPC.getBurndownController().hardReset();
   }
 
   /**
