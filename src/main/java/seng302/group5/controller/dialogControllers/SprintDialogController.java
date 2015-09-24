@@ -750,6 +750,9 @@ public class SprintDialogController implements AgileController {
       }
       // undo all editing of existing tasks made within this dialog
       mainApp.quickUndo(tasksUndoRedo);
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        sprint.copyValues(lastSprint);
+      }
       mainApp.popControllerStack();
       thisStage.close();
     }

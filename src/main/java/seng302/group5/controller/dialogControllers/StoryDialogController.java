@@ -252,7 +252,7 @@ public class StoryDialogController implements AgileController {
 
     storyNameField.textProperty().addListener((observable, oldValue, newValue) -> {
       //For disabling the button
-      if(createOrEdit == CreateOrEdit.EDIT) {
+      if (createOrEdit == CreateOrEdit.EDIT) {
         checkButtonDisabled();
       }
     });
@@ -611,6 +611,9 @@ public class StoryDialogController implements AgileController {
       }
       // undo all editing of existing tasks made within this dialog
       mainApp.quickUndo(tasksUndoRedo);
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        story.copyValues(lastStory);
+      }
       mainApp.popControllerStack();
       thisStage.close();
     }
