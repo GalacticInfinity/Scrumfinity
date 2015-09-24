@@ -363,8 +363,38 @@ public class StoryItemController {
     Label draggedLabel = (Label) node;
     VBox oldVBox = (VBox) draggedLabel.getParent();
     oldVBox.getChildren().remove(draggedLabel);
-    //2:Add to the new list
-    addWithDragging(root, draggedLabel);
+    if (root.getChildren().size() == 0) {
+      addWithDragging(root, draggedLabel);
+    } else {
+      Label lowermostLabel = (Label) root.getChildren().get(root.getChildren().size() - 1);
+      addWithDragging(root, draggedLabel);
+
+      Task tempT = null;
+      Task tempT2 = null;
+
+      for (Task task : story.getTasks()) {
+        if (task.getLabel().equals(lowermostLabel.getText()))
+          tempT = task;
+        if (task.getLabel().equals(draggedLabel.getText())) {
+          tempT2 = task;
+        }
+      }
+
+      int pos = story.getTasks().indexOf(tempT2);
+
+      if (tempT != null) {
+        System.out.println(tempT);
+        if (pos <= story.getTasks().indexOf(tempT)) {
+          story.removeTask(tempT);
+          story.addTask(pos, tempT);
+        } else if (pos > story.getTasks().indexOf(tempT)) {
+          story.removeTask(tempT);
+          story.addTask(pos - 1, tempT);
+        } else {
+          System.out.println("Very Bad things happened");
+        }
+      }
+    }
   }
 
   /**
@@ -490,21 +520,7 @@ public class StoryItemController {
       CompositeUndoRedo comp = new CompositeUndoRedo("Scrumboard Drag Action");
       comp.addUndoRedo(ssUR);
 
-      mainApp.newAction(comp);
-
-//      UndoRedo taskDelete = new UndoRedoObject();
-//      taskDelete.setAction(Action.TASK_DELETE);
-//      taskDelete.addDatum(new Task(deleteTask));
-//      taskDelete.addDatum(story);
-
-      // Store a copy of task to edit in object to avoid reference problems
-//      taskDelete.setAgileItem(deleteTask);
-//
-//      if (deleteTask != null) {
-//        story.removeTask(deleteTask);
-//      }
-
-//      mainApp.newAction(taskDelete);
+      mainApp.newAction(ssUR);
 
       mainApp.getLMPC().getScrumBoardController().refreshTaskLists();
 
