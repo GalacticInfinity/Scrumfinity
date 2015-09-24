@@ -490,21 +490,7 @@ public class StoryItemController {
       CompositeUndoRedo comp = new CompositeUndoRedo("Scrumboard Drag Action");
       comp.addUndoRedo(ssUR);
 
-      mainApp.newAction(comp);
-
-//      UndoRedo taskDelete = new UndoRedoObject();
-//      taskDelete.setAction(Action.TASK_DELETE);
-//      taskDelete.addDatum(new Task(deleteTask));
-//      taskDelete.addDatum(story);
-
-      // Store a copy of task to edit in object to avoid reference problems
-//      taskDelete.setAgileItem(deleteTask);
-//
-//      if (deleteTask != null) {
-//        story.removeTask(deleteTask);
-//      }
-
-//      mainApp.newAction(taskDelete);
+      mainApp.newAction(ssUR);
 
       mainApp.getLMPC().getScrumBoardController().refreshTaskLists();
 
