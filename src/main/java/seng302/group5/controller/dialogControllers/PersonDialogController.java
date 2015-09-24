@@ -461,6 +461,7 @@ public class PersonDialogController implements AgileController {
           mainApp.showSkillDialogWithinPerson(selectedSkill, thisStage);
           availableSkills.remove(selectedSkill);
           availableSkills.add(selectedSkill);
+          skillsList.getSelectionModel().select(selectedSkill);
         }
       });
     }
@@ -491,6 +492,7 @@ public class PersonDialogController implements AgileController {
           mainApp.showSkillDialogWithinPerson(selectedSkill, thisStage);
           selectedSkills.remove(selectedSkill);
           selectedSkills.add(selectedSkill);
+          personSkillList.getSelectionModel().select(selectedSkill);
           if (createOrEdit == CreateOrEdit.EDIT) {
             checkButtonDisabled();
           }

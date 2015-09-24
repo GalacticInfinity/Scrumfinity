@@ -133,7 +133,7 @@ public class BacklogDialogController implements AgileController {
       this.lastBacklog = new Backlog(backlog);
       this.btnEditProductOwner.setDisable(false);
     } else {
-      this.backlog = null;
+      this.backlog = new Backlog();
       this.lastBacklog = null;
       this.btnEditProductOwner.setDisable(true);
     }
@@ -218,6 +218,11 @@ public class BacklogDialogController implements AgileController {
             allocatedStoriesList.setItems(null);
             allocatedStoriesList.setItems(allocatedStories);
             allocatedStoriesList.getSelectionModel().clearSelection();
+
+            if (createOrEdit == CreateOrEdit.CREATE) {
+              // for nested story dialogs
+              this.backlog.setEstimate(newValue);
+            }
 
             if (createOrEdit == CreateOrEdit.EDIT) {
               checkButtonDisabled();
@@ -565,9 +570,18 @@ public class BacklogDialogController implements AgileController {
       alert.showAndWait();
     } else {
       if (createOrEdit == CreateOrEdit.CREATE) {
-        backlog = new Backlog(backlogLabel, backlogName, backlogDescription, productOwner, estimate);
+        backlog.setLabel(backlogLabel);
+        backlog.setBacklogName(backlogName);
+        backlog.setBacklogDescription(backlogDescription);
+        backlog.setProductOwner(productOwner);
+        backlog.setEstimate(estimate);
+
         for (StoryEstimate storyEstimate : allocatedStories) {
-          backlog.addStory(storyEstimate.getStory(), storyEstimate.getEstimateIndex());
+          if (!backlog.getStories().contains(storyEstimate.getStory())) {
+            backlog.addStory(storyEstimate.getStory(), storyEstimate.getEstimateIndex());
+          } else {
+            backlog.updateStory(storyEstimate.getStory(), storyEstimate.getEstimateIndex());
+          }
         }
         mainApp.addBacklog(backlog);
         if (Settings.correctList(backlog)) {
@@ -747,13 +761,34 @@ public class BacklogDialogController implements AgileController {
           int selectedIndex = allocatedStoriesList.getSelectionModel().getSelectedIndex();
           StoryEstimate selectedStoryEstimate = allocatedStoriesList.getSelectionModel().getSelectedItem();
 
+          if (createOrEdit == CreateOrEdit.CREATE) {
+            // update just before nested story dialog
+            backlog.setLabel(backlogLabelField.getText());
+          }
           mainApp.showStoryDialogWithinBacklog(CreateOrEdit.EDIT, selectedStoryEstimate.getStory(),
-                                               thisStage);
+                                               backlog, thisStage);
           //use this to do whatever you want to. Open Link etc.
-          allocatedStories.remove(selectedStoryEstimate);
-          selectedStoryEstimate.setEstimate(backlog.getSizes().get(selectedStoryEstimate.getStory()));
-          allocatedStories.add(selectedIndex, selectedStoryEstimate);
-          allocatedStoriesList.getSelectionModel().select(selectedIndex);
+
+          Story selectedStory = selectedStoryEstimate.getStory();
+          if (backlog.getSizes().get(selectedStory) != null) {
+            // this means you pressed OK on the story dialog
+            allocatedStories.remove(selectedStoryEstimate);
+
+            // update estimate index
+            selectedStoryEstimate.setEstimate(backlog.getSizes().get(selectedStory));
+
+            if (createOrEdit == CreateOrEdit.EDIT) {
+              // change lastBacklog so that undo keeps the edited story in the backlog
+              if (!lastBacklog.getStories().contains(selectedStoryEstimate.getStory())) {
+                lastBacklog.addStory(selectedStory, selectedStoryEstimate.getEstimateIndex());
+              } else {
+                lastBacklog.updateStory(selectedStory, selectedStoryEstimate.getEstimateIndex());
+              }
+            }
+
+            allocatedStories.add(selectedIndex, selectedStoryEstimate);
+            allocatedStoriesList.getSelectionModel().select(selectedIndex);
+          }
         }
       });
     }
@@ -931,7 +966,7 @@ public class BacklogDialogController implements AgileController {
    */
   @FXML
   protected void addNewStory(ActionEvent event) {
-    mainApp.showStoryDialogWithinBacklog(CreateOrEdit.CREATE, null, thisStage);
+    mainApp.showStoryDialogWithinBacklog(CreateOrEdit.CREATE, null, null, thisStage);
 
     Set<Story> storiesInUse = new HashSet<>();
     for (StoryEstimate storyEstimate : allocatedStories) {
@@ -962,7 +997,7 @@ public class BacklogDialogController implements AgileController {
             click.getButton() == MouseButton.PRIMARY &&
             !isEmpty()) {
           Story selectedStory = availableStoriesList.getSelectionModel().getSelectedItem();
-          mainApp.showStoryDialogWithinBacklog(CreateOrEdit.EDIT, selectedStory, thisStage);
+          mainApp.showStoryDialogWithinBacklog(CreateOrEdit.EDIT, selectedStory, null, thisStage);
           availableStories.remove(selectedStory);
           availableStories.add(selectedStory);
         }

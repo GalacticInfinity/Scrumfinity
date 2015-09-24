@@ -357,8 +357,9 @@ public class StoryDialogController implements AgileController {
   /**
    * Set up the dialog to be in backlog mode
    */
-  public void setupBacklogMode() {
+  public void setupBacklogMode(Backlog backlog) {
     dialogMode = DialogMode.BACKLOG_MODE;
+    backlogCombo.setValue(backlog);
     backlogCombo.setDisable(true);
     btnNewBacklog.setDisable(true);
     btnEditBacklog.setDisable(true);
@@ -566,11 +567,13 @@ public class StoryDialogController implements AgileController {
           backlog.updateStory(story, selectedEstimateIndex);
         }
       }
-      if (Settings.correctList(backlog)) {
-        mainApp.refreshList(backlog);
-      }
-      if (Settings.correctList(story)) {
-        mainApp.refreshList(story);
+      if (dialogMode == DialogMode.DEFAULT_MODE) {
+        if (Settings.correctList(backlog)) {
+          mainApp.refreshList(backlog);
+        }
+        if (Settings.correctList(story)) {
+          mainApp.refreshList(story);
+        }
       }
       UndoRedo undoRedoObject = generateUndoRedoObject();
       mainApp.newAction(undoRedoObject);

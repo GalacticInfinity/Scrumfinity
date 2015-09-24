@@ -942,7 +942,8 @@ public class Main extends Application {
    * @param story the person that you wanted to view or edit information with
    * @param owner the stage it is currently on to void unusual behaviour
    */
-  public void showStoryDialogWithinBacklog(CreateOrEdit createOrEdit, Story story, Stage owner) {
+  public void showStoryDialogWithinBacklog(CreateOrEdit createOrEdit, Story story,
+                                           Backlog backlog, Stage owner) {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/StoryDialog.fxml"));
@@ -973,7 +974,7 @@ public class Main extends Application {
       }
 
       controller.setupController(this, storyDialogStage, createOrEdit, story);
-      controller.setupBacklogMode();
+      controller.setupBacklogMode(backlog);
       pushControllerStack(controller);
 
       storyDialogStage.initModality(Modality.APPLICATION_MODAL);
