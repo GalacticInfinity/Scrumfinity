@@ -120,7 +120,7 @@
             <Insets bottom="5.0" />
          </VBox.margin>
       </HBox>
-      <HBox>
+      <HBox fx:id="btnContainer">
          <children>
             <Label prefHeight="19.0" prefWidth="245.0" text="* Fields cannot be empty.">
                <font>
