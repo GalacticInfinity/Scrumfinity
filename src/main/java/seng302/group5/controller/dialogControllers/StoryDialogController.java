@@ -532,6 +532,7 @@ public class StoryDialogController implements AgileController {
         alert.setHeaderText(null);
         alert.setContentText("This story must be ready for this story to appear in the list of "
                              + "available stories in the sprint dialog.");
+        alert.getDialogPane().setPrefHeight(135);
         alert.showAndWait();
         return;
       }
