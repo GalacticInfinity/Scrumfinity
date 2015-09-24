@@ -364,17 +364,13 @@ public class StoryItemController {
     VBox oldVBox = (VBox) draggedLabel.getParent();
     oldVBox.getChildren().remove(draggedLabel);
     if (root.getChildren().size() == 0) {
-      System.out.println("in here ");
       addWithDragging(root, draggedLabel);
     } else {
-      System.out.println("In there");
       Label lowermostLabel = (Label) root.getChildren().get(root.getChildren().size() - 1);
-      System.out.println("lowermostLabel = " + lowermostLabel);
       addWithDragging(root, draggedLabel);
 
       Task tempT = null;
       Task tempT2 = null;
-      System.out.println("root = " + root);
 
       for (Task task : story.getTasks()) {
         if (task.getLabel().equals(lowermostLabel.getText()))
@@ -385,8 +381,6 @@ public class StoryItemController {
       }
 
       int pos = story.getTasks().indexOf(tempT2);
-
-      System.out.println("tempT = " + tempT);
 
       if (tempT != null) {
         System.out.println(tempT);
@@ -401,7 +395,6 @@ public class StoryItemController {
         }
       }
     }
-    System.out.println("");
   }
 
   /**
