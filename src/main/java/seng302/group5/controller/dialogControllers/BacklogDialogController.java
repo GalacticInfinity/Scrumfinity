@@ -365,7 +365,7 @@ public class BacklogDialogController implements AgileController {
             } else if (selectedEstimateIndex == 0 &&
                        storiesInSprints.contains(selected.getStory())) {
               Alert alert = new Alert(Alert.AlertType.ERROR);
-              alert.setTitle("Story In Sprint");
+              alert.setTitle("Story in Sprint");
               alert.setHeaderText(null);
               alert.setContentText("The selected story is in a sprint. The estimate cannot be "
                                    + "removed or it will violate the readiness criteria.");
@@ -451,11 +451,27 @@ public class BacklogDialogController implements AgileController {
 
       if (storyEstimate != null) {
         Story selectedStory = storyEstimate.getStory();
-        this.availableStories.add(selectedStory);
-        this.allocatedStories.remove(storyEstimate);
-        this.availableStoriesList.getSelectionModel().select(selectedStory);
-        if (createOrEdit == CreateOrEdit.EDIT) {
-          checkButtonDisabled();
+        Sprint storySprint = null;
+        for (Sprint sprint : mainApp.getSprints()) {
+          if (sprint.getSprintStories().contains(selectedStory)) {
+            storySprint = sprint;
+            break;
+          }
+        }
+        if (storySprint != null) {
+          Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setTitle("Story in Sprint");
+          alert.setHeaderText(null);
+          alert.setContentText(String.format(
+              "This story cannot be removed because it is in the sprint '%s'", storySprint));
+          alert.showAndWait();
+        } else {
+          this.availableStories.add(selectedStory);
+          this.allocatedStories.remove(storyEstimate);
+          this.availableStoriesList.getSelectionModel().select(selectedStory);
+          if (createOrEdit == CreateOrEdit.EDIT) {
+            checkButtonDisabled();
+          }
         }
       }
     } catch (Exception e) {
