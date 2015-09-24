@@ -1,4 +1,4 @@
-package seng302.group5.controller.dialogControllers;
+package seng302.group5.controller.mainAppControllers;
 
 import java.time.LocalDate;
 import java.util.stream.Collectors;

@@ -1,4 +1,4 @@
-package seng302.group5.controller.dialogControllers;
+package seng302.group5.controller.mainAppControllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

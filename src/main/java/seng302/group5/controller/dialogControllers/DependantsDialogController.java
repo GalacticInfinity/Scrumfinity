@@ -14,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
 import seng302.group5.Main;
@@ -108,6 +109,7 @@ public class DependantsDialogController {
 
     initialiseLists();
     refreshLists();
+    thisStage.getIcons().add(new Image("Thumbnail.png"));
   }
 
   /**

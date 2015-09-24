@@ -1,6 +1,5 @@
 package seng302.group5.controller.mainAppControllers;
 
-import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -32,7 +31,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -40,12 +38,9 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
 import seng302.group5.Main;
-import seng302.group5.controller.dialogControllers.BurndownController;
-import seng302.group5.controller.dialogControllers.ScrumBoardController;
 import seng302.group5.model.AgileHistory;
 import seng302.group5.model.AgileItem;
 import seng302.group5.model.Backlog;
-import seng302.group5.model.Estimate;
 import seng302.group5.model.Release;
 import seng302.group5.model.Role;
 import seng302.group5.model.Sprint;

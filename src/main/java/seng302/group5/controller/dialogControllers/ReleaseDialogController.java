@@ -18,6 +18,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import seng302.group5.Main;
@@ -276,6 +277,7 @@ public class ReleaseDialogController implements AgileController {
         checkButtonDisabled();
       }
     });
+    thisStage.getIcons().add(new Image("Thumbnail.png"));
   }
 
   /**
