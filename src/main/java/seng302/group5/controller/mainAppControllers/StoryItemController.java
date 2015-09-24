@@ -23,6 +23,7 @@ import seng302.group5.model.Sprint;
 import seng302.group5.model.Status;
 import seng302.group5.model.Story;
 import seng302.group5.model.Task;
+import seng302.group5.model.Taskable;
 import seng302.group5.model.Team;
 import seng302.group5.model.undoredo.Action;
 import seng302.group5.model.undoredo.CompositeUndoRedo;
@@ -132,6 +133,11 @@ public class StoryItemController {
     inProgressList.getChildren().clear();
     verifyList.getChildren().clear();
     doneList.getChildren().clear();
+
+    if (story.getLabel().equals("Non-story Tasks")) {
+      story.removeAllTasks();
+      story.addAllTasks(sprint.getTasks());
+    }
 
     for (Task task : story.getTasks()) {
 
@@ -453,7 +459,13 @@ public class StoryItemController {
   protected void btnAddTask(ActionEvent event) {
     //Show the task creation dialog and make the undoredo object
     UndoRedo taskCreate;
-    taskCreate = mainApp.showTaskDialog(story, null, null, CreateOrEdit.CREATE, mainApp.getStage());
+    Taskable taskable;
+    if (story.getLabel().equals("Non-story Tasks")) {
+      taskable = sprint;
+    } else {
+      taskable = story;
+    }
+    taskCreate = mainApp.showTaskDialog(taskable, null, null, CreateOrEdit.CREATE, mainApp.getStage());
     if (taskCreate != null) {
       mainApp.newAction(taskCreate);
     }
