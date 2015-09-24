@@ -2234,9 +2234,14 @@ public class Main extends Application {
   public void setMainScene() {
     double height = primaryStage.getHeight();
     double width = primaryStage.getWidth();
+    boolean maximised = primaryStage.isMaximized();
     primaryStage.setScene(mainScene);
-    primaryStage.setHeight(height);
-    primaryStage.setWidth(width);
+    if (maximised) {
+      primaryStage.setMaximized(true);
+    } else {
+      primaryStage.setHeight(height);
+      primaryStage.setWidth(width);
+    }
   }
 
   public Stage getStage() {
