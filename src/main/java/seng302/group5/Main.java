@@ -653,8 +653,18 @@ public class Main extends Application {
       Scene releaseDialogScene = new Scene(releaseDialogLayout);
       Stage releaseDialogStage = new Stage();
 
+      if (isInControllerStack(controller, release)) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Dialog already open");
+        alert.setHeaderText(null);
+        alert.setContentText("The window you are trying to open is already open in the background.");
+        alert.showAndWait();
+        return;
+      }
+
       controller.setupController(this, releaseDialogStage, createOrEdit, release);
       controller.setupSprintMode(project);
+      pushControllerStack(controller);
 
       releaseDialogStage.initModality(Modality.APPLICATION_MODAL);
       releaseDialogStage.initOwner(stage);
