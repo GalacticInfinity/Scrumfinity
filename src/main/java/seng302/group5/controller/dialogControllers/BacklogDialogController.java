@@ -833,7 +833,11 @@ public class BacklogDialogController implements AgileController {
           setGraphic(circle);
         }
 
-      }}
+      } else {
+        setGraphic(null);
+        setText(null);
+      }
+    }
   }
 
   /**
