@@ -1304,7 +1304,7 @@ public class ListMainPaneController {
     if (!backlog.getStories().isEmpty()) {
       for (Story story : backlog.getStories()) {
 
-        Text t = new Text("\n\uD83C\uDF11 "); //Need to create an object so i can color it depending on the readiness of the story. The "\uD83C\uDF11" is a BIG bullet
+        Text t = new Text("\n⚫ "); //Need to create an object so i can color it depending on the readiness of the story. The "\uD83C\uDF11" is a BIG bullet
         t.setFill(getColor(story)); //Set the color
 
         int index = backlog.getSizes().get(story);
@@ -1331,7 +1331,7 @@ public class ListMainPaneController {
 
           for (Story story : sortedStories) {
 
-            Text t = new Text("\n\uD83C\uDF11 "); //Need to create an object so i can color it depending on the readiness of the story
+            Text t = new Text("\n⚫ "); //Need to create an object so i can color it depending on the readiness of the story
             t.setFill(getColor(story)); //set color
 
             int index = backlog.getSizes().get(story);
@@ -1352,7 +1352,7 @@ public class ListMainPaneController {
         if (!backlog.getStories().isEmpty()) {
           for (Story story : backlog.getStories()) {
 
-            Text t = new Text("\n\uD83C\uDF11 "); //Need to create an object so i can color it depending on the readiness of the story
+            Text t = new Text("\n⚫ "); //Need to create an object so i can color it depending on the readiness of the story
             t.setFill(getColor(story)); //set color
 
             int index = backlog.getSizes().get(story);

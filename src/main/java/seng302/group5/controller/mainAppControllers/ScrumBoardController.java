@@ -167,7 +167,7 @@ public class ScrumBoardController {
   }
 
   /**
-   * TODO write all the stuff it does
+   * Loads the StoryItem FXML and returns a StoryItemController if successful, or null if failed.
    *
    * @param story Story object which holds the data
    * @return The created controller
@@ -207,10 +207,10 @@ public class ScrumBoardController {
           return pane;
         }
       }
+      return createStoryPane(story, storiesBox);
     } else {
       return createStoryPane(story, storiesBox);
     }
-    return null;
   }
 
   /**
@@ -290,5 +290,9 @@ public class ScrumBoardController {
     for (StoryItemController controller : storyPanes) {
       controller.setupLists();
     }
+  }
+
+  public Stage getStage() {
+    return stage;
   }
 }

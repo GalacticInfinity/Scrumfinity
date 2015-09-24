@@ -149,7 +149,6 @@ public class StoryItemController {
           //Makes the task extend all the way across the container
           tempLabel.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
           addWithDragging(notStartedList, tempLabel);
-          // TODO this line specifically
           break;
         case IN_PROGRESS:
           inProgressTasks.add(task);
@@ -181,7 +180,24 @@ public class StoryItemController {
           generateUndoRedoObject(event, Status.NOT_STARTED);
           updateDino();
           updateProgBar();
+          disableVBoxStyles();
         }
+      }
+    });
+    // When dragging over the vbox
+    notStartedList.setOnMouseDragOver(new EventHandler<MouseDragEvent>() {
+      @Override
+      public void handle(MouseDragEvent event) {
+        if (checkVBox(event)) {
+          notStartedList.setStyle("-fx-border-color: #72f995");
+        }
+      }
+    });
+    // When dragging off the vbox
+    notStartedList.setOnMouseDragExited(new EventHandler<MouseDragEvent>() {
+      @Override
+      public void handle(MouseDragEvent event) {
+        notStartedList.setStyle("");
       }
     });
 
@@ -193,8 +209,24 @@ public class StoryItemController {
           generateUndoRedoObject(event, Status.IN_PROGRESS);
           updateDino();
           updateProgBar();
+          disableVBoxStyles();
 
         }
+      }
+    });
+    inProgressList.setOnMouseDragOver(new EventHandler<MouseDragEvent>() {
+      @Override
+      public void handle(MouseDragEvent event) {
+        if (checkVBox(event)) {
+          disableVBoxStyles();
+          inProgressList.setStyle("-fx-border-color: #72f995");
+        }
+      }
+    });
+    inProgressList.setOnMouseDragExited(new EventHandler<MouseDragEvent>() {
+      @Override
+      public void handle(MouseDragEvent event) {
+        inProgressList.setStyle("");
       }
     });
 
@@ -206,7 +238,23 @@ public class StoryItemController {
           generateUndoRedoObject(event, Status.VERIFY);
           updateDino();
           updateProgBar();
+          disableVBoxStyles();
         }
+      }
+    });
+    verifyList.setOnMouseDragOver(new EventHandler<MouseDragEvent>() {
+      @Override
+      public void handle(MouseDragEvent event) {
+        if (checkVBox(event)) {
+          disableVBoxStyles();
+          verifyList.setStyle("-fx-border-color: #72f995");
+        }
+      }
+    });
+    verifyList.setOnMouseDragExited(new EventHandler<MouseDragEvent>() {
+      @Override
+      public void handle(MouseDragEvent event) {
+        verifyList.setStyle("");
       }
     });
 
@@ -218,7 +266,23 @@ public class StoryItemController {
           generateUndoRedoObject(event, Status.DONE);
           updateDino();
           updateProgBar();
+          disableVBoxStyles();
         }
+      }
+    });
+    doneList.setOnMouseDragOver(new EventHandler<MouseDragEvent>() {
+      @Override
+      public void handle(MouseDragEvent event) {
+        if (checkVBox(event)) {
+          disableVBoxStyles();
+          doneList.setStyle("-fx-border-color: #72f995");
+        }
+      }
+    });
+    doneList.setOnMouseDragExited(new EventHandler<MouseDragEvent>() {
+      @Override
+      public void handle(MouseDragEvent event) {
+        doneList.setStyle("");
       }
     });
   }
@@ -306,6 +370,7 @@ public class StoryItemController {
         if (checkSource(event) && !checkSameLabel(event)) {
           // Mouse is dropped;
           label.setStyle("");
+          disableVBoxStyles();
           int indexOfDropTarget = -1;
           Label sourceLbl = (Label) event.getSource();
 
@@ -314,19 +379,15 @@ public class StoryItemController {
           if (notStartedList.getChildren().contains(sourceLbl)) {
             generateUndoRedoObject(event, Status.NOT_STARTED);
             notStartedList.getChildren().remove(sourceLbl);
-            indexOfDropTarget = notStartedList.getChildren().indexOf(sourceLbl);
           } else if (inProgressList.getChildren().contains(sourceLbl)) {
             generateUndoRedoObject(event, Status.IN_PROGRESS);
             inProgressList.getChildren().remove(sourceLbl);
-            indexOfDropTarget = inProgressList.getChildren().indexOf(sourceLbl);
           } else if (verifyList.getChildren().contains(sourceLbl)) {
             generateUndoRedoObject(event, Status.VERIFY);
             verifyList.getChildren().remove(sourceLbl);
-            indexOfDropTarget = verifyList.getChildren().indexOf(sourceLbl);
           } else if (doneList.getChildren().contains(sourceLbl)) {
             generateUndoRedoObject(event, Status.DONE);
             doneList.getChildren().remove(sourceLbl);
-            indexOfDropTarget = doneList.getChildren().indexOf(sourceLbl);
           }
 
           // Adds label to root with new listeners
@@ -492,7 +553,7 @@ public class StoryItemController {
       Task deleteTask = null;
 
       for (Task task : story.getTasks()) {
-        if (task.getLabel() == selectedLabel.getText()) {
+        if (task.getLabel().equals(selectedLabel.getText())) {
           deleteTask = task;
           break;
         }
@@ -683,6 +744,16 @@ public class StoryItemController {
     comp.addUndoRedo(taskUR);
 
     mainApp.newAction(comp);
+  }
+
+  /**
+   * Sets all VBox styles to empty
+   */
+  private void disableVBoxStyles() {
+    notStartedList.setStyle("");
+    inProgressList.setStyle("");
+    verifyList.setStyle("");
+    doneList.setStyle("");
   }
 
   public String getPaneName() {

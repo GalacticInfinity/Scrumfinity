@@ -362,6 +362,10 @@ public class StoryDialogController implements AgileController {
     backlogCombo.setDisable(true);
     btnNewBacklog.setDisable(true);
     btnEditBacklog.setDisable(true);
+    if (backlog != null && backlog.getStories().contains(story)) {
+      lastBacklog = new Backlog(backlog);
+      estimateCombo.getSelectionModel().select(backlog.getSizes().get(story));
+    }
   }
 
   /**
