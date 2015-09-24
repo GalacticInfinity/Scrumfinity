@@ -36,6 +36,7 @@ public class LoginController {
       }
       mainApp.toggleName();
       mainApp.setMainScene();
+      mainApp.getLMPC().getScrumBoardController().hardReset();
     }
   }
 
