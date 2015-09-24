@@ -218,18 +218,12 @@
                </VBox.margin>
             </HBox>
             <HBox spacing="10.0">
-            <HBox prefHeight="25.0" prefWidth="425.0">
                <children>
                   <Label fx:id="estimateLabel" prefWidth="125.0" text="Estimate:">
-                  <Label prefHeight="39.0" prefWidth="135.0" text="Estimate:">
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Label>
-                  <Label fx:id="shownEstimate" minHeight="25.0" prefWidth="200.0" text="Not Estimated">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
                   <Label fx:id="estimateContainer">
                      <graphic>
                         <ComboBox fx:id="estimateCombo" prefHeight="25.0" prefWidth="200.0" promptText="Set estimate" />
