@@ -64,7 +64,7 @@ public class BacklogDialogController implements AgileController {
   private ObservableList<StoryEstimate> originalStories;
   private ObservableList<Person> productOwners;
   private ObservableList<Estimate> estimates;
-  List<Story> storiesInSprints;
+  private List<Story> storiesInSprints;
   private ArrayList<Story> undoRedoStoryList = new ArrayList<>();
 
   @FXML private TextField backlogLabelField;
