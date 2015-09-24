@@ -92,6 +92,7 @@ public class BurndownController {
     backlogCombo.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldBacklog, newBacklog) -> {
           if (backlogCombo.getSelectionModel().getSelectedItem() != null) {
+            availableSprints.clear();
             sprintCombo.setDisable(false);
             // get backlog's sprints
             for (Sprint sprint : mainApp.getSprints()) {
