@@ -271,7 +271,6 @@ public class ScrumBoardController {
   public void hardReset() {
     backlogCombo.getSelectionModel().clearSelection();
     backlogCombo.setValue(null);
-    System.out.println(backlogCombo.getValue());
     backlogCombo.setItems(mainApp.getBacklogs());
     sprintCombo.getSelectionModel().clearSelection();
     sprintCombo.getItems().clear();
