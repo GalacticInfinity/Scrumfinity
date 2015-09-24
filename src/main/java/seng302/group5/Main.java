@@ -718,12 +718,12 @@ public class Main extends Application {
   }
 
   /**
-   * sets up the dialog box for editing a person when opened from the team dialog
+   * sets up the dialog box for editing a person when opened from a parent dialog
    *
    * @param person the person that you wanted to view or edit information with
    * @param stage the stage it is currently on to void unusual behaviour
    */
-  public void showPersonDialogWithinTeam(Person person, Stage stage) {
+  public void showPersonDialogNested(Person person, Stage stage) {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/PersonDialog.fxml"));

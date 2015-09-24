@@ -3,7 +3,6 @@ package seng302.group5.controller.dialogControllers;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -1114,7 +1113,7 @@ public class StoryDialogController implements AgileController {
     List<Person> tempCreatorList = new ArrayList<>(availablePeople);
     Person selectedPerson = storyCreatorList.getSelectionModel().getSelectedItem();
     if (selectedPerson != null) {
-      mainApp.showPersonDialogWithinTeam(selectedPerson, thisStage);
+      mainApp.showPersonDialogNested(selectedPerson, thisStage);
       availablePeople.setAll(tempCreatorList);
       storyCreatorList.getSelectionModel().select(selectedPerson);
     }
