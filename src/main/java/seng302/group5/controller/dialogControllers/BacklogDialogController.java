@@ -1020,6 +1020,7 @@ public class BacklogDialogController implements AgileController {
           mainApp.showStoryDialogWithinBacklog(CreateOrEdit.EDIT, selectedStory, null, thisStage);
           availableStories.remove(selectedStory);
           availableStories.add(selectedStory);
+          availableStoriesList.getSelectionModel().select(selectedStory);
         }
       });
     }

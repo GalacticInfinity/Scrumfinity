@@ -552,6 +552,7 @@ public class TeamDialogController implements AgileController {
           mainApp.showPersonDialogNested(selectedPerson.getPerson(), thisStage);
           selectedMembers.remove(selectedPerson);
           selectedMembers.add(selectedPerson);
+          teamMembersList.getSelectionModel().select(selectedPerson);
         }
       });
     }
@@ -581,6 +582,7 @@ public class TeamDialogController implements AgileController {
           mainApp.showPersonDialogNested(selectedPerson, thisStage);
           availableMembers.remove(selectedPerson);
           availableMembers.add(selectedPerson);
+          availableMembersList.getSelectionModel().select(selectedPerson);
         }
       });
     }
