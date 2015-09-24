@@ -1381,24 +1381,37 @@ public class ListMainPaneController {
   private Color getColor(Story story) {
 
     boolean dependent = false;
+    Backlog bl = null;
 
-    for (Story stories : mainApp.getStories()) {
-      if (story.getDependencies().contains(stories)) {
-        if (mainApp.getStories().indexOf(stories) >
-            mainApp.getStories().indexOf(story)) {
-          dependent = true;
-        }
+    for (Backlog backlog : mainApp.getBacklogs()) {
+      if (backlog.getStories().contains(story)) {
+        bl = backlog;
+        break;
       }
     }
 
-    if (dependent) {
-      return Color.RED;
-    } else if (story.getStoryState()) {
-      return Color.rgb(0, 191, 0);
-    } else if (story.getAcceptanceCriteria().size() > 0) {
-      return Color.rgb(255, 135, 0);
-    }
-    else {
+    if (bl != null) {
+
+      for (Story stories : bl.getStories()) {
+        if (story.getDependencies().contains(stories)) {
+          if (mainApp.getStories().indexOf(stories) <
+              mainApp.getStories().indexOf(story)) {
+            dependent = true;
+            break;
+          }
+        }
+      }
+
+      if (dependent) {
+        return Color.RED;
+      } else if (story.getStoryState() && bl.getSizes().get(story) != 0) {
+        return Color.rgb(0, 191, 0);
+      } else if (story.getAcceptanceCriteria().size() > 0 && bl.getSizes().get(story) == 0) {
+        return Color.rgb(255, 135, 0);
+      } else {
+        return Color.rgb(0, 0, 0, 0);
+      }
+    } else {
       return Color.rgb(0, 0, 0, 0);
     }
   }
