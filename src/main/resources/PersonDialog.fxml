@@ -90,7 +90,7 @@
                <children>
                   <Button fx:id="btnAddSkill" maxHeight="25.0" maxWidth="60.0" minHeight="25.0" minWidth="60.0" mnemonicParsing="false" onAction="#btnAddSkillClick" prefHeight="25.0" prefWidth="60.0">
                      <VBox.margin>
-                        <Insets bottom="10.0" top="70.0" />
+                        <Insets top="85.0" />
                      </VBox.margin>
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
@@ -102,7 +102,7 @@
                   </Button>
                   <Button fx:id="btnRemoveSkill" maxHeight="25.0" maxWidth="60.0" minHeight="25.0" minWidth="60.0" mnemonicParsing="false" onAction="#btnRemoveSkillClick" prefHeight="25.0" prefWidth="60.0">
                      <VBox.margin>
-                        <Insets />
+                        <Insets top="5.0" />
                      </VBox.margin>
                      <font>
                         <Font name="System Bold" size="12.0" />

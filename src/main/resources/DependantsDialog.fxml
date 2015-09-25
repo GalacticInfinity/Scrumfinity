@@ -55,7 +55,7 @@
                <children>
                   <Button fx:id="btnAddStory" maxHeight="25.0" maxWidth="60.0" minHeight="25.0" minWidth="60.0" mnemonicParsing="false" onAction="#btnAddStoryClick" prefHeight="25.0" prefWidth="60.0">
                      <VBox.margin>
-                        <Insets bottom="10.0" />
+                        <Insets />
                      </VBox.margin>
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
@@ -67,7 +67,7 @@
                   </Button>
                   <Button fx:id="btnRemoveStory" maxHeight="25.0" maxWidth="60.0" minHeight="25.0" minWidth="60.0" mnemonicParsing="false" onAction="#btnRemoveStoryClick" prefHeight="25.0" prefWidth="60.0">
                      <VBox.margin>
-                        <Insets />
+                        <Insets top="5.0" />
                      </VBox.margin>
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
@@ -79,7 +79,7 @@
                   </Button>
                </children>
                <HBox.margin>
-                  <Insets left="10.0" />
+                  <Insets left="10.0" top="20.0" />
                </HBox.margin>
             </VBox>
             <VBox>

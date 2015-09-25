@@ -28,7 +28,7 @@
                </tooltip></TextField>
             </children>
          <VBox.margin>
-            <Insets bottom="5.0" top="5.0" />
+            <Insets bottom="5.0" />
          </VBox.margin>
         </HBox>
         <HBox>

@@ -161,7 +161,7 @@
                   </DatePicker>
                   <Button fx:id="btnAddTeam" alignment="CENTER" contentDisplay="CENTER" maxHeight="25.0" maxWidth="60.0" minHeight="25.0" minWidth="60.0" mnemonicParsing="false" onAction="#btnAddTeam" prefHeight="25.0" prefWidth="60.0" textAlignment="CENTER">
                      <VBox.margin>
-                        <Insets bottom="10.0" left="33.0" />
+                        <Insets left="33.0" />
                      </VBox.margin>
                      <tooltip>
                         <Tooltip text="Allocate selected team to this project" />
@@ -176,7 +176,7 @@
                   </Button>
                   <Button fx:id="btnRemoveTeam" maxHeight="25.0" maxWidth="60.0" minHeight="25.0" minWidth="60.0" mnemonicParsing="false" onAction="#btnRemoveTeam" prefHeight="25.0" prefWidth="60.0">
                      <VBox.margin>
-                        <Insets left="33.0" />
+                        <Insets left="33.0" top="5.0" />
                      </VBox.margin>
                      <tooltip>
                         <Tooltip text="Remove selected team from this project" />
