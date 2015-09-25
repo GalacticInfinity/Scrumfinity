@@ -7,11 +7,11 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="445.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.ReleaseDialogController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.ReleaseDialogController">
     <children>
         <HBox alignment="BOTTOM_LEFT">
             <children>
-                <Label prefWidth="125.0" text="Release Label:*">
+                <Label prefHeight="25.0" prefWidth="125.0" text="Release Label:*">
                     <font>
                         <Font size="15.0" />
                     </font>
@@ -19,7 +19,7 @@
                   <Insets />
                </HBox.margin>
                 </Label>
-                <TextField fx:id="releaseLabelField" alignment="TOP_LEFT" layoutX="1.0" layoutY="10.0" prefWidth="200.0" promptText="Unique release label.">
+                <TextField fx:id="releaseLabelField" alignment="TOP_LEFT" layoutX="1.0" layoutY="10.0" prefWidth="200.0" promptText="Unique release label">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
@@ -33,12 +33,12 @@
         </HBox>
         <HBox>
             <children>
-                <Label prefWidth="125.0" text="Description:">
+                <Label prefHeight="25.0" prefWidth="125.0" text="Description:">
                     <font>
                         <Font size="15.0" />
                     </font>
                 </Label>
-                <TextArea fx:id="releaseDescriptionField" prefHeight="100.0" prefWidth="300.0" promptText="Description of release." wrapText="true">
+                <TextArea fx:id="releaseDescriptionField" prefHeight="100.0" prefWidth="300.0" promptText="Description of release" wrapText="true">
                <HBox.margin>
                   <Insets />
                </HBox.margin></TextArea>
@@ -49,12 +49,12 @@
         </HBox>
       <HBox>
          <children>
-            <Label prefWidth="125.0" text="Release Notes:">
+            <Label prefHeight="25.0" prefWidth="125.0" text="Release Notes:">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
-            <TextArea fx:id="releaseNotesField" prefHeight="100.0" prefWidth="300.0" promptText="Release notes." wrapText="true" />
+            <TextArea fx:id="releaseNotesField" prefHeight="100.0" prefWidth="300.0" promptText="Release notes" wrapText="true" />
          </children>
          <VBox.margin>
             <Insets bottom="5.0" />
@@ -62,14 +62,14 @@
       </HBox>
         <HBox alignment="CENTER_LEFT" layoutY="1.0">
             <children>
-                <Label prefWidth="125.0" text="Project:*">
+                <Label prefHeight="25.0" prefWidth="125.0" text="Project:*">
                     <font>
                         <Font size="15.0" />
                     </font>
                 </Label>
                 <Label fx:id="projectContainer">
                     <graphic>
-                        <ComboBox fx:id="projectComboBox" prefWidth="200.0" promptText="Available projects.">
+                        <ComboBox fx:id="projectComboBox" prefWidth="200.0" promptText="Available Projects">
                     <HBox.margin>
                         <Insets />
                     </HBox.margin></ComboBox>
@@ -106,7 +106,7 @@
         </HBox>
       <HBox>
          <children>
-            <Label prefWidth="125.0" text="Release Date:*">
+            <Label prefHeight="25.0" prefWidth="125.0" text="Release Date:*">
                <font>
                   <Font size="15.0" />
                </font>
@@ -144,6 +144,6 @@
       </HBox>
     </children>
    <padding>
-      <Insets left="10.0" />
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
    </padding>
 </VBox>
