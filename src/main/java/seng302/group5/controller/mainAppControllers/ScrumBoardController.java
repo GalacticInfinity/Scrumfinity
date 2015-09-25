@@ -236,6 +236,44 @@ public class ScrumBoardController {
     storyPanes.clear();
     sprintCombo.setDisable(true);
 
+    if (backlog != null && sprint != null
+        && mainApp.getSprints().contains(sprint)
+        && mainApp.getBacklogs().contains(sprint)) {
+      // TODO DO STUFF
+    } else if (backlog != null && mainApp.getBacklogs().contains(backlog)) {
+      // Hard reset most
+      if (oldSprints.equals(sprint) || !mainApp.getSprints().contains(sprint)) {
+        sprintCombo.setItems(mainApp.getSprints());
+        sprintCombo.getSelectionModel().clearSelection();
+        sprintCombo.getSelectionModel().select(null);
+      } else {
+
+      }
+    } else {
+      // Just hard reset
+      hardReset();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     if (backlog != null &&
         sprint != null) {
       if (mainApp.getBacklogs().contains(backlog)) {
@@ -277,7 +315,6 @@ public class ScrumBoardController {
     backlogCombo.getItems().addAll(mainApp.getBacklogs());
     backlogCombo.setValue(null);
     backlogCombo.getSelectionModel().select(null);
-    backlogCombo.setItems(mainApp.getBacklogs());
     sprintCombo.setValue(null);
     sprintCombo.getSelectionModel().select(null);
     sprintCombo.setDisable(true);
