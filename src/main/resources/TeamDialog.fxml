@@ -79,7 +79,7 @@
                <children>
                   <Button fx:id="btnAddMember" maxHeight="25.0" maxWidth="60.0" minHeight="25.0" minWidth="60.0" mnemonicParsing="false" onAction="#btnAddMemberClick" prefHeight="25.0" prefWidth="60.0">
                      <VBox.margin>
-                        <Insets bottom="10.0" />
+                        <Insets />
                      </VBox.margin>
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
@@ -91,7 +91,7 @@
                   </Button>
                   <Button fx:id="btnRemoveMember" maxHeight="25.0" maxWidth="60.0" minHeight="25.0" minWidth="60.0" mnemonicParsing="false" onAction="#btnRemoveMemberClick" prefHeight="25.0" prefWidth="60.0">
                      <VBox.margin>
-                        <Insets />
+                        <Insets top="5.0" />
                      </VBox.margin>
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">

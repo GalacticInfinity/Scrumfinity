@@ -71,7 +71,7 @@
         </HBox>
       <HBox fx:id="btnContainer" spacing="10.0">
          <children>
-            <Label prefHeight="25.0" prefWidth="245.0" text="*Fields cannot be empty.">
+            <Label prefHeight="25.0" prefWidth="245.0" text="* Fields cannot be empty.">
                <font>
                   <Font name="System Italic" size="13.0" />
                </font>

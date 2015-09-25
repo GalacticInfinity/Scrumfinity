@@ -138,6 +138,9 @@ public class DependantsDialogController {
         story = allStoriesList.getSelectionModel().getSelectedItem();
         refreshLists();
     }});
+    if (allStoriesList.getSelectionModel().getSelectedItem() != null) {
+      this.story = allStoriesList.getSelectionModel().getSelectedItem();
+    }
 /*    availableStoriesList.setOnMouseClicked(mouseEvent -> {
       if (mouseEvent.getButton().equals(MouseButton.PRIMARY) &&
           mouseEvent.getClickCount()%2 == 0 &&

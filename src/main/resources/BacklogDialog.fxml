@@ -122,7 +122,7 @@
                               <Font size="15.0" />
                            </font>
                            <HBox.margin>
-                              <Insets right="10.0" />
+                              <Insets />
                            </HBox.margin>
                         </Label>
                         <Button fx:id="btnNewStory" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" onAction="#addNewStory" prefHeight="20.0" prefWidth="20.0">
@@ -134,7 +134,7 @@
                               </ImageView>
                            </graphic>
                            <HBox.margin>
-                              <Insets top="5.0" />
+                              <Insets left="44.0" top="5.0" />
                            </HBox.margin>
                         </Button>
                      </children>
@@ -149,7 +149,7 @@
                <children>
                   <Button fx:id="btnAddStory" maxHeight="25.0" maxWidth="60.0" minHeight="25.0" minWidth="60.0" mnemonicParsing="false" onAction="#btnAddStoryClick" prefHeight="25.0" prefWidth="60.0">
                      <VBox.margin>
-                        <Insets bottom="10.0" />
+                        <Insets />
                      </VBox.margin>
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
@@ -161,7 +161,7 @@
                   </Button>
                   <Button fx:id="btnRemoveStory" maxHeight="25.0" maxWidth="60.0" minHeight="25.0" minWidth="60.0" mnemonicParsing="false" onAction="#btnRemoveStoryClick" prefHeight="25.0" prefWidth="60.0">
                      <VBox.margin>
-                        <Insets />
+                        <Insets top="5.0" />
                      </VBox.margin>
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
@@ -204,7 +204,7 @@
                <children>
                   <Button fx:id="btnIncreasePriority" maxHeight="35.0" maxWidth="30.0" minHeight="35.0" minWidth="30.0" mnemonicParsing="false" onAction="#btnIncreasePriorityClick" prefHeight="35.0" prefWidth="30.0">
                      <VBox.margin>
-                        <Insets bottom="10.0" />
+                        <Insets />
                      </VBox.margin>
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
@@ -216,7 +216,7 @@
                   </Button>
                   <Button fx:id="btnDecreasePriority" maxHeight="35.0" maxWidth="30.0" minHeight="35.0" minWidth="30.0" mnemonicParsing="false" onAction="#btnDecreasePriorityClick" prefHeight="35.0" prefWidth="30.0">
                      <VBox.margin>
-                        <Insets />
+                        <Insets top="5.0" />
                      </VBox.margin>
                      <graphic>
                         <ImageView fitHeight="30.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">

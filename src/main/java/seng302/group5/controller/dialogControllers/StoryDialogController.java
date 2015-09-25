@@ -1006,6 +1006,7 @@ public class StoryDialogController implements AgileController {
       pane.getColumnConstraints().add(new ColumnConstraints(labelWidth));
       pane.setHgap(5);
       pane.add(cellText, 0, 0);
+      cellText.setStyle("-fx-text-fill: black");
       //pane.add(editButton, 1, 0);
     }
 
@@ -1060,7 +1061,7 @@ public class StoryDialogController implements AgileController {
             click.getButton() == MouseButton.PRIMARY &&
             !isEmpty()) {
           UndoRedo taskEdit =
-                     mainApp.showTaskDialog(story, getItem(), team, CreateOrEdit.EDIT, thisStage);
+              mainApp.showTaskDialog(story, getItem(), team, CreateOrEdit.EDIT, thisStage);
           if (taskEdit != null) {
             tasksUndoRedo.addUndoRedo(taskEdit);
             taskList.setItems(null);
