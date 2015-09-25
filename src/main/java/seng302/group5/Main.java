@@ -2110,11 +2110,8 @@ public class Main extends Application {
     Comparator<Release> byDate = new Comparator<Release>() {
       @Override
       public int compare(Release o1, Release o2) {
-        if (o1.getReleaseDate().isAfter(o2.getReleaseDate())) {
-          return 1;
-        } else return 0;
+        return o1.getReleaseDate().compareTo(o2.getReleaseDate());
       }
-      //
     };
     return releases.sorted(byDate);
   }
@@ -2147,11 +2144,8 @@ public class Main extends Application {
     Comparator<Sprint> byDate = new Comparator<Sprint>() {
       @Override
       public int compare(Sprint o1, Sprint o2) {
-        if (o1.getSprintStart().isAfter(o2.getSprintStart())) {
-          return 1;
-        } else return 0;
+        return o1.getSprintStart().compareTo(o2.getSprintStart());
       }
-      //
     };
     return sprints.sorted(byDate);
   }
