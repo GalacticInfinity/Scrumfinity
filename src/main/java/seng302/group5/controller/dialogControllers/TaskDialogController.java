@@ -672,6 +672,8 @@ public class TaskDialogController implements AgileController {
       pane.setHgap(5);
       pane.add(cellText, 0, 0);
       pane.add(effortField, 1, 0);
+      cellText.setStyle("-fx-text-fill: black");
+      effortField.setStyle("-fx-text-fill: black");
 
       // double click for editing
       this.setOnMouseClicked(click -> {
