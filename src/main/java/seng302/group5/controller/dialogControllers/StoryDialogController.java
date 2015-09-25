@@ -1006,6 +1006,7 @@ public class StoryDialogController implements AgileController {
       pane.getColumnConstraints().add(new ColumnConstraints(labelWidth));
       pane.setHgap(5);
       pane.add(cellText, 0, 0);
+      cellText.setStyle("-fx-text-fill: black");
       //pane.add(editButton, 1, 0);
     }
 
@@ -1068,14 +1069,10 @@ public class StoryDialogController implements AgileController {
             taskList.getSelectionModel().select(getItem());
             if (createOrEdit == CreateOrEdit.EDIT) {
               checkButtonDisabled();
-            }/*
-            taskList.setStyle("-fx-text-fill: black");
-            this.setStyle("-fx-text-fill: black");*/
+            }
           }
         }
-      });/*
-      taskList.setStyle("-fx-text-fill: black");
-      this.setStyle("-fx-text-fill: black");*/
+      });
     }
   }
 

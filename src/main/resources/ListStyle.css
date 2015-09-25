@@ -3,10 +3,10 @@
     -fx-text-fill: black;
 }
 
-/* .list-cell:filled:selected {
+ .list-cell:filled:selected {
     -fx-background-color: #ffffa0;
     -fx-text-fill: black;
-}*/
+}
 
 .list-cell:even {
     -fx-background-color: white;
