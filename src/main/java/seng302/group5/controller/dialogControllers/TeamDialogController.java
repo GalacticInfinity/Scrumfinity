@@ -549,7 +549,7 @@ public class TeamDialogController implements AgileController {
             click.getButton() == MouseButton.PRIMARY &&
             !isEmpty()) {
           PersonRole selectedPerson = teamMembersList.getSelectionModel().getSelectedItem();
-          mainApp.showPersonDialogNested(selectedPerson.getPerson(), thisStage);
+          mainApp.showPersonDialogNested(selectedPerson.getPerson(),selectedPerson.getRole() ,thisStage);
           selectedMembers.remove(selectedPerson);
           selectedMembers.add(selectedPerson);
           teamMembersList.getSelectionModel().select(selectedPerson);
@@ -579,7 +579,7 @@ public class TeamDialogController implements AgileController {
             click.getButton() == MouseButton.PRIMARY &&
             !isEmpty()) {
           Person selectedPerson = availableMembersList.getSelectionModel().getSelectedItem();
-          mainApp.showPersonDialogNested(selectedPerson, thisStage);
+          mainApp.showPersonDialogNested(selectedPerson,null,thisStage);
           availableMembers.remove(selectedPerson);
           availableMembers.add(selectedPerson);
           availableMembersList.getSelectionModel().select(selectedPerson);

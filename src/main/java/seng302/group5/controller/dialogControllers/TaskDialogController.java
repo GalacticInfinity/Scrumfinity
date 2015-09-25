@@ -641,7 +641,7 @@ public class TaskDialogController implements AgileController {
             click.getButton() == MouseButton.PRIMARY &&
             !isEmpty()) {
           Person selectedPerson = getItem();
-          mainApp.showPersonDialogNested(selectedPerson, thisStage);
+          mainApp.showPersonDialogNested(selectedPerson,null,thisStage);
           availablePeople.remove(selectedPerson);
           availablePeople.add(selectedPerson);
           availablePeopleList.getSelectionModel().select(selectedPerson);
@@ -679,7 +679,7 @@ public class TaskDialogController implements AgileController {
             click.getButton() == MouseButton.PRIMARY &&
             !isEmpty()) {
           Person selectedPerson = getItem();
-          mainApp.showPersonDialogNested(selectedPerson, thisStage);
+          mainApp.showPersonDialogNested(selectedPerson,null,thisStage);
           allocatedPeople.remove(selectedPerson);
           allocatedPeople.add(selectedPerson);
           allocatedPeopleList.getSelectionModel().select(selectedPerson);
