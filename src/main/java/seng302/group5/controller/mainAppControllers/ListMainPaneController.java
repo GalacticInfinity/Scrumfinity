@@ -1778,7 +1778,7 @@ public class ListMainPaneController {
     return scrumBoardController;
   }
 
-  public  BurndownController getBurndownController() {return burndownController; }
+  public BurndownController getBurndownController() {return burndownController; }
 
   /**
    * Allows us to override the a ListViewCell - a single cell in a ListView.
