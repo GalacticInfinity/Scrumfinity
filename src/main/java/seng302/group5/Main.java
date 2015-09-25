@@ -343,9 +343,9 @@ public class Main extends Application {
         project = (Project) LMPC.getSelected();
         if (project == null) {
           Alert alert = new Alert(Alert.AlertType.ERROR);
-          alert.setTitle("Error");
+          alert.setTitle("Nothing selected");
           alert.setHeaderText(null);
-          alert.setContentText("No project selected");
+          alert.setContentText("No project selected.");
           alert.showAndWait();
           return;
         }
@@ -477,9 +477,9 @@ public class Main extends Application {
         team = (Team) LMPC.getSelected();
         if (team == null) {
           Alert alert = new Alert(Alert.AlertType.ERROR);
-          alert.setTitle("Error");
+          alert.setTitle("Nothing selected");
           alert.setHeaderText(null);
-          alert.setContentText("No team selected");
+          alert.setContentText("No team selected.");
           alert.showAndWait();
           return;
         }
@@ -565,9 +565,9 @@ public class Main extends Application {
         Release release = (Release) LMPC.getSelected();
         if (release == null) {
           Alert alert = new Alert(Alert.AlertType.ERROR);
-          alert.setTitle("Error");
+          alert.setTitle("Nothing selected");
           alert.setHeaderText(null);
-          alert.setContentText("No release selected");
+          alert.setContentText("No release selected.");
           alert.showAndWait();
           return;
         }
@@ -605,9 +605,9 @@ public class Main extends Application {
         release = (Release) LMPC.getSelected();
         if (release == null) {
           Alert alert = new Alert(Alert.AlertType.ERROR);
-          alert.setTitle("Error");
+          alert.setTitle("Nothing selected");
           alert.setHeaderText(null);
-          alert.setContentText("No release selected");
+          alert.setContentText("No release selected.");
           alert.showAndWait();
           return;
         }
@@ -697,9 +697,9 @@ public class Main extends Application {
         person = (Person) LMPC.getSelected();
         if (person == null) {
           Alert alert = new Alert(Alert.AlertType.ERROR);
-          alert.setTitle("Error");
+          alert.setTitle("Nothing selected");
           alert.setHeaderText(null);
-          alert.setContentText("No person selected");
+          alert.setContentText("No person selected.");
           alert.showAndWait();
           return;
         }
@@ -733,7 +733,7 @@ public class Main extends Application {
    * @param person the person that you wanted to view or edit information with
    * @param stage the stage it is currently on to void unusual behaviour
    */
-  public void showPersonDialogNested(Person person, Stage stage) {
+  public void showPersonDialogNested(Person person,Role role, Stage stage) {
     try {
       FXMLLoader loader = new FXMLLoader();
       loader.setLocation(Main.class.getResource("/PersonDialog.fxml"));
@@ -753,6 +753,7 @@ public class Main extends Application {
       }
 
       controller.setupController(this, personDialogStage, CreateOrEdit.EDIT, person);
+      controller.setupTeamMode(role);
       pushControllerStack(controller);
 
       personDialogStage.initModality(Modality.APPLICATION_MODAL);
@@ -825,9 +826,9 @@ public class Main extends Application {
         skill = (Skill) LMPC.getSelected();
         if (skill == null) {
           Alert alert = new Alert(Alert.AlertType.ERROR);
-          alert.setTitle("Error");
+          alert.setTitle("Nothing selected");
           alert.setHeaderText(null);
-          alert.setContentText("No skill selected");
+          alert.setContentText("No skill selected.");
           alert.showAndWait();
           return;
         }
@@ -914,9 +915,9 @@ public class Main extends Application {
         story = (Story) LMPC.getSelected();
         if (story == null) {
           Alert alert = new Alert(Alert.AlertType.ERROR);
-          alert.setTitle("Error");
+          alert.setTitle("Nothing selected");
           alert.setHeaderText(null);
-          alert.setContentText("No story selected");
+          alert.setContentText("No story selected.");
           alert.showAndWait();
           return;
         }
@@ -967,9 +968,9 @@ public class Main extends Application {
       if (createOrEdit == CreateOrEdit.EDIT) {
         if (story == null) {
           Alert alert = new Alert(Alert.AlertType.ERROR);
-          alert.setTitle("Error");
+          alert.setTitle("Nothing selected");
           alert.setHeaderText(null);
-          alert.setContentText("No story selected");
+          alert.setContentText("No story selected.");
           alert.showAndWait();
           return;
         }
@@ -1064,9 +1065,9 @@ public class Main extends Application {
         backlog = (Backlog) LMPC.getSelected();
         if (backlog == null) {
           Alert alert = new Alert(Alert.AlertType.ERROR);
-          alert.setTitle("Error");
+          alert.setTitle("Nothing selected");
           alert.setHeaderText(null);
-          alert.setContentText("No backlog selected");
+          alert.setContentText("No backlog selected.");
           alert.showAndWait();
           return;
         }
@@ -1156,9 +1157,9 @@ public class Main extends Application {
         sprint = (Sprint) LMPC.getSelected();
         if (sprint == null) {
           Alert alert = new Alert(Alert.AlertType.ERROR);
-          alert.setTitle("Error");
+          alert.setTitle("Nothing selected");
           alert.setHeaderText(null);
-          alert.setContentText("No sprint selected");
+          alert.setContentText("No sprint selected.");
           alert.showAndWait();
           return;
         }
@@ -1616,18 +1617,20 @@ public class Main extends Application {
           alert.setTitle("Person has logged effort");
           alert.setHeaderText(null);
           alert.setContentText(message);
+          alert.getDialogPane().setPrefSize(500, 130);
           alert.showAndWait();
           break;
         }
 
         if(inStory) {
           String message =
-              "This person is a creator of a story! You cannot delete them until you delete the "
-              + "story created by this person";
+              "This person is the creator of a story. You cannot delete them until you delete the "
+              + "story created by this person.";
           Alert alert = new Alert(Alert.AlertType.ERROR);
-          alert.setTitle("Person is a Story creator");
+          alert.setTitle("Person is a story creator");
           alert.setHeaderText(null);
           alert.setContentText(message);
+          alert.getDialogPane().setPrefSize(500, 130);
           alert.showAndWait();
           break;
         }
@@ -1640,12 +1643,13 @@ public class Main extends Application {
 
         if(inBacklog) {
           String message =
-              "This person is a product owner of a backlog. You must unassign them from the story"
+              "This person is the product owner of a backlog. You must un-assign them from the backlog"
               + " before you can delete them.";
           Alert alert = new Alert(Alert.AlertType.ERROR);
-          alert.setTitle("Person is a backlog product owner!");
+          alert.setTitle("Person is a backlog product owner");
           alert.setHeaderText(null);
           alert.setContentText(message);
+          alert.getDialogPane().setPrefSize(500, 130);
           alert.showAndWait();
           break;
         }
@@ -1657,17 +1661,18 @@ public class Main extends Application {
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
           if (inTask) {
             message = String.format(
-                "Do you want to delete '%s' and remove him/her from the team '%s' and unassign"
+                "Do you want to delete '%s', remove them from team '%s' and un-assign"
                 + " them from their assigned tasks?",
                 person.getLabel(),
                 person.getTeamLabel());
-            alert.getDialogPane().setPrefHeight(128);
+            alert.getDialogPane().setPrefSize(500, 130);
             alert.setTitle("Person is in team and assigned to tasks");
           } else {
             message = String.format(
-                "Do you want to delete '%s' and remove him/her from the team '%s'?",
+                "Do you want to delete '%s' and remove them from team '%s'?",
                 person.getLabel(),
                 person.getTeamLabel());
+            alert.getDialogPane().setPrefSize(500, 130);
             alert.setTitle("Person is in team");
           }
           alert.setHeaderText(null);
@@ -1714,8 +1719,9 @@ public class Main extends Application {
         if (!skillUsers.isEmpty()) {
           //if so open a yes/no dialog
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-          alert.setTitle("People have this skill!");
+          alert.setTitle("People have this skill");
           alert.setHeaderText(null);
+          alert.getDialogPane().setPrefSize(500, 130);
           int messageLength = 1;
           String message = String.format("Do you want to delete skill '%s' and remove it from:\n\n",
                                          skill.getLabel());
@@ -1763,7 +1769,7 @@ public class Main extends Application {
           Alert alert = new Alert(Alert.AlertType.WARNING);
           alert.setHeaderText(null);
           alert.setResizable(false);
-
+          alert.getDialogPane().setPrefSize(500, 130);
           alert.setTitle("Team assigned to a Sprint");
           String content = String.format("You are attempting to delete a team that"
                                          + " is allocated to a sprint.\nPlease remove "
@@ -1776,7 +1782,7 @@ public class Main extends Application {
               content += String.format("\t%s - %s\n", sprint.toString(), sprint.getSprintFullName());
             }
           }
-          alert.getDialogPane().setPrefSize(510, 150 + teamSprints.size() * 10);
+          alert.getDialogPane().setPrefSize(510, 150 + teamSprints.size() * 20);
 
           alert.getDialogPane().setContentText(content);
           alert.showAndWait();
@@ -1788,11 +1794,11 @@ public class Main extends Application {
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
           alert.setTitle("Team contains people");
           alert.setHeaderText(null);
-
+          alert.getDialogPane().setPrefSize(500, 130);
           int messageLength = 1;
           String
               message =
-              String.format("Are you sure you want to delete team '%s' and people:\n\n",
+              String.format("Are you sure that you want to delete team '%s' and people:\n\n",
                             team.getLabel());
           for (Person teamMember : team.getTeamMembers()) {
             messageLength++;
@@ -1801,7 +1807,7 @@ public class Main extends Application {
                                      teamMember.getFirstName(),
                                      teamMember.getLastName());
           }
-          alert.getDialogPane().setPrefHeight(60 + 30 * messageLength);
+          alert.getDialogPane().setPrefHeight(60 + 25 * messageLength);
           alert.setContentText(message);
 
           Optional<ButtonType> result = alert.showAndWait();
@@ -1828,7 +1834,7 @@ public class Main extends Application {
           Alert alert = new Alert(Alert.AlertType.WARNING);
           alert.setHeaderText(null);
           alert.setResizable(false);
-
+          alert.getDialogPane().setPrefSize(500, 130);
           String content = String.format("You are attempting to delete a release that"
                                          + " is allocated to a sprint.\nPlease remove "
                                          + "'%s' from the following sprints before deleting it:\n",
@@ -1840,7 +1846,7 @@ public class Main extends Application {
               content += String.format("\t%s - %s\n", sprint.toString(), sprint.getSprintFullName());
             }
           }
-          alert.getDialogPane().setPrefSize(510, 150 + releaseSprints.size() * 10);
+          alert.getDialogPane().setPrefSize(510, 150 + releaseSprints.size() * 20);
 
           alert.getDialogPane().setContentText(content);
           alert.showAndWait();
@@ -1865,10 +1871,11 @@ public class Main extends Application {
           Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
           alert.setTitle("Story is in a Backlog");
           alert.setHeaderText(null);
-          Story storySprint = null;
+          alert.getDialogPane().setPrefSize(500, 130);
+          Sprint storySprint = null;
           for (Sprint sprint : getSprints()) {
             if (sprint.getSprintStories().contains(story)) {
-              storySprint = story;
+              storySprint = sprint;
               break;
             }
           }
@@ -1923,8 +1930,9 @@ public class Main extends Application {
           String contentText = String.format("Are you sure you want to delete backlog '%s' and "
                                              + "its associated items?",
                                              backlog.getLabel());
-          alert.setResizable(true);
           alert.setContentText(contentText);
+          alert.setResizable(true);
+          alert.getDialogPane().setPrefSize(500, 130);
           int messageLength = 2;
           String message = "";
           message += "Stories:\n";

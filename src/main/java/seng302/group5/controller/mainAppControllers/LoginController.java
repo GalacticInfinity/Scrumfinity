@@ -79,9 +79,9 @@ public class LoginController {
     } catch (Exception e) {
 //      e.printStackTrace();
       Alert alert = new Alert(Alert.AlertType.INFORMATION);
-      alert.setTitle("LoadingError");
+      alert.setTitle("Loading error");
       alert.setHeaderText(null);
-      alert.setContentText("There was a problem with loading, file is out of date/corrupt");
+      alert.setContentText("There was a problem with loading. The file is out of date or corrupt.");
       alert.showAndWait();
     }
   }

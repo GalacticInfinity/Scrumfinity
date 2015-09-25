@@ -110,7 +110,7 @@ public class ACDialogController {
 
     //Display any errors.
     if (noErrors > 0) {
-      String title = String.format("%d Invalid Field", noErrors);
+      String title = String.format("%d invalid field", noErrors);
       if (noErrors > 1) {
         title += "s";  // plural
       }
@@ -149,7 +149,7 @@ public class ACDialogController {
    */
   private String checkValidInput(String string) throws Exception {
     if (string.isEmpty()) {
-      throw new Exception("Acceptance criteria is empty.");
+      throw new Exception("Acceptance criterion is empty.");
     } else {
       return string;
     }

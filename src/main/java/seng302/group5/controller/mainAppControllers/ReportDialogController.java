@@ -87,10 +87,10 @@ public class ReportDialogController {
           Alert alert = new Alert(Alert.AlertType.ERROR);
           alert.setResizable(true);
           alert.getDialogPane().setPrefSize(400, 150);
-          alert.setTitle("You have items selected.");
+          alert.setTitle("You have items selected");
           alert.setHeaderText(null);
-          alert.setContentText("You have items in the Selected Items list, "
-                               + "changing Report Levels will clear this selection. "
+          alert.setContentText("You have items in the Selected Items list. "
+                               + "Changing report levels will clear this selection. "
                                + "Are you sure you wish to proceed?");
           alert.getButtonTypes().add(ButtonType.CANCEL);
           alert.showAndWait();

@@ -54,7 +54,10 @@ public class PersonDialogController implements AgileController {
   private Person person;
   private Person lastPerson;
   private Skill poSkill;        // the product owner skill
+  private Skill smSkill;
   private boolean ownsBacklog;  // person owns a backlog
+
+  private Boolean isSM = false;
 
   private ObservableList<Skill> availableSkills = FXCollections.observableArrayList();
   private ObservableList<Skill> selectedSkills = FXCollections.observableArrayList();
@@ -120,6 +123,15 @@ public class PersonDialogController implements AgileController {
         break;
       }
     }
+
+    smSkill = null;
+    for (Role role : mainApp.getRoles()) {
+      if (role.getLabel().equals("SM")) {
+        smSkill = role.getRequiredSkill();
+        break;
+      }
+    }
+
     ownsBacklog = false;
     if (createOrEdit == CreateOrEdit.EDIT) {
       for (Backlog backlog : mainApp.getBacklogs()) {
@@ -190,6 +202,20 @@ public class PersonDialogController implements AgileController {
   }
 
   /**
+   * Set up the dialog to be in backlog mode.
+   */
+  public void setupTeamMode(Role role) {
+    dialogMode = DialogMode.TEAM_MODE;
+    if (role != null) {
+      if (role.getLabel().equals("SM")) {
+        isSM = true;
+      } else {
+        isSM = false;
+      }
+    }
+  }
+
+  /**
    * checks if there are any changed fields and disables or enables the button accordingly
    */
   private void checkButtonDisabled() {
@@ -251,7 +277,7 @@ public class PersonDialogController implements AgileController {
 
     // Display all errors if they exist
     if (noErrors > 0) {
-      String title = String.format("%d Invalid Field", noErrors);
+      String title = String.format("%d invalid field", noErrors);
       if (noErrors > 1) {
         title += "s";  // plural
       }
@@ -308,7 +334,7 @@ public class PersonDialogController implements AgileController {
     inputPersonLabel = inputPersonLabel.trim();
 
     if (inputPersonLabel.isEmpty()) {
-      throw new Exception("Person Label is empty.");
+      throw new Exception("Person label is empty.");
     } else {
       String lastPersonLabel;
       if (lastPerson == null) {
@@ -320,7 +346,7 @@ public class PersonDialogController implements AgileController {
         String personLabel = personInList.getLabel();
         if (personLabel.equalsIgnoreCase(inputPersonLabel) &&
             !personLabel.equalsIgnoreCase(lastPersonLabel)) {
-          throw new Exception("Person Label is not unique.");
+          throw new Exception("Person label is not unique.");
         }
       }
     }
@@ -392,11 +418,12 @@ public class PersonDialogController implements AgileController {
           if (selectedSkill.equals(roleSkill)) {
             // selected skill is required by the person's current role in their team
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Cannot Remove Skill");
+            alert.setTitle("Cannot remove skill");
             alert.setHeaderText(null);
             alert.setContentText(String.format(
-                "%s already has the role %s in the team %s with the required skill %s",
+                "%s already has the role %s in the team %s which requires a member have the skill %s.",
                 person, role, team, roleSkill));
+            alert.getDialogPane().setPrefHeight(150);
             alert.showAndWait();
             return;
           }
@@ -404,9 +431,18 @@ public class PersonDialogController implements AgileController {
         if (dialogMode == DialogMode.BACKLOG_MODE || ownsBacklog) {
           if (selectedSkill.equals(poSkill)) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Cannot Remove Product Owner Skill");
+            alert.setTitle("Cannot remove product owner skill");
             alert.setHeaderText(null);
             alert.setContentText("This person is or will be the product owner of a backlog.");
+            alert.showAndWait();
+            return;
+          }
+        } else if (DialogMode.TEAM_MODE.equals(dialogMode) && isSM) {
+          if (selectedSkill.equals(smSkill)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Cannot Remove Scrum Master Skill");
+            alert.setHeaderText(null);
+            alert.setContentText("This person is or will be a scrum master for a team.");
             alert.showAndWait();
             return;
           }

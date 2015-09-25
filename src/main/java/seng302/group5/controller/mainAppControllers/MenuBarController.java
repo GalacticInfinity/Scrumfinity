@@ -744,13 +744,13 @@ public class MenuBarController {
       Alert alert = new Alert(Alert.AlertType.ERROR);
       alert.setTitle("Cannot delete");
       alert.setHeaderText(null);
-      alert.setContentText("Deleting failed - No item selected");
+      alert.setContentText("Deleting failed. No item selected.");
       alert.showAndWait();
     } else if (mainApp.getNonRemovable().contains(selectedItem)) {
       Alert alert = new Alert(Alert.AlertType.ERROR);
       alert.setTitle("Cannot delete");
       alert.setHeaderText(null);
-      alert.setContentText(String.format("The item %s cannot be deleted", selectedItem));
+      alert.setContentText(String.format("The item %s cannot be deleted.", selectedItem));
       alert.showAndWait();
     } else {
       mainApp.delete(selectedItem);

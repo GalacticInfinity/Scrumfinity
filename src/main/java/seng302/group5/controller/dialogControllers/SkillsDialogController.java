@@ -132,7 +132,7 @@ public class SkillsDialogController implements AgileController {
     inputSkillLabel = inputSkillLabel.trim();
 
     if (inputSkillLabel.isEmpty()) {
-      throw new Exception("Skill Label is empty.");
+      throw new Exception("Skill label is empty.");
     } else {
       String lastSkillLabel;
       if (lastSkill == null) {
@@ -144,7 +144,7 @@ public class SkillsDialogController implements AgileController {
         String aSkillLabel = aSkill.getLabel();
         if (aSkillLabel.equalsIgnoreCase(inputSkillLabel) &&
             !aSkillLabel.equalsIgnoreCase(lastSkillLabel)) {
-          throw new Exception("Skill Label is not unique.");
+          throw new Exception("Skill label is not unique.");
         }
       }
     }
@@ -187,7 +187,7 @@ public class SkillsDialogController implements AgileController {
     } catch (Exception e1) {
       // Error - Don't create the object
       Alert alert = new Alert(Alert.AlertType.ERROR);
-      alert.setTitle("Invalid Field");
+      alert.setTitle("Invalid field");
       alert.setHeaderText(null);
       alert.setContentText(e1.getMessage());
       alert.showAndWait();

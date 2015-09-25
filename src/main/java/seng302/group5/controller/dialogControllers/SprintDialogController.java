@@ -629,15 +629,15 @@ public class SprintDialogController implements AgileController {
 
     if (backlog == null) {
       noErrors++;
-      errors.append(String.format("%s\n", "No backlog selected"));
+      errors.append(String.format("%s\n", "No backlog selected."));
     } else if (project == null) {
       noErrors++;
-      errors.append(String.format("%s\n", "Selected backlog is not assigned to a project"));
+      errors.append(String.format("%s\n", "Selected backlog is not assigned to a project."));
     }
 
     if (release == null) {
       noErrors++;
-      errors.append(String.format("%s\n", "No release selected"));
+      errors.append(String.format("%s\n", "No release selected."));
     }
 
     try {
@@ -663,7 +663,7 @@ public class SprintDialogController implements AgileController {
 
     // Display all errors if they exist
     if (noErrors > 0) {
-      String title = String.format("%d Invalid Field", noErrors);
+      String title = String.format("%d invalid field", noErrors);
       if (noErrors > 1) {
         title += "s";  // plural
       }
@@ -671,7 +671,7 @@ public class SprintDialogController implements AgileController {
       alert.setTitle(title);
       alert.setHeaderText(null);
       noErrors += 1;
-      alert.getDialogPane().setPrefHeight(60 + 30 * noErrors);
+      alert.getDialogPane().setPrefHeight(60 + 20 * noErrors);
       alert.setContentText(errors.toString());
       alert.showAndWait();
     } else {
@@ -743,7 +743,7 @@ public class SprintDialogController implements AgileController {
       String message = "By cancelling this dialog you will lose all changes you have made "
                        + "to tasks since this sprint dialog was opened. Are you sure you wish "
                        + "to continue?";
-      alert.getDialogPane().setPrefHeight(120);
+      alert.getDialogPane().setPrefHeight(150);
       alert.setContentText(message);
       //checks response
       alert.showAndWait();
@@ -816,7 +816,7 @@ public class SprintDialogController implements AgileController {
     inputSprintGoal = inputSprintGoal.trim();
 
     if (inputSprintGoal.isEmpty()) {
-      throw new Exception("Sprint Goal is empty.");
+      throw new Exception("Sprint goal is empty.");
     } else {
       String lastSprintGoal;
       if (lastSprint == null) {
@@ -828,7 +828,7 @@ public class SprintDialogController implements AgileController {
         String sprintGoal = sprint.getLabel();
         if (sprint.getLabel().equalsIgnoreCase(inputSprintGoal) &&
             !sprintGoal.equalsIgnoreCase(lastSprintGoal)) {
-          throw new Exception("Sprint Goal is not unique.");
+          throw new Exception("Sprint goal is not unique.");
         }
       }
       return inputSprintGoal;
@@ -846,7 +846,7 @@ public class SprintDialogController implements AgileController {
    */
   private Team parseTeam(Team team, LocalDate startDate, LocalDate endDate) throws Exception {
     if (team == null) {
-      throw new Exception("No team selected");
+      throw new Exception("No team selected.");
     } else if (startDate != null && endDate != null) {
       //If team is already assigned to a sprint, make sure the dates don't overlap.
       for (Sprint sprint : mainApp.getSprints()) {
@@ -863,7 +863,7 @@ public class SprintDialogController implements AgileController {
                startDate.isEqual(sprint.getSprintStart())) &&
                (endDate.isAfter(sprint.getSprintEnd()) ||
                endDate.isEqual(sprint.getSprintEnd())))) {
-            throw new Exception("Team is already assigned to a sprint in selected timeframe.");
+            throw new Exception("Team is already assigned to a sprint in selected time frame.");
           }
         }
       }
@@ -881,11 +881,11 @@ public class SprintDialogController implements AgileController {
    */
   private LocalDate parseStartDate(LocalDate startDate, Release release) throws Exception {
     if (startDate == null) {
-      throw new Exception("No start date selected");
+      throw new Exception("No start date selected.");
     } else if (release != null && startDate.isAfter(release.getReleaseDate())) {
       String dateFormat = "dd/MM/yyy";
       String releaseDate = release.getReleaseDate().format(DateTimeFormatter.ofPattern(dateFormat));
-      throw new Exception("Start date must be before release date - " + releaseDate);
+      throw new Exception("Start date must be before release date - " + releaseDate + ".");
     }
     return startDate;
   }
@@ -903,18 +903,18 @@ public class SprintDialogController implements AgileController {
   private LocalDate parseEndDate(LocalDate endDate, LocalDate startDate, Release release)
       throws Exception {
     if (endDate == null) {
-      throw new Exception("No end date selected");
+      throw new Exception("No end date selected.");
     } else {
       boolean afterReleaseDate = release != null && endDate.isAfter(release.getReleaseDate());
       boolean beforeStartDate = endDate.isBefore(startDate);
       if (afterReleaseDate && beforeStartDate) {
-        throw new Exception("End date must be before release date and after start date");
+        throw new Exception("End date must be before release date and after start date.");
       } else if (afterReleaseDate) {
         String dateFormat = "dd/MM/yyy";
         String releaseDate = release.getReleaseDate().format(DateTimeFormatter.ofPattern(dateFormat));
-        throw new Exception("End date must be before release date - " + releaseDate);
+        throw new Exception("End date must be before release date - " + releaseDate + ".");
       } else if (beforeStartDate) {
-        throw new Exception("End date must be after start date");
+        throw new Exception("End date must be after start date.");
       }
     }
     return endDate;
