@@ -1080,6 +1080,12 @@ public class StoryDialogController implements AgileController {
     Backlog selectedBacklog = backlogCombo.getSelectionModel().getSelectedItem();
     if (selectedBacklog != null) {
       mainApp.showBacklogDialogNested(selectedBacklog, thisStage);
+      if (selectedBacklog.getStories().contains(story)) {
+        // backlog may have been updated to contain the story
+        lastBacklog = new Backlog(selectedBacklog);
+        backlogCombo.setDisable(true);
+        btnNewBacklog.setDisable(true);
+      }
       backlogs.setAll(tempBacklogList);
       backlogCombo.getSelectionModel().select(selectedBacklog);
     }
@@ -1098,6 +1104,12 @@ public class StoryDialogController implements AgileController {
       List<Backlog> tempNewBacklogList = new ArrayList<>(mainApp.getBacklogs());
       for (Backlog backlog : tempNewBacklogList) {
         if (!tempBacklogList.contains(backlog)) {
+          if (backlog.getStories().contains(story)) {
+            // backlog may have been updated to contain the story
+            lastBacklog = new Backlog(backlog);
+            backlogCombo.setDisable(true);
+            btnNewBacklog.setDisable(true);
+          }
           backlogs.setAll(tempNewBacklogList);
           backlogCombo.getSelectionModel().select(backlog);
           break;
