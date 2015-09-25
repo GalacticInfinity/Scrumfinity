@@ -7,6 +7,7 @@ import seng302.group5.Main;
 import seng302.group5.model.undoredo.UndoRedoHandler;
 
 /**
+ * Controller that handles the Tool bar.
  * Created by Zander on 12/08/2015.
  */
 public class ToolBarController {

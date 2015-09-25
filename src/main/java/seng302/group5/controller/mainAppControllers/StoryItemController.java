@@ -456,8 +456,6 @@ public class StoryItemController {
         } else if (pos > story.getTasks().indexOf(tempT)) {
           story.removeTask(tempT);
           story.addTask(pos - 1, tempT);
-        } else {
-          System.out.println("Very Bad things happened");
         }
       }
     }
@@ -547,7 +545,6 @@ public class StoryItemController {
 
     if (selectedLabel != null) {
 
-      int initialPosition = -1;
       UndoRedo ssUR = new UndoRedoObject();
 
       Task deleteTask = null;
@@ -561,12 +558,7 @@ public class StoryItemController {
 
       if (story.getLabel().equals("Non-story Tasks")) {
         Sprint before = new Sprint(sprint);
-        for (Task task : sprint.getTasks()) {
-          if (task.getLabel().equals(deleteTask.getLabel())) {
-            initialPosition = sprint.getTasks().indexOf(task);
-            break;
-          }
-        }
+
         sprint.removeTask(deleteTask);
         story.removeTask(deleteTask);
         Sprint after = new Sprint(sprint);
@@ -576,11 +568,6 @@ public class StoryItemController {
         ssUR.addDatum(after);
       } else {
         Story before = new Story(story);
-        for (Task task : story.getTasks()) {
-          if (task.getLabel().equals(deleteTask.getLabel())) {
-            initialPosition = story.getTasks().indexOf(task);
-          }
-        }
         story.removeTask(deleteTask);
         Story after = new Story(story);
         ssUR.setAgileItem(story);

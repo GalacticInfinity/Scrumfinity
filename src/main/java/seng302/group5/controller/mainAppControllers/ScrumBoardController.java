@@ -157,16 +157,6 @@ public class ScrumBoardController {
     );
   }
 
-  @FXML
-  void addNewTask(ActionEvent event) {
-
-  }
-
-  @FXML
-  void deleteTask(ActionEvent event) {
-
-  }
-
   /**
    * Loads the StoryItem FXML and returns a StoryItemController if successful, or null if failed.
    *
@@ -194,7 +184,9 @@ public class ScrumBoardController {
 
 
   /**
-   * Checks if the controller already exists, if so, returns it instead of recreating it
+   * * Checks if the controller already exists, if so, returns it instead of recreating it
+   * @param story The story that controller is displaying
+   * @return The story pane
    */
   private StoryItemController checkController(Story story) {
     // Check if story inside sprint clone. If not make a controller.
@@ -237,7 +229,6 @@ public class ScrumBoardController {
 
       storiesBox.getChildren().setAll(FXCollections.observableArrayList());
       storyPanes.clear();
-//      initialiseLists();
 
       sprintCombo.setDisable(true);
 
@@ -246,7 +237,6 @@ public class ScrumBoardController {
 
         if (availableSprints.contains(sprint)) {
           sprintCombo.setValue(sprint);
-          //todo make stories in sprints be removed properly at some point.
         } else {
           sprintCombo.setValue(null);
           availableSprints.clear();

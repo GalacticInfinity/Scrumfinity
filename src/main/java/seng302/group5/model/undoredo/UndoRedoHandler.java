@@ -1061,8 +1061,13 @@ public class UndoRedoHandler {
     // Get the Release to undo/redo deletion of
     Backlog backlogToChange = (Backlog) undoRedoObject.getAgileItem();
     Backlog backlogData = (Backlog) data.get(0);
-    Project project = (Project) data.get(1);
-    List<AgileItem> blSprints = new ArrayList<>(data.subList(2, data.size()));
+    Project project = null;
+    List<AgileItem> blSprints = new ArrayList<>();
+    // backlog was not empty when deleted
+    if (data.size() > 1) {
+      project = (Project) data.get(1);
+      blSprints = new ArrayList<>(data.subList(2, data.size()));
+    }
 
     // Make the changes and refresh the list
     if (undoOrRedo == UndoOrRedo.UNDO) {
