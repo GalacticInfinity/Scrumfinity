@@ -93,6 +93,12 @@ public class BurndownController {
         (observable, oldBacklog, newBacklog) -> {
           if (backlogCombo.getSelectionModel().getSelectedItem() != null) {
             availableSprints.clear();
+            doneTasks.clear();
+            tasks.clear();
+            allEffort.clear();
+            time = 0;
+            burndownChart.setTitle("");
+            burndownChart.getData().clear();
             sprintCombo.setDisable(false);
             // get backlog's sprints
             for (Sprint sprint : mainApp.getSprints()) {
@@ -147,12 +153,13 @@ public class BurndownController {
             }
             //hours
             time = time / 60;
+            burndownChart.autosize();
+            burndownChart.getData().clear();
+            burndownChart.setData(getChartData(time));
           }
-          burndownChart.autosize();
-          burndownChart.getData().clear();
-          burndownChart.setData(getChartData(time));
         }
     );
+
   }
 
   /**
@@ -214,6 +221,7 @@ public class BurndownController {
       }
     }
     answer.addAll(aSeries, bSeries, cSeries);
+    refreshComboBoxes();
     return answer;
   }
   /**
