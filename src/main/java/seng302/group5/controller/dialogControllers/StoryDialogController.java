@@ -1060,7 +1060,7 @@ public class StoryDialogController implements AgileController {
             click.getButton() == MouseButton.PRIMARY &&
             !isEmpty()) {
           UndoRedo taskEdit =
-                     mainApp.showTaskDialog(story, getItem(), team, CreateOrEdit.EDIT, thisStage);
+              mainApp.showTaskDialog(story, getItem(), team, CreateOrEdit.EDIT, thisStage);
           if (taskEdit != null) {
             tasksUndoRedo.addUndoRedo(taskEdit);
             taskList.setItems(null);
@@ -1068,10 +1068,14 @@ public class StoryDialogController implements AgileController {
             taskList.getSelectionModel().select(getItem());
             if (createOrEdit == CreateOrEdit.EDIT) {
               checkButtonDisabled();
-            }
+            }/*
+            taskList.setStyle("-fx-text-fill: black");
+            this.setStyle("-fx-text-fill: black");*/
           }
         }
-      });
+      });/*
+      taskList.setStyle("-fx-text-fill: black");
+      this.setStyle("-fx-text-fill: black");*/
     }
   }
 
