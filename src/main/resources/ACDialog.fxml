@@ -10,7 +10,7 @@
    <children>
       <HBox>
          <children>
-            <Label fx:id="labelAC" prefWidth="125.0" text="Acceptance &#10;    Criterion:">
+            <Label fx:id="labelAC" prefHeight="50.0" prefWidth="125.0" text="Acceptance &#10;   Criterion:*">
                <font>
                   <Font size="15.0" />
                </font>
@@ -18,7 +18,7 @@
                   <Insets />
                </HBox.margin>
             </Label>
-            <TextArea fx:id="textAC" prefHeight="200.0" prefWidth="240.0" wrapText="true">
+            <TextArea fx:id="textAC" prefHeight="200.0" prefWidth="240.0" promptText="Acceptance criterion" wrapText="true">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
@@ -30,7 +30,11 @@
       </HBox>
       <HBox fx:id="btnContainer" spacing="10.0">
          <children>
-            <HBox prefWidth="175.0" />
+            <Label prefHeight="25.0" prefWidth="175.0" text="* Fields cannot be empty.">
+               <font>
+                  <Font name="System Italic" size="13.0" />
+               </font>
+            </Label>
             <Button fx:id="btnConfirm" mnemonicParsing="false" onAction="#btnAddClick" prefHeight="25.0" prefWidth="85.0" text="Save">
                <HBox.margin>
                   <Insets />

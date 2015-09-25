@@ -11,7 +11,7 @@
     <children>
         <HBox alignment="BOTTOM_LEFT">
             <children>
-                <Label prefWidth="125.0" text="Backlog Label:*">
+                <Label prefHeight="25.0" prefWidth="135.0" text="Backlog Label:*">
                     <font>
                         <Font size="15.0" />
                     </font>
@@ -27,7 +27,7 @@
         </HBox>
         <HBox alignment="CENTER_LEFT">
             <children>
-                <Label prefHeight="25.0" prefWidth="125.0" text="Backlog Name:">
+                <Label prefHeight="25.0" prefWidth="135.0" text="Backlog Name:">
                     <font>
                         <Font size="15.0" />
                     </font>
@@ -40,7 +40,7 @@
         </HBox>
         <HBox>
             <children>
-                <Label prefHeight="25.0" prefWidth="125.0" text="Description:">
+                <Label prefHeight="25.0" prefWidth="135.0" text="Description:">
                     <font>
                         <Font size="15.0" />
                     </font>
@@ -53,7 +53,7 @@
         </HBox>
         <HBox>
             <children>
-                <Label prefWidth="125.0" text="Product Owner:*">
+                <Label prefHeight="25.0" prefWidth="135.0" text="Product Owner:*">
                     <font>
                         <Font size="15.0" />
                     </font>
@@ -93,7 +93,7 @@
         </HBox>
       <HBox>
          <children>
-            <Label prefWidth="125.0" text="Estimate Scale:*">
+            <Label prefHeight="25.0" prefWidth="135.0" text="Estimate Scale:*">
                <font>
                   <Font size="15.0" />
                </font>
@@ -117,7 +117,7 @@
                <children>
                   <HBox>
                      <children>
-                        <Label text="Available Stories:">
+                        <Label prefHeight="25.0" text="Available Stories:">
                            <font>
                               <Font size="15.0" />
                            </font>
@@ -134,7 +134,7 @@
                               </ImageView>
                            </graphic>
                            <HBox.margin>
-                              <Insets />
+                              <Insets top="5.0" />
                            </HBox.margin>
                         </Button>
                      </children>
@@ -180,7 +180,7 @@
                <children>
                   <HBox>
                      <children>
-                        <Label text="In Backlog:">
+                        <Label prefHeight="25.0" text="In Backlog:">
                            <font>
                               <Font size="15.0" />
                            </font>
@@ -190,13 +190,13 @@
                         <Insets bottom="2.0" />
                      </VBox.margin>
                   </HBox>
-                  <ListView fx:id="allocatedStoriesList" prefHeight="170.0" prefWidth="200.0" stylesheets="@ListStyle.css">
-                     <VBox.margin>
-                        <Insets bottom="5.0" />
-                     </VBox.margin></ListView>
-                  <ComboBox fx:id="storyEstimateCombo" prefHeight="26.0" prefWidth="200.0" promptText="Estimate">
+                  <ListView fx:id="allocatedStoriesList" prefHeight="173.0" prefWidth="200.0" stylesheets="@ListStyle.css">
                      <VBox.margin>
                         <Insets />
+                     </VBox.margin></ListView>
+                  <ComboBox fx:id="storyEstimateCombo" prefHeight="25.0" prefWidth="200.0" promptText="Estimate">
+                     <VBox.margin>
+                        <Insets top="2.0" />
                      </VBox.margin></ComboBox>
                </children>
             </VBox>
@@ -238,7 +238,7 @@
       </HBox>
         <HBox fx:id="btnContainer" alignment="CENTER_LEFT" spacing="10.0">
             <children>
-                <Label prefHeight="25.0" prefWidth="325.0" text="* Fields cannot be empty.">
+                <Label prefHeight="25.0" prefWidth="330.0" text="* Fields cannot be empty.">
                     <font>
                         <Font name="System Italic" size="13.0" />
                     </font>
