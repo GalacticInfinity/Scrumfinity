@@ -5,9 +5,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
 /**
  * Story model. So that managers can keep track of the things people need to do, a way to record
  * work items as user stories. For now, it just have the most basic detail but we’ll add more
@@ -27,7 +24,7 @@ public class Story implements AgileItem, Taskable, Comparable<Story> {
   private List<Story> dependencies;
   private List<Task> tasks;
   private boolean isReady = false;
-  private ObservableList<String> acceptanceCriteria;
+  private List<String> acceptanceCriteria;
   private Status status;
 
   /**
@@ -39,7 +36,7 @@ public class Story implements AgileItem, Taskable, Comparable<Story> {
     this.description = "";
     this.creator = null;
     this.impediments = "";
-    this.acceptanceCriteria = FXCollections.observableArrayList();
+    this.acceptanceCriteria = new ArrayList<>();
     this.isReady = false;
     this.dependencies = new ArrayList<>();
     this.tasks = new ArrayList<>();
@@ -59,7 +56,7 @@ public class Story implements AgileItem, Taskable, Comparable<Story> {
     this.description = description;
     this.creator = creator;
     this.impediments = "";
-    this.acceptanceCriteria = FXCollections.observableArrayList();
+    this.acceptanceCriteria = new ArrayList<>();
     this.isReady = false;
     this.dependencies = new ArrayList<>();
     this.tasks = new ArrayList<>();
@@ -75,16 +72,15 @@ public class Story implements AgileItem, Taskable, Comparable<Story> {
    * @param acceptanceCriteria The criteria for the story to be considered done.
    */
   public Story(String label, String storyName, String description, Person creator,
-                 ObservableList<String> acceptanceCriteria) {
+               List<String> acceptanceCriteria) {
     this.label = label;
     this.storyName = storyName;
     this.description = description;
     this.creator = creator;
     this.impediments = "";
-    if (acceptanceCriteria == null) {
-      this.acceptanceCriteria = FXCollections.observableArrayList();
-    } else {
-      this.acceptanceCriteria = acceptanceCriteria;
+    this.acceptanceCriteria = new ArrayList<>();
+    if (acceptanceCriteria != null) {
+      this.acceptanceCriteria.addAll(acceptanceCriteria);
     }
     this.isReady = false;
     this.dependencies = new ArrayList<>();
@@ -102,16 +98,15 @@ public class Story implements AgileItem, Taskable, Comparable<Story> {
    * @param dependencies        List of stories that this story depends on.
    */
   public Story(String label, String storyName, String description, Person creator,
-               ObservableList<String> acceptanceCriteria, List<Story> dependencies) {
+               List<String> acceptanceCriteria, List<Story> dependencies) {
     this.label = label;
     this.storyName = storyName;
     this.description = description;
     this.creator = creator;
     this.impediments = "";
-    if (acceptanceCriteria == null) {
-      this.acceptanceCriteria = FXCollections.observableArrayList();
-    } else {
-      this.acceptanceCriteria = acceptanceCriteria;
+    this.acceptanceCriteria = new ArrayList<>();
+    if (acceptanceCriteria != null) {
+      this.acceptanceCriteria.addAll(acceptanceCriteria);
     }
     if (dependencies == null) {
       this.dependencies = new ArrayList<>();
@@ -132,16 +127,15 @@ public class Story implements AgileItem, Taskable, Comparable<Story> {
    * @param status              The status that the story is in. (Done, Not started, etc)
    */
   public Story(String label, String storyName, String description, Person creator,
-               ObservableList<String> acceptanceCriteria, Status status) {
+               List<String> acceptanceCriteria, Status status) {
     this.label = label;
     this.storyName = storyName;
     this.description = description;
     this.creator = creator;
     this.impediments = "";
-    if (acceptanceCriteria == null) {
-      this.acceptanceCriteria = FXCollections.observableArrayList();
-    } else {
-      this.acceptanceCriteria = acceptanceCriteria;
+    this.acceptanceCriteria = new ArrayList<>();
+    if (acceptanceCriteria != null) {
+      this.acceptanceCriteria.addAll(acceptanceCriteria);
     }
     this.dependencies = new ArrayList<>();
     this.tasks = new ArrayList<>();
@@ -160,16 +154,15 @@ public class Story implements AgileItem, Taskable, Comparable<Story> {
    * @param status              The status that the story is in. (Done, Not started, etc)
    */
   public Story(String label, String storyName, String description, Person creator,
-               ObservableList<String> acceptanceCriteria, List<Story> dependencies, Status status) {
+               List<String> acceptanceCriteria, List<Story> dependencies, Status status) {
     this.label = label;
     this.storyName = storyName;
     this.description = description;
     this.creator = creator;
     this.impediments = "";
-    if (acceptanceCriteria == null) {
-      this.acceptanceCriteria = FXCollections.observableArrayList();
-    } else {
-      this.acceptanceCriteria = acceptanceCriteria;
+    this.acceptanceCriteria = new ArrayList<>();
+    if (acceptanceCriteria != null) {
+      this.acceptanceCriteria.addAll(acceptanceCriteria);
     }
     if (dependencies == null) {
       this.dependencies = new ArrayList<>();
@@ -191,7 +184,7 @@ public class Story implements AgileItem, Taskable, Comparable<Story> {
     this.description = clone.getDescription();
     this.creator = clone.getCreator();
     this.impediments = clone.getImpediments();
-    this.acceptanceCriteria = FXCollections.observableArrayList();
+    this.acceptanceCriteria = new ArrayList<>();
     if (clone.getAcceptanceCriteria() != null) {
       this.acceptanceCriteria.addAll(clone.getAcceptanceCriteria());
     }
@@ -305,7 +298,7 @@ public class Story implements AgileItem, Taskable, Comparable<Story> {
    * gets the acceptance criteria
    * @return List which contains the ACS
    */
-  public ObservableList<String> getAcceptanceCriteria() {
+  public List<String> getAcceptanceCriteria() {
     return acceptanceCriteria;
   }
 
@@ -313,8 +306,9 @@ public class Story implements AgileItem, Taskable, Comparable<Story> {
    * sets the Acceptance criteria
    * @param acceptanceCriteria List which is the ACS
    */
-  public void setAcceptanceCriteria(ObservableList<String> acceptanceCriteria) {
-    this.acceptanceCriteria = acceptanceCriteria;
+  public void setAcceptanceCriteria(List<String> acceptanceCriteria) {
+    this.acceptanceCriteria.clear();
+    this.acceptanceCriteria.addAll(acceptanceCriteria);
   }
 
   /**
