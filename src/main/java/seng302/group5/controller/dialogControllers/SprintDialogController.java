@@ -1089,9 +1089,11 @@ public class SprintDialogController implements AgileController {
   @FXML
   protected void editProject(ActionEvent event) {
     Backlog backlog = sprintBacklogCombo.getSelectionModel().getSelectedItem();
+    Team team = sprintTeamCombo.getValue();
     mainApp.showProjectDialogWithinSprint(CreateOrEdit.EDIT, project, backlog, thisStage);
     sprintProjectLabel.setText(project.getLabel());
     teams.setAll(project.getCurrentlyAllocatedTeams());
+    sprintTeamCombo.getSelectionModel().select(team);
   }
 
   /**
