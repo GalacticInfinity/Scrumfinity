@@ -6,11 +6,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="249.0" prefWidth="458.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.EffortDialogController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="seng302.group5.controller.dialogControllers.EffortDialogController">
     <children>
         <HBox alignment="CENTER_LEFT">
             <children>
-                <Label prefWidth="125.0" text="Person:*">
+                <Label prefHeight="25.0" prefWidth="125.0" text="Person:*">
                     <font>
                         <Font size="15.0" />
                     </font>
@@ -23,7 +23,7 @@
         </HBox>
       <HBox>
          <children>
-            <Label prefWidth="125.0" text="Date &amp; Time:*">
+            <Label prefHeight="25.0" prefWidth="125.0" text="Date &amp; Time:*">
                <font>
                   <Font size="15.0" />
                </font>
@@ -41,7 +41,7 @@
       </HBox>
       <HBox>
          <children>
-            <Label prefWidth="125.0" text="Spent Effort:*">
+            <Label prefHeight="25.0" prefWidth="125.0" text="Spent Effort:*">
                <font>
                   <Font size="15.0" />
                </font>
@@ -58,12 +58,12 @@
       </HBox>
         <HBox>
             <children>
-                <Label prefWidth="125.0" text="Comment:*" wrapText="true">
+                <Label prefHeight="25.0" prefWidth="125.0" text="Comment:*" wrapText="true">
                     <font>
                         <Font size="15.0" />
                     </font>
                 </Label>
-                <TextArea fx:id="commentField" prefHeight="100.0" prefWidth="310.0" promptText="Comment for your logging effort is essential!" wrapText="true" />
+                <TextArea fx:id="commentField" prefHeight="100.0" prefWidth="310.0" promptText="Comment on your logged effort" wrapText="true" />
             </children>
          <VBox.margin>
             <Insets bottom="5.0" />
@@ -89,6 +89,6 @@
       </HBox>
     </children>
    <padding>
-      <Insets left="10.0" top="10.0" />
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
    </padding>
 </VBox>
