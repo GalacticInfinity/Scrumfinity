@@ -1171,7 +1171,12 @@ public class SprintDialogController implements AgileController {
   protected void addNewRelease(ActionEvent event) {
     List<Release> tempReleaseList = new ArrayList<>(releases);
     mainApp.showReleaseDialogWithinSprint(CreateOrEdit.CREATE, null, project, thisStage);
-    List<Release> tempNewReleaseList = new ArrayList<>(mainApp.getReleases());
+    List<Release> tempNewReleaseList = new ArrayList<>();
+    for (Release release : mainApp.getReleases()) {
+      if (release.getProjectRelease().equals(project)) {
+        tempNewReleaseList.add(release);
+      }
+    }
     for (Release release : tempNewReleaseList) {
       if (!tempReleaseList.contains(release)) {
         releases.setAll(tempNewReleaseList);

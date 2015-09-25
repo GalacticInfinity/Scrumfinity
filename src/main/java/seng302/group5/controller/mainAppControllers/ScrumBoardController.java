@@ -221,8 +221,10 @@ public class ScrumBoardController {
     backlogCombo.setItems(FXCollections.observableArrayList());
     backlogCombo.setItems(mainApp.getBacklogs());
     backlogCombo.getSelectionModel().clearSelection();
+    backlogCombo.getSelectionModel().select(null);
     sprintCombo.setItems(FXCollections.observableArrayList());
     sprintCombo.getSelectionModel().clearSelection();
+    sprintCombo.getSelectionModel().select(null);
 
     // The pane stuff
     openedTabs = new ArrayList<>();
@@ -240,21 +242,42 @@ public class ScrumBoardController {
         sprint != null) {
       if (mainApp.getBacklogs().contains(backlog)) {
         backlogCombo.setValue(backlog);
-        backlogCombo.getSelectionModel().select(backlog);
-        availableSprints.clear();
-        availableSprints.setAll(mainApp.getSprints().stream()
-                                    .filter(
-                                        sprintz -> sprintz.getSprintBacklog().equals(backlog))
-                                    .collect(Collectors.toList()));
-        sprintCombo.setItems(availableSprints);
 
-        if (availableSprints.contains(sprint) && mainApp.getSprints().contains(sprint)) {
+        if (availableSprints.contains(sprint)) {
           sprintCombo.setValue(sprint);
         } else {
-          hardReset();
+          sprintCombo.setValue(null);
+          availableSprints.clear();
+          storiesBox.getChildren().setAll(FXCollections.observableArrayList());
+          availableStories.clear();
+          storyPanes.clear();
+          openedTabs.clear();
+          availableSprints.addAll(mainApp.getSprints().stream()
+                                      .filter(
+                                          sprintz -> sprintz.getSprintBacklog()
+                                              .equals(backlog))
+                                      .collect(Collectors.toList()));
+          sprintCombo.setItems(availableSprints);
+          sprintCombo.getSelectionModel().clearSelection();
+          sprintCombo.getSelectionModel().select(null);
         }
       } else {
-        hardReset();
+        backlogCombo.setValue(null);
+        availableSprints.clear();
+        storiesBox.getChildren().setAll(FXCollections.observableArrayList());
+        availableStories.clear();
+        storyPanes.clear();
+        openedTabs.clear();
+        availableSprints.addAll(mainApp.getSprints().stream()
+                                    .filter(
+                                        sprintz -> sprintz.getSprintBacklog()
+                                            .equals(backlog))
+                                    .collect(Collectors.toList()));
+        sprintCombo.setItems(availableSprints);
+        sprintCombo.setValue(null);
+        sprintCombo.getSelectionModel().clearSelection();
+        sprintCombo.getSelectionModel().select(null);
+
       }
     } else {
       hardReset();
@@ -277,7 +300,6 @@ public class ScrumBoardController {
     backlogCombo.getItems().addAll(mainApp.getBacklogs());
     backlogCombo.setValue(null);
     backlogCombo.getSelectionModel().select(null);
-    backlogCombo.setItems(mainApp.getBacklogs());
     sprintCombo.setValue(null);
     sprintCombo.getSelectionModel().select(null);
     sprintCombo.setDisable(true);
