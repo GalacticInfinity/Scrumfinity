@@ -250,20 +250,8 @@ public class ScrumBoardController {
         if (availableSprints.contains(sprint) && mainApp.getSprints().contains(sprint)) {
           sprintCombo.setValue(sprint);
         } else {
-          sprintCombo.setValue(null);
-          sprintCombo.getSelectionModel().select(null);
+          hardReset();
         }
-      } else if (backlog != null) {
-        backlogCombo.setValue(backlog);
-        backlogCombo.getSelectionModel().select(backlog);
-        availableSprints.clear();
-        availableSprints.setAll(mainApp.getSprints().stream()
-                                    .filter(
-                                        sprintz -> sprintz.getSprintBacklog().equals(backlog))
-                                    .collect(Collectors.toList()));
-        sprintCombo.setItems(availableSprints);
-        sprintCombo.setValue(null);
-        sprintCombo.getSelectionModel().select(null);
       } else {
         hardReset();
       }

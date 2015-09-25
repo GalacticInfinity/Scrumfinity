@@ -1543,7 +1543,9 @@ public class Main extends Application {
               deleteRelease(release);
             }
             for (Sprint sprint : projectsSprints) {
-              deleteSprint(sprint);
+              if (sprints.contains(sprint)) {
+                deleteSprint(sprint);
+              }
             }
             deleteProject(project);
           } else {
