@@ -1043,7 +1043,7 @@ public class SprintDialogController implements AgileController {
     List<Backlog> tempBacklogList = new ArrayList<>(backlogs);
     Team tempTeam = sprintTeamCombo.getSelectionModel().getSelectedItem();
     Release tempRelease = sprintReleaseCombo.getSelectionModel().getSelectedItem();
-    List<Story> tempAllocatedStories = new ArrayList<>(allocatedStoriesPrioritised);
+    List<Story> tempAllocatedStories = new ArrayList<>(allocatedStories);
     Backlog selectedBacklog = sprintBacklogCombo.getSelectionModel().getSelectedItem();
     if (selectedBacklog != null) {
       mainApp.showBacklogDialogNested(selectedBacklog, thisStage);
@@ -1051,14 +1051,14 @@ public class SprintDialogController implements AgileController {
       sprintBacklogCombo.getSelectionModel().select(selectedBacklog);
       sprintTeamCombo.getSelectionModel().select(tempTeam);
       sprintReleaseCombo.getSelectionModel().select(tempRelease);
-      allocatedStoriesPrioritised.clear();
+      allocatedStories.clear();
       for (Story story : selectedBacklog.getStories()) {
-        // add story to either available or allocated stories in priority order
+        // add story to allocated stories if it was previously allocated and is still in backlog
         if (tempAllocatedStories.contains(story)) {
-          allocatedStoriesPrioritised.add(story);
+          allocatedStories.add(story);
         }
       }
-      availableStories.removeAll(tempAllocatedStories);
+      refreshLists();
     }
   }
 
@@ -1076,6 +1076,7 @@ public class SprintDialogController implements AgileController {
       if (!tempBacklogList.contains(backlog)) {
         backlogs.setAll(tempNewBacklogList);
         sprintBacklogCombo.getSelectionModel().select(backlog);
+        refreshLists();
         break;
       }
     }
