@@ -1089,7 +1089,7 @@ public class UndoRedoHandler {
       }
       for (AgileItem blSprint : blSprints) {
         Sprint mainSprint = (Sprint) blSprint;
-        mainApp.addSprint(mainSprint);
+        mainApp.deleteSprint(mainSprint);
       }
       if (project != null) {
         project.setBacklog(null);
