@@ -301,6 +301,7 @@ public class StoryDialogController implements AgileController {
             ObservableList<String> estimateNames = FXCollections.observableArrayList();
             estimateNames.setAll(newBacklog.getEstimate().getEstimateNames());
             estimateCombo.setItems(estimateNames);
+            estimateCombo.getSelectionModel().select(0);
           } else {
             btnEditBacklog.setDisable(true);
             estimateCombo.setDisable(true);
@@ -324,7 +325,11 @@ public class StoryDialogController implements AgileController {
       if (backlog != null && backlog != noBacklog && !acceptanceCriteria.isEmpty()) {
         estimateCombo.setDisable(false);
       } else {
-        estimateCombo.getSelectionModel().clearSelection();
+        if (backlog != null && backlog != noBacklog) {
+          estimateCombo.getSelectionModel().select(0);
+        } else {
+          estimateCombo.getSelectionModel().clearSelection();
+        }
         estimateCombo.setDisable(true);
       }
       checkReadinessCriteriaLocal();
@@ -401,7 +406,8 @@ public class StoryDialogController implements AgileController {
         listAC.getItems().equals(story.getAcceptanceCriteria()) &&
         readyCheckbox.isSelected() == story.getStoryState() &&
         statusCombo.getValue().equals(story.getStatusString()) &&
-        (backlogCombo.getValue() == null || backlogCombo.getValue().equals(lastBacklog)) &&
+        (backlogCombo.getValue() == null || backlogCombo.getValue() == noBacklog ||
+         backlogCombo.getValue().equals(lastBacklog)) &&
         estimateCombo.getSelectionModel().getSelectedIndex() == lastEstimateIndex &&
         tasks.equals(originalTasks) &&
         tasksUndoRedo.getUndoRedos().isEmpty()) {
@@ -1085,9 +1091,16 @@ public class StoryDialogController implements AgileController {
         lastBacklog = new Backlog(selectedBacklog);
         backlogCombo.setDisable(true);
         btnNewBacklog.setDisable(true);
+      } else {
+        lastBacklog = null;
+        backlogCombo.setDisable(false);
+        btnNewBacklog.setDisable(false);
       }
       backlogs.setAll(tempBacklogList);
       backlogCombo.getSelectionModel().select(selectedBacklog);
+      if (createOrEdit == CreateOrEdit.EDIT) {
+        checkButtonDisabled();
+      }
     }
   }
 
@@ -1109,9 +1122,16 @@ public class StoryDialogController implements AgileController {
             lastBacklog = new Backlog(backlog);
             backlogCombo.setDisable(true);
             btnNewBacklog.setDisable(true);
+          } else {
+            lastBacklog = null;
+            backlogCombo.setDisable(false);
+            btnNewBacklog.setDisable(false);
           }
           backlogs.setAll(tempNewBacklogList);
           backlogCombo.getSelectionModel().select(backlog);
+          if (createOrEdit == CreateOrEdit.EDIT) {
+            checkButtonDisabled();
+          }
           break;
         }
       }
