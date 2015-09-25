@@ -531,8 +531,6 @@ public class MenuBarController {
     TextField orgField = new TextField();
     if (!Settings.organizationName.isEmpty()) {
       orgField.setText(Settings.organizationName);
-    } else {
-      orgField.setPromptText("Default");
     }
 
     Node acceptButton = orgDialog.getDialogPane().lookupButton(acceptButtonType);

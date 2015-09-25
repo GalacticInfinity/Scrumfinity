@@ -16,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.model.Backlog;
@@ -56,6 +57,7 @@ public class DependantsDialogController {
   @FXML private ListView<Story> dependantStoriesList;
   @FXML private Button btnAddStory;
   @FXML private Button btnRemoveStory;
+  @FXML private HBox btnContainer;
   @FXML private Button btnConfirm;
   @FXML private Button btnCancel;
 
@@ -77,6 +79,14 @@ public class DependantsDialogController {
     cloneMap = new IdentityHashMap<>();
     beforeMap = new IdentityHashMap<>();
     afterMap = new IdentityHashMap<>();
+
+    String os = System.getProperty("os.name");
+
+    if (!os.startsWith("Windows")) {
+      btnContainer.getChildren().remove(btnConfirm);
+      btnContainer.getChildren().add(btnConfirm);
+    }
+
     for (Story origStory : mainApp.getStories()) {
       Story clonedStory = new Story(origStory);
       clones.add(clonedStory);
@@ -108,6 +118,7 @@ public class DependantsDialogController {
 
     allStoriesList.getSelectionModel().select(0);
 
+    btnConfirm.setDefaultButton(true);
     initialiseLists();
     refreshLists();
     thisStage.getIcons().add(new Image("Thumbnail.png"));
