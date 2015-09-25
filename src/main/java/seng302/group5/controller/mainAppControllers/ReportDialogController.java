@@ -14,6 +14,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -110,6 +111,8 @@ public class ReportDialogController {
         //e.printStackTrace();
       }
     });
+
+    thisStage.getIcons().add(new Image("Thumbnail.png"));
   }
 
   private void initialiseLists() {
