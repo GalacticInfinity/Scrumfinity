@@ -90,19 +90,19 @@ public class Loading {
       successfulLoad = false;
 
       Alert alert = new Alert(Alert.AlertType.ERROR);
-      alert.setTitle("Loading Error");
+      alert.setTitle("Loading error");
       alert.setHeaderText(null);
 
       String message;
 
       if(Settings.organizationName.equals("")) {
-        message = "This is not a Scrumfinity file or is an"
-                  + " unsupported file version and cannot be loaded.";
+        message = "This is either not a Scrumfinity file or is an"
+                  + " unsupported file version that cannot be loaded.";
       } else if(saveVersion == Settings.progVersion) {
         message = "This file appears to have corrupted and cannot be loaded.";
       } else {
         message = "This file may be corrupted or is from"
-                  + " an unsupported version and cannot be loaded";
+                  + " an unsupported version and cannot be loaded.";
       }
 
 

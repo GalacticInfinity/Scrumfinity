@@ -196,7 +196,7 @@ public class BacklogDialogController implements AgileController {
           Alert alert = null;
           if (!allocatedStories.isEmpty()) {
             alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirm Changing Estimate Scale");
+            alert.setTitle("Confirm changing estimate scale");
             alert.setHeaderText(null);
             alert.setContentText("Changing scales may result in unexpected "
                                  + "side effects to existing story estimates. "
@@ -346,14 +346,14 @@ public class BacklogDialogController implements AgileController {
             StoryEstimate selected = allocatedStoriesList.getSelectionModel().getSelectedItem();
             if (selected == null) {
               Alert alert = new Alert(Alert.AlertType.ERROR);
-              alert.setTitle("No Story Selected");
+              alert.setTitle("No story selected");
               alert.setHeaderText(null);
               alert.setContentText("Please select a story to give an estimate to.");
               alert.showAndWait();
             } else if (selected.getStory().getAcceptanceCriteria().isEmpty() &&
                        storyEstimateCombo.getSelectionModel().getSelectedIndex() != 0) {
               Alert alert = new Alert(Alert.AlertType.ERROR);
-              alert.setTitle("No Acceptance Criteria");
+              alert.setTitle("No acceptance criteria");
               alert.setHeaderText(null);
               alert.setContentText("The selected story has no acceptance criteria. "
                                    + "No estimate can be set.");
@@ -366,7 +366,7 @@ public class BacklogDialogController implements AgileController {
             } else if (selectedEstimateIndex == 0 &&
                        storiesInSprints.contains(selected.getStory())) {
               Alert alert = new Alert(Alert.AlertType.ERROR);
-              alert.setTitle("Story in Sprint");
+              alert.setTitle("Story in sprint");
               alert.setHeaderText(null);
               alert.setContentText("The selected story is in a sprint. The estimate cannot be "
                                    + "removed or it will violate the readiness criteria.");
@@ -417,9 +417,9 @@ public class BacklogDialogController implements AgileController {
     try {
       if (estimateScale == null) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("No Estimation Scale Selected");
+        alert.setTitle("No estimation scale selected");
         alert.setHeaderText(null);
-        alert.setContentText("No estimation scale has been selected for backlog.");
+        alert.setContentText("No estimation scale has been selected for the backlog.");
         alert.showAndWait();
         return;
       }
@@ -461,7 +461,7 @@ public class BacklogDialogController implements AgileController {
         }
         if (storySprint != null) {
           Alert alert = new Alert(Alert.AlertType.ERROR);
-          alert.setTitle("Story in Sprint");
+          alert.setTitle("Story in sprint");
           alert.setHeaderText(null);
           alert.setContentText(String.format(
               "This story cannot be removed because it is in the sprint '%s'", storySprint));
@@ -547,9 +547,9 @@ public class BacklogDialogController implements AgileController {
       alert.setHeaderText(null);
       alert.setResizable(true);
 
-      alert.setTitle("Removed stories that are in sprints.");
+      alert.setTitle("Story in sprint");
       String content = String.format("You are attempting to remove stories from the backlog that"
-                                     + " are associated to a sprint. Please remove"
+                                     + " are associated with a sprint. Please remove"
                                      + "\n%s\n from \n%s\n before removing it from the backlog.",
                                      removedStories.toString(), removedSprints.toString());
       alert.getDialogPane().setPrefSize(480, 150 + removedStories.size() * 10);
@@ -576,7 +576,7 @@ public class BacklogDialogController implements AgileController {
 
     // Display all errors if they exist
     if (noErrors > 0) {
-      String title = String.format("%d Invalid Field", noErrors);
+      String title = String.format("%d invalid field", noErrors);
       if (noErrors > 1) {
         title += "s";  // plural
       }
@@ -584,6 +584,7 @@ public class BacklogDialogController implements AgileController {
       alert.setTitle(title);
       alert.setHeaderText(null);
       alert.setContentText(errors.toString());
+      alert.getDialogPane().setPrefHeight(200);
       alert.showAndWait();
     } else {
       if (createOrEdit == CreateOrEdit.CREATE) {
@@ -622,14 +623,15 @@ public class BacklogDialogController implements AgileController {
           if (storyEstimate.getStory().getAcceptanceCriteria().size() < 1 &&
               storyEstimate.getEstimateIndex() != 0) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("No AC's in Story");
+            alert.setTitle("No acceptance criteria in story");
             alert.setHeaderText(null);
             alert.setResizable(true);
             alert.getDialogPane().setPrefSize(480, 150);
             alert.setContentText("The story  " + storyEstimate.getStory().getLabel() +
                                  " has been estimated"
-                                 + " but you removed the stories AC's, Press Okay to set the "
-                                 + "Estimate to Null or Cancel to Add Acceptance Criteria.");
+                                 + " but you removed the stories acceptance criteria. "
+                                 + "Press Okay to set the estimate to null or Cancel to add "
+                                 + "acceptance criteria.");
 
             alert.showAndWait();
             if (alert.getResult() == ButtonType.OK){
@@ -686,7 +688,7 @@ public class BacklogDialogController implements AgileController {
     inputBacklogLabel = inputBacklogLabel.trim();
 
     if (inputBacklogLabel.isEmpty()) {
-      throw new Exception("Backlog Label is empty.");
+      throw new Exception("Backlog label is empty.");
     } else {
       String lastBacklogLabel;
       if (lastBacklog == null) {
@@ -698,7 +700,7 @@ public class BacklogDialogController implements AgileController {
         String backlogLabel = backlog.getLabel();
         if (backlog.getLabel().equalsIgnoreCase(inputBacklogLabel) &&
             !backlogLabel.equalsIgnoreCase(lastBacklogLabel)) {
-          throw new Exception("Backlog Label is not unique.");
+          throw new Exception("Backlog label is not unique.");
         }
       }
       return inputBacklogLabel;

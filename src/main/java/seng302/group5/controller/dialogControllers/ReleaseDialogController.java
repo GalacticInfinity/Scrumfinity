@@ -111,7 +111,7 @@ public class ReleaseDialogController implements AgileController {
 
     // Display all errors if they exist
     if (noErrors > 0) {
-      String title = String.format("%d Invalid Field", noErrors);
+      String title = String.format("%d invalid field", noErrors);
       if (noErrors > 1) {
         title += "s";  // plural
       }
@@ -352,7 +352,7 @@ public class ReleaseDialogController implements AgileController {
     inputReleaseLabel = inputReleaseLabel.trim();
 
     if (inputReleaseLabel.isEmpty()) {
-      throw new Exception("Release Label is empty.");
+      throw new Exception("Release label is empty.");
     } else {
       String lastReleaseLabel;
       if (lastRelease == null) {
@@ -364,7 +364,7 @@ public class ReleaseDialogController implements AgileController {
         String releaseLabel = releaseInList.getLabel();
         if (releaseLabel.equalsIgnoreCase(inputReleaseLabel) &&
             !releaseLabel.equalsIgnoreCase(lastReleaseLabel)) {
-          throw new Exception("Release Label is not unique");
+          throw new Exception("Release label is not unique.");
         }
       }
     }
@@ -379,15 +379,15 @@ public class ReleaseDialogController implements AgileController {
   private LocalDate parseReleaseDate(LocalDate inputReleaseDate) throws Exception {
 
     if (inputReleaseDate == null) {
-      throw new Exception("Release Date is empty.");
+      throw new Exception("Release date is empty.");
     }
 
     if (createOrEdit == CreateOrEdit.EDIT) {
       for (Sprint sprint : mainApp.getSprints()) {
         if (sprint.getSprintRelease().getLabel().equals(releaseLabelField.getText().trim())) {
           if (sprint.getSprintEnd().isAfter(releaseDateField.getValue())) {
-            throw new Exception("Release date must be after the end date of the Sprint"
-                                + " it is assigned to");
+            throw new Exception("Release date must be after the end date of the sprint"
+                                + " it is assigned to.");
           }
         }
       }

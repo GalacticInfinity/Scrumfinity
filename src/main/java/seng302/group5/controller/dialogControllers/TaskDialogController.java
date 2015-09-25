@@ -320,7 +320,7 @@ public class TaskDialogController implements AgileController {
         alert.setHeaderText(null);
         String message = "You can not remove this person from the task because they have already "
                          + "logged some effort against it.";
-        alert.getDialogPane().setPrefHeight(120);
+        alert.getDialogPane().setPrefHeight(150);
         alert.setContentText(message);
         //checks response
         alert.showAndWait();
@@ -415,7 +415,7 @@ public class TaskDialogController implements AgileController {
 
     // Display all errors if they exist
     if (noErrors > 0) {
-      String title = String.format("%d Invalid Field", noErrors);
+      String title = String.format("%d invalid field", noErrors);
       if (noErrors > 1) {
         title += "s";  // plural
       }
@@ -499,7 +499,7 @@ public class TaskDialogController implements AgileController {
     inputTaskLabel = inputTaskLabel.trim();
 
     if (inputTaskLabel.isEmpty()) {
-      throw new Exception("Task Label is empty.");
+      throw new Exception("Task label is empty.");
     } else {
       String lastTaskLabel;
       if (lastTask == null) {
@@ -511,7 +511,7 @@ public class TaskDialogController implements AgileController {
         String taskLabel = task.getLabel();
         if (taskLabel.equalsIgnoreCase(inputTaskLabel) &&
             !taskLabel.equalsIgnoreCase(lastTaskLabel)) {
-          throw new Exception("Task Label is not unique within the object.");
+          throw new Exception("Task label is not unique within the object.");
         }
       }
       return inputTaskLabel;
@@ -592,7 +592,7 @@ public class TaskDialogController implements AgileController {
       alert.setHeaderText(null);
       String message = "You are trying to remove effort that has already been logged against this"
                        + " task. Are you sure you want to do this?";
-      alert.getDialogPane().setPrefHeight(120);
+      alert.getDialogPane().setPrefHeight(150);
       alert.setContentText(message);
       alert.showAndWait();
       if (alert.getResult() == ButtonType.OK) {

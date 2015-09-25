@@ -215,7 +215,7 @@ public class TeamDialogController implements AgileController {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Required skill not found");
                 alert.setHeaderText(null);
-                alert.setContentText(String.format("%s does not have the required skill of %s",
+                alert.setContentText(String.format("%s does not have the required skill of %s.",
                                                    selectedPerson,
                                                    selectedRole.getRequiredSkill()));
                 alert.showAndWait();
@@ -224,7 +224,7 @@ public class TeamDialogController implements AgileController {
                 alert.setTitle("Role taken");
                 alert.setHeaderText(null);
                 alert.setContentText(
-                    String.format("Max number of %s already assigned", selectedRole));
+                    String.format("Maximum number of %s already assigned.", selectedRole));
                 alert.showAndWait();
               } else {
                 if (selectedRole == noRole) {
@@ -369,7 +369,7 @@ public class TeamDialogController implements AgileController {
 
     // Display all errors if they exist
     if (noErrors > 0) {
-      String title = String.format("%d Invalid Field", noErrors);
+      String title = String.format("%d invalid field", noErrors);
       if (noErrors > 1) {
         title += "s";  // plural
       }
@@ -438,7 +438,7 @@ public class TeamDialogController implements AgileController {
     inputTeamLabel = inputTeamLabel.trim();
 
     if (inputTeamLabel.isEmpty()) {
-      throw new Exception("Team Label is empty.");
+      throw new Exception("Team label is empty.");
     } else {
       String lastTeamLabel;
       if (lastTeam == null) {
@@ -450,7 +450,7 @@ public class TeamDialogController implements AgileController {
         String teamLabel = team.getLabel();
         if (team.getLabel().equalsIgnoreCase(inputTeamLabel) &&
             !teamLabel.equalsIgnoreCase(lastTeamLabel)) {
-          throw new Exception("Team Label is not unique.");
+          throw new Exception("Team label is not unique.");
         }
       }
       return inputTeamLabel;

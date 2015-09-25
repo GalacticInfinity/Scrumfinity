@@ -339,10 +339,11 @@ public class StoryDialogController implements AgileController {
         (observable, oldValue, newValue) -> {
           if (inSprint && newValue.equals(0)) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Cannot Remove Estimate");
+            alert.setTitle("Cannot remove estimate");
             alert.setHeaderText(null);
             alert.setContentText("This story is currently in a sprint. The estimate can not be "
                                  + "removed or it will violate the readiness criteria.");
+            alert.getDialogPane().setPrefHeight(150);
             alert.showAndWait();
             Platform.runLater(() -> {
               estimateCombo.getSelectionModel().select((int) oldValue);
@@ -522,7 +523,7 @@ public class StoryDialogController implements AgileController {
 
     // Display all errors if they exist
     if (noErrors > 0) {
-      String title = String.format("%d Invalid Field", noErrors);
+      String title = String.format("%d invalid field", noErrors);
       if (noErrors > 1) {
         title += "s";  // plural
       }
@@ -534,9 +535,9 @@ public class StoryDialogController implements AgileController {
     } else {
       if (dialogMode == DialogMode.SPRINT_MODE && !readyCheckbox.isSelected()) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Story is Not Ready");
+        alert.setTitle("Story is not ready");
         alert.setHeaderText(null);
-        alert.setContentText("This story must be ready for this story to appear in the list of "
+        alert.setContentText("This story must be ready for it to appear in the list of "
                              + "available stories in the sprint dialog.");
         alert.getDialogPane().setPrefHeight(135);
         alert.showAndWait();
@@ -651,14 +652,14 @@ public class StoryDialogController implements AgileController {
     if (estimateCombo.getSelectionModel().getSelectedIndex() > 0 &&
         acceptanceCriteria.size() == 1) {
       Alert alert = new Alert(Alert.AlertType.ERROR);
-      alert.setTitle("Acceptance Criteria Required!");
+      alert.setTitle("Acceptance criteria required");
       alert.setHeaderText(null);
       alert.setContentText("This story is currently assigned an estimate in "
-                           + "a backlog, which requires at least one Acceptance Criterion"
-                           + " to be assigned. Please ensure there is at least one "
-                           + "Acceptance Criterion!");
+                           + "a backlog which requires at least one acceptance criterion"
+                           + " to be assigned. Please ensure that there is at least one "
+                           + "acceptance criterion.");
       alert.setResizable(true);
-      alert.getDialogPane().setPrefSize(400, 150);
+      alert.getDialogPane().setPrefSize(400, 180);
       alert.showAndWait();
     } else {
       acceptanceCriteria.remove(listAC.getSelectionModel().getSelectedItem());
@@ -764,7 +765,7 @@ public class StoryDialogController implements AgileController {
         ac = (String) listAC.getSelectionModel().getSelectedItem();
         if (ac == null) {
           Alert alert = new Alert(Alert.AlertType.ERROR);
-          alert.setTitle("Error");
+          alert.setTitle("Nothing selected");
           alert.setHeaderText(null);
           alert.setContentText("No acceptance criterion selected.");
           alert.showAndWait();
@@ -796,7 +797,7 @@ public class StoryDialogController implements AgileController {
     inputStoryLabel = inputStoryLabel.trim();
 
     if (inputStoryLabel.isEmpty()) {
-      throw new Exception("Story Label is empty.");
+      throw new Exception("Story label is empty.");
     } else {
       String lastStoryLabel;
       if (lastStory == null) {
@@ -808,7 +809,7 @@ public class StoryDialogController implements AgileController {
         String storyLabel = storyInList.getLabel();
         if (storyLabel.equalsIgnoreCase(inputStoryLabel) &&
             !storyLabel.equalsIgnoreCase(lastStoryLabel)) {
-          throw new Exception("Story Label is not unique.");
+          throw new Exception("Story label is not unique.");
         }
       }
     }
@@ -824,7 +825,7 @@ public class StoryDialogController implements AgileController {
    */
   private Person parseCreatorList(Person inputPerson) throws Exception {
     if (inputPerson == null) {
-      throw new Exception("No creator has been selected for story.");
+      throw new Exception("No creator has been selected for this story.");
     }
 
     return inputPerson;

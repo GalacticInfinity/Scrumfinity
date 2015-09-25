@@ -285,7 +285,7 @@ public class ProjectDialogController implements AgileController {
     inputProjectLabel = inputProjectLabel.trim();
 
     if (inputProjectLabel.isEmpty()) {
-      throw new Exception("Project Label is empty.");
+      throw new Exception("Project label is empty.");
     } else {
       String lastProjectLabel;
       if (lastProject == null) {
@@ -297,7 +297,7 @@ public class ProjectDialogController implements AgileController {
         String projectLabel = projectInList.getLabel();
         if (projectLabel.equalsIgnoreCase(inputProjectLabel) &&
             !projectLabel.equalsIgnoreCase(lastProjectLabel)) {
-          throw new Exception("Project Label is not unique.");
+          throw new Exception("Project label is not unique.");
         }
       }
     }
@@ -318,7 +318,7 @@ public class ProjectDialogController implements AgileController {
     if (startDate == null) {
       throw new Exception("Start date must be chosen.");
     } else if (endDate != null && startDate.isAfter(endDate)) {
-      throw new Exception("Start date must be before End Date.");
+      throw new Exception("Start date must be before end date.");
     } else if (team == null) {
       throw new Exception("Please select a team to assign.");
     } else {
@@ -463,9 +463,10 @@ public class ProjectDialogController implements AgileController {
       }
     } catch (Exception e1) {
       Alert alert = new Alert(Alert.AlertType.ERROR);
-      alert.setTitle("Invalid Fields");
+      alert.setTitle("Invalid fields");
       alert.setHeaderText(null);
       alert.setContentText(e1.getMessage());
+      alert.getDialogPane().setPrefHeight(150);
       alert.showAndWait();
       mainApp.refreshList(null);
     }
@@ -521,7 +522,7 @@ public class ProjectDialogController implements AgileController {
 
     // Display all errors if they exist
     if (noErrors > 0) {
-      String title = String.format("%d Invalid Field", noErrors);
+      String title = String.format("%d invalid field", noErrors);
       if (noErrors > 1) {
         title += "s";  // plural
       }
