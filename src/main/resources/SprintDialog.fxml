@@ -170,7 +170,7 @@
                         <Insets />
                      </HBox.margin>
                   </Label>
-                  <ComboBox fx:id="sprintTeamCombo" prefHeight="25.0" prefWidth="200.0" promptText="Avaliable Teams" visibleRowCount="5">
+                  <ComboBox fx:id="sprintTeamCombo" prefHeight="25.0" prefWidth="200.0" promptText="Available Teams" visibleRowCount="5">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
@@ -217,7 +217,7 @@
                         <Insets />
                      </HBox.margin>
                   </Label>
-                  <ComboBox fx:id="sprintReleaseCombo" prefHeight="25.0" prefWidth="200.0" promptText="Avaliable Releases" visibleRowCount="5">
+                  <ComboBox fx:id="sprintReleaseCombo" prefHeight="25.0" prefWidth="200.0" promptText="Available Releases" visibleRowCount="5">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
@@ -278,7 +278,7 @@
                         <Font size="15.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="sprintImpedimentsField" prefWidth="200.0" />
+                  <TextField fx:id="sprintImpedimentsField" prefWidth="200.0" promptText="Impediments to this sprint" />
                </children>
                <VBox.margin>
                   <Insets bottom="5.0" />

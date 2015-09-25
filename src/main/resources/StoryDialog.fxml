@@ -165,12 +165,12 @@
             </HBox>
             <HBox>
                <children>
-                  <Label prefHeight="25.0" prefWidth="125.0" text="Impendiments:">
+                  <Label prefHeight="25.0" prefWidth="125.0" text="Impediments:">
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="impedimentsTextField" prefHeight="25.0" prefWidth="200.0" />
+                  <TextField fx:id="impedimentsTextField" prefHeight="25.0" prefWidth="200.0" promptText="Impediments to this story" />
                </children>
                <VBox.margin>
                   <Insets bottom="5.0" />
@@ -293,7 +293,7 @@
          <children>
             <VBox>
                <children>
-                  <Label minHeight="25.0" prefHeight="25.0" text="Tasks: ">
+                  <Label prefHeight="25.0" text="Tasks: ">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
