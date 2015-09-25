@@ -42,6 +42,7 @@ public class BurndownController {
   private ObservableList<Backlog> availableBacklogs;
   private ObservableList<Task> doneTasks;
   private ObservableList<Task> tasks;
+  private int flag = 0;
 
   private Sprint sprint;
   private Integer time;
@@ -92,6 +93,9 @@ public class BurndownController {
     backlogCombo.getSelectionModel().selectedItemProperty().addListener(
         (observable, oldBacklog, newBacklog) -> {
           if (backlogCombo.getSelectionModel().getSelectedItem() != null) {
+            bSeries.getData().clear();
+            cSeries.getData().clear();
+            aSeries.getData().clear();
             availableSprints.clear();
             doneTasks.clear();
             tasks.clear();
@@ -131,6 +135,9 @@ public class BurndownController {
           if (newSprint != null) {
             allEffort.clear();
             tasks.clear();
+            aSeries.getData().clear();
+            bSeries.getData().clear();
+            cSeries.getData().clear();
             doneTasks.clear();
             sprint = sprintCombo.getValue();
             tasks.addAll(sprint.getTasks());
@@ -221,7 +228,7 @@ public class BurndownController {
       }
     }
     answer.addAll(aSeries, bSeries, cSeries);
-    refreshComboBoxes();
+
     return answer;
   }
   /**
