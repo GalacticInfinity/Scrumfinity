@@ -122,7 +122,7 @@
                               <Font size="15.0" />
                            </font>
                            <HBox.margin>
-                              <Insets right="10.0" />
+                              <Insets />
                            </HBox.margin>
                         </Label>
                         <Button fx:id="btnNewStory" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" onAction="#addNewStory" prefHeight="20.0" prefWidth="20.0">
@@ -134,7 +134,7 @@
                               </ImageView>
                            </graphic>
                            <HBox.margin>
-                              <Insets top="5.0" />
+                              <Insets left="44.0" top="5.0" />
                            </HBox.margin>
                         </Button>
                      </children>

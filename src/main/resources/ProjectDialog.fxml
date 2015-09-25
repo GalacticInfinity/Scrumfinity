@@ -131,7 +131,7 @@
                               </ImageView>
                            </graphic>
                            <HBox.margin>
-                              <Insets left="10.0" />
+                              <Insets left="13.0" />
                            </HBox.margin>
                         </Button>
                      </children>
