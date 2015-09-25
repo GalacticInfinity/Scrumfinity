@@ -219,6 +219,7 @@ public class ScrumBoardController {
     Sprint sprint = sprintCombo.getValue();
 
     backlogCombo.setItems(FXCollections.observableArrayList());
+    backlogCombo.setItems(mainApp.getBacklogs());
     backlogCombo.getSelectionModel().clearSelection();
     sprintCombo.setItems(FXCollections.observableArrayList());
     sprintCombo.getSelectionModel().clearSelection();
@@ -272,6 +273,8 @@ public class ScrumBoardController {
     oldPanes.clear();
     prevSprint = new Sprint();
 
+    backlogCombo.setItems(FXCollections.observableArrayList());
+    backlogCombo.getItems().addAll(mainApp.getBacklogs());
     backlogCombo.setValue(null);
     backlogCombo.getSelectionModel().select(null);
     backlogCombo.setItems(mainApp.getBacklogs());
