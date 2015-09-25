@@ -32,6 +32,7 @@ import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.AgileController;
+import seng302.group5.model.AgileHistory;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
@@ -389,7 +390,10 @@ public class SprintDialogController implements AgileController {
             sprintReleaseCombo.setDisable(false);
 
             // get project's current teams
-            teams.setAll(project.getCurrentlyAllocatedTeams());
+            teams.clear();
+            for (AgileHistory teamHistory : project.getAllocatedTeams()) {
+              teams.add((Team) teamHistory.getAgileItem());
+            }
 
             // get project's releases
             releases.clear();
@@ -1092,8 +1096,13 @@ public class SprintDialogController implements AgileController {
     Team team = sprintTeamCombo.getValue();
     mainApp.showProjectDialogWithinSprint(CreateOrEdit.EDIT, project, backlog, thisStage);
     sprintProjectLabel.setText(project.getLabel());
-    teams.setAll(project.getCurrentlyAllocatedTeams());
-    sprintTeamCombo.getSelectionModel().select(team);
+    teams.clear();
+    for (AgileHistory teamHistory : project.getAllocatedTeams()) {
+      teams.add((Team) teamHistory.getAgileItem());
+    }
+    if (teams.contains(team)) {
+      sprintTeamCombo.getSelectionModel().select(team);
+    }
   }
 
   /**
