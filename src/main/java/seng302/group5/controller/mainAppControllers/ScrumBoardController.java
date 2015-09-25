@@ -51,6 +51,8 @@ public class ScrumBoardController {
   private Sprint prevSprint;
   private List<StoryItemController> oldPanes;
 
+  private List<Sprint> oldSprints;
+
   private ObservableList<Sprint> availableSprints;
   private ObservableList<Story> availableStories;
   private List<StoryItemController> storyPanes;
@@ -215,46 +217,58 @@ public class ScrumBoardController {
   public void refreshComboBoxes() {
     Backlog backlog = backlogCombo.getValue();
     Sprint sprint = sprintCombo.getValue();
+
+    backlogCombo.setItems(FXCollections.observableArrayList());
+    backlogCombo.getSelectionModel().clearSelection();
+    sprintCombo.setItems(FXCollections.observableArrayList());
+    sprintCombo.getSelectionModel().clearSelection();
+
+    // The pane stuff
+    openedTabs = new ArrayList<>();
+    for (StoryItemController titledPane : storyPanes) {
+      if (titledPane.checkIfOpened()) {
+        openedTabs.add(titledPane.getPaneName());
+      }
+    }
+
+    storiesBox.getChildren().setAll(FXCollections.observableArrayList());
+    storyPanes.clear();
+    sprintCombo.setDisable(true);
+
     if (backlog != null &&
         sprint != null) {
-      backlogCombo.getSelectionModel().clearSelection();
-      sprintCombo.getSelectionModel().clearSelection();
-
-      // The pane stuff
-      openedTabs = new ArrayList<>();
-      for (StoryItemController titledPane : storyPanes) {
-        if (titledPane.checkIfOpened()) {
-          openedTabs.add(titledPane.getPaneName());
-        }
-      }
-
-      storiesBox.getChildren().setAll(FXCollections.observableArrayList());
-      storyPanes.clear();
-
-      sprintCombo.setDisable(true);
-
       if (mainApp.getBacklogs().contains(backlog)) {
         backlogCombo.setValue(backlog);
+        backlogCombo.getSelectionModel().select(backlog);
+        availableSprints.clear();
+        availableSprints.setAll(mainApp.getSprints().stream()
+                                    .filter(
+                                        sprintz -> sprintz.getSprintBacklog().equals(backlog))
+                                    .collect(Collectors.toList()));
+        sprintCombo.setItems(availableSprints);
 
-        if (availableSprints.contains(sprint)) {
+        if (availableSprints.contains(sprint) && mainApp.getSprints().contains(sprint)) {
           sprintCombo.setValue(sprint);
         } else {
           sprintCombo.setValue(null);
-          availableSprints.clear();
-          storiesBox.getChildren().setAll(FXCollections.observableArrayList());
-          availableStories.clear();
-          storyPanes.clear();
-          openedTabs.clear();
+          sprintCombo.getSelectionModel().select(null);
         }
-      } else {
-        backlogCombo.setValue(null);
-        sprintCombo.setValue(null);
+      } else if (backlog != null) {
+        backlogCombo.setValue(backlog);
+        backlogCombo.getSelectionModel().select(backlog);
         availableSprints.clear();
-        storiesBox.getChildren().setAll(FXCollections.observableArrayList());
-        availableStories.clear();
-        storyPanes.clear();
-        openedTabs.clear();
+        availableSprints.setAll(mainApp.getSprints().stream()
+                                    .filter(
+                                        sprintz -> sprintz.getSprintBacklog().equals(backlog))
+                                    .collect(Collectors.toList()));
+        sprintCombo.setItems(availableSprints);
+        sprintCombo.setValue(null);
+        sprintCombo.getSelectionModel().select(null);
+      } else {
+        hardReset();
       }
+    } else {
+      hardReset();
     }
   }
 
@@ -270,12 +284,11 @@ public class ScrumBoardController {
     oldPanes.clear();
     prevSprint = new Sprint();
 
-    backlogCombo.getSelectionModel().clearSelection();
     backlogCombo.setValue(null);
+    backlogCombo.getSelectionModel().select(null);
     backlogCombo.setItems(mainApp.getBacklogs());
-    sprintCombo.getSelectionModel().clearSelection();
-    sprintCombo.getItems().clear();
     sprintCombo.setValue(null);
+    sprintCombo.getSelectionModel().select(null);
     sprintCombo.setDisable(true);
   }
 

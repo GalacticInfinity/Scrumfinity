@@ -32,6 +32,7 @@ import javafx.stage.Stage;
 import seng302.group5.Main;
 import seng302.group5.controller.enums.CreateOrEdit;
 import seng302.group5.model.AgileController;
+import seng302.group5.model.AgileHistory;
 import seng302.group5.model.Backlog;
 import seng302.group5.model.Project;
 import seng302.group5.model.Release;
@@ -389,7 +390,10 @@ public class SprintDialogController implements AgileController {
             sprintReleaseCombo.setDisable(false);
 
             // get project's current teams
-            teams.setAll(project.getCurrentlyAllocatedTeams());
+            teams.clear();
+            for (AgileHistory teamHistory : project.getAllocatedTeams()) {
+              teams.add((Team) teamHistory.getAgileItem());
+            }
 
             // get project's releases
             releases.clear();
@@ -1043,7 +1047,7 @@ public class SprintDialogController implements AgileController {
     List<Backlog> tempBacklogList = new ArrayList<>(backlogs);
     Team tempTeam = sprintTeamCombo.getSelectionModel().getSelectedItem();
     Release tempRelease = sprintReleaseCombo.getSelectionModel().getSelectedItem();
-    List<Story> tempAllocatedStories = new ArrayList<>(allocatedStoriesPrioritised);
+    List<Story> tempAllocatedStories = new ArrayList<>(allocatedStories);
     Backlog selectedBacklog = sprintBacklogCombo.getSelectionModel().getSelectedItem();
     if (selectedBacklog != null) {
       mainApp.showBacklogDialogNested(selectedBacklog, thisStage);
@@ -1051,14 +1055,14 @@ public class SprintDialogController implements AgileController {
       sprintBacklogCombo.getSelectionModel().select(selectedBacklog);
       sprintTeamCombo.getSelectionModel().select(tempTeam);
       sprintReleaseCombo.getSelectionModel().select(tempRelease);
-      allocatedStoriesPrioritised.clear();
+      allocatedStories.clear();
       for (Story story : selectedBacklog.getStories()) {
-        // add story to either available or allocated stories in priority order
+        // add story to allocated stories if it was previously allocated and is still in backlog
         if (tempAllocatedStories.contains(story)) {
-          allocatedStoriesPrioritised.add(story);
+          allocatedStories.add(story);
         }
       }
-      availableStories.removeAll(tempAllocatedStories);
+      refreshLists();
     }
   }
 
@@ -1076,6 +1080,7 @@ public class SprintDialogController implements AgileController {
       if (!tempBacklogList.contains(backlog)) {
         backlogs.setAll(tempNewBacklogList);
         sprintBacklogCombo.getSelectionModel().select(backlog);
+        refreshLists();
         break;
       }
     }
@@ -1092,8 +1097,13 @@ public class SprintDialogController implements AgileController {
     Team team = sprintTeamCombo.getValue();
     mainApp.showProjectDialogWithinSprint(CreateOrEdit.EDIT, project, backlog, thisStage);
     sprintProjectLabel.setText(project.getLabel());
-    teams.setAll(project.getCurrentlyAllocatedTeams());
-    sprintTeamCombo.getSelectionModel().select(team);
+    teams.clear();
+    for (AgileHistory teamHistory : project.getAllocatedTeams()) {
+      teams.add((Team) teamHistory.getAgileItem());
+    }
+    if (teams.contains(team)) {
+      sprintTeamCombo.getSelectionModel().select(team);
+    }
   }
 
   /**
