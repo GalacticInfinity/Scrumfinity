@@ -54,7 +54,10 @@ public class PersonDialogController implements AgileController {
   private Person person;
   private Person lastPerson;
   private Skill poSkill;        // the product owner skill
+  private Skill smSkill;
   private boolean ownsBacklog;  // person owns a backlog
+
+  private Boolean isSM = false;
 
   private ObservableList<Skill> availableSkills = FXCollections.observableArrayList();
   private ObservableList<Skill> selectedSkills = FXCollections.observableArrayList();
@@ -120,6 +123,15 @@ public class PersonDialogController implements AgileController {
         break;
       }
     }
+
+    smSkill = null;
+    for (Role role : mainApp.getRoles()) {
+      if (role.getLabel().equals("SM")) {
+        smSkill = role.getRequiredSkill();
+        break;
+      }
+    }
+
     ownsBacklog = false;
     if (createOrEdit == CreateOrEdit.EDIT) {
       for (Backlog backlog : mainApp.getBacklogs()) {
@@ -186,6 +198,20 @@ public class PersonDialogController implements AgileController {
     if (createOrEdit == CreateOrEdit.CREATE) {
       this.selectedSkills.add(poSkill);
       this.availableSkills.remove(poSkill);
+    }
+  }
+
+  /**
+   * Set up the dialog to be in backlog mode.
+   */
+  public void setupTeamMode(Role role) {
+    dialogMode = DialogMode.TEAM_MODE;
+    if (role != null) {
+      if (role.getLabel().equals("SM")) {
+        isSM = true;
+      } else {
+        isSM = false;
+      }
     }
   }
 
@@ -408,6 +434,15 @@ public class PersonDialogController implements AgileController {
             alert.setTitle("Cannot remove product owner skill");
             alert.setHeaderText(null);
             alert.setContentText("This person is or will be the product owner of a backlog.");
+            alert.showAndWait();
+            return;
+          }
+        } else if (DialogMode.TEAM_MODE.equals(dialogMode) && isSM) {
+          if (selectedSkill.equals(smSkill)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Cannot Remove Scrum Master Skill");
+            alert.setHeaderText(null);
+            alert.setContentText("This person is or will be a scrum master for a team.");
             alert.showAndWait();
             return;
           }

@@ -1150,7 +1150,7 @@ public class StoryDialogController implements AgileController {
     List<Person> tempCreatorList = new ArrayList<>(availablePeople);
     Person selectedPerson = storyCreatorList.getSelectionModel().getSelectedItem();
     if (selectedPerson != null) {
-      mainApp.showPersonDialogNested(selectedPerson, thisStage);
+      mainApp.showPersonDialogNested(selectedPerson,null,thisStage);
       availablePeople.setAll(tempCreatorList);
       storyCreatorList.getSelectionModel().select(selectedPerson);
     }

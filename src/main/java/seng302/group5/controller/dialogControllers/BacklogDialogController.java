@@ -807,6 +807,9 @@ public class BacklogDialogController implements AgileController {
 
             allocatedStories.add(selectedIndex, selectedStoryEstimate);
             allocatedStoriesList.getSelectionModel().select(selectedIndex);
+            if (createOrEdit == CreateOrEdit.EDIT) {
+              checkButtonDisabled();
+            }
           }
         }
       });
@@ -1024,6 +1027,9 @@ public class BacklogDialogController implements AgileController {
           availableStories.remove(selectedStory);
           availableStories.add(selectedStory);
           availableStoriesList.getSelectionModel().select(selectedStory);
+          if (createOrEdit == CreateOrEdit.EDIT) {
+            checkButtonDisabled();
+          }
         }
       });
     }

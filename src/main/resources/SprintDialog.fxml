@@ -320,16 +320,31 @@
                                     <Font size="15.0" />
                                  </font>
                               </Label>
+                              <Label>
+                                 <HBox.margin>
+                                    <Insets left="70.0" top="5.0" />
+                                 </HBox.margin>
+                                 <graphic>
+                                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="question_mark.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                                 <tooltip>
+                                    <Tooltip text="Only ready stories are shown" />
+                                 </tooltip>
+                              </Label>
                               <Button fx:id="btnNewStory" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" onAction="#addNewStory" prefHeight="20.0" prefWidth="20.0">
                                  <graphic>
-                                    <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
                                           <Image url="ToolbarQuickAdd.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
                                  <HBox.margin>
-                                    <Insets left="74.0" right="5.0" top="5.0" />
+                                    <Insets left="5.0" right="5.0" top="5.0" />
                                  </HBox.margin>
                               </Button>
                            </children>
