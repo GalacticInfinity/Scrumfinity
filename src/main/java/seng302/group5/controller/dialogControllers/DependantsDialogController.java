@@ -77,6 +77,7 @@ public class DependantsDialogController {
     cloneMap = new IdentityHashMap<>();
     beforeMap = new IdentityHashMap<>();
     afterMap = new IdentityHashMap<>();
+    btnConfirm.setDisable(true);
     for (Story origStory : mainApp.getStories()) {
       Story clonedStory = new Story(origStory);
       clones.add(clonedStory);
@@ -221,6 +222,7 @@ public class DependantsDialogController {
    */
   @FXML
   protected void btnAddStoryClick(ActionEvent event) {
+    btnConfirm.setDisable(false);
     Story selectedStory = availableStoriesList.getSelectionModel().getSelectedItem();
     if (selectedStory == null) {
       return;
@@ -247,6 +249,7 @@ public class DependantsDialogController {
    */
   @FXML
   protected void btnRemoveStoryClick(ActionEvent event) {
+    btnConfirm.setDisable(false);
     Story selectedStory = dependantStoriesList.getSelectionModel().getSelectedItem();
     if (selectedStory == null) {
       return;

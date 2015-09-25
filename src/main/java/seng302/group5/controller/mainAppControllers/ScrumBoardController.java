@@ -109,7 +109,7 @@ public class ScrumBoardController {
 
     // Resizes the scrumboards width when the main stage is resized.
     stage.widthProperty().addListener((observable, oldValue, newValue) -> {
-      storiesBox.setMinWidth(stage.getWidth() - 200);
+      storiesBox.setMinWidth(stage.getWidth() - 230);
     });
 
     sprintCombo.getSelectionModel().selectedItemProperty().addListener(
