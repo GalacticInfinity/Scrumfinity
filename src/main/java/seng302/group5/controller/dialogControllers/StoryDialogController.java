@@ -224,6 +224,7 @@ public class StoryDialogController implements AgileController {
 
     btnCreateStory.setDefaultButton(true);
     thisStage.setResizable(false);
+    thisStage.getIcons().add(new Image("Thumbnail.png"));
 
     thisStage.setOnCloseRequest(event -> {
       mainApp.popControllerStack();
@@ -301,7 +302,12 @@ public class StoryDialogController implements AgileController {
             ObservableList<String> estimateNames = FXCollections.observableArrayList();
             estimateNames.setAll(newBacklog.getEstimate().getEstimateNames());
             estimateCombo.setItems(estimateNames);
-            estimateCombo.getSelectionModel().select(0);
+            if (newBacklog.getStories().contains(story)) {
+              int estIndex = newBacklog.getSizes().get(story);
+              estimateCombo.getSelectionModel().select(estIndex);
+            } else {
+              estimateCombo.getSelectionModel().select(0);
+            }
           } else {
             btnEditBacklog.setDisable(true);
             estimateCombo.setDisable(true);
@@ -356,7 +362,6 @@ public class StoryDialogController implements AgileController {
           }
         }
     );
-    thisStage.getIcons().add(new Image("Thumbnail.png"));
   }
 
   /**

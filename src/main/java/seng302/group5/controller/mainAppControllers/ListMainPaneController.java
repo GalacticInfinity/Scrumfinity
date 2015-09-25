@@ -652,7 +652,7 @@ public class ListMainPaneController {
 
     List<Release> releases = new ArrayList<>();
     List<Text> releasesBody = new ArrayList<>();
-    for (Release release : mainApp.getReleasesbydate()) {
+    for (Release release : mainApp.getReleases()) {
       if (project.equals(release.getProjectRelease())) {
         releases.add(release);
       }
@@ -679,7 +679,7 @@ public class ListMainPaneController {
 
     List<Sprint> projectsSprints = new ArrayList<>();
     List<Text> sprintsBody = new ArrayList<>();
-    for (Sprint sprint : mainApp.getSprintsByDate()) {
+    for (Sprint sprint : mainApp.getSprints()) {
       if (project.equals(sprint.getSprintProject())) {
         projectsSprints.add(sprint);
       }
