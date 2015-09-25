@@ -344,6 +344,7 @@ public class StoryDialogController implements AgileController {
     estimateCombo.getSelectionModel().selectedIndexProperty().addListener(
         (observable, oldValue, newValue) -> {
           if (inSprint && newValue.equals(0)) {
+            System.out.println("Hello world");
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Cannot remove estimate");
             alert.setHeaderText(null);
@@ -352,6 +353,7 @@ public class StoryDialogController implements AgileController {
             alert.getDialogPane().setPrefHeight(150);
             alert.showAndWait();
             Platform.runLater(() -> {
+              System.out.println("wtf are you doing here");
               estimateCombo.getSelectionModel().select((int) oldValue);
             });
           } else {
